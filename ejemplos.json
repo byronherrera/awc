@@ -1,0 +1,54 @@
+{
+  "id": "denunciasweb",
+  "type": "desktop/denunciasweb",
+  "about": {
+    "author": "",
+    "description": "Mantenimiento de Denunciasweb.",
+    "name": "Ventana Denunciasweb",
+    "url": "",
+    "version": "1.0"
+  },
+
+  "client": {
+    "class": "QoDesk.DenunciaswebWindow",
+    "css": [
+      {
+        "directory": "desktop/denunciasweb/client/resources/",
+        "files": [ "styles.css" ]
+      },
+      {
+        "directory": "common/libraries/",
+        "files": [ "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css"  ]
+      }
+    ],
+    "javascript": [
+      {
+        "directory": "desktop/denunciasweb/client/",
+        "files": [  "denunciasweb-win.js" ]
+      },
+      {
+        "directory": "common/libraries/",
+        "files": [ "datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
+      },
+      {
+        "directory": "qwiki/admin/client/",
+        "files": [ "QoAdmin.js" ]
+      },
+      {
+        "directory": "qwiki/admin/client/lib/",
+        "files": [ "ActiveColumn.js", "ColumnNodeUI.js", "Nav.js", "SearchField.js", "TooltipEditor.js" ]
+      }
+    ],
+    "launcher": {
+      "config": {
+        "iconCls": "denunciasweb-icon",
+        "shortcutIconCls": "denunciasweb-shortcut",
+        "text": "Denunciasweb",
+        "tooltip": "<b>Denuncias web</b>"
+      },
+      "paths": {
+        "startmenu": "/"
+      }
+    }
+  }
+}
