@@ -1649,7 +1649,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 triggerAction: 'all',
                                 mode: 'local'
                             },
-
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Guía',
@@ -1670,7 +1669,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         columnWidth: 1 / 3,
                         layout: 'form',
                         items: [
-
                             {
                                 xtype: 'multiselect',
                                 fieldLabel: 'Reasignado a:<br />(Para seleccion<br /> multiple mantenga<br /> pulsada la tecla Ctrl)',
