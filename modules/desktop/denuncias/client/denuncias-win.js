@@ -1095,14 +1095,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 cls: 'no-border',
                 items: [
                     {
-                        collapsible: true,
                         id: 'formcabeceradenuncias',
-                        collapsedTitle: true,
+                       /* collapsedTitle: true,
+                        collapsible: true,
+                        title: 'Listado Recepción Documentos',*/
+
                         titleCollapse: true,
                         split: true,
                         flex: 1,
                         autoScroll: true,
-                        title: 'Listado Recepción Documentos',
                         layout: 'column', items: this.gridDenuncias
                     },
                     {
