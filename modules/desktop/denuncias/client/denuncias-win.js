@@ -300,9 +300,10 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
         function listadoInstituciones(id) {
 
-                return id;
+            return id;
 
         }
+
         //fin combo instituciones INST
 
 // fin combos secretaria
@@ -971,7 +972,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('tb_grabardenuncias').setDisabled(true);
                                 else
                                     Ext.getCmp('tb_grabardenuncias').setDisabled(false);
-                            };
+                            }
+                            ;
                             storeINST.load();
                         }
                     }
@@ -1567,6 +1569,126 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     }
                 ]
             });
+
+            this.formConsultaDocumentos = new Ext.FormPanel({
+                layout: 'column',
+                title: 'Ingrese los parámetros',
+                items: [
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        monitorValid: true,
+                        defaultType: 'textfield',
+                        items: [
+                            {
+                                xtype: 'datetimefield',
+                                fieldLabel: 'Fecha Inicio',
+                                id: 'busqueda_fecha_inicio',
+                                anchor: '95%',
+                                dateFormat: 'Y-m-d',
+                                timeFormat: 'H:i:s'
+                            },
+                            {
+                                xtype: 'datetimefield',
+                                fieldLabel: 'Fecha Fin',
+                                id: 'busqueda_fecha_fin',
+                                anchor: '95%',
+                                dateFormat: 'Y-m-d',
+                                timeFormat: 'H:i:s'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Tipo documento',
+                                id: 'busqueda_tipo_documento',
+                                name: 'busqueda_tipo_documento',
+                                hiddenName: 'busqueda_tipo_documento',
+
+                                anchor: '95%',
+                                store: storeTID,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+
+                            }
+                        ]
+                    },
+                    {
+
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Institución',
+                                id: 'busqueda_institucion',
+                                name: 'busqueda_institucion',
+                                hiddenName: 'busqueda_institucion',
+
+                                anchor: '95%',
+                                store: storeINST,
+                                valueField: 'nombre',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Caracter del trámite',
+                                id: 'busqueda_caracter_tramite',
+                                name: 'busqueda_caracter_tramite',
+                                anchor: '95%',
+                                hiddenName: 'busqueda_caracter_tramite',
+                                store: storeCDT,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Guía',
+                                name: 'busqueda_guia',
+                                id: 'busqueda_guia',
+                                anchor: '95%',
+                                hiddenName: 'busqueda_guia',
+                                store: storeREAGUIA,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+
+                            {
+                                xtype: 'multiselect',
+                                fieldLabel: 'Reasignado a:<br />(Para seleccion<br /> multiple mantenga<br /> pulsada la tecla Ctrl)',
+                                id: 'busqueda_reasignacion',
+                                name: 'busqueda_reasignacion',
+                                width: 300,
+                                height: 130,
+                                allowBlank: false, store: storeREA,
+                                hiddenName: 'busqueda_reasignacion',
+                                displayField: 'nombre',
+                                valueField: 'id',
+                                ddReorder: true
+                            }
+                        ]
+                    }
+                ]
+            });
+
             var checkHandler = function (item, checked) {
                 if (checked) {
                     var store = this.storeDenuncias;
@@ -1822,7 +1944,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             items: this.formDenunciasDetalle
                         }
                         , {
-
                             title: 'Guías',
                             closable: true,
                             layout: 'border',
@@ -1929,6 +2050,51 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             ],
                             items: this.gridDenunciasZonas
                         }
+                        , {
+                            title: 'Reportes',
+                            closable: true,
+                            layout: 'border',
+                            disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
+                            tbar: {
+                                iconCls: 'excel-icon',
+                                handler: this.botonExportarReporteReimpresion,
+                                scope: this,
+                                text: 'Generar Reporte',
+                                tooltip: 'Se genera el reporte de la guía seleccionada',
+                                id: 'tb_repoteDenunciasGuias',
+                                disabled: !acceso
+                            }
+                            ,
+                            items: [
+                                {
+                                    region: 'north',
+                                    height: 200,
+                                    height: 200,
+                                    minSize: 100,
+                                    maxSize: 150,
+                                    closable: true,
+                                    autoScroll: false,
+                                    items: this.formConsultaDocumentos
+                                },
+
+                                {
+                                    // lazily created panel (xtype:'panel' is default)
+                                    region: 'center',
+                                    split: true,
+                                    autoScroll: true,
+                                    height: 300,
+                                    minSize: 100,
+                                    maxSize: 150,
+                                    collapsible: true,
+                                    title: 'Detalle',
+                                    margins: '0 0 0 0',
+                                    items: this.gridDenunciasSimple
+                                }
+                            ]
+
+                            //this.gridReportes
+                        }
+
                         , {
                             autoScroll: true,
                             title: 'Procedimientos',
