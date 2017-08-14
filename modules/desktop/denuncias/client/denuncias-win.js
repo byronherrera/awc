@@ -63,7 +63,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
-            mode: 'local'
+            mode: 'local',
+            forceSelection: true,
+            allowBlank: false
         });
 
         function personaTipoDocumento(id) {
@@ -130,8 +132,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             store: storeREA,
             valueField: 'id',
             displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
+            mode: 'local',
+            forceSelection: true,
+            allowBlank: false
         });
 
         function departamentoReasignacion(id) {
@@ -261,7 +264,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
-            mode: 'local'
+            mode: 'local',
+            //forceSelection: true,
+            allowBlank: true
         });
 
         function personaReceptaDenuncia(id) {
@@ -273,6 +278,32 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo persona recepta la denuncia PRD
+
+        //inicio combo instituciones INST
+        storeINST = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=instituciones'
+
+        });
+
+        var comboINST = new Ext.form.ComboBox({
+            id: 'comboINST',
+            store: storeINST,
+            valueField: 'nombre',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            allowBlank: false
+        });
+
+        function listadoInstituciones(id) {
+
+                return id;
+
+        }
+        //fin combo instituciones INST
 
 // fin combos secretaria
 
@@ -787,6 +818,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'num_documento', allowBlank: false},
                 {name: 'remitente', allowBlank: false},
                 {name: 'asunto', allowBlank: false},
+                {name: 'institucion', allowBlank: true},
                 {name: 'descripcion_anexos', allowBlank: false},
                 {name: 'reasignacion', allowBlank: false},
                 {name: 'id_caracter_tramite', allowBlank: false},
@@ -819,19 +851,19 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Código',
                     dataIndex: 'codigo_tramite',
                     sortable: true,
-                    width: 20
+                    width: 24
                 },
                 {
                     header: 'Persona recepta',
                     dataIndex: 'id_persona',
                     sortable: true,
-                    width: 35,
+                    width: 30,
                     renderer: personaReceptaDenuncia
                 }, {
                     header: 'Recepción documento',
                     dataIndex: 'recepcion_documento',
                     sortable: true,
-                    width: 45,
+                    width: 42,
                     renderer: formatDate,
                     editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
@@ -842,22 +874,29 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Tipo documento',
                     dataIndex: 'id_tipo_documento',
                     sortable: true,
-                    width: 30,
+                    width: 28,
                     editor: comboTID, renderer: personaTipoDocumento
                 },
                 {
                     header: 'N. documento',
                     dataIndex: 'num_documento',
                     sortable: true,
-                    width: 40,
+                    width: 38,
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
                     header: 'Remitente',
                     dataIndex: 'remitente',
                     sortable: true,
-                    width: 60,
+                    width: 55,
                     editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'Institución',
+                    dataIndex: 'institucion',
+                    sortable: true,
+                    width: 30,
+                    editor: comboINST, renderer: listadoInstituciones
                 },
                 {
                     header: 'Asunto',
@@ -870,7 +909,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Descripción anexos',
                     dataIndex: 'descripcion_anexos',
                     sortable: true,
-                    width: 55,
+                    width: 40,
                     editor: new Ext.form.TextField({allowBlank: false})
                 }
                 , {
@@ -882,7 +921,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 }, {
                     header: 'Fojas',
                     dataIndex: 'cantidad_fojas',
-                    sortable: true,
+
                     width: 20,
                     editor: new Ext.ux.form.SpinnerField({
                         fieldLabel: 'Age',
@@ -932,7 +971,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('tb_grabardenuncias').setDisabled(true);
                                 else
                                     Ext.getCmp('tb_grabardenuncias').setDisabled(false);
-                            }
+                            };
+                            storeINST.load();
                         }
                     }
                 }),
@@ -1096,9 +1136,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 items: [
                     {
                         id: 'formcabeceradenuncias',
-                       /* collapsedTitle: true,
-                        collapsible: true,
-                        title: 'Listado Recepción Documentos',*/
+                        /* collapsedTitle: true,
+                         collapsible: true,
+                         title: 'Listado Recepción Documentos',*/
 
                         titleCollapse: true,
                         split: true,
@@ -1107,20 +1147,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         layout: 'column', items: this.gridDenuncias
                     },
                     {
-                        collapsible: true,
-                        collapsedTitle: true,
-                        titleCollapse: true,
                         split: true,
                         flex: 2,
-
-                        labelAlign: 'left',
-                        title: 'Detalle Recepción Documentos',
                         bodyStyle: 'padding:0; background: #DFE8F6',
                         layout: 'column',
-
                         tbar: [
                             {
-                                text: 'Grabar Recepción Denuncia',
+                                text: 'Grabar Recepción Detalle',
                                 scope: this,
                                 handler: this.grabardenuncias,
                                 iconCls: 'save-icon',
@@ -1267,7 +1300,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         name: 'asunto',
                                                         height: 45,
                                                         anchor: '95%'
-                                                    }, {
+                                                    },
+                                                    {
+                                                        xtype: 'textfield',
+                                                        fieldLabel: 'Institución',
+                                                        id: 'institucion',
+                                                        name: 'institucion',
+                                                        anchor: '95%'
+                                                    },
+                                                    {
                                                         xtype: 'combo',
                                                         fieldLabel: 'Caracter del trámite',
                                                         id: 'id_caracter_tramite',
@@ -1358,6 +1399,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         xtype: 'combo',
                                                         fieldLabel: 'Guía',
                                                         name: 'guia',
+                                                        id: 'guia',
                                                         anchor: '95%',
 
                                                         hiddenName: 'guia',
@@ -1371,6 +1413,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         xtype: 'combo',
                                                         fieldLabel: 'Despachado',
                                                         name: 'envio_inspeccion',
+                                                        id: 'envio_inspeccion',
                                                         anchor: '95%',
 
                                                         hiddenName: 'envio_inspeccion',
@@ -1596,6 +1639,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             key: 'guia',
                             scope: this,
                             text: 'Guía'
+                        }, {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'institucion',
+                            scope: this,
+                            text: 'Institución'
                         }
                     ]
                 })
@@ -1942,6 +1992,11 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             else
                 activar2 = !accesosAdministrador
 
+            //en caso que es solo lectura
+            if (!acceso) {
+                activar2 = activar = true;
+            }
+
             Ext.getCmp('id_persona').setReadOnly(activar2);
             Ext.getCmp('recepcion_documento').setReadOnly(activar);
             Ext.getCmp('id_tipo_documento').setReadOnly(activar);
@@ -1952,8 +2007,14 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             Ext.getCmp('descripcion_anexos').setReadOnly(activar);
             Ext.getCmp('cantidad_fojas').setReadOnly(activar);
             Ext.getCmp('asunto').setReadOnly(activar);
+            Ext.getCmp('institucion').setReadOnly(activar);
             Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
             Ext.getCmp('observacion_secretaria').setReadOnly(activar);
+
+
+            Ext.getCmp('envio_inspeccion').setReadOnly(!acceso);
+            Ext.getCmp('guia').setReadOnly(!acceso);
+
 
             if (accesosZonales)
                 Ext.getCmp('reasignacion').disable();
@@ -1965,18 +2026,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             }
 
         };
-        /*this.gridDenuncias.on('rowclick', function (grid, rowIndex) {
-         this.record = this.gridDenuncias.getStore().getAt(rowIndex);
-         this.idDenunciasRecuperada = this.record.id;
 
-         /!*cargar el formulario*!/
-         cargaDetalle(this.idDenunciasRecuperada, this.formDenunciasDetalle, this.record.get("envio_inspeccion"));
-         if (this.record.get("envio_inspeccion"))
-         Ext.getCmp('tb_grabardenuncias').setDisabled(true);
-         else
-         Ext.getCmp('tb_grabardenuncias').setDisabled(false);
-
-         }, this);*/
 
         setTimeout(function () {
             this.storeDenuncias.load({
@@ -2015,10 +2065,10 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             id_tipo_documento: '2',
             num_documento: 'S/N',
             descripcion_anexos: '-',
+            institucion: '',
             remitente: '',
             reasignacion: '',
             id_caracter_tramite: '1',
-            cantidad_fojas: '0',
             cantidad_fojas: '0',
             envio_inspeccion: false
 

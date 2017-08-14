@@ -213,6 +213,21 @@ function comboActivo()
     );
 
 }
+function comboInstituciones()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT DISTINCT  institucion AS nombre FROM amc_denuncias WHERE length(institucion) > 0 ORDER BY institucion";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 
 function comboCargo()
 {
@@ -271,6 +286,10 @@ switch ($_GET['tipo']) {
 
     case 'activo' :
         comboActivo();
+        break;
+
+    case 'instituciones' :
+        comboInstituciones();
         break;
 }
 ?>
