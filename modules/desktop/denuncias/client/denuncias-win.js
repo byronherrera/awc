@@ -1798,6 +1798,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 {
                                     region: 'north',
                                     height: 200,
+                                    height: 200,
                                     minSize: 100,
                                     maxSize: 150,
                                     closable: true,

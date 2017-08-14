@@ -23,8 +23,8 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
 
         this.urlDenunciasweb = urlDenunciasweb;
         this.urlDenunciasLocal = urlDenunciasLocal;
-        var winWidth = desktop.getWinWidth() ;
-        var winHeight = desktop.getWinHeight() ;
+        var winWidth = desktop.getWinWidth();
+        var winHeight = desktop.getWinHeight();
         //inicio combo activo
         storeSASINO = new Ext.data.JsonStore({
             root: 'users',
@@ -186,14 +186,17 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                             if (this.record.get("prosesado") == 'true') {
                                 Ext.getCmp('tb_negardenuncias').setDisabled(true);
                                 Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                                Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
                             }
                             else {
                                 Ext.getCmp('tb_negardenuncias').setDisabled(false);
                                 Ext.getCmp('tb_aprobardenuncias').setDisabled(false);
+                                Ext.getCmp('motivoNegarDenuncia').setDisabled(false);
                             }
                         } else {
                             Ext.getCmp('tb_negardenuncias').setDisabled(true);
                             Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                            Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
                         }
                     }
                 }
@@ -258,6 +261,14 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                             scope: this,
                             text: 'Fecha'
                         }
+                        , {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'direccion',
+                            scope: this,
+                            text: 'Dirección'
+                        }
                     ]
                 })
                 , text: 'Código trámite'
@@ -299,16 +310,17 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                                 handler: this.negardenuncias,
                                 iconCls: 'save-icon',
                                 disabled: true,
-                                id: 'tb_negardenuncias'
-                                , formBind: true
+                                id: 'tb_negardenuncias',
+                                formBind: true
                             },
                             {
                                 text: '| Motivo negar:'
-                                , xtype: 'tbtext'
+                                , xtype: 'tbtext',
                             },
                             {
                                 xtype: 'textfield',
                                 id: 'motivoNegarDenuncia',
+                                disabled: true,
                                 anchor: '40%',
                                 width: '500'
                             },
@@ -328,10 +340,9 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                                 items: [
                                     {
                                         columnWidth: 1 / 4,
+                                        cls: 'margen10',
                                         layout: 'form',
                                         monitorValid: true,
-
-
                                         items: [
                                             {xtype: 'hidden', name: 'id'},
                                             {xtype: 'hidden', name: 'fecha'},
@@ -402,9 +413,13 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                                                         cls: 'disabled'
                                                     }
                                                 ]
+                                            },
+                                            {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Dirección',
+                                                name: 'direccion',
+                                                anchor: '96%'
                                             }
-
-                                            , {xtype: 'displayfield', fieldLabel: 'Dirección', name: 'direccion'}
                                             , {
                                                 xtype: 'compositefield',
                                                 fieldLabel: '<span ext:qtip="Zona, Parroquia<br>Sector, Barrio">Ubicación</span>',
@@ -456,6 +471,8 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                                     },
                                     {
 
+
+                                        cls: 'fondogris',
                                         columnWidth: 1 / 4,
                                         layout: 'form',
                                         items: [
@@ -494,7 +511,8 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Dirección',
-                                                name: 'direcciondenunciado'
+                                                name: 'direcciondenunciado',
+                                                anchor: '96%'
                                             }
                                             , {
                                                 xtype: 'compositefield',
@@ -551,6 +569,7 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                                     {
                                         columnWidth: 2 / 4,
                                         layout: 'form',
+                                        cls: 'margen10',
                                         items: [
                                             {
                                                 xtype: 'displayfield',

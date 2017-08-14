@@ -9,3 +9,8 @@
 .negrilla {font-weight: bolder;}
 .disabled { color: #000000 !important; opacity: 1; background-image: none !important; border: none !important; font-weight: bold !important;}
 .gold  { background-color: bisque !important;}
+
+.margen10 .x-panel-body {padding: 10px}
+
+.fondogris .x-panel-body { background-color: #e0eaee !important; height: -webkit-fill-available; padding: 10px}
+.fondogris .x-form-field{ background-color: #e0eaee !important; }
