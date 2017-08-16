@@ -897,7 +897,10 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'institucion',
                     sortable: true,
                     width: 30,
-                    editor: comboINST, renderer: listadoInstituciones
+                    editor: comboINST, renderer: listadoInstituciones,
+
+
+                cls: 'expand-panel'
                 },
                 {
                     header: 'Asunto',
@@ -2179,7 +2182,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             title: 'Reportes',
                             closable: true,
                             layout: 'border',
-                            disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
+                            disabled: this.app.isAllowedTo('accesosSecretaria', this.id) ? false : true,
                             tbar: [
                                 {
                                     iconCls: 'reload-icon',
