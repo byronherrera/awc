@@ -1003,7 +1003,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-
+        // datastore and datagrid in Guia
         this.storeDenunciasSimple = new Ext.data.Store({
             id: "id",
             proxy: proxyDenuncias,
@@ -1123,6 +1123,132 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
+        // fin datastore and datagrid in Guia
+
+        // datastore and datagrid in Guia
+        this.storeDocumentosReporte = new Ext.data.Store({
+            id: "id",
+            proxy: proxyDenuncias,
+            reader: readerDenuncias,
+            writer: writerDenuncias,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true
+        });
+
+        storeDocumentosReporte = this.storeDocumentosReporte
+        this.gridDocumentosReporte = new Ext.grid.EditorGridPanel({
+
+            height: desktop.getWinHeight() -  238,
+            autoScroll: true,
+            store: this.storeDocumentosReporte,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {
+                    header: 'Código',
+                    dataIndex: 'codigo_tramite',
+                    sortable: true,
+                    width: 20
+                },
+                {
+                    header: 'Persona recepta',
+                    dataIndex: 'id_persona',
+                    sortable: true,
+                    width: 35,
+                    renderer: personaReceptaDenuncia
+                }, {
+                    header: 'Recepción documento',
+                    dataIndex: 'recepcion_documento',
+                    sortable: true,
+                    width: 45,
+                    renderer: formatDate
+                },
+                {
+                    header: 'Tipo documento',
+                    dataIndex: 'id_tipo_documento',
+                    sortable: true,
+                    width: 30,
+                    renderer: personaTipoDocumento
+                },
+                {
+                    header: 'N. documento',
+                    dataIndex: 'num_documento',
+                    sortable: true,
+                    width: 40
+                },
+                {
+                    header: 'Remitente',
+                    dataIndex: 'remitente',
+                    sortable: true,
+                    width: 60
+                },
+{
+                    header: 'Institución',
+                    dataIndex: 'institucion',
+                    sortable: true,
+                    width: 60
+                },
+                {
+                    header: 'Asunto',
+                    dataIndex: 'asunto',
+                    sortable: true,
+                    width: 55
+                },
+                {
+                    header: 'Descripción anexos',
+                    dataIndex: 'descripcion_anexos',
+                    sortable: true,
+                    width: 55
+                }
+                , {
+                    header: 'Caracter trámite',
+                    dataIndex: 'id_caracter_tramite',
+                    sortable: true,
+                    width: 30,
+                    renderer: caracterTramite
+                }, {
+                    header: 'Fojas',
+                    dataIndex: 'cantidad_fojas',
+                    sortable: true,
+                    width: 20
+                }
+                , {
+                    header: 'Reasignación',
+                    dataIndex: 'reasignacion',
+                    sortable: true,
+                    width: 60,
+                    renderer: departamentoReasignacion
+                }
+                , {
+                    header: 'Despachado'
+                    , dataIndex: 'envio_inspeccion'
+                    , align: 'center'
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Si'
+                    , sortable: true
+                    , width: 20
+                    , xtype: 'booleancolumn'
+                }
+            ],
+            viewConfig: {
+                forceFit: true
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            bbar: new Ext.PagingToolbar({
+                pageSize: 100,
+                store: this.storeDocumentosReporte,
+                displayInfo: true,
+                displayMsg: 'Mostrando denuncias {0} - {1} of {2}',
+                emptyMsg: "No existen denuncias que mostrar"
+            }),
+        });
+        // fin datastore and datagrid in Guia
 
 
         var win = desktop.getWindow('layout-win');
@@ -1573,12 +1699,12 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             this.formConsultaDocumentos = new Ext.FormPanel({
                 layout: 'column',
                 title: 'Ingrese los parámetros',
+                frame: true,
+                bodyStyle: 'padding:5px 5px 0',
                 items: [
                     {
                         columnWidth: 1 / 3,
                         layout: 'form',
-                        monitorValid: true,
-                        defaultType: 'textfield',
                         items: [
                             {
                                 xtype: 'datetimefield',
@@ -1615,18 +1741,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         ]
                     },
                     {
-
                         columnWidth: 1 / 3,
                         layout: 'form',
                         items: [
-
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Institución',
                                 id: 'busqueda_institucion',
                                 name: 'busqueda_institucion',
                                 hiddenName: 'busqueda_institucion',
-
                                 anchor: '95%',
                                 store: storeINST,
                                 valueField: 'nombre',
@@ -1637,7 +1760,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Caracter del trámite',
+                                fieldLabel: 'Caracter',
                                 id: 'busqueda_caracter_tramite',
                                 name: 'busqueda_caracter_tramite',
                                 anchor: '95%',
@@ -1671,11 +1794,11 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         items: [
                             {
                                 xtype: 'multiselect',
-                                fieldLabel: 'Reasignado a:<br />(Para seleccion<br /> multiple mantenga<br /> pulsada la tecla Ctrl)',
+                                fieldLabel: 'Unidades',
                                 id: 'busqueda_reasignacion',
                                 name: 'busqueda_reasignacion',
                                 width: 300,
-                                height: 130,
+                                height: 100,
                                 allowBlank: false, store: storeREA,
                                 hiddenName: 'busqueda_reasignacion',
                                 displayField: 'nombre',
@@ -1686,6 +1809,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     }
                 ]
             });
+
+
+
 
             var checkHandler = function (item, checked) {
                 if (checked) {
@@ -1967,12 +2093,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 {
                                     region: 'north',
                                     height: 200,
-                                    height: 200,
+
                                     minSize: 100,
                                     maxSize: 150,
                                     closable: true,
                                     autoScroll: false,
                                     items: this.gridDenunciasGuia
+
                                 },
                                 // create instance immediately
                                 {
@@ -2053,28 +2180,43 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             closable: true,
                             layout: 'border',
                             disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
-                            tbar: {
-                                iconCls: 'excel-icon',
-                                handler: this.botonExportarReporteReimpresion,
-                                scope: this,
-                                text: 'Generar Reporte',
-                                tooltip: 'Se genera el reporte de la guía seleccionada',
-                                id: 'tb_repoteDenunciasGuias',
-                                disabled: !acceso
-                            }
-                            ,
+                            tbar: [
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridDataDocumentoReporte,
+                                    scope: this,
+                                    text: 'Buscar'
+
+                                },
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridDataDocumentoReporteReset,
+                                    scope: this,
+                                    text: 'Borrar formulario'
+
+                                },
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporte,
+                                    scope: this,
+                                    text: 'Exportar listado',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada',
+                                    id: 'tb_repoteDenunciasGuias',
+                                    disabled: !acceso,
+
+
+                                }
+                            ],
                             items: [
                                 {
                                     region: 'north',
-                                    height: 200,
-                                    height: 200,
+                                    height: 145,
                                     minSize: 100,
                                     maxSize: 150,
                                     closable: true,
                                     autoScroll: false,
                                     items: this.formConsultaDocumentos
                                 },
-
                                 {
                                     // lazily created panel (xtype:'panel' is default)
                                     region: 'center',
@@ -2083,10 +2225,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     height: 300,
                                     minSize: 100,
                                     maxSize: 150,
-                                    collapsible: true,
-                                    title: 'Detalle',
-                                    margins: '0 0 0 0',
-                                    items: this.gridDenunciasSimple
+                                    items: this.gridDocumentosReporte
                                 }
                             ]
 
@@ -2442,5 +2581,38 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
     },
     requestGridDataDenunciasGuia: function () {
         this.storeDenunciasGuia.load();
-    }
+    },
+    requestGridDataDocumentoReporte: function () {
+        this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
+        this.storeDocumentosReporte.load();
+    },
+    requestGridDataDocumentoReporteReset: function () {
+        this.formConsultaDocumentos.getForm().reset();
+    },
+    botonExportarDocumentoReporte: function () {
+        var rows = this.storeDocumentosReporte.getCount()
+        if (rows === 0) {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Busqueda sin resultados',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+        // mensaje continuar y llamada a descarga archivo
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    valueParams =   JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    window.location.href = 'modules/desktop/denuncias/server/descargaReporte.inc.php?param=' + valueParams;
+                }
+            }
+        });
+    },
 });
