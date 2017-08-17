@@ -1983,7 +1983,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     handler: this.deletedenuncias,
                                     iconCls: 'delete-icon',
-                                    disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true
+                                    //disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true
+                                    disabled: true
                                 },
                                 '-',
                                 {
