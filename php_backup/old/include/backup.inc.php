@@ -52,7 +52,7 @@ switch (schedule) {
 		break;
 	default:
 		deleteDailyBackups();
-		break;	
+		break;
 }
 
 //Setup variables
