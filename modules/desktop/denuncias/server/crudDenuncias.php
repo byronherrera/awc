@@ -42,6 +42,7 @@ function selectDenuncias()
 
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
+
     }
 
     if (isset($_POST['filterText'])) {
@@ -58,8 +59,9 @@ function selectDenuncias()
                     $campo = $row['id'];
                 }
             }
-        }
-        $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+            $where = " WHERE $columnaBusqueda LIKE '%$campo%' AND envio_inspeccion = 'true'";
+        } else
+            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
     }
 
     if (isset($_POST['unidadfiltro'])) {
@@ -97,7 +99,7 @@ function selectDenuncias()
     }
 
     // para los reportes
-    if (isset($_POST['busqueda_tipo_documento']) and ($_POST['busqueda_tipo_documento']!= '')) {
+    if (isset($_POST['busqueda_tipo_documento']) and ($_POST['busqueda_tipo_documento'] != '')) {
         $tipo = $_POST['busqueda_tipo_documento'];
         if ($where == '') {
             $where = "WHERE id_tipo_documento = $tipo ";
@@ -105,7 +107,7 @@ function selectDenuncias()
             $where = $where . " AND id_tipo_documento = $tipo ";
         }
     }
-    if (isset($_POST['busqueda_institucion']) and ($_POST['busqueda_institucion']!= '')) {
+    if (isset($_POST['busqueda_institucion']) and ($_POST['busqueda_institucion'] != '')) {
         $tipo = $_POST['busqueda_institucion'];
         if ($where == '') {
             $where = "WHERE institucion = '$tipo' ";
@@ -113,7 +115,7 @@ function selectDenuncias()
             $where = $where . " AND institucion = '$tipo' ";
         }
     }
-    if (isset($_POST['busqueda_caracter_tramite']) and ($_POST['busqueda_caracter_tramite']!= '')) {
+    if (isset($_POST['busqueda_caracter_tramite']) and ($_POST['busqueda_caracter_tramite'] != '')) {
         $tipo = $_POST['busqueda_caracter_tramite'];
         if ($where == '') {
             $where = "WHERE id_caracter_tramite = '$tipo' ";
@@ -122,7 +124,7 @@ function selectDenuncias()
         }
     }
 
-    if (isset($_POST['busqueda_guia']) and ($_POST['busqueda_guia']!= '')) {
+    if (isset($_POST['busqueda_guia']) and ($_POST['busqueda_guia'] != '')) {
         $tipo = $_POST['busqueda_guia'];
         if ($where == '') {
             $where = "WHERE guia = '$tipo' ";
@@ -131,7 +133,7 @@ function selectDenuncias()
         }
     }
 
-    if (isset($_POST['busqueda_reasignacion']) and ($_POST['busqueda_reasignacion']!= '')) {
+    if (isset($_POST['busqueda_reasignacion']) and ($_POST['busqueda_reasignacion'] != '')) {
         $tipo = $_POST['busqueda_reasignacion'];
         if ($where == '') {
             $where = "WHERE reasignacion in ($tipo) ";
@@ -141,10 +143,9 @@ function selectDenuncias()
     }
 
 
-
-    if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio']!= '')) {
+    if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
         $fechainicio = $_POST['busqueda_fecha_inicio'];
-        if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin']!= '')) {
+        if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin'] != '')) {
             $fechafin = $_POST['busqueda_fecha_fin'];
         } else {
             $fechafin = date('Y\m\d H:i:s');;
@@ -156,7 +157,6 @@ function selectDenuncias()
             $where = $where . " AND recepcion_documento between '$fechainicio' and '$fechafin' ";
         }
     }
-
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -297,11 +297,11 @@ function updateDenunciasForm()
     $remitente = $_POST["remitente"];
     $observacion_secretaria = $_POST["observacion_secretaria"];
     $asunto = addslashes($_POST["asunto"]);
-    if (isset($_POST["reasignacion"])){
+    if (isset($_POST["reasignacion"])) {
         $reasignacion = $_POST["reasignacion"];
     } else {
         //recuperamos la unidad en base a guia
-        if (isset ($_POST["guia"]) ) {
+        if (isset ($_POST["guia"])) {
             $valueGuia = $_POST["guia"];
             $os->db->conn->query("SET NAMES 'utf8'");
             $sql = "SELECT id_unidad FROM amc_guias WHERE id = $valueGuia ";

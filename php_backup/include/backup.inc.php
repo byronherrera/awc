@@ -34,15 +34,15 @@ if (!defined('mysqlDumpOptions')) {
 }
 
 //delete old backups
-switch (schedule) {
-    case "weekly":
-        deleteWeeklyBackups();
+switch (modo) {
+    case "daily":
+        deleteDailyBackups();
         break;
-    case "hourly":
-        deleteHourlyBackups();
+    case "monthly":
+        //deleteWeeklyBackups();
         break;
     default:
-        deleteDailyBackups();
+        deleteHourlyBackups();
         break;
 }
 
@@ -55,7 +55,8 @@ $mysql_backup_options = mysqlDumpOptions;
 
 function backupDB($hostname, $username, $password, $database, $prefix, $post_backup_query = '')
 {
-    $backup_file = modo . '/' .$database . '-' . date("Y-m-d-H") . '.sql';
+    //delete old backups
+    $backup_file = modo . '/' . $database . '-' . date(tipofecha) . '.sql';
     $command = '"c:\Program Files (x86)\MySQL\MySQL Server 5.5\bin\mysqldump"' . " --opt -h $hostname -u $username -p$password $database  > $backup_file";
     // ejecución y salida de éxito o errores
     system($command, $output);
@@ -65,16 +66,12 @@ function backupDB($hostname, $username, $password, $database, $prefix, $post_bac
 
 function deleteHourlyBackups()
 {
-    global $s3;
-
-   // deleteDailyBackups();
 
     //delete hourly backups, 72 hours before now, except the midnight (00) backup
-    $set_date = strtotime('-24 hours');
-
+    $set_date = strtotime('-90 hours');
     if (schedule == "hourly") {
-        for ($i = 1; $i <=  2; $i++) {
-            $prefix = s3Path('', database, $set_date, true) . str_pad((string)$i, 2, "0", STR_PAD_LEFT);
+        for ($i = 0; $i <= 23; $i++) {
+            $prefix = path('', database, $set_date, true) . str_pad((string)$i, 2, "0", STR_PAD_LEFT);
             if (debug == true) echo("Deleting hourly backup: " . $prefix . "\n");
             deletePrefix($prefix);
         }
@@ -83,11 +80,10 @@ function deleteHourlyBackups()
 
 function deleteWeeklyBackups()
 {
-    global $s3;
 
     //delete the backup from 36 weeks ago
     $set_date = strtotime('-36 weeks');
-    $prefix = s3Path('', '', $set_date, false);
+    $prefix = path('', '', $set_date, false);
 
     //only if it wasn't in January
     if ((int)date('n', $set_date) !== 1) {
@@ -101,7 +97,7 @@ function deleteWeeklyBackups()
 
     //delete the backup from 16 weeks ago
     $set_date = strtotime('-16 weeks');
-    $prefix = s3Path('', '', $set_date, false);
+    $prefix = path('', '', $set_date, false);
 
     //only if it wasn't the 1st 7 days of the month
     if ((int)date('j', $set_date) > 7) {
@@ -115,60 +111,44 @@ function deleteWeeklyBackups()
 
 function deleteDailyBackups()
 {
-    global $s3;
 
-    //delete the backup from 1 months ago
-    $set_date = strtotime('-1 months');
+    //delete hourly backups, 72 hours before now, except the midnight (00) backup
 
-    //only if it wasn't the first of the month or a Saturday
-    if ((int)date('j', $set_date) !== 1) {
-        //set s3 "dir" to delete
-        $prefix = s3Path('', database, $set_date, false);
-
-        if (debug == true) echo "Deleting backup from 2 months ago: " . $prefix . "\n";
-
-        //delete each key found
+    for ($i = -60; $i <= -30; $i++) {
+        $set_date = strtotime("$i days");
+        $prefix = path('', database, $set_date, false) ;
+        if (debug == true) echo("Deleting daily backup: " . $prefix . "\n");
         deletePrefix($prefix);
     }
 
-    //delete the backup from 2 weeks ago
-    $set_date = strtotime('-2 weeks');
 
-    //only if it wasn't a saturday or the 1st
-    if ((int)date('j', $set_date) !== 1 && (string)date('l', $set_date) !== "Saturday") {
-        $prefix = s3Path('', database, $set_date, false);
-        if (debug == true) echo "Deleting backup from 2 weeks ago: " . $prefix . "\n";
-
-        deletePrefix($prefix);
-    }
 
 }
 
 function deletePrefix($prefix)
 {
-    $directorio = modo. '/';
-    $keys  = scandir($directorio);
+    $directorio = modo . '/';
+    $keys = scandir($directorio);
     //find files to delete
-echo $prefix ."<br>";
+    echo $prefix . "<br>";
     foreach ($keys as $key => $meta) {
-      if (debug == true) echo $meta."<br>";
-        echo $meta."<br>";
-      //$s3->deleteObject(awsBucket,$key);
+        if (debug == true) echo $meta . "<br>";
+        // al realizar la busqueda en caso de encontrar el archivo para borrarlo
+
+        if ($prefix . '.sql' === $directorio . $meta) {
+            unlink($directorio . $meta);
+        }
     }
 }
 
-function s3Path($prefix, $name, $timestamp = null, $force_hourly = null)
+function path($prefix, $name, $timestamp = null, $force_hourly = null)
 {
     if (is_null($timestamp)) $timestamp = time();
-
-    $date = date("Y-m-d-", $timestamp);
-
-    if (is_null($force_hourly) && schedule == "hourly") {
-        return modo. "/" . $name . $date . date('H', $timestamp);
+    if (  modo == "hourly") {
+        $date = date("Y-m-d-", $timestamp);
     } else {
-        return modo . "/$name-" . $date . $prefix;
+        $date = date(tipofecha, $timestamp);
     }
+    return modo . "/$name-" . $date;
 }
-
-
 ?>
