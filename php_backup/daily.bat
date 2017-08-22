@@ -1,0 +1,1 @@
+php "c:\Program Files (x86)\Zend\Apache2\htdocs\procesos-amc\php_backup\backup.php" modo=daily
