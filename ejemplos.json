@@ -1,19 +1,28 @@
 {
-  "id": "denunciasweb",
-  "type": "desktop/denunciasweb",
+  "id": "inspeccion",
+  "type": "desktop/inspeccion",
   "about": {
     "author": "",
-    "description": "Mantenimiento de Denunciasweb.",
-    "name": "Ventana Denunciasweb",
+    "description": "AMC Inspección.",
+    "name": "Inspección",
     "url": "",
     "version": "1.0"
   },
+  "server": {
+    "methods": [
+      { "name": "accesosAdministrador", "description": "Full acceso" },
+      { "name": "accesosSecretaria", "description": "Full acceso" },
+      { "name": "accesosRecepción", "description": "Recepción" }
 
+    ],
+    "class": "QoInspeccion",
+    "file": "desktop/inspeccion/inspeccion.php"
+  },
   "client": {
-    "class": "QoDesk.DenunciaswebWindow",
+    "class": "QoDesk.InspeccionWindow",
     "css": [
       {
-        "directory": "desktop/denunciasweb/client/resources/",
+        "directory": "desktop/inspeccion/client/resources/",
         "files": [ "styles.css" ]
       },
       {
@@ -23,8 +32,8 @@
     ],
     "javascript": [
       {
-        "directory": "desktop/denunciasweb/client/",
-        "files": [  "denunciasweb-win.js" ]
+        "directory": "desktop/inspeccion/client/",
+        "files": [  "inspeccion-win.js" ]
       },
       {
         "directory": "common/libraries/",
@@ -41,10 +50,10 @@
     ],
     "launcher": {
       "config": {
-        "iconCls": "denunciasweb-icon",
-        "shortcutIconCls": "denunciasweb-shortcut",
-        "text": "Denunciasweb",
-        "tooltip": "<b>Denuncias web</b>"
+        "iconCls": "inspeccion-icon",
+        "shortcutIconCls": "inspeccion-shortcut",
+        "text": "Inspección",
+        "tooltip": "<b>Inspección - AMC</b>"
       },
       "paths": {
         "startmenu": "/"
