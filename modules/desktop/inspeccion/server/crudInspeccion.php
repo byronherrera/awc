@@ -38,7 +38,10 @@ function selectDenuncias()
     global $os;
 
     $columnaBusqueda = 'codigo_tramite';
-    $where = '';
+    //$where = '';
+
+    //forzamos que solo sea los asignados a inspeccion
+    $where = 'WHERE reasignacion = 3';
 
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
@@ -51,6 +54,7 @@ function selectDenuncias()
 
         //para el caso de busqueda por guia, recuperamos el id de la guia
         if ($columnaBusqueda == 'guia') {
+
             $sql = "SELECT id FROM amc_guias WHERE numero = '$campo'";
             $numguia = $os->db->conn->query($sql);
             if ($numguia) {
@@ -160,6 +164,8 @@ function selectDenuncias()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
+
+
     $sql = "SELECT * FROM amc_denuncias $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
