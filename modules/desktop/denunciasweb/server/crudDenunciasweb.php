@@ -37,7 +37,10 @@ function aprobarDenuncia()
     $data->remitente = $_POST["nombre"] . ' '.$_POST["apellido"];
 
     $data->asunto = $_POST["ampliaciondenuncia"];
-    $data->reasignacion = 2;
+
+    // se deja quemado que se envia a inspeccion
+    $data->reasignacion = 3;
+
     $data->descripcion_anexos = 'Denuncia Web, ' . addslashes($_POST["urldenuncia"]);
     $data->id_caracter_tramite = 1;
     $data->cedula = $_POST["cedula"];

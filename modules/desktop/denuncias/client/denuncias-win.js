@@ -802,8 +802,46 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 read: urlDenuncias + "crudDenuncias.php?operation=select",
                 update: urlDenuncias + "crudDenuncias.php?operation=update",
                 destroy: urlDenuncias + "crudDenuncias.php?operation=delete"
+            },
+            listeners: {
+                write: function(proxy, action, result, res, rs) {
+                    console.log ( action + ':->' + res.message);
+
+                    this.desktop = new Ext.Desktop(Ext.applyIf({
+                        app: this
+                    }, this.desktopConfig));
+
+                    var notifyWin = this.desktop.showNotification({
+                        html: 'Loading    ...'
+                        , title: 'Please wait'
+                    });
+
+                    notifyWin.setIconClass('icon-done');
+                    notifyWin.setTitle('Finalizado');
+                    notifyWin.setMessage( ' cargado.');
+                    this.desktop.hideNotification(notifyWin);
+                    notifyWin = null;
+
+                }
             }
         });
+
+//        Notification  animateFrom
+        function showNotification   (config){
+            var win = new Ext.ux.Notification(Ext.apply({
+                //animateTarget: this.taskbar.el,
+                animateTarget: this.el,
+                animateFrom: this.position,
+                animateFrom:'tr-br',
+                autoDestroy: true,
+                position: 'top',
+                hideDelay: 4000,
+                iconCls: 'icon-waiting',
+            }, config));
+            win.show();
+
+            return win;
+        }
 
         var readerDenuncias = new Ext.data.JsonReader({
             totalProperty: 'total',
@@ -838,6 +876,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             writer: writerDenuncias,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true
+
         });
         storeDenuncias = this.storeDenuncias;
         limitedenuncias = 100;
@@ -968,7 +1007,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         rowselect: function (sm, row, rec) {
                             /*cargar el formulario*/
                             // cargaDetalle(rec.id, this.formDenunciaswebDetalle, rec);
-
+                            console.log('111');
                             cargaDetalle(rec.id, this.formDenunciasDetalle, rec.get("envio_inspeccion"));
                             if (acceso) {
                                 if (rec.get("envio_inspeccion"))
@@ -979,6 +1018,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             ;
                             storeINST.load();
                         }
+
                     }
                 }),
             border: false,
@@ -2617,5 +2657,5 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
-    },
+    }
 });

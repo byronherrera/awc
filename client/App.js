@@ -195,7 +195,7 @@ Ext.extend(Ext.app.App, Ext.util.Observable, {
     		},
     		success: function(o){
     			notifyWin.setIconClass('icon-done');
-				notifyWin.setTitle('Finished');
+				notifyWin.setTitle('Finalizado');
 				notifyWin.setMessage(moduleName + ' cargado.');
 				this.desktop.hideNotification(notifyWin);
 				notifyWin = null;
