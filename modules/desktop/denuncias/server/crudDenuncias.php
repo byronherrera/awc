@@ -249,6 +249,14 @@ function updateDenuncias()
             $data->envio_inspeccion = 'true';
     }
 
+    $message = '';
+    if (isset($data->id_tipo_documento)) {
+        if ($data->id_tipo_documento == '1')
+            if (validarCedulaCorreo($data->id)) {
+                $message = 'Ingresar número de cédula y correo electrónico';
+            }
+    }
+
 
 // genero el listado de valores a insertar
     $cadenaDatos = '';
@@ -257,15 +265,41 @@ function updateDenuncias()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_denuncias SET  $cadenaDatos  WHERE amc_denuncias . id = '$data->id' ";
+    $sql = "UPDATE amc_denuncias SET  $cadenaDatos  WHERE amc_denuncias.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
+
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_denuncias actualizado exitosamente" : $sql->errorCode(),
-        "message" => $sql->errorCode() == 0 ? "Ubicación en amc_denuncias actualizado exitosamente" : $sql->errorCode()
+        "message" => $message
     ));
 }
+
+function validarCedulaCorreo($id) {
+    // true en caso que no exista ni correo ni cedula
+    // false  en caso que exista correo y cedula
+    //return false;
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT cedula, email FROM amc_denuncias WHERE id = $id";
+    $result = $os->db->conn->query($sql);
+
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $test = strlen($row['cedula']);
+    if (strlen($row['cedula']) == 0 ){
+
+        return true;
+    }
+    else {
+
+        return false;
+    }
+
+}
+
+
 
 function selectDenunciasForm()
 {
@@ -302,14 +336,15 @@ function updateDenunciasForm()
         $reasignacion = $_POST["reasignacion"];
     } else {
         //recuperamos la unidad en base a guia
-        if (isset ($_POST["guia"])) {
+        if ((isset ($_POST["guia"])) and ($_POST["guia"] !='')) {
             $valueGuia = $_POST["guia"];
             $os->db->conn->query("SET NAMES 'utf8'");
             $sql = "SELECT id_unidad FROM amc_guias WHERE id = $valueGuia ";
             $result = $os->db->conn->query($sql);
             $row = $result->fetch(PDO::FETCH_ASSOC);
             $reasignacion = $row ['id_unidad'];
-        }
+        } else
+            $reasignacion = '';
     }
     $guia = $_POST["guia"];
     $envio_inspeccion = $_POST["envio_inspeccion"];

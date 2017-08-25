@@ -19,6 +19,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
 
         var desktop = this.app.getDesktop();
+        var AppMsg =  new Ext.AppMsg({});
 
         var win = desktop.getWindow('grid-win-denuncias');
         var urlDenuncias = "modules/desktop/denuncias/server/";
@@ -793,9 +794,11 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         //fin mantenimiento DenunciasGuías
 
 
-// fin pestañas de mantenimiento
+        // fin pestañas de mantenimiento
 
         // inicio ventana denuncias
+
+
         var proxyDenuncias = new Ext.data.HttpProxy({
             api: {
                 create: urlDenuncias + "crudDenuncias.php?operation=insert",
@@ -847,6 +850,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             writer: writerDenuncias,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true
+
         });
         storeDenuncias = this.storeDenuncias;
         limitedenuncias = 100;
@@ -977,7 +981,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         rowselect: function (sm, row, rec) {
                             /*cargar el formulario*/
                             // cargaDetalle(rec.id, this.formDenunciaswebDetalle, rec);
-
                             cargaDetalle(rec.id, this.formDenunciasDetalle, rec.get("envio_inspeccion"));
                             if (acceso) {
                                 if (rec.get("envio_inspeccion"))
@@ -988,6 +991,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             ;
                             storeINST.load();
                         }
+
                     }
                 }),
             border: false,
@@ -1150,7 +1154,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         storeDocumentosReporte = this.storeDocumentosReporte
         this.gridDocumentosReporte = new Ext.grid.EditorGridPanel({
 
-            height: desktop.getWinHeight() -  238,
+            height: desktop.getWinHeight() - 238,
             autoScroll: true,
             store: this.storeDocumentosReporte,
             columns: [
@@ -1193,7 +1197,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 60
                 },
-{
+                {
                     header: 'Institución',
                     dataIndex: 'institucion',
                     sortable: true,
@@ -1823,8 +1827,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             });
 
 
-
-
             var checkHandler = function (item, checked) {
                 if (checked) {
                     var store = this.storeDenuncias;
@@ -2123,7 +2125,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     height: 300,
                                     minSize: 100,
                                     maxSize: 150,
-                                        margins: '0 0 0 0',
+                                    margins: '0 0 0 0',
                                     items: this.gridDenunciasSimple
                                 }
                             ]
@@ -2621,10 +2623,12 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    valueParams =   JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
                     window.location.href = 'modules/desktop/denuncias/server/descargaReporte.inc.php?param=' + valueParams;
                 }
             }
         });
     }
 });
+
+

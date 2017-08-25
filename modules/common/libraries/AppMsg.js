@@ -30,7 +30,7 @@ Ext.AppMsg = function(config) {
     if (!this.api.actions) {
         this.api.actions = {};
     }
-    
+
     Ext.onReady(this.onReady, this);
     
     Ext.AppMsg.superclass.constructor.apply(this, arguments);
