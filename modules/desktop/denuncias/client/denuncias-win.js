@@ -19,6 +19,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
 
         var desktop = this.app.getDesktop();
+        var AppMsg =  new Ext.AppMsg({});
 
         var win = desktop.getWindow('grid-win-denuncias');
         var urlDenuncias = "modules/desktop/denuncias/server/";

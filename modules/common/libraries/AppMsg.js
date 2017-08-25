@@ -41,12 +41,12 @@ Ext.extend(Ext.AppMsg, Ext.util.Observable, {
     /***
      * response status codes.
      */
-    STATUS_EXCEPTION :          'exception',
-    STATUS_VALIDATION_ERROR :   "validation",
-    STATUS_ERROR:               "error",
-    STATUS_NOTICE:              "notice",
-    STATUS_OK:                  "ok",
-    STATUS_HELP:                "help",
+    STATUS_EXCEPTION :          'Exception',
+    STATUS_VALIDATION_ERROR :   "Validación",
+    STATUS_ERROR:               "Error",
+    STATUS_NOTICE:              "Atención",
+    STATUS_OK:                  "Ok",
+    STATUS_HELP:                "Ayuda",
 
     /**
      * @cfg {Object} api

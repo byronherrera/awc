@@ -287,16 +287,12 @@ function validarCedulaCorreo($id) {
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);
-    $test = strlen($row['cedula']);
-    if (strlen($row['cedula']) == 0 ){
-
+    if ((strlen($row['cedula']) == 0 ) or (strlen($row['email']) == 0 )){
         return true;
     }
     else {
-
         return false;
     }
-
 }
 
 
@@ -336,15 +332,14 @@ function updateDenunciasForm()
         $reasignacion = $_POST["reasignacion"];
     } else {
         //recuperamos la unidad en base a guia
-        if ((isset ($_POST["guia"])) and ($_POST["guia"] !='')) {
+        if (isset ($_POST["guia"])) {
             $valueGuia = $_POST["guia"];
             $os->db->conn->query("SET NAMES 'utf8'");
             $sql = "SELECT id_unidad FROM amc_guias WHERE id = $valueGuia ";
             $result = $os->db->conn->query($sql);
             $row = $result->fetch(PDO::FETCH_ASSOC);
             $reasignacion = $row ['id_unidad'];
-        } else
-            $reasignacion = '';
+        }
     }
     $guia = $_POST["guia"];
     $envio_inspeccion = $_POST["envio_inspeccion"];
