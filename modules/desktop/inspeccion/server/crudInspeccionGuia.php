@@ -5,11 +5,15 @@ $os = new os();
 if (!$os->session_exists()) {
     die('No existe sesión!');
 }
+// inspeccion
 
+$unidad = 3;
 
 function selectDenunciasZonas()
 {
     global $os;
+    global $unidad;
+
 
     if (isset ($_POST['start']))
         $start = $_POST['start'];
@@ -27,14 +31,16 @@ function selectDenunciasZonas()
             amc_guias.unidad,
             amc_guias.creado,
             (SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name)  FROM qo_members WHERE id = id_member)  AS id_member ,
-            amc_guias.id
-            FROM amc_guias  ORDER BY creado DESC LIMIT $start, $limit";
+            amc_guias.id 
+            FROM amc_guias  
+            WHERE amc_guias.id_unidad = '$unidad' 
+            ORDER BY creado DESC LIMIT $start, $limit";
+
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
     }
-
 
     $sql = "SELECT count(*) AS total FROM amc_guias ";
     $result = $os->db->conn->query($sql);

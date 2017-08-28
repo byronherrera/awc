@@ -26,18 +26,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
         var textField = new Ext.form.TextField({allowBlank: false});
 
-        Ext.Ajax.request({
-            url: 'modules/common/combos/combos.php?tipo=usuario',
-            params: {
-                count: 1
-            },
-            // http success : code 200
-            success: function (response) {
-                obj = JSON.parse(response.responseText);
-                var usuarioLog = obj['data'];
-
-            }
-        });
 
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i:s') : '';
@@ -1269,6 +1257,10 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         if (!win) {
             var winWidth = desktop.getWinWidth();
             var winHeight = desktop.getWinHeight();
+
+            console.log (winWidth)
+            console.log (winHeight)
+
             this.seleccionDepar = 3;
 
             this.formDenunciasDetalle = new Ext.FormPanel({

@@ -257,8 +257,7 @@ function updateDenuncias()
             }
     }
 
-
-// genero el listado de valores a insertar
+    // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
         $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
