@@ -1999,20 +1999,18 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     triggerAction: 'all',
                                     mode: 'local',
                                     width: 250,
-                                    value: 'Seleccionar unidad',
+                                    value: 'Seleccionar Unidad',
                                     listeners: {
                                         'select': function (t) {
                                             isChecked = (Ext.getCmp('checkNoEnviados').getValue());
-                                            storeInspeccion.load({
-                                                params: {
-                                                    noenviados: isChecked,
-                                                    unidadfiltro: t.value
-                                                }
-                                            });
+                                            storeInspeccion.baseParams = {
+                                                noenviados: isChecked,
+                                                unidadfiltro: t.value
+                                            };
+                                            storeInspeccion.load();
+
                                         }
-
                                     }
-
                                 },
                                 {
                                     iconCls: 'excel-icon',
@@ -2354,7 +2352,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
     botonExportarReporte: function () {
 
-        if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar unidad')
+        if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar Unidad')
             Ext.Msg.show({
                 title: 'Advertencia',
                 msg: 'Seleccione unidad',

@@ -19,7 +19,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
 
         var desktop = this.app.getDesktop();
-        var AppMsg =  new Ext.AppMsg({});
+        var AppMsg = new Ext.AppMsg({});
 
         var win = desktop.getWindow('grid-win-denuncias');
         var urlDenuncias = "modules/desktop/denuncias/server/";
@@ -795,8 +795,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             listeners: {
                 write: function (proxy, action, result, res, rs) {
                     if (typeof res.message !== 'undefined') {
-                        if  (res.message != ''){
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message );
+                        if (res.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
                         }
                     }
                 }
@@ -835,10 +835,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             reader: readerDenuncias,
             writer: writerDenuncias,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true
+            remoteSort: true,
+            baseParams: {}
         });
         storeDenuncias = this.storeDenuncias;
         limitedenuncias = 100;
+
+        storeDenuncias.baseParams = {
+            limit: limitedenuncias
+        };
 
         this.gridDenuncias = new Ext.grid.EditorGridPanel({
             height: 160,
@@ -986,8 +991,10 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 pageSize: limitedenuncias,
                 store: storeDenuncias,
                 displayInfo: true,
-                displayMsg: 'Mostrando denuncias {0} - {1} of {2}',
-                emptyMsg: "No existen denuncias que mostrar"
+                displayMsg: 'Mostrando trámites  {0} - {1} of {2}',
+                emptyMsg: "No existen trámites que mostrar"
+                //filter: Ext.getCmp('tb_seleccionarUnidad').getValue()
+
             }),
 
             listeners: {
@@ -1139,7 +1146,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         storeDocumentosReporte = this.storeDocumentosReporte
         this.gridDocumentosReporte = new Ext.grid.EditorGridPanel({
 
-            height: desktop.getWinHeight() -  238,
+            height: desktop.getWinHeight() - 238,
             autoScroll: true,
             store: this.storeDocumentosReporte,
             columns: [
@@ -1182,7 +1189,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 60
                 },
-{
+                {
                     header: 'Institución',
                     dataIndex: 'institucion',
                     sortable: true,
@@ -1245,8 +1252,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 pageSize: 100,
                 store: this.storeDocumentosReporte,
                 displayInfo: true,
-                displayMsg: 'Mostrando denuncias {0} - {1} of {2}',
-                emptyMsg: "No existen denuncias que mostrar"
+                displayMsg: 'Mostrando guías {0} - {1} of {2}',
+                emptyMsg: "No existen guías que mostrar"
             }),
         });
         // fin datastore and datagrid in Guia
@@ -1258,8 +1265,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             var winWidth = desktop.getWinWidth();
             var winHeight = desktop.getWinHeight();
 
-            console.log (winWidth)
-            console.log (winHeight)
+            console.log(winWidth)
+            console.log(winHeight)
 
             this.seleccionDepar = 3;
 
@@ -1816,8 +1823,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             });
 
 
-
-
             var checkHandler = function (item, checked) {
                 if (checked) {
                     var store = this.storeDenuncias;
@@ -2011,7 +2016,10 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                         Ext.getCmp('tb_repoteDenuncias').setDisabled(!this.checked);
                                         //Ext.getCmp('tb_seleccionarUnidad').setDisabled(!this.checked);
                                         //Ext.getCmp('tb_seleccionarUnidad').getValue();
-                                        storeDenuncias.load({params: {noenviados: isChecked}});
+                                        //storeDenuncias.load({params: {noenviados: isChecked}});
+                                        storeDenuncias.baseParams = {
+                                            noenviados: isChecked                                        };
+                                        storeDenuncias.load();
                                         // if (!this.checked) {
                                         Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
                                         //}
@@ -2033,16 +2041,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     triggerAction: 'all',
                                     mode: 'local',
                                     width: 250,
-                                    value: 'Seleccionar unidad',
+                                    value: 'Seleccionar Unidad',
                                     listeners: {
                                         'select': function (t) {
                                             isChecked = (Ext.getCmp('checkNoEnviados').getValue());
-                                            storeDenuncias.load({
-                                                params: {
-                                                    noenviados: isChecked,
-                                                    unidadfiltro: t.value
-                                                }
-                                            });
+                                            storeDenuncias.baseParams = {
+                                                noenviados: isChecked,
+                                                unidadfiltro: t.value
+                                            };
+                                            storeDenuncias.load();
                                         }
 
                                     }
@@ -2116,7 +2123,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     height: 300,
                                     minSize: 100,
                                     maxSize: 150,
-                                        margins: '0 0 0 0',
+                                    margins: '0 0 0 0',
                                     items: this.gridDenunciasSimple
                                 }
                             ]
@@ -2269,6 +2276,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     ]
                 })
             });
+
         }
         win.show();
         function cargaDetalle(denuncias, forma, bloqueo) {
@@ -2392,8 +2400,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
     },
 
     botonExportarReporte: function () {
-
-        if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar unidad')
+        console.log (Ext.getCmp('tb_seleccionarUnidad').getValue());
+        if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar Unidad')
             Ext.Msg.show({
                 title: 'Advertencia',
                 msg: 'Seleccione unidad',
@@ -2614,7 +2622,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    valueParams =   JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
                     window.location.href = 'modules/desktop/denuncias/server/descargaReporte.inc.php?param=' + valueParams;
                 }
             }
