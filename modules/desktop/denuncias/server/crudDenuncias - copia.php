@@ -73,9 +73,9 @@ function selectDenuncias()
     if (isset($_POST['noenviados'])) {
         if ($_POST['noenviados'] == 'true') {
             if ($where == '') {
-                $where = " WHERE envio_inspeccion <> 'true'" . $unidadfiltro;
+                $where = " WHERE despacho_secretaria <> 'true'" . $unidadfiltro;
             } else {
-                $where = $where . " AND envio_inspeccion <> 'true'" .$unidadfiltro;
+                $where = $where . " AND despacho_secretaria <> 'true'" .$unidadfiltro;
             }
         }
     }
@@ -91,7 +91,7 @@ function selectDenuncias()
         $limit = 100;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    //$sql = "SELECT * FROM amc_denuncias $where ORDER BY envio_inspeccion, recepcion_documento DESC LIMIT $start, $limit";
+
     $sql = "SELECT * FROM amc_denuncias $where ORDER BY codigo_tramite DESC LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
@@ -118,7 +118,7 @@ function insertDenuncias()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
-    $data->envio_inspeccion = 'false';
+    $data->despacho_secretaria = 'false';
     $data->codigo_tramite = generaCodigoProcesoDenuncia();
     $data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
@@ -174,9 +174,9 @@ function updateDenuncias()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
 
-    if (isset($data->envio_inspeccion)) {
-        if (!$data->envio_inspeccion)
-            $data->envio_inspeccion = 0;
+    if (isset($data->despacho_secretaria)) {
+        if (!$data->despacho_secretaria)
+            $data->despacho_secretaria = 0;
     }
 
 
@@ -230,7 +230,7 @@ function updateDenunciasForm()
 
 
     $reasignacion = $_POST["reasignacion"];
-    $envio_inspeccion = $_POST["envio_inspeccion"];
+    $despacho_secretaria = $_POST["despacho_secretaria"];
     $descripcion_anexos = addslashes($_POST["descripcion_anexos"]);
     $id_caracter_tramite = $_POST["id_caracter_tramite"];
     $cantidad_fojas = $_POST["cantidad_fojas"];
@@ -239,9 +239,9 @@ function updateDenunciasForm()
 
     // se realiza la reasignación
     /*if ($reasignacion == 3)
-        $envio_inspeccion = 'true';
+        $despacho_secretaria = 'true';
     else
-        $envio_inspeccion = 'false';*/
+        $despacho_secretaria = 'false';*/
     // fin reasignacion
 
     //para el caso de denuncias se valida que exista cedula y correo
@@ -282,7 +282,7 @@ function updateDenunciasForm()
             cantidad_fojas = '$cantidad_fojas' ,
             cedula = '$cedula' ,
             email = '$email'  ,
-            envio_inspeccion = '$envio_inspeccion'  
+            despacho_secretaria = '$despacho_secretaria'  
          
           WHERE id = '$id' ";
     $sql = $os->db->conn->prepare($sql);

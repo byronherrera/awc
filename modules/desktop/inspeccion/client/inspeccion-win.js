@@ -763,8 +763,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 pageSize: 100,
                 store: this.storeInspeccionGuia,
                 displayInfo: true,
-                displayMsg: 'Mostrando inspeccion {0} - {1} of {2}',
-                emptyMsg: "No existen inspeccion que mostrar"
+                displayMsg: 'Mostrando trámite {0} - {1} de {2}',
+                emptyMsg: "No existen tramites que mostrar"
             }),
         });
 
@@ -811,7 +811,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'reasignacion', allowBlank: false},
                 {name: 'id_caracter_tramite', allowBlank: false},
                 {name: 'cantidad_fojas', allowBlank: false},
-                {name: 'envio_inspeccion', type: 'boolean', allowBlank: false}
+                {name: 'despacho_secretaria', type: 'boolean', allowBlank: false}
             ]
         });
         var writerInspeccion = new Ext.data.JsonWriter({
@@ -928,7 +928,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Despachado'
-                    , dataIndex: 'envio_inspeccion'
+                    , dataIndex: 'despacho_secretaria'
                     , align: 'center'
                     , falseText: 'No'
                     , menuDisabled: true
@@ -941,7 +941,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             viewConfig: {
                 forceFit: true,
                 getRowClass: function (record, index) {
-                    if (record.get('envio_inspeccion') == false) {
+                    if (record.get('despacho_secretaria') == false) {
                         return 'gold';
                     }
                 }
@@ -951,9 +951,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     singleSelect: true,
                     listeners: {
                         rowselect: function (sm, row, rec) {
-                            cargaDetalle(rec.id, this.formInspeccionDetalle, rec.get("envio_inspeccion"));
+                            cargaDetalle(rec.id, this.formInspeccionDetalle, rec.get("despacho_secretaria"));
                             if (acceso) {
-                                if (rec.get("envio_inspeccion"))
+                                if (rec.get("despacho_secretaria"))
                                     Ext.getCmp('tb_grabarinspeccion').setDisabled(true);
                                 else
                                     Ext.getCmp('tb_grabarinspeccion').setDisabled(false);
@@ -971,14 +971,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 pageSize: limiteinspeccion,
                 store: storeInspeccion,
                 displayInfo: true,
-                displayMsg: 'Mostrando inspeccion {0} - {1} of {2}',
+                displayMsg: 'Mostrando trámites {0} - {1} de {2}',
                 emptyMsg: "No existen inspeccion que mostrar"
             }),
 
             listeners: {
                 beforeedit: function (e) {
                     if (acceso) {
-                        if (e.record.get("envio_inspeccion")) {
+                        if (e.record.get("despacho_secretaria")) {
                             return false;
                         }
                         return true;
@@ -998,13 +998,43 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true
         });
-        storeInspeccionSimple = this.storeInspeccionSimple
+
+        storeInspeccionSimple = this.storeInspeccionSimple;
+
+
+        var checkboxSel = new Ext.grid.CheckboxSelectionModel({
+            checkOnly: true,
+            dataIndex: 'cantidad_fojas',
+            //dataIndex: 'id_caracter_tramite',
+
+            listeners: {
+                // On selection change, set enabled state of the removeButton
+                // which was placed into the GridPanel using the ref config
+                selectionchange: function (sm) {
+                    if(sm.getCount() > 0) {
+                        Ext.getCmp('tb_grabarRecepcionTramites').enable();
+                    }
+                    else {
+                        Ext.getCmp('tb_grabarRecepcionTramites').disable();
+                    }
+
+                   /* Ext.each(sm.getSelections(), function (item, index) {
+                        var record = sm.getSelections()[index];
+                        record.set("num_documento", "Test111");
+                    })
+                    console.log ('xxaxa');*/
+                }
+            }
+        })
+
         this.gridInspeccionSimple = new Ext.grid.EditorGridPanel({
+            id: 'gridInspeccionSimple',
             autoHeight: true,
             autoScroll: true,
             store: this.storeInspeccionSimple,
             columns: [
                 new Ext.grid.RowNumberer(),
+                checkboxSel,
                 {
                     header: 'Código',
                     dataIndex: 'codigo_tramite',
@@ -1073,28 +1103,26 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             viewConfig: {
                 forceFit: true
             },
-            sm: new Ext.grid.RowSelectionModel(
-                {
-                    singleSelect: true
-                }),
+            sm: checkboxSel,
             border: false,
             stripeRows: true,
             // paging bar on the bottom
             listeners: {
+
                 beforeedit: function (e) {
-                    if (acceso) {
-                        if (e.record.get("envio_inspeccion")) {
+                    /*    if (acceso) {
+                            if (e.record.get("despacho_secretaria")) {
+                                return false;
+                            }
+                            return true;
+                        } else {
                             return false;
-                        }
-                        return true;
-                    } else {
-                        return false;
+                        }*/
                     }
-                }
             }
         });
         // fin datastore and datagrid in Guia
-
+        var gridInspeccionSimple = this.gridInspeccionSimple
         // datastore and datagrid in Guia
         this.storeDocumentosReporte = new Ext.data.Store({
             id: "id",
@@ -1192,7 +1220,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Despachado'
-                    , dataIndex: 'envio_inspeccion'
+                    , dataIndex: 'despacho_secretaria'
                     , align: 'center'
                     , falseText: 'No'
                     , menuDisabled: true
@@ -1217,7 +1245,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 pageSize: 100,
                 store: this.storeDocumentosReporte,
                 displayInfo: true,
-                displayMsg: 'Mostrando inspeccion {0} - {1} of {2}',
+                displayMsg: 'Mostrando inspeccion {0} - {1} de {2}',
                 emptyMsg: "No existen inspeccion que mostrar"
             }),
         });
@@ -1261,13 +1289,13 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                 disabled: true,
                                 id: 'tb_grabarinspeccion'
                                 , formBind: true
-                            },
-                            '->',
-                            {
-                                text: 'Inspeccion anteriores:'
-                                , xtype: 'tbtext',
-                                id: 'textRecepcionAnteriores'
-                            }
+                            }/*,
+                             '->',
+                             {
+                             text: 'Inspeccion anteriores:'
+                             , xtype: 'tbtext',
+                             id: 'textRecepcionAnteriores'
+                             }*/
                         ],
                         items: [
                             {
@@ -1442,7 +1470,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                     listeners: {
                                                         change: function (field, newVal, oldVal) {
 
-                                                            if (field.getName() == 'envio_inspeccion') {
+                                                            if (field.getName() == 'despacho_secretaria') {
                                                                 if (oldVal == 'true') {
                                                                     if (newVal == 'false') {
                                                                         Ext.getCmp('tb_grabarinspeccion').setDisabled(false);
@@ -1513,11 +1541,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                     }, {
                                                         xtype: 'combo',
                                                         fieldLabel: 'Despachado',
-                                                        name: 'envio_inspeccion',
-                                                        id: 'envio_inspeccion',
+                                                        name: 'despacho_secretaria',
+                                                        id: 'despacho_secretaria',
                                                         anchor: '95%',
 
-                                                        hiddenName: 'envio_inspeccion',
+                                                        hiddenName: 'despacho_secretaria',
                                                         store: storeOFAC,
                                                         valueField: 'id',
                                                         displayField: 'nombre',
@@ -1920,7 +1948,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             this.targetFieldBtn = targetFieldBtn;
             win = desktop.createWindow({
                 id: 'grid-win-inspeccion',
-                title: 'Recepción Documentos',
+                title: 'Trámites Inspección',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'inspeccion-icon',
@@ -1933,111 +1961,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     activeTab: 0,
                     border: false,
                     items: [
-                        {
-                            autoScroll: true,
-                            title: 'General',
-                            closable: true,
-                            tbar: [
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addinspeccion,
-                                    iconCls: 'save-icon',
-                                    disabled: !acceso
-                                },
-                                '-',
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteinspeccion,
-                                    iconCls: 'delete-icon',
-                                    //disabled: this.app.isAllowedTo('accesosAdministradorIns', this.id) ? false : true
-                                    disabled: true
-                                },
-                                '-',
-                                {
-                                    iconCls: 'reload-icon',
-                                    handler: this.requestGridData,
-                                    scope: this,
-                                    text: 'Recargar Datos',
-                                    tooltip: 'Recargar datos'
-                                },
-                                '-',
-                                {
-                                    xtype: 'checkbox',
-                                    boxLabel: 'No despachados -- ',
-                                    id: 'checkNoEnviados',
-                                    name: 'noenviados',
-                                    checked: false,
-                                    inputValue: '1',
-                                    tooltip: 'Recargar datos',
-                                    disabled: !acceso,
-                                    cls: 'barramenu',
-                                    handler: function (checkbox, isChecked) {
-                                        Ext.getCmp('tb_repoteInspeccion').setDisabled(!this.checked);
-                                        //Ext.getCmp('tb_seleccionarUnidad').setDisabled(!this.checked);
-                                        //Ext.getCmp('tb_seleccionarUnidad').getValue();
-                                        storeInspeccion.load({params: {noenviados: isChecked}});
-                                        // if (!this.checked) {
-                                        Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
-                                        //}
-                                    }
-                                }, /*this.targetFieldBtn,*/
-                                {
-                                    xtype: 'combo',
-
-                                    fieldLabel: 'Reasignado a',
-                                    name: 'tb_reasignacion',
-                                    anchor: '95%',
-                                    id: 'tb_seleccionarUnidad',
-                                    /* disabled: true,*/
-                                    hiddenName: 'tb_reasignacion',
-                                    store: storeREATOT,
-                                    valueField: 'id',
-                                    displayField: 'nombre',
-                                    typeAhead: true,
-                                    triggerAction: 'all',
-                                    mode: 'local',
-                                    width: 250,
-                                    value: 'Seleccionar Unidad',
-                                    listeners: {
-                                        'select': function (t) {
-                                            isChecked = (Ext.getCmp('checkNoEnviados').getValue());
-                                            storeInspeccion.baseParams = {
-                                                noenviados: isChecked,
-                                                unidadfiltro: t.value
-                                            };
-                                            storeInspeccion.load();
-
-                                        }
-                                    }
-                                },
-                                {
-                                    iconCls: 'excel-icon',
-                                    handler: this.botonExportarReporte,
-                                    scope: this,
-                                    text: 'Generar Reporte',
-                                    tooltip: 'Se genera el reporte de los items',
-                                    id: 'tb_repoteInspeccion',
-                                    disabled: true
-                                },
-                                '-',
-                                '->'
-                                , {
-                                    text: 'Buscar por:'
-                                    , xtype: 'tbtext'
-                                }
-
-                                , searchFieldBtn
-                                , ' ', ' '
-                                , new QoDesk.QoAdmin.SearchField({
-                                    paramName: 'filterText'
-                                    , store: this.storeInspeccion
-                                })
-                            ],
-                            items: this.formInspeccionDetalle
-                        }
-                        ,
                         {
                             title: 'Recepción Guías',
                             closable: true,
@@ -2077,10 +2000,122 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     height: 300,
                                     minSize: 100,
                                     maxSize: 150,
+                                    tbar: [
+                                        {
+                                            text: 'Grabar Recepción Trámites'
+                                            , scope: this
+                                            , handler: this.grabardenuncias
+                                            , iconCls: 'save-icon'
+                                            , disabled: true
+                                            , id: 'tb_grabarRecepcionTramites'
+                                            , formBind: true
+                                        }
+                                    ],
                                     margins: '0 0 0 0',
                                     items: this.gridInspeccionSimple
                                 }
                             ]
+                        }
+
+                        , {
+                            autoScroll: true,
+                            title: 'General',
+                            closable: true,
+                            tbar: [
+                                /* {
+                                 text: 'Nuevo',
+                                 scope: this,
+                                 handler: this.addinspeccion,
+                                 iconCls: 'save-icon',
+                                 disabled: !acceso
+                                 },
+                                 '-',
+                                 {
+                                 text: "Eliminar",
+                                 scope: this,
+                                 handler: this.deleteinspeccion,
+                                 iconCls: 'delete-icon',
+                                 //disabled: this.app.isAllowedTo('accesosAdministradorIns', this.id) ? false : true
+                                 disabled: true
+                                 },
+                                 '-',*/
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridData,
+                                    scope: this,
+                                    text: 'Recargar Datos',
+                                    tooltip: 'Recargar datos'
+                                },
+                                '-',
+                                {
+                                    xtype: 'checkbox',
+                                    boxLabel: 'No recibidos -- ',
+                                    id: 'checkNoRecibidos',
+                                    name: 'noenviados',
+                                    checked: false,
+                                    inputValue: '1',
+                                    tooltip: 'Recargar datos',
+                                    disabled: !acceso,
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                        //   Ext.getCmp('tb_repoteInspeccion').setDisabled(!this.checked);
+                                        storeInspeccion.load({params: {noenviados: isChecked}});
+                                        //   Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
+                                    }
+                                }, /*this.targetFieldBtn,*/
+                                {
+                                    xtype: 'combo',
+
+                                    fieldLabel: 'Reasignado a',
+                                    name: 'tb_reasignacion',
+                                    anchor: '95%',
+                                    id: 'tb_seleccionarUnidad',
+                                    /* disabled: true,*/
+                                    hiddenName: 'tb_reasignacion',
+                                    store: storeREATOT,
+                                    valueField: 'id',
+                                    displayField: 'nombre',
+                                    typeAhead: true,
+                                    triggerAction: 'all',
+                                    mode: 'local',
+                                    width: 250,
+                                    value: 'Seleccionar Unidad',
+                                    listeners: {
+                                        'select': function (t) {
+                                            isChecked = (Ext.getCmp('checkNoRecibidos').getValue());
+                                            storeInspeccion.baseParams = {
+                                                noenviados: isChecked,
+                                                unidadfiltro: t.value
+                                            };
+                                            storeInspeccion.load();
+
+                                        }
+                                    }
+                                },
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarReporte,
+                                    scope: this,
+                                    text: 'Generar Reporte',
+                                    tooltip: 'Se genera el reporte de los items',
+                                    id: 'tb_repoteInspeccion',
+                                    disabled: true
+                                },
+                                '-',
+                                '->'
+                                , {
+                                    text: 'Buscar por:'
+                                    , xtype: 'tbtext'
+                                }
+
+                                , searchFieldBtn
+                                , ' ', ' '
+                                , new QoDesk.QoAdmin.SearchField({
+                                    paramName: 'filterText'
+                                    , store: this.storeInspeccion
+                                })
+                            ],
+                            items: this.formInspeccionDetalle
                         }
                         , {
                             autoScroll: true,
@@ -2194,7 +2229,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
                             //this.gridReportes
                         }
-
                         , {
                             autoScroll: true,
                             title: 'Procedimientos',
@@ -2224,7 +2258,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             ],
                             items: this.gridInspeccionProcedimientos
                         }
-
                     ]
                 })
             });
@@ -2237,12 +2270,13 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 params: {
                     id: inspeccion
                 },
-                success: function (response, opts) {
-                    mensaje = Ext.getCmp('textRecepcionAnteriores');
-                    if (response.findField('totaldocumentos').getValue() != '0')
-                        mensaje.setText('Total documentos anteriores: ' + response.findField('totaldocumentos').getValue())
-                    else
-                        mensaje.setText('')
+                success: function (response, opts) {/*
+                 // para el caso que existan denuncias anteriores
+                 mensaje = Ext.getCmp('textRecepcionAnteriores');
+                 if (response.findField('totaldocumentos').getValue() != '0')
+                 mensaje.setText('Total documentos anteriores: ' + response.findField('totaldocumentos').getValue())
+                 else
+                 mensaje.setText('')*/
                 }
             });
             bloquearLectura(forma, bloqueo);
@@ -2278,7 +2312,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             Ext.getCmp('observacion_secretaria').setReadOnly(activar);
 
 
-            Ext.getCmp('envio_inspeccion').setReadOnly(!acceso);
+            Ext.getCmp('despacho_secretaria').setReadOnly(!acceso);
             Ext.getCmp('guia').setReadOnly(!acceso);
 
 
@@ -2299,55 +2333,55 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 params: {
                     start: 0,
                     limit: limiteinspeccion,
-                    noenviados: Ext.getCmp('checkNoEnviados').getValue()
+                    noenviados: Ext.getCmp('checkNoRecibidos').getValue()
                 }
             });
         }, 500);
 
 
     },
-    deleteinspeccion: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridInspeccion.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeInspeccion.remove(rows);
-                }
-            }
-        });
-    },
-    addinspeccion: function () {
-        var inspeccion = new this.storeInspeccion.recordType({
-            codigo_tramite: ' ',
-            id_persona: ' ',
-            recepcion_documento: (new Date()),
-            id_tipo_documento: '2',
-            num_documento: 'S/N',
-            descripcion_anexos: '-',
-            institucion: '',
-            remitente: '',
-            reasignacion: '',
-            id_caracter_tramite: '1',
-            cantidad_fojas: '0',
-            envio_inspeccion: false
+    /*deleteinspeccion: function () {
+     Ext.Msg.show({
+     title: 'Confirmación',
+     msg: 'Está seguro de querer borrar?',
+     scope: this,
+     buttons: Ext.Msg.YESNO,
+     fn: function (btn) {
+     if (btn == 'yes') {
+     var rows = this.gridInspeccion.getSelectionModel().getSelections();
+     if (rows.length === 0) {
+     return false;
+     }
+     this.storeInspeccion.remove(rows);
+     }
+     }
+     });
+     },*/
+    /*addinspeccion: function () {
+     var inspeccion = new this.storeInspeccion.recordType({
+     codigo_tramite: ' ',
+     id_persona: ' ',
+     recepcion_documento: (new Date()),
+     id_tipo_documento: '2',
+     num_documento: 'S/N',
+     descripcion_anexos: '-',
+     institucion: '',
+     remitente: '',
+     reasignacion: '',
+     id_caracter_tramite: '1',
+     cantidad_fojas: '0',
+     despacho_secretaria: false
 
-        });
-        this.gridInspeccion.stopEditing();
-        this.storeInspeccion.insert(0, inspeccion);
-        this.gridInspeccion.startEditing(0, 0);
-        // this.cargaDetalle(rec.id, this.formInspeccionDetalle, rec.get("envio_inspeccion"));
-    },
+     });
+     this.gridInspeccion.stopEditing();
+     this.storeInspeccion.insert(0, inspeccion);
+     this.gridInspeccion.startEditing(0, 0);
+
+     },*/
     requestGridData: function () {
 
 
-        this.storeInspeccion.load({params: {noenviados: Ext.getCmp('checkNoEnviados').getValue()}});
+        this.storeInspeccion.load({params: {noenviados: Ext.getCmp('checkNoRecibidos').getValue()}});
     },
 
     botonExportarReporte: function () {
@@ -2370,7 +2404,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     if (btn == 'yes') {
                         window.location.href = 'modules/desktop/inspeccion/server/descargaInspeccionNuevas.inc.php?unidad=' + Ext.getCmp('tb_seleccionarUnidad').getValue();
                         setTimeout(function () {
-                            storeInspeccion.load({params: {noenviados: Ext.getCmp('checkNoEnviados').getValue()}});
+                            storeInspeccion.load({params: {noenviados: Ext.getCmp('checkNoRecibidos').getValue()}});
                         }, 1000);
 
                     }
@@ -2423,7 +2457,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         method: 'POST',
                         waitMsg: 'Saving data',
                         success: function (form, action) {
-                            storeInspeccion.load({params: {noenviados: Ext.getCmp('checkNoEnviados').getValue()}});
+                            storeInspeccion.load({params: {noenviados: Ext.getCmp('checkNoRecibidos').getValue()}});
                             Ext.getCmp('tb_grabarinspeccion').setDisabled(true);
                         },
                         failure: function (form, action) {

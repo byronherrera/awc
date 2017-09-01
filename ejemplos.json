@@ -1,6 +1,6 @@
 {
-  "id": "inspeccion",
-  "type": "desktop/inspeccion",
+  "id": "operativos",
+  "type": "desktop/operativos",
   "about": {
     "author": "",
     "description": "AMC Inspección.",
@@ -10,19 +10,18 @@
   },
   "server": {
     "methods": [
-      { "name": "accesosAdministrador", "description": "Full acceso" },
-      { "name": "accesosSecretaria", "description": "Full acceso" },
-      { "name": "accesosRecepción", "description": "Recepción" }
-
+      { "name": "accesosAdministradorIns", "description": "Administrador operativos" },
+      { "name": "accesosOperativos", "description": "Usuario opeativos" },
+      { "name": "accesosRecepciónIns", "description": "Recepción inspección" }
     ],
-    "class": "QoInspeccion",
-    "file": "desktop/inspeccion/inspeccion.php"
+    "class": "QoOperativos",
+    "file": "desktop/operativos/operativos.php"
   },
   "client": {
-    "class": "QoDesk.InspeccionWindow",
+    "class": "QoDesk.OperativosWindow",
     "css": [
       {
-        "directory": "desktop/inspeccion/client/resources/",
+        "directory": "desktop/operativos/client/resources/",
         "files": [ "styles.css" ]
       },
       {
@@ -32,13 +31,14 @@
     ],
     "javascript": [
       {
-        "directory": "desktop/inspeccion/client/",
-        "files": [  "inspeccion-win.js" ]
+        "directory": "common/libraries/",
+        "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
       },
       {
-        "directory": "common/libraries/",
-        "files": [ "datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
+        "directory": "desktop/operativos/client/",
+        "files": [  "operativos-win.js" ]
       },
+
       {
         "directory": "qwiki/admin/client/",
         "files": [ "QoAdmin.js" ]
@@ -50,10 +50,10 @@
     ],
     "launcher": {
       "config": {
-        "iconCls": "inspeccion-icon",
-        "shortcutIconCls": "inspeccion-shortcut",
-        "text": "Inspección",
-        "tooltip": "<b>Inspección - AMC</b>"
+        "iconCls": "operativos-icon",
+        "shortcutIconCls": "operativos-shortcut",
+        "text": "Operativos",
+        "tooltip": "<b>Operativos - AMC</b>"
       },
       "paths": {
         "startmenu": "/"

@@ -38,7 +38,7 @@ else
         cantidad_fojas,
         observacion_secretaria 
         FROM amc_denuncias 
-        WHERE $unidad like reasignacion AND  envio_inspeccion <> 'true' 
+        WHERE $unidad like reasignacion AND  despacho_secretaria <> 'true' 
         ORDER BY codigo_tramite";
 
 $result = $os->db->conn->query($sql);
@@ -174,7 +174,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     if (strlen($newIdGuia) > 0) {
         if (!$reimpresion) {
             $os->db->conn->query("SET NAMES 'utf8'");
-            $sql = "UPDATE amc_denuncias SET guia='$newIdGuia', envio_inspeccion = 'true' WHERE (id='" . $rowdetalle['id'] . "')";
+            $sql = "UPDATE amc_denuncias SET guia='$newIdGuia', despacho_secretaria = 'true' WHERE (id='" . $rowdetalle['id'] . "')";
             $os->db->conn->query($sql);
         }
     }

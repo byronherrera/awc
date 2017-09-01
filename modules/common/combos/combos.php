@@ -125,8 +125,8 @@ function comboUnidadesTotal()
 
     //$sql = "SELECT amc_unidades.id, CONCAT(amc_unidades.nombre, 'SSSS') AS nombre FROM amc_unidades WHERE activo = 1 ORDER BY id";
     $sql = "SELECT 
-                b.id, IF((SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND envio_inspeccion <> 'true' ) = 0,b.nombre,
-                (CONCAT(b.nombre, ' ( ',(SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND envio_inspeccion <> 'true' ), ' ) '))) AS nombre
+                b.id, IF((SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' ) = 0,b.nombre,
+                (CONCAT(b.nombre, ' ( ',(SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' ), ' ) '))) AS nombre
                 FROM amc_unidades b
                 WHERE b.activo = 1
                 ORDER BY b.id ";

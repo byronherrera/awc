@@ -1,45 +1,99 @@
 <?php
 /**
- * AMC
- *
- * Copyright (C)  2017
+ * PHPExcel
  *
  *
  * @category   PHPExcel
  * @package    PHPExcel
- * @copyright  Copyright (c) 2006 - 2015 PHPExcel (http://www.codeplex.com/PHPExcel)
+ * @copyright  Copyright (c) 2006 - 2012 PHPExcel (http://www.codeplex.com/PHPExcel)
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    1.0.0, 2017-06-15
+ * @version    1.7.7, 2012-05-19
  */
+
+/** Error reporting */
+error_reporting(E_ALL);
+
+/** Include PHPExcel */
+//echo dirname(__FILE__);
+require_once '../../../common/Classes/PHPExcel.php';
+require_once '../../../../server/os.php';
+
+$os = new os();
+if (!$os->session_exists()) {
+    die('No existe sesión!');
+}
+
+// si no existe unidad es para reimpresion se envia como parametro guia, obtenemos id unidad
+if (isset($_GET['param'])) {
+    $data = json_decode(stripslashes($_GET["param"]));
+}
+
+$today = date("Y-n-j-H-i-s");
+
+// para los reportes
+$where = '';
+if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_tipo_documento != '')) {
+    $tipo = $data->busqueda_tipo_documento;
+    if ($where == '') {
+        $where = "WHERE id_tipo_documento = $tipo ";
+    } else {
+        $where = $where . " AND id_tipo_documento = $tipo ";
+    }
+}
+if (isset($data->busqueda_institucion) and ($data->busqueda_institucion != '')) {
+    $tipo = $data->busqueda_institucion;
+    if ($where == '') {
+        $where = "WHERE institucion = '$tipo' ";
+    } else {
+        $where = $where . " AND institucion = '$tipo' ";
+    }
+}
+if (isset($data->busqueda_caracter_tramite) and ($data->busqueda_caracter_tramite != '')) {
+    $tipo = $data->busqueda_caracter_tramite;
+    if ($where == '') {
+        $where = "WHERE id_caracter_tramite = '$tipo' ";
+    } else {
+        $where = $where . " AND id_caracter_tramite = '$tipo' ";
+    }
+}
+
+if (isset($data->busqueda_guia) and ($data->busqueda_guia != '')) {
+    $tipo = $data->busqueda_guia;
+    if ($where == '') {
+        $where = "WHERE guia = '$tipo' ";
+    } else {
+        $where = $where . " AND guia = '$tipo' ";
+    }
+}
+
+if (isset($data->busqueda_reasignacion) and ($data->busqueda_reasignacion != '')) {
+    $tipo = $data->busqueda_reasignacion;
+    if ($where == '') {
+        $where = "WHERE reasignacion in ($tipo) ";
+    } else {
+        $where = $where . " AND reasignacion in ($tipo) ";
+    }
+}
+
+if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')) {
+    $fechainicio = $data->busqueda_fecha_inicio;
+    if (isset($data->busqueda_fecha_fin) and ($data->busqueda_fecha_fin != '')) {
+        $fechafin = $data->busqueda_fecha_fin;
+    } else {
+        $fechafin = date('Y\m\d H:i:s');;
+    }
+
+    if ($where == '') {
+        $where = "WHERE recepcion_documento between '$fechainicio' and '$fechafin'  ";
+    } else {
+        $where = $where . " AND recepcion_documento between '$fechainicio' and '$fechafin' ";
+    }
+}
+
 $os->db->conn->query("SET NAMES 'utf8'");
-if ($reimpresion)
-    $sql = "SELECT id, codigo_tramite, 
-        recepcion_documento,
-        id_tipo_documento,
-        num_documento,
-        remitente,
-        asunto,
-        descripcion_anexos,
-        id_caracter_tramite,
-        cantidad_fojas,
-        observacion_secretaria 
-        FROM amc_denuncias 
-        WHERE guia = $newIdGuia 
-        ORDER BY codigo_tramite";
-else
-    $sql = "SELECT id, codigo_tramite, 
-        recepcion_documento,
-        id_tipo_documento,
-        num_documento,
-        remitente,
-        asunto,
-        descripcion_anexos,
-        id_caracter_tramite,
-        cantidad_fojas,
-        observacion_secretaria 
-        FROM amc_denuncias 
-        WHERE $unidad like reasignacion AND  despacho_secretaria <> 'true' 
-        ORDER BY codigo_tramite";
+//$sql = "SELECT * FROM amc_denuncias $where ORDER BY codigo_tramite DESC ";
+$sql = "SELECT *, (select nombre FROM amc_unidades as a WHERE a.id in (b.reasignacion) LIMIT 1) as nombre_unidad  
+        FROM amc_denuncias as b $where ORDER BY b.codigo_tramite DESC";
 
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
@@ -60,56 +114,15 @@ $styleArray = array(
         )
     )
 );
-//get nombre largo unidad
-$nombreUnidad = '';
-$os->db->conn->query("SET NAMES 'utf8'");
-$sql = "SELECT nombre_completo FROM amc_unidades WHERE id = $unidad";
-$resultguia = $os->db->conn->query($sql);
-if ($resultguia) {
-    $row = $resultguia->fetch(PDO::FETCH_ASSOC);
-    if ($row) {
-        $nombreUnidad = $row['nombre_completo'];
-    }
-}
-
-//get numero de guia
-
-$os->db->conn->query("SET NAMES 'utf8'");
-$sql = "SELECT SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias ORDER BY a DESC, num DESC LIMIT 1";
-$resultguia = $os->db->conn->query($sql);
-if ($resultguia) {
-    $row = $resultguia->fetch(PDO::FETCH_ASSOC);
-    if ($row) {
-        if (!$reimpresion)
-            $numeroGuia = $row['num'] + 1;
 
 
-    }
-}
-$year = date("Y");
 
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':K' . $filaTitulo1);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':K' . $filaTitulo2);
 
-//$nombreUnidad
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO DOCUMENTOS RECIBIDOS");
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Secretaría General');
 
-if ($number_of_rows > 0) {
-    $newIdGuia = 'Vacio';
-    //insert  numero de guia
-    $os->db->conn->query("SET NAMES 'utf8'");
-
-    $idUsuario = $os->get_member_id();
-    if (!$reimpresion) {
-        $sql = "INSERT INTO amc_guias (numero, unidad, id_member, id_unidad) VALUES ('SGE-$year-$numeroGuia', '$nombreUnidad', '$idUsuario', '$unidad')";
-        $resultguia = $os->db->conn->query($sql);
-        $newIdGuia = $os->db->conn->lastInsertId();
-    }
-
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "GUIA DE DESPACHO N. SGE-$year-$numeroGuia");
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, $nombreUnidad);
-
-//insert  numero de guia
-}
 
 $os->db->conn->query("SET NAMES 'utf8'");
 $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
@@ -128,7 +141,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 1), $nombre
 $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 2), "SECRETARIA GENERAL");
 
 $objPHPExcel->getActiveSheet()->mergeCells('F' . ($filascabecera + 1) . ':I' . ($filascabecera + 2));
-$objPHPExcel->getActiveSheet()->setCellValue('F' . ($filascabecera + 1), $nombreUnidad);
+//$objPHPExcel->getActiveSheet()->setCellValue('F' . ($filascabecera + 1), $nombreUnidad);
 $objPHPExcel->getActiveSheet()->mergeCells('F' . $filascabecera . ':I' . $filascabecera);
 $objPHPExcel->getActiveSheet()->setCellValue('F' . $filascabecera, '__________________');
 
@@ -149,11 +162,15 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('G')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(8.71);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
 
+$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(8.71);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(8);
+$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16.30);
+
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('K')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(16.30);
 
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Codigo');
@@ -165,19 +182,14 @@ $objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Asunto');
 $objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Descripción del anexo');
 $objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Carácter de trámite');
 $objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Cantidad de fojas');
-$objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Observaciones');
+$objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Unidad');
+$objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Observaciones');
 
 $noExistenFilas = true;
 
 while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 // actualizar detalle idGuia
-    if (strlen($newIdGuia) > 0) {
-        if (!$reimpresion) {
-            $os->db->conn->query("SET NAMES 'utf8'");
-            $sql = "UPDATE amc_denuncias SET guia='$newIdGuia', despacho_secretaria = 'true' WHERE (id='" . $rowdetalle['id'] . "')";
-            $os->db->conn->query($sql);
-        }
-    }
+
 
     $noExistenFilas = false;
     switch ($rowdetalle['id_tipo_documento']) {
@@ -207,9 +219,10 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, strip_tags($rowdetalle['descripcion_anexos']));
     $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['id_caracter_tramite']);
     $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['cantidad_fojas']);
-    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['observacion_secretaria']);
+    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['nombre_unidad']);
+    $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['observacion_secretaria']);
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':J' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':K' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -235,7 +248,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:J100')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:K600')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -243,7 +256,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:J100')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:J30')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:K200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -251,17 +264,17 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:J30')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:J30')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:K30')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':J' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':K' . $filacabecera)->applyFromArray($styleArray);
 
 //$objPHPExcel->getActiveSheet()->getStyle('A7:D7')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
 
 // Set page orientation and size
 //echo date('H:i:s') , " Set page orientation and size" , PHP_EOL;
-$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT);
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
@@ -286,4 +299,28 @@ $objPHPExcel->getActiveSheet()->setShowGridLines(false);
 
 //echo date('H:i:s') , " Set orientation to landscape" , PHP_EOL;
 $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
-// luego de enviar la impresion se actualiza como enviado a inspeccion
+
+////////////////////////////////////////////////
+// se crea la cabecera de archivo y se lo graba al archivo
+header('Content-Type: application/xlsx');
+header('Content-Disposition: attachment;filename="export-documents-SGE-' . $today . '.xlsx"');
+header('Cache-Control: max-age=0');
+
+$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+$objWriter->save('php://output');
+exit;
+function quitar_tildes($cadena)
+{
+    $no_permitidas = array("á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "ñ", "À", "Ã", "Ì", "Ò", "Ù", "Ã™", "Ã ", "Ã¨", "Ã¬", "Ã²", "Ã¹", "ç", "Ç", "Ã¢", "ê", "Ã®", "Ã´", "Ã»", "Ã‚", "ÃŠ", "ÃŽ", "Ã”", "Ã›", "ü", "Ã¶", "Ã–", "Ã¯", "Ã¤", "«", "Ò", "Ã", "Ã„", "Ã‹");
+    $permitidas = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "n", "N", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "c", "C", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "u", "o", "O", "i", "a", "e", "U", "I", "A", "E");
+    $texto = str_replace($no_permitidas, $permitidas, $cadena);
+    return $texto;
+}
+
+function quitar_espacio($cadena)
+{
+    $no_permitidas = array(" ");
+    $permitidas = array("-");
+    $texto = str_replace($no_permitidas, $permitidas, $cadena);
+    return $texto;
+}

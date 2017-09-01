@@ -51266,16 +51266,16 @@ Ext.grid.EditorGridPanel = Ext.extend(Ext.grid.GridPanel, {
     
     autoEncode : false,
 
-    
-    
+
+
     trackMouseOver: false, 
 
-    
+
     initComponent : function(){
         Ext.grid.EditorGridPanel.superclass.initComponent.call(this);
 
         if(!this.selModel){
-            
+
             this.selModel = new Ext.grid.CellSelectionModel();
         }
 

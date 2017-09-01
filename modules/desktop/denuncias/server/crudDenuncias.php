@@ -59,7 +59,7 @@ function selectDenuncias()
                     $campo = $row['id'];
                 }
             }
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%' AND envio_inspeccion = 'true'";
+            $where = " WHERE $columnaBusqueda LIKE '%$campo%' AND despacho_secretaria = 'true'";
         } else
             $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
     }
@@ -76,9 +76,9 @@ function selectDenuncias()
     if (isset($_POST['noenviados'])) {
         if ($_POST['noenviados'] == 'true') {
             if ($where == '') {
-                $where = " WHERE envio_inspeccion <> 'true'";
+                $where = " WHERE despacho_secretaria <> 'true'";
             } else {
-                $where = $where . " AND envio_inspeccion <> 'true' ";
+                $where = $where . " AND despacho_secretaria <> 'true' ";
             }
         }
     }
@@ -186,7 +186,7 @@ function insertDenuncias()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
-    $data->envio_inspeccion = 'false';
+    $data->despacho_secretaria = 'false';
     $data->codigo_tramite = generaCodigoProcesoDenuncia();
     $data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
@@ -242,11 +242,11 @@ function updateDenuncias()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
 
-    if (isset($data->envio_inspeccion)) {
-        if (!$data->envio_inspeccion)
-            $data->envio_inspeccion = 'false';
+    if (isset($data->despacho_secretaria)) {
+        if (!$data->despacho_secretaria)
+            $data->despacho_secretaria = 'false';
         else
-            $data->envio_inspeccion = 'true';
+            $data->despacho_secretaria = 'true';
     }
 
     $message = '';
@@ -341,19 +341,14 @@ function updateDenunciasForm()
         }
     }
     $guia = $_POST["guia"];
-    $envio_inspeccion = $_POST["envio_inspeccion"];
+    $despacho_secretaria = $_POST["despacho_secretaria"];
     $descripcion_anexos = addslashes($_POST["descripcion_anexos"]);
     $id_caracter_tramite = $_POST["id_caracter_tramite"];
     $cantidad_fojas = $_POST["cantidad_fojas"];
     $cedula = $_POST["cedula"];
     $email = $_POST["email"];
 
-    // se realiza la reasignación
-    /*if ($reasignacion == 3)
-        $envio_inspeccion = 'true';
-    else
-        $envio_inspeccion = 'false';*/
-    // fin reasignacion
+
 
     //para el caso de denuncias se valida que exista cedula y correo
     if ($id_tipo_documento == 1) {
@@ -394,7 +389,7 @@ function updateDenunciasForm()
             cedula = '$cedula' ,
             email = '$email'  ,
             guia = '$guia'  ,
-            envio_inspeccion = '$envio_inspeccion'  
+            despacho_secretaria = '$despacho_secretaria'  
          
           WHERE id = '$id' ";
     $sql = $os->db->conn->prepare($sql);

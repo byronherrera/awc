@@ -58,7 +58,7 @@ Ext.onReady(function(){
                 expander,
                 {id:'company',header: "Company", width: 40, dataIndex: 'company'},
                 {header: "Price", renderer: Ext.util.Format.usMoney, dataIndex: 'price'},
-                {header: "Change", dataIndex: 'change'},
+                {header: "Cambio", dataIndex: 'change'},
                 {header: "% Change", dataIndex: 'pctChange'},
                 {header: "Last Updated", renderer: Ext.util.Format.dateRenderer('m/d/Y'), dataIndex: 'lastChange'}
             ]
@@ -93,8 +93,8 @@ Ext.onReady(function(){
             columns: [
                 sm,
                 {id:'company',header: "Company", width: 200, dataIndex: 'company'},
-                {header: "Price", renderer: Ext.util.Format.usMoney, dataIndex: 'price'},
-                {header: "Change", dataIndex: 'change'},
+                {header: "Precion", renderer: Ext.util.Format.usMoney, dataIndex: 'price'},
+                {header: "Cambio", dataIndex: 'change'},
                 {header: "% Change", dataIndex: 'pctChange'},
                 {header: "Last Updated", width: 135, renderer: Ext.util.Format.dateRenderer('m/d/Y'), dataIndex: 'lastChange'}
             ]
@@ -104,7 +104,7 @@ Ext.onReady(function(){
         width:600,
         height:300,
         frame:true,
-        title:'Framed with Checkbox Selection and Horizontal Scrolling',
+        title:'Ejemplo',
         iconCls:'icon-grid',
         renderTo: document.body
     });
@@ -119,9 +119,9 @@ Ext.onReady(function(){
         }),
         cm: new xg.ColumnModel([
             new xg.RowNumberer(),
-            {id:'company',header: "Company", width: 40, sortable: true, dataIndex: 'company'},
+            {id:'company',header: "Empresa", width: 40, sortable: true, dataIndex: 'company'},
             {header: "Price", width: 20, sortable: true, renderer: Ext.util.Format.usMoney, dataIndex: 'price'},
-            {header: "Change", width: 20, sortable: true, dataIndex: 'change'},
+            {header: "Cambio", width: 20, sortable: true, dataIndex: 'change'},
             {header: "% Change", width: 20, sortable: true, dataIndex: 'pctChange'},
             {header: "Last Updated", width: 20, sortable: true, renderer: Ext.util.Format.dateRenderer('m/d/Y'), dataIndex: 'lastChange'}
         ]),
@@ -160,9 +160,9 @@ Ext.onReady(function(){
         }),
         cm: new xg.ColumnModel([
             sm2,
-            {id:'company',header: "Company", width: 40, sortable: true, dataIndex: 'company'},
-            {header: "Price", width: 20, sortable: true, renderer: Ext.util.Format.usMoney, dataIndex: 'price'},
-            {header: "Change", width: 20, sortable: true, dataIndex: 'change'},
+            {id:'company',header: "Empresa", width: 40, sortable: true, dataIndex: 'company'},
+            {header: "Precio", width: 20, sortable: true, renderer: Ext.util.Format.usMoney, dataIndex: 'price'},
+            {header: "Cambio", width: 20, sortable: true, dataIndex: 'change'},
             {header: "% Change", width: 20, sortable: true, dataIndex: 'pctChange'},
             {header: "Last Updated", width: 20, sortable: true, renderer: Ext.util.Format.dateRenderer('m/d/Y'), dataIndex: 'lastChange'}
         ]),
@@ -174,7 +174,7 @@ Ext.onReady(function(){
         columnLines: true,
 
         // inline buttons
-        buttons: [{text:'Save'},{text:'Cancel'}],
+        buttons: [ ],
         buttonAlign:'center',
 
         // inline toolbars
