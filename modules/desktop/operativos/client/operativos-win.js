@@ -12,11 +12,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
     },
 
     createWindow: function () {
-        var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
+        var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
         var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
-        var accesosRecepciónIns = this.app.isAllowedTo('accesosRecepciónIns', this.id);
+        // estado no usado
+        //var accesosRecepciónIns = this.app.isAllowedTo('accesosRecepciónOpe', this.id);
 
-        var acceso = (accesosAdministradorIns || accesosOperativos || accesosRecepciónIns) ? true : false
+        //var acceso = (accesosAdministradorIns || accesosOperativos || accesosRecepciónIns) ? true : false
+        var acceso = (accesosAdministradorIns || accesosOperativos ) ? true : false
 
         var desktop = this.app.getDesktop();
         var AppMsg = new Ext.AppMsg({});
@@ -33,8 +35,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
 // inicio combos secretaria
 
-        //inicio combo tipo documento  TID
-        storeTID = new Ext.data.JsonStore({
+        //inicio combo tipo documento  OPTID
+        storeOPTID = new Ext.data.JsonStore({
             root: 'documento',
             fields: ['id', 'nombre'],
             autoLoad: true,
@@ -46,9 +48,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var comboTID = new Ext.form.ComboBox({
-            id: 'comboTID',
-            store: storeTID,
+        var comboOPTID = new Ext.form.ComboBox({
+            id: 'comboOPTID',
+            store: storeOPTID,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
@@ -57,19 +59,19 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             allowBlank: false
         });
 
-        function personaTipoDocumento(id) {
-            var index = storeTID.find('id', id);
+        function operativosTipoDocumento(id) {
+            var index = storeOPTID.find('id', id);
             if (index > -1) {
-                var record = storeTID.getAt(index);
+                var record = storeOPTID.getAt(index);
                 return record.get('nombre');
             }
         }
 
-        //fin combo tipo documento  TID
+        //fin combo tipo documento  OPTID
 
         //inicio combo activo
 
-        storeOFAC = new Ext.data.JsonStore({
+        storeOPOFAC = new Ext.data.JsonStore({
             root: 'users',
             fields: ['id', 'nombre'],
             autoLoad: true,
@@ -82,19 +84,19 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var comboOFAC = new Ext.form.ComboBox({
-            id: 'comboOFAC',
-            store: storeOFAC,
+        var comboOPOFAC = new Ext.form.ComboBox({
+            id: 'comboOPOFAC',
+            store: storeOPOFAC,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
             mode: 'local'
         });
 
-        function despachadoActivo(id) {
-            var index = storeOFAC.find('id', id);
+        function operativosDespachadoActivo(id) {
+            var index = storeOPOFAC.find('id', id);
             if (index > -1) {
-                var record = storeOFAC.getAt(index);
+                var record = storeOPOFAC.getAt(index);
                 return record.get('nombre');
             }
         }
@@ -102,8 +104,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         //fin combo activo
 
 
-        //inicio combo reasignacion  REA
-        storeREA = new Ext.data.JsonStore({
+        //inicio combo reasignacion  OPREA
+        storeOPREA = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre', 'orden'],
             autoLoad: true,
@@ -115,10 +117,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }],
         });
 
-        storeREA.sort('orden', 'ASC');
-        var comboREA = new Ext.form.ComboBox({
-            id: 'comboREA',
-            store: storeREA,
+        storeOPREA.sort('orden', 'ASC');
+        var comboOPREA = new Ext.form.ComboBox({
+            id: 'comboOPREA',
+            store: storeOPREA,
             valueField: 'id',
             displayField: 'nombre',
             mode: 'local',
@@ -126,10 +128,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             allowBlank: false
         });
 
-        function departamentoReasignacion(id) {
-            var index = storeREA.find('id', id);
+        function operativosDepartamentoReasignacion(id) {
+            var index = storeOPREA.find('id', id);
             if (index > -1) {
-                var record = storeREA.getAt(index);
+                var record = storeOPREA.getAt(index);
                 return record.get('nombre');
             } else {
                 return ''
@@ -137,9 +139,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         }
 
-        //fin combo reasignacion REA
-        //inicio combo reasignacion  REATOT
-        storeREATOT = new Ext.data.JsonStore({
+        //fin combo reasignacion OPREA
+        //inicio combo reasignacion  OPREATOT
+        storeOPREATOT = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
@@ -147,25 +149,25 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
 
-        var comboREATOT = new Ext.form.ComboBox({
-            id: 'comboREATOT',
-            store: storeREATOT,
+        var comboOPREATOT = new Ext.form.ComboBox({
+            id: 'comboOPREATOT',
+            store: storeOPREATOT,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
             mode: 'local'
         });
 
-        function departamentoREATOTsignacion(id) {
-            var index = storeREATOT.find('id', id);
-            var record = storeREATOT.getAt(index);
+        function departamentoOPREATOTsignacion(id) {
+            var index = storeOPREATOT.find('id', id);
+            var record = storeOPREATOT.getAt(index);
             return record.get('nombre');
         }
 
-        //fin combo reasignacion REATOT
+        //fin combo reasignacion OPREATOT
 
-        //inicio combo guia  REAGUIA
-        storeREAGUIA = new Ext.data.JsonStore({
+        //inicio combo guia  OPREAGUIA
+        storeOPREAGUIA = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
@@ -173,22 +175,22 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
 
-        var comboREAGUIA = new Ext.form.ComboBox({
-            id: 'comboREAGUIA',
-            store: storeREAGUIA,
+        var comboOPREAGUIA = new Ext.form.ComboBox({
+            id: 'comboOPREAGUIA',
+            store: storeOPREAGUIA,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
             mode: 'local'
         });
 
-        function departamentoREAGUIAS(id) {
-            var index = storeREAGUIA.find('id', id);
-            var record = storeREAGUIA.getAt(index);
+        function departamentoOPREAGUIAS(id) {
+            var index = storeOPREAGUIA.find('id', id);
+            var record = storeOPREAGUIA.getAt(index);
             return record.get('nombre');
         }
 
-        //fin combo reasignacion REAGUIA
+        //fin combo reasignacion OPREAGUIA
 
 
         //inicio combo caracter del tramite CDT
@@ -353,8 +355,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo actividad  ACTA
 
-        //inicio combo Estado Recepcion Información Operativos ESREA
-        storeESREA = new Ext.data.JsonStore({
+        //inicio combo Estado Recepcion Información Operativos ESOPREA
+        storeESOPREA = new Ext.data.JsonStore({
             root: 'datos',
             fields: ['id', 'nombre'],
             autoLoad: true,
@@ -367,9 +369,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var comboESREA = new Ext.form.ComboBox({
-            id: 'comboESREA',
-            store: storeESREA,
+        var comboESOPREA = new Ext.form.ComboBox({
+            id: 'comboESOPREA',
+            store: storeESOPREA,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
@@ -377,14 +379,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function estadoRecepcionAdm(id) {
-            var index = storeESREA.find('id', id);
+            var index = storeESOPREA.find('id', id);
             if (index > -1) {
-                var record = storeESREA.getAt(index);
+                var record = storeESOPREA.getAt(index);
                 return record.get('nombre');
             }
         }
 
-        //fin combo Estado Recepcion Información Operativos ESREA
+        //fin combo Estado Recepcion Información Operativos ESOPREA
 
         //inicio combo procedimientos PRSA
         storePRSA = new Ext.data.JsonStore({
@@ -799,7 +801,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'codigo_tramite', allowBlank: false},
+                {name: 'codigo_operativo', allowBlank: false},
                 {name: 'id_persona', allowBlank: false},
                 {name: 'recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'id_tipo_documento', allowBlank: false},
@@ -811,7 +813,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'reasignacion', allowBlank: false},
                 {name: 'id_caracter_tramite', allowBlank: false},
                 {name: 'cantidad_fojas', allowBlank: false},
-                {name: 'despacho_secretaria', type: 'boolean', allowBlank: false}
+                {name: 'finalizado', type: 'boolean', allowBlank: false}
             ]
         });
         var writerOperativos = new Ext.data.JsonWriter({
@@ -836,7 +838,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 new Ext.grid.RowNumberer(),
                 {
                     header: 'Código',
-                    dataIndex: 'codigo_tramite',
+                    dataIndex: 'codigo_operativo',
                     sortable: true,
                     width: 24
                 },
@@ -863,7 +865,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_tipo_documento',
                     sortable: true,
                     width: 28,
-                    editor: comboTID, renderer: personaTipoDocumento
+                    editor: comboOPTID, renderer: operativosTipoDocumento
                 },
                 {
                     header: 'N. documento',
@@ -924,11 +926,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'reasignacion',
                     sortable: true,
                     width: 60,
-                    editor: comboREA, renderer: departamentoReasignacion
+                    editor: comboOPREA, renderer: operativosDepartamentoReasignacion
                 },
                 {
                     header: 'Despachado'
-                    , dataIndex: 'despacho_secretaria'
+                    , dataIndex: 'finalizado'
                     , align: 'center'
                     , falseText: 'No'
                     , menuDisabled: true
@@ -941,7 +943,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             viewConfig: {
                 forceFit: true,
                 getRowClass: function (record, index) {
-                    if (record.get('despacho_secretaria') == false) {
+                    if (record.get('finalizado') == false) {
                         return 'gold';
                     }
                 }
@@ -951,9 +953,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     singleSelect: true,
                     listeners: {
                         rowselect: function (sm, row, rec) {
-                            cargaDetalle(rec.id, this.formOperativosDetalle, rec.get("despacho_secretaria"));
+                            cargaDetalle(rec.id, this.formOperativosDetalle, rec.get("finalizado"));
                             if (acceso) {
-                                if (rec.get("despacho_secretaria"))
+                                if (rec.get("finalizado"))
                                     Ext.getCmp('tb_grabaroperativos').setDisabled(true);
                                 else
                                     Ext.getCmp('tb_grabaroperativos').setDisabled(false);
@@ -978,7 +980,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             listeners: {
                 beforeedit: function (e) {
                     if (acceso) {
-                        if (e.record.get("despacho_secretaria")) {
+                        if (e.record.get("finalizado")) {
                             return false;
                         }
                         return true;
@@ -1037,7 +1039,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 checkboxSel,
                 {
                     header: 'Código',
-                    dataIndex: 'codigo_tramite',
+                    dataIndex: 'codigo_operativo',
                     sortable: true,
                     width: 20
                 },
@@ -1060,7 +1062,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_tipo_documento',
                     sortable: true,
                     width: 30,
-                    renderer: personaTipoDocumento
+                    renderer: operativosTipoDocumento
                 },
                 {
                     header: 'N. documento',
@@ -1111,7 +1113,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                 beforeedit: function (e) {
                     /*    if (acceso) {
-                            if (e.record.get("despacho_secretaria")) {
+                            if (e.record.get("finalizado")) {
                                 return false;
                             }
                             return true;
@@ -1143,7 +1145,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 new Ext.grid.RowNumberer(),
                 {
                     header: 'Código',
-                    dataIndex: 'codigo_tramite',
+                    dataIndex: 'codigo_operativo',
                     sortable: true,
                     width: 20
                 },
@@ -1166,7 +1168,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_tipo_documento',
                     sortable: true,
                     width: 30,
-                    renderer: personaTipoDocumento
+                    renderer: operativosTipoDocumento
                 },
                 {
                     header: 'N. documento',
@@ -1216,11 +1218,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'reasignacion',
                     sortable: true,
                     width: 60,
-                    renderer: departamentoReasignacion
+                    renderer: operativosDepartamentoReasignacion
                 },
                 {
                     header: 'Despachado'
-                    , dataIndex: 'despacho_secretaria'
+                    , dataIndex: 'finalizado'
                     , align: 'center'
                     , falseText: 'No'
                     , menuDisabled: true
@@ -1322,7 +1324,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     },
                                                     {
                                                         fieldLabel: 'Código trámite',
-                                                        name: 'codigo_tramite',
+                                                        name: 'codigo_operativo',
                                                         anchor: '95%',
                                                         readOnly: true,
                                                         cls: 'sololectura'
@@ -1363,7 +1365,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                         anchor: '95%',
 
                                                         hiddenName: 'id_tipo_documento',
-                                                        store: storeTID,
+                                                        store: storeOPTID,
                                                         valueField: 'id',
                                                         displayField: 'nombre',
                                                         typeAhead: true,
@@ -1470,7 +1472,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     listeners: {
                                                         change: function (field, newVal, oldVal) {
 
-                                                            if (field.getName() == 'despacho_secretaria') {
+                                                            if (field.getName() == 'finalizado') {
                                                                 if (oldVal == 'true') {
                                                                     if (newVal == 'false') {
                                                                         Ext.getCmp('tb_grabaroperativos').setDisabled(false);
@@ -1499,7 +1501,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                      anchor: '95%',
 
                                                      hiddenName: 'reasignacion',
-                                                     store: storeREA,
+                                                     store: storeOPREA,
                                                      valueField: 'id',
                                                      displayField: 'nombre',
                                                      typeAhead: true,
@@ -1513,7 +1515,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                         name: 'reasignacion',
                                                         width: 300,
                                                         height: 130,
-                                                        allowBlank: false, store: storeREA,
+                                                        allowBlank: false, store: storeOPREA,
                                                         hiddenName: 'reasignacion',
                                                         displayField: 'nombre',
                                                         valueField: 'id',
@@ -1532,7 +1534,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                         anchor: '95%',
 
                                                         hiddenName: 'guia',
-                                                        store: storeREAGUIA,
+                                                        store: storeOPREAGUIA,
                                                         valueField: 'id',
                                                         displayField: 'nombre',
                                                         typeAhead: true,
@@ -1541,12 +1543,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     }, {
                                                         xtype: 'combo',
                                                         fieldLabel: 'Despachado',
-                                                        name: 'despacho_secretaria',
-                                                        id: 'despacho_secretaria',
+                                                        name: 'finalizado',
+                                                        id: 'finalizado',
                                                         anchor: '95%',
 
-                                                        hiddenName: 'despacho_secretaria',
-                                                        store: storeOFAC,
+                                                        hiddenName: 'finalizado',
+                                                        store: storeOPOFAC,
                                                         valueField: 'id',
                                                         displayField: 'nombre',
                                                         typeAhead: true,
@@ -1575,7 +1577,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                         anchor: '95%',
                                                         hiddenName: 'estado_recepcion_informacion',
 
-                                                        store: storeESREA,
+                                                        store: storeESOPREA,
                                                         valueField: 'id',
                                                         displayField: 'nombre',
                                                         typeAhead: true,
@@ -1731,7 +1733,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_tipo_documento',
 
                                 anchor: '95%',
-                                store: storeTID,
+                                store: storeOPTID,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -1780,7 +1782,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 id: 'busqueda_guia',
                                 anchor: '95%',
                                 hiddenName: 'busqueda_guia',
-                                store: storeREAGUIA,
+                                store: storeOPREAGUIA,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -1800,7 +1802,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 name: 'busqueda_reasignacion',
                                 width: 300,
                                 height: 100,
-                                allowBlank: false, store: storeREA,
+                                allowBlank: false, store: storeOPREA,
                                 hiddenName: 'busqueda_reasignacion',
                                 displayField: 'nombre',
                                 valueField: 'id',
@@ -1834,7 +1836,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'codigo_tramite',
+                            key: 'codigo_operativo',
                             scope: this,
                             text: 'Código trámite'
                         },
@@ -1961,7 +1963,107 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     activeTab: 0,
                     border: false,
                     items: [
-                        {
+                         {
+                            autoScroll: true,
+                            title: 'General',
+                            closable: true,
+                            tbar: [
+                                 {
+                                 text: 'Nuevo',
+                                 scope: this,
+                                 handler: this.addoperativos,
+                                 iconCls: 'save-icon',
+                                 disabled: !acceso
+                                 },
+                                 '-',
+                                 {
+                                 text: "Eliminar",
+                                 scope: this,
+                                 handler: this.deleteoperativos,
+                                 iconCls: 'delete-icon',
+                                 //disabled: this.app.isAllowedTo('accesosAdministradorIns', this.id) ? false : true
+                                 disabled: true
+                                 },
+                                 '-',
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridData,
+                                    scope: this,
+                                    text: 'Recargar Datos',
+                                    tooltip: 'Recargar datos'
+                                },
+                                '-',
+                                {
+                                    xtype: 'checkbox',
+                                    boxLabel: 'No finalizados -- ',
+                                    id: 'checkNoRecibidos',
+                                    name: 'noenviados',
+                                    checked: true,
+                                    inputValue: '1',
+                                    tooltip: 'Recargar datos',
+                                    disabled: !acceso,
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                        //   Ext.getCmp('tb_repoteOperativos').setDisabled(!this.checked);
+                                        storeOperativos.load({params: {finalizados: isChecked}});
+                                        //   Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
+                                    }
+                                }, /*this.targetFieldBtn,*/
+                                {
+                                    xtype: 'combo',
+
+                                    fieldLabel: 'Reasignado a',
+                                    name: 'tb_reasignacion',
+                                    anchor: '95%',
+                                    id: 'tb_seleccionarUnidad',
+                                    /* disabled: true,*/
+                                    hiddenName: 'tb_reasignacion',
+                                    store: storeOPREATOT,
+                                    valueField: 'id',
+                                    displayField: 'nombre',
+                                    typeAhead: true,
+                                    triggerAction: 'all',
+                                    mode: 'local',
+                                    width: 250,
+                                    value: 'Seleccionar Unidad',
+                                    listeners: {
+                                        'select': function (t) {
+                                            isChecked = (Ext.getCmp('checkNoRecibidos').getValue());
+                                            storeOperativos.baseParams = {
+                                                finalizados: isChecked,
+                                                unidadfiltro: t.value
+                                            };
+                                            storeOperativos.load();
+
+                                        }
+                                    }
+                                },
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarReporte,
+                                    scope: this,
+                                    text: 'Generar Reporte',
+                                    tooltip: 'Se genera el reporte de los items',
+                                    id: 'tb_repoteOperativos',
+                                    disabled: true
+                                },
+                                '-',
+                                '->'
+                                , {
+                                    text: 'Buscar por:'
+                                    , xtype: 'tbtext'
+                                }
+
+                                , searchFieldBtn
+                                , ' ', ' '
+                                , new QoDesk.QoAdmin.SearchField({
+                                    paramName: 'filterText'
+                                    , store: this.storeOperativos
+                                })
+                            ],
+                            items: this.formOperativosDetalle
+                        }
+                        , {
                             title: 'Recepción Guías',
                             closable: true,
                             layout: 'border',
@@ -2015,107 +2117,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     items: this.gridOperativosSimple
                                 }
                             ]
-                        }
-
-                        , {
-                            autoScroll: true,
-                            title: 'General',
-                            closable: true,
-                            tbar: [
-                                /* {
-                                 text: 'Nuevo',
-                                 scope: this,
-                                 handler: this.addoperativos,
-                                 iconCls: 'save-icon',
-                                 disabled: !acceso
-                                 },
-                                 '-',
-                                 {
-                                 text: "Eliminar",
-                                 scope: this,
-                                 handler: this.deleteoperativos,
-                                 iconCls: 'delete-icon',
-                                 //disabled: this.app.isAllowedTo('accesosAdministradorIns', this.id) ? false : true
-                                 disabled: true
-                                 },
-                                 '-',*/
-                                {
-                                    iconCls: 'reload-icon',
-                                    handler: this.requestGridData,
-                                    scope: this,
-                                    text: 'Recargar Datos',
-                                    tooltip: 'Recargar datos'
-                                },
-                                '-',
-                                {
-                                    xtype: 'checkbox',
-                                    boxLabel: 'No recibidos -- ',
-                                    id: 'checkNoRecibidos',
-                                    name: 'noenviados',
-                                    checked: false,
-                                    inputValue: '1',
-                                    tooltip: 'Recargar datos',
-                                    disabled: !acceso,
-                                    cls: 'barramenu',
-                                    handler: function (checkbox, isChecked) {
-                                        //   Ext.getCmp('tb_repoteOperativos').setDisabled(!this.checked);
-                                        storeOperativos.load({params: {noenviados: isChecked}});
-                                        //   Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
-                                    }
-                                }, /*this.targetFieldBtn,*/
-                                {
-                                    xtype: 'combo',
-
-                                    fieldLabel: 'Reasignado a',
-                                    name: 'tb_reasignacion',
-                                    anchor: '95%',
-                                    id: 'tb_seleccionarUnidad',
-                                    /* disabled: true,*/
-                                    hiddenName: 'tb_reasignacion',
-                                    store: storeREATOT,
-                                    valueField: 'id',
-                                    displayField: 'nombre',
-                                    typeAhead: true,
-                                    triggerAction: 'all',
-                                    mode: 'local',
-                                    width: 250,
-                                    value: 'Seleccionar Unidad',
-                                    listeners: {
-                                        'select': function (t) {
-                                            isChecked = (Ext.getCmp('checkNoRecibidos').getValue());
-                                            storeOperativos.baseParams = {
-                                                noenviados: isChecked,
-                                                unidadfiltro: t.value
-                                            };
-                                            storeOperativos.load();
-
-                                        }
-                                    }
-                                },
-                                {
-                                    iconCls: 'excel-icon',
-                                    handler: this.botonExportarReporte,
-                                    scope: this,
-                                    text: 'Generar Reporte',
-                                    tooltip: 'Se genera el reporte de los items',
-                                    id: 'tb_repoteOperativos',
-                                    disabled: true
-                                },
-                                '-',
-                                '->'
-                                , {
-                                    text: 'Buscar por:'
-                                    , xtype: 'tbtext'
-                                }
-
-                                , searchFieldBtn
-                                , ' ', ' '
-                                , new QoDesk.QoAdmin.SearchField({
-                                    paramName: 'filterText'
-                                    , store: this.storeOperativos
-                                })
-                            ],
-                            items: this.formOperativosDetalle
                         }
                         , {
                             autoScroll: true,
@@ -2282,7 +2283,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             bloquearLectura(forma, bloqueo);
         };
 
-
         function bloquearLectura(forma, activar) {
             //en caso que se pueda editar .. revisamos permiso por perfil
 
@@ -2312,32 +2312,26 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             Ext.getCmp('observacion_secretaria').setReadOnly(activar);
 
 
-            Ext.getCmp('despacho_secretaria').setReadOnly(!acceso);
+            Ext.getCmp('finalizado').setReadOnly(!acceso);
             Ext.getCmp('guia').setReadOnly(!acceso);
 
 
-            if (accesosRecepciónIns)
-                Ext.getCmp('reasignacion').disable();
-            else {
                 if (!activar)
                     Ext.getCmp('reasignacion').enable();
                 else
                     Ext.getCmp('reasignacion').disable();
-            }
 
         };
-
 
         setTimeout(function () {
             this.storeOperativos.load({
                 params: {
                     start: 0,
                     limit: limiteoperativos,
-                    noenviados: Ext.getCmp('checkNoRecibidos').getValue()
+                    finalizados: Ext.getCmp('checkNoRecibidos').getValue()
                 }
             });
         }, 500);
-
 
     },
     /*deleteoperativos: function () {
@@ -2359,7 +2353,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
      },*/
     /*addoperativos: function () {
      var operativos = new this.storeOperativos.recordType({
-     codigo_tramite: ' ',
+     codigo_operativo: ' ',
      id_persona: ' ',
      recepcion_documento: (new Date()),
      id_tipo_documento: '2',
@@ -2370,7 +2364,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
      reasignacion: '',
      id_caracter_tramite: '1',
      cantidad_fojas: '0',
-     despacho_secretaria: false
+     finalizado: false
 
      });
      this.gridOperativos.stopEditing();
@@ -2381,7 +2375,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
     requestGridData: function () {
 
 
-        this.storeOperativos.load({params: {noenviados: Ext.getCmp('checkNoRecibidos').getValue()}});
+        this.storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
     },
 
     botonExportarReporte: function () {
@@ -2404,7 +2398,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     if (btn == 'yes') {
                         window.location.href = 'modules/desktop/operativos/server/descargaOperativosNuevas.inc.php?unidad=' + Ext.getCmp('tb_seleccionarUnidad').getValue();
                         setTimeout(function () {
-                            storeOperativos.load({params: {noenviados: Ext.getCmp('checkNoRecibidos').getValue()}});
+                            storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
                         }, 1000);
 
                     }
@@ -2457,7 +2451,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         method: 'POST',
                         waitMsg: 'Saving data',
                         success: function (form, action) {
-                            storeOperativos.load({params: {noenviados: Ext.getCmp('checkNoRecibidos').getValue()}});
+                            storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
                             Ext.getCmp('tb_grabaroperativos').setDisabled(true);
                         },
                         failure: function (form, action) {

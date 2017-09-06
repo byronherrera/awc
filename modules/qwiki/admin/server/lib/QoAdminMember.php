@@ -198,9 +198,9 @@ class QoAdminMember {
             // loop thru each data object
             for($i = 0, $len = count($data); $i < $len; $i++){
                // loop thru the objects key/values to build sql
-                if (!isset($data[$i]->active))  {
-                    $data[$i]->active = 0;
-                } else {
+                if (isset($data[$i]->active))  {
+                    /*  $data[$i]->active = 0;
+                  } else {*/
                     if ($data[$i]->active == false)  $data[$i]->active = 0;
                     if ($data[$i]->active == true)  $data[$i]->active = 1;
                 }

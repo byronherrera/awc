@@ -24,6 +24,4 @@
 }
 .gold  { background-color: bisque !important;}
 
-.x-combo-list-inner, .x-combo-list {
-    width: 220px !important;
-}
+ .x-combo-list-inner, .x-combo-list {min-width: 220px !important;}
