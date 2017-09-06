@@ -466,7 +466,7 @@ QoDesk.QoAdmin.Members = Ext.extend(Ext.grid.EditorGridPanel, {
 
                   this.store.commitChanges();
                   this.setSaveBtnDisabled(true);
-                  Ext.MessageBox.alert('Alert', 'Be sure to add new members to a group!');
+                  Ext.MessageBox.alert('Alert', 'No olvide agregar los usuarios al grupo correspondiente!');
                }
             }else{
                Ext.MessageBox.alert('Warning', 'Lost connection to the server!');

@@ -103,7 +103,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo activo
 
-
         //inicio combo reasignacion  OPREA
         storeOPREA = new Ext.data.JsonStore({
             root: 'data',
@@ -245,7 +244,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=personalsecretaria'
+            url: 'modules/common/combos/combos.php?tipo=personaloperativos'
 
         });
 
@@ -445,240 +444,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
 // inicio pestañas de mantenimiento
 
-
-        //inicio mantenimiento Operativos Procedimientos
-
-        var proxyOperativosProcedimientos = new Ext.data.HttpProxy({
-            api: {
-                create: urlOperativos + "crudOperativosProcedimientos.php?operation=insert",
-                read: urlOperativos + "crudOperativosProcedimientos.php?operation=select",
-                update: urlOperativos + "crudOperativosProcedimientos.php?operation=update",
-                destroy: urlOperativos + "crudOperativosProcedimientos.php?operation=delete"
-            }
-        });
-
-        var readerOperativosProcedimientos = new Ext.data.JsonReader({
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id', allowBlank: false},
-                {name: 'nombre', allowBlank: false},
-                {name: 'observacion', allowBlank: false}
-            ]
-        });
-
-        var writerOperativosProcedimientos = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeOperativosProcedimientos = new Ext.data.Store({
-            id: "id",
-            proxy: proxyOperativosProcedimientos,
-            reader: readerOperativosProcedimientos,
-            writer: writerOperativosProcedimientos,
-            autoSave: true
-        });
-        this.storeOperativosProcedimientos.load();
-
-        this.gridOperativosProcedimientos = new Ext.grid.EditorGridPanel({
-
-            autoHeight: true,
-            autoScroll: true,
-            store: this.storeOperativosProcedimientos, columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'ID',
-                    dataIndex: 'id',
-                    sortable: true,
-                    width: 10
-                },
-                {
-                    header: 'Nombre',
-                    dataIndex: 'nombre',
-                    sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Observación',
-                    dataIndex: 'observacion',
-                    sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-            ],
-            viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
-            border: false,
-            stripeRows: true
-        });
-
-        // fin OperativosProcedimientos
-
-        //inicio mantenimiento OperativosZonas
-
-        var proxyOperativosZonas = new Ext.data.HttpProxy({
-            api: {
-                create: urlOperativos + "crudOperativosZonas.php?operation=insert",
-                read: urlOperativos + "crudOperativosZonas.php?operation=select",
-                update: urlOperativos + "crudOperativosZonas.php?operation=update",
-                destroy: urlOperativos + "crudOperativosZonas.php?operation=delete"
-            }
-        });
-
-        var readerOperativosZonas = new Ext.data.JsonReader({
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id', allowBlank: false},
-                {name: 'nombre', allowBlank: false},
-                {name: 'activo', allowBlank: false}
-            ]
-        });
-
-        var writerOperativosZonas = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeOperativosZonas = new Ext.data.Store({
-            id: "id",
-            proxy: proxyOperativosZonas,
-            reader: readerOperativosZonas,
-            writer: writerOperativosZonas,
-            autoSave: true
-        });
-        this.storeOperativosZonas.load();
-
-        this.gridOperativosZonas = new Ext.grid.EditorGridPanel({
-            autoHeight: true,
-            autoScroll: true,
-            store: this.storeOperativosZonas, columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'ID',
-                    dataIndex: 'id',
-                    sortable: true,
-                    width: 10
-                },
-                {
-                    header: 'Nombre',
-                    dataIndex: 'nombre',
-                    sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Activo'
-                    , dataIndex: 'activo'
-                    , editor: {xtype: 'checkbox'}
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , sortable: true
-                    , width: 50
-                    , xtype: 'booleancolumn'
-                }
-            ],
-            viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
-            border: false,
-            stripeRows: true
-        });
-        //fin mantenimiento OperativosZonas
-
-        //inicio mantenimiento OperativosReasignacion
-        var proxyOperativosReasignacion = new Ext.data.HttpProxy({
-            api: {
-                create: urlOperativos + "crudOperativosReasignacion.php?operation=insert",
-                read: urlOperativos + "crudOperativosReasignacion.php?operation=select",
-                update: urlOperativos + "crudOperativosReasignacion.php?operation=update",
-                destroy: urlOperativos + "crudOperativosReasignacion.php?operation=delete"
-            }
-        });
-
-        var readerOperativosReasignacion = new Ext.data.JsonReader({
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id', allowBlank: false},
-                {name: 'nombre', allowBlank: false},
-                {name: 'nombre_completo', allowBlank: false},
-                {name: 'orden', allowBlank: false},
-                {name: 'activo', allowBlank: false}
-            ]
-        });
-
-        var writerOperativosReasignacion = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeOperativosReasignacion = new Ext.data.Store({
-            id: "id",
-            proxy: proxyOperativosReasignacion,
-            reader: readerOperativosReasignacion,
-            writer: writerOperativosReasignacion,
-            autoSave: true
-        });
-        this.storeOperativosReasignacion.load();
-
-        this.gridOperativosReasignacion = new Ext.grid.EditorGridPanel({
-            autoHeight: true,
-            autoScroll: true,
-            store: this.storeOperativosReasignacion, columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'ID',
-                    dataIndex: 'id',
-                    sortable: true,
-                    width: 10
-                },
-                {
-                    header: 'Nombre',
-                    dataIndex: 'nombre',
-                    sortable: true,
-                    width: 50,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Nombre completo',
-                    dataIndex: 'nombre_completo',
-                    sortable: true,
-                    width: 80,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Activo'
-                    , dataIndex: 'activo'
-                    , editor: {xtype: 'checkbox'}
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , sortable: true
-                    , width: 50
-                    , xtype: 'booleancolumn'
-                }, {
-                    header: 'Orden',
-                    dataIndex: 'orden',
-                    sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-            ],
-            viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
-            border: false,
-            stripeRows: true
-        });
-        //fin mantenimiento OperativosReasignacion
 
         //inicio mantenimiento OperativosGuia
         var proxyOperativosGuia = new Ext.data.HttpProxy({
@@ -2074,16 +1839,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Recargar Datos'
 
-                                }/*,
-                                 {
-                                 iconCls: 'excel-icon',
-                                 handler: this.botonExportarReporteReimpresion,
-                                 scope: this,
-                                 text: 'Generar Reporte',
-                                 tooltip: 'Se genera el reporte de la guía seleccionada',
-                                 id: 'tb_repoteOperativosGuias',
-                                 disabled: !acceso
-                                 }*/
+                                }
                             ],
                             items: [
                                 {
@@ -2118,67 +1874,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ]
                         }
-                        , {
-                            autoScroll: true,
-                            title: 'Unidades',
-                            closable: true,
-                            disabled: this.app.isAllowedTo('accesosAdministradorIns', this.id) ? false : true,
-                            tbar: [
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addOperativosReasignacion,
-                                    iconCls: 'save-icon'
-                                },
-                                '-',
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteOperativosReasignacion,
-                                    iconCls: 'delete-icon'
-                                },
-                                '-', {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataOperativosReasignacion,
-                                    scope: this,
-                                    text: 'Recargar Datos'
-                                }
-                            ],
-                            items: this.gridOperativosReasignacion
-                        }
-                        , {
-                            autoScroll: true,
-                            title: 'Zonas',
-                            closable: true,
-                            disabled: this.app.isAllowedTo('accesosAdministradorIns', this.id) ? false : true,
-                            tbar: [
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addOperativosZonas,
-                                    iconCls: 'save-icon'
-                                },
-                                '-',
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteOperativosZonas,
-                                    iconCls: 'delete-icon'
-                                },
-                                '-', {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataOperativosZonas,
-                                    scope: this,
-                                    text: 'Recargar Datos'
-                                }
-                            ],
-                            items: this.gridOperativosZonas
-                        }
+
+
                         , {
                             title: 'Reportes',
                             closable: true,
                             layout: 'border',
-                            disabled: this.app.isAllowedTo('accesosOperativos', this.id) ? false : true,
+                            //disabled: this.app.isAllowedTo('accesosOperativos', this.id) ? false : true,
                             tbar: [
                                 {
                                     iconCls: 'reload-icon',
@@ -2230,35 +1932,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                             //this.gridReportes
                         }
-                        , {
-                            autoScroll: true,
-                            title: 'Procedimientos',
-                            closable: true,
-                            disabled: this.app.isAllowedTo('accesosAdministradorIns', this.id) ? false : true,
 
-                            tbar: [
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addoperativosProcedimientos,
-                                    iconCls: 'save-icon'
-                                },
-                                '-',
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteoperativosProcedimientos,
-                                    iconCls: 'delete-icon'
-                                },
-                                '-', {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataOperativosProcedimientos,
-                                    scope: this,
-                                    text: 'Recargar Datos'
-                                }
-                            ],
-                            items: this.gridOperativosProcedimientos
-                        }
                     ]
                 })
             });
@@ -2479,101 +2153,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             , buttons: Ext.Msg.OK
         });
     },
-    deleteoperativosProcedimientos: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridOperativosProcedimientos.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeOperativosProcedimientos.remove(rows);
-                }
-            }
-        });
-    },
-    addoperativosProcedimientos: function () {
-        var operativosProcedimientos = new this.storeOperativosProcedimientos.recordType({
-            id: ' ',
-            nombre: '',
-            observacion: ''
-        });
-        this.gridOperativosProcedimientos.stopEditing();
-        this.storeOperativosProcedimientos.insert(0, operativosProcedimientos);
-        this.gridOperativosProcedimientos.startEditing(0, 0);
-    },
-    requestGridDataOperativosProcedimientos: function () {
-        this.storeOperativosProcedimientos.load();
-    },
 
-    deleteOperativosZonas: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridOperativosZonas.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeOperativosZonas.remove(rows);
-                }
-            }
-        });
-    },
-    addOperativosZonas: function () {
-        var OperativosZonas = new this.storeOperativosZonas.recordType({
-            id: ' ',
-            nombre: '',
-            activo: '1'
-        });
-        this.gridOperativosZonas.stopEditing();
-        this.storeOperativosZonas.insert(0, OperativosZonas);
-        this.gridOperativosZonas.startEditing(0, 0);
-    },
-    requestGridDataOperativosZonas: function () {
-        this.storeOperativosZonas.load();
-    },
-
-    deleteOperativosReasignacion: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridOperativosReasignacion.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeOperativosReasignacion.remove(rows);
-                }
-            }
-        });
-    },
-    addOperativosReasignacion: function () {
-        var OperativosReasignacion = new this.storeOperativosReasignacion.recordType({
-            id: ' ',
-            nombre: '',
-            activo: '1'
-        });
-        this.gridOperativosReasignacion.stopEditing();
-        this.storeOperativosReasignacion.insert(0, OperativosReasignacion);
-        this.gridOperativosReasignacion.startEditing(0, 0);
-    },
-    requestGridDataOperativosReasignacion: function () {
-        this.storeOperativosReasignacion.load();
-    },
-    requestGridDataOperativosGuia: function () {
-        this.storeOperativosGuia.load();
-    },
     requestGridDataDocumentoReporte: function () {
         this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
         this.storeDocumentosReporte.load();
