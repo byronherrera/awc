@@ -1362,7 +1362,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                         typeAhead: true,
                                                         triggerAction: 'all',
                                                         mode: 'local'
-                                                    }, {
+                                                    },
+                                                    {
                                                         xtype: 'combo',
                                                         fieldLabel: 'Despachado',
                                                         name: 'finalizado',
