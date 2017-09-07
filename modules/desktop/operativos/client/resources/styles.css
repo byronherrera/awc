@@ -15,3 +15,5 @@
 .x-toolbar-cell .x-form-checkbox  {margin-top: 0px !important;}
 .gold  { background-color: bisque !important;}
 .x-combo-list-inner, .x-combo-list* {min-width: 220px !important;}
+.x-checkboxcombo-list-inner, .x-checkboxcombo-list* {min-width: 220px !important;}
+

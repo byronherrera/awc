@@ -30,6 +30,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
 
         function formatDate(value) {
+            return value ? value.dateFormat('Y-m-d H:i') : '';
+        }
+        function formatDateFull(value) {
             return value ? value.dateFormat('Y-m-d H:i:s') : '';
         }
 
@@ -42,35 +45,40 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 documento: [
-                    {"id": 2, "nombre": "Comunicados"},
-                    {"id": 1, "nombre": "Operativos"}
+                    {"id": 1, "nombre": "Licenciamiento"},
+                    {"id": 2, "nombre": "Espacio Público"}
                 ]
             }
         });
 
-        var comboOPTID = new Ext.form.ComboBox({
-            id: 'comboOPTID',
+        var comboOPTID = new Ext.ux.form.CheckboxCombo({
+            width: 250,
+            mode: 'local',
             store: storeOPTID,
             valueField: 'id',
             displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local',
-            forceSelection: true,
-            allowBlank: false
+            allowBlank: false,
+            listeners: {
+                'change': function(cmb, arr) {
+                }
+            }
         });
 
-        function operativosTipoDocumento(id) {
-            var index = storeOPTID.find('id', id);
-            if (index > -1) {
+
+        function operativosTipoOperativos(id) {
+            var nombres = id.split(",");
+            retorno = '';
+            for (var i = 1; i <= nombres.length; i++) {
+                index = storeOPTID.find('id', i);
                 var record = storeOPTID.getAt(index);
-                return record.get('nombre');
+                retorno =  record.get('nombre') + ',' + retorno
             }
+            return retorno
         }
 
         //fin combo tipo documento  OPTID
 
         //inicio combo activo
-
         storeOPOFAC = new Ext.data.JsonStore({
             root: 'users',
             fields: ['id', 'nombre'],
@@ -102,6 +110,41 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo activo
+
+
+        //inicio combo nivel complejidad
+        storeOPNICO = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 'true', "nombre": "Si"},
+                    {"id": 'false', "nombre": "No"},
+                    {"id": '', "nombre": "No"}
+                ]
+            }
+        });
+
+        var comboOPNICO = new Ext.form.ComboBox({
+            id: 'comboOPNICO',
+            store: storeOPNICO,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function operativosDespachadoActivo(id) {
+            var index = storeOPNICO.find('id', id);
+            if (index > -1) {
+                var record = storeOPNICO.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo nivel complejidad
+
 
         //inicio combo reasignacion  OPREA
         storeOPREA = new Ext.data.JsonStore({
@@ -568,9 +611,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             fields: [
                 {name: 'codigo_operativo', allowBlank: false},
                 {name: 'id_persona', allowBlank: false},
-                {name: 'recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'id_tipo_documento', allowBlank: false},
-                {name: 'num_documento', allowBlank: false},
+                {name: 'fecha_inicio_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'id_tipo_control', allowBlank: false},
+                
+                {name: 'id_nivel_complejidad', allowBlank: false},
                 {name: 'remitente', allowBlank: false},
                 {name: 'asunto', allowBlank: false},
                 {name: 'institucion', allowBlank: true},
@@ -597,7 +642,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         limiteoperativos = 100;
 
         this.gridOperativos = new Ext.grid.EditorGridPanel({
-            height: 160,
+            height: 200,
             store: this.storeOperativos,
             columns: [
                 new Ext.grid.RowNumberer(),
@@ -608,36 +653,48 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     width: 24
                 },
                 {
-                    header: 'Persona recepta',
-                    dataIndex: 'id_persona',
+                    header: 'Fecha inicio',
+                    dataIndex: 'fecha_inicio_planificacion',
                     sortable: true,
-                    width: 30,
-                    renderer: personaReceptaDenuncia
-                },
-                {
-                    header: 'Instrucción trámites',
-                    dataIndex: 'recepcion_documento',
-                    sortable: true,
-                    width: 42,
+                    width: 50,
                     renderer: formatDate,
                     editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i:s'
+                        timeFormat: 'H:i'
                     })
                 },
                 {
-                    header: 'Tipo documento',
-                    dataIndex: 'id_tipo_documento',
+                    header: 'Fecha Fin',
+                    dataIndex: 'fecha_fin_planificacion',
                     sortable: true,
-                    width: 28,
-                    editor: comboOPTID, renderer: operativosTipoDocumento
+                    width: 50,
+                    renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({
+                        dateFormat: 'Y-m-d',
+                        timeFormat: 'H:i'
+                    })
                 },
                 {
-                    header: 'N. documento',
-                    dataIndex: 'num_documento',
+                    header: 'Tipo de control',
+                    dataIndex: 'id_tipo_control',
+                    sortable: true,
+                    width: 40,
+                    editor: comboOPTID, renderer: operativosTipoOperativos
+                },
+                {
+                    header: 'Nivel complejidad',
+                    dataIndex: 'id_nivel_complejidad',
                     sortable: true,
                     width: 38,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    editor: comboOPTID, renderer: operativosTipoOperativos
+                },
+                {
+                    header: 'Elaborado',
+                    dataIndex: 'id_persona',
+                    sortable: true,
+                    width: 30,
+                    editor: comboPRD,
+                    renderer: personaReceptaDenuncia
                 },
                 {
                     header: 'Remitente',
@@ -787,7 +844,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                    /* Ext.each(sm.getSelections(), function (item, index) {
                         var record = sm.getSelections()[index];
-                        record.set("num_documento", "Test111");
+                        record.set("id_nivel_complejidad", "Test111");
                     })
                     console.log ('xxaxa');*/
                 }
@@ -809,7 +866,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     width: 20
                 },
                 {
-                    header: 'Persona recepta',
+                    header: '2Persona recepta',
                     dataIndex: 'id_persona',
                     sortable: true,
                     width: 35,
@@ -817,21 +874,21 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Fecha recepción',
-                    dataIndex: 'recepcion_documento',
+                    dataIndex: 'fecha_inicio_planificacion',
                     sortable: true,
                     width: 45,
                     renderer: formatDate
                 },
                 {
                     header: 'Tipo documento',
-                    dataIndex: 'id_tipo_documento',
+                    dataIndex: 'id_tipo_control',
                     sortable: true,
                     width: 30,
-                    renderer: operativosTipoDocumento
+                    renderer: operativosTipoOperativos
                 },
                 {
                     header: 'N. documento',
-                    dataIndex: 'num_documento',
+                    dataIndex: 'id_nivel_complejidad',
                     sortable: true,
                     width: 40
                 },
@@ -915,7 +972,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     width: 20
                 },
                 {
-                    header: 'Persona recepta',
+                    header: '4Persona recepta',
                     dataIndex: 'id_persona',
                     sortable: true,
                     width: 35,
@@ -923,21 +980,21 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Recepción documento',
-                    dataIndex: 'recepcion_documento',
+                    dataIndex: 'fecha_inicio_planificacion',
                     sortable: true,
                     width: 45,
                     renderer: formatDate
                 },
                 {
                     header: 'Tipo documento',
-                    dataIndex: 'id_tipo_documento',
+                    dataIndex: 'id_tipo_control',
                     sortable: true,
                     width: 30,
-                    renderer: operativosTipoDocumento
+                    renderer: operativosTipoOperativos
                 },
                 {
                     header: 'N. documento',
-                    dataIndex: 'num_documento',
+                    dataIndex: 'id_nivel_complejidad',
                     sortable: true,
                     width: 40
                 },
@@ -1096,7 +1153,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     },
                                                     {
                                                         xtype: 'combo',
-                                                        fieldLabel: 'Persona recepta',
+                                                        fieldLabel: '3Persona recepta',
                                                         name: 'id_persona',
                                                         id: 'id_persona',
                                                         anchor: '95%',
@@ -1113,8 +1170,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     {
                                                         xtype: 'datetimefield',
                                                         fieldLabel: 'Fecha recepción',
-                                                        id: 'recepcion_documento',
-                                                        name: 'recepcion_documento',
+                                                        id: 'fecha_inicio_planificacion',
+                                                        name: 'fecha_inicio_planificacion',
                                                         anchor: '95%',
 
                                                         dateFormat: 'Y-m-d',
@@ -1125,11 +1182,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     {
                                                         xtype: 'combo',
                                                         fieldLabel: 'Tipo documento',
-                                                        id: 'id_tipo_documento',
-                                                        name: 'id_tipo_documento',
+                                                        id: 'id_tipo_control',
+                                                        name: 'id_tipo_control',
                                                         anchor: '95%',
 
-                                                        hiddenName: 'id_tipo_documento',
+                                                        hiddenName: 'id_tipo_control',
                                                         store: storeOPTID,
                                                         valueField: 'id',
                                                         displayField: 'nombre',
@@ -1140,8 +1197,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     },
                                                     {
                                                         fieldLabel: 'Núm documento',
-                                                        id: 'num_documento',
-                                                        name: 'num_documento',
+                                                        id: 'id_nivel_complejidad',
+                                                        name: 'id_nivel_complejidad',
                                                         anchor: '95%'
                                                     },
                                                     {
@@ -1609,7 +1666,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'num_documento',
+                            key: 'id_nivel_complejidad',
                             scope: this,
                             text: 'Número documento'
                         }
@@ -1634,7 +1691,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'recepcion_documento',
+                            key: 'fecha_inicio_planificacion',
                             scope: this,
                             text: 'Fecha'
                         }, {
@@ -1972,9 +2029,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
 
             Ext.getCmp('id_persona').setReadOnly(activar2);
-            Ext.getCmp('recepcion_documento').setReadOnly(activar);
-            Ext.getCmp('id_tipo_documento').setReadOnly(activar);
-            Ext.getCmp('num_documento').setReadOnly(activar);
+            Ext.getCmp('fecha_inicio_planificacion').setReadOnly(activar);
+            Ext.getCmp('id_tipo_control').setReadOnly(activar);
+            Ext.getCmp('id_nivel_complejidad').setReadOnly(activar);
             Ext.getCmp('remitente').setReadOnly(activar);
             Ext.getCmp('cedula').setReadOnly(activar);
             Ext.getCmp('email').setReadOnly(activar);
@@ -2029,9 +2086,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
      var operativos = new this.storeOperativos.recordType({
      codigo_operativo: ' ',
      id_persona: ' ',
-     recepcion_documento: (new Date()),
-     id_tipo_documento: '2',
-     num_documento: 'S/N',
+     fecha_inicio_planificacion: (new Date()),
+     id_tipo_control: '2',
+     id_nivel_complejidad: 'S/N',
      descripcion_anexos: '-',
      institucion: '',
      remitente: '',
