@@ -14,6 +14,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
     createWindow: function () {
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
         var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
+
+        var test = 'ele';
         // estado no usado
         //var accesosRecepciónIns = this.app.isAllowedTo('accesosRecepciónOpe', this.id);
 
@@ -75,6 +77,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
             return retorno
         }
+
         //fin combo tipo documento  OPTID
 
         //inicio combo activo
@@ -85,8 +88,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             data: {
                 users: [
                     {"id": 'true', "nombre": "Si"},
-                    {"id": 'false', "nombre": "No"},
-                    {"id": '', "nombre": "No"}
+                    {"id": 'false', "nombre": "No"}
                 ]
             }
         });
@@ -107,6 +109,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo activo
 
         //inicio combo nivel complejidad
@@ -139,6 +142,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo nivel complejidad
 
         //inicio combo reasignacion  OPREA
@@ -175,6 +179,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
 
         }
+
         //fin combo reasignacion OPREA
 
         //inicio combo reasignacion  OPREATOT
@@ -199,6 +204,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             var record = storeOPREATOT.getAt(index);
             return record.get('nombre');
         }
+
         //fin combo reasignacion OPREATOT
 
         //inicio combo guia  OPREAGUIA
@@ -223,6 +229,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             var record = storeOPREAGUIA.getAt(index);
             return record.get('nombre');
         }
+
         //fin combo reasignacion OPREAGUIA
 
         //inicio combo persona recepta la operativos PRD
@@ -252,6 +259,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo persona recepta la operativos PRD
 
 // fin combos secretaria
@@ -285,7 +293,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo ZONA
 
-        //inicio combo actividad  ACTAºº
+        //inicio combo actividad  ACTA
         storeACTA = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
@@ -478,7 +486,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 singleSelect: false,
                 listeners: {
                     rowselect: function (sm, row, rec) {
-                        storeOperativosSimple.load({params: {filterField: 'guia', filterText: rec.get("id")}})
+                        storeOperativosPersonal.load({params: {idOperativo: rec.get("id")}})
                     }
                 }
             }),
@@ -552,6 +560,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
         storeOperativos = this.storeOperativos;
         limiteoperativos = 100;
+
         this.gridOperativos = new Ext.grid.EditorGridPanel({
             height: 200,
             store: this.storeOperativos,
@@ -674,14 +683,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     singleSelect: true,
                     listeners: {
                         rowselect: function (sm, row, rec) {
-                            cargaDetalle(rec.id, this.formOperativosDetalle, rec.get("finalizado"));
+                            // recuperamos la informacion de personal asignado a ese operativo
+
+                            storeOperativosPersonal.load({params: {id_operativo: rec.id}})
+
+                            // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
                             if (acceso) {
                                 if (rec.get("finalizado")) {
-                                    Ext.getCmp('tb_grabaroperativos').setDisabled(true);
                                     Ext.getCmp('borraroperativo').setDisabled(true);
                                 }
                                 else {
-                                    Ext.getCmp('tb_grabaroperativos').setDisabled(false);
                                     Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
                                 }
                             }
@@ -716,111 +727,103 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         // datastore and datagrid in Guia
-        this.storeOperativosSimple = new Ext.data.Store({
+
+        var proxyOperativosPersonal = new Ext.data.HttpProxy({
+            api: {
+                create: urlOperativos + "crudOperativosPersonal.php?operation=insert",
+                read: urlOperativos + "crudOperativosPersonal.php?operation=select",
+                update: urlOperativos + "crudOperativosPersonal.php?operation=update",
+                destroy: urlOperativos + "crudOperativosPersonal.php?operation=delete"
+            }
+        });
+
+        var readerOperativosPersonal = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id_member', allowBlank: false},
+                {name: 'id_operativo', allowBlank: false},
+                {name: 'observaciones', allowBlank: true},
+                {name: 'asistencia', type: 'boolean', allowBlank: true}
+            ]
+        });
+        var writerOperativosPersonal = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        this.storeOperativosPersonal = new Ext.data.Store({
             id: "id",
-            proxy: proxyOperativos,
-            reader: readerOperativos,
-            writer: writerOperativos,
+            proxy: proxyOperativosPersonal,
+            reader: readerOperativosPersonal,
+            writer: writerOperativosPersonal,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true
         });
 
-        storeOperativosSimple = this.storeOperativosSimple;
+        storeOperativosPersonal = this.storeOperativosPersonal;
 
 
-        var checkboxSel = new Ext.grid.CheckboxSelectionModel({
-            checkOnly: true,
-            dataIndex: 'cantidad_fojas',
-            listeners: {
-                // On selection change, set enabled state of the removeButton
-                // which was placed into the GridPanel using the ref config
-                selectionchange: function (sm) {
-                    if (sm.getCount() > 0) {
-                        Ext.getCmp('tb_grabarRecepcionTramites').enable();
-                    }
-                    else {
-                        Ext.getCmp('tb_grabarRecepcionTramites').disable();
-                    }
-                }
-            }
-        })
-
-        this.gridOperativosSimple = new Ext.grid.EditorGridPanel({
-            id: 'gridOperativosSimple',
+        this.gridOperativosPersonal = new Ext.grid.EditorGridPanel({
+            id: 'gridOperativosPersonal',
+            height: 200,
             autoHeight: true,
             autoScroll: true,
-            store: this.storeOperativosSimple,
+            store: this.storeOperativosPersonal,
             columns: [
                 new Ext.grid.RowNumberer(),
-                checkboxSel,
                 {
-                    header: 'Código',
-                    dataIndex: 'codigo_operativo',
+                    header: 'Personal',
+                    dataIndex: 'id_member',
                     sortable: true,
-                    width: 20
-                },
-                {
-                    header: '2Persona recepta',
-                    dataIndex: 'id_persona',
-                    sortable: true,
-                    width: 35,
+                    width: 30,
+                    editor: comboPRD,
                     renderer: personaReceptaDenuncia
                 },
                 {
-                    header: 'Fecha recepción',
-                    dataIndex: 'fecha_inicio_planificacion',
-                    sortable: true,
-                    width: 45,
-                    renderer: formatDate
-                },
-                {
-                    header: 'Tipo documento',
-                    dataIndex: 'id_tipo_control',
+                    header: 'Operativo',
+                    dataIndex: 'id_operativo',
                     sortable: true,
                     width: 30,
-                    renderer: operativosTipoOperativos
-                },
-                {
-                    header: 'N. documento',
-                    dataIndex: 'id_nivel_complejidad',
-                    sortable: true,
-                    width: 40
-                },
-                {
-                    header: 'Remitente',
-                    dataIndex: 'punto_encuentro_planificado',
-                    sortable: true,
-                    width: 60
-                },
-                {
-                    header: 'Asunto',
-                    dataIndex: 'asunto',
-                    sortable: true,
-                    width: 55
-                },
-                {
-                    header: 'Descripción anexos',
-                    dataIndex: 'descripcion_anexos',
-                    sortable: true,
-                    width: 55
-                },
+                    hidden: true
 
+                },
                 {
-                    header: 'Fojas',
-                    dataIndex: 'cantidad_fojas',
+                    header: 'Asistencia',
+                    dataIndex: 'asistencia',
                     sortable: true,
-                    width: 20
+                    width: 30,
+                    editor: {
+                        xtype: 'checkbox'
+                    }
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Si'
+                    , xtype: 'booleancolumn'
+                },
+                {
+                    header: 'Observaciones',
+                    dataIndex: 'observaciones',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
                 }
             ],
             viewConfig: {
                 forceFit: true
             },
-            sm: checkboxSel,
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }
+            ),
             border: false,
             stripeRows: true,
             // paging bar on the bottom
             listeners: {
-
                 beforeedit: function (e) {
                     /*    if (acceso) {
                      if (e.record.get("finalizado")) {
@@ -834,7 +837,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
         // fin datastore and datagrid in Guia
-        var gridOperativosSimple = this.gridOperativosSimple
+        var gridOperativosPersonal = this.gridOperativosPersonal
+
         // datastore and datagrid in Guia
         this.storeDocumentosReporte = new Ext.data.Store({
             id: "id",
@@ -965,93 +969,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             var winHeight = desktop.getWinHeight();
 
             this.seleccionDepar = 3;
-            this.formOperativosDetalle = new Ext.FormPanel({
-                id: 'formOperativosDetalle',
-                cls: 'no-border',
-                items: [
-                    {
-                        id: 'formcabeceraoperativos',
-                        titleCollapse: true,
-                        split: true,
-                        flex: 1,
-                        autoScroll: true,
-                        layout: 'column', items: this.gridOperativos
-                    },
-                    {
-                        split: true,
-                        flex: 2,
-                        bodyStyle: 'padding:0; background: #DFE8F6',
-                        layout: 'column',
-                        items: [
-                            {
-                                xtype: 'tabpanel',
-
-                                activeTab: 0,
-                                width: winWidth,
-                                cls: 'no-border',
-                                items: [
-                                    {
-                                        title: 'Personal asignado',
-                                        layout: 'column',
-                                        tbar: [
-                                            {
-                                                text: 'Nuevo',
-                                                scope: this,
-                                                handler: this.addoperativos,
-                                                iconCls: 'save-icon',
-                                                disabled: !acceso
-                                            },
-                                            '-',
-                                            {
-                                                text: "Eliminar",
-                                                scope: this,
-                                                handler: this.deleteoperativos,
-                                                id: 'borraroperativo',
-                                                iconCls: 'delete-icon',
-                                                disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                //disabled: true
-                                            }
-                                        ],
-                                        items: [
-                                            //todo datagrid aca mismo
-                                        ]
-                                    },
-                                    {
-                                        title: 'Vehículos asignados',
-                                        layout: 'column',
-                                        autoScroll: true,
-                                        tbar: [
-                                            {
-                                                text: 'Nuevo',
-                                                scope: this,
-                                                handler: this.addoperativos,
-                                                iconCls: 'save-icon',
-                                                disabled: !acceso
-                                            },
-                                            '-',
-                                            {
-                                                text: "Eliminar",
-                                                scope: this,
-                                                handler: this.deleteoperativos,
-                                                id: 'borraroperativo',
-                                                iconCls: 'delete-icon',
-                                                disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                //disabled: true
-                                            }
-                                        ],
-                                        items: [
-                                            //todo datagrid aca mismo
-
-                                        ]
-                                    }
-
-                                ]
-                            }
-
-                        ]
-                    }
-                ]
-            });
 
             this.formConsultaDocumentos = new Ext.FormPanel({
                 layout: 'column',
@@ -1101,7 +1018,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         columnWidth: 1 / 3,
                         layout: 'form',
                         items: [
-
 
 
                             {
@@ -1377,7 +1293,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     id: 'tb_repoteOperativos',
                                     disabled: true
                                 },
-                                '-',
                                 '->'
                                 , {
                                     text: 'Buscar por:'
@@ -1391,7 +1306,89 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     , store: this.storeOperativos
                                 })
                             ],
-                            items: this.formOperativosDetalle
+                            items: [
+                                {
+                                    id: 'formcabeceraoperativos',
+                                    titleCollapse: true,
+                                    split: true,
+                                    flex: 1,
+                                    autoScroll: true,
+                                    layout: 'column', items: this.gridOperativos
+                                },
+                                {
+                                    split: true,
+                                    flex: 2,
+                                    bodyStyle: 'padding:0; background: #DFE8F6',
+                                    layout: 'column',
+                                    items: [
+                                        {
+                                            xtype: 'tabpanel',
+
+                                            activeTab: 0,
+                                            width: winWidth,
+                                            cls: 'no-border',
+                                            items: [
+                                                {
+                                                    title: 'Personal asignado',
+                                                    layout: 'column',
+                                                    height: 200,
+                                                    tbar: [
+                                                        {
+                                                            text: 'Nuevo',
+                                                            scope: this,
+                                                            handler: this.addoperativosPersonal,
+                                                            iconCls: 'save-icon',
+                                                            disabled: !acceso
+                                                        },
+                                                        '-',
+                                                        {
+                                                            text: "Eliminar",
+                                                            scope: this,
+                                                            handler: this.deleteoperativosPersonal,
+                                                            id: 'borraroperativodetalle',
+                                                            iconCls: 'delete-icon',
+                                                            disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                            //disabled: true
+                                                        }
+                                                    ],
+                                                    items: this.gridOperativosPersonal
+
+                                                },
+                                                {
+                                                    title: 'Vehículos asignados',
+                                                    layout: 'column',
+                                                    autoScroll: true,
+                                                    tbar: [
+                                                        {
+                                                            text: 'Nuevo',
+                                                            scope: this,
+                                                            handler: this.addoperativos,
+                                                            iconCls: 'save-icon',
+                                                            disabled: !acceso
+                                                        },
+                                                        '-',
+                                                        {
+                                                            text: "Eliminar",
+                                                            scope: this,
+                                                            handler: this.deleteoperativos,
+                                                            id: 'borraroperativodetalle',
+                                                            iconCls: 'delete-icon',
+                                                            disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                            //disabled: true
+                                                        }
+                                                    ],
+                                                    items: [
+                                                        //todo datagrid aca mismo
+
+                                                    ]
+                                                }
+
+                                            ]
+                                        }
+
+                                    ]
+                                }
+                            ]
                         }
                         , {
                             title: 'Recepción Guías',
@@ -1435,7 +1432,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                         }
                                     ],
                                     margins: '0 0 0 0',
-                                    items: this.gridOperativosSimple
+                                    //items: this.gridOperativosPersonal
                                 }
                             ]
                         }
@@ -1504,63 +1501,57 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         }
         win.show();
         function cargaDetalle(operativos, forma, bloqueo) {
-            forma = Ext.getCmp('formOperativosDetalle');
-            forma.getForm().load({
-                url: urlOperativos + 'crudOperativos.php?operation=selectForm',
-                params: {
-                    id: operativos
-                },
-                success: function (response, opts) {/*
-                 // para el caso que existan denuncias anteriores
-                 mensaje = Ext.getCmp('textRecepcionAnteriores');
-                 if (response.findField('totaldocumentos').getValue() != '0')
-                 mensaje.setText('Total documentos anteriores: ' + response.findField('totaldocumentos').getValue())
-                 else
-                 mensaje.setText('')*/
-                }
-            });
-            bloquearLectura(forma, bloqueo);
+            /* forma = Ext.getCmp('formOperativosPersonal');
+             forma.getForm().load({
+             url: urlOperativos + 'crudOperativos.php?operation=selectForm',
+             params: {
+             id: operativos
+             },
+             success: function (response, opts) {
+             }
+             });
+             bloquearLectura(forma, bloqueo);*/
         };
 
-        function bloquearLectura(forma, activar) {
-            //en caso que se pueda editar .. revisamos permiso por perfil
+        /* function bloquearLectura(forma, activar) {
+         //en caso que se pueda editar .. revisamos permiso por perfil
 
-            //validate if have access adminsitrator
-            if (activar)
-                activar2 = activar
-            else
-                activar2 = !accesosAdministradorOpe
+         //validate if have access adminsitrator
+         if (activar)
+         activar2 = activar
+         else
+         activar2 = !accesosAdministradorOpe
 
-            //en caso que es solo lectura
-            if (!acceso) {
-                activar2 = activar = true;
-            }
+         //en caso que es solo lectura
+         if (!acceso) {
+         activar2 = activar = true;
+         }
 
-            Ext.getCmp('id_persona').setReadOnly(activar2);
-            Ext.getCmp('fecha_inicio_planificacion').setReadOnly(activar);
-            Ext.getCmp('id_tipo_control').setReadOnly(activar);
-            Ext.getCmp('id_nivel_complejidad').setReadOnly(activar);
-            Ext.getCmp('punto_encuentro_planificado').setReadOnly(activar);
-            Ext.getCmp('cedula').setReadOnly(activar);
-            Ext.getCmp('email').setReadOnly(activar);
-            Ext.getCmp('descripcion_anexos').setReadOnly(activar);
-            Ext.getCmp('cantidad_fojas').setReadOnly(activar);
-            Ext.getCmp('asunto').setReadOnly(activar);
-            Ext.getCmp('institucion').setReadOnly(activar);
-            Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
-            Ext.getCmp('observacion_secretaria').setReadOnly(activar);
-
-
-            Ext.getCmp('finalizado').setReadOnly(!acceso);
-            Ext.getCmp('guia').setReadOnly(!acceso);
+         Ext.getCmp('id_persona').setReadOnly(activar2);
+         Ext.getCmp('fecha_inicio_planificacion').setReadOnly(activar);
+         Ext.getCmp('id_tipo_control').setReadOnly(activar);
+         Ext.getCmp('id_nivel_complejidad').setReadOnly(activar);
+         Ext.getCmp('punto_encuentro_planificado').setReadOnly(activar);
+         Ext.getCmp('cedula').setReadOnly(activar);
+         Ext.getCmp('email').setReadOnly(activar);
+         Ext.getCmp('descripcion_anexos').setReadOnly(activar);
+         Ext.getCmp('cantidad_fojas').setReadOnly(activar);
+         Ext.getCmp('asunto').setReadOnly(activar);
+         Ext.getCmp('institucion').setReadOnly(activar);
+         Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
+         Ext.getCmp('observacion_secretaria').setReadOnly(activar);
 
 
-            if (!activar)
-                Ext.getCmp('reasignacion').enable();
-            else
-                Ext.getCmp('reasignacion').disable();
+         Ext.getCmp('finalizado').setReadOnly(!acceso);
+         Ext.getCmp('guia').setReadOnly(!acceso);
 
-        };
+
+         if (!activar)
+         Ext.getCmp('reasignacion').enable();
+         else
+         Ext.getCmp('reasignacion').disable();
+
+         };*/
 
         setTimeout(function () {
             this.storeOperativos.load({
@@ -1571,7 +1562,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 }
             });
         }, 500);
-
     },
     deleteoperativos: function () {
         Ext.Msg.show({
@@ -1611,6 +1601,38 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
     },
     requestGridData: function () {
         this.storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
+    },
+
+    deleteoperativosPersonal: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridOperativosPersonal.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeOperativosPersonal.remove(rows);
+                }
+            }
+        });
+    },
+    addoperativosPersonal: function () {
+        var operativos = new this.storeOperativosPersonal.recordType({
+            id_persona: '-',
+            id_operativo: '',
+            asistencia: false,
+            observaciones: ''
+        });
+        this.gridOperativosPersonal.stopEditing();
+        this.storeOperativosPersonal.insert(0, operativos);
+        this.storeOperativosPersonal.startEditing(0, 0);
+    },
+    requestGridDataPersonal: function () {
+        this.storeOperativosPersonal.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
     },
 
     botonExportarReporte: function () {
@@ -1680,14 +1702,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var myForm = Ext.getCmp('formOperativosDetalle').getForm();
+                    var myForm = Ext.getCmp('formOperativosPersonal').getForm();
                     myForm.submit({
                         url: 'modules/desktop/operativos/server/crudOperativos.php?operation=updateForm',
                         method: 'POST',
                         waitMsg: 'Saving data',
                         success: function (form, action) {
                             storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
-                            Ext.getCmp('tb_grabaroperativos').setDisabled(true);
+                            //Ext.getCmp('tb_grabaroperativos').setDisabled(true);
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);
