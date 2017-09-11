@@ -12,13 +12,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
     },
 
     createWindow: function () {
-        var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
+        var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
         var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
         // estado no usado
         //var accesosRecepciónIns = this.app.isAllowedTo('accesosRecepciónOpe', this.id);
 
-        //var acceso = (accesosAdministradorIns || accesosOperativos || accesosRecepciónIns) ? true : false
-        var acceso = (accesosAdministradorIns || accesosOperativos ) ? true : false
+        //var acceso = (accesosAdministradorOpe || accesosOperativos || accesosRecepciónIns) ? true : false
+        var acceso = (accesosAdministradorOpe || accesosOperativos ) ? true : false
 
         var desktop = this.app.getDesktop();
         var AppMsg = new Ext.AppMsg({});
@@ -28,10 +28,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         var textField = new Ext.form.TextField({allowBlank: false});
 
-
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i') : '';
         }
+
         function formatDateFull(value) {
             return value ? value.dateFormat('Y-m-d H:i:s') : '';
         }
@@ -59,23 +59,22 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             displayField: 'nombre',
             allowBlank: false,
             listeners: {
-                'change': function(cmb, arr) {
+                'change': function (cmb, arr) {
                 }
             }
         });
 
-
         function operativosTipoOperativos(id) {
+            if (id === '') return '';
             var nombres = id.split(",");
             retorno = '';
             for (var i = 1; i <= nombres.length; i++) {
                 index = storeOPTID.find('id', i);
                 var record = storeOPTID.getAt(index);
-                retorno =  record.get('nombre') + ',' + retorno
+                retorno = record.get('nombre') + ',' + retorno
             }
             return retorno
         }
-
         //fin combo tipo documento  OPTID
 
         //inicio combo activo
@@ -108,9 +107,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
-
         //fin combo activo
-
 
         //inicio combo nivel complejidad
         storeOPNICO = new Ext.data.JsonStore({
@@ -119,9 +116,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 users: [
-                    {"id": 'true', "nombre": "Si"},
-                    {"id": 'false', "nombre": "No"},
-                    {"id": '', "nombre": "No"}
+                    {"id": '1', "nombre": "Alto"},
+                    {"id": '2', "nombre": "Medio"},
+                    {"id": '3', "nombre": "Bajo"}
                 ]
             }
         });
@@ -135,16 +132,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function operativosDespachadoActivo(id) {
+        function operativosNivelComplejidad(id) {
             var index = storeOPNICO.find('id', id);
             if (index > -1) {
                 var record = storeOPNICO.getAt(index);
                 return record.get('nombre');
             }
         }
-
         //fin combo nivel complejidad
-
 
         //inicio combo reasignacion  OPREA
         storeOPREA = new Ext.data.JsonStore({
@@ -180,8 +175,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
 
         }
-
         //fin combo reasignacion OPREA
+
         //inicio combo reasignacion  OPREATOT
         storeOPREATOT = new Ext.data.JsonStore({
             root: 'data',
@@ -189,7 +184,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=unidadestotal'
         });
-
 
         var comboOPREATOT = new Ext.form.ComboBox({
             id: 'comboOPREATOT',
@@ -205,7 +199,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             var record = storeOPREATOT.getAt(index);
             return record.get('nombre');
         }
-
         //fin combo reasignacion OPREATOT
 
         //inicio combo guia  OPREAGUIA
@@ -215,7 +208,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=guia'
         });
-
 
         var comboOPREAGUIA = new Ext.form.ComboBox({
             id: 'comboOPREAGUIA',
@@ -231,56 +223,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             var record = storeOPREAGUIA.getAt(index);
             return record.get('nombre');
         }
-
         //fin combo reasignacion OPREAGUIA
-
-
-        //inicio combo caracter del tramite CDT
-        storeCDT = new Ext.data.JsonStore({
-            root: 'datos',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                datos: [
-                    {"id": 1, "nombre": "Ordinario"},
-                    {"id": 2, "nombre": "Urgente"}
-                ]
-            }
-        });
-
-        var comboCDT = new Ext.form.ComboBox({
-            id: 'comboCDT',
-            store: storeCDT,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function caracterTramite(id) {
-            var index = storeCDT.find('id', id);
-            if (index > -1) {
-                var record = storeCDT.getAt(index);
-                // return record.get('nombre');
-                if (record.get('nombre') == 'Ordinario') {
-                    return '<span style="color:green;">' + record.get('nombre') + '</span>';
-                } else {
-                    return '<span style="color:red;">' + record.get('nombre') + '</span>';
-                }
-            }
-        }
-
-        function change(val) {
-            if (val > 0) {
-                return '<span style="color:green;">' + val + '</span>';
-            } else if (val < 0) {
-                return '<span style="color:red;">' + val + '</span>';
-            }
-            return val;
-        }
-
-
-        //fin combo caracter del tramite CDT
 
         //inicio combo persona recepta la operativos PRD
         storePRD = new Ext.data.JsonStore({
@@ -309,35 +252,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
-
         //fin combo persona recepta la operativos PRD
-
-        //inicio combo instituciones INST
-        storeINST = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=instituciones'
-
-        });
-
-        var comboINST = new Ext.form.ComboBox({
-            id: 'comboINST',
-            store: storeINST,
-            valueField: 'nombre',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local',
-            allowBlank: false
-        });
-
-        function listadoInstituciones(id) {
-
-            return id;
-
-        }
-
-        //fin combo instituciones INST
 
 // fin combos secretaria
 
@@ -370,7 +285,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo ZONA
 
-        //inicio combo actividad  ACTA
+        //inicio combo actividad  ACTAºº
         storeACTA = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
@@ -609,20 +524,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'codigo_operativo', allowBlank: false},
                 {name: 'id_persona', allowBlank: false},
+                {name: 'codigo_operativo', allowBlank: false},
+                {name: 'fecha_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_inicio_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'id_tipo_control', allowBlank: false},
-                
                 {name: 'id_nivel_complejidad', allowBlank: false},
-                {name: 'remitente', allowBlank: false},
-                {name: 'asunto', allowBlank: false},
-                {name: 'institucion', allowBlank: true},
-                {name: 'descripcion_anexos', allowBlank: false},
-                {name: 'reasignacion', allowBlank: false},
-                {name: 'id_caracter_tramite', allowBlank: false},
-                {name: 'cantidad_fojas', allowBlank: false},
+                {name: 'observaciones', allowBlank: false},
+                {name: 'punto_encuentro_planificado', allowBlank: false},
+                {name: 'id_zona', allowBlank: true},
+                {name: 'id_persona_encargada', allowBlank: false},
                 {name: 'finalizado', type: 'boolean', allowBlank: false}
             ]
         });
@@ -640,7 +552,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
         storeOperativos = this.storeOperativos;
         limiteoperativos = 100;
-
         this.gridOperativos = new Ext.grid.EditorGridPanel({
             height: 200,
             store: this.storeOperativos,
@@ -650,13 +561,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Código',
                     dataIndex: 'codigo_operativo',
                     sortable: true,
-                    width: 24
+                    width: 20
                 },
                 {
                     header: 'Fecha inicio',
                     dataIndex: 'fecha_inicio_planificacion',
                     sortable: true,
-                    width: 50,
+                    width: 45,
                     renderer: formatDate,
                     editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
@@ -667,7 +578,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Fecha Fin',
                     dataIndex: 'fecha_fin_planificacion',
                     sortable: true,
-                    width: 50,
+                    width: 45,
                     renderer: formatDate,
                     editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
@@ -678,7 +589,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Tipo de control',
                     dataIndex: 'id_tipo_control',
                     sortable: true,
-                    width: 40,
+                    width: 45,
                     editor: comboOPTID, renderer: operativosTipoOperativos
                 },
                 {
@@ -686,72 +597,60 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_nivel_complejidad',
                     sortable: true,
                     width: 38,
-                    editor: comboOPTID, renderer: operativosTipoOperativos
+                    editor: comboOPNICO, renderer: operativosNivelComplejidad
                 },
                 {
-                    header: 'Elaborado',
-                    dataIndex: 'id_persona',
+                    header: 'Zona',
+                    dataIndex: 'id_zona',
+                    sortable: true,
+                    width: 55,
+                    editor: comboZONA, renderer: zonaAdm
+                },
+                {
+                    header: 'Persona Encargada',
+                    dataIndex: 'id_persona_encargada',
                     sortable: true,
                     width: 30,
                     editor: comboPRD,
                     renderer: personaReceptaDenuncia
                 },
                 {
-                    header: 'Remitente',
-                    dataIndex: 'remitente',
+                    header: 'Punto Encuentro',
+                    dataIndex: 'punto_encuentro_planificado',
                     sortable: true,
+
                     width: 55,
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
-                    header: 'Institución',
-                    dataIndex: 'institucion',
+                    header: 'Observaciones',
+                    dataIndex: 'observaciones',
                     sortable: true,
-                    width: 30,
-                    editor: comboINST, renderer: listadoInstituciones,
-                    cls: 'expand-panel'
-                },
-                {
-                    header: 'Asunto',
-                    dataIndex: 'asunto',
-                    sortable: true,
-                    width: 55,
+                    width: 60,
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
-                    header: 'Descripción anexos',
-                    dataIndex: 'descripcion_anexos',
-                    sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Caracter trámite',
-                    dataIndex: 'id_caracter_tramite',
+                    header: 'Elaborado',
+                    dataIndex: 'id_persona',
                     sortable: true,
                     width: 30,
-                    editor: comboCDT, renderer: caracterTramite
+                    //editor: comboPRD,
+
+                    renderer: personaReceptaDenuncia
                 },
                 {
-                    header: 'Fojas',
-                    dataIndex: 'cantidad_fojas',
-                    width: 20,
-                    editor: new Ext.ux.form.SpinnerField({
-                        fieldLabel: 'Age',
-                        name: 'age',
-                        minValue: 0,
-                        maxValue: 100
+                    header: 'Fecha elaboracion',
+                    dataIndex: 'fecha_planificacion',
+                    sortable: true,
+                    width: 45,
+                    renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({
+                        dateFormat: 'Y-m-d',
+                        timeFormat: 'H:i'
                     })
                 },
                 {
-                    header: 'Reasignación',
-                    dataIndex: 'reasignacion',
-                    sortable: true,
-                    width: 60,
-                    editor: comboOPREA, renderer: operativosDepartamentoReasignacion
-                },
-                {
-                    header: 'Despachado'
+                    header: 'Finalizado'
                     , dataIndex: 'finalizado'
                     , align: 'center'
                     , falseText: 'No'
@@ -777,13 +676,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         rowselect: function (sm, row, rec) {
                             cargaDetalle(rec.id, this.formOperativosDetalle, rec.get("finalizado"));
                             if (acceso) {
-                                if (rec.get("finalizado"))
+                                if (rec.get("finalizado")) {
                                     Ext.getCmp('tb_grabaroperativos').setDisabled(true);
-                                else
+                                    Ext.getCmp('borraroperativo').setDisabled(true);
+                                }
+                                else {
                                     Ext.getCmp('tb_grabaroperativos').setDisabled(false);
+                                    Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
+                                }
                             }
-                            ;
-                            storeINST.load();
                         }
                     }
                 }
@@ -795,12 +696,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 pageSize: limiteoperativos,
                 store: storeOperativos,
                 displayInfo: true,
-                displayMsg: 'Mostrando trámites {0} - {1} de {2}',
+                displayMsg: 'Mostrando operativos {0} - {1} de {2}',
                 emptyMsg: "No existen operativos que mostrar"
             }),
 
             listeners: {
                 beforeedit: function (e) {
+                    // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
                         if (e.record.get("finalizado")) {
                             return false;
@@ -829,24 +731,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         var checkboxSel = new Ext.grid.CheckboxSelectionModel({
             checkOnly: true,
             dataIndex: 'cantidad_fojas',
-            //dataIndex: 'id_caracter_tramite',
-
             listeners: {
                 // On selection change, set enabled state of the removeButton
                 // which was placed into the GridPanel using the ref config
                 selectionchange: function (sm) {
-                    if(sm.getCount() > 0) {
+                    if (sm.getCount() > 0) {
                         Ext.getCmp('tb_grabarRecepcionTramites').enable();
                     }
                     else {
                         Ext.getCmp('tb_grabarRecepcionTramites').disable();
                     }
-
-                   /* Ext.each(sm.getSelections(), function (item, index) {
-                        var record = sm.getSelections()[index];
-                        record.set("id_nivel_complejidad", "Test111");
-                    })
-                    console.log ('xxaxa');*/
                 }
             }
         })
@@ -894,7 +788,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Remitente',
-                    dataIndex: 'remitente',
+                    dataIndex: 'punto_encuentro_planificado',
                     sortable: true,
                     width: 60
                 },
@@ -910,13 +804,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 55
                 },
-                {
-                    header: 'Caracter trámite',
-                    dataIndex: 'id_caracter_tramite',
-                    sortable: true,
-                    width: 30,
-                    renderer: caracterTramite
-                },
+
                 {
                     header: 'Fojas',
                     dataIndex: 'cantidad_fojas',
@@ -935,14 +823,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                 beforeedit: function (e) {
                     /*    if (acceso) {
-                            if (e.record.get("finalizado")) {
-                                return false;
-                            }
-                            return true;
-                        } else {
-                            return false;
-                        }*/
-                    }
+                     if (e.record.get("finalizado")) {
+                     return false;
+                     }
+                     return true;
+                     } else {
+                     return false;
+                     }*/
+                }
             }
         });
         // fin datastore and datagrid in Guia
@@ -1000,7 +888,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Remitente',
-                    dataIndex: 'remitente',
+                    dataIndex: 'punto_encuentro_planificado',
                     sortable: true,
                     width: 60
                 },
@@ -1022,13 +910,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 55
                 },
-                {
-                    header: 'Caracter trámite',
-                    dataIndex: 'id_caracter_tramite',
-                    sortable: true,
-                    width: 30,
-                    renderer: caracterTramite
-                },
+
                 {
                     header: 'Fojas',
                     dataIndex: 'cantidad_fojas',
@@ -1089,10 +971,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 items: [
                     {
                         id: 'formcabeceraoperativos',
-                        /* collapsedTitle: true,
-                         collapsible: true,
-                         title: 'Listado Recepción Documentos',*/
-
                         titleCollapse: true,
                         split: true,
                         flex: 1,
@@ -1104,23 +982,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         flex: 2,
                         bodyStyle: 'padding:0; background: #DFE8F6',
                         layout: 'column',
-                        tbar: [
-                            {
-                                text: 'Grabar Recepción Detalle',
-                                scope: this,
-                                handler: this.grabaroperativos,
-                                iconCls: 'save-icon',
-                                disabled: true,
-                                id: 'tb_grabaroperativos'
-                                , formBind: true
-                            }/*,
-                             '->',
-                             {
-                             text: 'Operativos anteriores:'
-                             , xtype: 'tbtext',
-                             id: 'textRecepcionAnteriores'
-                             }*/
-                        ],
                         items: [
                             {
                                 xtype: 'tabpanel',
@@ -1130,387 +991,57 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 cls: 'no-border',
                                 items: [
                                     {
-                                        title: 'Secretaría',
+                                        title: 'Personal asignado',
                                         layout: 'column',
-                                        items: [
+                                        tbar: [
                                             {
-                                                columnWidth: 1 / 3,
-                                                layout: 'form',
-                                                monitorValid: true,
-                                                defaultType: 'textfield',
-                                                items: [
-                                                    {
-                                                        xtype: 'hidden',
-                                                        fieldLabel: 'Id',
-                                                        name: 'id'
-                                                    },
-                                                    {
-                                                        fieldLabel: 'Código trámite',
-                                                        name: 'codigo_operativo',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: '3Persona recepta',
-                                                        name: 'id_persona',
-                                                        id: 'id_persona',
-                                                        anchor: '95%',
-                                                        hiddenName: 'id_persona',
-
-                                                        store: storePRD,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-
-                                                    },
-                                                    {
-                                                        xtype: 'datetimefield',
-                                                        fieldLabel: 'Fecha recepción',
-                                                        id: 'fecha_inicio_planificacion',
-                                                        name: 'fecha_inicio_planificacion',
-                                                        anchor: '95%',
-
-                                                        dateFormat: 'Y-m-d',
-                                                        timeFormat: 'H:i:s'
-
-
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Tipo documento',
-                                                        id: 'id_tipo_control',
-                                                        name: 'id_tipo_control',
-                                                        anchor: '95%',
-
-                                                        hiddenName: 'id_tipo_control',
-                                                        store: storeOPTID,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-
-                                                    },
-                                                    {
-                                                        fieldLabel: 'Núm documento',
-                                                        id: 'id_nivel_complejidad',
-                                                        name: 'id_nivel_complejidad',
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        fieldLabel: 'Remitente',
-                                                        id: 'remitente',
-                                                        name: 'remitente',
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        fieldLabel: 'C:I. denunciante',
-                                                        id: 'cedula',
-                                                        name: 'cedula',
-                                                        allowBlank: true,
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        fieldLabel: 'Email denunciante',
-                                                        id: 'email',
-                                                        name: 'email',
-                                                        anchor: '95%',
-                                                        allowBlank: true
-                                                        , vtype: 'email'
-                                                    }
-                                                ]
+                                                text: 'Nuevo',
+                                                scope: this,
+                                                handler: this.addoperativos,
+                                                iconCls: 'save-icon',
+                                                disabled: !acceso
                                             },
+                                            '-',
                                             {
-
-                                                columnWidth: 1 / 3,
-                                                layout: 'form',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Descripción anexo',
-                                                        id: 'descripcion_anexos',
-                                                        name: 'descripcion_anexos',
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-
-                                                        xtype: 'spinnerfield',
-                                                        fieldLabel: 'Cantidad de fojas',
-                                                        id: 'cantidad_fojas',
-                                                        name: 'cantidad_fojas',
-                                                        minValue: 0,
-                                                        maxValue: 200,
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        xtype: 'textarea',
-                                                        fieldLabel: 'Asunto',
-                                                        id: 'asunto',
-                                                        name: 'asunto',
-                                                        height: 45,
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Institución',
-                                                        id: 'institucion',
-                                                        name: 'institucion',
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Caracter del trámite',
-                                                        id: 'id_caracter_tramite',
-                                                        name: 'id_caracter_tramite',
-                                                        anchor: '95%',
-
-                                                        hiddenName: 'id_caracter_tramite',
-                                                        store: storeCDT,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-
-                                                    },
-                                                    {
-                                                        xtype: 'textarea',
-                                                        fieldLabel: 'Observaciones secretaria',
-                                                        id: 'observacion_secretaria',
-                                                        name: 'observacion_secretaria',
-                                                        height: 45,
-                                                        anchor: '95%'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                columnWidth: 1 / 3,
-                                                layout: 'form',
-                                                defaults: {
-                                                    listeners: {
-                                                        change: function (field, newVal, oldVal) {
-
-                                                            if (field.getName() == 'finalizado') {
-                                                                if (oldVal == 'true') {
-                                                                    if (newVal == 'false') {
-                                                                        Ext.getCmp('tb_grabaroperativos').setDisabled(false);
-                                                                        Ext.getCmp('reasignacion').enable();
-                                                                    }
-                                                                }
-                                                            }
-
-                                                            if (field.getName() == 'guia') {
-                                                                if (oldVal != newVal) {
-                                                                    console.log("cambio")
-                                                                    Ext.getCmp('tb_grabaroperativos').setDisabled(false);
-//                                                                        Ext.getCmp('reasignacion').enable();
-                                                                }
-                                                            }
-
-
-                                                        }
-                                                    },
-                                                },
-                                                items: [
-                                                    /* {
-                                                     xtype: 'combo',
-                                                     fieldLabel: 'Reasignado a',
-                                                     name: 'reasignacion',
-                                                     anchor: '95%',
-
-                                                     hiddenName: 'reasignacion',
-                                                     store: storeOPREA,
-                                                     valueField: 'id',
-                                                     displayField: 'nombre',
-                                                     typeAhead: true,
-                                                     triggerAction: 'all',
-                                                     mode: 'local'
-                                                     },*/
-                                                    {
-                                                        xtype: 'multiselect',
-                                                        fieldLabel: 'Reasignado a:<br />(Para seleccion<br /> multiple mantenga<br /> pulsada la tecla Ctrl)',
-                                                        id: 'reasignacion',
-                                                        name: 'reasignacion',
-                                                        width: 300,
-                                                        height: 130,
-                                                        allowBlank: false, store: storeOPREA,
-                                                        hiddenName: 'reasignacion',
-                                                        displayField: 'nombre',
-                                                        valueField: 'id',
-                                                        ddReorder: true
-                                                    }
-                                                    , {
-                                                        xtype: 'displayfield',
-                                                        fieldLabel: 'Total documentos anteriores:',
-                                                        name: 'totaldocumentos',
-                                                        anchor: '95%'
-                                                    }, {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Guía',
-                                                        name: 'guia',
-                                                        id: 'guia',
-                                                        anchor: '95%',
-
-                                                        hiddenName: 'guia',
-                                                        store: storeOPREAGUIA,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Despachado',
-                                                        name: 'finalizado',
-                                                        id: 'finalizado',
-                                                        anchor: '95%',
-
-                                                        hiddenName: 'finalizado',
-                                                        store: storeOPOFAC,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-                                                    }
-                                                ]
+                                                text: "Eliminar",
+                                                scope: this,
+                                                handler: this.deleteoperativos,
+                                                id: 'borraroperativo',
+                                                iconCls: 'delete-icon',
+                                                disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                //disabled: true
                                             }
+                                        ],
+                                        items: [
+                                            //todo datagrid aca mismo
                                         ]
                                     },
                                     {
-                                        title: 'Inspección',
+                                        title: 'Vehículos asignados',
                                         layout: 'column',
                                         autoScroll: true,
-                                        items: [
+                                        tbar: [
                                             {
-                                                type: 'container',
-                                                columnWidth: 1 / 2,
-                                                layout: 'form',
-                                                items: [
-                                                    {
-                                                        bodyStyle: 'padding:0; background: #ebfaeb',
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Estado Recepcion Información',
-                                                        name: 'estado_recepcion_informacion',
-                                                        anchor: '95%',
-                                                        hiddenName: 'estado_recepcion_informacion',
-
-                                                        store: storeESOPREA,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Actividad',
-                                                        name: 'actividad',
-                                                        anchor: '95%',
-                                                        hiddenName: 'actividad',
-
-                                                        store: storeACTA,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Persona asignada',
-                                                        name: 'persona_asignada',
-                                                        anchor: '95%',
-                                                        hiddenName: 'persona_asignada',
-
-                                                        store: storePRASA,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Cod operativos',
-                                                        name: 'codigo_operativos',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    }
-                                                ]
+                                                text: 'Nuevo',
+                                                scope: this,
+                                                handler: this.addoperativos,
+                                                iconCls: 'save-icon',
+                                                disabled: !acceso
                                             },
+                                            '-',
                                             {
-                                                type: 'container',
-                                                columnWidth: 1 / 2,
-                                                layout: 'form',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Cod procedimiento',
-                                                        name: 'codigo_procedimiento',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Zona',
-                                                        name: 'id_zona',
-                                                        anchor: '95%',
-                                                        hiddenName: 'id_zona',
-
-                                                        store: storeZONA,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Predio',
-                                                        name: 'predio',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    }
-                                                    ,
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Observación',
-                                                        name: 'observacion',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-
-                                                    {
-
-                                                        xtype: 'textarea',
-                                                        fieldLabel: 'Procedimiento',
-                                                        name: 'procedimientosdetalle',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-
-                                                    }
-                                                ]
+                                                text: "Eliminar",
+                                                scope: this,
+                                                handler: this.deleteoperativos,
+                                                id: 'borraroperativo',
+                                                iconCls: 'delete-icon',
+                                                disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                //disabled: true
                                             }
+                                        ],
+                                        items: [
+                                            //todo datagrid aca mismo
+
                                         ]
                                     }
 
@@ -1570,34 +1101,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         columnWidth: 1 / 3,
                         layout: 'form',
                         items: [
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Institución',
-                                id: 'busqueda_institucion',
-                                name: 'busqueda_institucion',
-                                hiddenName: 'busqueda_institucion',
-                                anchor: '95%',
-                                store: storeINST,
-                                valueField: 'nombre',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Caracter',
-                                id: 'busqueda_caracter_tramite',
-                                name: 'busqueda_caracter_tramite',
-                                anchor: '95%',
-                                hiddenName: 'busqueda_caracter_tramite',
-                                store: storeCDT,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
+
+
+
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Guía',
@@ -1675,7 +1181,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'remitente',
+                            key: 'punto_encuentro_planificado',
                             scope: this,
                             text: 'Remitente'
                         }
@@ -1786,28 +1292,29 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     activeTab: 0,
                     border: false,
                     items: [
-                         {
+                        {
                             autoScroll: true,
-                            title: 'General',
+                            title: 'Planificación operativos',
                             closable: true,
                             tbar: [
-                                 {
-                                 text: 'Nuevo',
-                                 scope: this,
-                                 handler: this.addoperativos,
-                                 iconCls: 'save-icon',
-                                 disabled: !acceso
-                                 },
-                                 '-',
-                                 {
-                                 text: "Eliminar",
-                                 scope: this,
-                                 handler: this.deleteoperativos,
-                                 iconCls: 'delete-icon',
-                                 //disabled: this.app.isAllowedTo('accesosAdministradorIns', this.id) ? false : true
-                                 disabled: true
-                                 },
-                                 '-',
+                                {
+                                    text: 'Nuevo',
+                                    scope: this,
+                                    handler: this.addoperativos,
+                                    iconCls: 'save-icon',
+                                    disabled: !acceso
+                                },
+                                '-',
+                                {
+                                    text: "Eliminar",
+                                    scope: this,
+                                    handler: this.deleteoperativos,
+                                    id: 'borraroperativo',
+                                    iconCls: 'delete-icon',
+                                    disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                    //disabled: true
+                                },
+                                '-',
                                 {
                                     iconCls: 'reload-icon',
                                     handler: this.requestGridData,
@@ -2022,7 +1529,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             if (activar)
                 activar2 = activar
             else
-                activar2 = !accesosAdministradorIns
+                activar2 = !accesosAdministradorOpe
 
             //en caso que es solo lectura
             if (!acceso) {
@@ -2033,7 +1540,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             Ext.getCmp('fecha_inicio_planificacion').setReadOnly(activar);
             Ext.getCmp('id_tipo_control').setReadOnly(activar);
             Ext.getCmp('id_nivel_complejidad').setReadOnly(activar);
-            Ext.getCmp('remitente').setReadOnly(activar);
+            Ext.getCmp('punto_encuentro_planificado').setReadOnly(activar);
             Ext.getCmp('cedula').setReadOnly(activar);
             Ext.getCmp('email').setReadOnly(activar);
             Ext.getCmp('descripcion_anexos').setReadOnly(activar);
@@ -2048,10 +1555,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             Ext.getCmp('guia').setReadOnly(!acceso);
 
 
-                if (!activar)
-                    Ext.getCmp('reasignacion').enable();
-                else
-                    Ext.getCmp('reasignacion').disable();
+            if (!activar)
+                Ext.getCmp('reasignacion').enable();
+            else
+                Ext.getCmp('reasignacion').disable();
 
         };
 
@@ -2066,47 +1573,43 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         }, 500);
 
     },
-    /*deleteoperativos: function () {
-     Ext.Msg.show({
-     title: 'Confirmación',
-     msg: 'Está seguro de querer borrar?',
-     scope: this,
-     buttons: Ext.Msg.YESNO,
-     fn: function (btn) {
-     if (btn == 'yes') {
-     var rows = this.gridOperativos.getSelectionModel().getSelections();
-     if (rows.length === 0) {
-     return false;
-     }
-     this.storeOperativos.remove(rows);
-     }
-     }
-     });
-     },*/
-    /*addoperativos: function () {
-     var operativos = new this.storeOperativos.recordType({
-     codigo_operativo: ' ',
-     id_persona: ' ',
-     fecha_inicio_planificacion: (new Date()),
-     id_tipo_control: '2',
-     id_nivel_complejidad: 'S/N',
-     descripcion_anexos: '-',
-     institucion: '',
-     remitente: '',
-     reasignacion: '',
-     id_caracter_tramite: '1',
-     cantidad_fojas: '0',
-     finalizado: false
-
-     });
-     this.gridOperativos.stopEditing();
-     this.storeOperativos.insert(0, operativos);
-     this.gridOperativos.startEditing(0, 0);
-
-     },*/
+    deleteoperativos: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridOperativos.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeOperativos.remove(rows);
+                }
+            }
+        });
+    },
+    addoperativos: function () {
+        var operativos = new this.storeOperativos.recordType({
+            id_persona: '-',
+            codigo_operativo: '-',
+            fecha_planificacion: (new Date()),
+            fecha_inicio_planificacion: (new Date()),
+            fecha_fin_planificacion: (new Date()),
+            id_tipo_control: '',
+            id_nivel_complejidad: ' ',
+            observaciones: '',
+            punto_encuentro_planificado: ' ',
+            id_zona: ' ',
+            id_persona_encargada: ' ',
+            finalizado: false,
+        });
+        this.gridOperativos.stopEditing();
+        this.storeOperativos.insert(0, operativos);
+        this.gridOperativos.startEditing(0, 0);
+    },
     requestGridData: function () {
-
-
         this.storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
     },
 
