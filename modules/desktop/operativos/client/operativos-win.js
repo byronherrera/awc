@@ -1409,7 +1409,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                         storeOperativos.load({params: {finalizados: isChecked}});
                                         //   Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
                                     }
-                                }, /*this.targetFieldBtn,*/
+                                },
                                 {
                                     xtype: 'combo',
 
