@@ -1236,118 +1236,39 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'codigo_operativo',
+                            key: 'id_zona',
                             scope: this,
-                            text: 'Código trámite'
+                            text: 'Zona'
                         },
                         {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'id_nivel_complejidad',
+                            key: 'id_persona_encargada',
                             scope: this,
-                            text: 'Número documento'
-                        }
-                        , {
+                            text: 'Persona encargada'
+                        },
+                        {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
                             key: 'punto_encuentro_planificado',
                             scope: this,
-                            text: 'Remitente'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'descripcion_anexos',
-                            scope: this,
-                            text: 'Descripcion Anexos'
-                        }
-
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'fecha_inicio_planificacion',
-                            scope: this,
-                            text: 'Fecha'
-                        }, {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'cedula',
-                            scope: this,
-                            text: 'Cédula'
-                        }, {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'guia',
-                            scope: this,
-                            text: 'Guía'
-                        }, {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'institucion',
-                            scope: this,
-                            text: 'Institución'
-                        }
-                    ]
-                })
-                , text: 'Código trámite'
-            });
-            var targetFieldBtn = new Ext.Button({
-                menu: new Ext.menu.Menu({
-                    id: 'tb_seleccionarUnidad1',
-                    disabled: true,
-                    items: [
+                            text: 'Punto encuentro'
+                        },
                         {
                             checked: false,
-                            checkHandler: targetHandler,
-                            group: 'targetField',
-                            key: '2',
-                            scope: this,
-                            text: 'Secretaría'
-                        }
-                        , {
-                            checked: true,
-                            checkHandler: targetHandler,
-                            group: 'targetField',
-                            key: '3',
-                            scope: this,
-                            text: 'Operativos'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: targetHandler,
-                            group: 'targetField',
-                            key: '4',
-                            scope: this,
-                            text: 'Instrucción'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: targetHandler,
-                            group: 'targetField',
-                            key: '5',
-                            scope: this,
-                            text: 'Resolución y Ejecución'
-                        }
-                        , {
-                            checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: '6',
+                            key: 'observaciones',
                             scope: this,
-                            text: 'Administrativa y financiera'
+                            text: 'Observaciones'
                         }
                     ]
                 })
-                , text: 'Operativos'
+                , text: 'Zona'
             });
-            this.targetFieldBtn = targetFieldBtn;
+
             win = desktop.createWindow({
                 id: 'grid-win-operativos',
                 title: 'Trámites Inspección',
@@ -1396,7 +1317,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 '-',
                                 {
                                     xtype: 'checkbox',
-                                    boxLabel: 'No finalizados -- ',
+                                    boxLabel: 'Operativos no finalizados',
                                     id: 'checkNoRecibidos',
                                     name: 'noenviados',
                                     checked: true,
@@ -1405,48 +1326,23 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     disabled: !acceso,
                                     cls: 'barramenu',
                                     handler: function (checkbox, isChecked) {
-                                        //   Ext.getCmp('tb_repoteOperativos').setDisabled(!this.checked);
+                                        // recargamos el combo
                                         storeOperativos.load({params: {finalizados: isChecked}});
-                                        //   Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
                                     }
-                                },
+                                },'-',
                                 {
-                                    xtype: 'combo',
-
-                                    fieldLabel: 'Reasignado a',
-                                    name: 'tb_reasignacion',
-                                    anchor: '95%',
-                                    id: 'tb_seleccionarUnidad',
-                                    /* disabled: true,*/
-                                    hiddenName: 'tb_reasignacion',
-                                    store: storeOPREATOT,
-                                    valueField: 'id',
-                                    displayField: 'nombre',
-                                    typeAhead: true,
-                                    triggerAction: 'all',
-                                    mode: 'local',
-                                    width: 250,
-                                    value: 'Seleccionar Unidad',
-                                    listeners: {
-                                        'select': function (t) {
-                                            isChecked = (Ext.getCmp('checkNoRecibidos').getValue());
-                                            storeOperativos.baseParams = {
-                                                finalizados: isChecked,
-                                                unidadfiltro: t.value
-                                            };
-                                            storeOperativos.load();
-
-                                        }
+                                    xtype: 'checkbox',
+                                    boxLabel: 'Todo personal',
+                                    id: 'checkTodoPersonal',
+                                    name: 'noenviados',
+                                    checked: false,
+                                    inputValue: '0',
+                                    tooltip: 'Recargar datos',
+                                    disabled: !acceso,
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                        storePRD.load({params: {finalizados: isChecked}});
                                     }
-                                },
-                                {
-                                    iconCls: 'excel-icon',
-                                    handler: this.botonExportarReporte,
-                                    scope: this,
-                                    text: 'Generar Reporte',
-                                    tooltip: 'Se genera el reporte de los items',
-                                    id: 'tb_repoteOperativos',
-                                    disabled: true
                                 },
                                 '->'
                                 , {
@@ -1455,7 +1351,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 }
 
                                 , searchFieldBtn
-                                , ' ', ' '
+                                , ' '
                                 , new QoDesk.QoAdmin.SearchField({
                                     paramName: 'filterText'
                                     , store: this.storeOperativos

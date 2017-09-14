@@ -37,7 +37,7 @@ function selectOperativos()
 {
     global $os;
     //TODO cambiar columna por defecto en busquedas
-    $columnaBusqueda = 'codigo_operativo';
+    $columnaBusqueda = 'id_zona';
 
     $where = '';
 
@@ -48,6 +48,23 @@ function selectOperativos()
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
+
+        if ($columnaBusqueda == 'id_zona') {
+            $sql = "SELECT id FROM amc_zonas WHERE UPPER(nombre) like UPPER('%$campo%') LIMIT 1";
+            $result = $os->db->conn->query($sql);
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            if (strlen($row['id']) > 0)
+                $campo = $row['id'];
+        }
+
+        if ($columnaBusqueda == 'id_persona_encargada') {
+            $sql = "SELECT id FROM qo_members WHERE UPPER(first_name) like UPPER('%$campo%') OR UPPER(last_name) like UPPER('%$campo%') OR UPPER(email_address) like UPPER('%$campo%') LIMIT 1";
+            $result = $os->db->conn->query($sql);
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            if (strlen($row['id']) > 0)
+            $campo = $row['id'];
+        }
+
         $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
     }
 

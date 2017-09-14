@@ -89,6 +89,13 @@ function comboPersonalSecretaria()
 function comboPersonalOperativos()
 {
     global $os;
+    $todos  = " AND (b.qo_groups_id = 8 OR b.qo_groups_id = 9 OR b.qo_groups_id = 1) ";
+    if (isset($_POST['todos'])) {
+        if ($_POST['todos'] == 'true') {
+            $todos  = "";
+        }
+    }
+
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT
             a.id,
@@ -96,7 +103,7 @@ function comboPersonalOperativos()
             FROM
             qo_members a,qo_groups_has_members b
             WHERE
-                a.id = b.qo_members_id AND (b.qo_groups_id = 8 OR b.qo_groups_id = 9 OR b.qo_groups_id = 1)  AND a.active = 1 
+                a.id = b.qo_members_id AND a.active = 1 $todos   
             ORDER BY
                 a.last_name ASC,a.first_name ASC";
 
