@@ -1153,10 +1153,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Tipo documento',
-                                id: 'busqueda_tipo_documento',
-                                name: 'busqueda_tipo_documento',
-                                hiddenName: 'busqueda_tipo_documento',
+                                fieldLabel: 'Tipo control',
+                                id: 'busqueda_tipo_control',
+                                name: 'busqueda_tipo_control',
+                                hiddenName: 'busqueda_tipo_control',
 
                                 anchor: '95%',
                                 store: storeOPTID,
@@ -1165,30 +1165,24 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
-
-                            }
-                        ]
-                    },
-                    {
-                        columnWidth: 1 / 3,
-                        layout: 'form',
-                        items: [
-
+                            },
 
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Guía',
-                                name: 'busqueda_guia',
-                                id: 'busqueda_guia',
+                                fieldLabel: 'Nivel Complejidad',
+                                id: 'busqueda_nivel_complejidad',
+                                name: 'busqueda_nivel_complejidad',
+                                hiddenName: 'busqueda_nivel_complejidad',
+
                                 anchor: '95%',
-                                hiddenName: 'busqueda_guia',
-                                store: storeOPREAGUIA,
+                                store: storeOPNICO,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
                             }
+
                         ]
                     },
                     {
@@ -1196,19 +1190,27 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         layout: 'form',
                         items: [
                             {
-                                xtype: 'multiselect',
-                                fieldLabel: 'Unidades',
-                                id: 'busqueda_reasignacion',
-                                name: 'busqueda_reasignacion',
-                                width: 300,
-                                height: 100,
-                                allowBlank: false, store: storeOPREA,
-                                hiddenName: 'busqueda_reasignacion',
-                                displayField: 'nombre',
+                                xtype: 'combo',
+                                fieldLabel: 'Zonal',
+                                id: 'busqueda_zonal',
+                                name: 'busqueda_zonal',
+                                hiddenName: 'busqueda_zonal',
+
+                                anchor: '95%',
+                                store: storeZONA,
                                 valueField: 'id',
-                                ddReorder: true
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
                             }
+
                         ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: []
                     }
                 ]
             });
@@ -1329,7 +1331,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                         // recargamos el combo
                                         storeOperativos.load({params: {finalizados: isChecked}});
                                     }
-                                },'-',
+                                }, '-',
                                 {
                                     xtype: 'checkbox',
                                     boxLabel: 'Todo personal',
@@ -1341,7 +1343,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     disabled: !acceso,
                                     cls: 'barramenu',
                                     handler: function (checkbox, isChecked) {
-                                        storePRD.load({params: {finalizados: isChecked}});
+                                        storePRD.load({params: {todos: isChecked}});
                                     }
                                 },
                                 '->'
@@ -1442,53 +1444,53 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ]
                         }
-                        , {
-                            title: 'Recepción Guías',
-                            closable: true,
-                            layout: 'border',
-                            tbar: [
-                                {
-                                    iconCls: 'reload-icon',
-                                    handler: this.requestGridDataOperativosGuia,
-                                    scope: this,
-                                    text: 'Recargar Datos'
+                        /* , {
+                         title: 'Recepción Guías',
+                         closable: true,
+                         layout: 'border',
+                         tbar: [
+                         {
+                         iconCls: 'reload-icon',
+                         handler: this.requestGridDataOperativosGuia,
+                         scope: this,
+                         text: 'Recargar Datos'
 
-                                }
-                            ],
-                            items: [
-                                {
-                                    region: 'north',
-                                    height: 200,
-                                    minSize: 100,
-                                    maxSize: 150,
-                                    closable: true,
-                                    autoScroll: false,
-                                    items: this.gridOperativosGuia
-                                },
-                                {
-                                    region: 'center',
-                                    split: true,
-                                    autoScroll: true,
-                                    height: 300,
-                                    minSize: 100,
-                                    maxSize: 150,
-                                    tbar: [
-                                        {
-                                            text: 'Grabar Recepción Trámites'
-                                            , scope: this
-                                            , handler: this.grabardenuncias
-                                            , iconCls: 'save-icon'
-                                            , disabled: true
-                                            , id: 'tb_grabarRecepcionTramites'
-                                            , formBind: true
-                                        }
-                                    ],
-                                    margins: '0 0 0 0',
-                                    //items: this.gridOperativosPersonal
-                                }
-                            ]
-                        }
-
+                         }
+                         ],
+                         items: [
+                         {
+                         region: 'north',
+                         height: 200,
+                         minSize: 100,
+                         maxSize: 150,
+                         closable: true,
+                         autoScroll: false,
+                         items: this.gridOperativosGuia
+                         },
+                         {
+                         region: 'center',
+                         split: true,
+                         autoScroll: true,
+                         height: 300,
+                         minSize: 100,
+                         maxSize: 150,
+                         tbar: [
+                         {
+                         text: 'Grabar Recepción Trámites'
+                         , scope: this
+                         , handler: this.grabardenuncias
+                         , iconCls: 'save-icon'
+                         , disabled: true
+                         , id: 'tb_grabarRecepcionTramites'
+                         , formBind: true
+                         }
+                         ],
+                         margins: '0 0 0 0',
+                         //items: this.gridOperativosPersonal
+                         }
+                         ]
+                         }
+                         */
 
                         , {
                             title: 'Reportes',

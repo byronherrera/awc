@@ -103,18 +103,26 @@ function selectOperativos()
     }
 
     // caso en reportes
-    if (isset($_POST['busqueda_tipo_documento']) and ($_POST['busqueda_tipo_documento'] != '')) {
-        $tipo = $_POST['busqueda_tipo_documento'];
+    if (isset($_POST['busqueda_tipo_control']) and ($_POST['busqueda_tipo_control'] != '')) {
+        $tipo = $_POST['busqueda_tipo_control'];
         if ($where == '') {
-            $where = "WHERE id_tipo_documento = $tipo ";
+            $where = "WHERE id_tipo_control like '%$tipo%'  ";
         } else {
-            $where = $where . " AND id_tipo_documento = $tipo ";
+            $where = $where . " AND id_tipo_control like '%$tipo%' ";
         }
     }
-    if (isset($_POST['busqueda_institucion']) and ($_POST['busqueda_institucion'] != '')) {
-        $tipo = $_POST['busqueda_institucion'];
+    if (isset($_POST['busqueda_nivel_complejidad']) and ($_POST['busqueda_nivel_complejidad'] != '')) {
+        $tipo = $_POST['busqueda_nivel_complejidad'];
         if ($where == '') {
-            $where = "WHERE institucion = '$tipo' ";
+            $where = "WHERE id_nivel_complejidad like '%$tipo%'  ";
+        } else {
+            $where = $where . " AND id_nivel_complejidad like '%$tipo%' ";
+        }
+    }
+    if (isset($_POST['busqueda_zonal']) and ($_POST['busqueda_zonal'] != '')) {
+        $tipo = $_POST['busqueda_zonal'];
+        if ($where == '') {
+            $where = "WHERE zonal = '$tipo' ";
         } else {
             $where = $where . " AND institucion = '$tipo' ";
         }
@@ -156,9 +164,9 @@ function selectOperativos()
         }
 
         if ($where == '') {
-            $where = "WHERE recepcion_documento between '$fechainicio' and '$fechafin'  ";
+            $where = "WHERE fecha_inicio_planificacion between '$fechainicio' and '$fechafin'  ";
         } else {
-            $where = $where . " AND recepcion_documento between '$fechainicio' and '$fechafin' ";
+            $where = $where . " AND fecha_inicio_planificacion between '$fechainicio' and '$fechafin' ";
         }
     }
 
