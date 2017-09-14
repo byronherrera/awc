@@ -122,7 +122,7 @@ function selectOperativos()
     if (isset($_POST['busqueda_zonal']) and ($_POST['busqueda_zonal'] != '')) {
         $tipo = $_POST['busqueda_zonal'];
         if ($where == '') {
-            $where = "WHERE zonal = '$tipo' ";
+            $where = "WHERE zonal  = '$tipo' ";
         } else {
             $where = $where . " AND institucion = '$tipo' ";
         }
