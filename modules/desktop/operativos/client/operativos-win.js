@@ -1027,82 +1027,97 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Código',
                     dataIndex: 'codigo_operativo',
                     sortable: true,
-                    width: 20
+                    width: 17
                 },
                 {
-                    header: '4Persona recepta',
-                    dataIndex: 'id_persona',
-                    sortable: true,
-                    width: 35,
-                    renderer: personaReceptaDenuncia
-                },
-                {
-                    header: 'Recepción documento',
+                    header: 'Fecha inicio',
                     dataIndex: 'fecha_inicio_planificacion',
                     sortable: true,
-                    width: 45,
+                    width: 37,
                     renderer: formatDate
                 },
                 {
-                    header: 'Tipo documento',
+                    header: 'Fecha Fin',
+                    dataIndex: 'fecha_fin_planificacion',
+                    sortable: true,
+                    width: 37,
+                    renderer: formatDate
+                },
+                {
+                    header: 'Tipo de control',
                     dataIndex: 'id_tipo_control',
                     sortable: true,
-                    width: 30,
+                    width: 45,
                     renderer: operativosTipoOperativos
                 },
                 {
-                    header: 'N. documento',
+                    header: 'Complejidad',
                     dataIndex: 'id_nivel_complejidad',
                     sortable: true,
-                    width: 40
+                    width: 30,
+                    renderer: operativosNivelComplejidad
                 },
                 {
-                    header: 'Remitente',
+                    header: 'Zona',
+                    dataIndex: 'id_zona',
+                    sortable: true,
+                    width: 40,
+                    renderer: zonaAdm
+                },
+                {
+                    header: 'Persona Encargada',
+                    dataIndex: 'id_persona_encargada',
+                    sortable: true,
+                    width: 40,
+                    renderer: personaReceptaDenuncia
+                },
+                {
+                    header: 'Punto Encuentro',
                     dataIndex: 'punto_encuentro_planificado',
                     sortable: true,
-                    width: 60
-                },
-                {
-                    header: 'Institución',
-                    dataIndex: 'institucion',
-                    sortable: true,
-                    width: 60
-                },
-                {
-                    header: 'Asunto',
-                    dataIndex: 'asunto',
-                    sortable: true,
                     width: 55
                 },
                 {
-                    header: 'Descripción anexos',
-                    dataIndex: 'descripcion_anexos',
+                    header: 'Observaciones',
+                    dataIndex: 'observaciones',
                     sortable: true,
-                    width: 55
-                },
-
-                {
-                    header: 'Fojas',
-                    dataIndex: 'cantidad_fojas',
-                    sortable: true,
-                    width: 20
+                    width: 60
                 },
                 {
-                    header: 'Reasignación',
-                    dataIndex: 'reasignacion',
+                    header: 'Elaborado',
+                    dataIndex: 'id_persona',
                     sortable: true,
-                    width: 60,
-                    renderer: operativosDepartamentoReasignacion
+                    width: 30,
+                    hidden: true,
+                    renderer: personaReceptaDenuncia
                 },
                 {
-                    header: 'Despachado'
+                    header: 'Fecha elaboracion',
+                    dataIndex: 'fecha_planificacion',
+                    sortable: true,
+                    width: 45, hidden: true,
+                    renderer: formatDate
+                },
+                {
+                    header: 'Fallido'
+                    , dataIndex: 'fallido'
+                    , align: 'center'
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Si'
+                    , sortable: true
+                    , width: 25
+                    , xtype: 'booleancolumn'
+                },
+                {
+                    header: 'Finalizado'
                     , dataIndex: 'finalizado'
                     , align: 'center'
                     , falseText: 'No'
                     , menuDisabled: true
                     , trueText: 'Si'
                     , sortable: true
-                    , width: 20
+                    , width: 25
                     , xtype: 'booleancolumn'
                 }
             ],
@@ -1603,7 +1618,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Exportar listado',
                                     tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    id: 'tb_repoteOperativosGuias',
+
                                     disabled: !acceso,
 
 

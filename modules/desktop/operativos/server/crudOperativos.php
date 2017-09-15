@@ -154,17 +154,17 @@ function selectOperativos()
     if (isset($_POST['busqueda_punto_encuentro']) and ($_POST['busqueda_punto_encuentro'] != '')) {
         $tipo = $_POST['busqueda_punto_encuentro'];
         if ($where == '') {
-            $where = "WHERE punto_encuentro = '$tipo' ";
+            $where = "WHERE punto_encuentro_planificado like '%$tipo%' ";
         } else {
-            $where = $where . " AND punto_encuentro = '$tipo' ";
+            $where = $where . " AND punto_encuentro_planificado like '%$tipo%' ";
         }
     }
     if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
         $tipo = $_POST['busqueda_observaciones'];
         if ($where == '') {
-            $where = "WHERE observaciones = '$tipo' ";
+            $where = "WHERE observaciones like '%$tipo%' ";
         } else {
-            $where = $where . " AND observaciones = '$tipo' ";
+            $where = $where . " AND observaciones like '%$tipo%' ";
         }
     }
     if (isset($_POST['busqueda_personal_asignado']) and ($_POST['busqueda_personal_asignado'] != '')) {
@@ -175,7 +175,6 @@ function selectOperativos()
             $where = $where . " AND (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0  ";
         }
     }
-
     if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
         $fechainicio = $_POST['busqueda_fecha_inicio'];
         if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin'] != '')) {

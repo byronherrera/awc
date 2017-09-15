@@ -56,7 +56,6 @@ if (isset($data->busqueda_caracter_tramite) and ($data->busqueda_caracter_tramit
         $where = $where . " AND id_caracter_tramite = '$tipo' ";
     }
 }
-
 if (isset($data->busqueda_guia) and ($data->busqueda_guia != '')) {
     $tipo = $data->busqueda_guia;
     if ($where == '') {
@@ -65,7 +64,6 @@ if (isset($data->busqueda_guia) and ($data->busqueda_guia != '')) {
         $where = $where . " AND guia = '$tipo' ";
     }
 }
-
 if (isset($data->busqueda_reasignacion) and ($data->busqueda_reasignacion != '')) {
     $tipo = $data->busqueda_reasignacion;
     if ($where == '') {
@@ -74,7 +72,6 @@ if (isset($data->busqueda_reasignacion) and ($data->busqueda_reasignacion != '')
         $where = $where . " AND reasignacion in ($tipo) ";
     }
 }
-
 if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')) {
     $fechainicio = $data->busqueda_fecha_inicio;
     if (isset($data->busqueda_fecha_fin) and ($data->busqueda_fecha_fin != '')) {
@@ -91,7 +88,6 @@ if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')
 }
 
 $os->db->conn->query("SET NAMES 'utf8'");
-//$sql = "SELECT * FROM amc_denuncias $where ORDER BY codigo_tramite DESC ";
 $sql = "SELECT *, (select nombre FROM amc_unidades as a WHERE a.id in (b.reasignacion) LIMIT 1) as nombre_unidad  
         FROM amc_denuncias as b $where ORDER BY b.codigo_tramite DESC";
 
