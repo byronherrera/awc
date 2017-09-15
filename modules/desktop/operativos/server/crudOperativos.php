@@ -122,38 +122,59 @@ function selectOperativos()
     if (isset($_POST['busqueda_zonal']) and ($_POST['busqueda_zonal'] != '')) {
         $tipo = $_POST['busqueda_zonal'];
         if ($where == '') {
-            $where = "WHERE zonal  = '$tipo' ";
+            $where = "WHERE id_zona  = '$tipo' ";
         } else {
-            $where = $where . " AND institucion = '$tipo' ";
+            $where = $where . " AND id_zona = '$tipo' ";
         }
     }
-    if (isset($_POST['busqueda_caracter_tramite']) and ($_POST['busqueda_caracter_tramite'] != '')) {
-        $tipo = $_POST['busqueda_caracter_tramite'];
+    if (isset($_POST['busqueda_persona_encargada']) and ($_POST['busqueda_persona_encargada'] != '')) {
+        $tipo = $_POST['busqueda_persona_encargada'];
         if ($where == '') {
-            $where = "WHERE id_caracter_tramite = '$tipo' ";
+            $where = "WHERE id_persona_encargada  = '$tipo' ";
         } else {
-            $where = $where . " AND id_caracter_tramite = '$tipo' ";
+            $where = $where . " AND id_persona_encargada = '$tipo' ";
         }
     }
-
-    if (isset($_POST['busqueda_guia']) and ($_POST['busqueda_guia'] != '')) {
-        $tipo = $_POST['busqueda_guia'];
+    if (isset($_POST['busqueda_fallido']) and ($_POST['busqueda_fallido'] != '')) {
+        $tipo = $_POST['busqueda_fallido'];
         if ($where == '') {
-            $where = "WHERE guia = '$tipo' ";
+            $where = "WHERE fallido = '$tipo' ";
         } else {
-            $where = $where . " AND guia = '$tipo' ";
+            $where = $where . " AND fallido = '$tipo' ";
         }
     }
-
-    if (isset($_POST['busqueda_reasignacion']) and ($_POST['busqueda_reasignacion'] != '')) {
-        $tipo = $_POST['busqueda_reasignacion'];
+    if (isset($_POST['busqueda_finalizado']) and ($_POST['busqueda_finalizado'] != '')) {
+        $tipo = $_POST['busqueda_finalizado'];
         if ($where == '') {
-            $where = "WHERE reasignacion in ($tipo) ";
+            $where = "WHERE finalizado = '$tipo' ";
         } else {
-            $where = $where . " AND reasignacion in ($tipo) ";
+            $where = $where . " AND finalizado = '$tipo' ";
         }
     }
-
+    if (isset($_POST['busqueda_punto_encuentro']) and ($_POST['busqueda_punto_encuentro'] != '')) {
+        $tipo = $_POST['busqueda_punto_encuentro'];
+        if ($where == '') {
+            $where = "WHERE punto_encuentro = '$tipo' ";
+        } else {
+            $where = $where . " AND punto_encuentro = '$tipo' ";
+        }
+    }
+    if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
+        $tipo = $_POST['busqueda_observaciones'];
+        if ($where == '') {
+            $where = "WHERE observaciones = '$tipo' ";
+        } else {
+            $where = $where . " AND observaciones = '$tipo' ";
+        }
+    }
+    if (isset($_POST['busqueda_personal_asignado']) and ($_POST['busqueda_personal_asignado'] != '')) {
+        $tipo = $_POST['busqueda_personal_asignado'];
+        if ($where == '') {
+            $where = "WHERE (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0 ";
+        } else {
+            $where = $where . " AND (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0  ";
+        }
+    }
 
     if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
         $fechainicio = $_POST['busqueda_fecha_inicio'];
@@ -259,6 +280,12 @@ function updateOperativos()
             $data->finalizado = 'false';
         else
             $data->finalizado = 'true';
+    }
+    if (isset($data->fallido)) {
+        if (!$data->fallido)
+            $data->fallido = 'false';
+        else
+            $data->fallido = 'true';
     }
 
     $message = '';

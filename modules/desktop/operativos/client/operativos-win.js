@@ -330,7 +330,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo actividad  ACTA
-
+        storeSINO = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 'false', "nombre": "NO"},
+                    {"id": 'true', "nombre": "SI"}
+                ]
+            }
+        });
         //inicio combo Estado Recepcion Información Operativos ESOPREA
         storeESOPREA = new Ext.data.JsonStore({
             root: 'datos',
@@ -670,16 +680,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     })
                 },
                 {
-                    header: 'Fallido',
-                    dataIndex: 'fallido',
-                    sortable: true,
-                    width: 25,
-                    editor: {
-                        xtype: 'checkbox'
-                    }
+                    header: 'Fallido'
+                    , dataIndex: 'fallido'
+                    , align: 'center'
                     , falseText: 'No'
                     , menuDisabled: true
                     , trueText: 'Si'
+                    , sortable: true
+                    , width: 25,
+                    editor: {
+                        xtype: 'checkbox'
+                    }
                     , xtype: 'booleancolumn'
                 },
                 {
@@ -1203,6 +1214,51 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Persn. Encargada',
+                                id: 'busqueda_persona_encargada',
+                                name: 'busqueda_persona_encargada',
+                                hiddenName: 'busqueda_persona_encargada',
+
+                                anchor: '95%',
+                                store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Operativo Fallido',
+                                id: 'busqueda_fallido',
+                                name: 'busqueda_fallido',
+                                hiddenName: 'busqueda_fallido',
+
+                                anchor: '95%',
+                                store: storeSINO,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Operativo Finalizado',
+                                id: 'busqueda_finalizado',
+                                name: 'busqueda_finalizado',
+                                hiddenName: 'busqueda_finalizado',
+
+                                anchor: '95%',
+                                store: storeSINO,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
                             }
 
                         ]
@@ -1210,7 +1266,36 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     {
                         columnWidth: 1 / 3,
                         layout: 'form',
-                        items: []
+                        items: [
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Personal asignado',
+                                id: 'busqueda_personal_asignado',
+                                name: 'busqueda_personal_asignado',
+                                hiddenName: 'busqueda_personal_asignado',
+
+                                anchor: '95%',
+                                store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {   xtype: 'textfield',
+                                fieldLabel: 'Punto Encuentro',
+                                id: 'busqueda_punto_encuentro',
+                                name: 'busqueda_punto_encuentro',
+                                anchor: '95%'
+                            },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Observaciones',
+                                id: 'busqueda_observaciones',
+                                name: 'busqueda_observaciones',
+                                anchor: '95%'
+                            },
+                        ]
                     }
                 ]
             });
