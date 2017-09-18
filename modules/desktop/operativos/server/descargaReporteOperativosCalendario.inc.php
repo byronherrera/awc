@@ -198,9 +198,9 @@ if (isset($data->busqueda_aprobado_por) and ($data->busqueda_aprobado_por != '')
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(32);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('B')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(6);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(6);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(30);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(16.71);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('E')->setAutoSize(false);
@@ -221,11 +221,6 @@ $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Fecha');
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Inicio');
 $objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Fin');
 $objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'Personal');
-$objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Tipo control');
-$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Complejidad');
-$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Punto Encuentro');
-$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Zonal');
-$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Codigo');
 
 $noExistenFilas = true;
 
@@ -257,7 +252,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
         $nombresUsuarios[] = $nombreDetalle['nombre'];
     }
-    $cadena_personal = implode(", ", $nombresUsuarios);
+    $cadena_personal = implode(",\n ", $nombresUsuarios);
     $rowdetalle['personal'] = $cadena_personal;
 
 // recuperamos el nombre de zona
@@ -267,31 +262,24 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
         $nombresUsuarios[] = $nombreDetalle['nombre'];
     }
-    $cadena_personal = implode(", ", $nombresUsuarios);
+    $cadena_personal = implode(",\n ", $nombresUsuarios);
     $rowdetalle['id_zona'] = $cadena_personal;
 
 
     // formatos de impresion de fechas y horas
     $date = new DateTime($rowdetalle['fecha_inicio_planificacion']);
-    $inicio = $date->format('H:i');
+    $inicio = $date->format('H\Hi');
 
     $dias = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
     $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-    $rowdetalle['fecha_inicio_planificacion'] = $dias[$date->format('w')] . ", " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
+    $rowdetalle['fecha_inicio_planificacion'] = $dias[$date->format('w')] . ",\n   " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
 
     $date = new DateTime($rowdetalle['fecha_fin_planificacion']);
-    $fin = $date->format('H:i');
+    $fin = $date->format('H\Hi');
 
     // envio de impresion de valores
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['fecha_inicio_planificacion']);
-    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $inicio);
-    $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $fin);
-    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['personal']);
-    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['id_tipo_control']);
-    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, substr($rowdetalle['id_nivel_complejidad'], 0, 200));
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, strip_tags($rowdetalle['punto_encuentro_planificado']));
-    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['id_zona']);
-    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['id']);
+    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $inicio. ' - ' . $fin .  "\n" . $rowdetalle['personal'] );
 
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':I' . $filaInicio)->applyFromArray($styleArray);

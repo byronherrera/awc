@@ -1192,7 +1192,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 triggerAction: 'all',
                                 mode: 'local'
                             },
-
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Nivel Complejidad',
@@ -1207,14 +1206,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
-                            }
-
-                        ]
-                    },
-                    {
-                        columnWidth: 1 / 3,
-                        layout: 'form',
-                        items: [
+                            },
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Zonal',
@@ -1229,7 +1221,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
-                            },
+                            }
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Persn. Encargada',
@@ -1274,14 +1272,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
-                            }
-
-                        ]
-                    },
-                    {
-                        columnWidth: 1 / 3,
-                        layout: 'form',
-                        items: [
+                            },
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Personal asignado',
@@ -1302,7 +1293,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 id: 'busqueda_punto_encuentro',
                                 name: 'busqueda_punto_encuentro',
                                 anchor: '95%'
-                            },
+                            }
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+
                             {
                                 xtype: 'textfield',
                                 fieldLabel: 'Observaciones',
@@ -1310,7 +1308,53 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 name: 'busqueda_observaciones',
                                 anchor: '95%'
                             },
-                        ]
+
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Elaborado por',
+                                id: 'busqueda_elaborado_por',
+                                name: 'busqueda_elaborado_por',
+                                hiddenName: 'busqueda_elaborado_por',
+
+                                anchor: '95%',
+                                store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Revisado por',
+                                id: 'busqueda_revisado_por',
+                                name: 'busqueda_revisado_por',
+                                hiddenName: 'busqueda_revisado_por',
+
+                                anchor: '95%',
+                                store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Aprobado por',
+                                id: 'busqueda_aprobado_por',
+                                name: 'busqueda_aprobado_por',
+                                hiddenName: 'busqueda_aprobado_por',
+
+                                anchor: '95%',
+                                store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }                        ]
                     }
                 ]
             });
@@ -1618,18 +1662,23 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Exportar listado',
                                     tooltip: 'Se genera archivo Excel con la información solicitada',
-
                                     disabled: !acceso,
-
-
+                                },
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporteCalendario,
+                                    scope: this,
+                                    text: 'Exportar calendario',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada',
+                                    disabled: !acceso,
                                 }
                             ],
                             items: [
                                 {
                                     region: 'north',
-                                    height: 145,
+                                    height: 175,
                                     minSize: 100,
-                                    maxSize: 150,
+                                    maxSize: 170,
                                     closable: true,
                                     autoScroll: false,
                                     items: this.formConsultaDocumentos
@@ -1639,7 +1688,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     region: 'center',
                                     split: true,
                                     autoScroll: true,
-                                    height: 300,
+                                    height: 270,
                                     minSize: 100,
                                     maxSize: 150,
                                     items: this.gridDocumentosReporte
@@ -1917,6 +1966,32 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
                     window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams;
+                }
+            }
+        });
+    },
+    botonExportarDocumentoReporteCalendario: function () {
+        var rows = this.storeDocumentosReporte.getCount()
+        if (rows === 0) {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Busqueda sin resultados',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+        // mensaje continuar y llamada a descarga archivo
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativoscalendario.inc.php?param=' + valueParams;
                 }
             }
         });
