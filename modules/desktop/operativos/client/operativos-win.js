@@ -1916,7 +1916,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
-                    window.location.href = 'modules/desktop/operativos/server/descargaReporte.inc.php?param=' + valueParams;
+                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams;
                 }
             }
         });

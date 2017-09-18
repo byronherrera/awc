@@ -32,68 +32,101 @@ $today = date("Y-n-j-H-i-s");
 
 // para los reportes
 $where = '';
-if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_tipo_documento != '')) {
-    $tipo = $data->busqueda_tipo_documento;
+// caso en reportes
+if (isset($_POST['busqueda_tipo_control']) and ($_POST['busqueda_tipo_control'] != '')) {
+    $tipo = $_POST['busqueda_tipo_control'];
     if ($where == '') {
-        $where = "WHERE id_tipo_documento = $tipo ";
+        $where = "WHERE id_tipo_control like '%$tipo%'  ";
     } else {
-        $where = $where . " AND id_tipo_documento = $tipo ";
+        $where = $where . " AND id_tipo_control like '%$tipo%' ";
     }
 }
-if (isset($data->busqueda_institucion) and ($data->busqueda_institucion != '')) {
-    $tipo = $data->busqueda_institucion;
+if (isset($_POST['busqueda_nivel_complejidad']) and ($_POST['busqueda_nivel_complejidad'] != '')) {
+    $tipo = $_POST['busqueda_nivel_complejidad'];
     if ($where == '') {
-        $where = "WHERE institucion = '$tipo' ";
+        $where = "WHERE id_nivel_complejidad like '%$tipo%'  ";
     } else {
-        $where = $where . " AND institucion = '$tipo' ";
+        $where = $where . " AND id_nivel_complejidad like '%$tipo%' ";
     }
 }
-if (isset($data->busqueda_caracter_tramite) and ($data->busqueda_caracter_tramite != '')) {
-    $tipo = $data->busqueda_caracter_tramite;
+if (isset($_POST['busqueda_zonal']) and ($_POST['busqueda_zonal'] != '')) {
+    $tipo = $_POST['busqueda_zonal'];
     if ($where == '') {
-        $where = "WHERE id_caracter_tramite = '$tipo' ";
+        $where = "WHERE id_zona  = '$tipo' ";
     } else {
-        $where = $where . " AND id_caracter_tramite = '$tipo' ";
+        $where = $where . " AND id_zona = '$tipo' ";
     }
 }
-
-if (isset($data->busqueda_guia) and ($data->busqueda_guia != '')) {
-    $tipo = $data->busqueda_guia;
+if (isset($_POST['busqueda_persona_encargada']) and ($_POST['busqueda_persona_encargada'] != '')) {
+    $tipo = $_POST['busqueda_persona_encargada'];
     if ($where == '') {
-        $where = "WHERE guia = '$tipo' ";
+        $where = "WHERE id_persona_encargada  = '$tipo' ";
     } else {
-        $where = $where . " AND guia = '$tipo' ";
+        $where = $where . " AND id_persona_encargada = '$tipo' ";
     }
 }
-
-if (isset($data->busqueda_reasignacion) and ($data->busqueda_reasignacion != '')) {
-    $tipo = $data->busqueda_reasignacion;
+if (isset($_POST['busqueda_fallido']) and ($_POST['busqueda_fallido'] != '')) {
+    $tipo = $_POST['busqueda_fallido'];
     if ($where == '') {
-        $where = "WHERE reasignacion in ($tipo) ";
+        $where = "WHERE fallido = '$tipo' ";
     } else {
-        $where = $where . " AND reasignacion in ($tipo) ";
+        $where = $where . " AND fallido = '$tipo' ";
     }
 }
-
-if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')) {
-    $fechainicio = $data->busqueda_fecha_inicio;
-    if (isset($data->busqueda_fecha_fin) and ($data->busqueda_fecha_fin != '')) {
-        $fechafin = $data->busqueda_fecha_fin;
+if (isset($_POST['busqueda_finalizado']) and ($_POST['busqueda_finalizado'] != '')) {
+    $tipo = $_POST['busqueda_finalizado'];
+    if ($where == '') {
+        $where = "WHERE finalizado = '$tipo' ";
+    } else {
+        $where = $where . " AND finalizado = '$tipo' ";
+    }
+}
+if (isset($_POST['busqueda_punto_encuentro']) and ($_POST['busqueda_punto_encuentro'] != '')) {
+    $tipo = $_POST['busqueda_punto_encuentro'];
+    if ($where == '') {
+        $where = "WHERE punto_encuentro_planificado like '%$tipo%' ";
+    } else {
+        $where = $where . " AND punto_encuentro_planificado like '%$tipo%' ";
+    }
+}
+if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
+    $tipo = $_POST['busqueda_observaciones'];
+    if ($where == '') {
+        $where = "WHERE observaciones like '%$tipo%' ";
+    } else {
+        $where = $where . " AND observaciones like '%$tipo%' ";
+    }
+}
+if (isset($_POST['busqueda_personal_asignado']) and ($_POST['busqueda_personal_asignado'] != '')) {
+    $tipo = $_POST['busqueda_personal_asignado'];
+    if ($where == '') {
+        $where = "WHERE (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0 ";
+    } else {
+        $where = $where . " AND (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0  ";
+    }
+}
+if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
+    $fechainicio = $_POST['busqueda_fecha_inicio'];
+    if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin'] != '')) {
+        $fechafin = $_POST['busqueda_fecha_fin'];
     } else {
         $fechafin = date('Y\m\d H:i:s');;
     }
 
     if ($where == '') {
-        $where = "WHERE recepcion_documento between '$fechainicio' and '$fechafin'  ";
+        $where = "WHERE fecha_inicio_planificacion between '$fechainicio' and '$fechafin'  ";
     } else {
-        $where = $where . " AND recepcion_documento between '$fechainicio' and '$fechafin' ";
+        $where = $where . " AND fecha_inicio_planificacion between '$fechainicio' and '$fechafin' ";
     }
 }
 
+
 $os->db->conn->query("SET NAMES 'utf8'");
 //$sql = "SELECT * FROM amc_denuncias $where ORDER BY codigo_tramite DESC ";
-$sql = "SELECT *, (select nombre FROM amc_unidades as a WHERE a.id in (b.reasignacion) LIMIT 1) as nombre_unidad  
-        FROM amc_denuncias as b $where ORDER BY b.codigo_tramite DESC";
+/*$sql = "SELECT *, (select nombre FROM amc_unidades as a WHERE a.id in (b.reasignacion) LIMIT 1) as nombre_unidad
+        FROM amc_operativos as b $where ORDER BY b.codigo_tramite DESC";*/
+$sql = "SELECT *  
+        FROM amc_operativos as b  ORDER BY b.codigo_operativo DESC";
 
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
@@ -115,14 +148,11 @@ $styleArray = array(
     )
 );
 
-
-
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':K' . $filaTitulo1);
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':K' . $filaTitulo2);
 
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO DOCUMENTOS RECIBIDOS");
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Secretaría General');
-
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO OPERATIVOS");
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Unidad de Operativos');
 
 $os->db->conn->query("SET NAMES 'utf8'");
 $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
@@ -132,19 +162,26 @@ $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
 $nombreUsuario = $rownombre['nombre'];
 
 $filascabecera = $number_of_rows + $filaInicio + 2;
-$objPHPExcel->getActiveSheet()->mergeCells('C' . ($filascabecera) . ':D' . ($filascabecera));
-$objPHPExcel->getActiveSheet()->mergeCells('C' . ($filascabecera + 1) . ':D' . ($filascabecera + 1));
-$objPHPExcel->getActiveSheet()->mergeCells('C' . ($filascabecera + 2) . ':D' . ($filascabecera + 2));
+/*bjPHPExcel->getActiveSheet()->mergeCells('A' . ($filascabecera) . ':B' . ($filascabecera));
+$objPHPExcel->getActiveSheet()->mergeCells('A' . ($filascabecera + 1) . ':B' . ($filascabecera + 1));
+$objPHPExcel->getActiveSheet()->mergeCells('A' . ($filascabecera + 2) . ':B' . ($filascabecera + 2));
+*/
+// Elaborador por:
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filascabecera, '__________________');
+$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filascabecera + 1), $nombreUsuario);
+$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filascabecera + 2), "Elaborado por");
 
-$objPHPExcel->getActiveSheet()->setCellValue('C' . $filascabecera, '__________________');
-$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 1), $nombreUsuario);
-$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 2), "SECRETARIA GENERAL");
+// Elaborador por:
+$objPHPExcel->getActiveSheet()->setCellValue('D' . $filascabecera, '__________________');
+$objPHPExcel->getActiveSheet()->setCellValue('D' . ($filascabecera + 1), $nombreUsuario);
+$objPHPExcel->getActiveSheet()->setCellValue('D' . ($filascabecera + 2), "Revisado por");
 
-$objPHPExcel->getActiveSheet()->mergeCells('F' . ($filascabecera + 1) . ':I' . ($filascabecera + 2));
-//$objPHPExcel->getActiveSheet()->setCellValue('F' . ($filascabecera + 1), $nombreUnidad);
-$objPHPExcel->getActiveSheet()->mergeCells('F' . $filascabecera . ':I' . $filascabecera);
-$objPHPExcel->getActiveSheet()->setCellValue('F' . $filascabecera, '__________________');
+// Elaborador por:
+$objPHPExcel->getActiveSheet()->setCellValue('G' . $filascabecera, '__________________');
+$objPHPExcel->getActiveSheet()->setCellValue('G' . ($filascabecera + 1), $nombreUsuario);
+$objPHPExcel->getActiveSheet()->setCellValue('G' . ($filascabecera + 2), "Aprobado por");
 
+// Ancho de las columnas
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6.86);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('B')->setAutoSize(false);
@@ -153,7 +190,6 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(11.50);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(16.71);
-
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('E')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(23);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('F')->setAutoSize(false);
@@ -163,27 +199,23 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(8.71);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
-
 $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(8.71);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
-
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('K')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(16.30);
 
 
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Codigo');
-$objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Fecha y hora de recepcion');
-$objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Tipo de documento');
-$objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'N. de documento');
-$objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Remitente');
-$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Asunto');
-$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Descripción del anexo');
-$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Carácter de trámite');
-$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Cantidad de fojas');
-$objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Unidad');
-$objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Observaciones');
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Fecha');
+$objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Inicio');
+$objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Fin');
+$objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'Personal');
+$objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Tipo control');
+$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Complejidad');
+$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Punto Encuentro');
+$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Zonal');
+$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Codigo');
 
 $noExistenFilas = true;
 
