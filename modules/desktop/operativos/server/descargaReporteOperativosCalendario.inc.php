@@ -109,21 +109,23 @@ if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')
     $fechainicio = $data->busqueda_fecha_inicio;
     if (isset($data->busqueda_fecha_fin) and ($data->busqueda_fecha_fin != '')) {
         $fechafin = $data->busqueda_fecha_fin;
-    } else {
-        $fechafin = date('Y\m\d H:i:s');;
     }
-
     if ($where == '') {
         $where = "WHERE fecha_inicio_planificacion between '$fechainicio' and '$fechafin'  ";
     } else {
         $where = $where . " AND fecha_inicio_planificacion between '$fechainicio' and '$fechafin' ";
     }
+} else {
+  // en caso que no existan las fechas de inicio y fin calculamos en base al select
+    $fechainicio = fechaInicioSQL($where);
+    $fechafin = fechaFinSQL($where);
 }
 
 
-$os->db->conn->query("SET NAMES 'utf8'");
 
-$sql = "SELECT * FROM amc_operativos as b  $where  ORDER BY b.codigo_operativo DESC";
+// recuepro el listado de operativos en base al filtro
+$os->db->conn->query("SET NAMES 'utf8'");
+$sql = "SELECT * FROM amc_operativos as b  $where  ORDER BY b.fecha_inicio_planificacion ";
 
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
@@ -133,10 +135,15 @@ $objPHPExcel->setActiveSheetIndex(0);
 
 $filaTitulo1 = 2;
 $filaTitulo2 = 3;
-$filacabecera = 5;
-$filaInicio = 6;
+$filaTitulo3 = 5;
+$filacabecera = 6;
+$filaInicio = 7;
+$dias = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
+$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
+$columnas = array("A", "B", "C", "D", "E", "F");
 
+//definicion de estilos
 $styleArray = array(
     'borders' => array(
         'allborders' => array(
@@ -145,25 +152,18 @@ $styleArray = array(
     )
 );
 
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':I' . $filaTitulo1);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':I' . $filaTitulo2);
+//declaracion de los titulos de la linea 1 2 3
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':G' . $filaTitulo1);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':G' . $filaTitulo2);
+
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo3 . ':G' . $filaTitulo3);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO OPERATIVOS");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Unidad de Operativos');
-
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, fechaLarga ($fechainicio, $dias, $meses). ' - ' . fechaLarga ($fechafin, $dias, $meses));
 
 $filascabecera = $number_of_rows + $filaInicio + 2;
 
-function regresaNombre ($id_dato) {
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
-            FROM qo_members WHERE id = " . $id_dato;
-    $nombre = $os->db->conn->query($sql);
-    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-    return $rownombre['nombre'];
-
-}
 
 // Elaborador por:
 if (isset($data->busqueda_elaborado_por) and ($data->busqueda_elaborado_por != '')) {
@@ -194,40 +194,38 @@ if (isset($data->busqueda_aprobado_por) and ($data->busqueda_aprobado_por != '')
     $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filascabecera + 1), regresaNombre($data->busqueda_aprobado_por));
     $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filascabecera + 2), "Aprobado por");
 }
+
+$anchoColumna = 20;
 // Ancho de las columnas
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(32);
+$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth($anchoColumna);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('B')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(30);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth($anchoColumna);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(30);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth($anchoColumna);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(16.71);
+$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth($anchoColumna);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('E')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(23);
+$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth($anchoColumna);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('F')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(18);
+$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth($anchoColumna);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('G')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(16);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(8.71);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth($anchoColumna);
 
-
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Fecha');
-$objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Inicio');
-$objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Fin');
-$objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'Personal');
+// todo quitar
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, $dias[0]);
+$objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, $dias[1]);
+$objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, $dias[2]);
+$objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, $dias[3]);
+$objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, $dias[4]);
+$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, $dias[5]);
+$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, $dias[6]);
 
 $noExistenFilas = true;
 
+$diasUsados = array (0,0,0,0,0,0,0);
 while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 // actualizar detalle idGuia
-
-
     $noExistenFilas = false;
     //cambio para impresiono el nivel de complejidad
     $niveles_complejidad = array("Alto", "Medio", "Bajo");
@@ -265,25 +263,32 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $cadena_personal = implode(",\n ", $nombresUsuarios);
     $rowdetalle['id_zona'] = $cadena_personal;
 
-
     // formatos de impresion de fechas y horas
     $date = new DateTime($rowdetalle['fecha_inicio_planificacion']);
     $inicio = $date->format('H\Hi');
+    $diaNumeral = $date->format('w');
 
-    $dias = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
-    $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-    $rowdetalle['fecha_inicio_planificacion'] = $dias[$date->format('w')] . ",\n   " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
+    //$filaInicio++;
+    if ($diasUsados[$diaNumeral] == 1){
+        $filaInicio++;
+
+        $diasUsados = array (0,0,0,0,0,0,0);
+    }
+
+    $diasUsados[$diaNumeral] = 1;
+
+
+    //$rowdetalle['fecha_inicio_planificacion'] = $dias[$date->format('w')] . ",\n   " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
+    $fechacorta = $dias[$date->format('w')] . " " . $date->format('d');
 
     $date = new DateTime($rowdetalle['fecha_fin_planificacion']);
     $fin = $date->format('H\Hi');
 
     // envio de impresion de valores
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['fecha_inicio_planificacion']);
-    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $inicio. ' - ' . $fin .  "\n" . $rowdetalle['personal'] );
+    //$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['fecha_inicio_planificacion']);
+    $objPHPExcel->getActiveSheet()->setCellValue($columnas[$diaNumeral] . $filaInicio, $fechacorta . "\n" . $inicio . ' - ' . $fin . "\n" . $rowdetalle['personal']);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':G' . $filaInicio)->applyFromArray($styleArray);
 
-
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':I' . $filaInicio)->applyFromArray($styleArray);
-    $filaInicio++;
 }
 
 
@@ -308,7 +313,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:I600')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:G600')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -316,7 +321,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:I600')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:I200')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:G200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -324,10 +329,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:I200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:I30')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:G30')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':I' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':G' . $filacabecera)->applyFromArray($styleArray);
 
 
 // Set page orientation and size
@@ -337,8 +342,8 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:I3')->getFont()->setSize(14);
-$objPHPExcel->getActiveSheet()->getStyle('A4:I40')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A1:G3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A4:G40')->getFont()->setSize(10);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -381,4 +386,42 @@ function quitar_espacio($cadena)
     $permitidas = array("-");
     $texto = str_replace($no_permitidas, $permitidas, $cadena);
     return $texto;
+}
+
+function regresaNombre($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
+            FROM qo_members WHERE id = " . $id_dato;
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['nombre'];
+
+}
+
+function fechaInicioSQL($where)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT fecha_inicio_planificacion FROM amc_operativos as b  $where  ORDER BY b.fecha_inicio_planificacion  LIMIT 1 ";
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['fecha_inicio_planificacion'];
+}
+
+function fechaFinSQL($where)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT fecha_fin_planificacion FROM amc_operativos as b  $where  ORDER BY b.fecha_fin_planificacion DESC LIMIT 1 ";
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['fecha_fin_planificacion'];
+}
+
+function fechaLarga ($fecha, $dias, $meses) {
+    $date = new DateTime($fecha);
+    return  $dias[$date->format('w')] . " " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
+
 }

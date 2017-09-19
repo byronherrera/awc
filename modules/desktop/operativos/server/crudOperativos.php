@@ -143,6 +143,14 @@ function selectOperativos()
             $where = $where . " AND fallido = '$tipo' ";
         }
     }
+    if (isset($_POST['busqueda_tipo_operativo']) and ($_POST['busqueda_tipo_operativo'] != '')) {
+        $tipo = $_POST['busqueda_tipo_operativo'];
+        if ($where == '') {
+            $where = "WHERE tipo_operativo = '$tipo' ";
+        } else {
+            $where = $where . " AND tipo_operativo = '$tipo' ";
+        }
+    }
     if (isset($_POST['busqueda_finalizado']) and ($_POST['busqueda_finalizado'] != '')) {
         $tipo = $_POST['busqueda_finalizado'];
         if ($where == '') {

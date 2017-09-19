@@ -42,7 +42,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 // inicio combos secretaria
 
         //inicio combo tipo documento  OPTID
-        storeOPTID = new Ext.data.JsonStore({
+      /*  storeOPTID = new Ext.data.JsonStore({
             root: 'documento',
             fields: ['id', 'nombre'],
             autoLoad: true,
@@ -52,7 +52,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     {"id": 2, "nombre": "Espacio Público"}
                 ]
             }
+        });*/
+
+        storeOPTID = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=ordenanzas'
         });
+
 
         var comboOPTID = new Ext.ux.form.CheckboxCombo({
             width: 250,
@@ -140,6 +148,38 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             var index = storeOPNICO.find('id', id);
             if (index > -1) {
                 var record = storeOPNICO.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo nivel complejidad
+
+        //inicio combo tipo operativo
+        storeOPTIPO = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 'planificado', "nombre": "Planificado"},
+                    {"id": 'emergente', "nombre": "Emergente"}
+                ]
+            }
+        });
+
+        var comboOPTIPO = new Ext.form.ComboBox({
+            id: 'comboOPTIPO',
+            store: storeOPTIPO,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function operativosTipo(id) {
+            var index = storeOPTIPO.find('id', id);
+            if (index > -1) {
+                var record = storeOPTIPO.getAt(index);
                 return record.get('nombre');
             }
         }
@@ -561,6 +601,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_tipo_control', allowBlank: false},
                 {name: 'id_nivel_complejidad', allowBlank: false},
                 {name: 'observaciones', allowBlank: false},
+                {name: 'tipo_operativo', allowBlank: false},
+                {name: 'participantes', allowBlank: false},
                 {name: 'punto_encuentro_planificado', allowBlank: false},
                 {name: 'id_zona', allowBlank: true},
                 {name: 'id_persona_encargada', allowBlank: false},
@@ -645,6 +687,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     renderer: personaReceptaDenuncia
                 },
                 {
+                    header: 'Participantes',
+                    dataIndex: 'participantes',
+                    sortable: true,
+                    width: 55,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
                     header: 'Punto Encuentro',
                     dataIndex: 'punto_encuentro_planificado',
                     sortable: true,
@@ -692,6 +741,18 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         xtype: 'checkbox'
                     }
                     , xtype: 'booleancolumn'
+                },
+                {
+                    header: 'Tipo'
+                    , dataIndex: 'tipo_operativo'
+                    , align: 'center'
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Si'
+                    , sortable: true
+                    , width: 25
+                    , editor: comboOPTIPO
+                    , renderer: operativosTipo
                 },
                 {
                     header: 'Finalizado'
@@ -1018,7 +1079,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         storeDocumentosReporte = this.storeDocumentosReporte
         this.gridDocumentosReporte = new Ext.grid.EditorGridPanel({
 
-            height: desktop.getWinHeight() - 238,
+            height: desktop.getWinHeight() - 268,
             autoScroll: true,
             store: this.storeDocumentosReporte,
             columns: [
@@ -1072,6 +1133,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     renderer: personaReceptaDenuncia
                 },
                 {
+                    header: 'Participantes',
+                    dataIndex: 'participantes',
+                    sortable: true,
+                    width: 55
+                },{
                     header: 'Punto Encuentro',
                     dataIndex: 'punto_encuentro_planificado',
                     sortable: true,
@@ -1097,6 +1163,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 45, hidden: true,
                     renderer: formatDate
+                },
+                {
+                    header: 'Tipo'
+                    , dataIndex: 'tipo_operativo'
+                    , align: 'center'
+                    ,sortable: true
+                    ,width: 30
+                    //,hidden: true
+                    ,renderer: operativosTipo
                 },
                 {
                     header: 'Fallido'
@@ -1245,7 +1320,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Operativo Fallido',
+                                fieldLabel: 'Oper. Fallido',
                                 id: 'busqueda_fallido',
                                 name: 'busqueda_fallido',
                                 hiddenName: 'busqueda_fallido',
@@ -1260,13 +1335,28 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Operativo Finalizado',
+                                fieldLabel: 'Oper. Finalizado',
                                 id: 'busqueda_finalizado',
                                 name: 'busqueda_finalizado',
                                 hiddenName: 'busqueda_finalizado',
 
                                 anchor: '95%',
                                 store: storeSINO,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Oper. Tipo',
+                                id: 'busqueda_tipo_operativo',
+                                name: 'busqueda_tipo_operativo',
+                                hiddenName: 'busqueda_tipo_operativo',
+
+                                anchor: '95%',
+                                store: storeOPTIPO,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -1287,12 +1377,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
-                            },
-                            {   xtype: 'textfield',
-                                fieldLabel: 'Punto Encuentro',
-                                id: 'busqueda_punto_encuentro',
-                                name: 'busqueda_punto_encuentro',
-                                anchor: '95%'
                             }
                         ]
                     },
@@ -1301,6 +1385,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         layout: 'form',
                         items: [
 
+                            {   xtype: 'textfield',
+                                fieldLabel: 'Punto Encuentro',
+                                id: 'busqueda_punto_encuentro',
+                                name: 'busqueda_punto_encuentro',
+                                anchor: '95%'
+                            },
                             {
                                 xtype: 'textfield',
                                 fieldLabel: 'Observaciones',
@@ -1754,11 +1844,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             id_tipo_control: '',
             id_nivel_complejidad: ' ',
             observaciones: '',
+            participantes: ' ',
             punto_encuentro_planificado: ' ',
             id_zona: ' ',
+            tipo_operativo: 'planificado',
             id_persona_encargada: ' ',
             fallido: false,
-            finalizado: false,
+            finalizado: false
         });
         this.gridOperativos.stopEditing();
         this.storeOperativos.insert(0, operativos);

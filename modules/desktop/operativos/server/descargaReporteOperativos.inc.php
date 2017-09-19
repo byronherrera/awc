@@ -292,6 +292,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, strip_tags($rowdetalle['punto_encuentro_planificado']));
     $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['id_zona']);
     $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['id']);
+    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['participantes']);
 
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':I' . $filaInicio)->applyFromArray($styleArray);
