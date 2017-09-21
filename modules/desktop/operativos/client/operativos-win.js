@@ -288,7 +288,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             retorno = '';
             for (var i = 1; i <= nombres.length; i++) {
                 index = storeOPPERENC.find('id', i);
+                console.log (index);
                 var record = storeOPPERENC.getAt(index);
+                console.log (record);
                 retorno = record.get('nombre') + ',' + retorno
             }
             return retorno

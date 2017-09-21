@@ -1,0 +1,19 @@
+{
+  "id_persona": "1",
+  "codigo_operativo": "10759",
+  "fecha_planificacion": "2017-09-19T14:49:36",
+  "fecha_inicio_planificacion": "2017-10-06T10:00:00",
+  "fecha_fin_planificacion": "2017-10-06T10:00:00",
+  "id_tipo_control": "1,2",
+  "id_nivel_complejidad": "1",
+  "observaciones": " OPERATIVO DE DENUNCIAS",
+  "tramite": "   ",
+  "tipo_operativo": "5",
+  "participantes": " ",
+  "punto_encuentro_planificado": "BARRIOS DE LA ZONA QUITUMBE",
+  "id_zona": "5",
+  "id_persona_encargada": "40",
+  "fallido": false,
+  "finalizado": false,
+  "id": "1"
+}
