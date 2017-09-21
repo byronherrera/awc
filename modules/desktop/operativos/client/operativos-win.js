@@ -42,15 +42,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 // inicio combos secretaria
 
         //inicio combo tipo documento  OPTID
-
-
         storeOPTID = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=ordenanzas'
         });
-
 
         var comboOPTID = new Ext.ux.form.CheckboxCombo({
             width: 250,
@@ -85,7 +82,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
             return retorno
         }
-
         //fin combo tipo documento  OPTID
 
         //inicio combo activo
@@ -117,7 +113,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
-
         //fin combo activo
 
         //inicio combo nivel complejidad
@@ -265,6 +260,41 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo reasignacion OPREAGUIA
+
+        //inicio combo tipo documento  OPPERENC
+        storeOPPERENC = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=personaloperativos'
+        });
+
+        var comboOPPERENC = new Ext.ux.form.CheckboxCombo({
+            width: 250,
+            mode: 'local',
+            store: storeOPPERENC,
+            valueField: 'id',
+            displayField: 'nombre',
+            allowBlank: false,
+            listeners: {
+                'change': function (cmb, arr) {
+                }
+            }
+        });
+
+        function operativosPersonalEncargado(id) {
+            if (id === '') return '';
+            var nombres = id.split(",");
+            retorno = '';
+            for (var i = 1; i <= nombres.length; i++) {
+                index = storeOPPERENC.find('id', i);
+                var record = storeOPPERENC.getAt(index);
+                retorno = record.get('nombre') + ',' + retorno
+            }
+            return retorno
+        }
+        //fin combo tipo documento  OPPERENC
+
 
         //inicio combo persona recepta la operativos PRD
         storePRD = new Ext.data.JsonStore({
@@ -677,8 +707,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_persona_encargada',
                     sortable: true,
                     width: 40,
-                    editor: comboPRD2,
-                    renderer: personaReceptaDenuncia
+                    editor: comboOPPERENC,
+                    renderer: operativosPersonalEncargado
                 },
                 {
                     header: 'Participantes',
@@ -1277,7 +1307,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_persona_encargada',
                     sortable: true,
                     width: 40,
-                    renderer: personaReceptaDenuncia
+                    renderer: operativosPersonalEncargado
                 },
                 {
                     header: 'Participantes',

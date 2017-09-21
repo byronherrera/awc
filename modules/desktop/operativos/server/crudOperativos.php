@@ -130,9 +130,9 @@ function selectOperativos()
     if (isset($_POST['busqueda_persona_encargada']) and ($_POST['busqueda_persona_encargada'] != '')) {
         $tipo = $_POST['busqueda_persona_encargada'];
         if ($where == '') {
-            $where = "WHERE id_persona_encargada  = '$tipo' ";
+            $where = "WHERE id_persona_encargada  like '%$tipo%' ";
         } else {
-            $where = $where . " AND id_persona_encargada = '$tipo' ";
+            $where = $where . " AND id_persona_encargada like '%$tipo%' ";
         }
     }
     if (isset($_POST['busqueda_fallido']) and ($_POST['busqueda_fallido'] != '')) {
