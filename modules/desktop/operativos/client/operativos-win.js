@@ -42,17 +42,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 // inicio combos secretaria
 
         //inicio combo tipo documento  OPTID
-      /*  storeOPTID = new Ext.data.JsonStore({
-            root: 'documento',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                documento: [
-                    {"id": 1, "nombre": "Licenciamiento"},
-                    {"id": 2, "nombre": "Espacio Público"}
-                ]
-            }   
-        });*/
+
 
         storeOPTID = new Ext.data.JsonStore({
             root: 'data',
@@ -73,6 +63,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 'change': function (cmb, arr) {
                 }
             }
+        });
+
+        var comboOPTIDSimple = new Ext.form.ComboBox({
+            id: 'comboOPNICO',
+            store: storeOPTID,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
         });
 
         function operativosTipoOperativos(id) {
@@ -156,15 +155,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         //inicio combo tipo operativo
         storeOPTIPO = new Ext.data.JsonStore({
-            root: 'users',
+            root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            data: {
-                users: [
-                    {"id": 'planificado', "nombre": "Planificado"},
-                    {"id": 'emergente', "nombre": "Emergente"}
-                ]
-            }
+            url: 'modules/common/combos/combos.php?tipo=tiposoperativos'
         });
 
         var comboOPTIPO = new Ext.form.ComboBox({
@@ -183,7 +177,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
-
         //fin combo nivel complejidad
 
         //inicio combo reasignacion  OPREA
@@ -601,6 +594,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_tipo_control', allowBlank: false},
                 {name: 'id_nivel_complejidad', allowBlank: false},
                 {name: 'observaciones', allowBlank: false},
+                {name: 'tramite', allowBlank: false},
                 {name: 'tipo_operativo', allowBlank: false},
                 {name: 'participantes', allowBlank: false},
                 {name: 'punto_encuentro_planificado', allowBlank: false},
@@ -709,6 +703,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
+                    header: 'Trámite',
+                    dataIndex: 'tramite',
+                    sortable: true,
+                    width: 30,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
                     header: 'Elaborado',
                     dataIndex: 'id_persona',
                     sortable: true,
@@ -786,6 +787,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             selectOperativos = rec.id;
                             storeOperativosPersonal.load({params: {id_operativo: rec.id}})
                             storeOperativosVehiculos.load({params: {id_operativo: rec.id}})
+                            storeOperativosInforme.load({params: {id_operativo: rec.id}})
 
                             // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
                             if (acceso) {
@@ -797,6 +799,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('borraroperativodetallevehiculo').setDisabled(true);
                                     Ext.getCmp('addoperativodetallevehiculo').setDisabled(true);
 
+                                    Ext.getCmp('borraroperativodetalleInforme').setDisabled(true);
+                                    Ext.getCmp('addoperativodetalleInforme').setDisabled(true);
                                 }
                                 else {
                                     Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
@@ -807,6 +811,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('borraroperativodetallevehiculo').setDisabled(accesosAdministradorOpe ? false : true);
                                     Ext.getCmp('addoperativodetallevehiculo').setDisabled(accesosAdministradorOpe ? false : true);
 
+                                    Ext.getCmp('borraroperativodetalleInforme').setDisabled(false);
+                                    Ext.getCmp('addoperativodetalleInforme').setDisabled(false);
 
                                     //disabled: !acceso
                                     //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
@@ -963,6 +969,147 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         var gridOperativosPersonal = this.gridOperativosPersonal
         // inicio ventana operativos detalle personal
+
+        // inicio ventana operativos detalle informe
+        var proxyOperativosInforme = new Ext.data.HttpProxy({
+            api: {
+                create: urlOperativos + "crudOperativosInforme.php?operation=insert",
+                read: urlOperativos + "crudOperativosInforme.php?operation=select",
+                update: urlOperativos + "crudOperativosInforme.php?operation=update",
+                destroy: urlOperativos + "crudOperativosInforme.php?operation=delete"
+            },
+            listeners: {
+                write: function (proxy, action, result, res, rs) {
+                    if (typeof res.message !== 'undefined') {
+                        if (res.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
+                        }
+                    }
+                }
+            }
+        });
+
+        var readerOperativosInforme = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id_operativo', allowBlank: false},
+                {name: 'id_ordenanza', allowBlank: false},
+                {name: 'novedades', allowBlank: true},
+                {name: 'medida_cautelas', allowBlank: true},
+                {name: 'autoinicio', allowBlank: true},
+                {name: 'observaciones', allowBlank: true}
+               // {name: 'asistencia', type: 'boolean', allowBlank: true}
+
+
+            ]
+        });
+        var writerOperativosInforme = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        this.storeOperativosInforme = new Ext.data.Store({
+            id: "id",
+            proxy: proxyOperativosInforme,
+            reader: readerOperativosInforme,
+            writer: writerOperativosInforme,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true
+        });
+
+        storeOperativosInforme = this.storeOperativosInforme;
+
+        this.gridOperativosInforme = new Ext.grid.EditorGridPanel({
+            id: 'gridOperativosInforme',
+
+            autoHeight: true,
+            autoScroll: true,
+            store: this.storeOperativosInforme,
+            columns: [
+
+                new Ext.grid.RowNumberer(),
+                {
+                    header: 'Ordenanza',
+                    dataIndex: 'id_ordenanza',
+                    sortable: true,
+                    width: 30,
+                    editor: comboOPTIDSimple,
+                    renderer: operativosTipoOperativos
+                },
+                {
+                    header: 'Operativo',
+                    dataIndex: 'id_operativo',
+                    sortable: true,
+                    width: 30, hidden: true
+                },
+                {
+                    header: 'Novedades',
+                    dataIndex: 'novedades',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'medida_cautelas',
+                    dataIndex: 'medida_cautelas',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'Novedades',
+                    dataIndex: 'novedades',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'Auto de inicio',
+                    dataIndex: 'autoinicio',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'Observaciones',
+                    dataIndex: 'observaciones',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
+            ],
+            viewConfig: {
+                forceFit: true
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }
+            ),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            listeners: {
+                beforeedit: function (e) {
+                    /*    if (acceso) {
+                     if (e.record.get("finalizado")) {
+                     return false;
+                     }
+                     return true;
+                     } else {
+                     return false;
+                     }*/
+                }
+            }
+        });
+
+        var gridOperativosInforme = this.gridOperativosInforme
+        // inicio ventana operativos detalle personal
+
 
         // inicio ventana operativos detalle vehiculos
         var proxyOperativosVehiculos = new Ext.data.HttpProxy({
@@ -1148,6 +1295,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'observaciones',
                     sortable: true,
                     width: 60
+                },
+                {
+                    header: 'Trámite',
+                    dataIndex: 'tramite',
+                    sortable: true,
+                    width: 30
                 },
                 {
                     header: 'Elaborado',
@@ -1647,7 +1800,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     title: 'Vehículos asignados',
                                                     layout: 'column',
                                                     height: 200,
-                                                    items: this.gridOperativosVehiculos,
+                                                    //items: this.gridOperativosVehiculos,
                                                     autoScroll: true,
                                                     tbar: [
                                                         {
@@ -1665,6 +1818,33 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             scope: this,
                                                             handler: this.deleteVehiculos,
                                                             id: 'borraroperativodetallevehiculo',
+                                                            iconCls: 'delete-icon',
+                                                            disabled: true
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    title: 'Informes',
+                                                    layout: 'column',
+                                                    height:200,
+                                                    items: this.gridOperativosInforme,
+                                                    autoScroll: true,
+                                                    tbar: [
+                                                        {
+                                                            text: 'Nuevo',
+                                                            scope: this,
+
+                                                            handler: this.addInforme,
+                                                            id: 'addoperativodetalleInforme',
+                                                            iconCls: 'save-icon',
+                                                            disabled: true
+                                                        },
+                                                        '-',
+                                                        {
+                                                            text: "Eliminar",
+                                                            scope: this,
+                                                            handler: this.deleteInforme,
+                                                            id: 'borraroperativodetalleInforme',
                                                             iconCls: 'delete-icon',
                                                             disabled: true
                                                         }
@@ -1934,6 +2114,40 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
     },
     requestGridDataVehiculos: function () {
         this.storeOperativosVehiculos.load();
+    },
+
+    deleteInforme: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridOperativosInforme.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeOperativosInforme.remove(rows);
+                }
+            }
+        });
+    },
+    addInforme: function () {
+        var informe = new this.storeOperativosInforme.recordType({
+
+            id_operativo: selectOperativos,
+            conductor: '',
+            telefono: '',
+            observaciones: ''
+        });
+
+        this.gridOperativosInforme.stopEditing();
+        this.storeOperativosInforme.insert(0, informe);
+        this.gridOperativosInforme.startEditing(0, 0);
+    },
+    requestGridDataInforme: function () {
+        this.storeOperativosInforme.load();
     },
 
     botonExportarReporte: function () {
