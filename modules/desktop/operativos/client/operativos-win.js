@@ -75,10 +75,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             if (id === '') return '';
             var nombres = id.split(",");
             retorno = '';
-            for (var i = 1; i <= nombres.length; i++) {
-                index = storeOPTID.find('id', i);
+            for (var i = 0; i < nombres.length; i++) {
+                index = storeOPTID.find('id', nombres[i]);
                 var record = storeOPTID.getAt(index);
-                retorno = record.get('nombre') + ',' + retorno
+                retorno = record.get('nombre') + ', ' + retorno
             }
             return retorno
         }
@@ -286,11 +286,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             if (id === '') return '';
             var nombres = id.split(",");
             retorno = '';
-            for (var i = 1; i <= nombres.length; i++) {
-                index = storeOPPERENC.find('id', i);
-                console.log (index);
+            for (var i = 0; i < nombres.length; i++) {
+                index = storeOPPERENC.find('id', nombres[i]);
                 var record = storeOPPERENC.getAt(index);
-                console.log (record);
                 retorno = record.get('nombre') + ',' + retorno
             }
             return retorno
