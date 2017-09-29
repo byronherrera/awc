@@ -80,9 +80,9 @@ function selectOperativos()
     if (isset($_POST['finalizados'])) {
         if ($_POST['finalizados'] == 'true') {
             if ($where == '') {
-                $where = " WHERE finalizado <> 'true'";
+                $where = " WHERE id_estado = 1";
             } else {
-                $where = $where . " AND finalizado <> 'true' ";
+                $where = $where . " AND id_estado = 1 ";
             }
         }
     }
@@ -135,14 +135,14 @@ function selectOperativos()
             $where = $where . " AND id_persona_encargada like '%$tipo%' ";
         }
     }
-    if (isset($_POST['busqueda_fallido']) and ($_POST['busqueda_fallido'] != '')) {
+    /*if (isset($_POST['busqueda_fallido']) and ($_POST['busqueda_fallido'] != '')) {
         $tipo = $_POST['busqueda_fallido'];
         if ($where == '') {
             $where = "WHERE fallido = '$tipo' ";
         } else {
             $where = $where . " AND fallido = '$tipo' ";
         }
-    }
+    }*/
     if (isset($_POST['busqueda_tipo_operativo']) and ($_POST['busqueda_tipo_operativo'] != '')) {
         $tipo = $_POST['busqueda_tipo_operativo'];
         if ($where == '') {
@@ -151,14 +151,14 @@ function selectOperativos()
             $where = $where . " AND tipo_operativo = '$tipo' ";
         }
     }
-    if (isset($_POST['busqueda_finalizado']) and ($_POST['busqueda_finalizado'] != '')) {
+   /* if (isset($_POST['busqueda_finalizado']) and ($_POST['busqueda_finalizado'] != '')) {
         $tipo = $_POST['busqueda_finalizado'];
         if ($where == '') {
             $where = "WHERE finalizado = '$tipo' ";
         } else {
             $where = $where . " AND finalizado = '$tipo' ";
         }
-    }
+    }*/
     if (isset($_POST['busqueda_punto_encuentro']) and ($_POST['busqueda_punto_encuentro'] != '')) {
         $tipo = $_POST['busqueda_punto_encuentro'];
         if ($where == '') {
@@ -288,12 +288,17 @@ function updateOperativos()
         else
             $data->finalizado = 'true';
     }
-    if (isset($data->fallido)) {
+  /*  if (isset($data->fallido)) {
         if (!$data->fallido)
             $data->fallido = 'false';
         else
             $data->fallido = 'true';
+    }*/
+
+    if (isset($data->fecha_informe)) {
+            $data->fecha_informe = NULL;
     }
+
 
     $message = '';
     if (isset($data->id_tipo_documento)) {
@@ -306,7 +311,10 @@ function updateOperativos()
 // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
+        if (isset($valor))
         $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        else
+            $cadenaDatos = $cadenaDatos . $clave . " = NULL, ";
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 

@@ -76,6 +76,21 @@ function comboTiposOperativos()
             "data" => $data)
     );
 }
+function comboTiposEntidades()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT id, nombre FROM amc_entidades WHERE activo = 1 ORDER BY orden";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 
 function comboReasignancion()
 {
@@ -161,6 +176,22 @@ function comboUnidades()
 
     //$sql = "SELECT id, nombre FROM amc_unidades WHERE activo = 1 $sqlZonal ORDER BY id";
     $sql = "SELECT * FROM amc_unidades WHERE activo = 1 ORDER BY id";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+function comboOperativosEstados()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+    $sql = "SELECT * FROM amc_operativos_estados WHERE activo = 1 ORDER BY orden";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -323,11 +354,17 @@ switch ($_GET['tipo']) {
     case 'tiposoperativos' :
         comboTiposOperativos();
         break;
+    case 'tiposentidades' :
+        comboTiposEntidades();
+        break;
     case 'reasignancion' :
         comboReasignancion();
         break;
     case 'unidades' :
         comboUnidades();
+        break;
+    case 'operativosestados' :
+        comboOperativosEstados();
         break;
     case 'unidadestotal' :
         comboUnidadesTotal();
