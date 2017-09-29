@@ -1336,7 +1336,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         this.gridOperativosImagenes = new Ext.grid.EditorGridPanel({
             id: 'gridOperativosImagenes',
             autoHeight: true,
-            autoScroll: true,fileUpload:true,
+            autoScroll: true,
             store: this.storeOperativosImagenes,
             columns: [
                 new Ext.grid.RowNumberer(),
@@ -1352,14 +1352,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 60,
                     editor: new Ext.ux.form.FileUploadField({
-
+                        buttonOnly: true,
 
                     })
-                },
-                {
-                    xtype       : "fileuploadfield"
-
-                },
+                }/*,
                 {
                     xtype: 'actioncolumn',
                     width: 50,
@@ -1371,7 +1367,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             console.log ( rec );
                         }
                     } ]
-                },
+                }*/
 
             ],
             viewConfig: {
