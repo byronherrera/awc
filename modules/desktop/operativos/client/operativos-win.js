@@ -967,6 +967,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                                     Ext.getCmp('borraroperativoimagenes').setDisabled(true);
                                     Ext.getCmp('addoperativoimagenes').setDisabled(true);
+                                    Ext.getCmp('subirimagen').setDisabled(true);
                                 }
                                 else {
                                     gridBlockOperativos = false;
@@ -987,7 +988,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('borraroperativoimagenes').setDisabled(false);
 
                                     Ext.getCmp('addoperativoimagenes').setDisabled(false);
-
+                                    Ext.getCmp('subirimagen').setDisabled(false);
 
                                     //disabled: !acceso
                                     //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
@@ -2322,6 +2323,69 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             handler: this.deleteoperativosImagenes,
                                                             id: 'borraroperativoimagenes',
                                                             iconCls: 'delete-icon',
+                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                            disabled: true
+                                                        },
+                                                          '-',
+                                                        {
+                                                            xtype: 'form',
+                                                            fileUpload: true,
+                                                            width: 300,
+                                                            frame: true,
+                                                            autoHeight: 60,
+                                                            defaults: {
+                                                                anchor: '100%',
+                                                                allowBlank: false
+
+                                                            },
+                                                            id: "fp",
+                                                            items: [
+                                                                {
+                                                                    xtype: 'fileuploadfield',
+                                                                    id: 'form-file',
+                                                                    emptyText: 'Seleccione imagen a subir',
+                                                                    fieldLabel: 'Imagen',
+                                                                    name: 'photo-path',
+                                                                    regex: /^.*.(jpg|JPG|jpeg|JPEG)$/,
+                                                                    regexText: 'Solo imagenes ',
+                                                                    buttonText: '',
+                                                                    //buttonOnly: true,
+                                                                    buttonCfg: {
+                                                                        iconCls: 'ux-start-menu-submenu'
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        '-',
+                                                        {
+                                                            text: "Subir Imagen",
+                                                            scope: this,
+                                                            handler: function () {
+                                                                if (Ext.getCmp('fp').getForm().isValid()) {
+                                                                    Ext.getCmp('fp').getForm().submit({
+                                                                        url: urlOperativos + 'file-upload.php',
+                                                                        params: {data: selectOperativos},
+                                                                        waitMsg: 'Subiendo Imagen...',
+                                                                        success: function (fp, o) {
+
+                                                                            storeOperativosImagenes.load({params: {id_operativo: selectOperativos}});
+                                                                            Ext.getCmp('fp').getForm().reset() ;
+                                                                        },
+                                                                        failure: function (form, action) {
+                                                                        var errorJson = JSON.parse(action.response.responseText);
+                                                                        Ext.Msg.show({
+                                                                            title: 'Error '
+                                                                            , msg: errorJson.msg
+                                                                            , modal: true
+                                                                            , icon: Ext.Msg.ERROR
+                                                                            , buttons: Ext.Msg.OK
+                                                                        });
+                                                                    }
+                                                                    });
+                                                                }
+                                                            },
+                                                            id: 'subirimagen',
+                                                            iconCls: 'subir-icon',
                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                                                             disabled: true
                                                         }
