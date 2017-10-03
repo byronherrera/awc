@@ -1006,7 +1006,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 pageSize: limiteoperativos,
                 store: storeOperativos,
                 displayInfo: true,
-                displayMsg: 'Mostrando operativos {0} - {1} de {2}',
+                displayMsg: 'Mostrando operativos {0} - {1} de {2} ',
                 emptyMsg: "No existen operativos que mostrar"
             }),
 
