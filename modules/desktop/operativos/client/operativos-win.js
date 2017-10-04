@@ -792,7 +792,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     renderer: operativosPersonalEncargado
                 },
                 {
-                    header: 'Zona',
+                    header: 'Lugar intervención',
                     dataIndex: 'zona',
                     sortable: true,
                     width: 55,

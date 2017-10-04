@@ -52,9 +52,9 @@ if (isset($data->busqueda_nivel_complejidad) and ($data->busqueda_nivel_compleji
 if (isset($data->busqueda_zonal) and ($data->busqueda_zonal != '')) {
     $tipo = $data->busqueda_zonal;
     if ($where == '') {
-        $where = "WHERE id_zona  = '$tipo' ";
+        $where = "WHERE id_zonal  = '$tipo' ";
     } else {
-        $where = $where . " AND id_zona = '$tipo' ";
+        $where = $where . " AND id_zonal = '$tipo' ";
     }
 }
 if (isset($data->busqueda_persona_encargada) and ($data->busqueda_persona_encargada != '')) {
@@ -254,14 +254,14 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $rowdetalle['personal'] = $cadena_personal;
 
 // recuperamos el nombre de zona
-    $sql = "SELECT  nombre  FROM amc_zonas WHERE id = '" . $rowdetalle['id_zona'] . "'";
+    $sql = "SELECT  nombre  FROM amc_zonas WHERE id = '" . $rowdetalle['id_zonal'] . "'";
     $nombres = $os->db->conn->query($sql);
     $nombresUsuarios = array();
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
         $nombresUsuarios[] = $nombreDetalle['nombre'];
     }
     $cadena_personal = implode(",\n ", $nombresUsuarios);
-    $rowdetalle['id_zona'] = $cadena_personal;
+    $rowdetalle['id_zonal'] = $cadena_personal;
 
     // formatos de impresion de fechas y horas
     $date = new DateTime($rowdetalle['fecha_inicio_planificacion']);

@@ -37,7 +37,7 @@ function selectOperativos()
 {
     global $os;
     //TODO cambiar columna por defecto en busquedas
-    $columnaBusqueda = 'id_zona';
+    $columnaBusqueda = 'id_zonal';
 
     $where = '';
 
@@ -49,7 +49,7 @@ function selectOperativos()
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
 
-        if ($columnaBusqueda == 'id_zona') {
+        if ($columnaBusqueda == 'id_zonal') {
             $sql = "SELECT id FROM amc_zonas WHERE UPPER(nombre) like UPPER('%$campo%') LIMIT 1";
             $result = $os->db->conn->query($sql);
             $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -122,9 +122,9 @@ function selectOperativos()
     if (isset($_POST['busqueda_zonal']) and ($_POST['busqueda_zonal'] != '')) {
         $tipo = $_POST['busqueda_zonal'];
         if ($where == '') {
-            $where = "WHERE id_zona  = '$tipo' ";
+            $where = "WHERE id_zonal  = '$tipo' ";
         } else {
-            $where = $where . " AND id_zona = '$tipo' ";
+            $where = $where . " AND id_zonal = '$tipo' ";
         }
     }
     if (isset($_POST['busqueda_persona_encargada']) and ($_POST['busqueda_persona_encargada'] != '')) {
@@ -270,9 +270,7 @@ function generaCodigoProcesoDenuncia()
         return $nuevoCodogo;
     } else {
         // valor inicial proceso
-
-        return 10759;
-
+        return 1;
     }
 }
 

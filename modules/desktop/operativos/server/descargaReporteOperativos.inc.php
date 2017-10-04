@@ -49,12 +49,15 @@ if (isset($data->busqueda_nivel_complejidad) and ($data->busqueda_nivel_compleji
         $where = $where . " AND id_nivel_complejidad like '%$tipo%' ";
     }
 }
+
+$titulosegundo = 'Unidad de Operativos';
 if (isset($data->busqueda_zonal) and ($data->busqueda_zonal != '')) {
     $tipo = $data->busqueda_zonal;
+    $titulosegundo = nombreZonal ($tipo);
     if ($where == '') {
-        $where = "WHERE id_zona  = '$tipo' ";
+        $where = "WHERE id_zonal  = '$tipo' ";
     } else {
-        $where = $where . " AND id_zona = '$tipo' ";
+        $where = $where . " AND id_zonal = '$tipo' ";
     }
 }
 if (isset($data->busqueda_persona_encargada) and ($data->busqueda_persona_encargada != '')) {
@@ -145,11 +148,13 @@ $styleArray = array(
     )
 );
 
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':I' . $filaTitulo1);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':I' . $filaTitulo2);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO OPERATIVOS");
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Unidad de Operativos');
+
+
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, $titulosegundo);
 
 
 $filascabecera = $number_of_rows + $filaInicio + 2;
@@ -196,36 +201,37 @@ if (isset($data->busqueda_aprobado_por) and ($data->busqueda_aprobado_por != '')
 }
 // Ancho de las columnas
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(32);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('B')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(16.71);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('E')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(23);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('F')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(18);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('G')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(8.71);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
+
+$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(26);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(6);
+$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(6);
+$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(16);
+$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(11);
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(26);
+$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(26);
+$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
 $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
 
-
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Fecha');
-$objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Inicio');
-$objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Fin');
-$objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'Personal');
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Cod');
+$objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Fecha');
+$objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Inicio');
+$objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'Fin');
 $objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Tipo control');
 $objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Complejidad');
 $objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Punto Encuentro');
-$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Zonal');
-$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Codigo');
+$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Observaciones');
+$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Personal');
+$objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Zonal');
 
 $noExistenFilas = true;
 
@@ -239,16 +245,14 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $rowdetalle['id_nivel_complejidad'] = $niveles_complejidad[$rowdetalle['id_nivel_complejidad'] - 1];
 
     //cambio para impresion el tipo de control
-    $tipo_control = array("Licenciamiento", "Espacio Público");
-
-    $cadena = $rowdetalle['id_tipo_control'];
-    $array = explode(",", $cadena);
-    foreach ($array as &$valor) {
-        $valor = $tipo_control[$valor - 1];
+    $sql = "SELECT nombre_completo as nombre  FROM amc_ordenanzas WHERE id in (" . $rowdetalle['id_tipo_control'] . ")";
+    $nombres = $os->db->conn->query($sql);
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $nombresUsuarios[] = $nombreDetalle['nombre'];
     }
-    $cadena_equipo = implode(",", $array);
-    $rowdetalle['id_tipo_control'] = $cadena_equipo;
-
+    $cadena_personal = implode(", ", $nombresUsuarios);
+    $rowdetalle['id_tipo_control'] = $cadena_personal;
 
 // recuperamos los nombres de los usuarios
     $sql = "SELECT (SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) FROM qo_members WHERE qo_members.id = b.id_member ) AS nombre  FROM amc_operativos_personal b WHERE id_operativo = '" . $rowdetalle['id'] . "'";
@@ -261,14 +265,14 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $rowdetalle['personal'] = $cadena_personal;
 
 // recuperamos el nombre de zona
-    $sql = "SELECT  nombre  FROM amc_zonas WHERE id = '" . $rowdetalle['id_zona'] . "'";
+    $sql = "SELECT  nombre  FROM amc_zonas WHERE id = '" . $rowdetalle['id_zonal'] . "'";
     $nombres = $os->db->conn->query($sql);
     $nombresUsuarios = array();
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
         $nombresUsuarios[] = $nombreDetalle['nombre'];
     }
     $cadena_personal = implode(", ", $nombresUsuarios);
-    $rowdetalle['id_zona'] = $cadena_personal;
+    $rowdetalle['id_zonal'] = $cadena_personal;
 
 
     // formatos de impresion de fechas y horas
@@ -283,19 +287,18 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $fin = $date->format('H:i');
 
     // envio de impresion de valores
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['fecha_inicio_planificacion']);
-    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $inicio);
-    $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $fin);
-    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['personal']);
+    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['id']);
+    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['fecha_inicio_planificacion']);
+    $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $inicio);
+    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $fin);
     $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['id_tipo_control']);
     $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, substr($rowdetalle['id_nivel_complejidad'], 0, 200));
     $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, strip_tags($rowdetalle['punto_encuentro_planificado']));
-    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['id_zona']);
-    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['id']);
-    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['participantes']);
+    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['observaciones']);
+    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['personal']);
+    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['id_zonal']);
 
-
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':I' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':J' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -321,7 +324,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:I600')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:J600')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -329,7 +332,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:I600')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:I200')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:J200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -337,10 +340,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:I200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:I30')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:J30')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':I' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':J' . $filacabecera)->applyFromArray($styleArray);
 
 
 // Set page orientation and size
@@ -350,8 +353,8 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:I3')->getFont()->setSize(14);
-$objPHPExcel->getActiveSheet()->getStyle('A4:I40')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A1:J3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A4:J40')->getFont()->setSize(10);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -394,4 +397,18 @@ function quitar_espacio($cadena)
     $permitidas = array("-");
     $texto = str_replace($no_permitidas, $permitidas, $cadena);
     return $texto;
+}
+
+
+function nombreZonal ($tipo) {
+    global $os;
+    $sql = "SELECT  nombre  FROM amc_zonas WHERE id = '" . $tipo . "'";
+    $nombres = $os->db->conn->query($sql);
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $nombresUsuarios[] = $nombreDetalle['nombre'];
+    }
+    $cadena_personal = implode(", ", $nombresUsuarios);
+    return $cadena_personal;
+
 }
