@@ -53,7 +53,7 @@ if (isset($data->busqueda_nivel_complejidad) and ($data->busqueda_nivel_compleji
 $titulosegundo = 'Unidad de Operativos';
 if (isset($data->busqueda_zonal) and ($data->busqueda_zonal != '')) {
     $tipo = $data->busqueda_zonal;
-    $titulosegundo = nombreZonal ($tipo);
+    $titulosegundo = nombreZonal($tipo);
     if ($where == '') {
         $where = "WHERE id_zonal  = '$tipo' ";
     } else {
@@ -126,7 +126,7 @@ if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')
 
 $os->db->conn->query("SET NAMES 'utf8'");
 
-$sql = "SELECT * FROM amc_operativos as b  $where  ORDER BY b.codigo_operativo DESC";
+$sql = "SELECT * FROM amc_operativos as b  $where  ORDER BY b.fecha_inicio_planificacion";
 
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
@@ -156,49 +156,73 @@ $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO OPERAT
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, $titulosegundo);
 
+$offsetTotalesTipo = totalesPorTipo($number_of_rows + $filaInicio, $where);
 
-$filascabecera = $number_of_rows + $filaInicio + 2;
 
-function regresaNombre ($id_dato) {
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
-            FROM qo_members WHERE id = " . $id_dato;
-    $nombre = $os->db->conn->query($sql);
-    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-    return $rownombre['nombre'];
+$filasPiePagina = $number_of_rows + $filaInicio + 4 + $offsetTotalesTipo;
 
-}
 
 // Elaborador por:
 if (isset($data->busqueda_elaborado_por) and ($data->busqueda_elaborado_por != '')) {
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filascabecera) . ':B' . ($filascabecera));
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filascabecera + 1) . ':B' . ($filascabecera + 1));
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filascabecera + 2) . ':B' . ($filascabecera + 2));
+    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filasPiePagina) . ':B' . ($filasPiePagina));
+    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filasPiePagina + 1) . ':B' . ($filasPiePagina + 1));
+    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filasPiePagina + 2) . ':B' . ($filasPiePagina + 2));
 
 
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filascabecera, '__________________');
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filascabecera + 1), regresaNombre($data->busqueda_elaborado_por));
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filascabecera + 2), "Elaborado por");
+    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filasPiePagina, '__________________');
+    $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filasPiePagina + 1), regresaNombre($data->busqueda_elaborado_por));
+    $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filasPiePagina + 2), "Elaborado por");
 }
 // Revisado por:
 if (isset($data->busqueda_revisado_por) and ($data->busqueda_revisado_por != '')) {
-    $objPHPExcel->getActiveSheet()->mergeCells('D' . ($filascabecera) . ':E' . ($filascabecera));
-    $objPHPExcel->getActiveSheet()->mergeCells('D' . ($filascabecera + 1) . ':E' . ($filascabecera + 1));
-    $objPHPExcel->getActiveSheet()->mergeCells('D' . ($filascabecera + 2) . ':E' . ($filascabecera + 2));
-    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filascabecera, '__________________');
-    $objPHPExcel->getActiveSheet()->setCellValue('D' . ($filascabecera + 1), regresaNombre($data->busqueda_revisado_por));
-    $objPHPExcel->getActiveSheet()->setCellValue('D' . ($filascabecera + 2), "Revisado por");
+    $objPHPExcel->getActiveSheet()->mergeCells('D' . ($filasPiePagina) . ':E' . ($filasPiePagina));
+    $objPHPExcel->getActiveSheet()->mergeCells('D' . ($filasPiePagina + 1) . ':E' . ($filasPiePagina + 1));
+    $objPHPExcel->getActiveSheet()->mergeCells('D' . ($filasPiePagina + 2) . ':E' . ($filasPiePagina + 2));
+    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filasPiePagina, '__________________');
+    $objPHPExcel->getActiveSheet()->setCellValue('D' . ($filasPiePagina + 1), regresaNombre($data->busqueda_revisado_por));
+    $objPHPExcel->getActiveSheet()->setCellValue('D' . ($filasPiePagina + 2), "Revisado por");
 }
 // Aprobado por:
 if (isset($data->busqueda_aprobado_por) and ($data->busqueda_aprobado_por != '')) {
-    $objPHPExcel->getActiveSheet()->mergeCells('G' . ($filascabecera) . ':H' . ($filascabecera));
-    $objPHPExcel->getActiveSheet()->mergeCells('G' . ($filascabecera + 1) . ':H' . ($filascabecera + 1));
-    $objPHPExcel->getActiveSheet()->mergeCells('G' . ($filascabecera + 2) . ':H' . ($filascabecera + 2));
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filascabecera, '__________________');
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filascabecera + 1), regresaNombre($data->busqueda_aprobado_por));
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filascabecera + 2), "Aprobado por");
+    $objPHPExcel->getActiveSheet()->mergeCells('G' . ($filasPiePagina) . ':H' . ($filasPiePagina));
+    $objPHPExcel->getActiveSheet()->mergeCells('G' . ($filasPiePagina + 1) . ':H' . ($filasPiePagina + 1));
+    $objPHPExcel->getActiveSheet()->mergeCells('G' . ($filasPiePagina + 2) . ':H' . ($filasPiePagina + 2));
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filasPiePagina, '__________________');
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filasPiePagina + 1), regresaNombre($data->busqueda_aprobado_por));
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filasPiePagina + 2), "Aprobado por");
 }
+
+// impresion pie de pagina
+$objDrawing = new PHPExcel_Worksheet_Drawing();
+$objDrawing->setName('test_img');
+$objDrawing->setDescription('test_img');
+$objDrawing->setPath('image2.png');
+$objDrawing->setCoordinates('A'. ($filasPiePagina + 5) );
+//setOffsetX works properly
+$objDrawing->setOffsetX(5);
+$objDrawing->setOffsetY(5);
+//set width, height
+$objDrawing->setWidth(200);
+$objDrawing->setHeight(70);
+$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
+// fin impresion pie de pagina
+
+// impresion pie de pagina
+$objDrawing = new PHPExcel_Worksheet_Drawing();
+$objDrawing->setName('test_img2');
+$objDrawing->setDescription('test_img2');
+$objDrawing->setPath('image1.png');
+$objDrawing->setCoordinates('I1');
+//setOffsetX works properly
+$objDrawing->setOffsetX(0);
+$objDrawing->setOffsetY(0);
+//set width, height
+$objDrawing->setWidth(100);
+$objDrawing->setHeight(50);
+$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
+// fin impresion pie de pagina
+
+
 // Ancho de las columnas
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('B')->setAutoSize(false);
@@ -213,12 +237,12 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(fal
 
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(26);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(6);
-$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(6);
-$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(16);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(5.5);
+$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(5.5);
+$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(14);
 $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(11);
-$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(26);
-$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(26);
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(32);
 $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
 $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
 
@@ -354,7 +378,8 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 
 
 $objPHPExcel->getActiveSheet()->getStyle('A1:J3')->getFont()->setSize(14);
-$objPHPExcel->getActiveSheet()->getStyle('A4:J40')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A4:F40')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('G4:J40')->getFont()->setSize(9);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -400,9 +425,10 @@ function quitar_espacio($cadena)
 }
 
 
-function nombreZonal ($tipo) {
+function nombreZonal($tipo)
+{
     global $os;
-    $sql = "SELECT  nombre  FROM amc_zonas WHERE id = '" . $tipo . "'";
+    $sql = "SELECT  nombre_largo as nombre FROM amc_zonas WHERE id = '" . $tipo . "'";
     $nombres = $os->db->conn->query($sql);
     $nombresUsuarios = array();
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
@@ -411,4 +437,53 @@ function nombreZonal ($tipo) {
     $cadena_personal = implode(", ", $nombresUsuarios);
     return $cadena_personal;
 
+}
+
+function regresaNombre($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
+            FROM qo_members WHERE id = " . $id_dato;
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['nombre'];
+
+}
+
+function totalesPorTipo($filaTitulo1, $where)
+{
+    global $objPHPExcel;
+    global $os;
+    global $styleArray;
+    $sql = "SELECT * FROM amc_ordenanzas";
+    $nombres = $os->db->conn->query($sql);
+
+    $j = 0;
+
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $totalOrdenanza = recuperarTotales($nombreDetalle['id'], $where);
+        if ($totalOrdenanza != 0) {
+            $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filaTitulo1 + $j), $nombreDetalle['nombre_completo']);
+            $objPHPExcel->getActiveSheet()->setCellValue('H' . ($filaTitulo1 + $j), $totalOrdenanza);
+            $objPHPExcel->getActiveSheet()->getStyle('G' . ($filaTitulo1 + $j) . ':H' . ($filaTitulo1 + $j))->applyFromArray($styleArray);
+            $j++;
+        };
+    }
+    return $j;
+}
+
+function recuperarTotales($id, $where)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($where == '') {
+        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b WHERE id_tipo_control like '%$id%'";
+    } else {
+        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b $where AND id_tipo_control like '%$id%'";
+    }
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+
+    return $rownombre['total'];
 }
