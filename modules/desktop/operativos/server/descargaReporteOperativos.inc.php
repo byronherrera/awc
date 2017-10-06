@@ -60,6 +60,17 @@ if (isset($data->busqueda_zonal) and ($data->busqueda_zonal != '')) {
         $where = $where . " AND id_zonal = '$tipo' ";
     }
 }
+
+
+if (isset($data->busqueda_unidad_asignado) and ($data->busqueda_unidad_asignado != '')) {
+    $tipo = $data->busqueda_unidad_asignado;
+    if ($where == '') {
+        $where = "WHERE id_unidad = $tipo ";
+    } else {
+        $where = $where . " AND id_unidad = $tipo ";
+    }
+}
+
 if (isset($data->busqueda_persona_encargada) and ($data->busqueda_persona_encargada != '')) {
     $tipo = $data->busqueda_persona_encargada;
     if ($where == '') {
@@ -239,22 +250,22 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(26);
 $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(5.5);
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(5.5);
-$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(14);
-$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(11);
-$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(14);
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(11);
 $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(32);
-$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
+$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Cod');
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Fecha');
 $objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Inicio');
 $objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'Fin');
-$objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Tipo control');
-$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Complejidad');
-$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Punto Encuentro');
+$objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Funcionarios Operantes');
+$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Tipo control');
+$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Complejidad');
 $objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Observaciones');
-$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Personal');
+$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Punto Encuentro');
 $objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Zonal');
 
 $noExistenFilas = true;
@@ -315,11 +326,11 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['fecha_inicio_planificacion']);
     $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $inicio);
     $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $fin);
-    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['id_tipo_control']);
-    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, substr($rowdetalle['id_nivel_complejidad'], 0, 200));
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, strip_tags($rowdetalle['punto_encuentro_planificado']));
+    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['personal']);
+    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['id_tipo_control']);
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, substr($rowdetalle['id_nivel_complejidad'], 0, 200));
     $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['observaciones']);
-    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['personal']);
+    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, strip_tags($rowdetalle['punto_encuentro_planificado']));
     $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['id_zonal']);
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':J' . $filaInicio)->applyFromArray($styleArray);

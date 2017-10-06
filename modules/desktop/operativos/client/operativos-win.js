@@ -215,7 +215,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: ['id', 'nombre', 'orden'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=unidades',
+            url: 'modules/common/combos/combos.php?tipo=unidadessinfiltro',
             remoteSort: true, //true for server sorting
             sorters: [{
                 property: 'orden',
@@ -695,12 +695,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_tipo_control', allowBlank: false},
                 {name: 'id_nivel_complejidad', allowBlank: false},
                 {name: 'id_zonal', allowBlank: true},
-                {name: 'observaciones', allowBlank: false},
+                {name: 'observaciones', allowBlank: true    },
                 {name: 'tramite', allowBlank: true},
                 {name: 'tipo_operativo', allowBlank: false},
                 {name: 'zona', allowBlank: true},
                 {name: 'id_unidad', allowBlank: true},
-                {name: 'punto_encuentro_planificado', allowBlank: false},
+                {name: 'punto_encuentro_planificado', allowBlank: true},
                 {name: 'id_persona_encargada', allowBlank: false},
                /* {name: 'fallido', type: 'boolean', allowBlank: false},*/
                 /*{name: 'finalizado', type: 'boolean', allowBlank: false},*/
@@ -1962,13 +1962,28 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Personal asignado',
+                                fieldLabel: 'Func.operante',
                                 id: 'busqueda_personal_asignado',
                                 name: 'busqueda_personal_asignado',
                                 hiddenName: 'busqueda_personal_asignado',
 
                                 anchor: '95%',
                                 store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Unidad',
+                                id: 'busqueda_unidad_asignado',
+                                name: 'busqueda_unidad_asignado',
+                                hiddenName: 'busqueda_unidad_asignado',
+
+                                anchor: '95%',
+                                store: storeOPREA,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2571,7 +2586,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     finalizados: Ext.getCmp('checkNoRecibidos').getValue()
                 }
             });
-        }, 400);
+        }, 600);
     },
     deleteoperativos: function () {
         Ext.Msg.show({

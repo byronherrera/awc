@@ -97,9 +97,13 @@ function selectOperativos()
     else
         $limit = 100;
 
-    $orderby = 'ORDER BY codigo_operativo DESC';
+    $orderby = 'ORDER BY CONVERT( codigo_operativo,UNSIGNED INTEGER) DESC';
     if (isset($_POST['sort'])) {
-        $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
+        if ($_POST['sort'] == 'codigo_operativo') {
+            $orderby = 'ORDER BY CONVERT( codigo_operativo,UNSIGNED INTEGER) DESC';
+        } else {
+            $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
+        }
     }
 
     // caso en reportes
@@ -149,6 +153,14 @@ function selectOperativos()
             $where = "WHERE tipo_operativo = '$tipo' ";
         } else {
             $where = $where . " AND tipo_operativo = '$tipo' ";
+        }
+    }
+    if (isset($_POST['busqueda_unidad_asignado']) and ($_POST['busqueda_unidad_asignado'] != '')) {
+        $tipo = $_POST['busqueda_unidad_asignado'];
+        if ($where == '') {
+            $where = "WHERE id_unidad = $tipo ";
+        } else {
+            $where = $where . " AND id_unidad = $tipo ";
         }
     }
    /* if (isset($_POST['busqueda_finalizado']) and ($_POST['busqueda_finalizado'] != '')) {

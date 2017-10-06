@@ -167,14 +167,7 @@ function comboUnidades()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    /*$sqlZonal = '';
-    if (isset($_POST['zonales'])) {
-        if ($_POST['zonales'] == 'true') {
-            $sqlZonal = " AND id = 2";
-        }
-    }*/
 
-    //$sql = "SELECT id, nombre FROM amc_unidades WHERE activo = 1 $sqlZonal ORDER BY id";
     $sql = "SELECT * FROM amc_unidades WHERE activo = 1 ORDER BY id";
     $result = $os->db->conn->query($sql);
     $data = array();
@@ -186,6 +179,24 @@ function comboUnidades()
             "data" => $data)
     );
 }
+
+function comboUnidadesSinFiltro()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+    $sql = "SELECT * FROM amc_unidades ORDER BY nombre";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
 function comboOperativosEstados()
 {
     global $os;
@@ -362,6 +373,9 @@ switch ($_GET['tipo']) {
         break;
     case 'unidades' :
         comboUnidades();
+        break;
+    case 'unidadessinfiltro' :
+        comboUnidadesSinFiltro();
         break;
     case 'operativosestados' :
         comboOperativosEstados();
