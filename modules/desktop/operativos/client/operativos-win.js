@@ -695,15 +695,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_tipo_control', allowBlank: false},
                 {name: 'id_nivel_complejidad', allowBlank: false},
                 {name: 'id_zonal', allowBlank: true},
-                {name: 'observaciones', allowBlank: true    },
+                {name: 'observaciones', allowBlank: true},
                 {name: 'tramite', allowBlank: true},
                 {name: 'tipo_operativo', allowBlank: false},
                 {name: 'zona', allowBlank: true},
                 {name: 'id_unidad', allowBlank: true},
                 {name: 'punto_encuentro_planificado', allowBlank: true},
                 {name: 'id_persona_encargada', allowBlank: false},
-               /* {name: 'fallido', type: 'boolean', allowBlank: false},*/
-                /*{name: 'finalizado', type: 'boolean', allowBlank: false},*/
+             /* {name: 'fallido', type: 'boolean', allowBlank: false},*/
+             /* {name: 'finalizado', type: 'boolean', allowBlank: false},*/
                 {name: 'id_estado', allowBlank: false}
             ]
         });
