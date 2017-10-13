@@ -318,7 +318,7 @@ QoDesk.QoAdmin.Members = Ext.extend(Ext.grid.EditorGridPanel, {
                         this.store.remove(this.store.getById(deleted[i].store_id));
                      }
                   }else{
-                     Ext.MessageBox.alert('Warning', 'Conexión perdida con el servidor');
+                     Ext.MessageBox.alert('Warning', 'Lost connection to the server!');
                   }
                }
                , params: {

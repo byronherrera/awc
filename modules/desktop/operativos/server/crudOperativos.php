@@ -80,9 +80,9 @@ function selectOperativos()
     if (isset($_POST['finalizados'])) {
         if ($_POST['finalizados'] == 'true') {
             if ($where == '') {
-                $where = " WHERE id_estado = 1";
+                $where = " WHERE id_estado = 1 OR id_estado = 4 ";
             } else {
-                $where = $where . " AND id_estado = 1 ";
+                $where = $where . " AND id_estado = 1 OR id_estado = 4 ";
             }
         }
     }
@@ -139,14 +139,14 @@ function selectOperativos()
             $where = $where . " AND id_persona_encargada like '%$tipo%' ";
         }
     }
-    /*if (isset($_POST['busqueda_fallido']) and ($_POST['busqueda_fallido'] != '')) {
-        $tipo = $_POST['busqueda_fallido'];
+    if (isset($_POST['busqueda_estado']) and ($_POST['busqueda_estado'] != '')) {
+        $tipo = $_POST['busqueda_estado'];
         if ($where == '') {
-            $where = "WHERE fallido = '$tipo' ";
+            $where = "WHERE id_estado = '$tipo' ";
         } else {
-            $where = $where . " AND fallido = '$tipo' ";
+            $where = $where . " AND id_estado = '$tipo' ";
         }
-    }*/
+    }
     if (isset($_POST['busqueda_tipo_operativo']) and ($_POST['busqueda_tipo_operativo'] != '')) {
         $tipo = $_POST['busqueda_tipo_operativo'];
         if ($where == '') {
@@ -171,14 +171,33 @@ function selectOperativos()
             $where = $where . " AND finalizado = '$tipo' ";
         }
     }*/
-    if (isset($_POST['busqueda_punto_encuentro']) and ($_POST['busqueda_punto_encuentro'] != '')) {
+    if (isset($_POST['busqueda_informe']) and ($_POST['busqueda_informe'] != '')) {
+        $tipo = $_POST['busqueda_informe'];
+        if ($where == '') {
+            $where = "WHERE (select count(*) from amc_operativos_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
+            UPPER(a.direccion) like UPPER('%$tipo%') OR
+            UPPER(a.hecho) like UPPER('%$tipo%') OR
+            UPPER(a.medida) like UPPER('%$tipo%') OR
+            UPPER(a.observaciones) like UPPER('%$tipo%')) AND
+            a.id_operativo = amc_operativos.id ) > 0 ";
+        } else {
+            $where = $where . " AND (select count(*) from amc_operativos_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
+            UPPER(a.direccion) like UPPER('%$tipo%') OR
+            UPPER(a.hecho) like UPPER('%$tipo%') OR
+            UPPER(a.medida) like UPPER('%$tipo%') OR
+            UPPER(a.observaciones) like UPPER('%$tipo%')) AND
+            a.id_operativo = amc_operativos.id ) > 0               ";
+        }
+    }
+
+/*    if (isset($_POST['busqueda_punto_encuentro']) and ($_POST['busqueda_punto_encuentro'] != '')) {
         $tipo = $_POST['busqueda_punto_encuentro'];
         if ($where == '') {
             $where = "WHERE punto_encuentro_planificado like '%$tipo%' ";
         } else {
             $where = $where . " AND punto_encuentro_planificado like '%$tipo%' ";
         }
-    }
+    }*/
     if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
         $tipo = $_POST['busqueda_observaciones'];
         if ($where == '') {
@@ -209,7 +228,6 @@ function selectOperativos()
             $where = $where . " AND fecha_inicio_planificacion between '$fechainicio' and '$fechafin' ";
         }
     }
-
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_operativos $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);

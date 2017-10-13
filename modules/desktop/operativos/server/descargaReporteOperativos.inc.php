@@ -95,12 +95,39 @@ if (isset($data->busqueda_finalizado) and ($data->busqueda_finalizado != '')) {
         $where = $where . " AND finalizado = '$tipo' ";
     }
 }
-if (isset($data->busqueda_punto_encuentro) and ($data->busqueda_punto_encuentro != '')) {
-    $tipo = $data->busqueda_punto_encuentro;
+if (isset($data->busqueda_estado) and ($data->busqueda_estado != '')) {
+    $tipo = $data->busqueda_estado;
     if ($where == '') {
-        $where = "WHERE punto_encuentro_planificado like '%$tipo%' ";
+        $where = "WHERE id_estado = '$tipo' ";
     } else {
-        $where = $where . " AND punto_encuentro_planificado like '%$tipo%' ";
+        $where = $where . " AND id_estado = '$tipo' ";
+    }
+}
+if (isset($data->busqueda_tipo_operativo) and ($data->busqueda_tipo_operativo != '')) {
+    $tipo = $data->busqueda_tipo_operativo;
+    if ($where == '') {
+        $where = "WHERE tipo_operativo = '$tipo' ";
+    } else {
+        $where = $where . " AND tipo_operativo = '$tipo' ";
+    }
+}
+
+if (isset($data->busqueda_informe) and ($data->busqueda_informe != '')) {
+    $tipo = $data->busqueda_informe;
+    if ($where == '') {
+        $where = "WHERE (select count(*) from amc_operativos_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
+            UPPER(a.direccion) like UPPER('%$tipo%') OR
+            UPPER(a.hecho) like UPPER('%$tipo%') OR
+            UPPER(a.medida) like UPPER('%$tipo%') OR
+            UPPER(a.observaciones) like UPPER('%$tipo%')) AND
+            a.id_operativo = b.id ) > 0 ";
+    } else {
+        $where = $where . " AND (select count(*) from amc_operativos_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
+            UPPER(a.direccion) like UPPER('%$tipo%') OR
+            UPPER(a.hecho) like UPPER('%$tipo%') OR
+            UPPER(a.medida) like UPPER('%$tipo%') OR
+            UPPER(a.observaciones) like UPPER('%$tipo%')) AND
+            a.id_operativo = b.id ) > 0               ";
     }
 }
 if (isset($data->busqueda_observaciones) and ($data->busqueda_observaciones != '')) {
@@ -375,7 +402,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:J200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:J30')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:J3000')->getAlignment()->setWrapText(true);
 
 
 $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':J' . $filacabecera)->applyFromArray($styleArray);
