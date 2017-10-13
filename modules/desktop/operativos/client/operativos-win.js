@@ -1369,7 +1369,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Test',
-                    dataIndex: 'url2',
+                    dataIndex: 'url',
                     sortable: true,
                     width: 60,
                     editor: new Ext.ux.form.FileUploadField({
