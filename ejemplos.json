@@ -1,32 +1,33 @@
 {
-  "id": "operativos",
-  "type": "desktop/operativos",
+  "id": "luae",
+  "type": "desktop/luae",
   "about": {
     "author": "",
-    "description": "AMC Inspección.",
-    "name": "Inspección",
+    "description": "Mantenimiento de Luae.",
+    "name": "Ventana Luae",
     "url": "",
     "version": "1.0"
   },
   "server": {
     "methods": [
-      { "name": "accesosAdministradorIns", "description": "Administrador operativos" },
-      { "name": "accesosOperativos", "description": "Usuario opeativos" },
-      { "name": "accesosRecepciónIns", "description": "Recepción inspección" }
+      { "name": "accesosAdministrador", "description": "Full acceso" },
+      { "name": "accesosSecretaria", "description": "Full acceso" },
+      { "name": "accesosZonales", "description": "Personal de zonales" }
+
     ],
-    "class": "QoOperativos",
-    "file": "desktop/operativos/operativos.php"
+    "class": "QoLuae",
+    "file": "desktop/luae/luae.php"
   },
   "client": {
-    "class": "QoDesk.OperativosWindow",
+    "class": "QoDesk.LuaeWindow",
     "css": [
       {
-        "directory": "desktop/operativos/client/resources/",
+        "directory": "desktop/luae/client/resources/",
         "files": [ "styles.css" ]
       },
       {
         "directory": "common/libraries/",
-        "files": [ "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css"  ]
+        "files": [  "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css"   ]
       }
     ],
     "javascript": [
@@ -35,10 +36,9 @@
         "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
       },
       {
-        "directory": "desktop/operativos/client/",
-        "files": [  "operativos-win.js" ]
+        "directory": "desktop/luae/client/",
+        "files": [  "luae-win.js" ]
       },
-
       {
         "directory": "qwiki/admin/client/",
         "files": [ "QoAdmin.js" ]
@@ -50,10 +50,10 @@
     ],
     "launcher": {
       "config": {
-        "iconCls": "operativos-icon",
-        "shortcutIconCls": "operativos-shortcut",
-        "text": "Operativos",
-        "tooltip": "<b>Operativos - AMC</b>"
+        "iconCls": "luae-icon",
+        "shortcutIconCls": "luae-shortcut",
+        "text": "Luae",
+        "tooltip": "<b>Luae</b>"
       },
       "paths": {
         "startmenu": "/"

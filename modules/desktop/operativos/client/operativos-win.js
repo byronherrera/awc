@@ -727,7 +727,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         storeOperativos = this.storeOperativos;
         limiteoperativos = 100;
         this.gridOperativos = new Ext.grid.EditorGridPanel({
-            height: desktop.getWinHeight() - 322,
+            height: desktop.getWinHeight() - 330,
             store: this.storeOperativos,
             columns: [
                 new Ext.grid.RowNumberer(),
@@ -960,7 +960,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                             // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
                             if (acceso) {
-                                if   (rec.get("id_estado") != 1) {
+                                if (rec.get("id_estado") != 1) {
                                     Ext.getCmp('informesOperativosTab').setDisabled(accesosAdministradorOpe ? false : true);
                                     Ext.getCmp('imagenesOperativosTab').setDisabled(accesosAdministradorOpe ? false : true);
                                 }
@@ -1356,7 +1356,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         this.gridOperativosImagenes = new Ext.grid.EditorGridPanel({
             id: 'gridOperativosImagenes',
             autoHeight: true,
-            autoScroll: true,
             store: this.storeOperativosImagenes,
             columns: [
                 new Ext.grid.RowNumberer(),
@@ -1364,10 +1363,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Url imagen',
                     dataIndex: 'url',
                     sortable: true,
-                    width: 60,
+                    width: 100,
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
+                    header: 'Imagen',
+                    dataIndex: 'url',
+                    renderer: function (value) {
+                        return '<img src="' + value + '" width="150" />';
+                    }
+                }
+                /*, {
                     header: 'Test',
                     dataIndex: 'url',
                     sortable: true,
@@ -1376,20 +1382,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         buttonOnly: true,
 
                     })
-                }/*,
-                 {
-                 xtype: 'actioncolumn',
-                 width: 50,
-                 items: [{
-                 icon   : 'resources/shared/icons/fam/delete.gif',  // Use a URL in the icon config
-                 tooltip: 'Sell stock',
-                 handler: function(grid, rowIndex, colIndex) {
-                 var rec = storeOperativosImagenes.getAt(rowIndex);
-                 console.log ( rec );
-                 }
-                 } ]
-                 }*/
-
+                }
+*/
             ],
             viewConfig: {
                 forceFit: true
@@ -1453,6 +1447,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'direccion', allowBlank: false},
                 {name: 'hecho', allowBlank: false},
                 {name: 'medida', allowBlank: false},
+                {name: 'numero_auto_inicio', allowBlank: true},
                 {name: 'observaciones', allowBlank: true}
 
             ]
@@ -1517,17 +1512,24 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
+                    header: 'Número auto inicio',
+                    dataIndex: 'numero_auto_inicio',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
                     header: 'Medida',
                     dataIndex: 'medida',
                     sortable: true,
-                    width: 60,
+                    width: 140,
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
                     header: 'Observaciones',
                     dataIndex: 'observaciones',
                     sortable: true,
-                    width: 60,
+                    width: 120,
                     editor: new Ext.form.TextField({allowBlank: false})
                 }
             ],
