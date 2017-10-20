@@ -794,7 +794,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 40,
                     editor: comboOPPERENC,
-                    renderer: operativosPersonalEncargado
+                    renderer: operativosPersonalEncargado,
+                    id : 'id_persona_encargada'
                 },
                 {
                     header: 'Lugar intervención',
@@ -874,20 +875,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     , editor: comboOPTIPO
                     , renderer: operativosTipo
                 },
-                /*{
-                 header: 'Finalizado'
-                 , dataIndex: 'finalizado'
-                 , align: 'center'
-                 , falseText: 'No'
-                 , menuDisabled: true
-                 , trueText: 'Si'
-                 , sortable: true
-                 , width: 25,
-                 editor: {
-                 xtype: 'checkbox'
-                 }
-                 , xtype: 'booleancolumn'
-                 },*/
+
                 {
                     header: 'Fecha informe',
                     dataIndex: 'fecha_informe',
@@ -935,6 +923,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 forceFit: true,
                 getRowClass: function (record, index) {
                     if (record.get('id_estado') == 1) {
+                       // Ext.getCmp('id_persona_encargada').setReadOnly(true);
                         return 'gold';
                     }
                     if (record.get('id_estado') == 4) {
@@ -1025,15 +1014,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 pageSize: limiteoperativos,
                 store: storeOperativos,
                 displayInfo: true,
-                displayMsg: 'Mostrando operativos {0} - {1} de {2} >>',
+                displayMsg: 'Mostrando operativos {0} - {1} de {2} - AMC',
                 emptyMsg: "No existen operativos que mostrar"
             }),
 
             listeners: {
                 beforeedit: function (e) {
-                    // si el operativo ya esta marcado como finalizado no se lo puede editar
+                    // si el operativo esta identificado como estado o planificado (1) o informe (4) se peude editar
                     if (acceso) {
-                        if (e.record.get("id_estado") == 1) {
+                        if ((e.record.get("id_estado") == 1) || (e.record.get("id_estado") == 4)) {
+
                             return true;
                         }
                         return false;
@@ -1374,16 +1364,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     }
                 }
                 /*, {
-                    header: 'Test',
-                    dataIndex: 'url',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.ux.form.FileUploadField({
-                        buttonOnly: true,
+                 header: 'Test',
+                 dataIndex: 'url',
+                 sortable: true,
+                 width: 60,
+                 editor: new Ext.ux.form.FileUploadField({
+                 buttonOnly: true,
 
-                    })
-                }
-*/
+                 })
+                 }
+                 */
             ],
             viewConfig: {
                 forceFit: true
