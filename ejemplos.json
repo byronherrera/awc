@@ -1,63 +1,94 @@
-{
-  "id": "luae",
-  "type": "desktop/luae",
-  "about": {
-    "author": "",
-    "description": "Mantenimiento de Luae.",
-    "name": "Ventana Luae",
-    "url": "",
-    "version": "1.0"
-  },
-  "server": {
-    "methods": [
-      { "name": "accesosAdministrador", "description": "Full acceso" },
-      { "name": "accesosSecretaria", "description": "Full acceso" },
-      { "name": "accesosZonales", "description": "Personal de zonales" }
-
-    ],
-    "class": "QoLuae",
-    "file": "desktop/luae/luae.php"
-  },
-  "client": {
-    "class": "QoDesk.LuaeWindow",
-    "css": [
-      {
-        "directory": "desktop/luae/client/resources/",
-        "files": [ "styles.css" ]
-      },
-      {
-        "directory": "common/libraries/",
-        "files": [  "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css"   ]
-      }
-    ],
-    "javascript": [
-      {
-        "directory": "common/libraries/",
-        "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
-      },
-      {
-        "directory": "desktop/luae/client/",
-        "files": [  "luae-win.js" ]
-      },
-      {
-        "directory": "qwiki/admin/client/",
-        "files": [ "QoAdmin.js" ]
-      },
-      {
-        "directory": "qwiki/admin/client/lib/",
-        "files": [ "ActiveColumn.js", "ColumnNodeUI.js", "Nav.js", "SearchField.js", "TooltipEditor.js" ]
-      }
-    ],
-    "launcher": {
-      "config": {
-        "iconCls": "luae-icon",
-        "shortcutIconCls": "luae-shortcut",
-        "text": "Luae",
-        "tooltip": "<b>Luae</b>"
-      },
-      "paths": {
-        "startmenu": "/"
-      }
-    }
-  }
-}
+<p>Estos son los perros que est&aacute;n a cargo de la Agencia Metropolitana de Control, cada uno de ellos tiene un proceso administrativo en tr&aacute;mite, si alguno de ellos te pertenece cont&aacute;ctate con nosotros</p>
+<p>&nbsp;</p>
+<div class="clearfix separador texto-gris">
+<div class="span3">
+<div class="img-shadow">
+<p class="bg-primary text-center">Lanitas</p>
+<img src="images/perrostramite/perros-en-tramite-agencia-metropolitana-de-control-0001.jpg" alt="direcciones" />
+<div class="clearfix">
+<div class="span4">Raza:</div>
+<div class="span8">mestizo</div>
+</div>
+<div class="clearfix">
+<div class="span4">Proceso:</div>
+<div class="span8">099-2017</div>
+</div>
+<div class="clearfix">
+<div class="span4">Edad:</div>
+<div class="span8">n/a</div>
+</div>
+<div class="clearfix">
+<div class="span4">Sexo:</div>
+<div class="span8">hembra</div>
+</div>
+<div class="clearfix">&nbsp;</div>
+</div>
+</div>
+<div class="span3">
+<div class="img-shadow">
+<p class="bg-primary text-center">Negruras</p>
+<img src="images/perrostramite/perros-en-tramite-agencia-metropolitana-de-control-0002.jpg" alt="direcciones" />
+<div class="clearfix">
+<div class="span4">Raza:</div>
+<div class="span8">mestiza</div>
+</div>
+<div class="clearfix">
+<div class="span4">Proceso:</div>
+<div class="span8">grande</div>
+</div>
+<div class="clearfix">
+<div class="span4">Edad:</div>
+<div class="span8">2 a&ntilde;os</div>
+</div>
+<div class="clearfix">
+<div class="span4">Sexo:</div>
+<div class="span8">macho</div>
+</div>
+</div>
+</div>
+<div class="span3">
+<div class="img-shadow">
+<p class="bg-primary text-center">Naricitas</p>
+<img src="images/perrostramite/perros-en-tramite-agencia-metropolitana-de-control-0003.jpg" alt="direcciones" />
+<div class="clearfix">
+<div class="span4">Raza:</div>
+<div class="span8">mestiza</div>
+</div>
+<div class="clearfix">
+<div class="span4">Proceso:</div>
+<div class="span8">grande</div>
+</div>
+<div class="clearfix">
+<div class="span4">Edad:</div>
+<div class="span8">2 a&ntilde;os</div>
+</div>
+<div class="clearfix">
+<div class="span4">Sexo:</div>
+<div class="span8">macho</div>
+</div>
+</div>
+</div>
+<div class="span3">
+<div class="img-shadow">
+<p class="bg-primary text-center">Alegr&iacute;a</p>
+<img src="images/perrostramite/perros-en-tramite-agencia-metropolitana-de-control-0004.jpg" alt="direcciones" />
+<div class="clearfix">
+<div class="span4">Raza:</div>
+<div class="span8">mestiza</div>
+</div>
+<div class="clearfix">
+<div class="span4">Proceso:</div>
+<div class="span8">grande</div>
+</div>
+<div class="clearfix">
+<div class="span4">Edad:</div>
+<div class="span8">3 meses</div>
+</div>
+<div class="clearfix">
+<div class="span4">Sexo:</div>
+<div class="span8">hembra</div>
+</div>
+</div>
+</div>
+</div>
+<div class="span12"><a href="index.php/fauna-urbana/perros-en-transito" class="btn btn btn-primary center-block" role="button">Conocer m&aacute;s</a></div>
