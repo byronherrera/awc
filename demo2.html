@@ -1,392 +1,223 @@
-<div class="row"><h2 class="text-center form-title">{Titulo:body}</h2></div>
-<div class="row">    <div class="alert_error">{error}</div></div>
-<!-- Do not remove this ID, it is used to identify the page so that the pagination script can work correctly -->
-<fieldset class="formHorizontal formContainer" id="rsform_{global:formid}_page_0">
+<div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt=""
+                                                          width="30%"/></div>
+<p>&nbsp;</p>
+<h2 class="text-center form-title">{Titulo:value}</h2>
+<h3 class="text-center form-title">{datosdenunciantecabecera:value}</h3>
+<table style="width: 95%;" cellspacing="0" cellpadding="0" border="0">
+    <tbody>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{nombre:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{nombre:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{apellido:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{apellido:value}</div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{email:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{email:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{telefono1:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{telefono1:value}</div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{telefono2:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{telefono2:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{direccion:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{direccion:value}</div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{sector:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{sector:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{fecha_nacimiento:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{fecha_nacimiento:value}</div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{sexo:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{sexo:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{ciudadnacimiento:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{ciudadnacimiento:value}</div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{formacion_academica:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{formacion_academica:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{ocupacion:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{ocupacion:value}</div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{afeccionesmedicas:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{afeccionesmedicas:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{preferencia_apoyo:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{preferencia_apoyo:value}</div>
+        </td>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{casa_acogida:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{casa_acogida:value}</div>
+        </td>
+        <td width="20%">
+        </td>
+        <td width="30%">
+        </td>
+    </tr>
+    </tbody>
+</table>
+<h3 class="text-center form-title">{paso2:value}</h3>
+<table style="width: 95%;" cellspacing="0" cellpadding="0" border="0">
+    <tbody>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{trabajador:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{trabajador:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{actividad_laboral_actual:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{actividad_laboral_actual:value}</div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{horario_trabajo:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{horario_trabajo:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{dependencia:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{dependencia:value}</div>
+        </td>
+    </tr>
 
-    <div class="rsform-block rsform-block-textampliacion">
-        <div class="row"><h3 class="text-center form-title">{textampliacion:body}</h3></div>
-    </div>
-    <div class="row"><h2 class="text-center form-title">{datosdenunciantecabecera:body}</h2></div>
-    <div class="row">
-        <div class="span4">
-            <div class="rsform-block rsform-block-nombre">
-                <div class="formControlLabel">{nombre:caption}<strong class="formRequired">* </strong></div>
-                <div class="formControls">
-                    <div class="formBody">{nombre:body}<span class="formValidation">{nombre:validation}</span></div>
-                    <p class="formDescription">{nombre:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span4">
-            <div class="rsform-block rsform-block-last-apellido">
-                <div class="formControlLabel">{apellido:caption}<strong class="formRequired">* </strong></div>
-                <div class="formControls">
-                    <div class="formBody">{apellido:body}<span class="formValidation">{apellido:validation}</span></div>
-                    <p class="formDescription">{apellido:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span4">
-            <div class="rsform-block rsform-block-email">
-                <div class="formControlLabel">{email:caption}<strong class="formRequired">* </strong></div>
-                <div class="formControls">
-                    <div class="formBody">{email:body}<span class="formValidation">{email:validation}</span></div>
-                    <p class="formDescription">{email:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{estudiante:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{estudiante:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{estudios_que_curso:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{estudios_que_curso:value}</div>
+        </td>
+    </tr>
+    <tr>
+        <td width="20%">
+            <div style="font-weight: bold;">{institucion_estudia:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{institucion_estudia:value}</div>
+        </td>
+        <td width="20%">
+            <div style="font-weight: bold;">{horario_estudio:caption}</div>
+        </td>
+        <td width="30%">
+            <div class="formBody">{horario_estudio:value}</div>
+        </td>
+    </tr>
 
-    <div class="row">
-        <div class="span4">
-            <div class="rsform-block rsform-block-cedula">
-                <div class="formControlLabel">{cedula:caption}<strong class="formRequired">* </strong></div>
-                <div class="formControls">
-                    <div class="formBody">{cedula:body}<span class="formValidation">{cedula:validation}</span></div>
-                    <p class="formDescription">{cedula:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span4">
-            <div class="rsform-block rsform-block-last-telefono1">
-                <div class="formControlLabel">{telefono1:caption}<strong class="formRequired">* </strong></div>
-                <div class="formControls">
-                    <div class="formBody">{telefono1:body}<span class="formValidation">{telefono1:validation}</span></div>
-                    <p class="formDescription">{telefono1:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span4">
-            <div class="rsform-block rsform-block-telefono2">
-                <div class="formControlLabel">{telefono2:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{telefono2:body}<span class="formValidation">{telefono2:validation}</span></div>
-                    <p class="formDescription">{telefono2:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="span8">
-            <div class="rsform-block rsform-block-direccion">
-                <div class="formControlLabel">{direccion:caption}<strong class="formRequired">* </strong></div>
-                <div class="formControls">
-                    <div class="formBody">{direccion:body}<span class="formValidation">{direccion:validation}</span></div>
-                    <p class="formDescription">{direccion:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span4">
-            <div class="rsform-block rsform-block-zonal">
-                <div class="formControlLabel">{zonal:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{zonal:body}<span class="formValidation">{zonal:validation}</span></div>
-                    <p class="formDescription">{zonal:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="span3">
-            <div class="rsform-block rsform-block-parroquia">
-                <div class="formControlLabel">{parroquia:caption}<strong class="formRequired">* </strong></div>
-                <div class="formControls">
-                    <div class="formBody">{parroquia:body}<span class="formValidation">{parroquia:validation}</span></div>
-                    <p class="formDescription">{parroquia:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span3">
-            <div class="rsform-block rsform-block-last-sector">
-                <div class="formControlLabel">{sector:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{sector:body}<span class="formValidation">{sector:validation}</span></div>
-                    <p class="formDescription">{sector:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span3">
-            <div class="rsform-block rsform-block-barrio">
-                <div class="formControlLabel">{barrio:caption}<strong class="formRequired">* </strong></div>
-                <div class="formControls">
-                    <div class="formBody">{barrio:body}<span class="formValidation">{barrio:validation}</span></div>
-                    <p class="formDescription">{barrio:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span3">
-            <div class="rsform-block rsform-block-numpredio">
-                <div class="formControlLabel">{numpredio:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{numpredio:body}<span class="formValidation">{numpredio:validation}</span></div>
-                    <p class="formDescription">{numpredio:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="rsform-block rsform-block-pagina-2">
-        <div class="formControlLabel"> &nbsp;</div>
-        <div class="formControls">
-            <div class="formBody">{Pagina 2:body}</div>
-        </div>
-    </div>
-</fieldset>
-<!-- Do not remove this ID, it is used to identify the page so that the pagination script can work correctly -->
-<fieldset class="formHorizontal formContainer" id="rsform_{global:formid}_page_1">
-    <div class="row"><h2 class="text-center form-title">{paso2:body}</h2></div>
-
-    <div class="row">
-        <div class="span6">
-            <div class="rsform-block rsform-block-nombredenunciado">
-                <div class="formControlLabel">{nombredenunciado:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{nombredenunciado:body}<span class="formValidation">{parroquia:validation}</span></div>
-                    <p class="formDescription">{parroquia:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span6">
-            <div class="rsform-block rsform-block-emaildenunciado">
-                <div class="formControlLabel">{emaildenunciado:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{emaildenunciado:body}<span class="formValidation">{emaildenunciado:validation}</span></div>
-                    <p class="formDescription">{emaildenunciado:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="span6">
-            <div class="rsform-block rsform-block-telefono1denunciado">
-                <div class="formControlLabel">{telefono1denunciado:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{telefono1denunciado:body}<span class="formValidation">{telefono1denunciado:validation}</span></div>
-                    <p class="formDescription">{telefono1denunciado:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span6">
-            <div class="rsform-block rsform-block-last-telefono2denunciado">
-                <div class="formControlLabel">{telefono2denunciado:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{telefono2denunciado:body}<span class="formValidation">{telefono2denunciado:validation}</span></div>
-                    <p class="formDescription">{telefono2denunciado:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="row"><h3 class="text-center form-title">{obsmensaje2:body}</h3></div>
-
-    <div class="row">
-        <div class="span8">
-            <div class="rsform-block rsform-block-direcciondenunciado">
-                <div class="formControlLabel">{direcciondenunciado:caption}<strong class="formRequired">* </strong> </div>
-                <div class="formControls">
-                    <div class="formBody">{direcciondenunciado:body}<span class="formValidation">{direcciondenunciado:validation}</span></div>
-                    <p class="formDescription">{direcciondenunciado:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span4">
-            <div class="rsform-block rsform-block-last-zonaldenunciado">
-                <div class="formControlLabel">{zonaldenunciado:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{zonaldenunciado:body}<span class="formValidation">{zonaldenunciado:validation}</span></div>
-                    <p class="formDescription">{zonaldenunciado:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="span3">
-            <div class="rsform-block rsform-block-parroquiadenunciado">
-                <div class="formControlLabel">{parroquiadenunciado:caption}<strong class="formRequired">* </strong></div>
-                <div class="formControls">
-                    <div class="formBody">{parroquiadenunciado:body}<span class="formValidation">{parroquiadenunciado:validation}</span></div>
-                    <p class="formDescription">{parroquiadenunciado:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span3">
-            <div class="rsform-block rsform-block-last-sector">
-                <div class="formControlLabel">{sectordenunciado:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{sectordenunciado:body}<span class="formValidation">{sectordenunciado:validation}</span></div>
-                    <p class="formDescription">{sectordenunciado:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span3">
-            <div class="rsform-block rsform-block-barrio">
-                <div class="formControlLabel">{barriodenunciado:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{barriodenunciado:body}<span class="formValidation">{barriodenunciado:validation}</span></div>
-                    <p class="formDescription">{barriodenunciado:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span3">
-            <div class="rsform-block rsform-block-numprediodenunciado">
-                <div class="formControlLabel">{numprediodenunciado:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{numprediodenunciado:body}<span class="formValidation">{numprediodenunciado:validation}</span></div>
-                    <p class="formDescription">{numprediodenunciado:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="rsform-block rsform-block-obsmensaje3">
-        <div class="row"><h3 class="text-center form-title">{obsmensaje3:body}</h3></div>
-    </div>
-
-    <div class="row">
-        <div class="span12">
-            <div class="rsform-block rsform-block-infraccion">
-                <div class="formControlLabel">{infraccion:caption}<strong class="formRequired">* </strong></div>
-                <div class="formControls">
-                    <div class="formBody">{infraccion:body}<span class="formValidation">{infraccion:validation}</span></div>
-                    <p class="formDescription">{infraccion:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="span12">
-            <div class="rsform-block rsform-block-ampliaciondenuncia">
-                <div class="formControlLabel">{ampliaciondenuncia:caption}</div>
-                <div class="formControls">
-                    <div class="formBody">{ampliaciondenuncia:body}<span class="formValidation">{ampliaciondenuncia:validation}</span></div>
-                    <p class="formDescription">{ampliaciondenuncia:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="rsform-block rsform-block-textampliacion">
-        <div class="row"><h3 class="text-center form-title">{textampliacion:body}</h3></div>
-    </div>
-
-    <div class="row">
-        <div class="span12">
-            <div class="rsform-block rsform-block-geoposicionamiento">
-                <div class="formControlLabel">{geoposicionamiento:caption}</div>
-                <div class="formControls">
-                    <div class="formBody">{geoposicionamiento:body}<span class="formValidation">{geoposicionamiento:validation}</span></div>
-                    <p class="formDescription">{geoposicionamiento:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="span12">
-            <div class="rsform-block rsform-block-croquis">
-                <div class="formControlLabel">{croquis:caption}</div>
-                <div class="formControls">
-                    <div class="formBody">{croquis:body}<span class="formValidation">{croquis:validation}</span></div>
-                    <p class="formDescription">{croquis:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="rsform-block rsform-block-obsmapa">
-        <div class="row"><h2 class="text-center form-title">{obsmapa:body}</h2></div>
-    </div>
+    </tbody>
+</table>
+<p>&nbsp;</p>
 
 
-    <div class="rsform-block rsform-block-textoanexos">
-        <div class="row"><h2 class="text-center form-title">{textoanexos:body}</h2></div>
+<div class="rsform-block rsform-block-importante-conocer">
+    <div class="formBody">{compromiso:value}</div>
+</div>
+<p>&nbsp;</p>
+<div class="rsform-block rsform-block-importante-conocer">
+    <div class="formBody">{importante_conocer:value}</div>
+</div>
+<p>&nbsp;</p>
+<div class="rsform-block">
+    <div class="formBody">
+        <p>Yo <strong>{nombre:value} {apellido:value}</strong>, con c&eacute;dula de ciudadan&iacute;a n&uacute;mero <strong>{cedula:value}</strong>
+            manifiesto que la informaci&oacute;n proporcionada en el presente formulario es veraz y fidedigna. Autorizo
+            a el GAD MDMQ Agencia Metropolitana de Control para que proceda a realizar la validaci&oacute;n de mi casa de
+            acogida, sujet&aacute;ndome a las leyes, ordenanzas metropolitanas, protocolos, programas, normas de regulaci&oacute;n
+            y m&eacute;todos de trabajo de la AMC, cumpliendo los compromisos adquiridos de manera libre y voluntaria en
+            el presente formulario, respetando a la Instituci&oacute;n, y contribuyendo a mejorar las condiciones de
+            bienestar animal en nuestra ciudad.</p>
+        <p>Este voluntariado no genera relaci&oacute;n econ&oacute;mica ni de dependencia laboral con GAD MDMQ Agencia
+            Metropolitana de Control.</p>
+        <br/> <br/>
+        <h3>{nombre:value} {apellido:value}</h3>
+        <br/> <br/> &hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;&hellip;
+        <p>FIRMA DEL VOLUNTARIO</p>
+        <p>CI: {cedula:value}</p>
     </div>
-
-    <div class="row">
-        <div class="span12">
-            <div class="rsform-block rsform-block-persona">
-                <div class="formControlLabel">{persona:caption}</div>
-                <div class="formControls">
-                    <div class="formBody">{persona:body}<span class="formValidation">{persona:validation}</span></div>
-                    <p class="formDescription">{persona:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="rsform-block rsform-block-textopersonanatural ">
-        <div class="row"><h3 class="text-left form-title">{textopersonanatural:body}</h3></div>
-    </div>
-
-    <div class="rsform-block rsform-block-textopersonajuridica">
-        <div class="row"><h3 class="text-left form-title">{textopersonajuridica:body}</h3></div>
-    </div>
-
-    <div class="row">
-        <div class="span6">
-            <div class="rsform-block rsform-block-imagencedula">
-                <div class="formControlLabel">{imagencedula:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{imagencedula:body}<span class="formValidation">{imagencedula:validation}</span></div>
-                    <p class="formDescription">{imagencedula:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span6">
-            <div class="rsform-block rsform-block-last-imagenvideo">
-                <div class="formControlLabel">{imagenvideo:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{imagenvideo:body}<span class="formValidation">{imagenvideo:validation}</span></div>
-                    <p class="formDescription">{imagenvideo:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="span6">
-            <div class="rsform-block rsform-block-imagennombramiento">
-                <div class="formControlLabel">{imagennombramiento:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{imagennombramiento:body}<span class="formValidation">{imagennombramiento:validation}</span></div>
-                    <p class="formDescription">{imagennombramiento:description}</p>
-                </div>
-            </div>
-        </div>
-        <div class="span6">
-            <div class="rsform-block rsform-block-last-fecha">
-                <div class="formControlLabel">{fecha:caption} </div>
-                <div class="formControls">
-                    <div class="formBody">{fecha:body}<span class="formValidation">{fecha:validation}</span></div>
-                    <p class="formDescription">{fecha:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row"><h3 class="text-center form-title">{captcha:caption}</h3></div>
-    <div class="row">
-        <div class="text-center">
-            <div class="rsform-block rsform-block-captcha">
-
-                <div class="formControls">
-                    <div class="formBody">{captcha:body}<span class="formValidation">{captcha:validation}</span></div>
-                    <p class="formDescription">{captcha:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="text-center">
-            <div class="rsform-block rsform-block-submit-form">
-                <div class="formControlLabel">{SubmitForm:caption}</div>
-                <div class="formControls">
-                    <div class="formBody">{SubmitForm:body}<span class="formValidation">{SubmitForm:validation}</span></div>
-                    <p class="formDescription">{SubmitForm:description}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</fieldset>
+</div>
+<p><br/></p>
+<div style="float: left; clear: both; width: 100%;"><img style="float: left;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt=""
+                                                         width="100%"/></div>
