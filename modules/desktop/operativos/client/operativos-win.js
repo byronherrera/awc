@@ -1023,7 +1023,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     // si el operativo esta identificado como estado o planificado (1) o informe (4) se peude editar
                     if (acceso) {
                         if ((e.record.get("id_estado") == 1) || (e.record.get("id_estado") == 4)) {
-
                             return true;
                         }
                         return false;
