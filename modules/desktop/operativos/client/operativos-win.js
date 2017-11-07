@@ -978,8 +978,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                                     Ext.getCmp('addoperativoimagenes').setDisabled(false);
                                     Ext.getCmp('subirimagen').setDisabled(false);
-
-
+                                    // solamente para el caso
                                 }
                                 else {
                                     gridBlockOperativos = true;
@@ -1000,8 +999,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('addoperativoimagenes').setDisabled(true);
                                     Ext.getCmp('subirimagen').setDisabled(true);
 
-
                                 }
+
+                                //para el caso  de los botones
+                                if ((rec.get("id_estado") == 2)||(rec.get("id_estado") == 3)||(rec.get("id_estado") == 5)) {
+                                    Ext.getCmp('tb_repoteOperativos').setDisabled(false);
+                                } else {
+                                    Ext.getCmp('tb_repoteOperativos').setDisabled(true);
+                                }
+
                             }
                         }
                     }
@@ -2198,6 +2204,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                         // recargamos el combo
                                         storeOperativos.load({params: {finalizados: isChecked}});
                                     }
+                                },'-',
+                                {
+                                    id: 'tb_repoteOperativos',
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarReporteOperativo,
+                                    scope: this,
+                                    text: 'Generar Reporte',
+                                    tooltip: 'Se genera el reporte de los operativo',
+                                    disabled: true
                                 },
                                 /*'-',
                                  {
@@ -2826,28 +2841,19 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         this.storeOperativosInforme.load();
     },
 
-    botonExportarReporte: function () {
-
-        if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar Unidad')
+    botonExportarReporteOperativo: function () {
             Ext.Msg.show({
                 title: 'Advertencia',
-                msg: 'Seleccione unidad',
-                scope: this,
-                icon: Ext.Msg.WARNING
-            });
-        else
-            Ext.Msg.show({
-                title: 'Advertencia',
-                msg: 'Se descarga el archivo Excel<br>Se cambia el estado de Enviado a Si.<br>¿Desea continuar?',
+                msg: 'Se descarga el archivo PDF con el informe<br>¿Desea continuar?',
                 scope: this,
                 icon: Ext.Msg.WARNING,
                 buttons: Ext.Msg.YESNO,
                 fn: function (btn) {
                     if (btn == 'yes') {
-                        window.location.href = 'modules/desktop/operativos/server/descargaOperativosNuevas.inc.php?unidad=' + Ext.getCmp('tb_seleccionarUnidad').getValue();
-                        setTimeout(function () {
+                        window.location.href = 'modules/desktop/operativos/server/descargaOperativosId.inc.php?operativo=' + selectOperativos;
+                        /*setTimeout(function () {
                             storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
-                        }, 1000);
+                        }, 1000);*/
 
                     }
                 }
@@ -2855,68 +2861,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
     },
 
 // funcion usada por boton
-    botonExportarReporteReimpresion: function () {
-        // recuperamos registro seleccionado de datagrid operativos
-        var rows = this.gridOperativosGuia.getSelectionModel().getSelections();
-        //validamos si existe seleccion  y mensaje error
-        if (rows.length === 0) {
-            Ext.Msg.show({
-                title: 'Atencion',
-                msg: 'Seleccione una guía a imprimir',
-                scope: this,
-                icon: Ext.Msg.WARNING
-            });
-            return false;
-        }
-        // mensaje continuar y llamada a descarga archivo
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
 
-                if (btn == 'yes') {
-                    window.location.href = 'modules/desktop/operativos/server/descargaOperativosNuevas.inc.php?reimpresion=true&guia=' + rows[0].get('id');
-                }
-            }
-        });
-    },
-
-    grabaroperativos: function () {
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Desea Guardar los cambios.<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var myForm = Ext.getCmp('formOperativosPersonal').getForm();
-                    myForm.submit({
-                        url: 'modules/desktop/operativos/server/crudOperativos.php?operation=updateForm',
-                        method: 'POST',
-                        waitMsg: 'Saving data',
-                        success: function (form, action) {
-                            storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
-                            //Ext.getCmp('tb_grabaroperativos').setDisabled(true);
-                        },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
-                            Ext.Msg.show({
-                                title: 'Error campos obligatorios'
-                                , msg: errorJson.msg
-                                , modal: true
-                                , icon: Ext.Msg.ERROR
-                                , buttons: Ext.Msg.OK
-                            });
-                        }
-                    });
-                }
-            }
-        });
-    },
     showError: function (msg, title) {
         title = title || 'Error';
         Ext.Msg.show({
