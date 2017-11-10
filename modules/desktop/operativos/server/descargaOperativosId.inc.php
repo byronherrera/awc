@@ -167,28 +167,30 @@ textoSiguieteFila("ORDENANZA 1" , 'A', 'F', 'center' );
 textoSiguieteFila("ORDENANZA 2" , 'A', 'F', 'center' );
 textoSiguieteFila("ORDENANZA 3" , 'A', 'F', 'center' );
 
-function imagenSiguieteFila($texto = '', $inicio, $fin, $alineacion = 'center', $nuevaLinea = true)
-{
 
+imagenSiguieteFila('imagenes/operativos/85-IMG_7744.JPG', 'A', 'C');
+
+function imagenSiguieteFila($imagen = '', $inicio, $fin, $nuevaLinea = true)
+{
     global $filacabecera, $objPHPExcel;
     if ($nuevaLinea) $filacabecera++;
     borde($inicio . $filacabecera . ':' . $fin . $filacabecera);
 
+    $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera)->setRowHeight(200);
+    $objDrawing = new PHPExcel_Worksheet_Drawing();
+    $objDrawing->setName($imagen);
+    $objDrawing->setDescription($imagen);
+    $objDrawing->setPath('../../../../' .$imagen);
+    $objDrawing->setCoordinates('A' . ($filacabecera));
+    //setOffsetX works properly
+    $objDrawing->setOffsetX(1);
+    $objDrawing->setOffsetY(1);
+    //set width, height
+    //$objDrawing->setHeight(360);
+    $objDrawing->setWidth(350);
+    $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 }
 
-$objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight(200);
-$objDrawing = new PHPExcel_Worksheet_Drawing();
-$objDrawing->setName('capu.jpg');
-$objDrawing->setDescription('capu.jpg');
-$objDrawing->setPath('../../../../imagenes/operativos/88-IMG_E7197.JPG');
-$objDrawing->setCoordinates('A' . ($filacabecera + 1));
-//setOffsetX works properly
-$objDrawing->setOffsetX(1);
-$objDrawing->setOffsetY(1);
-//set width, height
-//$objDrawing->setHeight(360);
-$objDrawing->setWidth(350);
-$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 
 
 // Elaborador por:
