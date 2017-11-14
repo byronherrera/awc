@@ -121,7 +121,7 @@ App.BookDetail = Ext.extend(Ext.Panel, {
 	// add tplMarkup as a new property
 	tplMarkup: [
 		'Title: <a href="{DetailPageURL}" target="_blank">{Title}</a><br/>',
-		'Author: {Author}<br/>',
+		'Author : {Author}<br/>',
 		'Manufacturer: {Manufacturer}<br/>',
 		'Product Group: {ProductGroup}<br/>'
 	],
@@ -167,11 +167,11 @@ App.BookMasterDetail = Ext.extend(Ext.Panel, {
 		// used applyIf rather than apply so user could
 		// override the defaults
 		Ext.applyIf(this, {
-			frame: true,
 			title: 'Book List',
-			width: 540,
-			height: 400,
-			layout: 'border',
+            width: 540,
+            height: 400,
+            frame: true,
+            layout: 'border',
 			items: [{
 				xtype: 'bookgrid',
 				itemId: 'gridPanel',

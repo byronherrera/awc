@@ -94,7 +94,32 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo tipo documento  OPTID
+//inicio combo tipo MEDIDA operativo
+        storeOPINFOMEDIDA = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=tiposMedidasOperativos'
+        });
 
+        var comboOPINFOMEDIDA = new Ext.form.ComboBox({
+            id: 'comboOPINFOMEDIDA',
+            store: storeOPINFOMEDIDA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function operativosTipoMedida(id) {
+            var index = storeOPINFOMEDIDA.find('id', id);
+            if (index > -1) {
+                var record = storeOPINFOMEDIDA.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo nivel MEDIDA OPERATIVO
         //inicio combo activo
         storeOPOFAC = new Ext.data.JsonStore({
             root: 'users',
@@ -727,7 +752,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         storeOperativos = this.storeOperativos;
         limiteoperativos = 100;
         this.gridOperativos = new Ext.grid.EditorGridPanel({
-            height: desktop.getWinHeight() - 330,
+            height: desktop.getWinHeight() - 380,
             store: this.storeOperativos,
             columns: [
                 new Ext.grid.RowNumberer(),
@@ -795,7 +820,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     width: 40,
                     editor: comboOPPERENC,
                     renderer: operativosPersonalEncargado,
-                    id : 'id_persona_encargada'
+                    id: 'id_persona_encargada'
                 },
                 {
                     header: 'Lugar intervención',
@@ -923,7 +948,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 forceFit: true,
                 getRowClass: function (record, index) {
                     if (record.get('id_estado') == 1) {
-                       // Ext.getCmp('id_persona_encargada').setReadOnly(true);
+                        // Ext.getCmp('id_persona_encargada').setReadOnly(true);
                         return 'gold';
                     }
                     if (record.get('id_estado') == 4) {
@@ -938,28 +963,32 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     singleSelect: true,
                     listeners: {
                         rowselect: function (sm, row, rec) {
-
+                            cargaDetalle(rec.id, this.formDenunciasDetalle, rec.get("despacho_secretaria"));
                             // recuperamos la informacion de personal asignado a ese operativo
                             selectOperativos = rec.id;
-                            storeOperativosPersonal.load({params: {id_operativo: rec.id}})
-                            storeOperativosVehiculos.load({params: {id_operativo: rec.id}})
-                            storeOperativosInforme.load({params: {id_operativo: rec.id}})
-                            storeOperativosParticipantes.load({params: {id_operativo: rec.id}})
-                            storeOperativosImagenes.load({params: {id_operativo: rec.id}})
+                            storeOperativosPersonal.load({params: {id_operativo: rec.id}});
+                            storeOperativosVehiculos.load({params: {id_operativo: rec.id}});
+                            storeOperativosInforme.load({params: {id_operativo: rec.id}});
+                            storeOperativosParticipantes.load({params: {id_operativo: rec.id}});
+                            storeOperativosImagenes.load({params: {id_operativo: rec.id}});
 
                             // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
                             if (acceso) {
                                 if (rec.get("id_estado") != 1) {
                                     Ext.getCmp('informesOperativosTab').setDisabled(accesosAdministradorOpe ? false : true);
                                     Ext.getCmp('imagenesOperativosTab').setDisabled(accesosAdministradorOpe ? false : true);
+                                    Ext.getCmp('detalleOperativosTab').setDisabled(accesosAdministradorOpe ? false : true);
                                 }
                                 else {
                                     Ext.getCmp('informesOperativosTab').setDisabled(true);
                                     Ext.getCmp('imagenesOperativosTab').setDisabled(true);
+                                    Ext.getCmp('detalleOperativosTab').setDisabled(true);
                                 }
 
                                 if ((rec.get("id_estado") == 1) || (rec.get("id_estado") == 4)) {
                                     gridBlockOperativos = false;
+                                    Ext.getCmp('savedetalleoperativo').setDisabled(false);
+
                                     Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
                                     // en caso que se tenga acceso tambien se habilitan o deshabilitan los botones para agregar detalle
                                     Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
@@ -982,6 +1011,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 }
                                 else {
                                     gridBlockOperativos = true;
+                                    Ext.getCmp('savedetalleoperativo').setDisabled(true);
+
                                     Ext.getCmp('borraroperativo').setDisabled(true);
                                     Ext.getCmp('borraroperativodetalle').setDisabled(true);
                                     Ext.getCmp('addoperativodetalle').setDisabled(true);
@@ -1002,7 +1033,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 }
 
                                 //para el caso  de los botones
-                                if ((rec.get("id_estado") == 2)||(rec.get("id_estado") == 3)||(rec.get("id_estado") == 5)) {
+                                if ((rec.get("id_estado") == 2) || (rec.get("id_estado") == 3) || (rec.get("id_estado") == 5)) {
                                     Ext.getCmp('tb_repoteOperativos').setDisabled(false);
                                 } else {
                                     Ext.getCmp('tb_repoteOperativos').setDisabled(true);
@@ -1301,6 +1332,46 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         var gridOperativosParticipantes = this.gridOperativosParticipantes
         // fin ventana operativos detalle participantes
 
+        var detalleOperativo = new Ext.FormPanel({
+            frame: true,
+            bodyStyle: 'padding:0',
+            width: '100%',
+            items: [{
+                layout: 'column',
+                items: [{
+                    xtype: 'hidden',
+                    fieldLabel: 'Id',
+                    name: 'id'
+                }, {
+                    columnWidth: .5,
+                    layout: 'form',
+                    items: [{
+                        xtype: 'textfield',
+                        fieldLabel: 'Parroquias Intervenidas',
+                        name: 'first',
+                        anchor: '95%'
+                    }]
+                }, {
+                    columnWidth: .5,
+                    layout: 'form',
+                    items: [{
+                        xtype: 'textfield',
+                        fieldLabel: 'Barrios Intervenidos',
+                        name: 'last',
+                        anchor: '95%'
+                    }]
+                }]
+            }, {
+                xtype: 'htmleditor',
+                id: 'bio',
+                fieldLabel: 'Detalle Operativo',
+                height: 150,
+                anchor: '98%'
+            }]
+
+
+        });
+
         // inicio ventana operativos detalle imagenes
         var proxyOperativosImagenes = new Ext.data.HttpProxy({
             api: {
@@ -1507,7 +1578,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
-                    header: 'Número auto inicio',
+                    header: 'Número documento',
                     dataIndex: 'numero_auto_inicio',
                     sortable: true,
                     width: 60,
@@ -1517,8 +1588,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Medida',
                     dataIndex: 'medida',
                     sortable: true,
-                    width: 140,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    width: 60,
+                    editor: comboOPINFOMEDIDA,
+                    renderer: operativosTipoMedida
                 },
                 {
                     header: 'Observaciones',
@@ -2204,7 +2276,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                         // recargamos el combo
                                         storeOperativos.load({params: {finalizados: isChecked}});
                                     }
-                                },'-',
+                                }, '-',
                                 {
                                     id: 'tb_repoteOperativos',
                                     iconCls: 'excel-icon',
@@ -2242,27 +2314,23 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     , store: this.storeOperativos
                                 })
                             ],
-
-
                             items: [
                                 {
                                     id: 'formcabeceraoperativos',
                                     titleCollapse: true,
-                                    split: true,
                                     flex: 1,
                                     autoScroll: true,
                                     layout: 'column',
                                     items: this.gridOperativos,
                                 },
                                 {
-                                    split: true,
+
                                     flex: 2,
                                     bodyStyle: 'padding:0; background: #DFE8F6',
                                     layout: 'column',
                                     items: [
                                         {
                                             xtype: 'tabpanel',
-
                                             activeTab: 0,
                                             width: winWidth,
                                             cls: 'no-border',
@@ -2270,7 +2338,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                 {
                                                     title: 'Participantes',
                                                     layout: 'column',
-                                                    height: 200,
+                                                    height: 250,
                                                     items: this.gridOperativosParticipantes,
                                                     autoScroll: true,
                                                     tbar: [
@@ -2300,7 +2368,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                 {
                                                     title: 'Personal asignado',
                                                     layout: 'column',
-                                                    height: 200,
+                                                    height: 250,
                                                     items: this.gridOperativosPersonal,
                                                     autoScroll: true,
                                                     tbar: [
@@ -2328,7 +2396,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                 {
                                                     title: 'Vehículos asignados',
                                                     layout: 'column',
-                                                    height: 200,
+                                                    height: 250,
                                                     items: this.gridOperativosVehiculos,
                                                     autoScroll: true,
                                                     tbar: [
@@ -2352,11 +2420,32 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     ]
                                                 },
                                                 {
+                                                    title: 'Detalle Operativo',
+                                                    layout: 'column',
+                                                    id: 'detalleOperativosTab',
+                                                    height: 250,
+                                                    items: detalleOperativo,
+                                                    disabled: true,
+                                                    autoScroll: true,
+                                                    tbar: [
+                                                        {
+                                                            text: 'Grabar',
+                                                            scope: this,
+                                                            handler: this.addoperativosPersonal,
+                                                            handler: this.addoperativosParticipantes,
+                                                            iconCls: 'save-icon',
+                                                            disabled: true,
+                                                            id: 'savedetalleoperativo',
+                                                            //disabled: !acceso
+                                                        }
+                                                    ]
+                                                },
+                                                {
                                                     title: 'Informes',
                                                     layout: 'column',
                                                     id: 'informesOperativosTab',
                                                     disabled: true,
-                                                    height: 200,
+                                                    height: 250,
                                                     items: this.gridOperativosInforme,
                                                     autoScroll: true,
                                                     tbar: [
@@ -2383,7 +2472,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     title: 'Imágenes',
                                                     id: 'imagenesOperativosTab',
                                                     layout: 'column',
-                                                    height: 200,
+                                                    height: 250,
                                                     disabled: true,
                                                     items: this.gridOperativosImagenes,
                                                     autoScroll: true,
@@ -2605,16 +2694,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         }
         win.show();
         function cargaDetalle(operativos, forma, bloqueo) {
-            /* forma = Ext.getCmp('formOperativosPersonal');
-             forma.getForm().load({
-             url: urlOperativos + 'crudOperativos.php?operation=selectForm',
-             params: {
-             id: operativos
-             },
-             success: function (response, opts) {
-             }
-             });
-             bloquearLectura(forma, bloqueo);*/
+           /* forma = Ext.getCmp('formOperativosPersonal');
+            forma.getForm().load({
+                url: urlOperativos + 'crudOperativos.php?operation=selectForm',
+                params: {
+                    id: operativos
+                },
+                success: function (response, opts) {
+                }
+            });
+            // bloquearLectura(forma, bloqueo);*/
         };
 
 
@@ -2842,22 +2931,22 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
     },
 
     botonExportarReporteOperativo: function () {
-            Ext.Msg.show({
-                title: 'Advertencia',
-                msg: 'Se descarga el archivo PDF con el informe<br>¿Desea continuar?',
-                scope: this,
-                icon: Ext.Msg.WARNING,
-                buttons: Ext.Msg.YESNO,
-                fn: function (btn) {
-                    if (btn == 'yes') {
-                        window.location.href = 'modules/desktop/operativos/server/descargaOperativosId.inc.php?operativo=' + selectOperativos;
-                        /*setTimeout(function () {
-                            storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
-                        }, 1000);*/
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo PDF con el informe<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/operativos/server/descargaOperativosId.inc.php?operativo=' + selectOperativos;
+                    /*setTimeout(function () {
+                     storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
+                     }, 1000);*/
 
-                    }
                 }
-            });
+            }
+        });
     },
 
 // funcion usada por boton

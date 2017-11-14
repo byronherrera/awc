@@ -145,7 +145,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabec
 
 
 // recuperamos los nombres de los usuarios
-$sql = "SELECT *
+$sql = "SELECT *, (SELECT nombre FROM amc_operativos_informes_tipos_medidas a WHERE b.medida = a.id) medida_nombre
         FROM amc_operativos_informes b 
         WHERE id_operativo = '" . $operativo['id'] . "'";
 $nombres = $os->db->conn->query($sql);
@@ -156,18 +156,17 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila(regresaOrdenanza($nombreDetalle['id_ordenanza']), 'B', 'B', 'center', false);
     textoSiguieteFila($nombreDetalle['direccion'], 'C', 'C', 'center', false);
     textoSiguieteFila($nombreDetalle['hecho'], 'D', 'D', 'center', false);
-    textoSiguieteFila($nombreDetalle['medida'], 'E', 'E', 'center', false);
+    textoSiguieteFila($nombreDetalle['medida_nombre'], 'E', 'E', 'center', false);
     textoSiguieteFila($nombreDetalle['numero_auto_inicio'], 'F', 'F', 'center', false);
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
-
 }
 
 textoSiguieteFila("5. OBSERVACIONES", 'A', 'F', 'left');
 
-$calcularAlto = calculaAltoTexto($operativo['observaciones']);
+$calcularAlto = calculaAltoTexto($operativo['detalle']);
 $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight($calcularAlto);
 
-textoSiguieteFila($operativo['observaciones'], 'A', 'F', 'left');
+textoSiguieteFila($operativo['detalle'], 'A', 'F', 'left');
 
 textoSiguieteFila("6. RESULTADOS", 'A', 'F', 'left');
 textoSiguieteFila("PARROQUIAS INTERVENIDAS", 'A', 'C', 'left');
@@ -182,14 +181,24 @@ $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight
 textoSiguieteFila($operativo['parroquias'], 'A', 'C', 'left');
 textoSiguieteFila($operativo['barrios'], 'D', 'F', 'left', false);
 
-//textoSiguieteFila("ESTABLECIMIENTOS" , 'A', 'F', 'left' );
-//textoSiguieteFila("ESTABLECIMIENTOS" , 'A', 'F', 'left' );
-//textoSiguieteFila("ESTABLECIMIENTOS" , 'A', 'F', 'left' );
-
 textoSiguieteFila("LUAE ACTAS/AUTOS LEVANTADOS", 'A', 'F', 'center');
-textoSiguieteFila("ORDENANZA 1", 'A', 'F', 'center');
-textoSiguieteFila("ORDENANZA 2", 'A', 'F', 'center');
-textoSiguieteFila("ORDENANZA 3", 'A', 'F', 'center');
+
+$sql = "SELECT 	COUNT(*) total,	id_ordenanza,	medida, (SELECT nombre FROM amc_operativos_informes_tipos_medidas a WHERE b.medida = a.id) medida_nombre
+        FROM
+	      amc_operativos_informes b
+        WHERE
+	      id_operativo = " . $operativo['id'] . "
+        GROUP BY
+	        id_ordenanza,
+	        medida;";
+
+$nombres = $os->db->conn->query($sql);
+while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+    textoSiguieteFila(regresaOrdenanza($nombreDetalle['id_ordenanza']), 'A', 'B', 'left' );
+    textoSiguieteFila($nombreDetalle['medida_nombre'], 'C', 'D', 'left', false);
+    textoSiguieteFila($nombreDetalle['total'], 'E', 'F', 'left', false);
+}
+
 
 $sql = "SELECT *
         FROM amc_operativos_imagenes b 
@@ -207,14 +216,15 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
 }
 
 // Elaborador por:
-$textoElaboradoPor = "
-Particular que pongo a su conocimiento para los fines consiguientes
-
-
+$textoElaboradoPor = "Particular que pongo a su conocimiento para los fines consiguientes
+Atentamente
 
 __________________________
-";
-$objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight($calcularAltoNuevo);
+Dra Mónica Alvarez
+INTRUCTURA METROPOLITANA GAD MDMQ AMC";
+$calcularAlto = calculaAltoTexto($operativo['detalle']);
+$objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight(100);
+
 textoSiguieteFila($textoElaboradoPor, 'A', 'F', 'left');
 
 
@@ -529,7 +539,8 @@ function imagenSiguieteFila($imagen = '', $inicio, $fin, $nuevaLinea = true)
 {
     global $filacabecera, $objPHPExcel;
     if ($nuevaLinea) $filacabecera++;
-    //borde($inicio . $filacabecera . ':' . $fin . $filacabecera);
+    borde($inicio . $filacabecera . ':' . $fin . $filacabecera);
+    unirycuadro($inicio . $filacabecera . ':' . $fin . $filacabecera);
 
     $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera)->setRowHeight(200);
     $objDrawing = new PHPExcel_Worksheet_Drawing();

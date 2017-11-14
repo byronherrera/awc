@@ -1,4 +1,20 @@
+/*
+This file is part of Ext JS 3.4
 
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial
+Software License Agreement provided with the Software or, alternatively, in accordance with the
+terms contained in a written agreement between you and Sencha.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 Ext.onReady(function(){
 
     // create the Data Store
@@ -23,6 +39,7 @@ Ext.onReady(function(){
     });
     store.setDefaultSort('lastpost', 'desc');
 
+
     // pluggable renders
     function renderTopic(value, p, record){
         return String.format(
@@ -39,19 +56,19 @@ Ext.onReady(function(){
         title:'ExtJS.com - Browse Forums',
         store: store,
         trackMouseOver:false,
-
+        disableSelection:true,
         loadMask: true,
 
         // grid columns
         columns:[{
-            id: 'topic', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
+            id: 'Tema', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
             header: "Topic",
             dataIndex: 'title',
             width: 420,
             renderer: renderTopic,
             sortable: true
         },{
-            header: "Author",
+            header: "Autor",
             dataIndex: 'author',
             width: 100,
             hidden: true,
@@ -71,15 +88,39 @@ Ext.onReady(function(){
             sortable: true
         }],
 
-
+        // customize view config
+        viewConfig: {
+            forceFit:true,
+            enableRowBody:true,
+            showPreview:true,
+            getRowClass : function(record, rowIndex, p, store){
+                if(this.showPreview){
+                    p.body = '<p>'+record.data.excerpt+'</p>';
+                    return 'x-grid3-row-expanded';
+                }
+                return 'x-grid3-row-collapsed';
+            }
+        },
 
         // paging bar on the bottom
         bbar: new Ext.PagingToolbar({
-            pageSize:  5,
+            pageSize: 25,
             store: store,
             displayInfo: true,
-            displayMsg: 'Mostrando denuncias {0} - {1} of {2}',
-            emptyMsg: "No existen denuncias que mostrar"
+            displayMsg: 'Displaying topics {0} - {1} of {2}',
+            emptyMsg: "No topics to display",
+            items:[
+                '-', {
+                pressed: true,
+                enableToggle:true,
+                text: 'Show Preview',
+                cls: 'x-btn-text-icon details',
+                toggleHandler: function(btn, pressed){
+                    var view = grid.getView();
+                    view.showPreview = pressed;
+                    view.refresh();
+                }
+            }]
         })
     });
 

@@ -16,11 +16,11 @@ at http://www.sencha.com/contact.
 Build date: 2013-04-03 15:07:25
 */
 /**
- * Ext.AppMsg
+ * Ext.App
  * @extends Ext.util.Observable
  * @author Chris Scott
  */
-Ext.AppMsg = function(config) {
+Ext.App = function(config) {
     this.views = [];
     
     this.initStateProvider();
@@ -33,10 +33,10 @@ Ext.AppMsg = function(config) {
     
     Ext.onReady(this.onReady, this);
     
-    Ext.AppMsg.superclass.constructor.apply(this, arguments);
+    Ext.App.superclass.constructor.apply(this, arguments);
 };
 
-Ext.extend(Ext.AppMsg, Ext.util.Observable, {
+Ext.extend(Ext.App, Ext.util.Observable, {
 
     /***
      * response status codes.
@@ -63,7 +63,7 @@ Ext.extend(Ext.AppMsg, Ext.util.Observable, {
 
     // @protected, onReady, executes when Ext.onReady fires.
     onReady : function() {
-        // create the msgBox container.  used for AppMsg.setAlert
+        // create the msgBox container.  used for App.setAlert
         this.msgCt = Ext.DomHelper.insertFirst(document.body, {id:'msg-div'}, true);
         this.msgCt.setStyle('position', 'absolute');
         this.msgCt.setStyle('z-index', 9999);
