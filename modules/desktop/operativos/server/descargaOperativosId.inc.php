@@ -63,7 +63,7 @@ $objPHPExcel = new PHPExcel();
 $objPHPExcel->setActiveSheetIndex(0);
 orientacion('A1:F600', 'center');
 //tamaños de texto pòr defecto
-$objPHPExcel->getActiveSheet()->getStyle('A1:F3')->getFont()->setSize(13);
+$objPHPExcel->getActiveSheet()->getStyle('A1:F3')->getFont()->setSize(12);
 $objPHPExcel->getActiveSheet()->getStyle('A4:F100')->getFont()->setSize(10);
 
 
@@ -81,15 +81,17 @@ $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':F' . $filaTitu
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':F' . $filaTitulo2);
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo3 . ':F' . $filaTitulo3);
 
+$objPHPExcel->getActiveSheet()->getStyle('A1:A3' )->getFont()->setBold(true);
+$objPHPExcel->getActiveSheet()->getStyle('A1:A3')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "MUNICIPIO DEL DISTRITO METROPOLITANO DE QUITO");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'AGENCIA METROPOLITANA DE CONTROL');
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "INFORME DE OPERATIVO DE CONTROL No. $operativoId");
 
-textoSiguieteFila("1. DATOS GENERALES DEL OPERATIVO", 'A', 'F', 'left');
+textoSiguieteFila("1. DATOS GENERALES DEL OPERATIVO", 'A', 'F', 'left',true,"B");
 textoSiguieteFila(regresaZonal($operativo['id_zonal']) . " - " . regresaUnidad($operativo['id_unidad']), 'A', 'F', 'center');
 
 $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight(27);
-textoSiguieteFila("Zona: " . $operativo['zona'], 'A', 'B', 'center');
+textoSiguieteFila("ZONA: " . $operativo['zona'], 'A', 'B', 'center');
 textoSiguieteFila("FECHA OPERATIVO:  " . fechaLarga($operativo['fecha_inicio_planificacion']), 'C', 'D', 'center', false);
 
 textoSiguieteFila("FECHA INFORME: " . fechaLarga($operativo['fecha_impresion_informe']), 'E', 'F', 'center', false);
@@ -109,11 +111,11 @@ textoSiguieteFila("Duración: " . $horasIntervalo, 'E', 'F', 'center', false);
 
 textoSiguieteFila("TIPO:" . regresaTipoOperativo($operativo['tipo_operativo']), 'A', 'F', 'center');
 
-textoSiguieteFila("2. TIPO DE OPERATIVO (EJES TEMATICOS DE CONTROL)", 'A', 'F', 'left');
-textoSiguieteFila("CONTROL ESPACIO PUBLICO", 'A', 'F', 'center');
+textoSiguieteFila("2. TIPO DE OPERATIVO (EJES TEMATICOS DE CONTROL)", 'A', 'F', 'left',true,"B");
+//textoSiguieteFila("CONTROL ESPACIO PUBLICO", 'A', 'F', 'center');
 textoSiguieteFila(tiposDeControl($operativo['id_tipo_control']), 'A', 'F', 'center');
 
-textoSiguieteFila('3. PERSONAL PARTICIPANTE EN LOS OPERATIVOS ', 'A', 'F', 'left');
+textoSiguieteFila('3. PERSONAL PARTICIPANTE EN LOS OPERATIVOS ', 'A', 'F', 'left',true,"B");
 
 textoSiguieteFila("ENTIDAD", 'A', 'B', 'center');
 textoSiguieteFila("JEFE DE GRUPO", 'C', 'D', 'center', false);
@@ -133,7 +135,7 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($nombreDetalle['personas'], 'E', 'F', 'center', false);
 }
 
-textoSiguieteFila('4. ACCIONES EJECUTADAS', 'A', 'F', 'left');
+textoSiguieteFila('4. ACCIONES EJECUTADAS', 'A', 'F', 'left',true,"B");
 
 textoSiguieteFila("Nombre Administrado", 'A', 'A');
 textoSiguieteFila("Ordenanza Metropolitana", 'B', 'B', 'center', false);
@@ -161,14 +163,14 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
 }
 
-textoSiguieteFila("5. OBSERVACIONES", 'A', 'F', 'left');
+textoSiguieteFila("5. OBSERVACIONES", 'A', 'F', 'left',true,"B");
 
 $calcularAlto = calculaAltoTexto($operativo['detalle']);
 $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight($calcularAlto);
 
 textoSiguieteFila($operativo['detalle'], 'A', 'F', 'left');
 
-textoSiguieteFila("6. RESULTADOS", 'A', 'F', 'left');
+textoSiguieteFila("6. RESULTADOS", 'A', 'F', 'left',true,"B");
 textoSiguieteFila("PARROQUIAS INTERVENIDAS", 'A', 'C', 'left');
 textoSiguieteFila("BARRIOS/SECTORES INTERVENIDOS", 'D', 'F', 'left', false);
 
@@ -182,6 +184,11 @@ textoSiguieteFila($operativo['parroquias'], 'A', 'C', 'left');
 textoSiguieteFila($operativo['barrios'], 'D', 'F', 'left', false);
 
 textoSiguieteFila("LUAE ACTAS/AUTOS LEVANTADOS", 'A', 'F', 'center');
+
+textoSiguieteFila("ORDENANZA", 'A', 'B', 'center');
+textoSiguieteFila("MEDIDA", 'C', 'D', 'center', false);
+textoSiguieteFila("TOTAL", 'E', 'F', 'center', false);
+
 
 $sql = "SELECT 	COUNT(*) total,	id_ordenanza,	medida, (SELECT nombre FROM amc_operativos_informes_tipos_medidas a WHERE b.medida = a.id) medida_nombre
         FROM
@@ -205,6 +212,7 @@ $sql = "SELECT *
         WHERE id_operativo = '" . $operativo['id'] . "'";
 $nombres = $os->db->conn->query($sql);
 $lado = true;
+$primeraFilaImage = $filacabecera + 1;
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     if ($lado) {
         imagenSiguieteFila($nombreDetalle['url'], 'A', 'C');
@@ -212,21 +220,45 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
         imagenSiguieteFila($nombreDetalle['url'], 'D', 'F', false);
     }
     $lado = !$lado;
-
 }
 
+// en el caso que no se quede el ultimo cuadro ocupado por una imagen
+if (!$lado) $objPHPExcel->getActiveSheet()->mergeCells("D" .$filacabecera . ":F" .$filacabecera );
+borde("A" . $primeraFilaImage . ':' . 'F' . $filacabecera);
 // Elaborador por:
 $textoElaboradoPor = "Particular que pongo a su conocimiento para los fines consiguientes
 Atentamente
 
 __________________________
-Dra Mónica Alvarez
-INTRUCTURA METROPOLITANA GAD MDMQ AMC";
+".regresaNombre($operativo['id_persona_encargada']). "
+".regresaUnidad($operativo['id_unidad'])."
+Elaborado por: ".regresaNombre($os->get_member_id());
 $calcularAlto = calculaAltoTexto($operativo['detalle']);
-$objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight(100);
+$objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight(110);
 
 textoSiguieteFila($textoElaboradoPor, 'A', 'F', 'left');
 
+
+$filacabecera++;
+unirycuadro("A" . $filacabecera . ':' . "F" . $filacabecera);
+
+$objDrawing = new PHPExcel_Worksheet_Drawing();
+$objDrawing->setPath('../../../../imagenes/image2.png');
+$objDrawing->setCoordinates("A" . ($filacabecera));
+//setOffsetX works properly
+$objDrawing->setOffsetX(0);
+$objDrawing->setOffsetY(0);
+$objDrawing->setWidth(686);
+$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
+
+$objDrawing = new PHPExcel_Worksheet_Drawing();
+$objDrawing->setPath('../../../../imagenes/image1.png');
+$objDrawing->setCoordinates("F1" );
+//setOffsetX works properly
+$objDrawing->setOffsetX(10);
+$objDrawing->setOffsetY(0);
+$objDrawing->setWidth(100);
+$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 
 // Ancho de las columnas
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
@@ -242,74 +274,6 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth($anchoColumna)
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('F')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth($anchoColumna);
 
-/*
-while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
-// actualizar detalle idGuia
-    $noExistenFilas = false;
-    //cambio para impresiono el nivel de complejidad
-    $niveles_complejidad = array("Alto", "Medio", "Bajo");
-    $rowdetalle['id_nivel_complejidad'] = $niveles_complejidad[$rowdetalle['id_nivel_complejidad'] - 1];
-
-    //cambio para impresion el tipo de control
-    $tipo_control = array("Licenciamiento", "Espacio Público");
-
-    $cadena = $rowdetalle['id_tipo_control'];
-    $array = explode(",", $cadena);
-    foreach ($array as &$valor) {
-        $valor = $tipo_control[$valor - 1];
-    }
-    $cadena_equipo = implode(",", $array);
-    $rowdetalle['id_tipo_control'] = $cadena_equipo;
-
-
-// recuperamos los nombres de los usuarios
-    $sql = "SELECT (SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) FROM qo_members WHERE qo_members.id = b.id_member ) AS nombre  FROM amc_operativos_personal b WHERE id_operativo = '" . $rowdetalle['id'] . "'";
-    $nombres = $os->db->conn->query($sql);
-    $nombresUsuarios = array();
-    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
-        $nombresUsuarios[] = $nombreDetalle['nombre'];
-    }
-    $cadena_personal = implode(",\n ", $nombresUsuarios);
-    $rowdetalle['personal'] = $cadena_personal;
-
-// recuperamos el nombre de zona
-    $sql = "SELECT  nombre  FROM amc_zonas WHERE id = '" . $rowdetalle['id_zonal'] . "'";
-    $nombres = $os->db->conn->query($sql);
-    $nombresUsuarios = array();
-    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
-        $nombresUsuarios[] = $nombreDetalle['nombre'];
-    }
-    $cadena_personal = implode(",\n ", $nombresUsuarios);
-    $rowdetalle['id_zonal'] = $cadena_personal;
-
-    // formatos de impresion de fechas y horas
-    $date = new DateTime($rowdetalle['fecha_inicio_planificacion']);
-    $inicio = $date->format('H\Hi');
-    $diaNumeral = $date->format('w');
-
-    //$filaInicio++;
-    if ($diasUsados[$diaNumeral] == 1){
-        $filaInicio++;
-
-        $diasUsados = array (0,0,0,0,0,0,0);
-    }
-
-    $diasUsados[$diaNumeral] = 1;
-
-
-    //$rowdetalle['fecha_inicio_planificacion'] = $dias[$date->format('w')] . ",\n   " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
-    $fechacorta = $dias[$date->format('w')] . " " . $date->format('d');
-
-    $date = new DateTime($rowdetalle['fecha_fin_planificacion']);
-    $fin = $date->format('H\Hi');
-
-    // envio de impresion de valores
-    //$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['fecha_inicio_planificacion']);
-    $objPHPExcel->getActiveSheet()->setCellValue($columnas[$diaNumeral] . $filaInicio, $fechacorta . "\n" . $inicio . ' - ' . $fin . "\n" . $rowdetalle['personal']);
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':G' . $filaInicio)->applyFromArray($styleArray);
-
-}
-*/
 
 // Set document properties
 //echo date('H:i:s') , " Set document properties" , PHP_EOL;
@@ -511,7 +475,7 @@ function orientacion($rango, $tipo = 'center')
     );
 }
 
-function textoSiguieteFila($texto = '', $inicio, $fin, $alineacion = 'center', $nuevaLinea = true)
+function textoSiguieteFila($texto = '', $inicio, $fin, $alineacion = 'center', $nuevaLinea = true, $negrilla = '')
 {
 
     global $filacabecera, $objPHPExcel;
@@ -521,6 +485,7 @@ function textoSiguieteFila($texto = '', $inicio, $fin, $alineacion = 'center', $
     orientacion($inicio . $filacabecera . ':' . $fin . $filacabecera, $alineacion);
     $objPHPExcel->getActiveSheet()->setCellValue($inicio . $filacabecera, $texto);
     $objPHPExcel->getActiveSheet()->getStyle($inicio . $filacabecera)->getAlignment()->setWrapText(true);
+    if ($negrilla == 'B') $objPHPExcel->getActiveSheet()->getStyle($inicio . $filacabecera . ':' . $fin . $filacabecera )->getFont()->setBold(true);
 }
 
 function calculaAltoTexto($texto)
@@ -539,10 +504,10 @@ function imagenSiguieteFila($imagen = '', $inicio, $fin, $nuevaLinea = true)
 {
     global $filacabecera, $objPHPExcel;
     if ($nuevaLinea) $filacabecera++;
-    borde($inicio . $filacabecera . ':' . $fin . $filacabecera);
+
     unirycuadro($inicio . $filacabecera . ':' . $fin . $filacabecera);
 
-    $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera)->setRowHeight(200);
+    $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera)->setRowHeight(220);
     $objDrawing = new PHPExcel_Worksheet_Drawing();
     $objDrawing->setName($imagen);
     $objDrawing->setDescription($imagen);
@@ -553,6 +518,6 @@ function imagenSiguieteFila($imagen = '', $inicio, $fin, $nuevaLinea = true)
     $objDrawing->setOffsetY(1);
     //set width, height
     //$objDrawing->setHeight(360);
-    $objDrawing->setWidth(343);
+    $objDrawing->setWidth(360);
     $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 }
