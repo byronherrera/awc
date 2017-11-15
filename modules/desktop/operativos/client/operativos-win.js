@@ -963,7 +963,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     singleSelect: true,
                     listeners: {
                         rowselect: function (sm, row, rec) {
-                            cargaDetalle(rec.id, this.formDenunciasDetalle, rec.get("despacho_secretaria"));
+
                             // recuperamos la informacion de personal asignado a ese operativo
                             selectOperativos = rec.id;
                             storeOperativosPersonal.load({params: {id_operativo: rec.id}});
@@ -978,11 +978,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('informesOperativosTab').setDisabled(accesosAdministradorOpe ? false : true);
                                     Ext.getCmp('imagenesOperativosTab').setDisabled(accesosAdministradorOpe ? false : true);
                                     Ext.getCmp('detalleOperativosTab').setDisabled(accesosAdministradorOpe ? false : true);
+                                    cargaDetalle(rec.id);
                                 }
                                 else {
                                     Ext.getCmp('informesOperativosTab').setDisabled(true);
                                     Ext.getCmp('imagenesOperativosTab').setDisabled(true);
                                     Ext.getCmp('detalleOperativosTab').setDisabled(true);
+                                    cargaDetalle(rec.id);
                                 }
 
                                 if ((rec.get("id_estado") == 1) || (rec.get("id_estado") == 4)) {
@@ -1333,6 +1335,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         // fin ventana operativos detalle participantes
 
         var detalleOperativo = new Ext.FormPanel({
+            id: 'formaDetalleOperativo',
             frame: true,
             bodyStyle: 'padding:0',
             width: '100%',
@@ -1348,7 +1351,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     items: [{
                         xtype: 'textfield',
                         fieldLabel: 'Parroquias Intervenidas',
-                        name: 'first',
+                        name: 'parroquias',
+                        id: 'parroquias',
                         anchor: '95%'
                     }]
                 }, {
@@ -1357,16 +1361,18 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     items: [{
                         xtype: 'textfield',
                         fieldLabel: 'Barrios Intervenidos',
-                        name: 'last',
+                        name: 'barrios',
+                        id: 'barrios',
                         anchor: '95%'
                     }]
                 }]
             }, {
                 xtype: 'htmleditor',
-                id: 'bio',
+                id: 'detalle',
                 fieldLabel: 'Detalle Operativo',
-                height: 150,
-                anchor: '98%'
+                height: 145,
+                anchor: '98%',
+                name: 'detalle'
             }]
 
 
@@ -2693,8 +2699,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             });
         }
         win.show();
-        function cargaDetalle(operativos, forma, bloqueo) {
-           /* forma = Ext.getCmp('formOperativosPersonal');
+        function cargaDetalle(operativos) {
+            //forma = Ext.getCmp('formaDetalleOperativo');
+            forma = this.detalleOperativo;
             forma.getForm().load({
                 url: urlOperativos + 'crudOperativos.php?operation=selectForm',
                 params: {
@@ -2703,9 +2710,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 success: function (response, opts) {
                 }
             });
-            // bloquearLectura(forma, bloqueo);*/
         };
-
 
         setTimeout(function () {
             this.storeOperativos.load({

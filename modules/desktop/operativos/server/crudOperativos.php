@@ -361,11 +361,10 @@ function selectOperativosForm()
     global $os;
     $id = (int)$_POST ['id'];
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT *, (SELECT numero FROM amc_guias WHERE amc_guias.id = a.guia ) as guianumero, (SELECT COUNT(*) FROM amc_operativos  b WHERE a.cedula = b.cedula and b.cedula <> '') as totaldocumentos FROM amc_operativos as a  WHERE a.id = $id";
+    $sql = "SELECT * FROM amc_operativos WHERE id = $id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $row['procedimientosdetalle'] = selectProcedimientosCadena($row['procedimientos']);
         $data = $row;
     }
     echo json_encode(array(
