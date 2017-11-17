@@ -88,7 +88,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'AGENCIA METROP
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "INFORME DE OPERATIVO DE CONTROL No. $operativoId");
 
 textoSiguieteFila("1. DATOS GENERALES DEL OPERATIVO", 'A', 'F', 'left',true,"B");
-textoSiguieteFila(regresaZonal($operativo['id_zonal']) . " - " . regresaUnidad($operativo['id_unidad']), 'A', 'F', 'center');
+textoSiguieteFila(regresaZonal($operativo['id_zonal']) . " - " . regresaUnidad($operativo['id_unidad']), 'A', 'F', 'center',true,"B");
 
 $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight(27);
 textoSiguieteFila("ZONA: " . $operativo['zona'], 'A', 'B', 'center');
@@ -117,9 +117,9 @@ textoSiguieteFila(tiposDeControl($operativo['id_tipo_control']), 'A', 'F', 'cent
 
 textoSiguieteFila('3. PERSONAL PARTICIPANTE EN LOS OPERATIVOS ', 'A', 'F', 'left',true,"B");
 
-textoSiguieteFila("ENTIDAD", 'A', 'B', 'center');
-textoSiguieteFila("JEFE DE GRUPO", 'C', 'D', 'center', false);
-textoSiguieteFila("No. Participantes", 'E', 'F', 'center', false);
+textoSiguieteFila("ENTIDAD", 'A', 'B', 'center',true,"B");
+textoSiguieteFila("JEFE DE GRUPO", 'C', 'D', 'center',false,"B");
+textoSiguieteFila("No. Participantes", 'E', 'F', 'center',false,"B");
 
 // recuperamos los nombres de los usuarios
 $sql = "SELECT (SELECT amc_entidades.nombre
@@ -135,14 +135,14 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($nombreDetalle['personas'], 'E', 'F', 'center', false);
 }
 
-textoSiguieteFila('4. ACCIONES EJECUTADAS', 'A', 'F', 'left',true,"B");
+textoSiguieteFila('4. ACCIONES EJECUTADAS (AUTOS DE INICIO, ACTAS DE INFRACCION) ', 'A', 'F', 'left',true,"B");
 
-textoSiguieteFila("Nombre Administrado", 'A', 'A');
-textoSiguieteFila("Ordenanza Metropolitana", 'B', 'B', 'center', false);
-textoSiguieteFila("Dirección Establecimiento", 'C', 'C', 'center', false);
-textoSiguieteFila("Hecho Constatado", 'D', 'D', 'center', false);
-textoSiguieteFila("Medida Adoptada", 'E', 'E', 'center', false);
-textoSiguieteFila("Auto Inicio ", 'F', 'F', 'center', false);
+textoSiguieteFila("Nombre Administrado", 'A', 'A',true,"B");
+textoSiguieteFila("Ordenanza Metropolitana", 'B', 'B', 'center',false,"B");
+textoSiguieteFila("Dirección Establecimiento", 'C', 'C', 'center',false,"B");
+textoSiguieteFila("Hecho Constatado", 'D', 'D', 'center',false,"B");
+textoSiguieteFila("Medida Adoptada", 'E', 'E', 'center',false,"B");
+textoSiguieteFila("Auto Inicio ", 'F', 'F', 'center',false,"B");
 $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
 
 
@@ -171,8 +171,8 @@ $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight
 textoSiguieteFila($operativo['detalle'], 'A', 'F', 'left');
 
 textoSiguieteFila("6. RESULTADOS", 'A', 'F', 'left',true,"B");
-textoSiguieteFila("PARROQUIAS INTERVENIDAS", 'A', 'C', 'left');
-textoSiguieteFila("BARRIOS/SECTORES INTERVENIDOS", 'D', 'F', 'left', false);
+textoSiguieteFila("PARROQUIAS INTERVENIDAS", 'A', 'C', 'left',true,"B");
+textoSiguieteFila("BARRIOS/SECTORES INTERVENIDOS", 'D', 'F', 'left',false,"B");
 
 //determina cual es el mas alto
 $calcularAlto1 = calculaAltoTexto($operativo['parroquias']);
@@ -185,10 +185,9 @@ textoSiguieteFila($operativo['barrios'], 'D', 'F', 'left', false);
 
 textoSiguieteFila("LUAE ACTAS/AUTOS LEVANTADOS", 'A', 'F', 'center');
 
-textoSiguieteFila("ORDENANZA", 'A', 'B', 'center');
-textoSiguieteFila("MEDIDA", 'C', 'D', 'center', false);
-textoSiguieteFila("TOTAL", 'E', 'F', 'center', false);
-
+textoSiguieteFila("ORDENANZA", 'A', 'B', 'center',true,"B");
+textoSiguieteFila("MEDIDA", 'C', 'D', 'center',false,"B");
+textoSiguieteFila("TOTAL", 'E', 'F', 'center',false,"B");
 
 $sql = "SELECT 	COUNT(*) total,	id_ordenanza,	medida, (SELECT nombre FROM amc_operativos_informes_tipos_medidas a WHERE b.medida = a.id) medida_nombre
         FROM
@@ -484,6 +483,26 @@ function textoSiguieteFila($texto = '', $inicio, $fin, $alineacion = 'center', $
     borde($inicio . $filacabecera . ':' . $fin . $filacabecera);
     orientacion($inicio . $filacabecera . ':' . $fin . $filacabecera, $alineacion);
     $objPHPExcel->getActiveSheet()->setCellValue($inicio . $filacabecera, $texto);
+    $objPHPExcel->getActiveSheet()->getStyle($inicio . $filacabecera)->getAlignment()->setWrapText(true);
+    if ($negrilla == 'B') $objPHPExcel->getActiveSheet()->getStyle($inicio . $filacabecera . ':' . $fin . $filacabecera )->getFont()->setBold(true);
+}
+
+function textoSiguieteFilaHtml($texto = '', $inicio, $fin, $alineacion = 'center', $nuevaLinea = true, $negrilla = '')
+{
+
+    global $filacabecera, $objPHPExcel;
+    if ($nuevaLinea) $filacabecera++;
+    if ($inicio != $fin) unirycuadro($inicio . $filacabecera . ':' . $fin . $filacabecera);
+    borde($inicio . $filacabecera . ':' . $fin . $filacabecera);
+    orientacion($inicio . $filacabecera . ':' . $fin . $filacabecera, $alineacion);
+    $wizard = new PHPExcel_Helper_HTML;
+    $richText = $wizard->toRichTextObject($texto);
+
+    $objPHPExcel->getActiveSheet()->setCellValue($inicio . $filacabecera, $richText);
+
+
+
+
     $objPHPExcel->getActiveSheet()->getStyle($inicio . $filacabecera)->getAlignment()->setWrapText(true);
     if ($negrilla == 'B') $objPHPExcel->getActiveSheet()->getStyle($inicio . $filacabecera . ':' . $fin . $filacabecera )->getFont()->setBold(true);
 }

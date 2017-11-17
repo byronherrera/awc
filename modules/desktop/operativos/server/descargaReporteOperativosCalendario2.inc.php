@@ -237,7 +237,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $cadena = $rowdetalle['id_tipo_control'];
     $array = explode(",", $cadena);
     foreach ($array as &$valor) {
-        $valor = $tipo_control[$valor - 1];
+        $valor = regresaOrdenanza($valor);
     }
     $cadena_equipo = implode(",", $array);
     $rowdetalle['id_tipo_control'] = $cadena_equipo;
@@ -424,4 +424,14 @@ function fechaLarga ($fecha, $dias, $meses) {
     $date = new DateTime($fecha);
     return  $dias[$date->format('w')] . " " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
 
+}
+
+function regresaOrdenanza($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT nombre FROM amc_ordenanzas WHERE id = " . $id_dato;
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['nombre'];
 }

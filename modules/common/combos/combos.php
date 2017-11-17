@@ -156,6 +156,14 @@ function comboPersonalOperativos()
             $todos  = "";
         }
     }
+// EN CASO QUE SOLO SEA UN USUARIO SOLO MUESTRA EL USUARIO LOGEADO
+    if (isset($_POST['accesosOperativos'])) {
+
+        if ($_POST['accesosOperativos'] == 'true') {
+            $id_user = $os->get_member_id();
+            $todos  = $todos  . " AND a.id = $id_user ";
+        }
+    }
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT

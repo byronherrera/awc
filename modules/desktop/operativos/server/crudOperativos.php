@@ -39,7 +39,14 @@ function selectOperativos()
     //TODO cambiar columna por defecto en busquedas
     $columnaBusqueda = 'id_zonal';
 
+
     $where = '';
+    $usuarioLog =  $os->get_member_id();
+    if (isset($_POST['accesosOperativos'])) {
+        $accesosOperativos = $_POST['accesosOperativos'];
+        if ($accesosOperativos == 'true')
+            $where = " WHERE $usuarioLog = id_persona_encargada ";
+    }
 
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
@@ -62,10 +69,12 @@ function selectOperativos()
             $result = $os->db->conn->query($sql);
             $row = $result->fetch(PDO::FETCH_ASSOC);
             if (strlen($row['id']) > 0)
-            $campo = $row['id'];
+                $campo = $row['id'];
         }
-
+        if ($where == '')
         $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+        else
+            $where = $where . " AND $columnaBusqueda LIKE '%$campo%'";
     }
 
     if (isset($_POST['unidadfiltro'])) {
@@ -73,16 +82,16 @@ function selectOperativos()
         if ($where == '') {
             $where = "WHERE reasignacion = $unidad ";
         } else {
-            $where = " AND reasignacion = $unidad ";
+            $where = $where . " AND reasignacion = $unidad ";
         }
     }
 
     if (isset($_POST['finalizados'])) {
         if ($_POST['finalizados'] == 'true') {
             if ($where == '') {
-                $where = " WHERE id_estado = 1 OR id_estado = 4 ";
+                $where = " WHERE (id_estado = 1 OR id_estado = 4) ";
             } else {
-                $where = $where . " AND id_estado = 1 OR id_estado = 4 ";
+                $where = $where . " AND (id_estado = 1 OR id_estado = 4) ";
             }
         }
     }
@@ -97,10 +106,10 @@ function selectOperativos()
     else
         $limit = 100;
 
-    $orderby = 'ORDER BY CONVERT( codigo_operativo,UNSIGNED INTEGER) DESC';
+    $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) DESC';
     if (isset($_POST['sort'])) {
-        if ($_POST['sort'] == 'codigo_operativo') {
-            $orderby = 'ORDER BY CONVERT( codigo_operativo,UNSIGNED INTEGER) DESC';
+        if ($_POST['sort'] == 'id') {
+            $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) DESC';
         } else {
             $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
         }
@@ -163,14 +172,14 @@ function selectOperativos()
             $where = $where . " AND id_unidad = $tipo ";
         }
     }
-   /* if (isset($_POST['busqueda_finalizado']) and ($_POST['busqueda_finalizado'] != '')) {
-        $tipo = $_POST['busqueda_finalizado'];
-        if ($where == '') {
-            $where = "WHERE finalizado = '$tipo' ";
-        } else {
-            $where = $where . " AND finalizado = '$tipo' ";
-        }
-    }*/
+    /* if (isset($_POST['busqueda_finalizado']) and ($_POST['busqueda_finalizado'] != '')) {
+         $tipo = $_POST['busqueda_finalizado'];
+         if ($where == '') {
+             $where = "WHERE finalizado = '$tipo' ";
+         } else {
+             $where = $where . " AND finalizado = '$tipo' ";
+         }
+     }*/
     if (isset($_POST['busqueda_informe']) and ($_POST['busqueda_informe'] != '')) {
         $tipo = $_POST['busqueda_informe'];
         if ($where == '') {
@@ -190,14 +199,7 @@ function selectOperativos()
         }
     }
 
-/*    if (isset($_POST['busqueda_punto_encuentro']) and ($_POST['busqueda_punto_encuentro'] != '')) {
-        $tipo = $_POST['busqueda_punto_encuentro'];
-        if ($where == '') {
-            $where = "WHERE punto_encuentro_planificado like '%$tipo%' ";
-        } else {
-            $where = $where . " AND punto_encuentro_planificado like '%$tipo%' ";
-        }
-    }*/
+
     if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
         $tipo = $_POST['busqueda_observaciones'];
         if ($where == '') {
@@ -257,7 +259,7 @@ function insertOperativos()
 
 
     $data->finalizado = 'false';
-    $data->codigo_operativo = generaCodigoProcesoDenuncia();
+    // $data->codigo_operativo = generaCodigoProcesoDenuncia();
     $data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
 
@@ -316,15 +318,15 @@ function updateOperativos()
         else
             $data->finalizado = 'true';
     }
-  /*  if (isset($data->fallido)) {
-        if (!$data->fallido)
-            $data->fallido = 'false';
-        else
-            $data->fallido = 'true';
-    }*/
+    /*  if (isset($data->fallido)) {
+          if (!$data->fallido)
+              $data->fallido = 'false';
+          else
+              $data->fallido = 'true';
+      }*/
 
     if (isset($data->fecha_informe)) {
-            $data->fecha_informe = NULL;
+        $data->fecha_informe = NULL;
     }
 
 
@@ -340,7 +342,7 @@ function updateOperativos()
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
         if (isset($valor))
-        $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
         else
             $cadenaDatos = $cadenaDatos . $clave . " = NULL, ";
     }
@@ -379,77 +381,12 @@ function updateOperativosForm()
     $os->db->conn->query("SET NAMES 'utf8'");
 
     $id = $_POST["id"];
-    $id_persona = $_POST["id_persona"];
-    $recepcion_documento = $_POST["recepcion_documento"];
-    $id_tipo_documento = $_POST["id_tipo_documento"];
-    $num_documento = $_POST["num_documento"];
-    $remitente = $_POST["remitente"];
-    $observacion_secretaria = $_POST["observacion_secretaria"];
-    $asunto = addslashes($_POST["asunto"]);
-    if (isset($_POST["reasignacion"])) {
-        $reasignacion = $_POST["reasignacion"];
-    } else {
-        //recuperamos la unidad en base a guia
-        if (isset ($_POST["guia"])) {
-            $valueGuia = $_POST["guia"];
-            $os->db->conn->query("SET NAMES 'utf8'");
-            $sql = "SELECT id_unidad FROM amc_guias WHERE id = $valueGuia ";
-            $result = $os->db->conn->query($sql);
-            $row = $result->fetch(PDO::FETCH_ASSOC);
-            $reasignacion = $row ['id_unidad'];
-        }
-    }
-    $guia = $_POST["guia"];
-    $finalizado = $_POST["finalizado"];
-    $descripcion_anexos = addslashes($_POST["descripcion_anexos"]);
-    $id_caracter_tramite = $_POST["id_caracter_tramite"];
-    $cantidad_fojas = $_POST["cantidad_fojas"];
-    $cedula = $_POST["cedula"];
-    $email = $_POST["email"];
+    $parroquias = $_POST["parroquias"];
+    $barrios = $_POST["barrios"];
+    $detalle = $_POST["detalle"];
 
 
-    //para el caso de denuncias se valida que exista cedula y correo
-    if ($id_tipo_documento == 1) {
-        // se valida que se envio cedula, email
-        $error = false;
-        $msjError = '';
-        if (!isset ($cedula) or $cedula == '') {
-            $error = true;
-            $msjError = 'Falta cédula. ' . $msjError;
-        }
-        if (!isset ($email) or $email == '') {
-            $error = true;
-            $msjError = $msjError . 'Falta email';
-        }
-
-        if ($error) {
-            echo json_encode(array(
-                "success" => false,
-                "msg" => $msjError
-            ));
-            return;
-        }
-
-    }
-    /*codigo_operativo='$codigo_operativo',*/
-    $sql = "UPDATE amc_operativos SET 
-            id_persona = '$id_persona',
-            recepcion_documento = '$recepcion_documento',
-            id_tipo_documento = '$id_tipo_documento',
-            num_documento = '$num_documento',
-            remitente = '$remitente',
-            asunto = '$asunto',
-            observacion_secretaria = '$observacion_secretaria',
-            reasignacion = '$reasignacion',
-            descripcion_anexos = '$descripcion_anexos',
-            id_caracter_tramite = '$id_caracter_tramite',
-            cantidad_fojas = '$cantidad_fojas' ,
-            cedula = '$cedula' ,
-            email = '$email'  ,
-            guia = '$guia'  ,
-            finalizado = '$finalizado'  
-         
-          WHERE id = '$id' ";
+    $sql = "UPDATE `amc_operativos` SET `detalle`='$detalle', `parroquias`='$parroquias', `barrios`='$barrios' WHERE (`id`='$id')";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(

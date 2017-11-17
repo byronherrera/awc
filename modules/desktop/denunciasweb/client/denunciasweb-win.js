@@ -92,7 +92,7 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                 },
                 success: function (response, opts) {
                     var obj = Ext.decode(response.responseText);
-                    console.dir(obj);
+
                 },
                 failure: function (response, opts) {
                     console.log('server-side failure with status code ' + response.status);
