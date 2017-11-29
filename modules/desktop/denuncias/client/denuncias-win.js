@@ -238,6 +238,35 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo caracter del tramite CDT
 
+        //inicio combo denuncias ordenanza DETIORD
+        storeDETIORD = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=ordenanzas'
+        });
+
+        var comboDETIORD = new Ext.form.ComboBox({
+            id: 'comboDETIORD',
+            store: storeDETIORD,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            forceSelection: true,
+            allowBlank: false
+        });
+
+        function denunciasListaOrdenanza(id) {
+            var index = storeDETIORD.find('id', id);
+            if (index > -1) {
+                var record = storeDETIORD.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin  combo denuncias ordenanza
+
         //inicio combo persona recepta la denuncia PRD
         storePRD = new Ext.data.JsonStore({
             root: 'data',
@@ -814,6 +843,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_persona', allowBlank: false},
                 {name: 'recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'id_tipo_documento', allowBlank: false},
+                {name: 'id_ordenanza', allowBlank: true},
                 {name: 'num_documento', allowBlank: false},
                 {name: 'remitente', allowBlank: false},
                 {name: 'asunto', allowBlank: false},
@@ -880,6 +910,14 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 28,
                     editor: comboTID, renderer: personaTipoDocumento
+                },
+                {
+                    header: 'Ordenanza',
+                    dataIndex: 'id_ordenanza',
+                    sortable: true,
+                    width: 28,
+                    editor: comboDETIORD, renderer: denunciasListaOrdenanza
+
                 },
                 {
                     header: 'N. documento',
@@ -1053,6 +1091,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     width: 30,
                     renderer: personaTipoDocumento
                 },
+
                 {
                     header: 'N. documento',
                     dataIndex: 'num_documento',
@@ -1176,6 +1215,14 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 30,
                     renderer: personaTipoDocumento
+                },
+                {
+                    header: 'Ordenanza',
+                    dataIndex: 'id_ordenanza',
+                    sortable: true,
+                    width: 28,
+                    renderer: denunciasListaOrdenanza
+
                 },
                 {
                     header: 'N. documento',
@@ -1381,6 +1428,21 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         triggerAction: 'all',
                                                         mode: 'local'
 
+                                                    },
+                                                    {
+                                                        xtype: 'combo',
+                                                        fieldLabel: 'Ordenanza',
+                                                        id: 'id_ordenanza',
+                                                        name: 'id_ordenanza',
+                                                        anchor: '95%',
+
+                                                        hiddenName: 'id_ordenanza',
+                                                        store: storeDETIORD,
+                                                        valueField: 'id',
+                                                        displayField: 'nombre',
+                                                        typeAhead: true,
+                                                        triggerAction: 'all',
+                                                        mode: 'local'
                                                     },
                                                     {
                                                         fieldLabel: 'Núm documento',
@@ -2018,7 +2080,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                         //Ext.getCmp('tb_seleccionarUnidad').getValue();
                                         //storeDenuncias.load({params: {noenviados: isChecked}});
                                         storeDenuncias.baseParams = {
-                                            noenviados: isChecked                                        };
+                                            noenviados: isChecked
+                                        };
                                         storeDenuncias.load();
                                         // if (!this.checked) {
                                         Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
@@ -2400,7 +2463,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
     },
 
     botonExportarReporte: function () {
-        console.log (Ext.getCmp('tb_seleccionarUnidad').getValue());
+        console.log(Ext.getCmp('tb_seleccionarUnidad').getValue());
         if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar Unidad')
             Ext.Msg.show({
                 title: 'Advertencia',

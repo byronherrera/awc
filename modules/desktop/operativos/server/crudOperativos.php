@@ -41,11 +41,27 @@ function selectOperativos()
 
 
     $where = '';
-    $usuarioLog =  $os->get_member_id();
+    $usuarioLog = $os->get_member_id();
     if (isset($_POST['accesosOperativos'])) {
         $accesosOperativos = $_POST['accesosOperativos'];
         if ($accesosOperativos == 'true')
             $where = " WHERE $usuarioLog = id_persona_encargada ";
+    }
+
+    if (isset($_POST['accesosAdministradorOpe'])) {
+        $accesosOperativos = $_POST['accesosAdministradorOpe'];
+        if ($accesosOperativos == 'false')
+            if ($where == '')
+                $where = " WHERE visible  = 1 ";
+            else
+                $where = $where . " AND visible  = 1";
+    }
+    // se muestran todos los operativos
+    if (isset($_POST['acceso'])) {
+        $acceso = $_POST['acceso'];
+        if ($acceso == 'false')
+            $where = "";
+            //$where = " WHERE $usuarioLog = id_persona_encargada ";
     }
 
     if (isset($_POST['filterField'])) {
@@ -72,7 +88,7 @@ function selectOperativos()
                 $campo = $row['id'];
         }
         if ($where == '')
-        $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
         else
             $where = $where . " AND $columnaBusqueda LIKE '%$campo%'";
     }
@@ -266,8 +282,10 @@ function insertOperativos()
     $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaCampos = $cadenaCampos . $clave . ',';
-        $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        if ($clave != 'id') {
+            $cadenaCampos = $cadenaCampos . $clave . ',';
+            $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        }
     }
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);

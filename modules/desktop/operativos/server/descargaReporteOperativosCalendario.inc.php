@@ -229,7 +229,11 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $noExistenFilas = false;
     //cambio para impresiono el nivel de complejidad
     $niveles_complejidad = array("Alto", "Medio", "Bajo");
-    $rowdetalle['id_nivel_complejidad'] = $niveles_complejidad[$rowdetalle['id_nivel_complejidad'] - 1];
+    if (isset($rowdetalle['id_nivel_complejidad']) and ($rowdetalle['id_nivel_complejidad']!= ' ')) {
+        $rowdetalle['id_nivel_complejidad'] = $niveles_complejidad[$rowdetalle['id_nivel_complejidad'] - 1];
+    } else {
+        $rowdetalle['id_nivel_complejidad'] = '';
+    }
 
     //cambio para impresion el tipo de control
     $tipo_control = array("Licenciamiento", "Espacio Público");

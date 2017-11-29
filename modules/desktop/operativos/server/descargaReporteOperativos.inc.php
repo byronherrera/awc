@@ -299,12 +299,15 @@ $noExistenFilas = true;
 
 while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 // actualizar detalle idGuia
-
-
     $noExistenFilas = false;
     //cambio para impresiono el nivel de complejidad
     $niveles_complejidad = array("Alto", "Medio", "Bajo");
-    $rowdetalle['id_nivel_complejidad'] = $niveles_complejidad[$rowdetalle['id_nivel_complejidad'] - 1];
+    $test = $rowdetalle['id_nivel_complejidad'];
+    if (isset($rowdetalle['id_nivel_complejidad']) and ($rowdetalle['id_nivel_complejidad']!= ' ')) {
+        $rowdetalle['id_nivel_complejidad'] = $niveles_complejidad[$rowdetalle['id_nivel_complejidad'] - 1];
+    } else {
+        $rowdetalle['id_nivel_complejidad'] = '';
+    }
 
     //cambio para impresion el tipo de control
     $sql = "SELECT nombre_completo as nombre  FROM amc_ordenanzas WHERE id in (" . $rowdetalle['id_tipo_control'] . ")";
