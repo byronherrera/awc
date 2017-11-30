@@ -2751,7 +2751,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         var operativos = new this.storeOperativos.recordType({
             id_persona: '-',
             id: ' ',
-            visible : '0',
+            visible : 'false',
             fecha_planificacion: (new Date()),
             fecha_inicio_planificacion: (new Date()),
             fecha_fin_planificacion: (new Date()),
