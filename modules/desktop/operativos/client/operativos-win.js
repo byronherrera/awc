@@ -406,6 +406,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         });
 
+
         var comboPRD = new Ext.form.ComboBox({
             id: 'comboPRD',
             store: storePRD,
@@ -416,6 +417,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             //forceSelection: true,
             allowBlank: true
         });
+
         var comboPRD2 = new Ext.form.ComboBox({
             id: 'comboPRD2',
             store: storePRD,
@@ -428,6 +430,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaReceptaDenuncia(id) {
+            var index = storePRD.find('id', id);
+            if (index > -1) {
+                var record = storePRD.getAt(index);
+                return record.get('nombre');
+            }
+        }
+function personaReceptaDenuncia2(id) {
             var index = storePRD.find('id', id);
             if (index > -1) {
                 var record = storePRD.getAt(index);
@@ -966,7 +975,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
             ],
             viewConfig: {
-
                 forceFit: false,
                 getRowClass: function (record, index) {
                     // validamos la fecha
@@ -975,7 +983,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                     var diasDif = fechaActual.getTime() - fechaOperativo.getTime();
                     var horas = Math.round(diasDif/(1000 * 60 * 60 ));
-                    console.log(horas )
 
                     if ((record.get('id_estado') == 1) && (horas > 86)) {
                         return 'redstate';
@@ -1177,8 +1184,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_member',
                     sortable: true,
                     width: 30,
-                    editor: comboPRD,
-                    renderer: personaReceptaDenuncia
+                    editor: comboPRD2,
+                    renderer: personaReceptaDenuncia2
+
                 },
                 {
                     header: 'Operativo',
@@ -1423,7 +1431,22 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 height: 145,
                 anchor: '98%',
                 name: 'detalle'
-            }]
+            }],
+            defaults: {
+                listeners: {
+                    change: function(field, newVal, oldVal) {
+
+                        var myForm = Ext.getCmp('formaDetalleOperativo').getForm();
+                        myForm.submit({
+                            url: 'modules/desktop/operativos/server/crudOperativos.php?operation=updateForm',
+                            method: 'POST',
+
+                            success: function (form, action) { }
+                        });
+
+                    }
+                },
+            },
 
 
         });
@@ -2751,7 +2774,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         var operativos = new this.storeOperativos.recordType({
             id_persona: '-',
             id: ' ',
-            visible : 'false',
+            visible : '',
             fecha_planificacion: (new Date()),
             fecha_inicio_planificacion: (new Date()),
             fecha_fin_planificacion: (new Date()),
