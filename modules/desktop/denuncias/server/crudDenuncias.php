@@ -257,6 +257,10 @@ function updateDenuncias()
             }
     }
 
+    if ($data->id_ordenanza== NULL)
+            unset($data->id_ordenanza);
+
+
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {

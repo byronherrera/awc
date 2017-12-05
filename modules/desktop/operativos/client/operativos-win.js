@@ -81,6 +81,25 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         }
 
+
+        var comboOPTIDSimple2 = new Ext.form.ComboBox({
+            id: 'comboOPNICO',
+            store: storeOPTID,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function operativosTipoOperativosSimple2(id) {
+            var index = storeOPTID.find('id', id);
+            if (index > -1) {
+                var record = storeOPTID.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+
         function operativosTipoOperativos(id) {
             if (id === '') return '';
             var nombres = id.split(",");
@@ -360,7 +379,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             fields: ['id', 'nombre'],
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=personaloperativos',
-            baseParams: {accesosAdministradorOpe:accesosAdministradorOpe,accesosOperativos:accesosOperativos, acceso: acceso }
+            baseParams: {
+                accesosAdministradorOpe: accesosAdministradorOpe,
+                accesosOperativos: accesosOperativos,
+                acceso: acceso
+            }
         });
 
         var comboOPPERENC = new Ext.ux.form.CheckboxCombo({
@@ -402,7 +425,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             fields: ['id', 'nombre'],
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=personaloperativos',
-            baseParams: {todos: 'true', accesosAdministradorOpe:accesosAdministradorOpe,accesosOperativos:accesosOperativos, acceso:acceso }
+            baseParams: {
+                todos: 'true',
+                accesosAdministradorOpe: accesosAdministradorOpe,
+                accesosOperativos: accesosOperativos,
+                acceso: acceso
+            }
 
         });
 
@@ -436,7 +464,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
-function personaReceptaDenuncia2(id) {
+
+        function personaReceptaDenuncia2(id) {
             var index = storePRD.find('id', id);
             if (index > -1) {
                 var record = storePRD.getAt(index);
@@ -766,7 +795,7 @@ function personaReceptaDenuncia2(id) {
                 finalizados: finalizados,
                 accesosAdministradorOpe: accesosAdministradorOpe,
                 accesosOperativos: accesosOperativos,
-                acceso:acceso
+                acceso: acceso
             }
         });
         storeOperativos = this.storeOperativos;
@@ -776,12 +805,12 @@ function personaReceptaDenuncia2(id) {
             store: this.storeOperativos,
             columns: [
                 new Ext.grid.RowNumberer(),
-               /* {
-                    header: 'Código',
-                    dataIndex: 'codigo_operativo',
-                    sortable: true,
-                    width: 45
-                },*/
+                /* {
+                 header: 'Código',
+                 dataIndex: 'codigo_operativo',
+                 sortable: true,
+                 width: 45
+                 },*/
                 {
                     header: 'Código',
                     dataIndex: 'id',
@@ -861,8 +890,8 @@ function personaReceptaDenuncia2(id) {
                     editor: comboPRD,
                     renderer: personaReceptaDenuncia,
                     /*
-                    editor: comboOPPERENC,
-                    renderer: operativosPersonalEncargado,*/
+                     editor: comboOPPERENC,
+                     renderer: operativosPersonalEncargado,*/
                     id: 'id_persona_encargada'
                 },
                 {
@@ -982,7 +1011,7 @@ function personaReceptaDenuncia2(id) {
                     fechaOperativo = record.get('fecha_fin_planificacion')
 
                     var diasDif = fechaActual.getTime() - fechaOperativo.getTime();
-                    var horas = Math.round(diasDif/(1000 * 60 * 60 ));
+                    var horas = Math.round(diasDif / (1000 * 60 * 60 ));
 
                     if ((record.get('id_estado') == 1) && (horas > 86)) {
                         return 'redstate';
@@ -1085,12 +1114,9 @@ function personaReceptaDenuncia2(id) {
                                     Ext.getCmp('tb_repoteOperativos').setDisabled(true);
                                 }
                                 //para el caso que se es administrador
-                                if (accesosAdministradorOpe )    {
+                                if (accesosAdministradorOpe) {
                                     Ext.getCmp('savedetalleoperativo').setDisabled(false);
                                 }
-
-
-
                             }
                         }
                     }
@@ -1379,7 +1405,7 @@ function personaReceptaDenuncia2(id) {
                         if (gridBlockOperativos) {
                             //verifico que si no es administrador se bloque la edicion
                             if (!accesosAdministradorOpe)
-                            return false;
+                                return false;
                         }
                         return true;
                     } else {
@@ -1434,14 +1460,15 @@ function personaReceptaDenuncia2(id) {
             }],
             defaults: {
                 listeners: {
-                    change: function(field, newVal, oldVal) {
+                    change: function (field, newVal, oldVal) {
 
                         var myForm = Ext.getCmp('formaDetalleOperativo').getForm();
                         myForm.submit({
                             url: 'modules/desktop/operativos/server/crudOperativos.php?operation=updateForm',
                             method: 'POST',
 
-                            success: function (form, action) { }
+                            success: function (form, action) {
+                            }
                         });
 
                     }
@@ -1548,7 +1575,7 @@ function personaReceptaDenuncia2(id) {
                         if (gridBlockOperativos) {
                             //verifico que si no es administrador se bloque la edicion
                             if (!accesosAdministradorOpe)
-                            return false;
+                                return false;
                         }
                         return true;
                     } else {
@@ -1628,8 +1655,8 @@ function personaReceptaDenuncia2(id) {
                     dataIndex: 'id_ordenanza',
                     sortable: true,
                     width: 30,
-                    editor: comboOPTIDSimple,
-                    renderer: operativosTipoOperativosSimple
+                    editor: comboOPTIDSimple2,
+                    renderer: operativosTipoOperativosSimple2
                 },
                 {
                     header: 'Operativo',
@@ -1699,7 +1726,7 @@ function personaReceptaDenuncia2(id) {
                         if (gridBlockOperativos) {
                             //verifico que si no es administrador se bloque la edicion
                             if (!accesosAdministradorOpe)
-                            return false;
+                                return false;
                         }
                         return true;
                     } else {
@@ -1814,7 +1841,7 @@ function personaReceptaDenuncia2(id) {
                         if (gridBlockOperativos) {
                             //verifico que si no es administrador se bloque la edicion
                             if (!accesosAdministradorOpe)
-                            return false;
+                                return false;
                         }
                         return true;
                     } else {
@@ -2422,25 +2449,25 @@ function personaReceptaDenuncia2(id) {
                                             cls: 'no-border',
                                             items: [
                                                 {
-                                                title: 'Detalle Operativo',
-                                                layout: 'column',
-                                                id: 'detalleOperativosTab',
-                                                height: 250,
-                                                items: detalleOperativo,
-                                                disabled: true,
-                                                autoScroll: true,
-                                                tbar: [
-                                                    {
-                                                        text: 'Grabar',
-                                                        scope: this,
-                                                        handler: this.updateOperativo,
-                                                        iconCls: 'save-icon',
-                                                        disabled: true,
-                                                        id: 'savedetalleoperativo',
-                                                        //disabled: !acceso
-                                                    }
-                                                ]
-                                            },
+                                                    title: 'Detalle Operativo',
+                                                    layout: 'column',
+                                                    id: 'detalleOperativosTab',
+                                                    height: 250,
+                                                    items: detalleOperativo,
+                                                    disabled: true,
+                                                    autoScroll: true,
+                                                    tbar: [
+                                                        {
+                                                            text: 'Grabar',
+                                                            scope: this,
+                                                            handler: this.updateOperativo,
+                                                            iconCls: 'save-icon',
+                                                            disabled: true,
+                                                            id: 'savedetalleoperativo',
+                                                            //disabled: !acceso
+                                                        }
+                                                    ]
+                                                },
                                                 {
                                                     title: 'Instituciones Participantes',
                                                     layout: 'column',
@@ -2774,7 +2801,7 @@ function personaReceptaDenuncia2(id) {
         var operativos = new this.storeOperativos.recordType({
             id_persona: '-',
             id: ' ',
-            visible : '',
+            visible: '',
             fecha_planificacion: (new Date()),
             fecha_inicio_planificacion: (new Date()),
             fecha_fin_planificacion: (new Date()),
@@ -2879,7 +2906,6 @@ function personaReceptaDenuncia2(id) {
             }
         });
     },
-
 
 
     addoperativosParticipantes: function () {

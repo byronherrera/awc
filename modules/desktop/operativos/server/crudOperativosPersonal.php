@@ -13,7 +13,7 @@ function selectPersonal()
     $id_operativo =  $_POST["id_operativo"] ;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_operativos_personal WHERE id_operativo = $id_operativo ";
+    $sql = "SELECT * FROM amc_operativos_personal WHERE id_operativo = $id_operativo  ORDER BY id DESC ";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -60,8 +60,8 @@ function insertPersonal()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_operativos_personal ($cadenaCampos)
-	values($cadenaDatos);";
+    $sql = "INSERT INTO amc_operativos_personal ($cadenaCampos) values($cadenaDatos);";
+    $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
@@ -74,6 +74,11 @@ function insertPersonal()
         "data" => array($data),
         "message" => $message
     ));
+
+    $fichero = 'crudOperativosPersonal.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $log . "\n";
+    file_put_contents($fichero, $actual);
 }
 
 function updatePersonal()
