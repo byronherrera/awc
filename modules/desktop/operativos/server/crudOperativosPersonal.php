@@ -87,7 +87,7 @@ function updatePersonal()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
     $message = validarPersonal($data->id_member,$data->id_operativo );
-     // genero el listado de valores a insertar
+    // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
         $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";

@@ -21,7 +21,7 @@ if(isset($_POST['data'])){
                 $origen=$uploadfile;
                 $destino=$uploadfile;
                 $destino_temporal=tempnam("tmp/","tmp");
-                redimensionar_jpeg($origen, $destino_temporal, 800, 800, 90);
+                redimensionar_jpeg($origen, $destino_temporal, 1000, 1000, 70);
 
                 // guardamos la imagen
                 $fp=fopen($destino,"w");
