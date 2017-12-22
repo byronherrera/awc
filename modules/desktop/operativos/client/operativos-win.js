@@ -465,10 +465,35 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         }
 
+        storePRD2 = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=personaloperativos',
+            baseParams: {
+                todos: 'true',
+                accesosAdministradorOpe: true,
+                accesosOperativos: false,
+                acceso: acceso
+            }
+
+        });
+
+        var comboPRD2 = new Ext.form.ComboBox({
+            id: 'comboPRD2',
+            store: storePRD2,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            //forceSelection: true,
+            allowBlank: true
+        });
+
         function personaReceptaDenuncia2(id) {
-            var index = storePRD.find('id', id);
+            var index = storePRD2.find('id', id);
             if (index > -1) {
-                var record = storePRD.getAt(index);
+                var record = storePRD2.getAt(index);
                 return record.get('nombre');
             }
         }

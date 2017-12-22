@@ -1,262 +1,110 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Geocoding service</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <style>
+<head>
+	<title>Personal Amc</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<style>
       /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
+      * element that contains the map. */
       #map {
-        height: 100%;
+      	height: 100%;
       }
       /* Optional: Makes the sample page fill the window. */
       html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
+      	height: 100%;
+      	margin: 0;
+      	padding: 0;
       }
       #floating-panel {
-        position: absolute;
-        top: 10px;
-        left: 25%;
-        z-index: 5;
-        background-color: #fff;
-        padding: 5px;
-        border: 1px solid #999;
-        text-align: center;
-        font-family: 'Roboto','sans-serif';
-        line-height: 30px;
-        padding-left: 10px;
+      	position: absolute;
+      	top: 10px;
+      	left: 25%;
+      	z-index: 5;
+      	background-color: #fff;
+      	padding: 5px;
+      	border: 1px solid #999;
+      	text-align: center;
+      	font-family: 'Roboto','sans-serif';
+      	line-height: 30px;
+      	padding-left: 10px;
       }
-    </style>
-  </head>
-  <body>
-     
-    <div id="map"></div>
-    <script>
-            // Data for the markers consisting of a name, a LatLng and a zIndex for the
-      // order in which these markers should display on top of each other.
-      var beaches = [
-        ['ACEBO VILLAFUERTE MARITZA ELIZABETH','MANUEL MATEO  Y JORGE ICAZA',''],
-  ['ACOSTA OBANDO KAREN ALEJANDRA','AV. MARQUESA DE SOLANDA Y AV. 6 DE JUNIO',''],
-  ['AGREDA VASQUEZ JUAN ANGEL','Calle Riobamba N55-38 Y Carlos Quinto ',''],
-  ['AGUILAR BOLANOS FERNANDO JAVIER','FRANCISCO HALL Y HOPPE NORTON',''],
-  ['AGUILAR SANTACRUZ RITA DEL ROSARIO','AV. SIMON BOLIVAR Y EJE TRANSVERSAL ALANGASI',''],
-  ['AGUILAR VACA RONALD ULICES','Calle Piedras Negras  Y Condominio Loyola ',''],
-  ['AGUIRRE AVILES NANCY JOHANA','PASAJE A LOTE 11 A Y CARAN',''],
-  ['AGUIRRE SALAZAR ALEX FABIAN','Calle Murialdo S/N Y Urbina ',''],
-  ['ALDAZ MARTINEZ EDISON RODRIGO','ABETATOS LOTE 4  Y Y ALGABORROS',''],
-  ['ALMEIDA PERALTA  MAYRA ALEJANDRA','FCO. DE LA TORRE Y ÁNGEL DE SALAZAR',''],
-  ['ALVAREZ LEON VERONICA FRANCISCA','PULULAHUA, CONJUNTO PULULAHUA CASA 6 Y PASAJE F',''],
-  ['ALVAREZ PILA KARINA DEL ROSARIO','Mons. LEONIDAS PROAÑO Y PANAMERICANA NORTE',''],
-  ['ANDRADE ALBUJA IVAN EUGENIO','MARIANO PAREDES Y JOSÉ ANDRADE',''],
-  ['ANDRADE GALLARDO BRUNO NICOLAS','SAAMANO Y GUARANDA',''],
-  ['ANDRADE MORENO ROSA EUGENIA','SIERRA MORENA Y CARLOS MANTILLA',''],
-  ['ANDRADE REYES NURIA MARIA SOLEDAD','NÚÑEZ DE VELA Y VILLALENGUA',''],
-  ['ARAGON PAREDES WASHINGTON EDUARDO','FRANCISCO BURGUEÑO Y FRANCISCO GARCIA',''],
-  ['ARBOLEDA MONGE DIANA CAROLINA','DEMETRIO AGUILERA MALTA Y ELISA MARIÑO',''],
-  ['ARIZAGA ESCOBAR MERCEDES MARIETA','Raúl Padilla 7-47  Y Anvenida Occidental Departamento N 28 ',''],
-  ['ASHQUI GUAÑA MARCO GEOVANNY','Leopoldo Mercado 9-19 Y Luis Cordero ',''],
-  ['AVILES MERINO ANGEL MAURICIO','CAÑARIS Y EPICLACHIMA',''],
-  ['BARRAGAN SAMANIEGO MARCO FRANKLIN','TAYA S16-441 Y PIMAMPIRO',''],
-  ['BASTIDAS ANTON IVAN STALIN','TENIENTE HUGO ORTIZ  Y CUSUBAMBA MZ. D, MZ. 9 CASA 7',''],
-  ['BAUTISTA ALARCON LILIANA GABRIELA','MELCHOR DE VALDEZ Y MARTIN OCHOA DE JAUREGUI',''],
-  ['BAUTISTA MOREIRA MIRIAM GISELLA','CONJUNTO MONACO CASA 46,  Y  CALLE LAS VIÑAS',''],
-  ['BAUTISTA RUIZ LUIS ENRIQUE','Los Andes Carihuairazo  Y Villonaco E2-61 Eloy Alfaro ',''],
-  ['BEDOYA BERRAZUETA MARCO ESTEBAN','Eloy Alfaro  Y Portugal',''],
-  ['BENAVIDES DOMINGUEZ LUIS GERMAN','GONZALO PIZARRO Y ORIENTE',''],
-  ['BORJA GARCIA MILTON WILFRIDO','RIO SALEMA  Y CARCHI 11-75',''],
-  ['BORJA NARANJO ZOILA MARLENE','IGNACIO ASIN Y VICENTE HEREDIA',''],
-  ['BRONCANO BARRAGAN JAIME RICHARTH','Avenida Ponce Enriquez  Y Portal Andalucia F2-Parado 4. ',''],
-  ['BUENANO CUJANO LUCAS HUMBERT','PEÑA Y PALLATANGA',''],
-  ['CABRERA BORJA ANA BELEN','QE-4B Y DE LOS CIRUELOS',''],
-  ['CACERES MORENO PEDRO ALEJANDRO','DE LAS GROSELLAS Y DE LOS MORTIÑOS ',''],
-  ['CAICEDO DAVALOS GLORIA DESIREE','LA TIERRA Y JUAN DE ALCANTARA',''],
-  ['CAIZA AYO NARCISA ANABELLA','RIO USHIMANA  Y MANUEL MARÍA BORRERO OE764',''],
-  ['CAIZA CHASIPANTA JUAN CARLOS','LOS GUABOS Y PASAJE Oe11D',''],
-  ['CALAHORRANO MENA CARLOS DARWIN','MEJÍA Y 11 DE FEBRERO',''],
-  ['CALERO REVELO ANA MARIA','DE LAS HIEDRAS Y RÍO COCA',''],
-  ['CALVACHE LOZADA IVAN ROBERTO','Avenida Ilalo  Y Grivaldo Miño Lote 4 ',''],
-  ['CANO RIPALDA WILMER ALONSO','ISLA SANTA FE Y ISLA FLOREANA',''],
-  ['CARCHI SAÑAY DIANA DEL CARMEN','ANTONIO DE ELIZALDE Y E4-28',''],
-  ['CARGUA GUANUNA LUIS MANUEL','ESCALINATA SIN NOMBRE Y RAMIREZ DE ARELLANO',''],
-  ['CARRILLO CALVA DIANA CAROLINA',' CALLE S/N Y  CAMILO OREJUELA',''],
-  ['CEPEDA SUAREZ EDGAR RAMIRO','RIO ANZU 631 Y J CARDENAS',''],
-  ['CEVALLOS ALCOSER  PAUL MARCELO','FELIX BARREIRO Y E16A',''],
-  ['CEVALLOS CAMPOVERDE MARIO ERNESTO','DEL AMOR Y DE LA ESPERANZA',''],
-  ['CHACON TALEYSSAT SANTIAGO','Calle Los Ruiseñores S1-16  Y Los Cisnes ',''],
-  ['CHANCUSIG TOAPANTA GEOVANNA PATRICIA','AV. 21 DE AGOSTO Y ',''],
-  ['CHAVEZ MONTENEGRO CARINA MARGARITA','LA GASCA  Y PASAJE SILVESTRE BARAÑO  N24-70',''],
-  ['CHICAIZA CHIZA EDUARDO PAUL','FRANCISCO HUERTAS Y JORGE SUIT',''],
-  ['CHULCA CHAQUINGA LUIS ROLANDO','AV. MARISCAL SUCRE S13-168 Y JUAN CAMACARO',''],
-  ['CONGO AGUAS EDWIN RICARDO','PASAJE LA TOLITA Y PASAJE HUANCAVILCA',''],
-  ['CONSTANTE CASTRO MARCO ANTONIO','ANTONIO RODRIGUEZ  Y AV. TENIENTE HUGO ORTIZ',''],
-  ['CORDERO QUEVEDO GUADALUPE DEL CARMEN','Calle Martha Bucaram  Y Pasaje 8 y S39 Casa N°128 ',''],
-  ['CORNEJO AGUIAR  JOSE SEBASTIAN','Álamos Y Cristóbal de Ayala ',''],
-  ['CORONEL ZUÑIGA CRISTIAN RICARDO','Mariana de Jesús  Y Pamzalpe ',''],
-  ['CRIOLLO YAGUANA FRANIO ROQUE','CALLE S44-CASAOE1-52 Y CALLE OE2D',''],
-  ['CUSQUILLO CUSQUILLO FABIAN RODOLFO','AV. PAQUISHA Y TRANSVERSAL 6 ',''],
-  ['DAVALOS SAENZ  RAFAEL ALEJANDRO','Cardenal de la Torre OE4-V Y Manuel Luzuriaga S24-22',''],
-  ['DIAZ ANDRADE CARLOS EDDY','BELLAVISTA OE4-109 Y LOS MOLLES',''],
-  ['DURAN GARCIA RODRIGO MILLAN','AV. PEDRO PINTO GUZMAN Y AV. NAPO',''],
-  ['ENCALADA VIVAS MARIA GABRIELA','JOSE JAVANEN Y -',''],
-  ['ESCALANTE VITERI GLORIA CECIBEL','CALLE Oe3A Y CALLE S34F',''],
-  ['ESCOBAR CEPEDA FREDDY DARIO','CHILLA S26-113 Y CUSUBAMBA',''],
-  ['ESCOBAR ORTIZ  GABRIELA CRISTINA','JUAN DE ALCAZAR Y PEDRO CEPERO',''],
-  ['ESPINEL ECHEVERRIA PEDRO','Francisco de Orellana  Y Av. Belermo',''],
-  ['ESPINOSA DUQUE OMAR JOSUE','CALLE A Y PRINCIPAL',''],
-  ['ESPINOSA SALAZAR SANTIAGO MANUEL','ZAPAROS Y FERNANDO DAVALOS Y HOMERO SALAS',''],
-  ['ESPINOZA CALLE ARNALDO ANDRES','RIO SANTIAGO Y RIO PASTAZA',''],
-  ['FLORES QUISHPE PAULINA ELIZABETH','SAN MIGUEL DE ANAGAES Y PASAJE U',''],
-  ['GAIBOR VITERI LEONARDO MIGUEL','DIEGO DE TRUJILLO Y EMPERADOR CARLOS V',''],
-  ['GALARZA CEDEÑO JOSE REINALDO','JOSÉ CORREA Y AV. ELOY ALFARO',''],
-  ['GARCIA CARRERA SARA NARCISA','LUIS PALLARES  Y PASAJE CARRERA',''],
-  ['GAVILANES ARIAS PATRICIA ALEXANDRA','Monseñor Leonidas Proaño Conjunto Habitacional "Sal Camilo"  Y  casa 81',''],
-  ['GAVILANES MACHADO LEONARDO ISRAEL','DE LAS VIÑAS E13-301 Y CESAR TERAN LOPEZ',''],
-  ['GOMEZ ALVEAR ANDREINA MARIA','AV. REAL AUDIENCIA Y DE LOS CIRUELOS',''],
-  ['GONGORA VILLAFUERTE DANNY EDMUNDO','ISLA MARCHENA Y JOEL POLANCO',''],
-  ['GRANDA VIVANCO JORGE LUIS','EL CANELO  Y OE9B ',''],
-  ['GUALLPA PARRA JUAN CARLOS','EL CANELO  Y ',''],
-  ['GUAYASAMIN BAHAMONDE MARJORIE PAMELA','RIO PURARAY CALLE C3 Y CANARIOS',''],
-  ['GUAYTA CAZA CARLOS ALBERTO','LEONIDAS PLAZA Y WILSON',''],
-  ['GUERRERO RODRIGUEZ IVAN PATRICIO','AV. QUITUMBE ÑAN Y CALLE 1',''],
-  ['HERRERA AVALOS BYRON GUSTAVO','MARIANO TINAJERO Y FRANCISCO SANCHEZ',''],
-  ['HERRERA CASTRO LIGIA PATRICIA','ISLA GENOVESA 644 Y ENTRE RIO COCA Y TOMAS DE BERLANGA',''],
-  ['HERRERA FUENTES JOSE ARMANDO','EL PINAR OE Y PABLO GUITIERREZ 1231',''],
-  ['HERRERA OSORIO NELLY FABIOLA','PASAJE LLOA Y GATAZAO',''],
-  ['HIDALGO BENITEZ  PAUL EDUARDO','TOMAS BERMUTH  Y GUANGLITALGUA',''],
-  ['HOLGUIN SCACCO GIANINNA NOEMI','AV. MALDONADO S14-158 Y JOAQUIN GUITIERREZ',''],
-  ['HURTADO CEVALLOS DIANA BEATRIZ','SAN MIGUEL DE ANAGAES Y PASAJE N53E',''],
-  ['IDROBO SILVA MARIA ESTHER','ZOILA UGARTE  Y RAMON BORJA',''],
-  ['JATIVA FLORES CARLOS MANUEL','BELEN OE9-37  Y PURUHANTA',''],
-  ['JIMENEZ ROMAN EDISON PATRICIO','GONZALO DÍAZ DE PINEDA Y PEDRO DE ALFARO',''],
-  ['LEDESMA ALAVA PABLO ALBERTO','CALLE 23 DE ABRIL C55 Y LINARES',''],
-  ['LEMA JORGE SALVADOR','OE10F  Y S42-231',''],
-  ['LEMA PARREÑO EDISON ANIBAL','CRISTOBAL ENRIQUEZ S17-72 Y FRAY PEDRO DE GANTE',''],
-  ['LEON PALACIOS RAFAEL','BRUNELESCHI 130 Y AV. FLORENCIA ',''],
-  ['LOMBEIDA JORGE LUIS','YUMBOS 113 Y MANUEL VALDIVIEZO',''],
-  ['LOPEZ CRIOLLO MARCO ANTONIO','FRANCISCO TERÁN OE3-54 Y ALONSO LÓPEZ ',''],
-  ['MALDONADO FLORES JIMENA DEL ROCIO','PASAJE 4 E14-215 Y DE LAS ANONAS',''],
-  ['MARMOL MOLINA DORIS NATALIA','PIO XII Y GUADALUPE LARRIVA',''],
-  ['MARTINEZ BALDEON CATHERINE PAULINA','PISQUE S7-41 Y UPANO',''],
-  ['MARTINEZ SALGUERO EDGAR WLADIMIR','PIO JARAMILLO ALVARADO Y CALLE B',''],
-  ['MEDRANDA VERA MARIA GABRIELA','ELOY ALFARO Y NOGALES',''],
-  ['MEJIA ACOSTA EDGAR OMAR','PASAJE OE3F Y CALLE S33D',''],
-  ['MEJIA LOZADA GONZALO HERIBERTO','LEGARDA Y CUARTA TRASVERSAL ',''],
-  ['MONTENEGRO BRACERO LUCIA FERNANDA','CAMILO GUACHAMÍN Y SEGUNDO LEÓN',''],
-  ['MONTERO CANO DIOGENES','CALLE S57-F Y OE-57 Y TRANSVERSAL OE7-F',''],
-  ['MORA CARPIO ALVARO SEBASTIAN','ISLA PUNÁ #4 Y ISLA RÁBIDA',''],
-  ['MORALES PONCE DANIEL EDUARDO ','SEGUNDO NICANOR QUIROZ Y LEONIDAS PLAZA',''],
-  ['MORALES SANDOVALIN MAGDALENA JOHANA','EUGENIO ESPEJO Y ATAHUALPA',''],
-  ['MOREIRA MENDOZA FANNY DEL CARMEN','PATRICIO ROMERO Y PANAMERICANA SUR',''],
-  ['MORENO MIRANDA ALEJANDRA CAROLINA','FIGUEROA Y MACHALA',''],
-  ['MORILLO BURGOS OSWALDO RENE','GUAYAQUIL N2-152 Y OLMEDO',''],
-  ['MUÑOZ RICAURTE PATRICIO JAVIER','DE LOS CEREZOS Y REAL AUDIENCIA',''],
-  ['MURIEL CAYANCELA  JAIME EDUARDO','CALLE DON BOSCO N6 – 25 Y ENTRE PEDRO FERMIN CEVALLOS Y LUIS CALIXTO',''],
-  ['NAJERA MARTINEZ  SOFIA ELOISA','AV. JIPIJAPA Y PASAJE RUBEN DAVILA OE2-522',''],
-  ['NARANJO COBOS  MONICA CAROLINA','Bartolome de las Casas OE1-91 Y Toribio Montes',''],
-  ['NARVAEZ HERNANDEZ PAMELA JAKELINE','Lizardo Garcia  Y Francisco de Asconada ',''],
-  ['NASIMBA GUASUMBA VITERIO GIOVANNI','GONZALES SUAREZ  Y GABRIEL GARCÍA N1-24',''],
-  ['NAVEDA JACOME MONICA ALEXANDRA','MARIANO PAREDES Y RODRIGO DE VILLALOBOS',''],
-  ['NIETO VILLAVICENCIO CARLOS RENAN','VICENTE DUQUE N76-131 Y JUAQUIN MANCHENO',''],
-  ['NOLIVOS DUQUE WASHINGTON EDUARDO','Panamericana Norte  Y Peaje de Oyacoto ',''],
-  ['NUNEZ GARCIA JIMENA JANETH','SIMON BOLIVAR OE3-16 Y ABDON CALDERON',''],
-  ['NUÑEZ PARRA LUIS EDUARDO','Pasaje A  Y Avenida Llira Ñañ Lote 1 ',''],
-  ['OBANDO CORAL ALBERTO JARDIEL','Diez de DicIembre  Y Casacocha ',''],
-  ['OQUENDO OQUENDO  SANTIAGO EDUARDO','AVIGIRAS  Y GUAYACANES ',''],
-  ['PAREDES ONATE MARCELO','ERMEL FIALLOS  Y JUAN VASQUEZ',''],
-  ['PAZMINO PAZMINO GUIDO GUSTAVO','TENIENTE HUGO ORTIZ Y AV MORAN VALVERDE',''],
-  ['PEREZ DUQUE LENIN GUALBERTO','6 DE DICIEMBRE Y BOZANO',''],
-  ['PEREZ PEREZ MONICA PATRICIA ','MAGDALENA DAVALOS E3-62 Y ANTONIO DE RIVERA',''],
-  ['PILLAGUANGO ACOSTA JOSE MIGUEL','TENIENTE HUGO ORTIZ Y MORO MORO',''],
-  ['PILLAJO NARVAEZ RICARDO JAVIER','ANGAMARCA  Y PASAJE 7 Y 8',''],
-  ['PULLAS MORENO DANIELA PAULINA','JUAN DE SALINAS Y S/N',''],
-  ['QUILLUPANGUI CAÑABERAL DARIO ALEJANDRO','CIPRIANO ALVARADO Y JUAN BARREIRO',''],
-  ['QUIROGA QUISAGUANO LUIS H','CALLE D Y CALLE  E 14-38',''],
-  ['RECALDE LIMAICO LUIS ALFONSO','VALLE DEL CENEPA  Y PASAJE S/N CASA S47-17',''],
-  ['REINA CRUZ FRANCISCO XAVIER','CALLE S39B E1-168 Y E2',''],
-  ['RODRIGUEZ BARCENES ANGELITA MA','LA ORIANGA  Y LOS CEDROS ',''],
-  ['RODRIGUEZ CASTILLO LUCIA FERNANDA','ALBERTO SPENCER Y CUSUBAMBA',''],
-  ['RODRIGUEZ JARA JOSE LUIS','ALONSO DE GAMA Y HERNANDO DE PRADO',''],
-  ['SAA MIDEROS CRISTOBAL FERNANDO','AV. REAL AUDIENCIA Y DE LOS CIRUELOS',''],
-  ['SALAS ORTIZ CARLOS FERNANDO','SAN PEDRO DE TABOADA Y PICHINCHA ',''],
-  ['SALAZAR COSTA GALO ANDRES','CALLE CAPRI Y AV. ELOY ALFARO',''],
-  ['SALAZAR NARVAEZ LADY ELIZABETH','Argentina Y Pasaje Oe8J',''],
-  ['SALAZAR SANDOVAL KLEVER ARTURO','Angel Ludeña  Y Calle Luis Dillon ',''],
-  ['SANABRIA LANDETA MAURICIO ESTEBAN','Avenida Cardenal de La Torre  Y Teniente Hugo Ortiz ',''],
-  ['SANCHEZ LANDAZURI ROSARIO DE LOURDES','Carcelén Alto  Y Pedro Ayana ',''],
-  ['SANCHEZ RODRIGUEZ NELLY JACQUELINE','Congonamá Y  Bartolomé Álvez',''],
-  ['SANDOVAL CARRILLO MARIO FRANCISCO','BARRIO LAS ACACIAS DE CARAPUNGO  Y CALLE B LOTE 36',''],
-  ['SANGUCHO YUPANGUI DIEGO JOEL','CALLE D Y VILCABAMBA',''],
-  ['SANTACRUZ PONCE  DAVID HUBERTO','Avenida Velasco Ibarra  Y Sur/Norte',''],
-  ['SEGOVIA PLUAS ROBERTO ROGELIO','CALLE E OE16-139 Y VIA NONO',''],
-  ['SILVA REINA GEOVANY FRANCISCO','GUAYAQUIL Y MANABÍ',''],
-  ['TAMAYO GUERRERO LUIS ALEJANDRO','CALLE “D” LOTE 18 Y CALLE “A”',''],
-  ['TERAN ANDINO EDGAR HUMBERTO','Cusumasa 0E 119 Y Avenida Teniente Hugo Ortiz ',''],
-  ['TERAN IMBAQUINGO HUGO ARTURO','Agustin Azkunaga OE4-215 Y Avenida Brazil ',''],
-  ['TITUAÑA VILCA DIEGO ARMANDO','LUIS DUQUE  Y OSWALDO HURTADA',''],
-  ['TOAPANTA TREJO PABLO FERNANDO','MERECEDES NOBOA Y JUANA TERRAZAS',''],
-  ['TORRES JURADO  ANA CRISTINA','YUMBOS N53-15 Y JOSE HERBOSO',''],
-  ['TORRES LOPEZ EDWIN JAVIER','COOP. JOSEFINA ENRÍQUEZ  Y S/N',''],
-  ['TOSCANO IZURIETA JUAN CARLOS','SERAPIO JAPERABI Y PANGUI',''],
-  ['TUFIÑO QUISHPE LUIS ENRIQUE','Panamericana Norte  Y El Arenal ',''],
-  ['VALENCIA PAUCAR SANTIAGO GERMAN','JUAQUIN RUALES Y MANUEL CORONADO',''],
-  ['VALLEJO PAMBABAY MILTON FERNANDO','TEODORO WOLF N16-68  Y SOLANO',''],
-  ['VASCONEZ HERNANDEZ ADRIANA PAMELA','MANUEL CORDOVA GALARZA Y N/A',''],
-  ['VEGA GALLEGOS  MARIA JOSE','TOMÁS CHARIOVE Y AGUSTÍN ZAMBRANO',''],
-  ['VELASQUEZ CORDOVA MAYRA IRENE PATRICIA','JUAN GARZON Y FRANCISCO PACHECO',''],
-  ['VELASQUEZ QUINTO LOURDES YAJAIRA','JOSE FELIZ BARREIRO Y ELOY ALFARO',''],
-  ['VILLAVICENCIO NAVAS LUCIA MACARENA','A L50 Y D 2',''],
-  ['VILLAVICENCIO VACA MIGUEL ANGEL','SUCRE E3-231 Y PICHINCHA',''],
-  ['VILLAVICENCIO YUBI JUAN CARLOS','AV. ATAHUALPA Y CALLE 1',''],
-  ['VIZCAINO TRUJILLO MAYRA ROCIO','MURIALDO Y PASAJE B',''],
-  ['YAMA CASTRO JEYMMY ALEXANDRA','PUERTO RICO Y PASAJE OE7 G',''],
-  ['YANEZ SALAS PAOLA RITA','SANTA TERESA  Y IGNACIO DE LOYOLA',''],
-  ['YELA BENALCAZAR RICARDO XAVIER','MARIANO ECHEVERRIA Y FRANCISCO DE NATES',''],
-  ['ZAMBRANO TAIPE ANA LUCIA','AV. MARISCAL SUCRE Y ',''],
-  ['ZAPATA JARAMILLO VERONICA CRISTINA','AUSTRIA Y IRLANDA','']
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
 
-      ];
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 11,
-          center: {lat: -0.1962073, lng: -78.448391}
+	<div id="map"></div>
 
+<script>
+	var data;
+	jQuery( document ).ready(function() {
+		jQuery.getJSON( "http://agenciadecontrol.quito.gob.ec/amcserver/crudGetPersonal.php?operation=selectAll", { parametro: '' } )
+		.done(function(datos) {
+			if (datos.success) {
+				data = datos
+				initMap();
+			}
+		})
+	});
+
+    // Data for the markers consisting of a name, a LatLng and a zIndex for the
+    // order in which these markers should display on top of each other.
+
+    function initMap() {
+    	var map = new google.maps.Map(document.getElementById('map'), {
+    		zoom: 11,
+    		center: {lat: -0.1962073, lng: -78.448391}
+    	});
+
+    	var geocoder = new google.maps.Geocoder();
+
+    	for (var i = 0; i < data.data.length; i++) {
+    		geocodeAddress(geocoder, map, i);
+    	}
+
+    } 
+
+    function geocodeAddress(geocoder, resultsMap, numero) {
+
+    	var address = data.data[numero].direccionprincipal;
+    	var nombre = data.data[numero].nombre + ' ' +  data.data[numero].apellido;
+    	var position = data.data[numero].geoposicionamiento; 
+
+		var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">'+ data.data[numero].nombre + ' ' +  data.data[numero].apellido   +'</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>Direccion:</b> ' + data.data[numero].direccionprincipal + ', ' + data.data[numero].direccionsecundaria + ', ' + data.data[numero].direccionnumero + 
+            '. <b>Barrio:</b> ' + data.data[numero].barrio + '. <b>Parroquia:</b> ' + data.data[numero].parroquia + '</p>' +
+            '<p><b>Telefono:</b> ' + data.data[numero].telefono1 + ' - ' + data.data[numero].telefono2 +  '</p>' + 
+             '<p><b>Zonal:</b> ' + data.data[numero].zonal   + 
+            '</div>'+
+            '</div>';
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
         });
-        var geocoder = new google.maps.Geocoder();
+    
 
-        //for (var i = 0; i < beaches.length; i++) {
-        for (var i = 0; 13; i++) {
-          geocodeAddress(geocoder, map, i);
-        }
-
-       
-      }
-
-      function geocodeAddress(geocoder, resultsMap, numero) {
-        var address = beaches[numero][1];
-        //var address = document.getElementById('address').value;
-        geocoder.geocode({'address': address}, function(results, status) {
-          if (status === 'OK') {
-            resultsMap.setCenter(results[0].geometry.location);
-
-            var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-            var marker = new google.maps.Marker({
-              map: resultsMap,
-              position: results[0].geometry.location,
-              title: beaches[numero][0],
-              draggable: true,
-    		  icon: image
-            });
-          } else {
-            console.log ('Error: ' + status + ' la usuario  ' + beaches[numero][0]) ;
-          }
+    	var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+    	 
+    	var posiciones = position.split(",");
+    	 
+    	var marker = new google.maps.Marker({
+    		map: resultsMap,
+    		position: {lat: Number(posiciones[0]), lng: Number (posiciones[1])},
+    		title: nombre  ,
+    		draggable: false,
+    		icon: image
+    	});	
+    	marker.addListener('click', function() {
+          infowindow.open(map, marker);
         });
-      }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMRqBCH27guelvMimjC_X104PShRSojR8&callback=initMap">
-    </script>
-  </body>
+
+    }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMRqBCH27guelvMimjC_X104PShRSojR8&"></script>
+</body>
 </html>  
