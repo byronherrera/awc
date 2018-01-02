@@ -1,1 +1,67 @@
-{"appearance":{"fontColor":"F2DFDF","themeId":2,"taskbarTransparency":100},"background":{"color":"f9f9f9","wallpaperId":11,"wallpaperPosition":"center"},"launchers":{"shortcut":["demo-accordion","demo-tab","demo-bogus","veris","tienda","mapa","ofertalaboral","contenidos","historia","imageadmin","denuncias-secretaria","denuncias","denuncias-inspeccion","denuncias-crecretaria","denunciassecretaria","denunciasinspeccion","denunciasweb","inspeccion","operativos"],"quickstart":["demo-tab","mapa","contenidos","denuncias-secretaria","denunciassecretaria","denuncias","denunciasinspeccion","denunciasweb","inspeccion"],"autorun":["denuncias-inspeccion","operativos"]}}
+{
+  "id": "operativos",
+  "type": "desktop/operativos",
+  "about": {
+    "author": "",
+    "description": "AMC Operativos.",
+    "name": "Operativos",
+    "url": "",
+    "version": "1.0"
+  },
+
+  "dependencies": [
+    { "id": "checkbox", "type": "library" }
+  ],
+  "server": {
+    "methods": [
+      { "name": "accesosAdministradorOpe", "description": "Administrador operativos" },
+      { "name": "accesosOperativos", "description": "Usuario opeativos" },
+      { "name": "accesosRecepcionOpe", "description": "Recepcion operativos" }
+    ],
+    "class": "QoOperativos",
+    "file": "desktop/operativos/operativos.php"
+  },
+  "client": {
+    "class": "QoDesk.OperativosWindow",
+    "css": [
+      {
+        "directory": "desktop/operativos/client/resources/",
+        "files": [ "styles.css" ]
+      },
+      {
+        "directory": "common/libraries/",
+        "files": [ "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css", "fileuploadfield/FileUploadField.css" ]
+      }
+    ],
+    "javascript": [
+      {
+        "directory": "common/libraries/",
+        "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js", "fileuploadfield/FileUploadField.js"  ]
+      },
+      {
+        "directory": "desktop/operativos/client/",
+        "files": [  "operativos-win.js" ]
+      },
+
+      {
+        "directory": "qwiki/admin/client/",
+        "files": [ "QoAdmin.js" ]
+      },
+      {
+        "directory": "qwiki/admin/client/lib/",
+        "files": [ "ActiveColumn.js", "ColumnNodeUI.js", "Nav.js", "SearchField.js", "TooltipEditor.js" ]
+      }
+    ],
+    "launcher": {
+      "config": {
+        "iconCls": "operativos-icon",
+        "shortcutIconCls": "operativos-shortcut",
+        "text": "Operativos",
+        "tooltip": "<b>Operativos - AMC</b>"
+      },
+      "paths": {
+        "startmenu": "/"
+      }
+    }
+  }
+}

@@ -93,7 +93,7 @@ function selectDenuncias()
     else
         $limit = 100;
 
-    $orderby = 'ORDER BY codigo_tramite DESC';
+    $orderby = 'ORDER BY YEAR(recepcion_documento) DESC, codigo_tramite DESC';
     if (isset($_POST['sort'])) {
         $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
     }
@@ -222,7 +222,8 @@ function generaCodigoProcesoDenuncia()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
+    //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE codigo_tramite < 11000 AND recepcion_documento > DATE('2018-01-01 01:01:01')";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -259,7 +260,7 @@ function updateDenuncias()
 
     if ($data->id_ordenanza== NULL)
             unset($data->id_ordenanza);
-
+    
 
     // genero el listado de valores a insertar
     $cadenaDatos = '';

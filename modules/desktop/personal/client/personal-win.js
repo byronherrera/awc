@@ -1,11 +1,11 @@
-QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
-    id: 'operativos',
-    type: 'desktop/operativos',
+QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
+    id: 'personal',
+    type: 'desktop/personal',
 
     init: function () {
         this.launcher = {
-            text: 'Inspección',
-            iconCls: 'operativos-icon',
+            text: 'Personal',
+            iconCls: 'personal-icon',
             handler: this.createWindow,
             scope: this
         }
@@ -13,23 +13,23 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
     createWindow: function () {
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
-        var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
+        var accesosPersonal = this.app.isAllowedTo('accesosPersonal', this.id);
         finalizados = true;
-        limiteoperativos = 100;
-        this.selectOperativos = 0;
-        selectOperativos = 0;
+        limitepersonal = 100;
+        this.selectPersonal = 0;
+        selectPersonal = 0;
         // estado no usado
         //var accesosRecepciónIns = this.app.isAllowedTo('accesosRecepciónOpe', this.id);
 
-        //var acceso = (accesosAdministradorOpe || accesosOperativos || accesosRecepciónIns) ? true : false
-        var acceso = (accesosAdministradorOpe || accesosOperativos ) ? true : false
+        //var acceso = (accesosAdministradorOpe || accesosPersonal || accesosRecepciónIns) ? true : false
+        var acceso = (accesosAdministradorOpe || accesosPersonal ) ? true : false
 
-        var gridBlockOperativos = false;
+        var gridBlockPersonal = false;
         var desktop = this.app.getDesktop();
         var AppMsg = new Ext.AppMsg({});
 
-        var win = desktop.getWindow('grid-win-operativos');
-        var urlOperativos = "modules/desktop/operativos/server/";
+        var win = desktop.getWindow('grid-win-personal');
+        var urlPersonal = "modules/desktop/personal/server/";
 
         var textField = new Ext.form.TextField({allowBlank: false});
 
@@ -73,7 +73,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function operativosTipoOperativosSimple(id) {
+        function personalTipoPersonalSimple(id) {
             var index = storeOPTID.find('id', id);
             if (index > -1) {
                 var record = storeOPTID.getAt(index);
@@ -91,7 +91,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function operativosTipoOperativosSimple2(id) {
+        function personalTipoPersonalSimple2(id) {
             var index = storeOPTID.find('id', id);
             if (index > -1) {
                 var record = storeOPTID.getAt(index);
@@ -100,7 +100,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         }
 
 
-        function operativosTipoOperativos(id) {
+        function personalTipoPersonal(id) {
             if (id === '') return '';
             var nombres = id.split(",");
             retorno = '';
@@ -120,7 +120,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=tiposMedidasOperativos'
+            url: 'modules/common/combos/combos.php?tipo=tiposMedidasPersonal'
         });
 
         var comboOPINFOMEDIDA = new Ext.form.ComboBox({
@@ -132,7 +132,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function operativosTipoMedida(id) {
+        function personalTipoMedida(id) {
             var index = storeOPINFOMEDIDA.find('id', id);
             if (index > -1) {
                 var record = storeOPINFOMEDIDA.getAt(index);
@@ -163,7 +163,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function operativosDespachadoActivo(id) {
+        function personalDespachadoActivo(id) {
             var index = storeOPOFAC.find('id', id);
             if (index > -1) {
                 var record = storeOPOFAC.getAt(index);
@@ -196,7 +196,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function operativosNivelComplejidad(id) {
+        function personalNivelComplejidad(id) {
             var index = storeOPNICO.find('id', id);
             if (index > -1) {
                 var record = storeOPNICO.getAt(index);
@@ -211,7 +211,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=tiposoperativos'
+            url: 'modules/common/combos/combos.php?tipo=tipospersonal'
         });
 
         var comboOPTIPO = new Ext.form.ComboBox({
@@ -223,7 +223,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function operativosTipo(id) {
+        function personalTipo(id) {
             var index = storeOPTIPO.find('id', id);
             if (index > -1) {
                 var record = storeOPTIPO.getAt(index);
@@ -284,7 +284,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             allowBlank: false
         });
 
-        function operativosUnidades(id) {
+        function personalUnidades(id) {
             var index = storeOPREA.find('id', id);
             if (index > -1) {
                 var record = storeOPREA.getAt(index);
@@ -322,12 +322,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo reasignacion OPREATOT
-        //inicio combo operativos estado
+        //inicio combo personal estado
         storeOPESTA = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=operativosestados'
+            url: 'modules/common/combos/combos.php?tipo=personalestados'
         });
 
         var comboOPESTA = new Ext.form.ComboBox({
@@ -339,7 +339,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function operativosEstados(id) {
+        function personalEstados(id) {
             var index = storeOPESTA.find('id', id);
             if (index > -1) {
                 var record = storeOPESTA.getAt(index);
@@ -347,7 +347,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         }
 
-        //fin combo operativos estado
+        //fin combo personal estado
         //inicio combo guia  OPREAGUIA
         storeOPREAGUIA = new Ext.data.JsonStore({
             root: 'data',
@@ -378,10 +378,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=personaloperativos',
+            url: 'modules/common/combos/combos.php?tipo=personalpersonal',
             baseParams: {
                 accesosAdministradorOpe: accesosAdministradorOpe,
-                accesosOperativos: accesosOperativos,
+                accesosPersonal: accesosPersonal,
                 acceso: acceso
             }
         });
@@ -399,7 +399,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        function operativosPersonalEncargado(id) {
+        function personalPersonalEncargado(id) {
 
             if (id === '') return ' ';
             if (id === null) return ' ';
@@ -419,16 +419,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         //fin combo tipo documento  OPPERENC
 
 
-        //inicio combo persona recepta la operativos PRD
+        //inicio combo persona recepta la personal PRD
         storePRD = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=personaloperativos',
+            url: 'modules/common/combos/combos.php?tipo=personalpersonal',
             baseParams: {
                 todos: 'true',
                 accesosAdministradorOpe: accesosAdministradorOpe,
-                accesosOperativos: accesosOperativos,
+                accesosPersonal: accesosPersonal,
                 acceso: acceso
             }
 
@@ -469,11 +469,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=personaloperativos',
+            url: 'modules/common/combos/combos.php?tipo=personalpersonal',
             baseParams: {
                 todos: 'true',
                 accesosAdministradorOpe: true,
-                accesosOperativos: false,
+                accesosPersonal: false,
                 acceso: acceso
             }
 
@@ -498,11 +498,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         }
 
-        //fin combo persona recepta la operativos PRD
+        //fin combo persona recepta la personal PRD
 
 // fin combos secretaria
 
-// inicio combos operativos
+// inicio combos personal
 
         //inicio combo ZONA
         storeZONA = new Ext.data.JsonStore({
@@ -536,7 +536,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=depOperativos'
+            url: 'modules/common/combos/combos.php?tipo=depPersonal'
         });
 
         var comboACTA = new Ext.form.ComboBox({
@@ -568,7 +568,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 ]
             }
         });
-        //inicio combo Estado Recepcion Información Operativos ESOPREA
+        //inicio combo Estado Recepcion Información Personal ESOPREA
         storeESOPREA = new Ext.data.JsonStore({
             root: 'datos',
             fields: ['id', 'nombre'],
@@ -599,7 +599,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         }
 
-        //fin combo Estado Recepcion Información Operativos ESOPREA
+        //fin combo Estado Recepcion Información Personal ESOPREA
 
         //inicio combo procedimientos PRSA
         storePRSA = new Ext.data.JsonStore({
@@ -633,7 +633,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=personaloperativos'
+            url: 'modules/common/combos/combos.php?tipo=personalpersonal'
         });
 
         var comboPRASA = new Ext.form.ComboBox({
@@ -654,22 +654,22 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo caracter del tramite PRASA
-// inicio combos operativos
+// inicio combos personal
 
 // inicio pestañas de mantenimiento
 
 
-        //inicio mantenimiento OperativosGuia
-        var proxyOperativosGuia = new Ext.data.HttpProxy({
+        //inicio mantenimiento PersonalGuia
+        var proxyPersonalGuia = new Ext.data.HttpProxy({
             api: {
-                create: urlOperativos + "crudOperativosGuia.php?operation=insert",
-                read: urlOperativos + "crudOperativosGuia.php?operation=select",
-                update: urlOperativos + "crudOperativosGuia.php?operation=update",
-                destroy: urlOperativos + "crudOperativosGuia.php?operation=delete"
+                create: urlPersonal + "crudPersonalGuia.php?operation=insert",
+                read: urlPersonal + "crudPersonalGuia.php?operation=select",
+                update: urlPersonal + "crudPersonalGuia.php?operation=update",
+                destroy: urlPersonal + "crudPersonalGuia.php?operation=delete"
             }
         });
 
-        var readerOperativosGuia = new Ext.data.JsonReader({
+        var readerPersonalGuia = new Ext.data.JsonReader({
             successProperty: 'success',
             messageProperty: 'message',
             idProperty: 'id',
@@ -683,25 +683,25 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             ]
         });
 
-        var writerOperativosGuia = new Ext.data.JsonWriter({
+        var writerPersonalGuia = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
 
-        this.storeOperativosGuia = new Ext.data.Store({
+        this.storePersonalGuia = new Ext.data.Store({
             id: "id",
-            proxy: proxyOperativosGuia,
-            reader: readerOperativosGuia,
-            writer: writerOperativosGuia,
+            proxy: proxyPersonalGuia,
+            reader: readerPersonalGuia,
+            writer: writerPersonalGuia,
             autoSave: true
         });
-        this.storeOperativosGuia.load();
+        this.storePersonalGuia.load();
 
-        this.gridOperativosGuia = new Ext.grid.EditorGridPanel({
-            id: 'gridOperativosGuia',
+        this.gridPersonalGuia = new Ext.grid.EditorGridPanel({
+            id: 'gridPersonalGuia',
             xtype: "grid",
             height: 200,
-            store: this.storeOperativosGuia,
+            store: this.storePersonalGuia,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -734,7 +734,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 singleSelect: false,
                 listeners: {
                     rowselect: function (sm, row, rec) {
-                        storeOperativosPersonal.load({params: {idOperativo: rec.get("id")}})
+                        storePersonalPersonal.load({params: {idOperativo: rec.get("id")}})
                     }
                 }
             }),
@@ -742,25 +742,25 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             stripeRows: true,
             bbar: new Ext.PagingToolbar({
                 pageSize: 100,
-                store: this.storeOperativosGuia,
+                store: this.storePersonalGuia,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámite {0} - {1} de {2}',
                 emptyMsg: "No existen tramites que mostrar"
             }),
         });
 
-        //fin mantenimiento OperativosGuías
+        //fin mantenimiento PersonalGuías
 
 
 // fin pestañas de mantenimiento
 
-        // inicio ventana operativos
-        var proxyOperativos = new Ext.data.HttpProxy({
+        // inicio ventana personal
+        var proxyPersonal = new Ext.data.HttpProxy({
             api: {
-                create: urlOperativos + "crudOperativos.php?operation=insert",
-                read: urlOperativos + "crudOperativos.php?operation=select",
-                update: urlOperativos + "crudOperativos.php?operation=update",
-                destroy: urlOperativos + "crudOperativos.php?operation=delete"
+                create: urlPersonal + "crudPersonal.php?operation=insert",
+                read: urlPersonal + "crudPersonal.php?operation=select",
+                update: urlPersonal + "crudPersonal.php?operation=update",
+                destroy: urlPersonal + "crudPersonal.php?operation=delete"
             },
 
             listeners: {
@@ -774,7 +774,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var readerOperativos = new Ext.data.JsonReader({
+        var readerPersonal = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
@@ -805,29 +805,29 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'visible', type: 'boolean', allowBlank: true}
             ]
         });
-        var writerOperativos = new Ext.data.JsonWriter({
+        var writerPersonal = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
-        this.storeOperativos = new Ext.data.Store({
+        this.storePersonal = new Ext.data.Store({
             id: "id",
-            proxy: proxyOperativos,
-            reader: readerOperativos,
-            writer: writerOperativos,
+            proxy: proxyPersonal,
+            reader: readerPersonal,
+            writer: writerPersonal,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
-            baseParams: {//limit: limiteoperativos,
+            baseParams: {//limit: limitepersonal,
                 finalizados: finalizados,
                 accesosAdministradorOpe: accesosAdministradorOpe,
-                accesosOperativos: accesosOperativos,
+                accesosPersonal: accesosPersonal,
                 acceso: acceso
             }
         });
-        storeOperativos = this.storeOperativos;
+        storePersonal = this.storePersonal;
 
-        this.gridOperativos = new Ext.grid.EditorGridPanel({
+        this.gridPersonal = new Ext.grid.EditorGridPanel({
             height: desktop.getWinHeight() - 380,
-            store: this.storeOperativos,
+            store: this.storePersonal,
             columns: [
                 new Ext.grid.RowNumberer(),
                 /* {
@@ -890,14 +890,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_tipo_control',
                     sortable: true,
                     width: 100,
-                    editor: comboOPTID, renderer: operativosTipoOperativos
+                    editor: comboOPTID, renderer: personalTipoPersonal
                 },
                 {
                     header: 'Unidad',
                     dataIndex: 'id_unidad',
                     sortable: true,
                     width: 120, editor: comboOPREA,
-                    renderer: operativosUnidades
+                    renderer: personalUnidades
                 },
 
                 {
@@ -905,7 +905,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_nivel_complejidad',
                     sortable: true,
                     width: 60,
-                    editor: comboOPNICO, renderer: operativosNivelComplejidad
+                    editor: comboOPNICO, renderer: personalNivelComplejidad
                 },
                 {
                     header: 'Responsable',
@@ -916,7 +916,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     renderer: personaReceptaDenuncia,
                     /*
                      editor: comboOPPERENC,
-                     renderer: operativosPersonalEncargado,*/
+                     renderer: personalPersonalEncargado,*/
                     id: 'id_persona_encargada'
                 },
                 {
@@ -982,7 +982,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     , sortable: true
                     , width: 140
                     , editor: comboOPTIPO
-                    , renderer: operativosTipo
+                    , renderer: personalTipo
                 },
 
                 {
@@ -1024,7 +1024,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 100,
                     editor: comboOPESTA,
-                    renderer: operativosEstados
+                    renderer: personalEstados
                 },
 
             ],
@@ -1060,34 +1060,34 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         rowselect: function (sm, row, rec) {
 
                             // recuperamos la informacion de personal asignado a ese operativo
-                            selectOperativos = rec.id;
-                            storeOperativosPersonal.load({params: {id_operativo: rec.id}});
-                            storeOperativosVehiculos.load({params: {id_operativo: rec.id}});
-                            storeOperativosInforme.load({params: {id_operativo: rec.id}});
-                            storeOperativosParticipantes.load({params: {id_operativo: rec.id}});
-                            storeOperativosImagenes.load({params: {id_operativo: rec.id}});
+                            selectPersonal = rec.id;
+                            storePersonalPersonal.load({params: {id_operativo: rec.id}});
+                            storePersonalVehiculos.load({params: {id_operativo: rec.id}});
+                            storePersonalInforme.load({params: {id_operativo: rec.id}});
+                            storePersonalParticipantes.load({params: {id_operativo: rec.id}});
+                            storePersonalImagenes.load({params: {id_operativo: rec.id}});
 
                             // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
                             if (acceso) {
                                 if (rec.get("id_estado") != 1) {
-                                    Ext.getCmp('informesOperativosTab').setDisabled(acceso ? false : true);
-                                    Ext.getCmp('imagenesOperativosTab').setDisabled(acceso ? false : true);
-                                    Ext.getCmp('detalleOperativosTab').setDisabled(acceso ? false : true);
+                                    Ext.getCmp('informesPersonalTab').setDisabled(acceso ? false : true);
+                                    Ext.getCmp('imagenesPersonalTab').setDisabled(acceso ? false : true);
+                                    Ext.getCmp('detallePersonalTab').setDisabled(acceso ? false : true);
                                     cargaDetalle(rec.id);
                                 }
                                 else {
-                                    Ext.getCmp('informesOperativosTab').setDisabled(true);
-                                    Ext.getCmp('imagenesOperativosTab').setDisabled(true);
-                                    Ext.getCmp('detalleOperativosTab').setDisabled(true);
+                                    Ext.getCmp('informesPersonalTab').setDisabled(true);
+                                    Ext.getCmp('imagenesPersonalTab').setDisabled(true);
+                                    Ext.getCmp('detallePersonalTab').setDisabled(true);
                                     cargaDetalle(rec.id);
                                 }
 
                                 if ((rec.get("id_estado") == 1) || (rec.get("id_estado") == 4)) {
-                                    gridBlockOperativos = false;
+                                    gridBlockPersonal = false;
                                     Ext.getCmp('savedetalleoperativo').setDisabled(false);
 
                                     Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
-                                    Ext.getCmp('addoperativos').setDisabled(accesosAdministradorOpe ? false : true);
+                                    Ext.getCmp('addpersonal').setDisabled(accesosAdministradorOpe ? false : true);
                                     // en caso que se tenga acceso tambien se habilitan o deshabilitan los botones para agregar detalle
                                     Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
                                     Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
@@ -1108,11 +1108,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     // solamente para el caso
                                 }
                                 else {
-                                    gridBlockOperativos = true;
+                                    gridBlockPersonal = true;
                                     Ext.getCmp('savedetalleoperativo').setDisabled(true);
 
                                     Ext.getCmp('borraroperativo').setDisabled(true);
-                                    Ext.getCmp('addoperativos').setDisabled(true);
+                                    Ext.getCmp('addpersonal').setDisabled(true);
                                     Ext.getCmp('borraroperativodetalle').setDisabled(true);
                                     Ext.getCmp('addoperativodetalle').setDisabled(true);
 
@@ -1134,9 +1134,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                                 //para el caso  de los botones
                                 if ((rec.get("id_estado") == 2) || (rec.get("id_estado") == 3) || (rec.get("id_estado") == 5)) {
-                                    Ext.getCmp('tb_repoteOperativos').setDisabled(false);
+                                    Ext.getCmp('tb_repotePersonal').setDisabled(false);
                                 } else {
-                                    Ext.getCmp('tb_repoteOperativos').setDisabled(true);
+                                    Ext.getCmp('tb_repotePersonal').setDisabled(true);
                                 }
                                 //para el caso que se es administrador
                                 if (accesosAdministradorOpe) {
@@ -1151,11 +1151,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             stripeRows: true,
             // paging bar on the bottom
             bbar: new Ext.PagingToolbar({
-                pageSize: limiteoperativos,
-                store: storeOperativos,
+                pageSize: limitepersonal,
+                store: storePersonal,
                 displayInfo: true,
-                displayMsg: 'Mostrando operativos {0} - {1} de {2} - AMC',
-                emptyMsg: "No existen operativos que mostrar"
+                displayMsg: 'Mostrando personal {0} - {1} de {2} - AMC',
+                emptyMsg: "No existen personal que mostrar"
             }),
 
             listeners: {
@@ -1172,15 +1172,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
-        // fin ventana operativos
+        // fin ventana personal
 
-        // inicio ventana operativos detalle personal
-        var proxyOperativosPersonal = new Ext.data.HttpProxy({
+        // inicio ventana personal detalle personal
+        var proxyPersonalPersonal = new Ext.data.HttpProxy({
             api: {
-                create: urlOperativos + "crudOperativosPersonal.php?operation=insert",
-                read: urlOperativos + "crudOperativosPersonal.php?operation=select",
-                update: urlOperativos + "crudOperativosPersonal.php?operation=update",
-                destroy: urlOperativos + "crudOperativosPersonal.php?operation=delete"
+                create: urlPersonal + "crudPersonalPersonal.php?operation=insert",
+                read: urlPersonal + "crudPersonalPersonal.php?operation=select",
+                update: urlPersonal + "crudPersonalPersonal.php?operation=update",
+                destroy: urlPersonal + "crudPersonalPersonal.php?operation=delete"
             },
             listeners: {
                 write: function (proxy, action, result, res, rs) {
@@ -1193,7 +1193,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var readerOperativosPersonal = new Ext.data.JsonReader({
+        var readerPersonalPersonal = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
@@ -1206,28 +1206,28 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'asistencia', type: 'boolean', allowBlank: true}
             ]
         });
-        var writerOperativosPersonal = new Ext.data.JsonWriter({
+        var writerPersonalPersonal = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
 
-        this.storeOperativosPersonal = new Ext.data.Store({
+        this.storePersonalPersonal = new Ext.data.Store({
             id: "id",
-            proxy: proxyOperativosPersonal,
-            reader: readerOperativosPersonal,
-            writer: writerOperativosPersonal,
+            proxy: proxyPersonalPersonal,
+            reader: readerPersonalPersonal,
+            writer: writerPersonalPersonal,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true
         });
 
-        storeOperativosPersonal = this.storeOperativosPersonal;
+        storePersonalPersonal = this.storePersonalPersonal;
 
-        this.gridOperativosPersonal = new Ext.grid.EditorGridPanel({
-            id: 'gridOperativosPersonal',
+        this.gridPersonalPersonal = new Ext.grid.EditorGridPanel({
+            id: 'gridPersonalPersonal',
 
             autoHeight: true,
             autoScroll: true,
-            store: this.storeOperativosPersonal,
+            store: this.storePersonalPersonal,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -1283,7 +1283,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
                         // verifico variable que permite editar o no
-                        if (gridBlockOperativos) {
+                        if (gridBlockPersonal) {
                             //verifico que si no es administrador se bloque la edicion
                             if (!accesosAdministradorOpe)
                                 return false;
@@ -1297,16 +1297,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var gridOperativosPersonal = this.gridOperativosPersonal
-        // fin  ventana operativos detalle personal
+        var gridPersonalPersonal = this.gridPersonalPersonal
+        // fin  ventana personal detalle personal
 
-        // inicio ventana operativos detalle participantes
-        var proxyOperativosParticipantes = new Ext.data.HttpProxy({
+        // inicio ventana personal detalle participantes
+        var proxyPersonalParticipantes = new Ext.data.HttpProxy({
             api: {
-                create: urlOperativos + "crudOperativosParticipantes.php?operation=insert",
-                read: urlOperativos + "crudOperativosParticipantes.php?operation=select",
-                update: urlOperativos + "crudOperativosParticipantes.php?operation=update",
-                destroy: urlOperativos + "crudOperativosParticipantes.php?operation=delete"
+                create: urlPersonal + "crudPersonalParticipantes.php?operation=insert",
+                read: urlPersonal + "crudPersonalParticipantes.php?operation=select",
+                update: urlPersonal + "crudPersonalParticipantes.php?operation=update",
+                destroy: urlPersonal + "crudPersonalParticipantes.php?operation=delete"
             },
             listeners: {
                 write: function (proxy, action, result, res, rs) {
@@ -1319,7 +1319,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var readerOperativosParticipantes = new Ext.data.JsonReader({
+        var readerPersonalParticipantes = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
@@ -1334,27 +1334,27 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'asistencia', type: 'boolean', allowBlank: true}
             ]
         });
-        var writerOperativosParticipantes = new Ext.data.JsonWriter({
+        var writerPersonalParticipantes = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
 
-        this.storeOperativosParticipantes = new Ext.data.Store({
+        this.storePersonalParticipantes = new Ext.data.Store({
             id: "id",
-            proxy: proxyOperativosParticipantes,
-            reader: readerOperativosParticipantes,
-            writer: writerOperativosParticipantes,
+            proxy: proxyPersonalParticipantes,
+            reader: readerPersonalParticipantes,
+            writer: writerPersonalParticipantes,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true
         });
 
-        storeOperativosParticipantes = this.storeOperativosParticipantes;
+        storePersonalParticipantes = this.storePersonalParticipantes;
 
-        this.gridOperativosParticipantes = new Ext.grid.EditorGridPanel({
-            id: 'gridOperativosParticipantes',
+        this.gridPersonalParticipantes = new Ext.grid.EditorGridPanel({
+            id: 'gridPersonalParticipantes',
             autoHeight: true,
             autoScroll: true,
-            store: this.storeOperativosParticipantes,
+            store: this.storePersonalParticipantes,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -1427,7 +1427,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
                         // verifico variable que permite editar o no
-                        if (gridBlockOperativos) {
+                        if (gridBlockPersonal) {
                             //verifico que si no es administrador se bloque la edicion
                             if (!accesosAdministradorOpe)
                                 return false;
@@ -1440,8 +1440,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var gridOperativosParticipantes = this.gridOperativosParticipantes
-        // fin ventana operativos detalle participantes
+        var gridPersonalParticipantes = this.gridPersonalParticipantes
+        // fin ventana personal detalle participantes
 
         var detalleOperativo = new Ext.FormPanel({
             id: 'formaDetalleOperativo',
@@ -1489,7 +1489,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                         var myForm = Ext.getCmp('formaDetalleOperativo').getForm();
                         myForm.submit({
-                            url: 'modules/desktop/operativos/server/crudOperativos.php?operation=updateForm',
+                            url: 'modules/desktop/personal/server/crudPersonal.php?operation=updateForm',
                             method: 'POST',
 
                             success: function (form, action) {
@@ -1503,13 +1503,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         });
 
-        // inicio ventana operativos detalle imagenes
-        var proxyOperativosImagenes = new Ext.data.HttpProxy({
+        // inicio ventana personal detalle imagenes
+        var proxyPersonalImagenes = new Ext.data.HttpProxy({
             api: {
-                create: urlOperativos + "crudOperativosImagenes.php?operation=insert",
-                read: urlOperativos + "crudOperativosImagenes.php?operation=select",
-                update: urlOperativos + "crudOperativosImagenes.php?operation=update",
-                destroy: urlOperativos + "crudOperativosImagenes.php?operation=delete"
+                create: urlPersonal + "crudPersonalImagenes.php?operation=insert",
+                read: urlPersonal + "crudPersonalImagenes.php?operation=select",
+                update: urlPersonal + "crudPersonalImagenes.php?operation=update",
+                destroy: urlPersonal + "crudPersonalImagenes.php?operation=delete"
             },
             listeners: {
                 write: function (proxy, action, result, res, rs) {
@@ -1522,7 +1522,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var readerOperativosImagenes = new Ext.data.JsonReader({
+        var readerPersonalImagenes = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
@@ -1534,26 +1534,26 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
             ]
         });
-        var writerOperativosImagenes = new Ext.data.JsonWriter({
+        var writerPersonalImagenes = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
 
-        this.storeOperativosImagenes = new Ext.data.Store({
+        this.storePersonalImagenes = new Ext.data.Store({
             id: "id",
-            proxy: proxyOperativosImagenes,
-            reader: readerOperativosImagenes,
-            writer: writerOperativosImagenes,
+            proxy: proxyPersonalImagenes,
+            reader: readerPersonalImagenes,
+            writer: writerPersonalImagenes,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true
         });
 
-        storeOperativosImagenes = this.storeOperativosImagenes;
+        storePersonalImagenes = this.storePersonalImagenes;
 
-        this.gridOperativosImagenes = new Ext.grid.EditorGridPanel({
-            id: 'gridOperativosImagenes',
+        this.gridPersonalImagenes = new Ext.grid.EditorGridPanel({
+            id: 'gridPersonalImagenes',
             autoHeight: true,
-            store: this.storeOperativosImagenes,
+            store: this.storePersonalImagenes,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -1597,7 +1597,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
-                        if (gridBlockOperativos) {
+                        if (gridBlockPersonal) {
                             //verifico que si no es administrador se bloque la edicion
                             if (!accesosAdministradorOpe)
                                 return false;
@@ -1610,17 +1610,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var gridOperativosImagenes = this.gridOperativosImagenes
-        // fin ventana operativos detalle imagenes
+        var gridPersonalImagenes = this.gridPersonalImagenes
+        // fin ventana personal detalle imagenes
 
 
-        // inicio ventana operativos detalle informe
-        var proxyOperativosInforme = new Ext.data.HttpProxy({
+        // inicio ventana personal detalle informe
+        var proxyPersonalInforme = new Ext.data.HttpProxy({
             api: {
-                create: urlOperativos + "crudOperativosInforme.php?operation=insert",
-                read: urlOperativos + "crudOperativosInforme.php?operation=select",
-                update: urlOperativos + "crudOperativosInforme.php?operation=update",
-                destroy: urlOperativos + "crudOperativosInforme.php?operation=delete"
+                create: urlPersonal + "crudPersonalInforme.php?operation=insert",
+                read: urlPersonal + "crudPersonalInforme.php?operation=select",
+                update: urlPersonal + "crudPersonalInforme.php?operation=update",
+                destroy: urlPersonal + "crudPersonalInforme.php?operation=delete"
             },
             listeners: {
                 write: function (proxy, action, result, res, rs) {
@@ -1633,7 +1633,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var readerOperativosInforme = new Ext.data.JsonReader({
+        var readerPersonalInforme = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
@@ -1651,28 +1651,28 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
             ]
         });
-        var writerOperativosInforme = new Ext.data.JsonWriter({
+        var writerPersonalInforme = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
 
-        this.storeOperativosInforme = new Ext.data.Store({
+        this.storePersonalInforme = new Ext.data.Store({
             id: "id",
-            proxy: proxyOperativosInforme,
-            reader: readerOperativosInforme,
-            writer: writerOperativosInforme,
+            proxy: proxyPersonalInforme,
+            reader: readerPersonalInforme,
+            writer: writerPersonalInforme,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true
         });
 
-        storeOperativosInforme = this.storeOperativosInforme;
+        storePersonalInforme = this.storePersonalInforme;
 
-        this.gridOperativosInforme = new Ext.grid.EditorGridPanel({
-            id: 'gridOperativosInforme',
+        this.gridPersonalInforme = new Ext.grid.EditorGridPanel({
+            id: 'gridPersonalInforme',
 
             autoHeight: true,
             autoScroll: true,
-            store: this.storeOperativosInforme,
+            store: this.storePersonalInforme,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -1681,7 +1681,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 30,
                     editor: comboOPTIDSimple2,
-                    renderer: operativosTipoOperativosSimple2
+                    renderer: personalTipoPersonalSimple2
                 },
                 {
                     header: 'Operativo',
@@ -1723,7 +1723,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 60,
                     editor: comboOPINFOMEDIDA,
-                    renderer: operativosTipoMedida
+                    renderer: personalTipoMedida
                 },
                 {
                     header: 'Observaciones',
@@ -1748,7 +1748,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
-                        if (gridBlockOperativos) {
+                        if (gridBlockPersonal) {
                             //verifico que si no es administrador se bloque la edicion
                             if (!accesosAdministradorOpe)
                                 return false;
@@ -1761,17 +1761,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var gridOperativosInforme = this.gridOperativosInforme
-        // inicio ventana operativos detalle personal
+        var gridPersonalInforme = this.gridPersonalInforme
+        // inicio ventana personal detalle personal
 
 
-        // inicio ventana operativos detalle vehiculos
-        var proxyOperativosVehiculos = new Ext.data.HttpProxy({
+        // inicio ventana personal detalle vehiculos
+        var proxyPersonalVehiculos = new Ext.data.HttpProxy({
             api: {
-                create: urlOperativos + "crudOperativosVehiculos.php?operation=insert",
-                read: urlOperativos + "crudOperativosVehiculos.php?operation=select",
-                update: urlOperativos + "crudOperativosVehiculos.php?operation=update",
-                destroy: urlOperativos + "crudOperativosVehiculos.php?operation=delete"
+                create: urlPersonal + "crudPersonalVehiculos.php?operation=insert",
+                read: urlPersonal + "crudPersonalVehiculos.php?operation=select",
+                update: urlPersonal + "crudPersonalVehiculos.php?operation=update",
+                destroy: urlPersonal + "crudPersonalVehiculos.php?operation=delete"
             },
             listeners: {
                 write: function (proxy, action, result, res, rs) {
@@ -1784,7 +1784,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var readerOperativosVehiculos = new Ext.data.JsonReader({
+        var readerPersonalVehiculos = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
@@ -1797,28 +1797,28 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'observaciones', allowBlank: true}
             ]
         });
-        var writerOperativosVehiculos = new Ext.data.JsonWriter({
+        var writerPersonalVehiculos = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
 
-        this.storeOperativosVehiculos = new Ext.data.Store({
+        this.storePersonalVehiculos = new Ext.data.Store({
             id: "id",
-            proxy: proxyOperativosVehiculos,
-            reader: readerOperativosVehiculos,
-            writer: writerOperativosVehiculos,
+            proxy: proxyPersonalVehiculos,
+            reader: readerPersonalVehiculos,
+            writer: writerPersonalVehiculos,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true
         });
 
-        storeOperativosVehiculos = this.storeOperativosVehiculos;
+        storePersonalVehiculos = this.storePersonalVehiculos;
 
-        this.gridOperativosVehiculos = new Ext.grid.EditorGridPanel({
-            id: 'gridOperativosVehiculos',
+        this.gridPersonalVehiculos = new Ext.grid.EditorGridPanel({
+            id: 'gridPersonalVehiculos',
 
             autoHeight: true,
             autoScroll: true,
-            store: this.storeOperativosVehiculos,
+            store: this.storePersonalVehiculos,
             columns: [
                 {
                     header: 'Operativo',
@@ -1863,7 +1863,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
-                        if (gridBlockOperativos) {
+                        if (gridBlockPersonal) {
                             //verifico que si no es administrador se bloque la edicion
                             if (!accesosAdministradorOpe)
                                 return false;
@@ -1878,16 +1878,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         });
 
-        var gridOperativosVehiculos = this.gridOperativosVehiculos
-        // inicio ventana operativos detalle vehiculos
+        var gridPersonalVehiculos = this.gridPersonalVehiculos
+        // inicio ventana personal detalle vehiculos
 
 
         // datastore and datagrid in Guia
         this.storeDocumentosReporte = new Ext.data.Store({
             id: "id",
-            proxy: proxyOperativos,
-            reader: readerOperativos,
-            writer: writerOperativos,
+            proxy: proxyPersonal,
+            reader: readerPersonal,
+            writer: writerPersonal,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true
         });
@@ -1925,14 +1925,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_tipo_control',
                     sortable: true,
                     width: 45,
-                    renderer: operativosTipoOperativos
+                    renderer: personalTipoPersonal
                 },
                 {
                     header: 'Complejidad',
                     dataIndex: 'id_nivel_complejidad',
                     sortable: true,
                     width: 30,
-                    renderer: operativosNivelComplejidad
+                    renderer: personalNivelComplejidad
                 },
                 {
                     header: 'Zonal',
@@ -1946,7 +1946,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_persona_encargada',
                     sortable: true,
                     width: 40,
-                    renderer: operativosPersonalEncargado
+                    renderer: personalPersonalEncargado
                 },
                 /*                {
                  header: 'Participantes',
@@ -1994,7 +1994,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     , sortable: true
                     , width: 30
                     //,hidden: true
-                    , renderer: operativosTipo
+                    , renderer: personalTipo
                 },
                 /* {
                  header: 'Fallido'
@@ -2034,8 +2034,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 pageSize: 100,
                 store: this.storeDocumentosReporte,
                 displayInfo: true,
-                displayMsg: 'Mostrando operativos {0} - {1} de {2}  >>',
-                emptyMsg: "No existen operativos que mostrar"
+                displayMsg: 'Mostrando personal {0} - {1} de {2}  >>',
+                emptyMsg: "No existen personal que mostrar"
             }),
         });
         // fin datastore and datagrid in Guia
@@ -2300,7 +2300,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
             var checkHandler = function (item, checked) {
                 if (checked) {
-                    var store = this.storeOperativos;
+                    var store = this.storePersonal;
                     store.baseParams.filterField = item.key;
                     searchFieldBtn.setText(item.text);
                 }
@@ -2308,7 +2308,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
             var targetHandler = function (item, checked) {
                 if (checked) {
-                    //var store = this.storeOperativos;
+                    //var store = this.storePersonal;
                     this.seleccionDepar = item.key;
                     this.targetFieldBtn.setText(item.text);
                 }
@@ -2354,11 +2354,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             });
 
             win = desktop.createWindow({
-                id: 'grid-win-operativos',
-                title: 'Inspección - Gestión Operativos',
+                id: 'grid-win-personal',
+                title: 'Inspección - Gestión Personal',
                 width: winWidth,
                 height: winHeight,
-                iconCls: 'operativos-icon',
+                iconCls: 'personal-icon',
                 shim: false,
                 animCollapse: false,
                 constrainHeader: true,
@@ -2370,22 +2370,22 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     items: [
                         {
                             autoScroll: true,
-                            title: 'Planificación operativos',
+                            title: 'Planificación personal',
                             closable: true,
                             tbar: [
                                 {
                                     text: 'Nuevo',
                                     scope: this,
-                                    handler: this.addoperativos,
+                                    handler: this.addpersonal,
                                     iconCls: 'save-icon',
-                                    id: 'addoperativos',
+                                    id: 'addpersonal',
                                     disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                                 },
                                 '-',
                                 {
                                     text: "Eliminar",
                                     scope: this,
-                                    handler: this.deleteoperativos,
+                                    handler: this.deletepersonal,
                                     id: 'borraroperativo',
                                     iconCls: 'delete-icon',
                                     disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
@@ -2402,7 +2402,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 '-',
                                 {
                                     xtype: 'checkbox',
-                                    boxLabel: 'Operativos no finalizados',
+                                    boxLabel: 'Personal no finalizados',
                                     id: 'checkNoRecibidos',
                                     name: 'noenviados',
                                     checked: true,
@@ -2411,12 +2411,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     disabled: !acceso,
                                     cls: 'barramenu',
                                     handler: function (checkbox, isChecked) {
-                                        storeOperativos.baseParams.finalizados = isChecked;
-                                        storeOperativos.load();
+                                        storePersonal.baseParams.finalizados = isChecked;
+                                        storePersonal.load();
                                     }
                                 }, '-',
                                 {
-                                    id: 'tb_repoteOperativos',
+                                    id: 'tb_repotePersonal',
                                     iconCls: 'excel-icon',
                                     handler: this.botonExportarReporteOperativo,
                                     scope: this,
@@ -2449,17 +2449,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 , ' '
                                 , new QoDesk.QoAdmin.SearchField({
                                     paramName: 'filterText'
-                                    , store: this.storeOperativos
+                                    , store: this.storePersonal
                                 })
                             ],
                             items: [
                                 {
-                                    id: 'formcabeceraoperativos',
+                                    id: 'formcabecerapersonal',
                                     titleCollapse: true,
                                     flex: 1,
                                     autoScroll: true,
                                     layout: 'column',
-                                    items: this.gridOperativos,
+                                    items: this.gridPersonal,
                                 },
                                 {
 
@@ -2476,7 +2476,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                 {
                                                     title: 'Detalle Operativo',
                                                     layout: 'column',
-                                                    id: 'detalleOperativosTab',
+                                                    id: 'detallePersonalTab',
                                                     height: 250,
                                                     items: detalleOperativo,
                                                     disabled: true,
@@ -2497,14 +2497,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     title: 'Instituciones Participantes',
                                                     layout: 'column',
                                                     height: 250,
-                                                    items: this.gridOperativosParticipantes,
+                                                    items: this.gridPersonalParticipantes,
                                                     autoScroll: true,
                                                     tbar: [
                                                         {
                                                             text: 'Nuevo',
                                                             scope: this,
-                                                            //handler: this.addoperativosPersonal,
-                                                            handler: this.addoperativosParticipantes,
+                                                            //handler: this.addpersonalPersonal,
+                                                            handler: this.addpersonalParticipantes,
                                                             iconCls: 'save-icon',
                                                             disabled: true,
                                                             id: 'addoperativoparticipantes'
@@ -2514,8 +2514,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                         {
                                                             text: "Eliminar",
                                                             scope: this,
-                                                            handler: this.deleteoperativosPersonal,
-                                                            handler: this.deleteoperativosParticipantes,
+                                                            handler: this.deletepersonalPersonal,
+                                                            handler: this.deletepersonalParticipantes,
                                                             id: 'borraroperativoparticipantes',
                                                             iconCls: 'delete-icon',
                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
@@ -2527,13 +2527,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     title: 'Personal asignado',
                                                     layout: 'column',
                                                     height: 250,
-                                                    items: this.gridOperativosPersonal,
+                                                    items: this.gridPersonalPersonal,
                                                     autoScroll: true,
                                                     tbar: [
                                                         {
                                                             text: 'Nuevo',
                                                             scope: this,
-                                                            handler: this.addoperativosPersonal,
+                                                            handler: this.addpersonalPersonal,
                                                             iconCls: 'save-icon',
                                                             disabled: true,
                                                             id: 'addoperativodetalle',
@@ -2543,7 +2543,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                         {
                                                             text: "Eliminar",
                                                             scope: this,
-                                                            handler: this.deleteoperativosPersonal,
+                                                            handler: this.deletepersonalPersonal,
                                                             id: 'borraroperativodetalle',
                                                             iconCls: 'delete-icon',
                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
@@ -2555,7 +2555,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     title: 'Vehículos asignados',
                                                     layout: 'column',
                                                     height: 250,
-                                                    items: this.gridOperativosVehiculos,
+                                                    items: this.gridPersonalVehiculos,
                                                     autoScroll: true,
                                                     tbar: [
                                                         {
@@ -2580,10 +2580,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                 {
                                                     title: 'Informes',
                                                     layout: 'column',
-                                                    id: 'informesOperativosTab',
+                                                    id: 'informesPersonalTab',
                                                     disabled: true,
                                                     height: 250,
-                                                    items: this.gridOperativosInforme,
+                                                    items: this.gridPersonalInforme,
                                                     autoScroll: true,
                                                     tbar: [
                                                         {
@@ -2607,17 +2607,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                 },
                                                 {
                                                     title: 'Imágenes',
-                                                    id: 'imagenesOperativosTab',
+                                                    id: 'imagenesPersonalTab',
                                                     layout: 'column',
                                                     height: 235,
                                                     disabled: true,
-                                                    items: this.gridOperativosImagenes,
+                                                    items: this.gridPersonalImagenes,
                                                     autoScroll: true,
                                                     tbar: [
                                                         {
                                                             text: 'Nuevo',
                                                             scope: this,
-                                                            handler: this.addoperativosImagenes,
+                                                            handler: this.addpersonalImagenes,
                                                             iconCls: 'save-icon',
                                                             disabled: true,
                                                             id: 'addoperativoimagenes',
@@ -2628,7 +2628,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                         {
                                                             text: "Eliminar",
                                                             scope: this,
-                                                            handler: this.deleteoperativosImagenes,
+                                                            handler: this.deletepersonalImagenes,
                                                             id: 'borraroperativoimagenes',
                                                             iconCls: 'delete-icon',
                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
@@ -2671,12 +2671,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             handler: function () {
                                                                 if (Ext.getCmp('fp').getForm().isValid()) {
                                                                     Ext.getCmp('fp').getForm().submit({
-                                                                        url: urlOperativos + 'file-upload.php',
-                                                                        params: {data: selectOperativos},
+                                                                        url: urlPersonal + 'file-upload.php',
+                                                                        params: {data: selectPersonal},
                                                                         waitMsg: 'Subiendo Imagen...',
                                                                         success: function (fp, o) {
 
-                                                                            storeOperativosImagenes.load({params: {id_operativo: selectOperativos}});
+                                                                            storePersonalImagenes.load({params: {id_operativo: selectPersonal}});
                                                                             Ext.getCmp('fp').getForm().reset();
                                                                         },
                                                                         failure: function (form, action) {
@@ -2711,7 +2711,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             title: 'Reportes',
                             closable: true,
                             layout: 'border',
-                            //disabled: this.app.isAllowedTo('accesosOperativos', this.id) ? false : true,
+                            //disabled: this.app.isAllowedTo('accesosPersonal', this.id) ? false : true,
                             tbar: [
                                 {
                                     iconCls: 'reload-icon',
@@ -2746,9 +2746,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 ,
                                 {
                                     iconCls: 'excel-icon',
-                                    handler: this.botonExportarDocumentoReporteCalendarioOperativos,
+                                    handler: this.botonExportarDocumentoReporteCalendarioPersonal,
                                     scope: this,
-                                    text: 'Exportar calendario  operativos',
+                                    text: 'Exportar calendario  personal',
                                     tooltip: 'Se genera archivo Excel con la información solicitada',
                                     disabled: !acceso,
                                 }
@@ -2765,13 +2765,19 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 },
                                 {
                                     // lazily created panel (xtype:'panel' is default)
-                                    region: 'center',
                                     split: true,
-                                    autoScroll: true,
                                     height: 270,
                                     minSize: 100,
                                     maxSize: 150,
-                                    items: this.gridDocumentosReporte
+                                    region: 'center',
+                                    autoEl: {
+                                        id: 'iframemap',
+                                        tag: 'iframe',
+                                        style: 'height: 360px; width: 100%; border: none',
+                                        src: 'http://localhost:8080/mapaRecorrido.html'
+                                        //src: 'http://agenciadecontrol.quito.gob.ec/mapaPersonal.html'
+                                    },
+                                    id: 'data_export_iframe'
                                 }
                             ]
 
@@ -2783,29 +2789,29 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             });
         }
         win.show();
-        function cargaDetalle(operativos) {
+        function cargaDetalle(personal) {
             //forma = Ext.getCmp('formaDetalleOperativo');
             detalleOperativo.getForm().load({
-                url: urlOperativos + 'crudOperativos.php?operation=selectForm',
+                url: urlPersonal + 'crudPersonal.php?operation=selectForm',
                 params: {
-                    id: operativos
+                    id: personal
                 }
             });
         };
 
         setTimeout(function () {
-            this.storeOperativos.load({
+            this.storePersonal.load({
                 params: {
                     start: 0,
-                    limit: limiteoperativos,
+                    limit: limitepersonal,
                     finalizados: Ext.getCmp('checkNoRecibidos').getValue(),
                     accesosAdministradorOpe: accesosAdministradorOpe,
-                    accesosOperativos: accesosOperativos
+                    accesosPersonal: accesosPersonal
                 }
             });
-        }, 1200);
+        }, 600);
     },
-    deleteoperativos: function () {
+    deletepersonal: function () {
         Ext.Msg.show({
             title: 'Confirmación',
             msg: 'Está seguro de querer borrar?',
@@ -2813,17 +2819,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridOperativos.getSelectionModel().getSelections();
+                    var rows = this.gridPersonal.getSelectionModel().getSelections();
                     if (rows.length === 0) {
                         return false;
                     }
-                    this.storeOperativos.remove(rows);
+                    this.storePersonal.remove(rows);
                 }
             }
         });
     },
-    addoperativos: function () {
-        var operativos = new this.storeOperativos.recordType({
+    addpersonal: function () {
+        var personal = new this.storePersonal.recordType({
             id_persona: '-',
             id: ' ',
             visible: '',
@@ -2841,15 +2847,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
             id_estado: 1
         });
-        this.gridOperativos.stopEditing();
-        this.storeOperativos.insert(0, operativos);
-        this.gridOperativos.startEditing(0, 0);
+        this.gridPersonal.stopEditing();
+        this.storePersonal.insert(0, personal);
+        this.gridPersonal.startEditing(0, 0);
     },
     requestGridData: function () {
-        this.storeOperativos.load();
+        this.storePersonal.load();
     },
 
-    deleteoperativosPersonal: function () {
+    deletepersonalPersonal: function () {
         Ext.Msg.show({
             title: 'Confirmación',
             msg: 'Está seguro de querer borrar?',
@@ -2857,31 +2863,31 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridOperativosPersonal.getSelectionModel().getSelections();
+                    var rows = this.gridPersonalPersonal.getSelectionModel().getSelections();
                     if (rows.length === 0) {
                         return false;
                     }
-                    this.storeOperativosPersonal.remove(rows);
+                    this.storePersonalPersonal.remove(rows);
                 }
             }
         });
     },
-    addoperativosPersonal: function () {
-        var operativos = new this.storeOperativosPersonal.recordType({
+    addpersonalPersonal: function () {
+        var personal = new this.storePersonalPersonal.recordType({
             id_persona: '-',
-            id_operativo: selectOperativos,
+            id_operativo: selectPersonal,
             asistencia: true,
             observaciones: ''
         });
-        this.gridOperativosPersonal.stopEditing();
-        this.storeOperativosPersonal.insert(0, operativos);
-        this.gridOperativosPersonal.startEditing(0, 0);
+        this.gridPersonalPersonal.stopEditing();
+        this.storePersonalPersonal.insert(0, personal);
+        this.gridPersonalPersonal.startEditing(0, 0);
     },
     requestGridDataPersonal: function () {
-        this.storeOperativosPersonal.load();
+        this.storePersonalPersonal.load();
     },
     // controles insercion eliminar reload Participantes
-    deleteoperativosParticipantes: function () {
+    deletepersonalParticipantes: function () {
         Ext.Msg.show({
             title: 'Confirmación',
             msg: 'Está seguro de querer borrar?',
@@ -2889,11 +2895,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridOperativosParticipantes.getSelectionModel().getSelections();
+                    var rows = this.gridPersonalParticipantes.getSelectionModel().getSelections();
                     if (rows.length === 0) {
                         return false;
                     }
-                    this.storeOperativosParticipantes.remove(rows);
+                    this.storePersonalParticipantes.remove(rows);
                 }
             }
         });
@@ -2909,7 +2915,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     var myForm = Ext.getCmp('formaDetalleOperativo').getForm();
                     myForm.submit({
-                        url: 'modules/desktop/operativos/server/crudOperativos.php?operation=updateForm',
+                        url: 'modules/desktop/personal/server/crudPersonal.php?operation=updateForm',
                         method: 'POST',
                         waitMsg: 'Saving data',
                         success: function (form, action) {
@@ -2933,26 +2939,26 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
     },
 
 
-    addoperativosParticipantes: function () {
-        var operativos = new this.storeOperativosParticipantes.recordType({
+    addpersonalParticipantes: function () {
+        var personal = new this.storePersonalParticipantes.recordType({
             id_persona: '-',
-            id_operativo: selectOperativos,
+            id_operativo: selectPersonal,
             asistencia: true,
             observaciones: '',
             id_entidad: '-',
             jefe_grupo: '-',
             personas: 0
         });
-        this.gridOperativosParticipantes.stopEditing();
-        this.storeOperativosParticipantes.insert(0, operativos);
-        this.gridOperativosParticipantes.startEditing(0, 0);
+        this.gridPersonalParticipantes.stopEditing();
+        this.storePersonalParticipantes.insert(0, personal);
+        this.gridPersonalParticipantes.startEditing(0, 0);
     },
     requestGridDataParticipantes: function () {
-        this.storeOperativosParticipantes.load();
+        this.storePersonalParticipantes.load();
     },
 
     // controles insercion eliminar reload Imagenes
-    deleteoperativosImagenes: function () {
+    deletepersonalImagenes: function () {
         Ext.Msg.show({
             title: 'Confirmación',
             msg: 'Está seguro de querer borrar?',
@@ -2960,31 +2966,31 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridOperativosImagenes.getSelectionModel().getSelections();
+                    var rows = this.gridPersonalImagenes.getSelectionModel().getSelections();
                     if (rows.length === 0) {
                         return false;
                     }
-                    this.storeOperativosImagenes.remove(rows);
+                    this.storePersonalImagenes.remove(rows);
                 }
             }
         });
     },
-    addoperativosImagenes: function () {
-        var operativos = new this.storeOperativosImagenes.recordType({
+    addpersonalImagenes: function () {
+        var personal = new this.storePersonalImagenes.recordType({
             id_persona: '-',
-            id_operativo: selectOperativos,
+            id_operativo: selectPersonal,
             asistencia: true,
             observaciones: '',
             id_entidad: '-',
             jefe_grupo: '-',
             personas: 0
         });
-        this.gridOperativosImagenes.stopEditing();
-        this.storeOperativosImagenes.insert(0, operativos);
-        this.gridOperativosImagenes.startEditing(0, 0);
+        this.gridPersonalImagenes.stopEditing();
+        this.storePersonalImagenes.insert(0, personal);
+        this.gridPersonalImagenes.startEditing(0, 0);
     },
     requestGridDataImagenes: function () {
-        this.storeOperativosImagenes.load();
+        this.storePersonalImagenes.load();
     },
 
 
@@ -2996,31 +3002,31 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridOperativosVehiculos.getSelectionModel().getSelections();
+                    var rows = this.gridPersonalVehiculos.getSelectionModel().getSelections();
                     if (rows.length === 0) {
                         return false;
                     }
-                    this.storeOperativosVehiculos.remove(rows);
+                    this.storePersonalVehiculos.remove(rows);
                 }
             }
         });
     },
     addVehiculos: function () {
-        var vehiculos = new this.storeOperativosVehiculos.recordType({
+        var vehiculos = new this.storePersonalVehiculos.recordType({
 
-            id_operativo: selectOperativos,
+            id_operativo: selectPersonal,
             conductor: '',
             telefono: '',
             observaciones: ''
         });
 
 
-        this.gridOperativosVehiculos.stopEditing();
-        this.storeOperativosVehiculos.insert(0, vehiculos);
-        this.gridOperativosVehiculos.startEditing(0, 0);
+        this.gridPersonalVehiculos.stopEditing();
+        this.storePersonalVehiculos.insert(0, vehiculos);
+        this.gridPersonalVehiculos.startEditing(0, 0);
     },
     requestGridDataVehiculos: function () {
-        this.storeOperativosVehiculos.load();
+        this.storePersonalVehiculos.load();
     },
 
     deleteInforme: function () {
@@ -3031,26 +3037,26 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridOperativosInforme.getSelectionModel().getSelections();
+                    var rows = this.gridPersonalInforme.getSelectionModel().getSelections();
                     if (rows.length === 0) {
                         return false;
                     }
-                    this.storeOperativosInforme.remove(rows);
+                    this.storePersonalInforme.remove(rows);
                 }
             }
         });
     },
     addInforme: function () {
-        var informe = new this.storeOperativosInforme.recordType({
-            id_operativo: selectOperativos
+        var informe = new this.storePersonalInforme.recordType({
+            id_operativo: selectPersonal
         });
 
-        this.gridOperativosInforme.stopEditing();
-        this.storeOperativosInforme.insert(0, informe);
-        this.gridOperativosInforme.startEditing(0, 0);
+        this.gridPersonalInforme.stopEditing();
+        this.storePersonalInforme.insert(0, informe);
+        this.gridPersonalInforme.startEditing(0, 0);
     },
     requestGridDataInforme: function () {
-        this.storeOperativosInforme.load();
+        this.storePersonalInforme.load();
     },
 
     botonExportarReporteOperativo: function () {
@@ -3062,9 +3068,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    window.location.href = 'modules/desktop/operativos/server/descargaOperativosId.inc.php?operativo=' + selectOperativos;
+                    window.location.href = 'modules/desktop/personal/server/descargaPersonalId.inc.php?operativo=' + selectPersonal;
                     /*setTimeout(function () {
-                     storeOperativos.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
+                     storePersonal.load({params: {finalizados: Ext.getCmp('checkNoRecibidos').getValue()}});
                      }, 1000);*/
 
                 }
@@ -3090,10 +3096,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
 
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
-        var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
+        var accesosPersonal = this.app.isAllowedTo('accesosPersonal', this.id);
 
         this.storeDocumentosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
-        this.storeDocumentosReporte.baseParams.accesosOperativos = accesosOperativos;
+        this.storeDocumentosReporte.baseParams.accesosPersonal = accesosPersonal;
 
         this.storeDocumentosReporte.load();
     },
@@ -3122,7 +3128,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
-                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams;
+                    window.location.href = 'modules/desktop/personal/server/descargaReportePersonal.inc.php?param=' + valueParams;
                 }
             }
         });
@@ -3148,12 +3154,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
-                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativoscalendario.inc.php?param=' + valueParams;
+                    window.location.href = 'modules/desktop/personal/server/descargaReportePersonalcalendario.inc.php?param=' + valueParams;
                 }
             }
         });
     },
-    botonExportarDocumentoReporteCalendarioOperativos: function () {
+    botonExportarDocumentoReporteCalendarioPersonal: function () {
         var rows = this.storeDocumentosReporte.getCount()
         if (rows === 0) {
             Ext.Msg.show({
@@ -3174,7 +3180,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
-                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativoscalendario2.inc.php?param=' + valueParams;
+                    window.location.href = 'modules/desktop/personal/server/descargaReportePersonalcalendario2.inc.php?param=' + valueParams;
                 }
             }
         });
