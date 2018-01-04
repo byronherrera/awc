@@ -75,7 +75,7 @@ if ($resultguia) {
 //get numero de guia
 
 $os->db->conn->query("SET NAMES 'utf8'");
-$sql = "SELECT SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias ORDER BY a DESC, num DESC LIMIT 1";
+$sql = "SELECT SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias WHERE SUBSTRING(numero,5,4) = YEAR(CURDATE()) AND id not BETWEEN 1635 AND  1655  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
 $resultguia = $os->db->conn->query($sql);
 if ($resultguia) {
     $row = $resultguia->fetch(PDO::FETCH_ASSOC);
@@ -84,7 +84,11 @@ if ($resultguia) {
             $numeroGuia = $row['num'] + 1;
 
 
+    } else {
+        $numeroGuia = 1;
     }
+} else {
+    $numeroGuia = 1;
 }
 $year = date("Y");
 

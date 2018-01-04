@@ -39,7 +39,6 @@ function selectOperativos()
     //TODO cambiar columna por defecto en busquedas
     $columnaBusqueda = 'id_zonal';
 
-
     $where = '';
     $usuarioLog = $os->get_member_id();
     if (isset($_POST['accesosOperativos'])) {
@@ -188,14 +187,7 @@ function selectOperativos()
             $where = $where . " AND id_unidad = $tipo ";
         }
     }
-    /* if (isset($_POST['busqueda_finalizado']) and ($_POST['busqueda_finalizado'] != '')) {
-         $tipo = $_POST['busqueda_finalizado'];
-         if ($where == '') {
-             $where = "WHERE finalizado = '$tipo' ";
-         } else {
-             $where = $where . " AND finalizado = '$tipo' ";
-         }
-     }*/
+
     if (isset($_POST['busqueda_informe']) and ($_POST['busqueda_informe'] != '')) {
         $tipo = $_POST['busqueda_informe'];
         if ($where == '') {
@@ -247,7 +239,7 @@ function selectOperativos()
         }
     }
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_operativos $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT * FROM amc_personal_distributivo $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

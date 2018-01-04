@@ -141,7 +141,7 @@ $filaInicio = 7;
 $dias = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
 $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
-$columnas = array("A", "B", "C", "D", "E", "F");
+$columnas = array("A", "B", "C", "D", "E", "F", "G");
 
 //definicion de estilos
 $styleArray = array(

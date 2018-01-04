@@ -1088,12 +1088,21 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                                     Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
                                     Ext.getCmp('addoperativos').setDisabled(accesosAdministradorOpe ? false : true);
-                                    // en caso que se tenga acceso tambien se habilitan o deshabilitan los botones para agregar detalle
-                                    Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
-                                    Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
 
-                                    Ext.getCmp('borraroperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
-                                    Ext.getCmp('addoperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
+                                    // en caso que se tenga acceso tambien se habilitan o deshabilitan los botones para agregar detalle
+                                    // valido si es el caso operativo tipo Permanentes Zonales
+
+                                    if (rec.get("tipo_operativo") == 2 ){
+                                        Ext.getCmp('borraroperativodetalle').setDisabled(false);
+                                        Ext.getCmp('addoperativodetalle').setDisabled(false);
+                                        Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
+                                        Ext.getCmp('addoperativoparticipantes').setDisabled(false);
+                                    } else {
+                                        Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
+                                        Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
+                                        Ext.getCmp('borraroperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
+                                        Ext.getCmp('addoperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
+                                    }
 
                                     Ext.getCmp('borraroperativodetallevehiculo').setDisabled(accesosAdministradorOpe ? false : true);
                                     Ext.getCmp('addoperativodetallevehiculo').setDisabled(accesosAdministradorOpe ? false : true);
@@ -1113,6 +1122,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                                     Ext.getCmp('borraroperativo').setDisabled(true);
                                     Ext.getCmp('addoperativos').setDisabled(true);
+
                                     Ext.getCmp('borraroperativodetalle').setDisabled(true);
                                     Ext.getCmp('addoperativodetalle').setDisabled(true);
 

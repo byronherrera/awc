@@ -93,7 +93,7 @@ function selectDenuncias()
     else
         $limit = 100;
 
-    $orderby = 'ORDER BY YEAR(recepcion_documento) DESC, codigo_tramite DESC';
+    $orderby = 'ORDER BY recepcion_documento DESC, codigo_tramite DESC';
     if (isset($_POST['sort'])) {
         $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
     }

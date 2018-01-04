@@ -320,16 +320,16 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $rowdetalle['id_tipo_control'] = $cadena_personal;
 
 // recuperamos los nombres de los usuarios
-    $sql = "SELECT (SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) FROM qo_members WHERE qo_members.id = b.id_member ) AS nombre  FROM amc_operativos_personal b WHERE id_operativo = '" . $rowdetalle['id'] . "'";
+    $sql = "SELECT (SELECT CONCAT(qo_members.last_name, ' ', qo_members.first_name) FROM qo_members WHERE qo_members.id = b.id_member ) AS nombre  FROM amc_operativos_personal b WHERE id_operativo = '" . $rowdetalle['id'] . "'";
     $nombres = $os->db->conn->query($sql);
     $nombresUsuarios = array();
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
         $nombresUsuarios[] = $nombreDetalle['nombre'];
     }
     $cadena_personal = implode(", ", $nombresUsuarios);
-    $rowdetalle['personal'] = $cadena_personal;
+    $rowdetalle['personal'] = regresaNombre($rowdetalle['id_persona_encargada']). ' *, ' . $cadena_personal;
 
-// recuperamos el nombre de zona
+    // recuperamos el nombre de zona
     $sql = "SELECT  nombre  FROM amc_zonas WHERE id = '" . $rowdetalle['id_zonal'] . "'";
     $nombres = $os->db->conn->query($sql);
     $nombresUsuarios = array();
