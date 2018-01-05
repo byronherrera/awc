@@ -37,7 +37,7 @@ function selectOperativos()
 {
     global $os;
     //TODO cambiar columna por defecto en busquedas
-    $columnaBusqueda = 'id_zonal';
+    $columnaBusqueda = 'apellidos';
 
     $where = '';
     $usuarioLog = $os->get_member_id();
@@ -71,21 +71,14 @@ function selectOperativos()
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
 
-        if ($columnaBusqueda == 'id_zonal') {
-            $sql = "SELECT id FROM amc_zonas WHERE UPPER(nombre) like UPPER('%$campo%') LIMIT 1";
+        if ($columnaBusqueda == 'unidad') {
+            $sql = "SELECT id FROM amc_unidades_personal WHERE UPPER(nombre) like UPPER('%$campo%') LIMIT 1";
             $result = $os->db->conn->query($sql);
             $row = $result->fetch(PDO::FETCH_ASSOC);
             if (strlen($row['id']) > 0)
                 $campo = $row['id'];
         }
 
-        if ($columnaBusqueda == 'id_persona_encargada') {
-            $sql = "SELECT id FROM qo_members WHERE UPPER(first_name) like UPPER('%$campo%') OR UPPER(last_name) like UPPER('%$campo%') OR UPPER(email_address) like UPPER('%$campo%') LIMIT 1";
-            $result = $os->db->conn->query($sql);
-            $row = $result->fetch(PDO::FETCH_ASSOC);
-            if (strlen($row['id']) > 0)
-                $campo = $row['id'];
-        }
         if ($where == '')
             $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
         else
@@ -191,19 +184,19 @@ function selectOperativos()
     if (isset($_POST['busqueda_informe']) and ($_POST['busqueda_informe'] != '')) {
         $tipo = $_POST['busqueda_informe'];
         if ($where == '') {
-            $where = "WHERE (select count(*) from amc_operativos_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
+            $where = "WHERE (select count(*) from amc_personal_distributivo_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
             UPPER(a.direccion) like UPPER('%$tipo%') OR
             UPPER(a.hecho) like UPPER('%$tipo%') OR
             UPPER(a.medida) like UPPER('%$tipo%') OR
             UPPER(a.observaciones) like UPPER('%$tipo%')) AND
-            a.id_operativo = amc_operativos.id ) > 0 ";
+            a.id_operativo = amc_personal_distributivo.id ) > 0 ";
         } else {
-            $where = $where . " AND (select count(*) from amc_operativos_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
+            $where = $where . " AND (select count(*) from amc_personal_distributivo_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
             UPPER(a.direccion) like UPPER('%$tipo%') OR
             UPPER(a.hecho) like UPPER('%$tipo%') OR
             UPPER(a.medida) like UPPER('%$tipo%') OR
             UPPER(a.observaciones) like UPPER('%$tipo%')) AND
-            a.id_operativo = amc_operativos.id ) > 0               ";
+            a.id_operativo = amc_personal_distributivo.id ) > 0               ";
         }
     }
 
@@ -219,9 +212,9 @@ function selectOperativos()
     if (isset($_POST['busqueda_personal_asignado']) and ($_POST['busqueda_personal_asignado'] != '')) {
         $tipo = $_POST['busqueda_personal_asignado'];
         if ($where == '') {
-            $where = "WHERE (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0 ";
+            $where = "WHERE (select count(*) from amc_personal_distributivo_personal a where a.id_member = '$tipo' and a.id_operativo = amc_personal_distributivo.id ) > 0 ";
         } else {
-            $where = $where . " AND (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0  ";
+            $where = $where . " AND (select count(*) from amc_personal_distributivo_personal a where a.id_member = '$tipo' and a.id_operativo = amc_personal_distributivo.id ) > 0  ";
         }
     }
     if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
@@ -246,7 +239,7 @@ function selectOperativos()
         $data[] = $row;
     };
 
-    $sql = "SELECT count(*) AS total FROM amc_operativos $where";
+    $sql = "SELECT count(*) AS total FROM amc_personal_distributivo $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
@@ -282,7 +275,7 @@ function insertOperativos()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_operativos($cadenaCampos)
+    $sql = "INSERT INTO amc_personal_distributivo($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -304,7 +297,7 @@ function generaCodigoProcesoDenuncia()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_operativos";
+    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_personal_distributivo";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -328,12 +321,6 @@ function updateOperativos()
         else
             $data->finalizado = 'true';
     }
-    /*  if (isset($data->fallido)) {
-          if (!$data->fallido)
-              $data->fallido = 'false';
-          else
-              $data->fallido = 'true';
-      }*/
 
     if (isset($data->fecha_informe)) {
         $data->fecha_informe = NULL;
@@ -358,12 +345,12 @@ function updateOperativos()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_operativos SET  $cadenaDatos  WHERE amc_operativos . id = '$data->id' ";
+    $sql = "UPDATE amc_personal_distributivo SET  $cadenaDatos  WHERE amc_personal_distributivo.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos actualizado exitosamente" : $sql->errorCode(),
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_personal_distributivo actualizado exitosamente" : $sql->errorCode(),
         "message" => $message
     ));
 }
@@ -373,7 +360,7 @@ function selectOperativosForm()
     global $os;
     $id = (int)$_POST ['id'];
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_operativos WHERE id = $id";
+    $sql = "SELECT * FROM amc_personal_distributivo WHERE id = $id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -396,7 +383,7 @@ function updateOperativosForm()
     $detalle = $_POST["detalle"];
 
 
-    $sql = "UPDATE `amc_operativos` SET `detalle`='$detalle', `parroquias`='$parroquias', `barrios`='$barrios' WHERE (`id`='$id')";
+    $sql = "UPDATE `amc_personal_distributivo` SET `detalle`='$detalle', `parroquias`='$parroquias', `barrios`='$barrios' WHERE (`id`='$id')";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
@@ -409,12 +396,12 @@ function deleteOperativos()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_operativos WHERE id = $id";
+    $sql = "DELETE FROM amc_personal_distributivo WHERE id = $id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos, eliminado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_personal_distributivo, eliminado exitosamente" : $sql->errorCode()
     ));
 }
 
@@ -446,7 +433,7 @@ function validarCedulaCorreo($id)
 
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT cedula, email FROM amc_operativos WHERE id = $id";
+    $sql = "SELECT cedula, email FROM amc_personal_distributivo WHERE id = $id";
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);

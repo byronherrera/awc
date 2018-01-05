@@ -220,6 +220,23 @@ function comboUnidadesSinFiltro()
     );
 }
 
+function comboUnidadesPersonal()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+    $sql = "SELECT * FROM amc_unidades_personal ORDER BY nombre";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
 function comboOperativosEstados()
 {
     global $os;
@@ -402,6 +419,9 @@ switch ($_GET['tipo']) {
         break;
     case 'unidadessinfiltro' :
         comboUnidadesSinFiltro();
+        break;
+    case 'unidadespersonal' :
+        comboUnidadesPersonal();
         break;
     case 'operativosestados' :
         comboOperativosEstados();

@@ -140,31 +140,31 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo nivel MEDIDA OPERATIVO
         //inicio combo activo
-        storeOPOFAC = new Ext.data.JsonStore({
+        storePEOFAC = new Ext.data.JsonStore({
             root: 'users',
             fields: ['id', 'nombre'],
             autoLoad: true,
             data: {
                 users: [
-                    {"id": 'true', "nombre": "Si"},
-                    {"id": 'false', "nombre": "No"}
+                    {"id": '1', "nombre": "Si"},
+                    {"id": '0', "nombre": "No"}
                 ]
             }
         });
 
-        var comboOPOFAC = new Ext.form.ComboBox({
+        var comboPEOFAC = new Ext.form.ComboBox({
             id: 'comboOPOFAC',
-            store: storeOPOFAC,
+            store: storePEOFAC,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
             mode: 'local'
         });
 
-        function personalDespachadoActivo(id) {
-            var index = storeOPOFAC.find('id', id);
+        function personalActivo(id) {
+            var index = storePEOFAC.find('id', id);
             if (index > -1) {
-                var record = storeOPOFAC.getAt(index);
+                var record = storePEOFAC.getAt(index);
                 return record.get('nombre');
             }
         }
@@ -262,7 +262,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: ['id', 'nombre', 'orden'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=unidadessinfiltro',
+            url: 'modules/common/combos/combos.php?tipo=unidadespersonal',
             remoteSort: true, //true for server sorting
             sorters: [{
                 property: 'orden',
@@ -687,27 +687,24 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'id', allowBlank: false},
-                {name: 'id_persona', allowBlank: false},
-                {name: 'fecha_planificacion', type: 'date', dateFormat: 'c', allowBlank: false},
-                {name: 'fecha_inicio_planificacion', type: 'date', dateFormat: 'c', allowBlank: false},
-                {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: false},
-                {name: 'fecha_informe', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'id_tipo_control', allowBlank: false},
-                {name: 'id_nivel_complejidad', allowBlank: false},
-                {name: 'id_zonal', allowBlank: true},
-                {name: 'observaciones', allowBlank: true},
-                {name: 'tramite', allowBlank: true},
-                {name: 'tipo_personal', allowBlank: false},
-                {name: 'zona', allowBlank: true},
-                {name: 'id_unidad', allowBlank: true},
-                {name: 'punto_encuentro_planificado', allowBlank: true},
-                {name: 'id_persona_encargada', allowBlank: false},
-                /* {name: 'fallido', type: 'boolean', allowBlank: false},*/
-                /* {name: 'finalizado', type: 'boolean', allowBlank: false},*/
+                {name: 'cedula', allowBlank: false},
+                {name: 'apellidos', allowBlank: false},
+                {name: 'nombres', allowBlank: false},
+                {name: 'partida', allowBlank: false},
+                {name: 'rol', allowBlank: false},
+                {name: 'denominacion', allowBlank: false},
+                {name: 'grado', allowBlank: false},
+                {name: 'regimen', allowBlank: false},
+                {name: 'modalidad', allowBlank: false},
+                {name: 'rmu', allowBlank: false},
+                {name: 'unidad', allowBlank: false},
+                {name: 'telefono_institucional', allowBlank: false},
+                {name: 'extencion', allowBlank: false},
+                {name: 'piso', allowBlank: false},
                 {name: 'id_estado', allowBlank: false},
-                {name: 'visible', type: 'boolean', allowBlank: true}
+                {name: 'email', allowBlank: false}
+
+
             ]
         });
         var writerPersonal = new Ext.data.JsonWriter({
@@ -719,9 +716,9 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             proxy: proxyPersonal,
             reader: readerPersonal,
             writer: writerPersonal,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            autoSave: acceso,
             remoteSort: true,
-            baseParams: {//limit: limitepersonal,
+            baseParams: {
                 finalizados: finalizados,
                 accesosAdministradorOpe: accesosAdministradorOpe,
                 accesosPersonal: accesosPersonal,
@@ -737,203 +734,34 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             store: this.storePersonal,
             columns: [
                 new Ext.grid.RowNumberer(),
-                /* {
-                 header: 'Código',
-                 dataIndex: 'codigo_personal',
-                 sortable: true,
-                 width: 45
-                 },*/
-                {
-                    header: 'Código',
-                    dataIndex: 'id',
-                    sortable: true,
-                    width: 45
-                },
-                {
-                    header: 'Visible',
-                    dataIndex: 'visible',
+                {header: 'Id', dataIndex: 'id', sortable: true, width: 45 },
+                {   header: 'Activo',
+                    dataIndex: 'id_estado',
                     sortable: true,
                     width: 45,
                     align: 'center',
-                    editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , xtype: 'booleancolumn'
+                    editor: comboPEOFAC,
+                    renderer: personalActivo
                 },
-                {
-                    header: 'Fecha inicio',
-                    dataIndex: 'fecha_inicio_planificacion',
-                    sortable: true,
-                    width: 100,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
-                },
-                {
-                    header: 'Fecha Fin',
-                    dataIndex: 'fecha_fin_planificacion',
-                    sortable: true,
-                    width: 100,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
-                },
-                {
-                    header: 'Zonal',
-                    dataIndex: 'id_zonal',
-                    sortable: true,
-                    width: 100,
-                    editor: comboZONA, renderer: zonaAdm
-                },
-                {
-                    header: 'Tipo de control',
-                    dataIndex: 'id_tipo_control',
-                    sortable: true,
-                    width: 100,
-                    editor: comboOPTID, renderer: personalTipoPersonal
-                },
-                {
-                    header: 'Unidad',
-                    dataIndex: 'id_unidad',
-                    sortable: true,
-                    width: 120, editor: comboOPREA,
-                    renderer: personalUnidades
-                },
+                {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 90,editor: textField},
+                {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 140,editor: textField},
+                {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 140,editor: textField},
+                {header: 'partida', dataIndex: 'partida', sortable: true, width: 60,editor: textField, align: 'right'},
+                {header: 'rol', dataIndex: 'rol', sortable: true, width: 240,editor: textField},
+                {header: 'denominacion', dataIndex: 'denominacion', sortable: true, width:200,editor: textField},
+                {header: 'grado', dataIndex: 'grado', sortable: true, width: 60,editor: textField, align: 'right'},
 
-                {
-                    header: 'Complejidad',
-                    dataIndex: 'id_nivel_complejidad',
-                    sortable: true,
-                    width: 60,
-                    editor: comboOPNICO, renderer: personalNivelComplejidad
-                },
-                {
-                    header: 'Responsable',
-                    dataIndex: 'id_persona_encargada',
-                    sortable: true,
-                    width: 120,
-                    editor: comboPRD,
-                    renderer: personaReceptaDenuncia,
-                    /*
-                     editor: comboOPPERENC,
-                     renderer: personalPersonalEncargado,*/
-                    id: 'id_persona_encargada'
-                },
-                {
-                    header: 'Lugar intervención',
-                    dataIndex: 'zona',
-                    sortable: true,
-                    width: 130,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Punto Encuentro',
-                    dataIndex: 'punto_encuentro_planificado',
-                    sortable: true,
-                    width: 130,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Observaciones',
-                    dataIndex: 'observaciones',
-                    sortable: true,
-                    width: 140,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Trámite',
-                    dataIndex: 'tramite',
-                    sortable: true,
-                    width: 50,
-                    editor: new Ext.form.NumberField({
-                        allowBlank: false,
-                        allowNegative: false,
-                        maxValue: 100000
-                    })
-                },
-                {
-                    header: 'Elaborado',
-                    dataIndex: 'id_persona',
-                    sortable: true,
-                    width: 100,
-                    hidden: true,
-                    //editor: comboPRD,
-                    renderer: personaReceptaDenuncia
-                },
-                {
-                    header: 'Fecha elaboracion',
-                    dataIndex: 'fecha_planificacion',
-                    sortable: true,
-                    width: 100, hidden: true,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
-                },
+                {header: 'regimen', dataIndex: 'regimen', sortable: true, width: 200,editor: textField},
+                {header: 'modalidad', dataIndex: 'modalidad', sortable: true, width: 200,editor: textField},
+                {header: 'rmu', dataIndex: 'rmu', sortable: true, width: 90,editor: textField, renderer : 'usMoney', align: 'right'},
+                {header: 'unidad', dataIndex: 'unidad', sortable: true, width: 200, editor: comboOPREA,
+                    renderer: personalUnidades},
+                {header: 'telefono_institucional', dataIndex: 'telefono_institucional', sortable: true, width: 80,editor: textField, align: 'right'},
 
-                {
-                    header: 'Tipo planificación'
-                    , dataIndex: 'tipo_personal'
-                    , align: 'left'
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , sortable: true
-                    , width: 140
-                    , editor: comboOPTIPO
-                    , renderer: personalTipo
-                },
-
-                {
-                    header: 'Fecha informe',
-                    dataIndex: 'fecha_informe',
-                    sortable: true,
-                    width: 100, hidden: true,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
-                },
-                {
-                    header: 'Fecha Real Inicio',
-                    dataIndex: 'fecha_real_inicio',
-                    sortable: true,
-                    width: 100, hidden: true,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
-                },
-                {
-                    header: 'Fecha Real Fin',
-                    dataIndex: 'fecha_real_fin',
-                    sortable: true,
-                    width: 100, hidden: true,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
-                },
-                {
-                    header: 'Estado',
-                    dataIndex: 'id_estado',
-                    sortable: true,
-                    width: 100,
-                    editor: comboOPESTA,
-                    renderer: personalEstados
-                },
-
+                {header: 'extencion', dataIndex: 'extencion', sortable: true, width: 80,editor: textField, align: 'right'},
+                {header: 'email', dataIndex: 'email', sortable: true, width: 140,editor: textField},
+                {header: 'rol', dataIndex: 'rol', sortable: true, width: 140,editor: textField},
+                {header: 'piso', dataIndex: 'piso', sortable: true, width: 140,editor: textField}
             ],
             viewConfig: {
                 forceFit: false,
@@ -1435,37 +1263,29 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'id_zonal',
+                            key: 'apellidos',
                             scope: this,
-                            text: 'Zona'
+                            text: 'Apellidos'
                         },
                         {
-                            checked: false,
+                            checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'id_persona_encargada',
+                            key: 'unidad',
                             scope: this,
-                            text: 'Responsable'
+                            text: 'Unidad'
                         },
                         {
-                            checked: false,
+                            checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'punto_encuentro_planificado',
+                            key: 'modalidad',
                             scope: this,
-                            text: 'Punto encuentro'
-                        },
-                        {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'observaciones',
-                            scope: this,
-                            text: 'Observaciones'
+                            text: 'Modalidad'
                         }
                     ]
                 })
-                , text: 'Zona'
+                , text: 'Apellidos'
             });
 
             win = desktop.createWindow({
