@@ -79,6 +79,7 @@ function selectOperativos()
                 $campo = $row['id'];
         }
 
+
         if ($where == '')
             $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
         else
