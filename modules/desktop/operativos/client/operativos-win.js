@@ -13,6 +13,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
     createWindow: function () {
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
+        var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
         var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
         finalizados = true;
         limiteoperativos = 100;
@@ -381,6 +382,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             url: 'modules/common/combos/combos.php?tipo=personaloperativos',
             baseParams: {
                 accesosAdministradorOpe: accesosAdministradorOpe,
+                accesosAdministradorIns: accesosAdministradorIns,
                 accesosOperativos: accesosOperativos,
                 acceso: acceso
             }
@@ -400,12 +402,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function operativosPersonalEncargado(id) {
-
             if (id === '') return ' ';
             if (id === null) return ' ';
             var nombres = id.split(",");
             retorno = '';
-
             for (var i = 0; i < nombres.length; i++) {
                 index = storeOPPERENC.find('id', nombres[i]);
                 var record = storeOPPERENC.getAt(index);
@@ -428,6 +428,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             baseParams: {
                 todos: 'true',
                 accesosAdministradorOpe: accesosAdministradorOpe,
+                accesosAdministradorIns: accesosAdministradorIns,
                 accesosOperativos: accesosOperativos,
                 acceso: acceso
             }
@@ -1089,19 +1090,22 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
                                     Ext.getCmp('addoperativos').setDisabled(accesosAdministradorOpe ? false : true);
 
+                                    Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
+                                    Ext.getCmp('addoperativoparticipantes').setDisabled(false);
                                     // en caso que se tenga acceso tambien se habilitan o deshabilitan los botones para agregar detalle
                                     // valido si es el caso operativo tipo Permanentes Zonales
 
-                                    if (rec.get("tipo_operativo") == 2 ){
+
+                                    if  (rec.get("tipo_operativo") == 2 ) {
                                         Ext.getCmp('borraroperativodetalle').setDisabled(false);
                                         Ext.getCmp('addoperativodetalle').setDisabled(false);
-                                        Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
-                                        Ext.getCmp('addoperativoparticipantes').setDisabled(false);
+                                        //Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
+                                       // Ext.getCmp('addoperativoparticipantes').setDisabled(false);
                                     } else {
                                         Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
                                         Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
-                                        Ext.getCmp('borraroperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
-                                        Ext.getCmp('addoperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
+                                       // Ext.getCmp('borraroperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
+                                       // Ext.getCmp('addoperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
                                     }
 
                                     Ext.getCmp('borraroperativodetallevehiculo').setDisabled(accesosAdministradorOpe ? false : true);
@@ -1956,7 +1960,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_persona_encargada',
                     sortable: true,
                     width: 40,
-                    renderer: operativosPersonalEncargado
+                    renderer: personaReceptaDenuncia
                 },
                 /*                {
                  header: 'Participantes',
@@ -2561,7 +2565,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                         }
                                                     ]
                                                 },
-                                                {
+                                               /* {
                                                     title: 'Vehículos asignados',
                                                     layout: 'column',
                                                     height: 250,
@@ -2586,7 +2590,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             disabled: true
                                                         }
                                                     ]
-                                                },
+                                                },*/
                                                 {
                                                     title: 'Informes',
                                                     layout: 'column',
