@@ -9,3 +9,7 @@ INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_me
 INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('9','1','','128');
 INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('10','1','','207');
 INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('37','1','','223');
+INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('72','1','','85');
+INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('72','1','','85');
+INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('72','1','','85');
+INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('73','1','','46');

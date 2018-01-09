@@ -1,21 +1,4 @@
-/*
-This file is part of Ext JS 3.4
 
-Copyright (c) 2011-2013 Sencha Inc
-
-Contact:  http://www.sencha.com/contact
-
-Commercial Usage
-Licensees holding valid commercial licenses may use this file in accordance with the Commercial
-Software License Agreement provided with the Software or, alternatively, in accordance with the
-terms contained in a written agreement between you and Sencha.
-
-If you are unsure which license is appropriate for your use, please contact the sales department
-at http://www.sencha.com/contact.
-
-Build date: 2013-04-03 15:07:25
-*/
-// Add the additional 'advanced' VTypes
 Ext.apply(Ext.form.VTypes, {
     daterange : function(val, field) {
         var date = field.parseDate(val);
@@ -37,22 +20,8 @@ Ext.apply(Ext.form.VTypes, {
                 end.validate();
             }
         }
-        /*
-         * Always return true since we're only using this vtype to set the
-         * min/max allowed values (these are tested for after the vtype test)
-         */
         return true;
     },
-
-    password : function(val, field) {
-        if (field.initialPassField) {
-            var pwd = Ext.getCmp(field.initialPassField);
-            return (val == pwd.getValue());
-        }
-        return true;
-    },
-
-    passwordText : 'Passwords do not match'
 });
 
 
@@ -65,9 +34,6 @@ Ext.onReady(function(){
 
     var bd = Ext.getBody();
 
-    /*
-     * ================  Date Range  =======================
-     */
 
     var dr = new Ext.FormPanel({
       labelWidth: 125,
@@ -94,32 +60,4 @@ Ext.onReady(function(){
 
     dr.render('dr');
 
-    /*
-     * ================  Password Verification =======================
-     */
-
-    var pwd = new Ext.FormPanel({
-      labelWidth: 125,
-      frame: true,
-      title: 'Password Verification',
-      bodyStyle:'padding:5px 5px 0',
-      width: 350,
-      defaults: {
-        width: 175,
-        inputType: 'password'
-      },
-      defaultType: 'textfield',
-      items: [{
-        fieldLabel: 'Password',
-        name: 'pass',
-        id: 'pass'
-      },{
-        fieldLabel: 'Confirm Password',
-        name: 'pass-cfrm',
-        vtype: 'password',
-        initialPassField: 'pass' // id of the initial password field
-      }]
-    });
-
-    pwd.render('pw');
 });

@@ -13,8 +13,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
     createWindow: function () {
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
-        var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
         var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
+
+        var fecha_inicio_planificacion;
+        var fecha_fin_planificacion;
+
         finalizados = true;
         limiteoperativos = 100;
         this.selectOperativos = 0;
@@ -34,13 +37,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         var textField = new Ext.form.TextField({allowBlank: false});
 
-        function formatDate(value) {
+        function formatDate(value, field) {
             return value ? value.dateFormat('Y-m-d H:i') : '';
         }
 
-        function formatDateFull(value) {
-            return value ? value.dateFormat('Y-m-d H:i:s') : '';
-        }
 
 // inicio combos secretaria
 
@@ -382,7 +382,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             url: 'modules/common/combos/combos.php?tipo=personaloperativos',
             baseParams: {
                 accesosAdministradorOpe: accesosAdministradorOpe,
-                accesosAdministradorIns: accesosAdministradorIns,
                 accesosOperativos: accesosOperativos,
                 acceso: acceso
             }
@@ -402,10 +401,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function operativosPersonalEncargado(id) {
+
             if (id === '') return ' ';
             if (id === null) return ' ';
             var nombres = id.split(",");
             retorno = '';
+
             for (var i = 0; i < nombres.length; i++) {
                 index = storeOPPERENC.find('id', nombres[i]);
                 var record = storeOPPERENC.getAt(index);
@@ -428,7 +429,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             baseParams: {
                 todos: 'true',
                 accesosAdministradorOpe: accesosAdministradorOpe,
-                accesosAdministradorIns: accesosAdministradorIns,
                 accesosOperativos: accesosOperativos,
                 acceso: acceso
             }
@@ -865,7 +865,26 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     renderer: formatDate,
                     editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
+                        timeFormat: 'H:i',
+                        listeners: {
+                            change: function (field, val, valOld) {
+                                //fecha inicial debe ser mayor que la final
+                                if (val > fecha_fin_planificacion)
+                                    AppMsg.setAlert("Alerta ", 'Fecha inicial no  debe ser mayor que fecha final');
+                                fecha_inicio_planificacion = val
+                                //fecha inicial no debe ser mayor de 12 horas
+                                var diff = Math.abs(fecha_fin_planificacion - fecha_inicio_planificacion) / 3600000;
+                                if (diff > 12)
+                                    AppMsg.setAlert("Alerta ", 'Fecha final supera las 12 horas de operativo, están ' + parseFloat(diff).toFixed(1) + " horas");
+                                else
+                                    AppMsg.setAlert("Observación ", 'Están ' + parseFloat(diff).toFixed(1) + " horas de operativo");
+                                // alerta fecha menor a la actual
+                                fecha_actual = new Date();
+                                if (val < fecha_actual ) {
+                                    AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
+                                }
+                            }
+                        }
                     })
                 },
                 {
@@ -876,7 +895,26 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     renderer: formatDate,
                     editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
+                        timeFormat: 'H:i',
+                        listeners: {
+                            change: function (field, val, valOld) {
+                                //fecha inicial debe ser mayor que la final
+                                if (val < fecha_inicio_planificacion)
+                                    AppMsg.setAlert("Alerta ", 'Fecha final debe ser mayor que fecha inicial');
+                                fecha_fin_planificacion = val
+                                //fecha inicial no debe ser mayor de 12 horas
+                                var diff = Math.abs(fecha_fin_planificacion - fecha_inicio_planificacion) / 3600000;
+                                if (diff > 12)
+                                    AppMsg.setAlert("Alerta ", 'Fecha final supera las 12 horas de operativo, están ' + parseFloat(diff).toFixed(1) + " horas");
+                                else
+                                    AppMsg.setAlert("Observación ", 'Están ' + parseFloat(diff).toFixed(1) + " horas de operativo");
+                                // alerta fecha menor a la actual
+                                fecha_actual = new Date();
+                                if (val < fecha_actual ) {
+                                    AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
+                                }
+                            }
+                        }
                     })
                 },
                 {
@@ -972,7 +1010,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         timeFormat: 'H:i'
                     })
                 },
-
                 {
                     header: 'Tipo planificación'
                     , dataIndex: 'tipo_operativo'
@@ -985,7 +1022,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     , editor: comboOPTIPO
                     , renderer: operativosTipo
                 },
-
                 {
                     header: 'Fecha informe',
                     dataIndex: 'fecha_informe',
@@ -1026,8 +1062,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     width: 100,
                     editor: comboOPESTA,
                     renderer: operativosEstados
-                },
-
+                }
             ],
             viewConfig: {
                 forceFit: false,
@@ -1038,6 +1073,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                     var diasDif = fechaActual.getTime() - fechaOperativo.getTime();
                     var horas = Math.round(diasDif / (1000 * 60 * 60 ));
+
 
                     if ((record.get('id_estado') == 1) && (horas > 86)) {
                         return 'redstate';
@@ -1059,6 +1095,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     singleSelect: true,
                     listeners: {
                         rowselect: function (sm, row, rec) {
+                            fecha_inicio_planificacion = rec.get('fecha_inicio_planificacion')
+                            fecha_fin_planificacion = rec.get('fecha_fin_planificacion');
 
                             // recuperamos la informacion de personal asignado a ese operativo
                             selectOperativos = rec.id;
@@ -1096,16 +1134,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     // valido si es el caso operativo tipo Permanentes Zonales
 
 
-                                    if  (rec.get("tipo_operativo") == 2 ) {
+                                    if (rec.get("tipo_operativo") == 2) {
                                         Ext.getCmp('borraroperativodetalle').setDisabled(false);
                                         Ext.getCmp('addoperativodetalle').setDisabled(false);
                                         //Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
-                                       // Ext.getCmp('addoperativoparticipantes').setDisabled(false);
+                                        // Ext.getCmp('addoperativoparticipantes').setDisabled(false);
                                     } else {
                                         Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
                                         Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
-                                       // Ext.getCmp('borraroperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
-                                       // Ext.getCmp('addoperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
+                                        // Ext.getCmp('borraroperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
+                                        // Ext.getCmp('addoperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
                                     }
 
                                     Ext.getCmp('borraroperativodetallevehiculo').setDisabled(accesosAdministradorOpe ? false : true);
@@ -1960,7 +1998,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_persona_encargada',
                     sortable: true,
                     width: 40,
-                    renderer: personaReceptaDenuncia
+                    renderer: operativosPersonalEncargado
                 },
                 /*                {
                  header: 'Participantes',
@@ -2565,7 +2603,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                         }
                                                     ]
                                                 },
-                                               /* {
+                                                {
                                                     title: 'Vehículos asignados',
                                                     layout: 'column',
                                                     height: 250,
@@ -2590,7 +2628,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             disabled: true
                                                         }
                                                     ]
-                                                },*/
+                                                },
                                                 {
                                                     title: 'Informes',
                                                     layout: 'column',

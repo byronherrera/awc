@@ -301,8 +301,8 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 // actualizar detalle idGuia
     $noExistenFilas = false;
     //cambio para impresiono el nivel de complejidad
-    $niveles_complejidad = array("Alto", "Medio", "Bajo");
-    $test = $rowdetalle['id_nivel_complejidad'];
+    $niveles_complejidad = array("Alto", "Medio", "Bajo","");
+
     if (isset($rowdetalle['id_nivel_complejidad']) and ($rowdetalle['id_nivel_complejidad']!= ' ')) {
         $rowdetalle['id_nivel_complejidad'] = $niveles_complejidad[$rowdetalle['id_nivel_complejidad'] - 1];
     } else {

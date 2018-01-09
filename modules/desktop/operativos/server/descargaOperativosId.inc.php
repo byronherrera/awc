@@ -140,6 +140,9 @@ textoSiguieteFila('PERSONAL AMC PARTICIPANTE EN EL OPERATIVO ', 'A', 'F', 'left'
 textoSiguieteFila("NOMBRE", 'A', 'C', 'center', true, "B");
 textoSiguieteFila("OBSERVACIONES", 'D', 'F', 'center', false, "B");
 
+textoSiguieteFila(regresaNombre($operativo['id_persona_encargada']), 'A', 'C', 'left');
+textoSiguieteFila('RESPONSABLE', 'D', 'F', 'left', false);
+
 
 // recuperamos los nombres de los usuarios
 $sql = "SELECT id_member, observaciones, asistencia
