@@ -343,12 +343,7 @@ function updateOperativos()
         else
             $data->finalizado = 'true';
     }
-    /*  if (isset($data->fallido)) {
-          if (!$data->fallido)
-              $data->fallido = 'false';
-          else
-              $data->fallido = 'true';
-      }*/
+
 
     if (isset($data->fecha_informe)) {
         $data->fecha_informe = NULL;
@@ -378,8 +373,7 @@ function updateOperativos()
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos actualizado exitosamente" : $sql->errorCode(),
-        "message" => $message
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos actualizado exitosamente" : $sql->errorCode()
     ));
 }
 

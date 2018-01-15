@@ -1,48 +1,44 @@
 {
-  "id": "operativos",
-  "type": "desktop/operativos",
+  "id": "mantenimiento",
+  "type": "desktop/mantenimiento",
   "about": {
     "author": "",
-    "description": "AMC Operativos.",
-    "name": "Operativos",
+    "description": "Mantenimiento de Mantenimiento.",
+    "name": "Ventana Mantenimiento",
     "url": "",
     "version": "1.0"
   },
-
-  "dependencies": [
-    { "id": "checkbox", "type": "library" }
-  ],
   "server": {
     "methods": [
-      { "name": "accesosAdministradorOpe", "description": "Administrador operativos" },
-      { "name": "accesosOperativos", "description": "Usuario opeativos" },
-      { "name": "accesosRecepcionOpe", "description": "Recepcion operativos" }
+      { "name": "accesosAdministrador", "description": "Full acceso" },
+      { "name": "accesosSecretaria", "description": "Full acceso" },
+      { "name": "accesosZonales", "description": "Personal de zonales" }
+
     ],
-    "class": "QoOperativos",
-    "file": "desktop/operativos/operativos.php"
+    "class": "QoMantenimiento",
+    "file": "desktop/mantenimiento/mantenimiento.php"
   },
   "client": {
-    "class": "QoDesk.OperativosWindow",
+    "class": "QoDesk.MantenimientoWindow",
     "css": [
       {
-        "directory": "desktop/operativos/client/resources/",
+        "directory": "desktop/mantenimiento/client/resources/",
         "files": [ "styles.css" ]
       },
       {
         "directory": "common/libraries/",
-        "files": [ "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css", "fileuploadfield/FileUploadField.css" ]
+        "files": [  "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css"   ]
       }
     ],
     "javascript": [
       {
         "directory": "common/libraries/",
-        "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js", "fileuploadfield/FileUploadField.js"  ]
+        "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
       },
       {
-        "directory": "desktop/operativos/client/",
-        "files": [  "operativos-win.js" ]
+        "directory": "desktop/mantenimiento/client/",
+        "files": [  "mantenimiento-win.js" ]
       },
-
       {
         "directory": "qwiki/admin/client/",
         "files": [ "QoAdmin.js" ]
@@ -54,10 +50,10 @@
     ],
     "launcher": {
       "config": {
-        "iconCls": "operativos-icon",
-        "shortcutIconCls": "operativos-shortcut",
-        "text": "Operativos",
-        "tooltip": "<b>Operativos - AMC</b>"
+        "iconCls": "mantenimiento-icon",
+        "shortcutIconCls": "mantenimiento-shortcut",
+        "text": "Mantenimiento",
+        "tooltip": "<b>Mantenimiento</b>"
       },
       "paths": {
         "startmenu": "/"

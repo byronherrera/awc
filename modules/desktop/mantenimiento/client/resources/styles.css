@@ -1,7 +1,7 @@
-.luae-icon { background-image: url(images/luae.png) !important; }
-.x-btn-large .luae-icon { background-image: url(images/luae32.png) !important; }
-.luae-shortcut { background-image: url(images/luae48.png) !important; }
-#luae-nav-panel li { margin-bottom:5px; }
+.mantenimiento-icon { background-image: url(images/mantenimiento.png) !important; }
+.x-btn-large .mantenimiento-icon { background-image: url(images/mantenimiento32.png) !important; }
+.mantenimiento-shortcut { background-image: url(images/mantenimiento48.png) !important; }
+#mantenimiento-nav-panel li { margin-bottom:5px; }
 .save-icon{background:transparent url(images/add.png) 0 0 no-repeat !important;}
 .delete-icon{background:transparent url(images/delete.png) 0 0 no-repeat !important;}
 .print-icon{background:transparent url(images/printer.png) 0 0 no-repeat !important;}

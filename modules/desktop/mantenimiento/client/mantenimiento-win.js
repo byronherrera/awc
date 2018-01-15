@@ -1,11 +1,11 @@
-QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
-    id: 'luae',
-    type: 'desktop/luae',
+QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
+    id: 'mantenimiento',
+    type: 'desktop/mantenimiento',
 
     init: function () {
         this.launcher = {
             text: 'Recepción documentos',
-            iconCls: 'luae-icon',
+            iconCls: 'mantenimiento-icon',
             handler: this.createWindow,
             scope: this
         }
@@ -17,95 +17,70 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
         var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
         var desktop = this.app.getDesktop();
         var AppMsg = new Ext.AppMsg({});
-        var win = desktop.getWindow('grid-win-luae');
+        var win = desktop.getWindow('grid-win-mantenimiento');
 
-        var urlLuae = "modules/desktop/luae/server/";
+        var urlOrdenanzas = "modules/desktop/mantenimiento/server/";
 
         var textField = new Ext.form.TextField({allowBlank: false});
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i:s') : '';
         }
 
-        // inicio ventana luae
-        var proxyLuae = new Ext.data.HttpProxy({
+        // inicio ventana mantenimiento ordenanzas
+        var proxyOrdenanzas = new Ext.data.HttpProxy({
             api: {
-                create: urlLuae + "crudLuae.php?operation=insert",
-                read: urlLuae + "crudLuae.php?operation=select",
-                update: urlLuae + "crudLuae.php?operation=update",
-                destroy: urlLuae + "crudLuae.php?operation=delete"
+                create: urlOrdenanzas + "crudOrdenanzas.php?operation=insert",
+                read: urlOrdenanzas + "crudOrdenanzas.php?operation=select",
+                update: urlOrdenanzas + "crudOrdenanzas.php?operation=update",
+                destroy: urlOrdenanzas + "crudOrdenanzas.php?operation=delete"
             }
         });
 
-        var readerLuae = new Ext.data.JsonReader({
+        var readerOrdenanzas = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'numero_tramite', allowBlank: true},
-                {name: 'ruc_licencia', allowBlank: true},
-                {name: 'razon_social', allowBlank: true},
-                {name: 'codigo', allowBlank: true},
-                {name: 'descripcion_actividad_economica', allowBlank: true},
-                {name: 'patente', allowBlank: true},
-                {name: 'predio', allowBlank: true},
-                {name: 'categoria', allowBlank: true},
-                {name: 'secretaria_otorgante', allowBlank: true},
-                {name: 'parroquia', allowBlank: true},
-                {name: 'calle', allowBlank: true},
-                {name: 'calle2', allowBlank: true},
-                {name: 'numero', allowBlank: true},
-                {name: 'telefono1', allowBlank: true},
-                {name: 'telefono2', allowBlank: true},
-                {name: 'mail', allowBlank: true},
-                {name: 'estado', allowBlank: true},
-                {name: 'zonal', allowBlank: true},
+                {name: 'nombre', allowBlank: true},
+                {name: 'nombre_completo', allowBlank: true},
+                {name: 'activo', allowBlank: true},
+                {name: 'orden', allowBlank: true}
+
             ]
         });
-        var writerLuae = new Ext.data.JsonWriter({
+
+        var writerOrdenanzas = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
-        this.storeLuae = new Ext.data.Store({
+        this.storeOrdenanzas = new Ext.data.Store({
             id: "id",
-            proxy: proxyLuae,
-            reader: readerLuae,
-            writer: writerLuae,
+            proxy: proxyOrdenanzas,
+            reader: readerOrdenanzas,
+            writer: writerOrdenanzas,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
+            autoSave: true,
             baseParams: {}
         });
-        storeLuae = this.storeLuae;
-        limiteluae = 100;
+        storeOrdenanzas = this.storeOrdenanzas;
+        limitemantenimiento = 100;
 
-        storeLuae.baseParams = {
-            limit: limiteluae
+        storeOrdenanzas.baseParams = {
+            limit: limitemantenimiento
         };
 
-        this.gridLuae = new Ext.grid.EditorGridPanel({
+        this.gridOrdenanzas = new Ext.grid.EditorGridPanel({
             height: '100%',
-            store: this.storeLuae,
+            store: this.storeOrdenanzas,
             columns: [
                 new Ext.grid.RowNumberer(),
-                {header: 'Número trámite', dataIndex: 'numero_tramite', sortable: true,width: 125},
-                {header: 'RUC/Licencia', dataIndex: 'ruc_licencia', sortable: true,width: 100},
-                {header: 'Razón social', dataIndex: 'razon_social', sortable: true,width: 240},
-                {header: 'Código', dataIndex: 'codigo', sortable: true,width: 80},
-                {header: 'Descripción actividad económica', flex:1, dataIndex: 'descripcion_actividad_economica', sortable: true,width: 300},
-                {header: 'Patente', dataIndex: 'patente', sortable: true,width: 70},
-                {header: 'Predio', dataIndex: 'predio', sortable: true,width: 70},
-                {header: 'Parroquia', dataIndex: 'parroquia', sortable: true,width: 200},
-                {header: 'Calle', dataIndex: 'calle', sortable: true,width: 120},
-                {header: 'Calle2', dataIndex: 'calle2', sortable: true,width: 120},
-                {header: 'Número', dataIndex: 'numero', sortable: true,width: 80},
-                {header: 'Teléfono 1', dataIndex: 'telefono1', sortable: true,width:90},
-                {header: 'Teléfono 2', dataIndex: 'telefono2', sortable: true,width:90},
-                {header: 'Mail', dataIndex: 'mail', sortable: true,width: 100},
-                {header: 'Estado', dataIndex: 'estado', sortable: true,width: 90},
-                {header: 'Categoria', dataIndex: 'categoria', sortable: true,width: 80},
-                {header: 'Secretaria Otorgante', dataIndex: 'secretaria_otorgante', sortable: true,width: 60},
-                {header: 'Zonal', dataIndex: 'zonal', sortable: true,width: 100}
+                {header: 'nombre', dataIndex: 'nombre', sortable: true,width: 200, editor: textField},
+                {header: 'nombre_completo', dataIndex: 'nombre_completo', sortable: true,width: 200, editor: textField},
+                {header: 'activo', dataIndex: 'activo', sortable: true,width: 100, editor: textField},
+                {header: 'orden', dataIndex: 'orden', sortable: true,width: 100, editor: textField}
             ],
             viewConfig: {
                 forceFit: false
@@ -115,8 +90,8 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
             stripeRows: true,
             // paging bar on the bottom
             bbar: new Ext.PagingToolbar({
-                pageSize: limiteluae,
-                store: storeLuae,
+                pageSize: limitemantenimiento,
+                store: storeOrdenanzas,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
                 emptyMsg: "No existen trámites que mostrar"
@@ -133,7 +108,7 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
 
             var checkHandler = function (item, checked) {
                 if (checked) {
-                    var store = this.storeLuae;
+                    var store = this.storeOrdenanzas;
                     store.baseParams.filterField = item.key;
                     searchFieldBtn.setText(item.text);
                 }
@@ -141,7 +116,7 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
 
             var targetHandler = function (item, checked) {
                 if (checked) {
-                    //var store = this.storeLuae;
+                    //var store = this.storeOrdenanzas;
                     this.seleccionDepar = item.key;
                     this.targetFieldBtn.setText(item.text);
                 }
@@ -211,11 +186,11 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
             });
 
             win = desktop.createWindow({
-                id: 'grid-win-luae',
+                id: 'grid-win-mantenimiento',
                 title: 'Consulta LUAE',
                 width: winWidth,
                 height: winHeight,
-                iconCls: 'luae-icon',
+                iconCls: 'mantenimiento-icon',
                 shim: false,
                 animCollapse: false,
                 constrainHeader: true,
@@ -225,29 +200,63 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
                     , ' ', ' '
                     , new QoDesk.QoAdmin.SearchField({
                         paramName: 'filterText'
-                        , store: this.storeLuae
+                        , store: this.storeOrdenanzas
                     })
                 ],
                 layout: 'fit',
-                items: this.gridLuae
+                items: this.gridOrdenanzas
             });
         }
         win.show();
         setTimeout(function () {
-            this.storeLuae.load({
+            this.storeOrdenanzas.load({
                 params: {
                     start: 0,
-                    limit: limiteluae
+                    limit: limitemantenimiento
                 }
             });
         }, 10);
     },
 
+    deleteoperativos: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridOperativos.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeOperativos.remove(rows);
+                }
+            }
+        });
+    },
+    addoperativos: function () {
+        var operativos = new this.storeOperativos.recordType({
+            id: '',
+            nombre: '',
+            nombre_completo: '',
+            activo: '',
+            orden: '',
+        });
+        this.gridOperativos.stopEditing();
+        this.storeOperativos.insert(0, operativos);
+        this.gridOperativos.startEditing(0, 0);
+    },
     requestGridData: function () {
-        this.storeLuae.load({params:
+        this.storeOperativos.load();
+    },
+
+
+    requestGridData: function () {
+        this.storeOrdenanzas.load({params:
             {
                 start: 0,
-                limit: limiteluae
+                limit: limitemantenimiento
             }
         });
     },
