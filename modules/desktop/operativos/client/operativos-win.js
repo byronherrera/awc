@@ -13,6 +13,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
     createWindow: function () {
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
+        var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
         var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
 
         var fecha_inicio_planificacion;
@@ -820,6 +821,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             baseParams: {//limit: limiteoperativos,
                 finalizados: finalizados,
                 accesosAdministradorOpe: accesosAdministradorOpe,
+                accesosAdministradorIns: accesosAdministradorIns,
                 accesosOperativos: accesosOperativos,
                 acceso: acceso
             }
@@ -1941,7 +1943,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             reader: readerOperativos,
             writer: writerOperativos,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true
+            remoteSort: true,
+            baseParams: {//limit: limiteoperativos,
+                accesosAdministradorOpe: accesosAdministradorOpe,
+                accesosAdministradorIns: accesosAdministradorIns,
+                accesosOperativos: accesosOperativos
+
+            }
         });
 
         storeDocumentosReporte = this.storeDocumentosReporte
@@ -1998,7 +2006,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_persona_encargada',
                     sortable: true,
                     width: 40,
-                    renderer: operativosPersonalEncargado
+                    renderer: personaReceptaDenuncia
                 },
                 /*                {
                  header: 'Participantes',
@@ -3139,13 +3147,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
     requestGridDataDocumentoReporte: function () {
         this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
-        this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
 
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
         var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
+        var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
 
         this.storeDocumentosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
         this.storeDocumentosReporte.baseParams.accesosOperativos = accesosOperativos;
+        this.storeDocumentosReporte.baseParams.accesosAdministradorIns = accesosAdministradorIns;
+         
 
         this.storeDocumentosReporte.load();
     },

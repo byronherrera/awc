@@ -39,7 +39,6 @@ function selectOperativos()
     //TODO cambiar columna por defecto en busquedas
     $columnaBusqueda = 'id_zonal';
 
-
     $where = '';
     $usuarioLog = $os->get_member_id();
     if (isset($_POST['accesosOperativos'])) {
@@ -47,6 +46,14 @@ function selectOperativos()
         if ($accesosOperativos == 'true')
             $where = " WHERE $usuarioLog = id_persona_encargada ";
     }
+
+
+    if (isset($_POST['accesosAdministradorIns'])) {
+        $accesosOperativos = $_POST['accesosAdministradorIns'];
+        if ($accesosOperativos == 'true')
+                $where = " WHERE ($usuarioLog = id_persona_encargada or id_unidad = 3 ) ";
+    }
+
 
     if (isset($_POST['accesosAdministradorOpe'])) {
         $accesosOperativos = $_POST['accesosAdministradorOpe'];

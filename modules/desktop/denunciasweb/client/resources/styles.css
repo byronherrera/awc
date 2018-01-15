@@ -14,3 +14,4 @@
 
 .fondogris .x-panel-body { background-color: #e0eaee !important; height: -webkit-fill-available; padding: 10px}
 .fondogris .x-form-field{ background-color: #e0eaee !important; }
+.x-combo-list-inner, .x-combo-list {min-width: 220px !important;}
