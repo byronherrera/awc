@@ -371,7 +371,7 @@ function regresaTipoOperativo($id_dato)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_operativos_tipos WHERE id = " . $id_dato;
+    $sql = "SELECT * FROM amc_operativos_tipos WHERE id = '" . $id_dato . "'";
     $nombre = $os->db->conn->query($sql);
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['nombre'];

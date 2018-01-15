@@ -15,3 +15,4 @@ INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_me
 INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('73','1','','46');
 INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('80','1','','242');
 INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('80','1','','44');
+INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('91','1','','46');
