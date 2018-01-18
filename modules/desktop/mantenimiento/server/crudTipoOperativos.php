@@ -383,7 +383,7 @@ function updateOrdenanzasForm()
 
     }
     /*codigo_tramite='$codigo_tramite',*/
-    $sql = "UPDATE amc_ordenanzas SET 
+    $sql = "UPDATE amc_operativos_tipos SET 
             id = '$id',
             nombre = $nombre,
             nombre_completo = $nombre_completo,
@@ -404,7 +404,7 @@ function deleteOrdenanzas()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_ordenanzas WHERE id = $id";
+    $sql = "DELETE FROM amc_operativos_tipos WHERE id = $id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
