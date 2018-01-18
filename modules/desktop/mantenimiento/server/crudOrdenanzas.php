@@ -6,98 +6,12 @@ if (!$os->session_exists()) {
     die('No existe sesión!');
 }
 
-function selectProcedimientosCadena($procLista)
-{
-    global $os;
-    if (isset($procLista)) {
-        $os->db->conn->query("SET NAMES 'utf8'");
-        $sql = "SELECT amc_procedimientos.nombre FROM amc_procedimientos WHERE id in ( $procLista ) ORDER BY id";
-        $result = $os->db->conn->query($sql);
-        $data = array();
-
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $data[] = $row ['nombre'];
-        }
-        return implode(",\n", $data);
-    } else {
-        return '';
-    }
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT amc_procedimientos.nombre FROM amc_procedimientos WHERE id in ( $procLista ) ORDER BY id";
-    $result = $os->db->conn->query($sql);
-    $data = array();
-
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $data[] = $row ['nombre'];
-    }
-    return implode(",\n", $data);
-}
-
 function selectOrdenanzas()
 {
     global $os;
 
     $columnaBusqueda = 'busqueda_todos';
     $where = '';
-
-    if (isset($_POST['filterField'])) {
-        $columnaBusqueda = $_POST['filterField'];
-    }
-
-    if (isset($_POST['filterText'])) {
-        $campo = $_POST['filterText'];
-        $campo = str_replace(" ", "%", $campo);
-        if ($columnaBusqueda != 'busqueda_todos') {
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-        } else {
-            $listadoCampos = array(
-                'numero_tramite',
-                'ruc_licencia',
-                'razon_social',
-                'codigo',
-                'descripcion_actividad_economica',
-                'patente',
-                'predio',
-                'categoria',
-                'secretaria_otorgante',
-                'parroquia',
-                'calle',
-                'calle2',
-                'numero',
-                'telefono1',
-                'telefono2',
-                'mail',
-                'estado',
-                'zonal'
-            );
-            $cadena = '';
-            foreach ($listadoCampos as &$valor) {
-                $cadena  = $cadena  .   " $valor LIKE '%$campo%' OR ";
-            }
-
-            $cadena = substr($cadena,0,-3);
-            $where = " WHERE $cadena ";
-        }
-    }
-
-    if (isset($_POST['unidadfiltro'])) {
-        $unidad = $_POST['unidadfiltro'];
-        if ($where == '') {
-            $where = "WHERE reasignacion = $unidad ";
-        } else {
-            $where = " AND reasignacion = $unidad ";
-        }
-    }
-
-    if (isset($_POST['noenviados'])) {
-        if ($_POST['noenviados'] == 'true') {
-            if ($where == '') {
-                $where = " WHERE despacho_secretaria <> 'true'";
-            } else {
-                $where = $where . " AND despacho_secretaria <> 'true' ";
-            }
-        }
-    }
 
     if (isset ($_POST['start']))
         $start = $_POST['start'];
@@ -109,69 +23,6 @@ function selectOrdenanzas()
     else
         $limit = 100;
     $orderby = 'ORDER BY id ASC';
-    if (isset($_POST['sort'])) {
-        $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
-    }
-    // para los reportes
-    if (isset($_POST['busqueda_tipo_documento']) and ($_POST['busqueda_tipo_documento'] != '')) {
-        $tipo = $_POST['busqueda_tipo_documento'];
-        if ($where == '') {
-            $where = "WHERE id_tipo_documento = $tipo ";
-        } else {
-            $where = $where . " AND id_tipo_documento = $tipo ";
-        }
-    }
-    if (isset($_POST['busqueda_institucion']) and ($_POST['busqueda_institucion'] != '')) {
-        $tipo = $_POST['busqueda_institucion'];
-        if ($where == '') {
-            $where = "WHERE institucion = '$tipo' ";
-        } else {
-            $where = $where . " AND institucion = '$tipo' ";
-        }
-    }
-    if (isset($_POST['busqueda_caracter_tramite']) and ($_POST['busqueda_caracter_tramite'] != '')) {
-        $tipo = $_POST['busqueda_caracter_tramite'];
-        if ($where == '') {
-            $where = "WHERE id_caracter_tramite = '$tipo' ";
-        } else {
-            $where = $where . " AND id_caracter_tramite = '$tipo' ";
-        }
-    }
-
-    if (isset($_POST['busqueda_guia']) and ($_POST['busqueda_guia'] != '')) {
-        $tipo = $_POST['busqueda_guia'];
-        if ($where == '') {
-            $where = "WHERE guia = '$tipo' ";
-        } else {
-            $where = $where . " AND guia = '$tipo' ";
-        }
-    }
-
-    if (isset($_POST['busqueda_reasignacion']) and ($_POST['busqueda_reasignacion'] != '')) {
-        $tipo = $_POST['busqueda_reasignacion'];
-        if ($where == '') {
-            $where = "WHERE reasignacion in ($tipo) ";
-        } else {
-            $where = $where . " AND reasignacion in ($tipo) ";
-        }
-    }
-
-
-    if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
-        $fechainicio = $_POST['busqueda_fecha_inicio'];
-        if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin'] != '')) {
-            $fechafin = $_POST['busqueda_fecha_fin'];
-        } else {
-            $fechafin = date('Y\m\d H:i:s');;
-        }
-
-        if ($where == '') {
-            $where = "WHERE recepcion_documento between '$fechainicio' and '$fechafin'  ";
-        } else {
-            $where = $where . " AND recepcion_documento between '$fechainicio' and '$fechafin' ";
-        }
-    }
-
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_ordenanzas $where $orderby LIMIT $start, $limit";
@@ -181,7 +32,7 @@ function selectOrdenanzas()
         $data[] = $row;
     };
 
-    $sql = "SELECT count(*) AS total FROM amc_luae $where";
+    $sql = "SELECT count(*) AS total FROM amc_ordenanzas $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
@@ -199,9 +50,10 @@ function insertOrdenanzas()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
-    $data->despacho_secretaria = 'false';
-    $data->codigo_tramite = generaCodigoProcesoDenuncia();
-    $data->id_persona = $os->get_member_id();
+    //$data->despacho_secretaria = 'false';
+    $data->id = generaCodigoProcesoOrdenanza();
+    $data->orden = generaCodigoProcesoOrdenanza();
+    //$data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
 
     $cadenaDatos = '';
@@ -213,9 +65,9 @@ function insertOrdenanzas()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_luae($cadenaCampos)
+    $sql = "INSERT INTO amc_ordenanzas($cadenaCampos)
 	values($cadenaDatos);";
-    $sql = $os->db->conn->prepare($sql);
+     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
@@ -229,13 +81,13 @@ function insertOrdenanzas()
     ));
 }
 
-function generaCodigoProcesoDenuncia()
+function generaCodigoProcesoOrdenanza()
 {
     global $os;
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_luae";
+    $sql = "SELECT MAX(id) AS maximo FROM amc_ordenanzas";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -277,13 +129,13 @@ function updateOrdenanzas()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_luae SET  $cadenaDatos  WHERE amc_luae.id = '$data->id' ";
+    $sql = "UPDATE amc_ordenanzas SET  $cadenaDatos  WHERE amc_ordenanzas.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_luae actualizado exitosamente" : $sql->errorCode(),
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_ordenanzas actualizado exitosamente" : $sql->errorCode(),
         "message" => $message
     ));
 }
@@ -296,7 +148,7 @@ function validarCedulaCorreo($id)
 
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT cedula, email FROM amc_luae WHERE id = $id";
+    $sql = "SELECT cedula, email FROM amc_ordenanzas WHERE id = $id";
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -313,7 +165,7 @@ function selectOrdenanzasForm()
     global $os;
     $id = (int)$_POST ['id'];
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT *, (SELECT numero FROM amc_guias WHERE amc_guias.id = a.guia ) as guianumero, (SELECT COUNT(*) FROM amc_luae  b WHERE a.cedula = b.cedula and b.cedula <> '') as totaldocumentos FROM amc_luae as a  WHERE a.id = $id";
+    $sql = "SELECT *, (SELECT numero FROM amc_guias WHERE amc_guias.id = a.guia ) as guianumero, (SELECT COUNT(*) FROM amc_ordenanzas  b WHERE a.cedula = b.cedula and b.cedula <> '') as totaldocumentos FROM amc_ordenanzas as a  WHERE a.id = $id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -332,13 +184,11 @@ function updateOrdenanzasForm()
     $os->db->conn->query("SET NAMES 'utf8'");
 
     $id = $_POST["id"];
-    $id_persona = $_POST["id_persona"];
-    $recepcion_documento = $_POST["recepcion_documento"];
-    $id_tipo_documento = $_POST["id_tipo_documento"];
-    $num_documento = $_POST["num_documento"];
-    $remitente = $_POST["remitente"];
-    $observacion_secretaria = $_POST["observacion_secretaria"];
-    $asunto = addslashes($_POST["asunto"]);
+    $nombre = $_POST["nombre"];
+    $nombre_completo = $_POST["nombre_completo"];
+    $activo = $_POST["activo"];
+    $orden = $_POST["orden"];
+
     if (isset($_POST["reasignacion"])) {
         $reasignacion = $_POST["reasignacion"];
     } else {
@@ -353,12 +203,11 @@ function updateOrdenanzasForm()
         }
     }
     $guia = $_POST["guia"];
-    $despacho_secretaria = $_POST["despacho_secretaria"];
-    $descripcion_anexos = addslashes($_POST["descripcion_anexos"]);
-    $id_caracter_tramite = $_POST["id_caracter_tramite"];
-    $cantidad_fojas = $_POST["cantidad_fojas"];
-    $cedula = $_POST["cedula"];
-    $email = $_POST["email"];
+    $id = $_POST["id"];
+    $nombre = $_POST["nombre"];
+    $nombre_completo = $_POST["nombre_completo"];
+    $activo = $_POST["activo"];
+    $orden = $_POST["orden"];
 
 
     //para el caso de denuncias se valida que exista cedula y correo
@@ -385,22 +234,13 @@ function updateOrdenanzasForm()
 
     }
     /*codigo_tramite='$codigo_tramite',*/
-    $sql = "UPDATE amc_luae SET 
-            id_persona = '$id_persona',
-            recepcion_documento = '$recepcion_documento',
-            id_tipo_documento = '$id_tipo_documento',
-            num_documento = '$num_documento',
-            remitente = '$remitente',
-            asunto = '$asunto',
-            observacion_secretaria = '$observacion_secretaria',
-            reasignacion = '$reasignacion',
-            descripcion_anexos = '$descripcion_anexos',
-            id_caracter_tramite = '$id_caracter_tramite',
-            cantidad_fojas = '$cantidad_fojas' ,
-            cedula = '$cedula' ,
-            email = '$email'  ,
-            guia = '$guia'  ,
-            despacho_secretaria = '$despacho_secretaria'  
+    $sql = "UPDATE amc_ordenanzas SET 
+            id = '$id',
+            nombre = $nombre,
+            nombre_completo = $nombre_completo,
+            activo = $activo,
+            orden = $orden
+            
          
           WHERE id = '$id' ";
     $sql = $os->db->conn->prepare($sql);
@@ -415,12 +255,12 @@ function deleteOrdenanzas()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_luae WHERE id = $id";
+    $sql = "DELETE FROM amc_ordenanzas WHERE id = $id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_luae, eliminado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_ordenanzas, eliminado exitosamente" : $sql->errorCode()
     ));
 }
 
