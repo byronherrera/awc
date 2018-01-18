@@ -860,6 +860,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     , xtype: 'booleancolumn'
                 },
                 {
+                    header: 'Estado',
+                    dataIndex: 'id_estado',
+                    sortable: true,
+                    width: 100,
+                    editor: comboOPESTA,
+                    renderer: operativosEstados
+                },
+                {
                     header: 'Fecha inicio',
                     dataIndex: 'fecha_inicio_planificacion',
                     sortable: true,
@@ -1056,14 +1064,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         dateFormat: 'Y-m-d',
                         timeFormat: 'H:i'
                     })
-                },
-                {
-                    header: 'Estado',
-                    dataIndex: 'id_estado',
-                    sortable: true,
-                    width: 100,
-                    editor: comboOPESTA,
-                    renderer: operativosEstados
                 }
             ],
             viewConfig: {

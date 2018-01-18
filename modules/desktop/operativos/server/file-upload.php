@@ -12,9 +12,16 @@ if(isset($_POST['data'])){
     if($_POST['data']!= '0'){
         if(isset($_FILES)){
             $temp_file_name = $_FILES['photo-path']['tmp_name'];
+
             $original_file_name = $_FILES['photo-path']['name'];
             $uploaddir =   __DIR__  . "/../../../../imagenes/operativos/";
-            $uploadfile = $uploaddir . basename($_POST['data']. '-' . $_FILES['photo-path']['name']);
+
+            $nombreArchivo = $_FILES['photo-path']['name'];
+
+            $vowels = array("[", "]");
+            $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+
+            $uploadfile = $uploaddir . basename($_POST['data']. '-' .$nombreArchivo );
             if (move_uploaded_file($temp_file_name, $uploadfile)) {
                 // en caso de ser exito el ingreso entonces se inserta un registro en la base de datos
 
@@ -61,6 +68,10 @@ function insertParticipantes($url, $idOper)
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $id = 0;
     if ($row['total'] == 0 ) {
+
+        $vowels = array("[", "]");
+        $url = str_replace($vowels, "", $url);
+
         $sql = "INSERT INTO amc_operativos_imagenes (id_operativo, url) VALUES ('$idOper', '$url');";
         $sql = $os->db->conn->prepare($sql);
         $sql->execute();

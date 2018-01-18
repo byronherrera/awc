@@ -60,7 +60,7 @@ function selectOperativos()
         $acceso = $_POST['acceso'];
         if ($acceso == 'false')
             $where = "";
-            //$where = " WHERE $usuarioLog = id_persona_encargada ";
+        //$where = " WHERE $usuarioLog = id_persona_encargada ";
     }
 
     if (isset($_POST['filterField'])) {
@@ -75,14 +75,23 @@ function selectOperativos()
             $sql = "SELECT id FROM amc_unidades_personal WHERE UPPER(nombre) like UPPER('%$campo%') LIMIT 1";
             $result = $os->db->conn->query($sql);
             $row = $result->fetch(PDO::FETCH_ASSOC);
-            if (strlen($row['id']) > 0)
+            if (strlen($row['id']) > 0) {
                 $campo = $row['id'];
+            }
         }
 
-        if ($where == '')
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-        else
-            $where = $where . " AND $columnaBusqueda LIKE '%$campo%'";
+        if ($where == '') {
+            if ($columnaBusqueda == 'unidad')
+                $where = " WHERE $columnaBusqueda = '$campo'";
+            else
+                $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+
+        } else {
+            if ($columnaBusqueda == 'unidad')
+                $where = $where . " AND $columnaBusqueda = '$campo'";
+            else
+                $where = $where . " AND $columnaBusqueda LIKE '%$campo%'";
+        }
     }
 
     if (isset($_POST['unidadfiltro'])) {
@@ -114,10 +123,10 @@ function selectOperativos()
     else
         $limit = 100;
 
-    $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) DESC';
+    $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) ASC';
     if (isset($_POST['sort'])) {
         if ($_POST['sort'] == 'id') {
-            $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) DESC';
+            $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) ASC';
         } else {
             $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
         }
