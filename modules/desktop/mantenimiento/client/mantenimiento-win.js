@@ -100,7 +100,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Base Legal', dataIndex: 'base_legal', sortable: true, width: 200, editor: textField}
             ],
             viewConfig: {
-                forceFit: false
+                forceFit: true
             },
             sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
             border: false,
@@ -187,7 +187,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField}
             ],
             viewConfig: {
-                forceFit: false
+                forceFit: true
             },
             sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
             border: false,
@@ -450,7 +450,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField}
             ],
             viewConfig: {
-                forceFit: false
+                forceFit: true
             },
             sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
             border: false,
@@ -539,7 +539,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField}
             ],
             viewConfig: {
-                forceFit: false
+                forceFit: true
             },
             sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
             border: false,
