@@ -17,10 +17,10 @@
 .gold  { background-color: bisque !important;}
 .bluestate  { background-color: #A7C5DF !important;}
 .redstate  { background-color: #df8f83 !important;}
-.x-combo-list-inner, .x-combo-list* {min-width: 220px !important;}
-.x-checkboxcombo-list-inner, .x-checkboxcombo-list* {min-width: 220px !important;}
+.x-combo-list-inner {min-width: 220px !important;}
+.x-checkboxcombo-list-inner {min-width: 220px !important;}
 
-.x-checkboxcombo-list, .x-checkboxcombo-list-inner {
+.x-checkboxcombo-list, .x-checkboxcombo-list-inner, .x-combo-list {
     min-width: 220px !important;
 }
 

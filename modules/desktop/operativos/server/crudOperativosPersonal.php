@@ -10,7 +10,7 @@ if (!$os->session_exists()) {
 function selectPersonal()
 {
     global $os;
-    $id_operativo =  $_POST["id_operativo"] ;
+    $id_operativo = $_POST["id_operativo"];
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_operativos_personal WHERE id_operativo = $id_operativo  ORDER BY id DESC ";
@@ -25,14 +25,15 @@ function selectPersonal()
     );
 }
 
-function validarPersonal($id_member, $id_operativo) {
+function validarPersonal($id_member, $id_operativo)
+{
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT COUNT(*) AS total FROM amc_operativos_personal WHERE id_member = $id_member AND id_operativo = $id_operativo  " ;
+    $sql = "SELECT COUNT(*) AS total FROM amc_operativos_personal WHERE id_member = $id_member AND id_operativo = $id_operativo  ";
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);
-    if ($row['total'] == 0 ) {
+    if ($row['total'] == 0) {
         return '';
     } else {
         return 'El usuario ya existe';
@@ -52,28 +53,37 @@ function insertPersonal()
     $cadenaCampos = '';
 
     // validamos que la persona ya exista, si existe agregamos un mensjae de error
-    $message = validarPersonal($data->id_member,$data->id_operativo );
-    foreach ($data as $clave => $valor) {
-        $cadenaCampos = $cadenaCampos . $clave . ',';
-        $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+    $message = validarPersonal($data->id_member, $data->id_operativo);
+    if ($message = '') {
+        foreach ($data as $clave => $valor) {
+            $cadenaCampos = $cadenaCampos . $clave . ',';
+            $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        }
+        $cadenaCampos = substr($cadenaCampos, 0, -1);
+        $cadenaDatos = substr($cadenaDatos, 0, -1);
+
+        $sql = "INSERT INTO amc_operativos_personal ($cadenaCampos) values($cadenaDatos);";
+        $log = $sql;
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
+
+        $data->id = $os->db->conn->lastInsertId();
+        // genero el nuevo codigo de proceso
+
+        echo json_encode(array(
+            "success" => true,
+            "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
+            "data" => array($data),
+            "message" => $message
+        ));
+    } else {
+        echo json_encode(array(
+            "success" => true,
+            "msg" => "Insertado exitosamente",
+            "data" => '',
+            "message" => $message
+        ));
     }
-    $cadenaCampos = substr($cadenaCampos, 0, -1);
-    $cadenaDatos = substr($cadenaDatos, 0, -1);
-
-    $sql = "INSERT INTO amc_operativos_personal ($cadenaCampos) values($cadenaDatos);";
-    $log = $sql;
-    $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
-
-    $data->id = $os->db->conn->lastInsertId();
-    // genero el nuevo codigo de proceso
-
-    echo json_encode(array(
-        "success" => true,
-        "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
-        "data" => array($data),
-        "message" => $message
-    ));
 
     $fichero = 'crudOperativosPersonal.log';
     $actual = file_get_contents($fichero);
@@ -86,7 +96,7 @@ function updatePersonal()
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
-    $message = validarPersonal($data->id_member,$data->id_operativo );
+    $message = validarPersonal($data->id_member, $data->id_operativo);
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
