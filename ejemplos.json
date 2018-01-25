@@ -1,10 +1,10 @@
 {
-  "id": "mantenimiento",
-  "type": "desktop/mantenimiento",
+  "id": "inspeccion",
+  "type": "desktop/inspeccion",
   "about": {
     "author": "",
-    "description": "Mantenimiento de Mantenimiento.",
-    "name": "Ventana Mantenimiento",
+    "description": "Inspeccion de Inspeccion.",
+    "name": "Ventana Inspeccion",
     "url": "",
     "version": "1.0"
   },
@@ -15,14 +15,14 @@
       { "name": "accesosZonales", "description": "Personal de zonales" }
 
     ],
-    "class": "QoMantenimiento",
-    "file": "desktop/mantenimiento/mantenimiento.php"
+    "class": "QoInspeccion",
+    "file": "desktop/inspeccion/inspeccion.php"
   },
   "client": {
-    "class": "QoDesk.MantenimientoWindow",
+    "class": "QoDesk.InspeccionWindow",
     "css": [
       {
-        "directory": "desktop/mantenimiento/client/resources/",
+        "directory": "desktop/inspeccion/client/resources/",
         "files": [ "styles.css" ]
       },
       {
@@ -36,8 +36,8 @@
         "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
       },
       {
-        "directory": "desktop/mantenimiento/client/",
-        "files": [  "mantenimiento-win.js" ]
+        "directory": "desktop/inspeccion/client/",
+        "files": [  "inspeccion-win.js" ]
       },
       {
         "directory": "qwiki/admin/client/",
@@ -50,10 +50,10 @@
     ],
     "launcher": {
       "config": {
-        "iconCls": "mantenimiento-icon",
-        "shortcutIconCls": "mantenimiento-shortcut",
-        "text": "Mantenimiento",
-        "tooltip": "<b>Mantenimiento</b>"
+        "iconCls": "inspeccion-icon",
+        "shortcutIconCls": "inspeccion-shortcut",
+        "text": "Inspeccion",
+        "tooltip": "<b>Inspeccion</b>"
       },
       "paths": {
         "startmenu": "/"

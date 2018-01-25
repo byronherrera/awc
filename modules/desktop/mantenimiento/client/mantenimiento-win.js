@@ -161,7 +161,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
             //baseParams: {}
         });
         storeUnidades = this.storeUnidades;
-        limitemantenimiento = 100;
+        limitemantenimiento = 20;
         storeUnidades.baseParams = {
             limit: limitemantenimiento
         };
