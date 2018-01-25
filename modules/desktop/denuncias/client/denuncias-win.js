@@ -2193,7 +2193,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                             //this.gridDenunciasGuia
                         }
-                        /*
                         , {
                             autoScroll: true,
                             title: 'Unidades',
@@ -2249,7 +2248,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ],
                             items: this.gridDenunciasZonas
-                        }*/
+                        }
                         , {
                             title: 'Reportes',
                             closable: true,
@@ -2261,6 +2260,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     handler: this.requestGridDataDocumentoReporte,
                                     scope: this,
                                     text: 'Buscar'
+
 
                                 },
                                 {
@@ -2306,7 +2306,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                             //this.gridReportes
                         }
-                        /*
+
                         , {
                             autoScroll: true,
                             title: 'Procedimientos',
@@ -2335,7 +2335,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ],
                             items: this.gridDenunciasProcedimientos
-                        }*/
+                        }
 
                     ]
                 })

@@ -201,6 +201,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo nivel complejidad
 
         //inicio combo tipo personal
@@ -655,8 +656,6 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
 // inicio pestañas de mantenimiento
 
 
-
-
 // fin pestañas de mantenimiento
 
         // inicio ventana personal
@@ -734,8 +733,9 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             store: this.storePersonal,
             columns: [
                 new Ext.grid.RowNumberer(),
-                {header: 'Id', dataIndex: 'id', sortable: true, width: 45 },
-                {   header: 'Activo',
+                {header: 'Id', dataIndex: 'id', sortable: true, width: 45},
+                {
+                    header: 'Activo',
                     dataIndex: 'id_estado',
                     sortable: true,
                     width: 45,
@@ -743,25 +743,49 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                     editor: comboPEOFAC,
                     renderer: personalActivo
                 },
-                {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 90,editor: textField},
-                {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 140,editor: textField},
-                {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 140,editor: textField},
-                {header: 'partida', dataIndex: 'partida', sortable: true, width: 60,editor: textField, align: 'right'},
-                {header: 'rol', dataIndex: 'rol', sortable: true, width: 240,editor: textField},
-                {header: 'denominacion', dataIndex: 'denominacion', sortable: true, width:200,editor: textField},
-                {header: 'grado', dataIndex: 'grado', sortable: true, width: 60,editor: textField, align: 'right'},
+                {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 90, editor: textField},
+                {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 140, editor: textField},
+                {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 140, editor: textField},
+                {header: 'partida', dataIndex: 'partida', sortable: true, width: 60, editor: textField, align: 'right'},
+                {header: 'rol', dataIndex: 'rol', sortable: true, width: 240, editor: textField},
+                {header: 'denominacion', dataIndex: 'denominacion', sortable: true, width: 200, editor: textField},
+                {header: 'grado', dataIndex: 'grado', sortable: true, width: 60, editor: textField, align: 'right'},
 
-                {header: 'regimen', dataIndex: 'regimen', sortable: true, width: 200,editor: textField},
-                {header: 'modalidad', dataIndex: 'modalidad', sortable: true, width: 200,editor: textField},
-                {header: 'rmu', dataIndex: 'rmu', sortable: true, width: 90,editor: textField, renderer : 'usMoney', align: 'right'},
-                {header: 'unidad', dataIndex: 'unidad', sortable: true, width: 200, editor: comboOPREA,
-                    renderer: personalUnidades},
-                {header: 'telefono_institucional', dataIndex: 'telefono_institucional', sortable: true, width: 80,editor: textField, align: 'right'},
+                {header: 'regimen', dataIndex: 'regimen', sortable: true, width: 200, editor: textField},
+                {header: 'modalidad', dataIndex: 'modalidad', sortable: true, width: 200, editor: textField},
+                {
+                    header: 'rmu',
+                    dataIndex: 'rmu',
+                    sortable: true,
+                    width: 90,
+                    editor: textField,
+                    renderer: 'usMoney',
+                    align: 'right'
+                },
+                {
+                    header: 'unidad', dataIndex: 'unidad', sortable: true, width: 200, editor: comboOPREA,
+                    renderer: personalUnidades
+                },
+                {
+                    header: 'telefono_institucional',
+                    dataIndex: 'telefono_institucional',
+                    sortable: true,
+                    width: 80,
+                    editor: textField,
+                    align: 'right'
+                },
 
-                {header: 'extencion', dataIndex: 'extencion', sortable: true, width: 80,editor: textField, align: 'right'},
-                {header: 'email', dataIndex: 'email', sortable: true, width: 140,editor: textField},
-                {header: 'rol', dataIndex: 'rol', sortable: true, width: 140,editor: textField},
-                {header: 'piso', dataIndex: 'piso', sortable: true, width: 140,editor: textField}
+                {
+                    header: 'extencion',
+                    dataIndex: 'extencion',
+                    sortable: true,
+                    width: 80,
+                    editor: textField,
+                    align: 'right'
+                },
+                {header: 'email', dataIndex: 'email', sortable: true, width: 140, editor: textField},
+                {header: 'rol', dataIndex: 'rol', sortable: true, width: 140, editor: textField},
+                {header: 'piso', dataIndex: 'piso', sortable: true, width: 140, editor: textField}
             ],
             viewConfig: {
                 forceFit: false,
@@ -784,7 +808,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                         rowselect: function (sm, row, rec) {
                             // recuperamos la informacion de personal asignado a ese personal
                             selectPersonal = rec.id;
-                             //maestro detalle llamadas
+                            //maestro detalle llamadas
                             //storePersonalParticipantes.load({params: {id_personal: rec.id}});
                             //storePersonalImagenes.load({params: {id_personal: rec.id}});
 
@@ -792,7 +816,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                             if (acceso) {
                                 //para el caso que se es administrador
                                 if (accesosAdministradorOpe) {
-                                   // Ext.getCmp('savedetallepersonal').setDisabled(false);
+                                    // Ext.getCmp('savedetallepersonal').setDisabled(false);
                                 }
                             }
                         }
@@ -994,7 +1018,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
 
             this.formConsultaDocumentos = new Ext.FormPanel({
                 layout: 'column',
-               // title: 'Ingrese los parámetros',
+                // title: 'Ingrese los parámetros',
                 frame: true,
                 bodyStyle: 'padding:5px 5px 0',
                 items: [
