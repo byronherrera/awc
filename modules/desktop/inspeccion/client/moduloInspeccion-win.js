@@ -328,7 +328,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridModuloInspeccion = new Ext.grid.EditorGridPanel({
             id: 'gridModuloInspeccion',
             xtype: "grid",
-            height: 100,
+            height: 300,
             store: this.storeModuloInspeccion,
             columns: [
                 //Definición de campos bdd Inspeccion
@@ -861,6 +861,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 shim: false,
                 animCollapse: false,
                 constrainHeader: true,
+                layout: 'fit',
                 //Creación de panel de pestañas
                 items: new Ext.TabPanel({
                     activeTab: 0,
@@ -883,8 +884,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             autoScroll: true,
                             title: 'Inspección',
                             closable: true,
-                            layout: 'fit',
-                            height: winHeight-70,
+                            //layout: 'fit',
+                            //height: winHeight-70,
                             //disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
                             //Barra de botones
                             tbar: [
@@ -926,7 +927,19 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                 })
                             ],
                             //Llamado a función que arma la tabla de datos
-                            items: this.gridModuloInspeccion
+                            items: [{
+                                id: 'formcabeceraoperativos',
+                                titleCollapse: true,
+                                flex: 1,
+                                autoScroll: true,
+                                layout: 'column',
+                                items: this.gridModuloInspeccion
+                            },{
+                                flex: 2,
+                                bodyStyle: 'padding:0; background: #DFE8F6',
+                                layout: 'column'
+                            }],
+
                         }
                     ]
                 })
