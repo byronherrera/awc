@@ -603,6 +603,34 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo Estado Recepcion Información Operativos ESOPREA
 
+        //inicio combo estado retiros operativo ESREOP
+        storeESREOP = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": "Perecible", "nombre": "Perecible"},
+                    {"id": "No perecible", "nombre": "No perecible"}
+                ]
+            }
+        });
+
+        var comboESREOP = new Ext.form.ComboBox({
+            id: 'comboESREOP',
+            store: storeESREOP,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function estadoRetirosAdm(id) {
+                return id;
+        }
+
+        //fin combo Estado Recepcion Información Operativos ESREOP
+
         //inicio combo procedimientos PRSA
         storePRSA = new Ext.data.JsonStore({
             root: 'data',
@@ -1106,6 +1134,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             storeOperativosVehiculos.load({params: {id_operativo: rec.id}});
                             storeOperativosInforme.load({params: {id_operativo: rec.id}});
                             storeOperativosParticipantes.load({params: {id_operativo: rec.id}});
+                            storeOperativosRetiros.load({params: {id_operativo: rec.id}});
                             storeOperativosImagenes.load({params: {id_operativo: rec.id}});
 
                             // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
@@ -1114,12 +1143,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('informesOperativosTab').setDisabled(acceso ? false : true);
                                     Ext.getCmp('imagenesOperativosTab').setDisabled(acceso ? false : true);
                                     Ext.getCmp('detalleOperativosTab').setDisabled(acceso ? false : true);
+                                    Ext.getCmp('retirosOperativosTab').setDisabled(acceso ? false : true);
                                     cargaDetalle(rec.id);
                                 }
                                 else {
                                     Ext.getCmp('informesOperativosTab').setDisabled(true);
                                     Ext.getCmp('imagenesOperativosTab').setDisabled(true);
                                     Ext.getCmp('detalleOperativosTab').setDisabled(true);
+                                    Ext.getCmp('retirosOperativosTab').setDisabled(true);
                                     cargaDetalle(rec.id);
                                 }
 
@@ -1817,6 +1848,155 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
         var gridOperativosInforme = this.gridOperativosInforme
         // inicio ventana operativos detalle personal
+
+
+        // inicio ventana retiros detalle personal
+        var proxyOperativosRetiros = new Ext.data.HttpProxy({
+            api: {
+                create: urlOperativos + "crudOperativosRetiros.php?operation=insert",
+                read: urlOperativos + "crudOperativosRetiros.php?operation=select",
+                update: urlOperativos + "crudOperativosRetiros.php?operation=update",
+                destroy: urlOperativos + "crudOperativosRetiros.php?operation=delete"
+            },
+            listeners: {
+                write: function (proxy, action, result, res, rs) {
+                    if (typeof res.message !== 'undefined') {
+                        if (res.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
+                        }
+                    }
+                }
+            }
+        });
+
+        var readerOperativosRetiros = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id_operativo', allowBlank: false},
+                {name: 'nombre', allowBlank: true},
+                {name: 'direccion', allowBlank: false},
+                {name: 'tipo', allowBlank: true},
+                {name: 'codigo_bodega', allowBlank: false},
+                {name: 'detalle', allowBlank: true}
+            ]
+        });
+        var writerOperativosRetiros = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        this.storeOperativosRetiros = new Ext.data.Store({
+            id: "id",
+            proxy: proxyOperativosRetiros,
+            reader: readerOperativosRetiros,
+            writer: writerOperativosRetiros,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true
+        });
+
+        storeOperativosRetiros = this.storeOperativosRetiros;
+
+        this.gridOperativosRetiros = new Ext.grid.EditorGridPanel({
+            id: 'gridOperativosRetiros',
+
+            autoHeight: true,
+            autoScroll: true,
+            store: this.storeOperativosRetiros,
+            columns: [
+                new Ext.grid.RowNumberer(),
+         /*       {
+                    header: 'Retiros',
+                    dataIndex: 'id_member',
+                    sortable: true,
+                    width: 30,
+                    editor: comboPRD2,
+                    renderer: personaReceptaDenuncia2
+
+                },*/
+                {
+                    header: 'Operativo',
+                    dataIndex: 'id_operativo',
+                    sortable: true,
+                    width: 30, hidden: true
+
+                },
+                {
+                    header: 'nombre',
+                    dataIndex: 'nombre',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
+,
+                {
+                    header: 'Dirección',
+                    dataIndex: 'direccion',
+                    sortable: true,
+                    width: 80,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
+,
+                {
+                    header: 'Tipo',
+                    dataIndex: 'tipo',
+                    sortable: true,
+                    width: 25,
+                    editor: comboESREOP,
+                    renderer: estadoRetirosAdm
+                }
+,
+                {
+                    header: 'Código bodega',
+                    dataIndex: 'codigo_bodega',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
+,
+                {
+                    header: 'Detalle',
+                    dataIndex: 'detalle',
+                    sortable: true,
+                    width: 200,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
+            ],
+            viewConfig: {
+                forceFit: true
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }
+            ),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            listeners: {
+                beforeedit: function (e) {
+                    // si el operativo ya esta marcado como finalizado no se lo puede editar
+                    if (acceso) {
+                        // verifico variable que permite editar o no
+                        if (gridBlockOperativos) {
+                            //verifico que si no es administrador se bloque la edicion
+                            if (!accesosAdministradorOpe)
+                                return false;
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
+            }
+        });
+
+        var gridOperativosRetiros = this.gridOperativosRetiros
+        // fin  ventana retiros detalle personal
 
 
         // inicio ventana operativos detalle vehiculos
@@ -2522,7 +2702,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     items: this.gridOperativos,
                                 },
                                 {
-
                                     flex: 2,
                                     bodyStyle: 'padding:0; background: #DFE8F6',
                                     layout: 'column',
@@ -2667,6 +2846,36 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                     ]
                                                 },
                                                 {
+                                                    title: 'Retiros',
+                                                    layout: 'column',
+                                                    disabled: true,
+                                                    height: 250,
+                                                    id: 'retirosOperativosTab',
+                                                    items: this.gridOperativosRetiros,
+                                                    autoScroll: true,
+                                                    tbar: [
+                                                        {
+                                                            text: 'Nuevo',
+                                                            scope: this,
+                                                            handler: this.addretirosRetiros,
+                                                            iconCls: 'save-icon',
+                                                            disabled: true,
+                                                            id: 'addoperativodetalle',
+                                                            //disabled: !acceso
+                                                        },
+                                                        '-',
+                                                        {
+                                                            text: "Eliminar",
+                                                            scope: this,
+                                                            handler: this.deleteretirosRetiros,
+                                                            id: 'borraroperativodetalle',
+                                                            iconCls: 'delete-icon',
+                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                            disabled: true
+                                                        }
+                                                    ]
+                                                },
+                                                {
                                                     title: 'Imágenes',
                                                     id: 'imagenesOperativosTab',
                                                     layout: 'column',
@@ -2766,9 +2975,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     ]
                                 }
                             ]
-                        }
-
-                        , {
+                        },
+                        {
                             title: 'Reportes',
                             closable: true,
                             layout: 'border',
@@ -2838,7 +3046,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                             //this.gridReportes
                         }
-
                     ]
                 })
             });
@@ -3046,6 +3253,37 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         this.storeOperativosImagenes.load();
     },
 
+    deleteretirosRetiros: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridOperativosRetiros.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeOperativosRetiros.remove(rows);
+                }
+            }
+        });
+    },
+    addretirosRetiros: function () {
+        var retiros = new this.storeOperativosRetiros.recordType({
+            id_persona: '-',
+            id_operativo: selectOperativos,
+            asistencia: true,
+            observaciones: ''
+        });
+        this.gridOperativosRetiros.stopEditing();
+        this.storeOperativosRetiros.insert(0, retiros);
+        this.gridOperativosRetiros.startEditing(0, 0);
+    },
+    requestGridDataRetiros: function () {
+        this.storeOperativosRetiros.load();
+    },
 
     deleteVehiculos: function () {
         Ext.Msg.show({

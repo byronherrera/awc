@@ -6,6 +6,25 @@ if (!$os->session_exists()) {
     die('No existe sesión!');
 }
 
+
+function verificarAnteriorOperativo($id_operativo)
+{
+    global $os;
+
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM amc_operativos WHERE id = $id_operativo ";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        return $row;
+    }
+    else {
+        return $row;
+    }
+
+
+}
 function selectProcedimientosCadena($procLista)
 {
     global $os;
@@ -358,7 +377,8 @@ function updateOperativos()
             }
     }
 
-// genero el listado de valores a insertar
+
+    // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
         if (isset($valor))
@@ -368,6 +388,7 @@ function updateOperativos()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
+    $test = verificarAnteriorOperativo($data->id);
     $sql = "UPDATE amc_operativos SET  $cadenaDatos  WHERE amc_operativos . id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();

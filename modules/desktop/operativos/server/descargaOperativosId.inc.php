@@ -197,6 +197,33 @@ $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight
 
 textoSiguieteFila($operativo['detalle'], 'A', 'F', 'left');
 
+textoSiguieteFila('RETIROS EFECTUADOS', 'A', 'F', 'left', true, "B");
+
+textoSiguieteFila("Nombre Administrado", 'A', 'A', 'center', true, "B");
+textoSiguieteFila("Dirección", 'B', 'B', 'center', false, "B");
+textoSiguieteFila("tipo", 'C', 'C', 'center', false, "B");
+textoSiguieteFila("Código bodega ", 'D', 'D', 'center', false, "B");
+textoSiguieteFila("Detalle", 'E', 'F', 'center', false, "B");
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
+
+
+// recuperamos los nombres de los usuarios
+$sql = "SELECT * FROM amc_operativos_retiros WHERE id_operativo = '" . $operativo['id'] . "'";
+$nombres = $os->db->conn->query($sql);
+$nombresUsuarios = array();
+while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+    // declarar tamaños de letra
+   textoSiguieteFila($nombreDetalle['nombre'], 'A', 'A', 'center');
+    textoSiguieteFila( $nombreDetalle['direccion'] , 'B', 'B', 'center', false);
+    textoSiguieteFila($nombreDetalle['tipo'], 'C', 'C', 'center', false);
+    textoSiguieteFila($nombreDetalle['codigo_bodega'], 'D', 'D', 'center', false);
+    textoSiguieteFila($nombreDetalle['detalle'], 'E', 'F', 'center', false);
+
+
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
+}
+
+
 textoSiguieteFila("6. RESULTADOS", 'A', 'F', 'left', true, "B");
 textoSiguieteFila("PARROQUIAS INTERVENIDAS", 'A', 'C', 'left', true, "B");
 textoSiguieteFila("BARRIOS/SECTORES INTERVENIDOS", 'D', 'F', 'left', false, "B");

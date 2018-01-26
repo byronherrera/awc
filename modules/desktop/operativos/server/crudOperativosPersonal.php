@@ -32,9 +32,10 @@ function validarPersonal($id_member, $id_operativo)
     $sql = "SELECT COUNT(*) AS total FROM amc_operativos_personal WHERE id_member = $id_member AND id_operativo = $id_operativo  ";
     $result = $os->db->conn->query($sql);
 
+
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if ($row['total'] == 0) {
-        return '';
+        return "";
     } else {
         return 'El usuario ya existe';
     }
@@ -51,10 +52,10 @@ function insertPersonal()
 
     $cadenaDatos = '';
     $cadenaCampos = '';
-
+    $log = '';
     // validamos que la persona ya exista, si existe agregamos un mensjae de error
     $message = validarPersonal($data->id_member, $data->id_operativo);
-    if ($message = '') {
+    if ($message == '') {
         foreach ($data as $clave => $valor) {
             $cadenaCampos = $cadenaCampos . $clave . ',';
             $cadenaDatos = $cadenaDatos . "'" . $valor . "',";

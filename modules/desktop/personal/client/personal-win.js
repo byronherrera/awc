@@ -1,5 +1,6 @@
 QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
     id: 'personal',
+
     type: 'desktop/personal',
 
     init: function () {
@@ -35,6 +36,9 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
 
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i') : '';
+        }
+        function formatDateMin(value) {
+            return value ? value.dateFormat('Y-m-d') : '';
         }
 
         function formatDateFull(value) {
@@ -697,9 +701,17 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {name: 'modalidad', allowBlank: false},
                 {name: 'rmu', allowBlank: false},
                 {name: 'unidad', allowBlank: false},
+                {name: 'id_zonal', allowBlank: true},
                 {name: 'telefono_institucional', allowBlank: false},
                 {name: 'extencion', allowBlank: false},
                 {name: 'piso', allowBlank: false},
+                {name: 'id_estado', allowBlank: false},
+                {name: 'observaciones', allowBlank: true},
+
+
+                {name: 'fecha_salida', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_entrada', type: 'date', dateFormat: 'c', allowBlank: true},
+
                 {name: 'id_estado', allowBlank: false},
                 {name: 'email', allowBlank: false}
 
@@ -743,16 +755,16 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                     editor: comboPEOFAC,
                     renderer: personalActivo
                 },
-                {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 90, editor: textField},
-                {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 140, editor: textField},
-                {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 140, editor: textField},
-                {header: 'partida', dataIndex: 'partida', sortable: true, width: 60, editor: textField, align: 'right'},
-                {header: 'rol', dataIndex: 'rol', sortable: true, width: 240, editor: textField},
-                {header: 'denominacion', dataIndex: 'denominacion', sortable: true, width: 200, editor: textField},
-                {header: 'grado', dataIndex: 'grado', sortable: true, width: 60, editor: textField, align: 'right'},
+                {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 90, editor: textField},
+                {header: 'Apellidos', dataIndex: 'apellidos', sortable: true, width: 140, editor: textField},
+                {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 140, editor: textField},
+                {header: 'Partida', dataIndex: 'partida', sortable: true, width: 60, editor: textField, align: 'right'},
+                {header: 'Rol', dataIndex: 'rol', sortable: true, width: 240, editor: textField},
+                {header: 'Denominación', dataIndex: 'denominacion', sortable: true, width: 200, editor: textField},
+                {header: 'Grado', dataIndex: 'grado', sortable: true, width: 60, editor: textField, align: 'right'},
 
-                {header: 'regimen', dataIndex: 'regimen', sortable: true, width: 200, editor: textField},
-                {header: 'modalidad', dataIndex: 'modalidad', sortable: true, width: 200, editor: textField},
+                {header: 'Régimen', dataIndex: 'regimen', sortable: true, width: 200, editor: textField},
+                {header: 'Modalidad', dataIndex: 'modalidad', sortable: true, width: 200, editor: textField},
                 {
                     header: 'rmu',
                     dataIndex: 'rmu',
@@ -763,11 +775,20 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                     align: 'right'
                 },
                 {
-                    header: 'unidad', dataIndex: 'unidad', sortable: true, width: 200, editor: comboOPREA,
+                    header: 'Unidad', dataIndex: 'unidad', sortable: true, width: 200, editor: comboOPREA,
                     renderer: personalUnidades
                 },
                 {
-                    header: 'telefono_institucional',
+                    header: 'Zonal',
+                    dataIndex: 'id_zonal',
+                    sortable: true,
+                    width: 120,
+                    editor: comboZONA,
+                    renderer: zonaAdm,
+                    align: 'left'
+                },
+                {
+                    header: 'Teléfono institucional',
                     dataIndex: 'telefono_institucional',
                     sortable: true,
                     width: 80,
@@ -776,16 +797,24 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 },
 
                 {
-                    header: 'extencion',
+                    header: 'Extensión',
                     dataIndex: 'extencion',
                     sortable: true,
                     width: 80,
                     editor: textField,
                     align: 'right'
                 },
-                {header: 'email', dataIndex: 'email', sortable: true, width: 140, editor: textField},
-                {header: 'rol', dataIndex: 'rol', sortable: true, width: 140, editor: textField},
-                {header: 'piso', dataIndex: 'piso', sortable: true, width: 140, editor: textField}
+                {header: 'Email', dataIndex: 'email', sortable: true, width: 140, editor: textField},
+                {header: 'Piso', dataIndex: 'piso', sortable: true, width: 140, editor: textField},
+                {
+                    header: 'Obnservaciones',
+                    dataIndex: 'observaciones',
+                    sortable: true,
+                    width: 280,
+                    editor: textField
+                },
+
+
             ],
             viewConfig: {
                 forceFit: false,
@@ -837,14 +866,14 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             listeners: {
                 beforeedit: function (e) {
                     // si el personal esta identificado como estado o planificado (1) o informe (4) se peude editar
-                    if (acceso) {
+                    /*  if (acceso) {
                         if ((e.record.get("id_estado") == 1) || (e.record.get("id_estado") == 4)) {
                             return true;
                         }
                         return false;
                     } else {
                         return false;
-                    }
+                    }*/
                 }
             }
         });
@@ -1171,20 +1200,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                                 triggerAction: 'all',
                                 mode: 'local'
                             }
-                            /*{
-                             xtype: 'combo',
-                             fieldLabel: 'Oper. Finalizado',
-                             id: 'busqueda_finalizado',
-                             name: 'busqueda_finalizado',
-                             hiddenName: 'busqueda_finalizado',
-                             anchor: '95%',
-                             store: storeSINO,
-                             valueField: 'id',
-                             displayField: 'nombre',
-                             typeAhead: true,
-                             triggerAction: 'all',
-                             mode: 'local'
-                             },*/
+
 
                         ]
                     },
@@ -1314,7 +1330,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
 
             win = desktop.createWindow({
                 id: 'grid-win-personal',
-                title: 'Inspección - Gestión Personal',
+                title: 'Talento Humano - Distributivo Personal',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'personal-icon',
@@ -1325,7 +1341,6 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
 
                 items: new Ext.TabPanel({
                     activeTab: 0,
-
                     border: false,
                     items: [
                         {
@@ -1363,7 +1378,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                                 '-',
                                 {
                                     xtype: 'checkbox',
-                                    boxLabel: 'Personal no finalizados',
+                                    boxLabel: 'Personal activo',
                                     id: 'checkNoRecibidos',
                                     name: 'noenviados',
                                     checked: true,
@@ -1405,6 +1420,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                             title: 'Reportes',
                             closable: true,
                             layout: 'border',
+                            disabled:true,
                             tbar: [
                                 {
                                     iconCls: 'reload-icon',
@@ -1525,18 +1541,15 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             id_persona: '-',
             id: ' ',
             visible: '',
-            fecha_planificacion: (new Date()),
-            fecha_inicio_planificacion: (new Date()),
-            fecha_fin_planificacion: (new Date()),
             id_tipo_control: '',
             id_nivel_complejidad: ' ',
             observaciones: ' ',
-
             punto_encuentro_planificado: ' ',
             id_zonal: ' ',
             tipo_personal: '1',
             id_persona_encargada: ' ',
-
+            fecha_entrada: (new Date()),
+            fecha_salida: (new Date()),
             id_estado: 1
         });
         this.gridPersonal.stopEditing();

@@ -43,10 +43,10 @@ $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "
 
 $objPHPExcel = new PHPExcel();
 $objPHPExcel->setActiveSheetIndex(0);
-orientacion('A1:F600', 'center');
+orientacion('A1:Q600', 'center');
 //tamaños de texto pòr defecto
-$objPHPExcel->getActiveSheet()->getStyle('A1:F3')->getFont()->setSize(12);
-$objPHPExcel->getActiveSheet()->getStyle('A4:F100')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A1:N3')->getFont()->setSize(12);
+$objPHPExcel->getActiveSheet()->getStyle('A4:N500')->getFont()->setSize(10);
 
 
 //definicion de estilos
@@ -59,9 +59,9 @@ $styleArray = array(
 );
 
 //declaracion de los titulos de la linea 1 2 3
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':O' . $filaTitulo1);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':O' . $filaTitulo2);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo3 . ':O' . $filaTitulo3);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':P' . $filaTitulo1);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':P' . $filaTitulo2);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo3 . ':P' . $filaTitulo3);
 
 $objPHPExcel->getActiveSheet()->getStyle('A1:A3')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "MUNICIPIO DEL DISTRITO METROPOLITANO DE QUITO");
@@ -84,32 +84,37 @@ textoSiguieteFila("TELEFONO", 'M', 'M', 'center', false, "B");
 textoSiguieteFila("EXTENSION", 'N', 'N', 'center', false, "B");
 textoSiguieteFila("EMAIL", 'O', 'O', 'center', false, "B");
 textoSiguieteFila("PISO", 'P', 'P', 'center', false, "B");
-
-
 // recuperamos los nombres de los usuarios
-$sql = "SELECT * FROM amc_personal_distributivo WHERE id_estado = 1 ";
 
-$nombres = $os->db->conn->query($sql);
+$sql = "SELECT * FROM amc_unidades_personal WHERE activo = 1 ORDER BY orden";
+$unidades = $os->db->conn->query($sql);
+$numero = 1;
+while ($nombreUnidad = $unidades->fetch(PDO::FETCH_ASSOC)) {
+    textoSiguieteFila($nombreUnidad['nombre'], 'A', 'P', 'left', 'B');
+    $idUnidad = $nombreUnidad['id'];
+    $sql = "SELECT * FROM amc_personal_distributivo WHERE id_estado = 1 and unidad = $idUnidad ORDER BY apellidos";
+    $nombres = $os->db->conn->query($sql);
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        textoSiguieteFila($numero, 'A', 'A', 'center');
+        $numero ++;
+        textoSiguieteFila($nombreDetalle['cedula'], 'B', 'B', 'left', false);
+        textoSiguieteFila($nombreDetalle['apellidos'], 'C', 'C', 'left', false);
+        textoSiguieteFila($nombreDetalle['nombres'], 'D', 'D', 'left', false);
+        textoSiguieteFila($nombreDetalle['partida'], 'E', 'E', 'center', false);
+        textoSiguieteFila($nombreDetalle['rol'], 'F', 'F', 'left', false);
+        textoSiguieteFila($nombreDetalle['denominacion'], 'G', 'G', 'left', false);
+        textoSiguieteFila($nombreDetalle['grado'], 'H', 'H', 'center', false);
+        textoSiguieteFila($nombreDetalle['regimen'], 'I', 'I', 'left', false);
+        textoSiguieteFila($nombreDetalle['modalidad'], 'J', 'J', 'left', false);
+        textoSiguieteFila($nombreDetalle['rmu'], 'K', 'K', 'center', false);
+        textoSiguieteFila(regresaUnidad($nombreDetalle['unidad']), 'L', 'L', 'center', false);
+        textoSiguieteFila($nombreDetalle['telefono_institucional'], 'M', 'M', 'center', false);
+        textoSiguieteFila($nombreDetalle['extencion'], 'N', 'N', 'center', false);
+        textoSiguieteFila($nombreDetalle['email'], 'O', 'O', 'left', false);
+        textoSiguieteFila($nombreDetalle['piso'], 'P', 'P', 'left', false);
+    }
 
-while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
-    textoSiguieteFila($nombreDetalle['id'], 'A', 'A', 'center');
-    textoSiguieteFila($nombreDetalle['cedula'], 'B', 'B', 'center', false);
-    textoSiguieteFila($nombreDetalle['apellidos'], 'C', 'C', 'center', false);
-    textoSiguieteFila($nombreDetalle['nombres'], 'D', 'D', 'center', false);
-    textoSiguieteFila($nombreDetalle['partida'], 'E', 'E', 'center', false);
-    textoSiguieteFila($nombreDetalle['rol'], 'F', 'F', 'center', false);
-    textoSiguieteFila($nombreDetalle['denominacion'], 'G', 'G', 'center', false);
-    textoSiguieteFila($nombreDetalle['grado'], 'H', 'H', 'center', false);
-    textoSiguieteFila($nombreDetalle['regimen'], 'I', 'I', 'center', false);
-    textoSiguieteFila($nombreDetalle['modalidad'], 'J', 'J', 'center', false);
-    textoSiguieteFila($nombreDetalle['rmu'], 'K', 'K', 'center', false);
-    textoSiguieteFila($nombreDetalle['unidad'], 'L', 'L', 'center', false);
-    textoSiguieteFila($nombreDetalle['telefono_institucional'], 'M', 'M', 'center', false);
-    textoSiguieteFila($nombreDetalle['extencion'], 'N', 'N', 'center', false);
-    textoSiguieteFila($nombreDetalle['email'], 'O', 'O', 'center', false);
-    textoSiguieteFila($nombreDetalle['piso'], 'P', 'P', 'center', false);
 }
-
 
 //borde("A" . $primeraFilaImage . ':' . 'F' . $filacabecera);
 // Elaborador por:
@@ -122,7 +127,7 @@ __________________________
 textoSiguieteFila($textoElaboradoPor, 'A', 'F', 'left');
 
 $filacabecera++;
-
+//UBICACION DEL LOGO
 $objDrawing = new PHPExcel_Worksheet_Drawing();
 $objDrawing->setPath('../../../../imagenes/image2.png');
 $objDrawing->setCoordinates("A" . ($filacabecera));
@@ -132,14 +137,16 @@ $objDrawing->setOffsetY(0);
 $objDrawing->setWidth(686);
 $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 
+
 $objDrawing = new PHPExcel_Worksheet_Drawing();
 $objDrawing->setPath('../../../../imagenes/image1.png');
-$objDrawing->setCoordinates("O1");
+$objDrawing->setCoordinates("P1");
 //setOffsetX works properly
 $objDrawing->setOffsetX(10);
 $objDrawing->setOffsetY(0);
 $objDrawing->setWidth(100);
 $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
+//FIN UBICACION DEL LOGO
 
 // Ancho de las columnas
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
@@ -147,13 +154,34 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('B')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(11);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth($anchoColumna);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(22);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth($anchoColumna);
+$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(18);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('E')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth($anchoColumna);
+$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(10);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('F')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth($anchoColumna);
+$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(38);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('G')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(24);
+
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(8);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(32);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(36);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('K')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('L')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('M')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('N')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(12);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('O')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(32);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('P')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(50);
 
 
 // Set document properties
@@ -177,7 +205,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:F200')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:QF200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -185,7 +213,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:F200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:F30')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:Q300')->getAlignment()->setWrapText(true);
 
 // genera los cuadros
 //$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->applyFromArray($styleArray);
@@ -282,7 +310,7 @@ function regresaUnidad($id_dato)
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT *
-            FROM amc_unidades WHERE id = " . $id_dato;
+            FROM amc_unidades_personal WHERE id = " . $id_dato;
     $nombre = $os->db->conn->query($sql);
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['nombre_completo'];
@@ -416,11 +444,10 @@ function imagenSiguieteFila($imagen = '', $inicio, $fin, $nuevaLinea = true)
     $objDrawing->setOffsetX(1);
     $objDrawing->setOffsetY(1);
     //set width, height
-    //$objDrawing->setHeight(360);
+
     $objDrawing->setWidth(360);
     $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 }
-
 
 function fecha_informe($personalId)
 {

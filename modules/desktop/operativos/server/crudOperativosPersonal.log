@@ -21,3 +21,18 @@ INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_me
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('146','1','adf','53');
+INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('146','1','','180');
+INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('146','1','','44');
