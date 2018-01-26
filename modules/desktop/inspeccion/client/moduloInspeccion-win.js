@@ -52,17 +52,17 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'codigo_tramite', allowBlank: true},
-                {name: 'recepcion_documento', allowBlank: true},
-                {name: 'id_ordenanza', allowBlank: true},
-                {name: 'num_documento', allowBlank: true},
-                {name: 'remitente', allowBlank: true},
-                {name: 'cedula', allowBlank: true},
-                {name: 'institucion', allowBlank: true},
-                {name: 'asunto', allowBlank: true},
-                {name: 'descripcion_anexos', allowBlank: true},
-                {name: 'id_caracter_tramite', allowBlank: true},
-                {name: 'cantidad_fojas', allowBlank: true}
+                {name: 'codigo_tramite', readOnly: true, allowBlank: true},
+                {name: 'recepcion_documento', readOnly: true, allowBlank: true},
+                {name: 'id_ordenanza', readOnly: true, allowBlank: true},
+                {name: 'num_documento', readOnly: true, allowBlank: true},
+                {name: 'remitente', readOnly: true, allowBlank: true},
+                {name: 'cedula', readOnly: true, allowBlank: true},
+                {name: 'institucion', readOnly: true, allowBlank: true},
+                {name: 'asunto', readOnly: true, allowBlank: true},
+                {name: 'descripcion_anexos', readOnly: true, allowBlank: true},
+                {name: 'id_caracter_tramite', readOnly: true, allowBlank: true},
+                {name: 'cantidad_fojas', readOnly: true, allowBlank: true}
                 /*
                 {name: 'reasignacion', allowBlank: true},
                 {name: 'despacho_secretaria', allowBlank: true},
@@ -91,7 +91,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
         var checkHandler = function (item, checked) {
             if (checked) {
-                console.log('checkHandler');
                 var store = this.storeModuloInspeccion;
                 store.baseParams.filterField = item.key;
                 searchFieldBtn.setText(item.text);
@@ -328,24 +327,22 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridModuloInspeccion = new Ext.grid.EditorGridPanel({
             id: 'gridModuloInspeccion',
             xtype: "grid",
-            height: 300,
+            height: 200,
             store: this.storeModuloInspeccion,
             columns: [
                 //Definición de campos bdd Inspeccion
                 new Ext.grid.RowNumberer(),
-                {header: 'Trámite', dataIndex: 'codigo_tramite', sortable: true, width: 100, editor: textField},
-                {header: 'Fecha recepción', dataIndex: 'recepcion_documento', sortable: true, width: 100, editor: textField},
-                {header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100, editor: textField},
+                {header: 'Trámite', dataIndex: 'codigo_tramite', sortable: true, width: 100},
+                {header: 'Fecha recepción', dataIndex: 'recepcion_documento', sortable: true, width: 300},
+                {header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 200},
                 {header: 'Numero Documento', dataIndex: 'num_documento', sortable: true, width: 200, editor: textField},
-                {header: 'Remitente', dataIndex: 'remitente', sortable: true, width: 200, editor: textField},
-                {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 100, editor: textField},
+                {header: 'Remitente', dataIndex: 'remitente', sortable: true, width: 300, editor: textField},
+                {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 200, editor: textField},
                 {header: 'Institución', dataIndex: 'institucion', sortable: true, width: 200, editor: textField},
                 {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 600, editor: textField},
-                {header: 'Descripción Anexo', dataIndex: 'email', sortable: true, width: 100, editor: textField},
                 {header: 'Caracter trámite', dataIndex: 'id_caracter_tramite', sortable: true, width: 200, editor: comboCDT,
                     renderer: caracterTramite},
-                {header: 'Fojas', dataIndex: 'cantidad_fojas', width: 70, editor: new Ext.ux.form.SpinnerField({fieldLabel: 'Age',
-                        name: 'age', minValue: 0, maxValue: 100})}
+                {header: 'Fojas', dataIndex: 'cantidad_fojas', width: 70}
                 /*
                 {header: 'Reasignación', dataIndex: 'reasignacion', sortable: true, width: 100, editor: comboREA,
                     renderer: departamentoReasignacion},
@@ -376,14 +373,13 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         var win = desktop.getWindow('layout-win');
 
         if (!win) {
-            console.log('Si !win');
             //Creación variables de tamaño vertical y horizontal en función del espacio utilizado por el browser en la pantalla
             var winWidth = desktop.getWinWidth();
             var winHeight = desktop.getWinHeight();
             //this.seleccionDepar = 3;
             var checkHandler = function (item, checked) {
                 if (checked) {
-                    var store = this.storeModuloInspeccion;
+                     var store = this.storeModuloInspeccion;
                     store.baseParams.filterField = item.key;
                     searchFieldBtn.setText(item.text);
                 }
@@ -397,458 +393,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 }
             };
 
-            this.formInspeccion = new Ext.FormPanel({
-                id: 'formInspeccion',
-                cls: 'no-border',
-                items: [
-                    {
-                        id: 'formInspeccion',
-                        /* collapsedTitle: true,
-                         collapsible: true,
-                         title: 'Listado Recepción Documentos',*/
 
-                        titleCollapse: true,
-                        split: true,
-                        flex: 1,
-                        autoScroll: true,
-                        layout: 'column', items: this.gridModuloInspeccion
-                    },
-                    {
-                        split: true,
-                        flex: 2,
-                        bodyStyle: 'padding:0; background: #DFE8F6',
-                        layout: 'column',
-                        tbar: [
-                            {
-                                text: 'Grabar Recepción Detalle',
-                                scope: this,
-                                handler: this.grabardenuncias,
-                                iconCls: 'save-icon',
-                                disabled: true,
-                                id: 'tb_grabardenuncias'
-                                , formBind: true
-                            },
-                            '->',
-                            {
-                                text: 'Denuncias anteriores:'
-                                , xtype: 'tbtext',
-                                id: 'textRecepcionAnteriores'
-                            }
-                        ],
-                        items: [
-                            {
-                                xtype: 'tabpanel',
-
-                                activeTab: 0,
-                                width: winWidth,
-                                cls: 'no-border',
-                                items: [
-                                    {
-                                        title: 'Secretaría',
-                                        layout: 'column',
-                                        items: [
-                                            {
-                                                columnWidth: 1 / 3,
-                                                layout: 'form',
-                                                monitorValid: true,
-                                                defaultType: 'textfield',
-                                                items: [
-                                                    {
-                                                        xtype: 'hidden',
-                                                        fieldLabel: 'Id',
-                                                        name: 'id'
-                                                    },
-                                                    {
-                                                        fieldLabel: 'Código trámite',
-                                                        name: 'codigo_tramite',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Persona recepta',
-                                                        name: 'id_persona',
-                                                        id: 'id_persona',
-                                                        anchor: '95%',
-                                                        hiddenName: 'id_persona',
-
-                                                        store: storePRD,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-
-                                                    },
-                                                    {
-                                                        xtype: 'datetimefield',
-                                                        fieldLabel: 'Fecha recepción',
-                                                        id: 'recepcion_documento',
-                                                        name: 'recepcion_documento',
-                                                        anchor: '95%',
-
-                                                        dateFormat: 'Y-m-d',
-                                                        timeFormat: 'H:i:s'
-
-
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Tipo documento',
-                                                        id: 'id_tipo_documento',
-                                                        name: 'id_tipo_documento',
-                                                        anchor: '95%',
-
-                                                        hiddenName: 'id_tipo_documento',
-                                                        store: storeTID,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Ordenanza',
-                                                        id: 'id_ordenanza',
-                                                        name: 'id_ordenanza',
-                                                        anchor: '95%',
-
-                                                        hiddenName: 'id_ordenanza',
-                                                        store: storeDETIORD,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-                                                    },
-                                                    {
-                                                        fieldLabel: 'Núm documento',
-                                                        id: 'num_documento',
-                                                        name: 'num_documento',
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        fieldLabel: 'Remitente',
-                                                        id: 'remitente',
-                                                        name: 'remitente',
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        fieldLabel: 'C:I. denunciante',
-                                                        id: 'cedula',
-                                                        name: 'cedula',
-                                                        allowBlank: true,
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        fieldLabel: 'Email denunciante',
-                                                        id: 'email',
-                                                        name: 'email',
-                                                        anchor: '95%',
-                                                        allowBlank: true
-                                                        , vtype: 'email'
-                                                    }
-                                                ]
-                                            },
-                                            {
-
-                                                columnWidth: 1 / 3,
-                                                layout: 'form',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Descripción anexo',
-                                                        id: 'descripcion_anexos',
-                                                        name: 'descripcion_anexos',
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-
-                                                        xtype: 'spinnerfield',
-                                                        fieldLabel: 'Cantidad de fojas',
-                                                        id: 'cantidad_fojas',
-                                                        name: 'cantidad_fojas',
-                                                        minValue: 0,
-                                                        maxValue: 200,
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        xtype: 'textarea',
-                                                        fieldLabel: 'Asunto',
-                                                        id: 'asunto',
-                                                        name: 'asunto',
-                                                        height: 45,
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Institución',
-                                                        id: 'institucion',
-                                                        name: 'institucion',
-                                                        anchor: '95%'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Caracter del trámite',
-                                                        id: 'id_caracter_tramite',
-                                                        name: 'id_caracter_tramite',
-                                                        anchor: '95%',
-
-                                                        hiddenName: 'id_caracter_tramite',
-                                                        store: storeCDT,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-
-                                                    },
-                                                    {
-                                                        xtype: 'textarea',
-                                                        fieldLabel: 'Observaciones secretaria',
-                                                        id: 'observacion_secretaria',
-                                                        name: 'observacion_secretaria',
-                                                        height: 45,
-                                                        anchor: '95%'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                columnWidth: 1 / 3,
-                                                layout: 'form',
-                                                defaults: {
-                                                    listeners: {
-                                                        change: function (field, newVal, oldVal) {
-
-                                                            if (field.getName() == 'despacho_secretaria') {
-                                                                if (oldVal == 'true') {
-                                                                    if (newVal == 'false') {
-                                                                        Ext.getCmp('tb_grabardenuncias').setDisabled(false);
-                                                                        Ext.getCmp('reasignacion').enable();
-                                                                    }
-                                                                }
-                                                            }
-
-                                                            if (field.getName() == 'guia') {
-                                                                if (oldVal != newVal) {
-                                                                    console.log("cambio")
-                                                                    Ext.getCmp('tb_grabardenuncias').setDisabled(false);
-//                                                                        Ext.getCmp('reasignacion').enable();
-                                                                }
-                                                            }
-
-
-                                                        }
-                                                    },
-                                                },
-                                                items: [
-                                                    /* {
-                                                     xtype: 'combo',
-                                                     fieldLabel: 'Reasignado a',
-                                                     name: 'reasignacion',
-                                                     anchor: '95%',
-
-                                                     hiddenName: 'reasignacion',
-                                                     store: storeREA,
-                                                     valueField: 'id',
-                                                     displayField: 'nombre',
-                                                     typeAhead: true,
-                                                     triggerAction: 'all',
-                                                     mode: 'local'
-                                                     },*/
-                                                    {
-                                                        xtype: 'multiselect',
-                                                        fieldLabel: 'Reasignado a:<br />(Para seleccion<br /> multiple mantenga<br /> pulsada la tecla Ctrl)',
-                                                        id: 'reasignacion',
-                                                        name: 'reasignacion',
-                                                        width: 300,
-                                                        height: 130,
-                                                        allowBlank: false, store: storeREA,
-                                                        hiddenName: 'reasignacion',
-                                                        displayField: 'nombre',
-                                                        valueField: 'id',
-                                                        ddReorder: true
-                                                    }
-                                                    , {
-                                                        xtype: 'displayfield',
-                                                        fieldLabel: 'Total documentos anteriores:',
-                                                        name: 'totaldocumentos',
-                                                        anchor: '95%'
-                                                    }, {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Guía',
-                                                        name: 'guia',
-                                                        id: 'guia',
-                                                        anchor: '95%',
-
-                                                        hiddenName: 'guia',
-                                                        store: storeREAGUIA,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-                                                    }, {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Despachado',
-                                                        name: 'despacho_secretaria',
-                                                        id: 'despacho_secretaria',
-                                                        anchor: '95%',
-
-                                                        hiddenName: 'despacho_secretaria',
-                                                        store: storeOFAC,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        title: 'Inspección',
-                                        layout: 'column',
-                                        autoScroll: true,
-                                        items: [
-                                            {
-                                                type: 'container',
-                                                columnWidth: 1 / 2,
-                                                layout: 'form',
-                                                items: [
-                                                    {
-                                                        bodyStyle: 'padding:0; background: #ebfaeb',
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Estado Recepcion Información',
-                                                        name: 'estado_recepcion_informacion',
-                                                        anchor: '95%',
-                                                        hiddenName: 'estado_recepcion_informacion',
-
-                                                        store: storeESREA,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Actividad',
-                                                        name: 'actividad',
-                                                        anchor: '95%',
-                                                        hiddenName: 'actividad',
-
-                                                        store: storeACTA,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Persona asignada',
-                                                        name: 'persona_asignada',
-                                                        anchor: '95%',
-                                                        hiddenName: 'persona_asignada',
-
-                                                        store: storePRASA,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Cod inspección',
-                                                        name: 'codigo_inspeccion',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                type: 'container',
-                                                columnWidth: 1 / 2,
-                                                layout: 'form',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Cod procedimiento',
-                                                        name: 'codigo_procedimiento',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-                                                    {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Zona',
-                                                        name: 'id_zona',
-                                                        anchor: '95%',
-                                                        hiddenName: 'id_zona',
-
-                                                        store: storeZONA,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Predio',
-                                                        name: 'predio',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    }
-                                                    ,
-                                                    {
-                                                        xtype: 'textfield',
-                                                        fieldLabel: 'Observación',
-                                                        name: 'observacion',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-                                                    },
-
-                                                    {
-
-                                                        xtype: 'textarea',
-                                                        fieldLabel: 'Procedimiento',
-                                                        name: 'procedimientosdetalle',
-                                                        anchor: '95%',
-                                                        readOnly: true,
-                                                        cls: 'sololectura'
-
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-
-                                ]
-                            }
-
-                        ]
-                    }
-                ]
-            });
             //Creación de la ventana win
             win = desktop.createWindow({
                 id: 'grid-win-moduloInspeccion',
@@ -937,7 +482,435 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             },{
                                 flex: 2,
                                 bodyStyle: 'padding:0; background: #DFE8F6',
-                                layout: 'column'
+                                layout: 'column',
+                                tbar: [
+                                    {
+                                        text: 'Grabar Recepción Detalle',
+                                        scope: this,
+                                        handler: this.grabardenuncias,
+                                        iconCls: 'save-icon',
+                                        disabled: true,
+                                        id: 'tb_grabardenuncias'
+                                        , formBind: true
+                                    },
+                                    '->',
+                                    {
+                                        text: 'Denuncias anteriores:'
+                                        , xtype: 'tbtext',
+                                        id: 'textRecepcionAnteriores'
+                                    }
+                                ],
+                                items: [
+                                    {
+                                        xtype: 'tabpanel',
+
+                                        activeTab: 0,
+                                        width: winWidth,
+                                        cls: 'no-border',
+                                        items: [
+                                            {
+                                                title: 'Secretaría',
+                                                layout: 'column',
+                                                items: [
+                                                    {
+                                                        columnWidth: 1 / 3,
+                                                        layout: 'form',
+                                                        monitorValid: true,
+                                                        defaultType: 'textfield',
+                                                        items: [
+                                                            {
+                                                                xtype: 'hidden',
+                                                                fieldLabel: 'Id',
+                                                                name: 'id'
+                                                            },
+                                                            {
+                                                                fieldLabel: 'Código trámite',
+                                                                name: 'codigo_tramite',
+                                                                anchor: '95%',
+                                                                readOnly: true,
+                                                                cls: 'sololectura'
+                                                            },
+                                                            {
+                                                                xtype: 'combo',
+                                                                fieldLabel: 'Persona recepta',
+                                                                name: 'id_persona',
+                                                                id: 'id_persona',
+                                                                anchor: '95%',
+                                                                hiddenName: 'id_persona',
+
+                                                                store: storePRD,
+                                                                valueField: 'id',
+                                                                displayField: 'nombre',
+                                                                typeAhead: true,
+                                                                triggerAction: 'all',
+                                                                mode: 'local'
+
+                                                            },
+                                                            {
+                                                                xtype: 'datetimefield',
+                                                                fieldLabel: 'Fecha recepción',
+                                                                id: 'recepcion_documento',
+                                                                name: 'recepcion_documento',
+                                                                anchor: '95%',
+
+                                                                dateFormat: 'Y-m-d',
+                                                                timeFormat: 'H:i:s'
+
+
+                                                            },
+                                                            {
+                                                                xtype: 'combo',
+                                                                fieldLabel: 'Tipo documento',
+                                                                id: 'id_tipo_documento',
+                                                                name: 'id_tipo_documento',
+                                                                anchor: '95%',
+
+                                                                hiddenName: 'id_tipo_documento',
+                                                                store: storeTID,
+                                                                valueField: 'id',
+                                                                displayField: 'nombre',
+                                                                typeAhead: true,
+                                                                triggerAction: 'all',
+                                                                mode: 'local'
+
+                                                            },
+                                                            {
+                                                                xtype: 'combo',
+                                                                fieldLabel: 'Ordenanza',
+                                                                id: 'id_ordenanza',
+                                                                name: 'id_ordenanza',
+                                                                anchor: '95%',
+
+                                                                hiddenName: 'id_ordenanza',
+                                                                store: storeDETIORD,
+                                                                valueField: 'id',
+                                                                displayField: 'nombre',
+                                                                typeAhead: true,
+                                                                triggerAction: 'all',
+                                                                mode: 'local'
+                                                            },
+                                                            {
+                                                                fieldLabel: 'Núm documento',
+                                                                id: 'num_documento',
+                                                                name: 'num_documento',
+                                                                anchor: '95%'
+                                                            },
+                                                            {
+                                                                fieldLabel: 'Remitente',
+                                                                id: 'remitente',
+                                                                name: 'remitente',
+                                                                anchor: '95%'
+                                                            },
+                                                            {
+                                                                fieldLabel: 'C:I. denunciante',
+                                                                id: 'cedula',
+                                                                name: 'cedula',
+                                                                allowBlank: true,
+                                                                anchor: '95%'
+                                                            },
+                                                            {
+                                                                fieldLabel: 'Email denunciante',
+                                                                id: 'email',
+                                                                name: 'email',
+                                                                anchor: '95%',
+                                                                allowBlank: true
+                                                                , vtype: 'email'
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+
+                                                        columnWidth: 1 / 3,
+                                                        layout: 'form',
+                                                        items: [
+                                                            {
+                                                                xtype: 'textfield',
+                                                                fieldLabel: 'Descripción anexo',
+                                                                id: 'descripcion_anexos',
+                                                                name: 'descripcion_anexos',
+                                                                anchor: '95%'
+                                                            },
+                                                            {
+
+                                                                xtype: 'spinnerfield',
+                                                                fieldLabel: 'Cantidad de fojas',
+                                                                id: 'cantidad_fojas',
+                                                                name: 'cantidad_fojas',
+                                                                minValue: 0,
+                                                                maxValue: 200,
+                                                                anchor: '95%'
+                                                            },
+                                                            {
+                                                                xtype: 'textarea',
+                                                                fieldLabel: 'Asunto',
+                                                                id: 'asunto',
+                                                                name: 'asunto',
+                                                                height: 45,
+                                                                anchor: '95%'
+                                                            },
+                                                            {
+                                                                xtype: 'textfield',
+                                                                fieldLabel: 'Institución',
+                                                                id: 'institucion',
+                                                                name: 'institucion',
+                                                                anchor: '95%'
+                                                            },
+                                                            {
+                                                                xtype: 'combo',
+                                                                fieldLabel: 'Caracter del trámite',
+                                                                id: 'id_caracter_tramite',
+                                                                name: 'id_caracter_tramite',
+                                                                anchor: '95%',
+
+                                                                hiddenName: 'id_caracter_tramite',
+                                                                store: storeCDT,
+                                                                valueField: 'id',
+                                                                displayField: 'nombre',
+                                                                typeAhead: true,
+                                                                triggerAction: 'all',
+                                                                mode: 'local'
+
+                                                            },
+                                                            {
+                                                                xtype: 'textarea',
+                                                                fieldLabel: 'Observaciones secretaria',
+                                                                id: 'observacion_secretaria',
+                                                                name: 'observacion_secretaria',
+                                                                height: 45,
+                                                                anchor: '95%'
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        columnWidth: 1 / 3,
+                                                        layout: 'form',
+                                                        defaults: {
+                                                            listeners: {
+                                                                change: function (field, newVal, oldVal) {
+
+                                                                    if (field.getName() == 'despacho_secretaria') {
+                                                                        if (oldVal == 'true') {
+                                                                            if (newVal == 'false') {
+                                                                                Ext.getCmp('tb_grabardenuncias').setDisabled(false);
+                                                                                Ext.getCmp('reasignacion').enable();
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    if (field.getName() == 'guia') {
+                                                                        if (oldVal != newVal) {
+                                                                            console.log("cambio")
+                                                                            Ext.getCmp('tb_grabardenuncias').setDisabled(false);
+//                                                                        Ext.getCmp('reasignacion').enable();
+                                                                        }
+                                                                    }
+
+
+                                                                }
+                                                            },
+                                                        },
+                                                        items: [
+                                                            /* {
+                                                             xtype: 'combo',
+                                                             fieldLabel: 'Reasignado a',
+                                                             name: 'reasignacion',
+                                                             anchor: '95%',
+
+                                                             hiddenName: 'reasignacion',
+                                                             store: storeREA,
+                                                             valueField: 'id',
+                                                             displayField: 'nombre',
+                                                             typeAhead: true,
+                                                             triggerAction: 'all',
+                                                             mode: 'local'
+                                                             },*/
+                                                            {
+                                                                xtype: 'multiselect',
+                                                                fieldLabel: 'Reasignado a:<br />(Para seleccion<br /> multiple mantenga<br /> pulsada la tecla Ctrl)',
+                                                                id: 'reasignacion',
+                                                                name: 'reasignacion',
+                                                                width: 300,
+                                                                height: 130,
+                                                                allowBlank: false, store: storeREA,
+                                                                hiddenName: 'reasignacion',
+                                                                displayField: 'nombre',
+                                                                valueField: 'id',
+                                                                ddReorder: true
+                                                            }
+                                                            , {
+                                                                xtype: 'displayfield',
+                                                                fieldLabel: 'Total documentos anteriores:',
+                                                                name: 'totaldocumentos',
+                                                                anchor: '95%'
+                                                            }, {
+                                                                xtype: 'combo',
+                                                                fieldLabel: 'Guía',
+                                                                name: 'guia',
+                                                                id: 'guia',
+                                                                anchor: '95%',
+
+                                                                hiddenName: 'guia',
+                                                                store: storeREAGUIA,
+                                                                valueField: 'id',
+                                                                displayField: 'nombre',
+                                                                typeAhead: true,
+                                                                triggerAction: 'all',
+                                                                mode: 'local'
+                                                            }, {
+                                                                xtype: 'combo',
+                                                                fieldLabel: 'Despachado',
+                                                                name: 'despacho_secretaria',
+                                                                id: 'despacho_secretaria',
+                                                                anchor: '95%',
+
+                                                                hiddenName: 'despacho_secretaria',
+                                                                store: storeOFAC,
+                                                                valueField: 'id',
+                                                                displayField: 'nombre',
+                                                                typeAhead: true,
+                                                                triggerAction: 'all',
+                                                                mode: 'local'
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                title: 'Inspección',
+                                                layout: 'column',
+                                                autoScroll: true,
+                                                items: [
+                                                    {
+                                                        type: 'container',
+                                                        columnWidth: 1 / 2,
+                                                        layout: 'form',
+                                                        items: [
+                                                            {
+                                                                bodyStyle: 'padding:0; background: #ebfaeb',
+                                                                xtype: 'combo',
+                                                                fieldLabel: 'Estado Recepcion Información',
+                                                                name: 'estado_recepcion_informacion',
+                                                                anchor: '95%',
+                                                                hiddenName: 'estado_recepcion_informacion',
+
+                                                                store: storeESREA,
+                                                                valueField: 'id',
+                                                                displayField: 'nombre',
+                                                                typeAhead: true,
+                                                                triggerAction: 'all',
+                                                                mode: 'local',
+                                                                readOnly: true,
+                                                                cls: 'sololectura'
+                                                            },
+                                                            {
+                                                                xtype: 'combo',
+                                                                fieldLabel: 'Actividad',
+                                                                name: 'actividad',
+                                                                anchor: '95%',
+                                                                hiddenName: 'actividad',
+
+                                                                store: storeACTA,
+                                                                valueField: 'id',
+                                                                displayField: 'nombre',
+                                                                typeAhead: true,
+                                                                triggerAction: 'all',
+                                                                mode: 'local',
+                                                                readOnly: true,
+                                                                cls: 'sololectura'
+                                                            },
+                                                            {
+                                                                xtype: 'combo',
+                                                                fieldLabel: 'Persona asignada',
+                                                                name: 'persona_asignada',
+                                                                anchor: '95%',
+                                                                hiddenName: 'persona_asignada',
+
+                                                                store: storePRASA,
+                                                                valueField: 'id',
+                                                                displayField: 'nombre',
+                                                                typeAhead: true,
+                                                                triggerAction: 'all',
+                                                                mode: 'local',
+                                                                readOnly: true,
+                                                                cls: 'sololectura'
+                                                            },
+
+                                                            {
+                                                                xtype: 'textfield',
+                                                                fieldLabel: 'Cod inspección',
+                                                                name: 'codigo_inspeccion',
+                                                                anchor: '95%',
+                                                                readOnly: true,
+                                                                cls: 'sololectura'
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        type: 'container',
+                                                        columnWidth: 1 / 2,
+                                                        layout: 'form',
+                                                        items: [
+                                                            {
+                                                                xtype: 'textfield',
+                                                                fieldLabel: 'Cod procedimiento',
+                                                                name: 'codigo_procedimiento',
+                                                                anchor: '95%',
+                                                                readOnly: true,
+                                                                cls: 'sololectura'
+                                                            },
+                                                            {
+                                                                xtype: 'combo',
+                                                                fieldLabel: 'Zona',
+                                                                name: 'id_zona',
+                                                                anchor: '95%',
+                                                                hiddenName: 'id_zona',
+
+                                                                store: storeZONA,
+                                                                valueField: 'id',
+                                                                displayField: 'nombre',
+                                                                typeAhead: true,
+                                                                triggerAction: 'all',
+                                                                mode: 'local',
+                                                                readOnly: true,
+                                                                cls: 'sololectura'
+                                                            },
+                                                            {
+                                                                xtype: 'textfield',
+                                                                fieldLabel: 'Predio',
+                                                                name: 'predio',
+                                                                anchor: '95%',
+                                                                readOnly: true,
+                                                                cls: 'sololectura'
+                                                            }
+                                                            ,
+                                                            {
+                                                                xtype: 'textfield',
+                                                                fieldLabel: 'Observación',
+                                                                name: 'observacion',
+                                                                anchor: '95%',
+                                                                readOnly: true,
+                                                                cls: 'sololectura'
+                                                            },
+
+                                                            {
+
+                                                                xtype: 'textarea',
+                                                                fieldLabel: 'Procedimiento',
+                                                                name: 'procedimientosdetalle',
+                                                                anchor: '95%',
+                                                                readOnly: true,
+                                                                cls: 'sololectura'
+
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+
+                                        ]
+                                    }
+
+                                ]
                             }],
 
                         }
