@@ -206,7 +206,6 @@ textoSiguieteFila("Código bodega ", 'D', 'D', 'center', false, "B");
 textoSiguieteFila("Detalle", 'E', 'F', 'center', false, "B");
 $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
 
-
 // recuperamos los nombres de los usuarios
 $sql = "SELECT * FROM amc_operativos_retiros WHERE id_operativo = '" . $operativo['id'] . "'";
 $nombres = $os->db->conn->query($sql);
