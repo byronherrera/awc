@@ -394,6 +394,7 @@ function updateOperativos()
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
+        "mail" => "aa",
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos actualizado exitosamente" : $sql->errorCode()
     ));
 }
