@@ -795,15 +795,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
             listeners: {
                 write: function (proxy, action, result, res, rs) {
-
-                    console.log (rs.data.visible);
-
-
                     if (typeof res.message !== 'undefined') {
-
                         if (res.message != '') {
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
-
                         }
                     }
                 }
@@ -2780,7 +2774,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             scope: this,
                                                             handler: this.addoperativosPersonal,
                                                             iconCls: 'save-icon',
-                                                            disabled: true,
+                                                            //disabled: true,
                                                             id: 'addoperativodetalle',
                                                             //disabled: !acceso
                                                         },
@@ -2792,7 +2786,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             id: 'borraroperativodetalle',
                                                             iconCls: 'delete-icon',
                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                            disabled: true
+                                                            //disabled: true
                                                         }
                                                     ]
                                                 },
