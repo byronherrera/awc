@@ -1964,6 +1964,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             key: 'institucion',
                             scope: this,
                             text: 'Institución'
+                        }, {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'asunto',
+                            scope: this,
+                            text: 'Asunto'
                         }
                     ]
                 })
