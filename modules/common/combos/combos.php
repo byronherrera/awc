@@ -389,6 +389,40 @@ function comboCargo()
     );
 }
 
+function comboTipoActividad()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM amc_inspeccion_actividad";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
+function comboPersonalDistributivo()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM amc_personal_distributivo";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
 switch ($_GET['tipo']) {
     case 'usuario' :
         usuario();
@@ -457,6 +491,14 @@ switch ($_GET['tipo']) {
 
     case 'instituciones' :
         comboInstituciones();
+        break;
+
+    case 'tipo_actividad' :
+        comboTipoActividad();
+        break;
+
+    case 'personal_distributivo' :
+        comboPersonalDistributivo();
         break;
 }
 ?>
