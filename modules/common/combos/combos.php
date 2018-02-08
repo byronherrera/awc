@@ -410,7 +410,7 @@ function comboPersonalDistributivo()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_personal_distributivo";
+    $sql = "SELECT CONCAT(last_name,' ',first_name) as nombre,id FROM qo_members WHERE active=1 ORDER BY last_name";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
