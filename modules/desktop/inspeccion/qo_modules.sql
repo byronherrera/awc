@@ -2,7 +2,7 @@ INSERT INTO `qo_modules` VALUES ('moduloInspeccion', 'desktop/moduloInspeccion',
 
 
 ALTER TABLE `prueba`.`amc_denuncias`
-ADD COLUMN `procesado_inspeccion` int(1) NULL AFTER `procesado_inspeccion`;
+ADD COLUMN `procesado_inspeccion` int(1) NULL  ;
 
 
 /*

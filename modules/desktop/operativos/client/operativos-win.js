@@ -76,7 +76,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function operativosTipoOperativosSimple(id) {
-            var index = storeOPTID.find('id', id);
+            var index = storeOPTID.findExact('id', id);
             if (index > -1) {
                 var record = storeOPTID.getAt(index);
                 return record.get('nombre');
@@ -94,7 +94,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function operativosTipoOperativosSimple2(id) {
-            var index = storeOPTID.find('id', id);
+            var index = storeOPTID.findExact('id', id);
             if (index > -1) {
                 var record = storeOPTID.getAt(index);
                 return record.get('nombre');
@@ -107,7 +107,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             var nombres = id.split(",");
             retorno = '';
             for (var i = 0; i < nombres.length; i++) {
-                index = storeOPTID.find('id', nombres[i]);
+                index = storeOPTID.findExact('id', nombres[i]);
                 var record = storeOPTID.getAt(index);
                 if (typeof record !== 'undefined') {
                     retorno = record.data.nombre + ',' + retorno
@@ -135,7 +135,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function operativosTipoMedida(id) {
-            var index = storeOPINFOMEDIDA.find('id', id);
+            var index = storeOPINFOMEDIDA.findExact('id', id);
             if (index > -1) {
                 var record = storeOPINFOMEDIDA.getAt(index);
                 return record.get('nombre');
@@ -166,7 +166,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function operativosDespachadoActivo(id) {
-            var index = storeOPOFAC.find('id', id);
+            var index = storeOPOFAC.findExact('id', id);
             if (index > -1) {
                 var record = storeOPOFAC.getAt(index);
                 return record.get('nombre');
@@ -199,7 +199,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function operativosNivelComplejidad(id) {
-            var index = storeOPNICO.find('id', id);
+            var index = storeOPNICO.findExact('id', id);
             if (index > -1) {
                 var record = storeOPNICO.getAt(index);
                 return record.get('nombre');
@@ -226,7 +226,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function operativosTipo(id) {
-            var index = storeOPTIPO.find('id', id);
+            var index = storeOPTIPO.findExact('id', id);
             if (index > -1) {
                 var record = storeOPTIPO.getAt(index);
                 return record.get('nombre');
@@ -253,7 +253,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function entidadesTipo(id) {
-            var index = storeOPENTT.find('id', id);
+            var index = storeOPENTT.findExact('id', id);
             if (index > -1) {
                 var record = storeOPENTT.getAt(index);
                 return record.get('nombre');
@@ -287,7 +287,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function operativosUnidades(id) {
-            var index = storeOPREA.find('id', id);
+            var index = storeOPREA.findExact('id', id);
             if (index > -1) {
                 var record = storeOPREA.getAt(index);
                 return record.get('nombre');
@@ -318,7 +318,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function departamentoOPREATOTsignacion(id) {
-            var index = storeOPREATOT.find('id', id);
+            var index = storeOPREATOT.findExact('id', id);
             var record = storeOPREATOT.getAt(index);
             return record.get('nombre');
         }
@@ -342,7 +342,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function operativosEstados(id) {
-            var index = storeOPESTA.find('id', id);
+            var index = storeOPESTA.findExact('id', id);
             if (index > -1) {
                 var record = storeOPESTA.getAt(index);
                 return record.get('nombre');
@@ -368,7 +368,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function departamentoOPREAGUIAS(id) {
-            var index = storeOPREAGUIA.find('id', id);
+            var index = storeOPREAGUIA.findExact('id', id);
             var record = storeOPREAGUIA.getAt(index);
             return record.get('nombre');
         }
@@ -409,7 +409,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             retorno = '';
 
             for (var i = 0; i < nombres.length; i++) {
-                index = storeOPPERENC.find('id', nombres[i]);
+                index = storeOPPERENC.findExact('id', nombres[i]);
                 var record = storeOPPERENC.getAt(index);
                 if (typeof record !== 'undefined') {
                     retorno = record.data.nombre + ',' + retorno
@@ -417,9 +417,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
             return retorno
         }
-
         //fin combo tipo documento  OPPERENC
-
 
         //inicio combo persona recepta la operativos PRD
         storePRD = new Ext.data.JsonStore({
@@ -460,7 +458,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaReceptaDenuncia(id) {
-            var index = storePRD.find('id', id);
+            var index = storePRD.findExact('id', id);
             if (index > -1) {
                 var record = storePRD.getAt(index);
                 return record.get('nombre');
@@ -493,7 +491,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaReceptaDenuncia2(id) {
-            var index = storePRD2.find('id', id);
+            //var index = storePRD2.findExact('id', id);
+            var index = storePRD2.findExact('id', id);
             if (index > -1) {
                 var record = storePRD2.getAt(index);
                 return record.get('nombre');
@@ -524,7 +523,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function zonaAdm(id) {
-            var index = storeZONA.find('id', id);
+            var index = storeZONA.findExact('id', id);
             if (index > -1) {
                 var record = storeZONA.getAt(index);
                 return record.get('nombre');
@@ -551,7 +550,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function actividadAdm(id) {
-            var index = storeACTA.find('id', id);
+            var index = storeACTA.findExact('id', id);
             if (index > -1) {
                 var record = storeACTA.getAt(index);
                 return record.get('nombre');
@@ -594,7 +593,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function estadoRecepcionAdm(id) {
-            var index = storeESOPREA.find('id', id);
+            var index = storeESOPREA.findExact('id', id);
             if (index > -1) {
                 var record = storeESOPREA.getAt(index);
                 return record.get('nombre');
@@ -649,7 +648,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function procedimientosAdm(id) {
-            var index = storePRSA.find('id', id);
+            var index = storePRSA.findExact('id', id);
             if (index > -1) {
                 var record = storePRSA.getAt(index);
                 return record.get('nombre');
@@ -676,7 +675,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaAsignadaAdm(id) {
-            var index = storePRASA.find('id', id);
+            var index = storePRASA.findExact('id', id);
             if (index > -1) {
                 var record = storePRASA.getAt(index);
                 return record.get('nombre');
@@ -1322,7 +1321,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     width: 30,
                     editor: comboPRD2,
                     renderer: personaReceptaDenuncia2
-
                 },
                 {
                     header: 'Operativo',
@@ -2776,7 +2774,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             iconCls: 'save-icon',
                                                             //disabled: true,
                                                             id: 'addoperativodetalle',
-                                                            //disabled: !acceso
+                                                            disabled: !acceso
                                                         },
                                                         '-',
                                                         {
@@ -2785,7 +2783,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             handler: this.deleteoperativosPersonal,
                                                             id: 'borraroperativodetalle',
                                                             iconCls: 'delete-icon',
-                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                            disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                                                             //disabled: true
                                                         }
                                                     ]

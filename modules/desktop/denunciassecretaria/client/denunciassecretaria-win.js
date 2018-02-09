@@ -40,7 +40,7 @@ QoDesk.DenunciassecretariaWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaReceptaDenunciaSec(id) {
-            var index = storePRDS.find('id', id);
+            var index = storePRDS.findExact('id', id);
             if (index > -1) {
                 var record = storePRDS.getAt(index);
                 return record.get('nombre');
@@ -72,7 +72,7 @@ QoDesk.DenunciassecretariaWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaTipoDocumentoSec(id) {
-            var index = storeTIDS.find('id', id);
+            var index = storeTIDS.findExact('id', id);
             if (index > -1) {
                 var record = storeTIDS.getAt(index);
                 return record.get('nombre');
@@ -114,7 +114,7 @@ QoDesk.DenunciassecretariaWindow = Ext.extend(Ext.app.Module, {
         });
 
         function departamentoReasignacionSec(id) {
-            var index = storeREAS.find('id', id);
+            var index = storeREAS.findExact('id', id);
             if (index > -1) {
                 var record = storeREAS.getAt(index);
                 return record.get('nombre');
@@ -146,7 +146,7 @@ QoDesk.DenunciassecretariaWindow = Ext.extend(Ext.app.Module, {
         });
 
         function caracterTramiteSec(id) {
-            var index = storeCDTS.find('id', id);
+            var index = storeCDTS.findExact('id', id);
             if (index > -1) {
                 var record = storeCDTS.getAt(index);
                 return record.get('nombre');

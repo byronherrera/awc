@@ -35,7 +35,7 @@ QoDesk.DenunciasinspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaReceptaDenunciaInspeccion(id) {
-            var index = storePRDI.find('id', id);
+            var index = storePRDI.findExact('id', id);
             if (index > -1) {
                 var record = storePRDI.getAt(index);
                 return record.get('nombre');
@@ -67,7 +67,7 @@ QoDesk.DenunciasinspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaTipoDocumentoIns(id) {
-            var index = storeTIDI.find('id', id);
+            var index = storeTIDI.findExact('id', id);
             if (index > -1) {
                 var record = storeTIDI.getAt(index);
                 return record.get('nombre');
@@ -94,7 +94,7 @@ QoDesk.DenunciasinspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function departamentoReasignacionIns(id) {
-            var index = storeREAI.find('id', id);
+            var index = storeREAI.findExact('id', id);
             if (index > -1) {
                 var record = storeREAI.getAt(index);
                 return record.get('nombre');
@@ -127,7 +127,7 @@ QoDesk.DenunciasinspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function caracterTramiteIns(id) {
-            var index = storeCDTI.find('id', id);
+            var index = storeCDTI.findExact('id', id);
             if (index > -1) {
                 var record = storeCDTI.getAt(index);
                 return record.get('nombre');
@@ -156,7 +156,7 @@ QoDesk.DenunciasinspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function zonaIns(id) {
-            var index = storeZONI.find('id', id);
+            var index = storeZONI.findExact('id', id);
             if (index > -1) {
                 var record = storeZONI.getAt(index);
                 return record.get('nombre');
@@ -183,7 +183,7 @@ QoDesk.DenunciasinspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function actividadIns(id) {
-            var index = storeACTI.find('id', id);
+            var index = storeACTI.findExact('id', id);
             if (index > -1) {
                 var record = storeACTI.getAt(index);
                 return record.get('nombre');
@@ -217,7 +217,7 @@ QoDesk.DenunciasinspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function estadoRecepcionInspeccion(id) {
-            var index = storeESREI.find('id', id);
+            var index = storeESREI.findExact('id', id);
             if (index > -1) {
                 var record = storeESREI.getAt(index);
                 return record.get('nombre');
@@ -247,7 +247,7 @@ QoDesk.DenunciasinspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function procedimientosIns(id) {
-            var index = storePRSI.find('id', id);
+            var index = storePRSI.findExact('id', id);
             if (index > -1) {
                 var record = storePRSI.getAt(index);
                 return record.get('nombre');
@@ -274,7 +274,7 @@ QoDesk.DenunciasinspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaAsignadaIns(id) {
-            var index = storePRASI.find('id', id);
+            var index = storePRASI.findExact('id', id);
             if (index > -1) {
                 var record = storePRASI.getAt(index);
                 return record.get('nombre');

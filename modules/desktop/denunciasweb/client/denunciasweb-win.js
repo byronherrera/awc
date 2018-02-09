@@ -49,7 +49,7 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
         });
 
         function denunciaswebActivo(id) {
-            var index = storeSASINO.find('id', id);
+            var index = storeSASINO.findExact('id', id);
             if (index > -1) {
                 var record = storeSASINO.getAt(index);
                 return record.get('nombre');

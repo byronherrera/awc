@@ -166,8 +166,7 @@ function comboPersonalOperativos()
     }
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT
-            a.id,
+    $sql = "SELECT DISTINCT a.id,
             CONCAT(a.last_name,' ',a.first_name) AS nombre
             FROM
             qo_members a,qo_groups_has_members b
