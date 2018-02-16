@@ -417,7 +417,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
             return retorno
         }
+
         //fin combo tipo documento  OPPERENC
+
 
         //inicio combo persona recepta la operativos PRD
         storePRD = new Ext.data.JsonStore({
@@ -610,7 +612,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             data: {
                 datos: [
                     {"id": "Perecible", "nombre": "Perecible"},
-                    {"id": "No perecible", "nombre": "No perecible"}
+                    {"id": "No perecible", "nombre": "No perecible"},
+                    {"id": "Vehículos", "nombre": "Vehículos"},
+                    {"id": "Otros", "nombre": "Otros"}
                 ]
             }
         });
@@ -2774,7 +2778,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             iconCls: 'save-icon',
                                                             //disabled: true,
                                                             id: 'addoperativodetalle',
-                                                            disabled: !acceso
+                                                            //disabled: !acceso
                                                         },
                                                         '-',
                                                         {
@@ -2783,7 +2787,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             handler: this.deleteoperativosPersonal,
                                                             id: 'borraroperativodetalle',
                                                             iconCls: 'delete-icon',
-                                                            disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                                                             //disabled: true
                                                         }
                                                     ]

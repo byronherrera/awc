@@ -19,7 +19,9 @@ function selectInspeccion()
 
     if (isset($_POST['pendientesAprobar'])) {
         if ($_POST['pendientesAprobar'] == 'true') {
-            $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0";
+            ///cambio bh
+            //$where = " WHERE reasignacion = 3 and procesado_inspeccion = 0";
+            $where = " WHERE reasignacion = 3 and ( procesado_inspeccion = 0 and despacho_secretaria_insp = 0) ";
         }
     }
 
@@ -52,8 +54,8 @@ function selectInspeccion()
         $limit = $_POST['limit'];
     else
         $limit = 100;
-
-    $orderby = 'ORDER BY codigo_tramite DESC';
+    // cambio BH
+    $orderby = 'ORDER BY id DESC';
 
     $os->db->conn->query("SET NAMES 'utf8'");
 
