@@ -1,6 +1,6 @@
 QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
-    id: 'inspeccion',
-    type: 'desktop/moduloInspeccion',
+    id: 'moduloInspeccion',
+    type: 'desktop/inspeccion',
 
     init: function () {
         this.launcher = {
@@ -11,13 +11,12 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
     },
     createWindow: function () {
-        //Variables de acceso
-        var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
-        var accesosInspeccion = this.app.isAllowedTo('accesosInspeccion', this.id);
-        var accesosRecepciónIns = this.app.isAllowedTo('accesosRecepciónIns', this.id);
+        var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
+        var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
+        var accesosZonales = this.app.isAllowedTo('accesosZonales', this.id);
 
-        var acceso = (accesosAdministradorIns || accesosInspeccion || accesosRecepciónIns) ? true : false
-
+        var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
+        var isChecked = true;
         var desktop = this.app.getDesktop();
         var winHeight = desktop.getWinHeight();
         var winWidth = desktop.getWinWidth();
