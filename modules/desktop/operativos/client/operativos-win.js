@@ -3073,7 +3073,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     accesosOperativos: accesosOperativos
                 }
             });
-        }, 1200);
+        }, 1800);
     },
     deleteoperativos: function () {
         Ext.Msg.show({
