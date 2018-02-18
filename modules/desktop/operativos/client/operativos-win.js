@@ -691,7 +691,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
 // inicio pestañas de mantenimiento
 
-
+/*
         //inicio mantenimiento OperativosGuia
         var proxyOperativosGuia = new Ext.data.HttpProxy({
             api: {
@@ -783,7 +783,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         });
 
         //fin mantenimiento OperativosGuías
-
+*/
 
 // fin pestañas de mantenimiento
 
