@@ -531,7 +531,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         });
         //bh llamada innecesaria
         //this.storeModuloInspeccion.load();
-        this.storeDetalleInspeccion.load();
+        //this.storeDetalleInspeccion.load();
         storeModuloInspeccion = this.storeModuloInspeccion;
         limiteModuloInspeccion = 100;
         storeDetalleInspeccion = this.storeDetalleInspeccion;
@@ -539,6 +539,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         storeModuloInspeccion.baseParams = {
             limit: limiteModuloInspeccion
         };
+
 
 
         //Inicio formato grid Inspeccion
@@ -766,7 +767,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                 //bh boton generar
                                 {
                                     iconCls: 'excel-icon',
-                                    handler: this.botonExportarReporte,
+                                    handler: this.botonGenerarGuia,
                                     scope: this,
                                     text: 'Generar Nueva Guía',
                                     tooltip: 'Se genera guía con los ',
@@ -1045,35 +1046,22 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 }
         });
     },
-
-    botonExportarReporte: function () {
-
-        if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar Unidad')
-            Ext.Msg.show({
-                title: 'Advertencia',
-                msg: 'Seleccione unidad',
-                scope: this,
-                icon: Ext.Msg.WARNING
-            });
-        else
-            Ext.Msg.show({
-                title: 'Advertencia',
-                msg: 'Se descarga el archivo Excel<br>Se cambia el estado de Enviado a Si.<br>¿Desea continuar?',
-                scope: this,
-                icon: Ext.Msg.WARNING,
-                buttons: Ext.Msg.YESNO,
-                fn: function (btn) {
-                    if (btn == 'yes') {
-                        window.location.href = 'modules/desktop/inspeccion/server/descargaInspeccionNuevas.inc.php?unidad=' + Ext.getCmp('tb_seleccionarUnidad').getValue();
-                        setTimeout(function () {
-                            storeInspeccion.load({params: {noenviados: Ext.getCmp('checkNoRecibidos').getValue()}});
-                        }, 1000);
-
-                    }
+    // bh boton generar nueva guía
+    botonGenerarGuia: function () {
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descará el formato Excel<br>Se cambiará el estado de generado Si.<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuias.php';
+                    setTimeout(function () {
+                        storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkNoRecibidos').getValue()}});
+                    }, 1000);
                 }
-            });
+            }
+        });
     },
-
-
 });
-
