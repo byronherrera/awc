@@ -529,8 +529,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             })
             , text: 'Código trámite'
         });
-
-        this.storeModuloInspeccion.load();
+        //bh llamada innecesaria
+        //this.storeModuloInspeccion.load();
         this.storeDetalleInspeccion.load();
         storeModuloInspeccion = this.storeModuloInspeccion;
         limiteModuloInspeccion = 100;
@@ -763,6 +763,16 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     }
                                 }, /*this.targetFieldBtn,*/
 
+                                //bh boton generar
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarReporte,
+                                    scope: this,
+                                    text: 'Generar Nueva Guía',
+                                    tooltip: 'Se genera guía con los ',
+                                    id: 'tb_repoteDenuncias',
+                                    disabled: false
+                                },
                                 '-',
                                 '->'
                                 , {
@@ -1035,6 +1045,35 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 }
         });
     },
+
+    botonExportarReporte: function () {
+
+        if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar Unidad')
+            Ext.Msg.show({
+                title: 'Advertencia',
+                msg: 'Seleccione unidad',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+        else
+            Ext.Msg.show({
+                title: 'Advertencia',
+                msg: 'Se descarga el archivo Excel<br>Se cambia el estado de Enviado a Si.<br>¿Desea continuar?',
+                scope: this,
+                icon: Ext.Msg.WARNING,
+                buttons: Ext.Msg.YESNO,
+                fn: function (btn) {
+                    if (btn == 'yes') {
+                        window.location.href = 'modules/desktop/inspeccion/server/descargaInspeccionNuevas.inc.php?unidad=' + Ext.getCmp('tb_seleccionarUnidad').getValue();
+                        setTimeout(function () {
+                            storeInspeccion.load({params: {noenviados: Ext.getCmp('checkNoRecibidos').getValue()}});
+                        }, 1000);
+
+                    }
+                }
+            });
+    },
+
 
 });
 
