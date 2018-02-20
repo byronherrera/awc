@@ -11,62 +11,24 @@ if (!$os->session_exists()) {
 function selectInspeccion()
 {
     global $os;
-    //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'codigo_tramite';
-    //$where = '';
-    //forzamos que solo sea los asignados a inspeccion
-     $where = 'WHERE reasignacion = 3';
+    //$id = (int)$_POST ['id'];
+    $funcionario_entrega = $os->get_member_id();
+    //if($id!=0){
+        $os->db->conn->query("SET NAMES 'utf8'");
+        $sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega";
+        //$sql = "SELECT * FROM amc_inspeccion";
+        $result = $os->db->conn->query($sql);
+        $data = array();
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
-     //
-    if (isset($_POST['pendientesAprobar'])) {
-        if ($_POST['pendientesAprobar'] == 'true') {
-            $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0";
+            $data[] = $row;
         }
-    }
+        echo json_encode(array(
+                "success" => true,
+                "data" => $data)
+        );
+    //}
 
-    if (isset($_POST['filterText'])) {
-        $campo = $_POST['filterText'];
-        $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
-            $columnaBusqueda = $_POST['filterField'];
-        }
-        $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-    }
-
-
-    if (isset ($_POST['start']))
-        $start = $_POST['start'];
-    else
-        $start = 0;
-
-    if (isset ($_POST['limit']))
-        $limit = $_POST['limit'];
-    else
-        $limit = 100;
-
-    $orderby = 'ORDER BY codigo_tramite DESC';
-
-    $os->db->conn->query("SET NAMES 'utf8'");
-
-
-    $sql = "SELECT * FROM amc_denuncias $where $orderby LIMIT $start, $limit";
-     $result = $os->db->conn->query($sql);
-    $data = array();
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
-        $data[] = $row;
-    };
-
-    $sql = "SELECT count(*) AS total FROM amc_denuncias $where";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    $total = $row['total'];
-
-    echo json_encode(array(
-            "total" => $total,
-            "success" => true,
-            "data" => $data)
-    );
 }
 
 function insertInspeccion()

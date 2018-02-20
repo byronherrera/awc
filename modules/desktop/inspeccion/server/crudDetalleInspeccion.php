@@ -8,160 +8,28 @@ if (!$os->session_exists()) {
     die('No existe sesión!');
 }
 
-function selectOrdenanzas()
+function selectDetalleInspecciones()
 {
     global $os;
+    $id = (int)$_POST ['id'];
+    if($id!=0){
+        $os->db->conn->query("SET NAMES 'utf8'");
+        $sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.id_denuncia = $id";
+        $result = $os->db->conn->query($sql);
+        $data = array();
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
-    $columnaBusqueda = 'codigo_tramite';
-    //$where = '';
-
-    //forzamos que solo sea los asignados a inspeccion
-    $where = 'WHERE reasignacion = 3 and recepcion_inspeccion = 1 and procesado_inspeccion = 0 ';
-
-    if (isset($_POST['filterField'])) {
-        $columnaBusqueda = $_POST['filterField'];
-
-    }
-
-    if (isset($_POST['filterText'])) {
-        $campo = $_POST['filterText'];
-        $campo = str_replace(" ", "%", $campo);
-
-        //para el caso de busqueda por guia, recuperamos el id de la guia
-        if ($columnaBusqueda == 'guia') {
-
-            $sql = "SELECT id FROM amc_inspeccion WHERE numero = '$campo'";
-            $numguia = $os->db->conn->query($sql);
-            if ($numguia) {
-                $row = $numguia->fetch(PDO::FETCH_ASSOC);
-                if ($row) {
-                    $campo = $row['id'];
-                }
-            }
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%' AND despacho_secretaria = 'true'";
-        } else
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-    }
-
-    if (isset($_POST['unidadfiltro'])) {
-        $unidad = $_POST['unidadfiltro'];
-        if ($where == '') {
-            $where = "WHERE reasignacion = $unidad ";
-        } else {
-            $where = " AND reasignacion = $unidad ";
+            $data[] = $row;
         }
+        echo json_encode(array(
+                "success" => true,
+                "data" => $data)
+        );
     }
 
-    if (isset($_POST['noenviados'])) {
-        if ($_POST['noenviados'] == 'true') {
-            if ($where == '') {
-                $where = " WHERE despacho_secretaria <> 'true'";
-            } else {
-                $where = $where . " AND despacho_secretaria <> 'true' ";
-            }
-        }
-    }
-
-    if (isset ($_POST['start']))
-        $start = $_POST['start'];
-    else
-        $start = 0;
-
-    if (isset ($_POST['limit']))
-        $limit = $_POST['limit'];
-    else
-        $limit = 100;
-
-    $orderby = 'ORDER BY codigo_tramite DESC';
-    if (isset($_POST['sort'])) {
-        $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
-    }
-
-    // para los reportes
-    if (isset($_POST['busqueda_tipo_documento']) and ($_POST['busqueda_tipo_documento'] != '')) {
-        $tipo = $_POST['busqueda_tipo_documento'];
-        if ($where == '') {
-            $where = "WHERE id_tipo_documento = $tipo ";
-        } else {
-            $where = $where . " AND id_tipo_documento = $tipo ";
-        }
-    }
-    if (isset($_POST['busqueda_institucion']) and ($_POST['busqueda_institucion'] != '')) {
-        $tipo = $_POST['busqueda_institucion'];
-        if ($where == '') {
-            $where = "WHERE institucion = '$tipo' ";
-        } else {
-            $where = $where . " AND institucion = '$tipo' ";
-        }
-    }
-    if (isset($_POST['busqueda_caracter_tramite']) and ($_POST['busqueda_caracter_tramite'] != '')) {
-        $tipo = $_POST['busqueda_caracter_tramite'];
-        if ($where == '') {
-            $where = "WHERE id_caracter_tramite = '$tipo' ";
-        } else {
-            $where = $where . " AND id_caracter_tramite = '$tipo' ";
-        }
-    }
-
-    if (isset($_POST['busqueda_guia']) and ($_POST['busqueda_guia'] != '')) {
-        $tipo = $_POST['busqueda_guia'];
-        if ($where == '') {
-            $where = "WHERE guia = '$tipo' ";
-        } else {
-            $where = $where . " AND guia = '$tipo' ";
-        }
-    }
-/*
-    if (isset($_POST['busqueda_reasignacion']) and ($_POST['busqueda_reasignacion'] != '')) {
-        $tipo = $_POST['busqueda_reasignacion'];
-        if ($where == '') {
-            $where = "WHERE reasignacion in ($tipo) ";
-        } else {
-            $where = $where . " AND reasignacion in ($tipo) ";
-        }
-    }
-*/
-
-    if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
-        $fechainicio = $_POST['busqueda_fecha_inicio'];
-        if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin'] != '')) {
-            $fechafin = $_POST['busqueda_fecha_fin'];
-        } else {
-            $fechafin = date('Y\m\d H:i:s');;
-        }
-
-        if ($where == '') {
-            $where = "WHERE recepcion_documento between '$fechainicio' and '$fechafin'  ";
-        } else {
-            $where = $where . " AND recepcion_documento between '$fechainicio' and '$fechafin' ";
-        }
-    }
-
-
-    $os->db->conn->query("SET NAMES 'utf8'");
-
-
-    $sql = "SELECT * FROM amc_inspeccion $where $orderby LIMIT $start, $limit";
-     $result = $os->db->conn->query($sql);
-    $data = array();
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
-        $data[] = $row;
-    };
-
-    $sql = "SELECT count(*) AS total FROM amc_inspeccion $where";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    $total = $row['total'];
-
-    echo json_encode(array(
-            "total" => $total,
-            "success" => true,
-            "data" => $data)
-    );
 }
 
-function insertOrdenanzas()
+function insertDetalleInspecciones()
 {
     global $os;
 
@@ -217,7 +85,7 @@ function generaCodigoProcesoOrdenanza()
     }
 }
 
-function updateOrdenanzas()
+function updateDetalleInspecciones()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -276,7 +144,7 @@ function validarCedulaCorreo($id)
 }
 
 
-function selectOrdenanzasForm()
+function selectDetalleInspeccionesForm()
 {
     global $os;
     $id = (int)$_POST ['id'];
@@ -297,7 +165,7 @@ function selectOrdenanzasForm()
 
 }
 
-function updateOrdenanzasForm()
+function updateDetalleInspeccionesForm()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -333,7 +201,7 @@ function updateOrdenanzasForm()
     ));
 }
 
-function deleteOrdenanzas()
+function deleteDetalleInspecciones()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
@@ -348,21 +216,21 @@ function deleteOrdenanzas()
 
 switch ($_GET['operation']) {
     case 'select' :
-        selectOrdenanzasForm();
+        selectDetalleInspecciones();
         break;
     case 'insert' :
-        insertOrdenanzas();
+        insertDetalleInspecciones();
         break;
     case 'update' :
-        updateOrdenanzas();
+        updateDetalleInspecciones();
         break;
     case 'selectForm' :
-        selectOrdenanzasForm();
+        selectDetalleInspeccionesForm();
         break;
     case 'updateForm' :
-        updateOrdenanzasForm();
+        updateDetalleInspeccionesForm();
         break;
     case 'delete' :
-        deleteOrdenanzas();
+        deleteDetalleInspecciones();
         break;
 }
