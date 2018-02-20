@@ -726,6 +726,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         };
 
 
+
         //Inicio formato grid Inspeccion
         this.gridModuloInspeccion = new Ext.grid.EditorGridPanel({
             id: 'gridModuloInspeccion',
