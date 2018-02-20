@@ -16,6 +16,10 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
         var accesosZonales = this.app.isAllowedTo('accesosZonales', this.id);
 
+        console.log (accesosAdministrador);
+        console.log (accesosSecretaria);
+        console.log (accesosZonales);
+
         var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
 
         var desktop = this.app.getDesktop();

@@ -417,7 +417,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             }
             return retorno
         }
+
         //fin combo tipo documento  OPPERENC
+
 
         //inicio combo persona recepta la operativos PRD
         storePRD = new Ext.data.JsonStore({
@@ -610,7 +612,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             data: {
                 datos: [
                     {"id": "Perecible", "nombre": "Perecible"},
-                    {"id": "No perecible", "nombre": "No perecible"}
+                    {"id": "No perecible", "nombre": "No perecible"},
+                    {"id": "Vehículos", "nombre": "Vehículos"},
+                    {"id": "Otros", "nombre": "Otros"}
                 ]
             }
         });
@@ -687,98 +691,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
 // inicio pestañas de mantenimiento
 
-
-        //inicio mantenimiento OperativosGuia
-        var proxyOperativosGuia = new Ext.data.HttpProxy({
-            api: {
-                create: urlOperativos + "crudOperativosGuia.php?operation=insert",
-                read: urlOperativos + "crudOperativosGuia.php?operation=select",
-                update: urlOperativos + "crudOperativosGuia.php?operation=update",
-                destroy: urlOperativos + "crudOperativosGuia.php?operation=delete"
-            }
-        });
-
-        var readerOperativosGuia = new Ext.data.JsonReader({
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id', allowBlank: false},
-                {name: 'numero', allowBlank: false},
-                {name: 'unidad', allowBlank: false},
-                {name: 'id_member', allowBlank: false},
-                {name: 'creado', allowBlank: false}
-            ]
-        });
-
-        var writerOperativosGuia = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeOperativosGuia = new Ext.data.Store({
-            id: "id",
-            proxy: proxyOperativosGuia,
-            reader: readerOperativosGuia,
-            writer: writerOperativosGuia,
-            autoSave: true
-        });
-        this.storeOperativosGuia.load();
-
-        this.gridOperativosGuia = new Ext.grid.EditorGridPanel({
-            id: 'gridOperativosGuia',
-            xtype: "grid",
-            height: 200,
-            store: this.storeOperativosGuia,
-            columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'Número',
-                    dataIndex: 'numero',
-                    sortable: true,
-                    width: 30
-                },
-                {
-                    header: 'Unidad',
-                    dataIndex: 'unidad',
-                    sortable: true,
-                    width: 40
-                },
-                {
-                    header: 'Fecha Guía',
-                    dataIndex: 'creado',
-                    sortable: true,
-                    width: 30
-                },
-                {
-                    header: 'Encargado',
-                    dataIndex: 'id_member',
-                    sortable: true,
-                    width: 40
-                }
-            ],
-            viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({
-                singleSelect: false,
-                listeners: {
-                    rowselect: function (sm, row, rec) {
-                        storeOperativosPersonal.load({params: {idOperativo: rec.get("id")}})
-                    }
-                }
-            }),
-            border: false,
-            stripeRows: true,
-            bbar: new Ext.PagingToolbar({
-                pageSize: 100,
-                store: this.storeOperativosGuia,
-                displayInfo: true,
-                displayMsg: 'Mostrando trámite {0} - {1} de {2}',
-                emptyMsg: "No existen tramites que mostrar"
-            }),
-        });
-
-        //fin mantenimiento OperativosGuías
 
 
 // fin pestañas de mantenimiento
@@ -2774,7 +2686,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             iconCls: 'save-icon',
                                                             //disabled: true,
                                                             id: 'addoperativodetalle',
-                                                            disabled: !acceso
+                                                            //disabled: !acceso
                                                         },
                                                         '-',
                                                         {
@@ -2783,7 +2695,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             handler: this.deleteoperativosPersonal,
                                                             id: 'borraroperativodetalle',
                                                             iconCls: 'delete-icon',
-                                                            disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                                                             //disabled: true
                                                         }
                                                     ]
@@ -3069,7 +2981,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     accesosOperativos: accesosOperativos
                 }
             });
-        }, 1200);
+        }, 1800);
     },
     deleteoperativos: function () {
         Ext.Msg.show({
