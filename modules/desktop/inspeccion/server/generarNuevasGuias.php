@@ -31,7 +31,7 @@ if (isset($_GET['param'])) {
 $today = date("Y-n-j-H-i-s");
 
 // se determina un filtro  para determinar las denuncias / tramites pendientes
-$where = ' WHERE reasignacion = 3 and ( procesado_inspeccion = 0 and despacho_secretaria_insp = 0) ';
+$where = ' WHERE reasignacion = 3 and ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) ';
 
 $year = date("Y");
 
@@ -69,7 +69,10 @@ $titulosegundo = "ACTA DE ENTREGA  $year-$numeroGuia";
 
 $os->db->conn->query("SET NAMES 'utf8'");
 
-$sql = "SELECT * FROM amc_denuncias as b  $where  ORDER BY b.recepcion_documento";
+$sql = "SELECT *, 'TEST' fechasumilla, 'TEST' funcionario, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
+FROM amc_denuncias as b 
+INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
+ $where  ORDER BY b.recepcion_documento";
 
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
@@ -155,7 +158,7 @@ $objDrawing = new PHPExcel_Worksheet_Drawing();
 $objDrawing->setName('test_img2');
 $objDrawing->setDescription('test_img2');
 $objDrawing->setPath('image1.png');
-$objDrawing->setCoordinates('I1');
+$objDrawing->setCoordinates('H1');
 //setOffsetX works properly
 $objDrawing->setOffsetX(0);
 $objDrawing->setOffsetY(0);
@@ -177,9 +180,9 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('G')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
 
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(4);
-$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(8);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
-$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(28);
+$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(28);
 $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
 $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(14);
 $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(11);
@@ -191,7 +194,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Tipo document
 $objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'Remitente');
 $objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Sumillado');
 $objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Para');
-$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Fecha sumilla');
+$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Guia');
 $objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Firmma');
 
 $noExistenFilas = true;
@@ -257,12 +260,10 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['codigo_tramite']);
     $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['num_documento']);
     $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['remitente']);
-    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, 'fecha sumilla');
-    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, 'uncionario');
-
-    //$objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, substr($rowdetalle['id_nivel_complejidad'], 0, 200));
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, 'firma');
-        $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, 'xx');
+    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['fechasumilla']);
+    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['funcionario']);
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, $rowdetalle['guia']);
+    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, '  ');
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':H' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;

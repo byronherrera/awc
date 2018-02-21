@@ -11,17 +11,66 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
     },
     createWindow: function () {
-        var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
-        var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
-        var accesosZonales = this.app.isAllowedTo('accesosZonales', this.id);
+        //Variables de acceso
+        var accesosCoordinadorInspeccion = this.app.isAllowedTo('accesosAdministrador', this.id); //Todos los accesos, visualiza todos los trámites
+        var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id); //Todos los accesos, visualiza trámites pendientes
+        var accesosInspectores = this.app.isAllowedTo('accesosInspeccion', this.id); //Sin acceso a pestaña trámites pendientes, acceso a inspecciones asignadas
+        var accesosSupervision = this.app.isAllowedTo('accesosSupervision', this.id); //Solo modo lectura
 
-        var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
-        var isChecked = true;
+        //Control en caso de tener asignado el perfil de administrador
+        if (accesosCoordinadorInspeccion && accesosSecretaria && accesosInspectores && accesosSupervision == true) {
+            accesosSecretaria = false;
+            accesosInspectores = false;
+            accesosSupervision = false;
+        }
+        //Acceso para creación y edición en pestaña Datos inspección
+        if (accesosCoordinadorInspeccion || accesosInspectores == true){
+            var creacionDatosInspeccion = true;
+        }
+        else{
+            var creacionDatosInspeccion = false;
+        }
+
+        //Acceso para creación y edición en pestaña Trámites pendientes
+        if (accesosCoordinadorInspeccion || accesosSecretaria == true){
+            var creacionTramites = true;
+        }
+        else{
+            var creacionTramites = false;
+        }
+
+        //Acceso para pestaña Inspecciones
+        //if (accesosCoordinadorInspeccion || accesosInspectores || accesosSupervision == true){
+        if (accesosInspectores || accesosCoordinadorInspeccion == true){
+            var pestInspeccion = true;
+        }
+        else{
+            var pestInspeccion = false;
+        }
+
+
+        console.log('accesosAdministrador '+accesosCoordinadorInspeccion);
+        console.log('accesosSecretaria '+accesosSecretaria);
+        console.log('accesosInspeccion '+accesosInspectores);
+        console.log('accesosSupervision '+accesosSupervision);
+        console.log('creacionDatosInspeccion '+creacionDatosInspeccion);
+        console.log('creacionTramites '+creacionTramites);
+        console.log('accesosSupervision '+accesosSupervision);
+        console.log('pestInspeccion '+pestInspeccion);
+
+        if(accesosSecretaria){
+            isChecked = true;
+        }
+        else{
+            isChecked = false;
+        }
+
+        var bloqueo = (accesosCoordinadorInspeccion || accesosSecretaria || accesosInspectores || accesosSupervision) ? true : false
+
         var desktop = this.app.getDesktop();
         var winHeight = desktop.getWinHeight();
         var winWidth = desktop.getWinWidth();
 
-        var desktop = this.app.getDesktop();
         var AppMsg = new Ext.AppMsg({});
         var win = desktop.getWindow('grid-win-moduloInspeccion');
 
@@ -62,6 +111,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'num_documento', readOnly: true, allowBlank: true},
                 {name: 'remitente', readOnly: true, allowBlank: true},
                 {name: 'cedula', readOnly: true, allowBlank: true},
+                {name: 'email', readOnly: true, allowBlank: true},
                 {name: 'institucion', readOnly: true, allowBlank: true},
                 {name: 'asunto', readOnly: true, allowBlank: true},
                 //{name: 'descripcion_anexos', readOnly: true, allowBlank: true},
@@ -104,16 +154,58 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_inspeccion', readOnly: false, allowBlank: true},
                 {name: 'codificacion', readOnly: false, allowBlank: true},
                 {name: 'nombre_denunciado', readOnly: false, allowBlank: true},
-                {name: 'fecha_despacho', readOnly: false, allowBlank: true},
+                {name: 'fecha_despacho',  type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'id_actividad', readOnly: false, allowBlank: true},
                 {name: 'funcionario_entrega', readOnly: false, allowBlank: true},
                 {name: 'respuesta', readOnly: false, allowBlank: true},
-                {name: 'guia', readOnly: false, allowBlank: true}
+                {name: 'guia', readOnly: false, allowBlank: true},
+                {name: 'id_zona', readOnly:false, allowBlank:true},
+                {name: 'predio', readOnly:false, allowBlank:true},
+                {name: 'id_control_programado', readOnly:false, allow:true}
             ]
         });
 
         //Definición de escritura en campos bdd Inspeccion
         var writerDetalleInspeccion = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        //Definición de url CRUD
+        var proxyListadoInspeccion = new Ext.data.HttpProxy({
+            api: {
+                create: urlInspeccion + "crudListadoInspecciones.php?operation=insert",
+                read: urlInspeccion + "crudListadoInspecciones.php?operation=select",
+                update: urlInspeccion + "crudListadoInspecciones.php?operation=update",
+                destroy: urlInspeccion + "crudListadoInspecciones.php?operation=delete"
+            }
+        });
+
+        //Definición de lectura de campos bdd Inspeccion
+        var readerListadoInspeccion = new Ext.data.JsonReader({
+            //totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id_denuncia', readOnly: false, allowBlank: true},
+                {name: 'id_inspeccion', readOnly: false, allowBlank: true},
+                {name: 'codificacion', readOnly: false, allowBlank: true},
+                {name: 'nombre_denunciado', readOnly: false, allowBlank: true},
+                {name: 'fecha_despacho',  type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'id_actividad', readOnly: false, allowBlank: true},
+                {name: 'funcionario_entrega', readOnly: false, allowBlank: true},
+                {name: 'respuesta', readOnly: false, allowBlank: true},
+                {name: 'guia', readOnly: false, allowBlank: true},
+                {name: 'id_zona', readOnly:false, allowBlank:true},
+                {name: 'predio', readOnly:false, allowBlank:true},
+                {name: 'id_control_programado', readOnly:false, allow:true}
+            ]
+        });
+
+        //Definición de escritura en campos bdd Inspeccion
+        var writerListadoInspeccion = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
@@ -124,9 +216,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             proxy: proxyModuloInspeccion,
             reader: readerModuloInspeccion,
             writer: writerModuloInspeccion,
-            //autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            autoSave: !accesosSupervision, // dependiendo de si se tiene acceso para grabar
             //remoteSort: true,
-            autoSave: true
+            //autoSave: true
             //baseParams: {}
         });
 
@@ -136,12 +228,20 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             proxy: proxyDetalleInspeccion,
             reader: readerDetalleInspeccion,
             writer: writerDetalleInspeccion,
-            //autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            autoSave: !accesosSupervision, // dependiendo de si se tiene acceso para grabar
             //remoteSort: true,
-            autoSave: true
             //baseParams: {}
         });
 
+        this.storeListadoInspeccion = new Ext.data.Store({
+            id: "id",
+            proxy: proxyListadoInspeccion,
+            reader: readerListadoInspeccion,
+            writer: writerListadoInspeccion,
+            autoSave: !accesosSupervision, // dependiendo de si se tiene acceso para grabar
+            //remoteSort: true,
+            //baseParams: {}
+        });
         var checkHandler = function (item, checked) {
             if (checked) {
                 var store = this.storeModuloInspeccion;
@@ -157,7 +257,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 datos: [
-                    {"id": 0, "nombre": "Seleccionar"},
                     {"id": 1, "nombre": "Denuncia"},
                     {"id": 2, "nombre": "Comunicado"},
                     {"id": 3, "nombre": "Oficio"},
@@ -231,6 +330,38 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 ]
             }
         });
+
+        //inicio combo aprobación secretaría inspección
+        storeCONTROLPROGRAMADO = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 1, "nombre": "Control programado"},
+                    {"id": 0, "nombre": "Fecha programada"}
+                ]
+            }
+        });
+
+        var comboCONTROLPROGRAMADO= new Ext.form.ComboBox({
+            id: 'comboCONTROLPROGRAMADO',
+            store: storeCONTROLPROGRAMADO,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function controlProgramado(id) {
+            var index = storeCONTROLPROGRAMADO.find('id', id);
+            if (index > -1) {
+                var record = storeCONTROLPROGRAMADO.getAt(index);
+                return record.get('nombre');
+            } else {
+                return ''
+            }
+        }
 
         //inicio combo guia  REAGUIA
         storeREAGUIA = new Ext.data.JsonStore({
@@ -308,6 +439,25 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=zonas'
         });
+
+        var comboZONA = new Ext.form.ComboBox({
+            id: 'comboZONA',
+            store: storeZONA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function zonaAdm(id) {
+            var index = storeZONA.find('id', id);
+            if (index > -1) {
+                var record = storeZONA.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo ZONA
 
         //inicio combo denuncias ordenanza DETIORD
         storeORD = new Ext.data.JsonStore({
@@ -509,7 +659,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         group: 'filterField',
                         key: 'recepcion_documento',
                         scope: this,
-                        text: 'Fecha'
+                        text: 'Fecha Ingreso'
                     }, {
                         checked: false,
                         checkHandler: checkHandler,
@@ -521,21 +671,61 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         checked: false,
                         checkHandler: checkHandler,
                         group: 'filterField',
+                        key: 'email',
+                        scope: this,
+                        text: 'Email'
+                    }, {
+                        checked: false,
+                        checkHandler: checkHandler,
+                        group: 'filterField',
                         key: 'institucion',
                         scope: this,
-                        text: 'Institución'
+                        text: 'Entidad'
+                    }, {
+                        checked: false,
+                        checkHandler: checkHandler,
+                        group: 'filterField',
+                        key: 'asunto',
+                        scope: this,
+                        text: 'Asunto'
                     }
                 ]
             })
             , text: 'Código trámite'
         });
-        //bh llamada innecesaria
+
+                var searchInpeccionesBtn = new Ext.Button({
+                    menu: new Ext.menu.Menu({
+                        items: [
+                            {
+                                checked: true,
+                                checkHandler: checkHandler,
+                                group: 'filterField',
+                                key: 'codigo_tramite',
+                                scope: this,
+                                text: 'Código trámite'
+                            }
+                            ,{
+                                checked: false,
+                                checkHandler: checkHandler,
+                                group: 'filterField',
+                                key: 'num_documento',
+                                scope: this,
+                                text: 'Número documento'
+                            }
+                        ]
+                    })
+                    , text: 'Código trámite'
+                });
+
         //this.storeModuloInspeccion.load();
         //this.storeDetalleInspeccion.load();
+        this.storeListadoInspeccion.load();
+
         storeModuloInspeccion = this.storeModuloInspeccion;
         limiteModuloInspeccion = 100;
         storeDetalleInspeccion = this.storeDetalleInspeccion;
-        limiteDetalleInspeccion = 100;
+        limiteDetalleInspeccion = 10;
         storeModuloInspeccion.baseParams = {
             limit: limiteModuloInspeccion
         };
@@ -929,7 +1119,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             closable: true,
                             //layout: 'fit',
                             //height: winHeight-70,
-                            //disabled: this.app.isAllowedTo('accesosCoordinadorInspeccion', this.id) ? false : true,
+                            disabled: !pestInspeccion,
                             //Barra de botones
                             tbar: [
                                 //Definición de botón regargar datos
@@ -968,6 +1158,22 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         //Llamado a función que muestra la ventana en pantalla
         win.show();
         /*
+       if(accesosSecretaria){
+           var activar = true;
+
+           Ext.getCmp('id_tipo_documento').setReadOnly(activar);
+           Ext.getCmp('num_documento').setReadOnly(activar);
+           Ext.getCmp('id_ordenanza').setReadOnly(activar);
+           Ext.getCmp('remitente').setReadOnly(activar);
+           Ext.getCmp('cedula').setReadOnly(activar);
+           Ext.getCmp('email').setReadOnly(activar);
+           Ext.getCmp('institucion').setReadOnly(activar);
+           Ext.getCmp('asunto').setReadOnly(activar);
+           Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
+           Ext.getCmp('cantidad_fojas').setReadOnly(activar);
+           Ext.getCmp('procesado_inspeccion').setReadOnly(activar);
+       }
+
                 function cargaDetalle(idModuloInspeccion) {
                     forma = Ext.getCmp('formModuloInspeccion');
                     console.log(idModuloInspeccion);
@@ -988,9 +1194,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     });
                     //console.log(url);
 
-                    //bloquearLectura(forma, bloqueo);
+                    bloquearLectura(forma, bloqueo);
                 };
-        */
+
         function bloquearLectura(forma, activar) {
             //en caso que se pueda editar .. revisamos permiso por perfil
 
@@ -1034,7 +1240,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             }
 
         };
-
+*/
         setTimeout(function () {
             this.storeModuloInspeccion.load({
                 params: {
@@ -1163,7 +1369,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     botonGenerarGuia: function () {
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Se descará el formato Excel<br>Se cambiará el estado de generado Si.<br>¿Desea continuar?',
+            msg: 'Se descargará el formato Excel<br>Se cambiará el estado de generado Si.<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
@@ -1171,7 +1377,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuias.php';
                     setTimeout(function () {
-                        storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkNoRecibidos').getValue()}});
+                        storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkPendientesAprobar').getValue()}});
                     }, 1000);
                 }
             }
