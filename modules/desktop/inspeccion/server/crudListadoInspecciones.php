@@ -31,6 +31,29 @@ function selectInspeccion()
 
 }
 
+function selectInspeccionesCoordinadores()
+{
+    global $os;
+    //$id = (int)$_POST ['id'];
+    $funcionario_entrega = $os->get_member_id();
+    //if($id!=0){
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM amc_inspeccion";
+    //$sql = "SELECT * FROM amc_inspeccion";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+    //}
+
+}
+
 function insertInspeccion()
 {
     global $os;
@@ -258,6 +281,9 @@ function deleteInspeccion()
 switch ($_GET['operation']) {
     case 'select' :
         selectInspeccion();
+        break;
+    case 'selectTodas' :
+        selectInspeccionesCoordinadores();
         break;
     case 'insert' :
         insertInspeccion();

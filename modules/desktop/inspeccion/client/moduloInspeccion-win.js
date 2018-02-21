@@ -41,17 +41,23 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
 
         //Acceso para pestaña Inspecciones
-        if (accesosCoordinadorInspeccion || accesosInspectores || accesosSupervision == true){
-            var creacionTramites = true;
+        //if (accesosCoordinadorInspeccion || accesosInspectores || accesosSupervision == true){
+        if (accesosInspectores || accesosCoordinadorInspeccion == true){
+            var pestInspeccion = true;
         }
         else{
-            var creacionTramites = false;
+            var pestInspeccion = false;
         }
+
 
         console.log('accesosAdministrador '+accesosCoordinadorInspeccion);
         console.log('accesosSecretaria '+accesosSecretaria);
         console.log('accesosInspeccion '+accesosInspectores);
         console.log('accesosSupervision '+accesosSupervision);
+        console.log('creacionDatosInspeccion '+creacionDatosInspeccion);
+        console.log('creacionTramites '+creacionTramites);
+        console.log('accesosSupervision '+accesosSupervision);
+        console.log('pestInspeccion '+pestInspeccion);
 
         if(accesosSecretaria){
             isChecked = true;
@@ -1103,7 +1109,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             closable: true,
                             //layout: 'fit',
                             //height: winHeight-70,
-                            //disabled: this.app.isAllowedTo('accesosCoordinadorInspeccion', this.id) ? false : true,
+                            disabled: !pestInspeccion,
                             //Barra de botones
                             tbar: [
                                 //Definición de botón regargar datos
@@ -1142,6 +1148,22 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         //Llamado a función que muestra la ventana en pantalla
         win.show();
         /*
+       if(accesosSecretaria){
+           var activar = true;
+
+           Ext.getCmp('id_tipo_documento').setReadOnly(activar);
+           Ext.getCmp('num_documento').setReadOnly(activar);
+           Ext.getCmp('id_ordenanza').setReadOnly(activar);
+           Ext.getCmp('remitente').setReadOnly(activar);
+           Ext.getCmp('cedula').setReadOnly(activar);
+           Ext.getCmp('email').setReadOnly(activar);
+           Ext.getCmp('institucion').setReadOnly(activar);
+           Ext.getCmp('asunto').setReadOnly(activar);
+           Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
+           Ext.getCmp('cantidad_fojas').setReadOnly(activar);
+           Ext.getCmp('procesado_inspeccion').setReadOnly(activar);
+       }
+
                 function cargaDetalle(idModuloInspeccion) {
                     forma = Ext.getCmp('formModuloInspeccion');
                     console.log(idModuloInspeccion);
@@ -1162,9 +1184,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     });
                     //console.log(url);
 
-                    //bloquearLectura(forma, bloqueo);
+                    bloquearLectura(forma, bloqueo);
                 };
-        */
+
         function bloquearLectura(forma, activar) {
             //en caso que se pueda editar .. revisamos permiso por perfil
 
@@ -1208,7 +1230,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             }
 
         };
-
+*/
         setTimeout(function () {
             this.storeModuloInspeccion.load({
                 params: {
