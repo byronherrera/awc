@@ -770,10 +770,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 listeners: {
                     rowselect: function (sm, row, rec) {
                         // recuperamos la informacion de personal asignado a ese operativo
-                        select_codigo_tramite = rec.data.codigo_tramite;
-                        storeDetalleInspeccion.load({params: {id: rec.data.codigo_tramite}});
-                        tramiteSeleccionado = rec.data.codigo_tramite;
-                        //storeDetalleInspeccion.load({params: {filterText: rec.data.codigo_tramite}});
+                        // bh cambio
+                        select_codigo_tramite = rec.id;
+                        storeDetalleInspeccion.load({params: {id: rec.id}});
+                        tramiteSeleccionado = rec.id;
                     }
                 }
             }),
