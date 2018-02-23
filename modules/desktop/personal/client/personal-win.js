@@ -1420,7 +1420,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                             title: 'Reportes',
                             closable: true,
                             layout: 'border',
-                            disabled:true,
+                            //disabled:true,
                             tbar: [
                                 {
                                     iconCls: 'reload-icon',

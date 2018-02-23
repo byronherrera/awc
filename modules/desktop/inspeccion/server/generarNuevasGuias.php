@@ -56,12 +56,12 @@ $os->db->conn->query("SET NAMES 'utf8'");
 // todo validar para cambio de año
 
 if (total_guias() > 0) {
-    $nombre = $os->db->conn->query("SELECT id_unidad, SUBSTRING(numero,10) as num FROM amc_guias_inspeccion WHERE id = $newIdGuia");
+    //$nombre = $os->db->conn->query("SELECT id_unidad, SUBSTRING(numero,10) as num FROM amc_guias_inspeccion WHERE id = $newIdGuia");
+    $nombre = $os->db->conn->query("SELECT MAX(numero) as num FROM amc_guias_inspeccion ");
     $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
-    $numeroGuia = $rowguia['num'];
+    $numeroGuia = $rowguia['num'] + 1;
 } else {
     // se valida para la primera vez,
-
     $numeroGuia = 1;
 }
 $titulosegundo = "ACTA DE ENTREGA  $year-$numeroGuia";
@@ -409,16 +409,16 @@ function fecha_actual () {
 function actualizar_estado_tramite ($id, $codigo_tramite, $numeroGuia) {
     global $os;
     $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_secretaria`='$numeroGuia' WHERE (`id`='$id')";
-    $nombre = $os->db->conn->query($sql);
-    $nombre->fetch(PDO::FETCH_ASSOC);
+    $os->db->conn->query($sql);
+
 };
 
 function actualizar_guia_inspeccion ($id, $codigo_tramite,$numeroGuia) {
     global $os;
-    $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_secretaria`='$numeroGuia' WHERE (`id`='$id')";
-//    $nombre = $os->db->conn->query($sql);
-//    return $nombre->fetch(PDO::FETCH_ASSOC);
-
-
+    $idMember = $os->get_member_id();
+    $sql = "INSERT INTO `amc_guias_inspeccion`
+            (`numero`, `id_unidad`, `unidad`, `id_member`) 
+            VALUES ('$numeroGuia', '3', 'Inspeccion', '$idMember')";
+    $nombre = $os->db->conn->query($sql);
 };
 

@@ -143,13 +143,13 @@ function updateInspeccion()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_denuncias SET  $cadenaDatos  WHERE amc_denuncias.id = '$data->id' ";
+    $sql = "UPDATE amc_inspeccion SET  $cadenaDatos  WHERE amc_inspeccion.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_denuncias actualizado exitosamente" : $sql->errorCode(),
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_inspeccion actualizado exitosamente" : $sql->errorCode(),
         "message" => $message
     ));
 }
@@ -282,7 +282,7 @@ switch ($_GET['operation']) {
     case 'select' :
         selectInspeccion();
         break;
-    case 'selectTodas' :
+    case 'selectTodos' :
         selectInspeccionesCoordinadores();
         break;
     case 'insert' :
