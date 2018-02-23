@@ -1369,7 +1369,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     botonGenerarGuia: function () {
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Se descargará el formato Excel<br>Se cambiará el estado de generado Si.<br>¿Desea continuar?',
+            msg: 'Descargar acta<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,

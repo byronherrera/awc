@@ -197,8 +197,6 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
         $rowdetalle['id_nivel_complejidad'] = '';
     }
 
-
-
     // envio de impresion de valores
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $fila);
     $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['codigo_tramite']);
@@ -213,8 +211,8 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $filaInicio++;
 
     // ACTUALIZAR ESTADO DEL REGISTRO
-    actualizar_estado_tramite ($rowdetalle['id'],$rowdetalle['codigo_tramite'], $numeroGuia);
-    actualizar_guia_inspeccion ($rowdetalle['id'],$rowdetalle['codigo_tramite'],$numeroGuia);
+    actualizar_estado_tramite ($rowdetalle['id_denuncia'],$rowdetalle['codigo_tramite'], $numeroGuia);
+    actualizar_guia_inspeccion ($rowdetalle['id_denuncia'],$rowdetalle['codigo_tramite'],$numeroGuia);
 
 }
 
