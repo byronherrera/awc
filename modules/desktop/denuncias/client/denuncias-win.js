@@ -16,10 +16,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
         var accesosZonales = this.app.isAllowedTo('accesosZonales', this.id);
 
-        console.log (accesosAdministrador);
-        console.log (accesosSecretaria);
-        console.log (accesosZonales);
-
         var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
 
         var desktop = this.app.getDesktop();
@@ -45,7 +41,10 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             data: {
                 documento: [
                     {"id": 2, "nombre": "Comunicados"},
-                    {"id": 1, "nombre": "Denuncias"}
+                    {"id": 1, "nombre": "Denuncias"},
+                    {"id": 3, "nombre": "Oficio"},
+                    {"id": 4, "nombre": "Memorando"}
+
                 ]
             }
         });
@@ -62,17 +61,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaTipoDocumento(id) {
-            var index = storeTID.findExact('id', id);
+            var index = storeTID.find('id', id);
             if (index > -1) {
                 var record = storeTID.getAt(index);
                 return record.get('nombre');
             }
         }
-
         //fin combo tipo documento  TID
 
         //inicio combo activo
-
         storeOFAC = new Ext.data.JsonStore({
             root: 'users',
             fields: ['id', 'nombre'],
@@ -218,7 +215,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         });
 
         function caracterTramite(id) {
-            var index = storeCDT.findExact('id', id);
+            var index = storeCDT.find('id', id);
             if (index > -1) {
                 var record = storeCDT.getAt(index);
                 // return record.get('nombre');
@@ -912,7 +909,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Tipo documento',
                     dataIndex: 'id_tipo_documento',
                     sortable: true,
-                    width: 28,
+                    width: 30,
                     editor: comboTID, renderer: personaTipoDocumento
                 },
                 {
@@ -983,7 +980,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Reasignación',
                     dataIndex: 'reasignacion',
                     sortable: true,
-                    width: 60,
+                    width: 50,
                     editor: comboREA, renderer: departamentoReasignacion
                 }
                 , {
@@ -1315,9 +1312,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         if (!win) {
             var winWidth = desktop.getWinWidth();
             var winHeight = desktop.getWinHeight();
-
-            console.log(winWidth)
-            console.log(winHeight)
+ 
 
             this.seleccionDepar = 3;
 
@@ -1558,7 +1553,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                                                             if (field.getName() == 'guia') {
                                                                 if (oldVal != newVal) {
-                                                                    console.log("cambio")
+                                                              
                                                                     Ext.getCmp('tb_grabardenuncias').setDisabled(false);
 //                                                                        Ext.getCmp('reasignacion').enable();
                                                                 }
@@ -1968,6 +1963,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             key: 'institucion',
                             scope: this,
                             text: 'Institución'
+                        }, {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'asunto',
+                            scope: this,
+                            text: 'Asunto'
                         }
                     ]
                 })
@@ -2197,63 +2199,62 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                             //this.gridDenunciasGuia
                         }
-                        /*
-                         , {
-                         autoScroll: true,
-                         title: 'Unidades',
-                         closable: true,
-                         disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
-                         tbar: [
-                         {
-                         text: 'Nuevo',
-                         scope: this,
-                         handler: this.addDenunciasReasignacion,
-                         iconCls: 'save-icon'
-                         },
-                         '-',
-                         {
-                         text: "Eliminar",
-                         scope: this,
-                         handler: this.deleteDenunciasReasignacion,
-                         iconCls: 'delete-icon'
-                         },
-                         '-', {
-                         iconCls: 'demo-grid-add',
-                         handler: this.requestGridDataDenunciasReasignacion,
-                         scope: this,
-                         text: 'Recargar Datos'
-                         }
-                         ],
-                         items: this.gridDenunciasReasignacion
-                         }
-                         , {
-                         autoScroll: true,
-                         title: 'Zonas',
-                         closable: true,
-                         disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
-                         tbar: [
-                         {
-                         text: 'Nuevo',
-                         scope: this,
-                         handler: this.addDenunciasZonas,
-                         iconCls: 'save-icon'
-                         },
-                         '-',
-                         {
-                         text: "Eliminar",
-                         scope: this,
-                         handler: this.deleteDenunciasZonas,
-                         iconCls: 'delete-icon'
-                         },
-                         '-', {
-                         iconCls: 'demo-grid-add',
-                         handler: this.requestGridDataDenunciasZonas,
-                         scope: this,
-                         text: 'Recargar Datos'
-                         }
-                         ],
-                         items: this.gridDenunciasZonas
-                         }*/
+                        , {
+                            autoScroll: true,
+                            title: 'Unidades',
+                            closable: true,
+                            disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
+                            tbar: [
+                                {
+                                    text: 'Nuevo',
+                                    scope: this,
+                                    handler: this.addDenunciasReasignacion,
+                                    iconCls: 'save-icon'
+                                },
+                                '-',
+                                {
+                                    text: "Eliminar",
+                                    scope: this,
+                                    handler: this.deleteDenunciasReasignacion,
+                                    iconCls: 'delete-icon'
+                                },
+                                '-', {
+                                    iconCls: 'demo-grid-add',
+                                    handler: this.requestGridDataDenunciasReasignacion,
+                                    scope: this,
+                                    text: 'Recargar Datos'
+                                }
+                            ],
+                            items: this.gridDenunciasReasignacion
+                        }
+                        , {
+                            autoScroll: true,
+                            title: 'Zonas',
+                            closable: true,
+                            disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
+                            tbar: [
+                                {
+                                    text: 'Nuevo',
+                                    scope: this,
+                                    handler: this.addDenunciasZonas,
+                                    iconCls: 'save-icon'
+                                },
+                                '-',
+                                {
+                                    text: "Eliminar",
+                                    scope: this,
+                                    handler: this.deleteDenunciasZonas,
+                                    iconCls: 'delete-icon'
+                                },
+                                '-', {
+                                    iconCls: 'demo-grid-add',
+                                    handler: this.requestGridDataDenunciasZonas,
+                                    scope: this,
+                                    text: 'Recargar Datos'
+                                }
+                            ],
+                            items: this.gridDenunciasZonas
+                        }
                         , {
                             title: 'Reportes',
                             closable: true,
@@ -2265,6 +2266,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     handler: this.requestGridDataDocumentoReporte,
                                     scope: this,
                                     text: 'Buscar'
+
 
                                 },
                                 {
@@ -2310,36 +2312,36 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                             //this.gridReportes
                         }
-                        /*
-                         , {
-                         autoScroll: true,
-                         title: 'Procedimientos',
-                         closable: true,
-                         disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
 
-                         tbar: [
-                         {
-                         text: 'Nuevo',
-                         scope: this,
-                         handler: this.adddenunciasProcedimientos,
-                         iconCls: 'save-icon'
-                         },
-                         '-',
-                         {
-                         text: "Eliminar",
-                         scope: this,
-                         handler: this.deletedenunciasProcedimientos,
-                         iconCls: 'delete-icon'
-                         },
-                         '-', {
-                         iconCls: 'demo-grid-add',
-                         handler: this.requestGridDataDenunciasProcedimientos,
-                         scope: this,
-                         text: 'Recargar Datos'
-                         }
-                         ],
-                         items: this.gridDenunciasProcedimientos
-                         }*/
+                        , {
+                            autoScroll: true,
+                            title: 'Procedimientos',
+                            closable: true,
+                            disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
+
+                            tbar: [
+                                {
+                                    text: 'Nuevo',
+                                    scope: this,
+                                    handler: this.adddenunciasProcedimientos,
+                                    iconCls: 'save-icon'
+                                },
+                                '-',
+                                {
+                                    text: "Eliminar",
+                                    scope: this,
+                                    handler: this.deletedenunciasProcedimientos,
+                                    iconCls: 'delete-icon'
+                                },
+                                '-', {
+                                    iconCls: 'demo-grid-add',
+                                    handler: this.requestGridDataDenunciasProcedimientos,
+                                    scope: this,
+                                    text: 'Recargar Datos'
+                                }
+                            ],
+                            items: this.gridDenunciasProcedimientos
+                        }
 
                     ]
                 })
@@ -2468,7 +2470,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
     },
 
     botonExportarReporte: function () {
-        console.log(Ext.getCmp('tb_seleccionarUnidad').getValue());
+        
         if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar Unidad')
             Ext.Msg.show({
                 title: 'Advertencia',

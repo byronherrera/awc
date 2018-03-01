@@ -899,7 +899,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Responsable',
                     dataIndex: 'id_persona_encargada',
                     sortable: true,
-                    width: 120,
+                    width: 190,
                     editor: comboPRD,
                     renderer: personaReceptaDenuncia,
                     /*
@@ -911,21 +911,21 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Lugar intervención',
                     dataIndex: 'zona',
                     sortable: true,
-                    width: 130,
+                    width: 160,
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
                     header: 'Punto Encuentro',
                     dataIndex: 'punto_encuentro_planificado',
                     sortable: true,
-                    width: 130,
+                    width: 160,
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
                     header: 'Observaciones',
                     dataIndex: 'observaciones',
                     sortable: true,
-                    width: 140,
+                    width: 200,
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
@@ -2111,6 +2111,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     width: 55
                 },
                 {
+                    header: 'Lugar intervención ',
+                    dataIndex: 'zona',
+                    sortable: true,
+                    width: 55
+                },
+                {
                     header: 'Observaciones',
                     dataIndex: 'observaciones',
                     sortable: true,
@@ -2470,6 +2476,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
+                            key: 'id',
+                            scope: this,
+                            text: 'Código'
+                        },
+                        {
+                            checked: true,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
                             key: 'id_zonal',
                             scope: this,
                             text: 'Zona'
@@ -2500,7 +2514,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                         }
                     ]
                 })
-                , text: 'Zona'
+                , text: 'Código'
             });
 
             win = desktop.createWindow({
@@ -2558,7 +2572,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     checked: true,
                                     inputValue: '1',
                                     tooltip: 'Recargar datos',
-                                    disabled: !acceso,
+                                    //disabled: !acceso,
                                     cls: 'barramenu',
                                     handler: function (checkbox, isChecked) {
                                         storeOperativos.baseParams.finalizados = isChecked;

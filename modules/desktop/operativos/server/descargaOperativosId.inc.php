@@ -452,11 +452,15 @@ function regresaUnidad($id_dato)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT *
+    if ($id_dato != '') {
+        $sql = "SELECT *
             FROM amc_unidades WHERE id = " . $id_dato;
-    $nombre = $os->db->conn->query($sql);
-    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-    return $rownombre['nombre_completo'];
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre_completo'];
+    } else
+        return '';
+
 }
 
 function quitar_tildes($cadena)

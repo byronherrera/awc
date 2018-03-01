@@ -55,16 +55,6 @@ $os->db->conn->query("SET NAMES 'utf8'");
 //  validacion para la primera vez
 // todo validar para cambio de año
 
-if (total_guias() > 0) {
-    //$nombre = $os->db->conn->query("SELECT id_unidad, SUBSTRING(numero,10) as num FROM amc_guias_inspeccion WHERE id = $newIdGuia");
-    $nombre = $os->db->conn->query("SELECT MAX(numero) as num FROM amc_guias_inspeccion ");
-    $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
-    $numeroGuia = $rowguia['num'] + 1;
-} else {
-    // se valida para la primera vez,
-    $numeroGuia = 1;
-}
-$titulosegundo = "ACTA DE ENTREGA  $year-$numeroGuia";
 
 $os->db->conn->query("SET NAMES 'utf8'");
 
@@ -76,6 +66,25 @@ INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
 
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
+
+
+if ($number_of_rows > 0) {
+    if (total_guias() > 0) {
+        //$nombre = $os->db->conn->query("SELECT id_unidad, SUBSTRING(numero,10) as num FROM amc_guias_inspeccion WHERE id = $newIdGuia");
+        $nombre = $os->db->conn->query("SELECT MAX(numero) as num FROM amc_guias_inspeccion ");
+        $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
+        $numeroGuia = $rowguia['num'] + 1;
+    } else {
+        // se valida para la primera vez,
+        $numeroGuia = 1;
+    }
+    $titulosegundo = "ACTA DE ENTREGA  $year-$numeroGuia";
+    actualizar_guia_inspeccion($numeroGuia);
+} else {
+    $titulosegundo = "ACTA SIN DATOS";
+    $numeroGuia = 'SIN-DATOS';
+}
+
 
 $objPHPExcel = new PHPExcel();
 $objPHPExcel->setActiveSheetIndex(0);
@@ -103,32 +112,32 @@ $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, $tituloPrimero)
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, $titulosegundo);
 $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 2) . ':H' . ($filaTitulo2 + 2));
 
-$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 +2), "Fecha: " .fecha_actual ());
+$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 + 2), "Fecha: " . fecha_actual());
 $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 3) . ':H' . ($filaTitulo2 + 3));
-$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 +3), "Responsable: " . regresaNombre($os->get_member_id()));
+$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 + 3), "Responsable: " . regresaNombre($os->get_member_id()));
 $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 4) . ':H' . ($filaTitulo2 + 4));
-$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 +4), "Cargo: SECRETARIA DIRECCION DE INSPECCION.");
+$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 + 4), "Cargo: SECRETARIA DIRECCION DE INSPECCION.");
 
 $offsetTotalesTipo = totalesPorTipo($number_of_rows + $filaInicio, $where);
 $filasPiePagina = $number_of_rows + $filaInicio + 2 + $offsetTotalesTipo;
 
 
 // Elaborador por:
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filasPiePagina) . ':C' . ($filasPiePagina));
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filasPiePagina + 1) . ':C' . ($filasPiePagina + 1));
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filasPiePagina + 2) . ':C' . ($filasPiePagina + 2));
+$objPHPExcel->getActiveSheet()->mergeCells('A' . ($filasPiePagina) . ':C' . ($filasPiePagina));
+$objPHPExcel->getActiveSheet()->mergeCells('A' . ($filasPiePagina + 1) . ':C' . ($filasPiePagina + 1));
+$objPHPExcel->getActiveSheet()->mergeCells('A' . ($filasPiePagina + 2) . ':C' . ($filasPiePagina + 2));
 
 
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filasPiePagina, '__________________');
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filasPiePagina + 1), regresaNombre($os->get_member_id()));
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filasPiePagina + 2), "Elaborado por");
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filasPiePagina, '__________________');
+$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filasPiePagina + 1), regresaNombre($os->get_member_id()));
+$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filasPiePagina + 2), "Elaborado por");
 
 // impresion pie de pagina
 $objDrawing = new PHPExcel_Worksheet_Drawing();
 $objDrawing->setName('test_img');
 $objDrawing->setDescription('test_img');
 $objDrawing->setPath('image2.png');
-$objDrawing->setCoordinates('A'. ($filasPiePagina + 5) );
+$objDrawing->setCoordinates('A' . ($filasPiePagina + 5));
 //setOffsetX works properly
 $objDrawing->setOffsetX(5);
 $objDrawing->setOffsetY(5);
@@ -184,14 +193,15 @@ $objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Firma / fecha
 
 $noExistenFilas = true;
 $fila = 0;
+
 while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
-    $fila ++;
+    $fila++;
 // actualizar detalle idGuia
     $noExistenFilas = false;
     //cambio para impresiono el nivel de complejidad
-    $niveles_complejidad = array("Alto", "Medio", "Bajo","");
+    $niveles_complejidad = array("Alto", "Medio", "Bajo", "");
 
-    if (isset($rowdetalle['id_nivel_complejidad']) and ($rowdetalle['id_nivel_complejidad']!= ' ')) {
+    if (isset($rowdetalle['id_nivel_complejidad']) and ($rowdetalle['id_nivel_complejidad'] != ' ')) {
         $rowdetalle['id_nivel_complejidad'] = $niveles_complejidad[$rowdetalle['id_nivel_complejidad'] - 1];
     } else {
         $rowdetalle['id_nivel_complejidad'] = '';
@@ -211,8 +221,8 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $filaInicio++;
 
     // ACTUALIZAR ESTADO DEL REGISTRO
-    actualizar_estado_tramite ($rowdetalle['id_denuncia'],$rowdetalle['codigo_tramite'], $numeroGuia);
-    actualizar_guia_inspeccion ($rowdetalle['id_denuncia'],$rowdetalle['codigo_tramite'],$numeroGuia);
+    actualizar_estado_tramite($rowdetalle['id_denuncia'], $rowdetalle['codigo_tramite'], $numeroGuia);
+
 
 }
 
@@ -301,7 +311,7 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Workshee
 ////////////////////////////////////////////////
 // se crea la cabecera de archivo y se lo graba al archivo
 header('Content-Type: application/xlsx');
-header('Content-Disposition: attachment;filename="export-documents-SGE-' . $today . '.xlsx"');
+header('Content-Disposition: attachment;filename="acta-entrega-recepcion-inspeccion-' . $numeroGuia . "-" . $today . '.xlsx"');
 header('Cache-Control: max-age=0');
 
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
@@ -396,7 +406,8 @@ function total_guias()
     return $rowguia['total'];
 }
 
-function fecha_actual () {
+function fecha_actual()
+{
     $date = new DateTime();
     $inicio = $date->format('H:i');
 
@@ -406,19 +417,27 @@ function fecha_actual () {
 
 }
 
-function actualizar_estado_tramite ($id, $codigo_tramite, $numeroGuia) {
+function actualizar_estado_tramite($id, $codigo_tramite, $numeroGuia)
+{
     global $os;
+    // actualizo denuncia con el numero de acta de despacho y se cambia la bandera a tramite realizadoo
+    
     $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_secretaria`='$numeroGuia' WHERE (`id`='$id')";
+    $os->db->conn->query($sql);
+
+    $sql = "UPDATE `amc_inspeccion` SET `guia`='$numeroGuia', `fecha_despacho`=NOW() WHERE (`id_denuncia`='$id')";
     $os->db->conn->query($sql);
 
 };
 
-function actualizar_guia_inspeccion ($id, $codigo_tramite,$numeroGuia) {
+function actualizar_guia_inspeccion($numeroGuia)
+{
     global $os;
     $idMember = $os->get_member_id();
     $sql = "INSERT INTO `amc_guias_inspeccion`
             (`numero`, `id_unidad`, `unidad`, `id_member`) 
             VALUES ('$numeroGuia', '3', 'Inspeccion', '$idMember')";
-    $nombre = $os->db->conn->query($sql);
-};
+    $os->db->conn->query($sql);
+}
+;
 

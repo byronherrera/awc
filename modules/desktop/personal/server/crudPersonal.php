@@ -37,7 +37,7 @@ function selectOperativos()
 {
     global $os;
     //TODO cambiar columna por defecto en busquedas
-    $columnaBusqueda = 'apellidos';
+    $columnaBusqueda = 'cedula';
 
     $where = '';
     $usuarioLog = $os->get_member_id();
@@ -268,17 +268,26 @@ function insertOperativos()
     $data = json_decode(stripslashes($_POST["data"]));
 
 
-    $data->finalizado = 'false';
+    //$data->finalizado = 'false';
     // $data->codigo_operativo = generaCodigoProcesoDenuncia();
-    $data->id_persona = $os->get_member_id();
+    //$data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
+
+
 
     $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
         if ($clave != 'id') {
-            $cadenaCampos = $cadenaCampos . $clave . ',';
-            $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+            if ($clave == 'fecha_salida') {
+                if ($valor == ''){
+                    $cadenaCampos = $cadenaCampos . $clave . ',';
+                    $cadenaDatos = $cadenaDatos . " NULL ,";
+                }
+            } else {
+                $cadenaCampos = $cadenaCampos . $clave . ',';
+                $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+            }
         }
     }
     $cadenaCampos = substr($cadenaCampos, 0, -1);
@@ -350,17 +359,19 @@ function updateOperativos()
         if (isset($valor))
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
         else
-            $cadenaDatos = $cadenaDatos . $clave . " = NULL, ";
+            $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_personal_distributivo SET  $cadenaDatos  WHERE amc_personal_distributivo.id = '$data->id' ";
+    $sqlOrginal = $sql ;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_personal_distributivo actualizado exitosamente" : $sql->errorCode(),
-        "message" => $message
+        "message" => $message,
+        "sqlOriginal" => $sqlOrginal
     ));
 }
 

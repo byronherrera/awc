@@ -1,6 +1,8 @@
+var tramiteSeleccionado = '';
+var todosInspectores = '';
 QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     id: 'moduloInspeccion',
-    type: 'desktop/inspeccion',
+    type: 'desktop/moduloInspeccion',
 
     init: function () {
         this.launcher = {
@@ -48,7 +50,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             var pestInspeccion = false;
         }
 
-
+        todosInspectores = accesosInspectores;
         console.log('accesosAdministrador '+accesosCoordinadorInspeccion);
         console.log('accesosSecretaria '+accesosSecretaria);
         console.log('accesosInspeccion '+accesosInspectores);
@@ -77,8 +79,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         //Ubicación de la carpeta de Inspeccion
         var urlInspeccion = "modules/desktop/inspeccion/server/";
 
-        var textField = new Ext.form.TextField({allowBlank: false});
-        var textFieldDetalle = new Ext.form.TextField({allowBlank: false});
+        var textField = new Ext.form.TextField({allowBlank: false, readOnly: accesosSupervision});
+        var textFieldDetalle = new Ext.form.TextField({allowBlank: true, readOnly: accesosSupervision});
+        var textFieldControlProgramado = new Ext.form.TextField({allowBlank: true, readOnly: accesosSupervision});
+        var textFieldCCF = new Ext.form.TextField({allowBlank: true, readOnly: accesosSupervision});
 
         //Definición del formato de fecha
         function formatDate(value) {
@@ -117,12 +121,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 //{name: 'descripcion_anexos', readOnly: true, allowBlank: true},
                 {name: 'id_caracter_tramite', readOnly: true, allowBlank: true},
                 {name: 'cantidad_fojas', readOnly: true, allowBlank: true},
-                {name: 'procesado_inspeccion', allowBlank: true}
+                {name: 'procesado_inspeccion', allowBlank: true},
+                {name: 'id_planificacion', allowBlank: true}
                 /*
                 {name: 'despacho_secretaria', allowBlank: true},
                 {name: 'email', allowBlank: true},
                 {name: 'observacion', allowBlank: true}*/
             ]
+
         });
 
         //Definición de escritura en campos bdd Inspeccion
@@ -154,14 +160,17 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_inspeccion', readOnly: false, allowBlank: true},
                 {name: 'codificacion', readOnly: false, allowBlank: true},
                 {name: 'nombre_denunciado', readOnly: false, allowBlank: true},
-                {name: 'fecha_despacho',  type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_asignacion',  type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'id_actividad', readOnly: false, allowBlank: true},
                 {name: 'funcionario_entrega', readOnly: false, allowBlank: true},
                 {name: 'respuesta', readOnly: false, allowBlank: true},
                 {name: 'guia', readOnly: false, allowBlank: true},
+                {name: 'fecha_despacho', readOnly: false, allowBlank: true},
                 {name: 'id_zona', readOnly:false, allowBlank:true},
                 {name: 'predio', readOnly:false, allowBlank:true},
-                {name: 'id_control_programado', readOnly:false, allow:true}
+                {name: 'id_acta', readOnly:false, allowBlank:true},
+                {name: 'prioridad', readOnly:false, allowBlank:true},
+                {name: 'funcionario_reasignacion', allowBlank:true}
             ]
         });
 
@@ -181,6 +190,16 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
+        //Definición de url CRUD
+        var proxyListadoTodosInspectores = new Ext.data.HttpProxy({
+            api: {
+                create: urlInspeccion + "crudListadoInspecciones.php?operation=insert",
+                read: urlInspeccion + "crudListadoInspecciones.php?operation=selectTodos",
+                update: urlInspeccion + "crudListadoInspecciones.php?operation=update",
+                destroy: urlInspeccion + "crudListadoInspecciones.php?operation=delete"
+            }
+        });
+
         //Definición de lectura de campos bdd Inspeccion
         var readerListadoInspeccion = new Ext.data.JsonReader({
             //totalProperty: 'total',
@@ -193,6 +212,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_inspeccion', readOnly: false, allowBlank: true},
                 {name: 'codificacion', readOnly: false, allowBlank: true},
                 {name: 'nombre_denunciado', readOnly: false, allowBlank: true},
+                {name: 'id_ordenanza', readOnly: true, allowBlank: true},
                 {name: 'fecha_despacho',  type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'id_actividad', readOnly: false, allowBlank: true},
                 {name: 'funcionario_entrega', readOnly: false, allowBlank: true},
@@ -200,7 +220,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'guia', readOnly: false, allowBlank: true},
                 {name: 'id_zona', readOnly:false, allowBlank:true},
                 {name: 'predio', readOnly:false, allowBlank:true},
-                {name: 'id_control_programado', readOnly:false, allow:true}
+                {name: 'id_control_programado', readOnly:false, allow:true},
+                {name: 'id_motivo_acta', readOnly:false, allow:true},
+                {name: 'id_acta', readOnly:false, allow:true}
             ]
         });
 
@@ -209,6 +231,107 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             encode: true,
             writeAllFields: true
         });
+
+
+        //Definición de url CRUD
+        var proxyControlProgramadoInspeccion = new Ext.data.HttpProxy({
+            api: {
+                create: urlInspeccion + "crudInspeccionControlProgramado.php?operation=insert",
+                read: urlInspeccion + "crudInspeccionControlProgramado.php?operation=select",
+                update: urlInspeccion + "crudInspeccionControlProgramado.php?operation=update",
+                destroy: urlInspeccion + "crudInspeccionControlProgramado.php?operation=delete"
+            }
+        });
+
+        //Definición de lectura de campos bdd Inspeccion
+        var readerControlProgramadoInspeccion = new Ext.data.JsonReader({
+            //totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id_denuncia', readOnly: false, allowBlank: true},
+                {name: 'id_inspeccion', readOnly: false, allowBlank: true},
+                {name: 'fecha_registro',  type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'codigo_tramite', readOnly: false, allowBlank: true},
+                {name: 'tecnico', readOnly: false, allowBlank: true},
+                {name: 'asunto', readOnly: false, allowBlank: true},
+                {name: 'sector', readOnly: false, allowBlank: true},
+                {name: 'parroquia', readOnly: false, allowBlank: true},
+                {name: 'zona', readOnly: false, allowBlank: true},
+                {name: 'calle', readOnly: false, allowBlank: true},
+                {name: 'predio', readOnly:false, allowBlank:true},
+                {name: 'clave_catastral', readOnly:false, allowBlank:true},
+                {name: 'inventariado', readOnly:false, allow:true},
+                {name: 'nombre_propietario', readOnly:false, allow:true},
+                {name: 'cedula_propietario', readOnly:false, allow:true},
+                {name: 'proyecto', readOnly:false, allow:true},
+                {name: 'etapas', readOnly:false, allow:true},
+                {name: 'tramite', readOnly:false, allow:true},
+                {name: 'aprobacion_registro', readOnly:false, allow:true},
+                {name: 'telefono', readOnly:false, allow:true},
+                {name: 'registro_actas_licencias', readOnly:false, allow:true},
+                {name: 'gdoc', readOnly:false, allow:true},
+                {name: 'responsable_tecnico', readOnly:false, allow:true},
+                {name: 'licencia_profesional', readOnly:false, allow:true},
+                {name: 'licencia_municipal', readOnly:false, allow:true}
+            ]
+        });
+
+        //Definición de escritura en campos bdd Inspeccion
+        var writerControlProgramadoInspeccion = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+
+        //Definición de url CRUD
+        var proxyCCFInspeccion = new Ext.data.HttpProxy({
+            api: {
+                create: urlInspeccion + "crudInspeccionCCF.php?operation=insert",
+                read: urlInspeccion + "crudInspeccionCCF.php?operation=select",
+                update: urlInspeccion + "crudInspeccionCCF.php?operation=update",
+                destroy: urlInspeccion + "crudInspeccionCCF.php?operation=delete"
+            }
+        });
+
+        //Definición de lectura de campos bdd Inspeccion
+        var readerCCFInspeccion = new Ext.data.JsonReader({
+            //totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id_denuncia', readOnly: false, allowBlank: true},
+                {name: 'id_inspeccion', readOnly: false, allowBlank: true},
+                {name: 'fecha_recepcion_documento',  type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'num_registro', readOnly: false, allowBlank: true},
+                {name: 'fecha_inicio', readOnly: false, allowBlank: true},
+                {name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
+                {name: 'asunto', readOnly: false, allowBlank: true},
+                {name: 'tipo', readOnly: false, allowBlank: true},
+                {name: 'zona', readOnly: false, allowBlank: true},
+                {name: 'predio', readOnly:false, allowBlank:true},
+                {name: 'clave_catastral', readOnly:false, allowBlank:true},
+                {name: 'proyecto', readOnly:false, allow:true},
+                {name: 'etapa', readOnly:false, allow:true},
+                {name: 'tecnico', readOnly:false, allow:true},
+                {name: 'fecha_inspeccion', readOnly:false, allow:true},
+                {name: 'fecha_egreso_verificacion', readOnly:false, allow:true},
+                {name: 'fecha_certificado_informe', readOnly:false, allow:true},
+                {name: 'resultado', readOnly:false, allow:true},
+                {name: 'numero_informe_certificado', readOnly:false, allow:true}
+            ]
+        });
+
+        //Definición de escritura en campos bdd Inspeccion
+        var writerCCFInspeccion = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
 
         //Definición de store para módulo Inspeccion
         this.storeModuloInspeccion = new Ext.data.Store({
@@ -242,6 +365,37 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //remoteSort: true,
             //baseParams: {}
         });
+
+        this.storeListadoTodosInspectores = new Ext.data.Store({
+            id: "id",
+            proxy: proxyListadoTodosInspectores,
+            reader: readerListadoInspeccion,
+            writer: writerListadoInspeccion,
+            autoSave: !accesosSupervision, // dependiendo de si se tiene acceso para grabar
+            //remoteSort: true,
+            //baseParams: {}
+        });
+
+        this.storeControlProgramadoInspeccion = new Ext.data.Store({
+            id: "id",
+            proxy: proxyControlProgramadoInspeccion,
+            reader: readerControlProgramadoInspeccion,
+            writer: writerControlProgramadoInspeccion,
+            autoSave: !accesosSupervision, // dependiendo de si se tiene acceso para grabar
+            //remoteSort: true,
+            //baseParams: {}
+        });
+
+        this.storeCCFInspeccion = new Ext.data.Store({
+            id: "id",
+            proxy: proxyCCFInspeccion,
+            reader: readerCCFInspeccion,
+            writer: writerCCFInspeccion,
+            autoSave: !accesosSupervision, // dependiendo de si se tiene acceso para grabar
+            //remoteSort: true,
+            //baseParams: {}
+        });
+
         var checkHandler = function (item, checked) {
             if (checked) {
                 var store = this.storeModuloInspeccion;
@@ -317,6 +471,20 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
+        //inicio combo caracter del tramite CDT
+        storePRIORIDAD = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "Bajo"},
+                    {"id": 1, "nombre": "Medio"},
+                    {"id": 2, "nombre": "Alto"}
+                ]
+            }
+        });
+
         //inicio combo aprobación secretaría inspección
         storeAPROBADO = new Ext.data.JsonStore({
             root: 'datos',
@@ -338,8 +506,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 datos: [
-                    {"id": 1, "nombre": "Control programado"},
-                    {"id": 0, "nombre": "Fecha programada"}
+                    {"id": 2, "nombre": "Inspeccion"},
+                    {"id": 1, "nombre": "Inspeccion conjunta"},
+                    {"id": 0, "nombre": "Control programado"}
                 ]
             }
         });
@@ -357,6 +526,42 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             var index = storeCONTROLPROGRAMADO.find('id', id);
             if (index > -1) {
                 var record = storeCONTROLPROGRAMADO.getAt(index);
+                return record.get('nombre');
+            } else {
+                return ''
+            }
+        }
+
+        //inicio combo aprobación secretaría inspección
+        storeMOTIVOACTA = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "De oficio"},
+                    {"id": 1, "nombre": "Atención a trámite"},
+                    {"id": 2, "nombre": "Denuncia"},
+                    {"id": 3, "nombre": "Denuncia redes sociales"},
+                    {"id": 4, "nombre": "Operativo"},
+                    {"id": 5, "nombre": "Pedido del director"},
+                ]
+            }
+        });
+
+        var comboMOTIVOACTA= new Ext.form.ComboBox({
+            id: 'comboMOTIVOACTA',
+            store: storeMOTIVOACTA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function motivoActa(id) {
+            var index = storeMOTIVOACTA.find('id', id);
+            if (index > -1) {
+                var record = storeMOTIVOACTA.getAt(index);
                 return record.get('nombre');
             } else {
                 return ''
@@ -487,6 +692,15 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
+        var comboPRIORIDAD = new Ext.form.ComboBox({
+            id: 'comboPRIORIDAD',
+            store: storePRIORIDAD,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
 
         var comboAPROBADO = new Ext.form.ComboBox({
             id: 'comboAPROBADO',
@@ -515,6 +729,22 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 } else {
                     return '<span style="color:red;">' + record.get('nombre') + '</span>';
                 }
+            }
+        }
+
+        function prioridad(id) {
+            var index = storePRIORIDAD.find('id', id);
+            if (index > -1) {
+                var record = storePRIORIDAD.getAt(index);
+                // return record.get('nombre');
+                if (record.get('nombre') == 'Bajo') {
+                    return '<span style="color:green;">' + record.get('nombre') + '</span>';
+                } else if (record.get('nombre') == 'Medio') {
+                    return '<span style="color:darkorange;">' + record.get('nombre') + '</span>';
+                }else{
+                    return '<span style="color:red;">' + record.get('nombre') + '</span>';
+                }
+
             }
         }
 
@@ -720,7 +950,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
         //this.storeModuloInspeccion.load();
         //this.storeDetalleInspeccion.load();
-        this.storeListadoInspeccion.load();
+        this.storeControlProgramadoInspeccion.load();
+        this.storeCCFInspeccion.load();
+
+        if(todosInspectores == true){
+            this.storeListadoInspeccion.load();
+        }else{
+            this.storeListadoTodosInspectores.load();
+        }
 
         storeModuloInspeccion = this.storeModuloInspeccion;
         limiteModuloInspeccion = 100;
@@ -731,36 +968,37 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         };
 
 
-
         //Inicio formato grid Inspeccion
         this.gridModuloInspeccion = new Ext.grid.EditorGridPanel({
             id: 'gridModuloInspeccion',
             xtype: "grid",
             //Calculo de tamaño vertical frame superior de pestaña Trámites pendientes
-            height: winHeight*0.5,
+            height: winHeight*0.44,
             //Calculo de tamaño horizontal frame superior de pestaña Trámites pendientes
             width: winWidth*0.99,
             store: this.storeModuloInspeccion,
             columns: [
                 //Definición de campos bdd Inspeccion
                 new Ext.grid.RowNumberer(),
-                {header: 'Trámite', dataIndex: 'codigo_tramite', sortable: true, width: 100},
-                {header: 'Fecha ingreso SG', dataIndex: 'recepcion_documento', sortable: true, width: 250, sorters: [{
+                {header: 'Trámite', dataIndex: 'codigo_tramite', sortable: true, width: 150},
+                {header: 'Fecha ingreso', dataIndex: 'recepcion_documento', sortable: true, width: 150, sorters: [{
                         direction: 'ASC'}]},
-                {header: 'Tipo documento', dataIndex: 'id_tipo_documento', sortable: true, width: 200,
+                {header: 'Tipo documento', dataIndex: 'id_tipo_documento', sortable: true, width: 150,
                     editor: comboTID, renderer: personaTipoDocumento},
-                {header: 'Número Documento', dataIndex: 'num_documento', sortable: true, width: 300, editor: textField},
+                {header: 'Núm documento', dataIndex: 'num_documento', sortable: true, width: 150, editor: textField},
                 {header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 150, editor: comboORD, renderer: listaOrdenanzas},
-                {header: 'Nombre Remitente', dataIndex: 'remitente', sortable: true, width: 400, editor: textField},
-                {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 200, editor: textField},
-                {header: 'Email Denunciante', dataIndex: 'email', sortable: true, width: 200, editor: textField},
-                {header: 'Entidad', dataIndex: 'institucion', sortable: true, width: 200, editor: textField},
-                {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 600, editor: textField},
-                {header: 'Caracter trámite', dataIndex: 'id_caracter_tramite', sortable: true, width: 200, editor: comboCDT,
+                {header: 'Nombre remitente', dataIndex: 'remitente', sortable: true, width: 250, editor: textField},
+                {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 120, editor: textField},
+                {header: 'Email denunciante', dataIndex: 'email', sortable: true, width: 200, editor: textField},
+                {header: 'Entidad', dataIndex: 'institucion', sortable: true, width: 150, editor: textField},
+                {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 400, editor: textField},
+                {header: 'Urgencia', dataIndex: 'id_caracter_tramite', sortable: true, width: 100, editor: comboCDT,
                     renderer: caracterTramite},
-                {header: 'Fojas', dataIndex: 'cantidad_fojas', width: 100,editor: textField},
-                {header: 'Aceptación', dataIndex: 'procesado_inspeccion', sortable: true, width: 150, editor: comboAPROBADO,
-                    renderer: aprobacion}
+                {header: 'Fojas', dataIndex: 'cantidad_fojas', width: 70,editor: textField},
+                {header: 'Aceptación', dataIndex: 'procesado_inspeccion', sortable: true, width: 120, editor: comboAPROBADO,
+                    renderer: aprobacion},
+                {header: 'Planificación', dataIndex: 'id_planificacion', sortable: true, width: 200, editor: comboCONTROLPROGRAMADO,
+                    renderer: controlProgramado}
             ],
             viewConfig: {
                 forceFit: true
@@ -770,10 +1008,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 listeners: {
                     rowselect: function (sm, row, rec) {
                         // recuperamos la informacion de personal asignado a ese operativo
-                        // bh cambio
                         select_codigo_tramite = rec.id;
                         storeDetalleInspeccion.load({params: {id: rec.id}});
                         tramiteSeleccionado = rec.id;
+                        //storeDetalleInspeccion.load({params: {filterText: rec.data.codigo_tramite}});
                     }
                 }
             }),
@@ -793,37 +1031,40 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridDetalleInspeccion = new Ext.grid.EditorGridPanel({
             id: 'gridDetalleInspeccion',
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
-            height: winHeight*0.26,
+            height: winHeight*0.32,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth*0.99,
+            width: winWidth*0.98,
             readOnly: accesosSupervision,
             store: this.storeDetalleInspeccion,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
-                {header: 'Cód inspección', dataIndex: 'id_inspeccion', sortable: true, width: 200},
+                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 120},
                 //{header: 'Codificacion', dataIndex: 'codificacion', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
-                {header: 'Codificacion', dataIndex: 'id_actividad', sortable: true, width: 200,  editor: comboACTIVIDAD,
+                {header: 'Codificacion', dataIndex: 'id_actividad', sortable: true, width: 180,  editor: comboACTIVIDAD,
                     renderer: tipoActividad},
                 {header: 'Nombre denunciado', dataIndex: 'nombre_denunciado', sortable: true, width: 200, editor: textFieldDetalle},
-                {header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 200,  editor: comboZONA,
+                {header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 120,  editor: comboZONA,
                     renderer: zonaAdm},
-                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 200,  editor: textFieldDetalle},
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 150,  editor: textFieldDetalle},
                 //{header: 'Sumilla DMI', dataIndex: 'sumilla_dmi', sortable: true, width: 400, editor: textFieldDetalle, autoSave:true},
-                {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 200, renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i:s'
-                    })
-                },
                 //{header: 'Tipo de actividad', dataIndex: 'id_actividad', sortable: true, width: 200,  editor: comboACTIVIDAD,
                 //autoSave:true, renderer: tipoActividad},
                 {header: 'Funcionario Entrega', dataIndex: 'funcionario_entrega', sortable: true, width: 200, editor: comboPERDIS,
                     renderer: tipoUnidadesPersonal},
+                {header: 'Fecha asignación', dataIndex: 'fecha_asignacion', sortable: true, width: 150, allowBlank: true
+                    ,renderer: formatDate, editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Funcionario Reasignación', dataIndex: 'funcionario_reasignacion', sortable: true, width: 200, editor: comboPERDIS,
+                    renderer: tipoUnidadesPersonal, readOnly:true},
                 //{header: 'Respuesta', dataIndex: 'respuesta', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
-                {header: 'Guia', dataIndex: 'guia', sortable: true, width: 150, editor: textFieldDetalle},
-                {header: 'Tipo documento', dataIndex: 'id_control_programado', sortable: true, width: 200, editor: comboCONTROLPROGRAMADO,
-                    renderer: controlProgramado}
+                //{header: 'Guia', dataIndex: 'guia', sortable: true, width: 100, editor: textFieldDetalle},
+                {header: 'Guia', dataIndex: 'guia', sortable: true, width: 100},
+                {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 200, allowBlank: true},
+                //{header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 100, editor: textFieldDetalle},
+                {header: 'Prioridad', dataIndex: 'prioridad', sortable: true, width: 100, editor: comboPRIORIDAD,
+                    renderer: prioridad}
+                //{header: 'Tipo documento', dataIndex: 'id_control_programado', sortable: true, width: 200, editor: comboCONTROLPROGRAMADO,
+                    //renderer: controlProgramado}
             ],
             viewConfig: {
                 forceFit: true
@@ -864,24 +1105,23 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         {header: 'Codificacion', dataIndex: 'id_actividad', sortable: true, width: 200,  editor: comboACTIVIDAD,
                             renderer: tipoActividad},
                         {header: 'Nombre denunciado', dataIndex: 'nombre_denunciado', sortable: true, width: 200, editor: textFieldDetalle},
+                        {header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 150, editor: comboORD, renderer: listaOrdenanzas},
                         {header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 200,  editor: comboZONA,
                             renderer: zonaAdm},
                         {header: 'Predio', dataIndex: 'predio', sortable: true, width: 200,  editor: textFieldDetalle},
                         //{header: 'Sumilla DMI', dataIndex: 'sumilla_dmi', sortable: true, width: 400, editor: textFieldDetalle, autoSave:true},
-                        {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 200, renderer: formatDate,
-                            editor: new Ext.ux.form.DateTimeField({
-                                dateFormat: 'Y-m-d',
-                                timeFormat: 'H:i:s'
-                            })
-                        },
+                        {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 200, readOnly:true},
                         //{header: 'Tipo de actividad', dataIndex: 'id_actividad', sortable: true, width: 200,  editor: comboACTIVIDAD,
                         //autoSave:true, renderer: tipoActividad},
                         {header: 'Funcionario Entrega', dataIndex: 'funcionario_entrega', sortable: true, width: 200, editor: comboPERDIS,
                             renderer: tipoUnidadesPersonal},
                         //{header: 'Respuesta', dataIndex: 'respuesta', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
-                        {header: 'Guia', dataIndex: 'guia', sortable: true, width: 150},
-                        {header: 'Tipo documento', dataIndex: 'id_control_programado', sortable: true, width: 200, editor: comboCONTROLPROGRAMADO,
-                            renderer: controlProgramado}
+                        {header: 'Guias', dataIndex: 'guia', sortable: true, width: 150},
+                        {header: 'Planificación', dataIndex: 'id_control_programado', sortable: true, width: 200, editor: comboCONTROLPROGRAMADO,
+                            renderer: controlProgramado},
+                        {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 150, editor: textFieldDetalle},
+                        {header: 'Motivo del acta', dataIndex: 'id_motivo_acta', sortable: true, width: 200, editor: comboMOTIVOACTA,
+                            renderer: motivoActa}
                     ],
                     viewConfig: {
                         forceFit: true
@@ -904,6 +1144,173 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 });
 
         //Fin ventana Inspeccion
+
+        //Inicio pestaña inspecciones
+        this.gridListadoTodosInspectores = new Ext.grid.EditorGridPanel({
+            id: 'gridListadoTodosInspectores',
+            //Calculo de tamaño vertical frame inferior de pestaña Inspecciones
+            height: winHeight*0.85,
+            //Calculo de tamaño vertical frame inferior de pestaña Inspecciones
+            width: winWidth*0.99,
+            //readOnly: accesosSupervision,
+            store: this.storeListadoTodosInspectores,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
+                {header: 'Cód inspección', dataIndex: 'id_inspeccion', sortable: true, width: 200},
+                {header: 'Codificacion', dataIndex: 'id_actividad', sortable: true, width: 200,  editor: comboACTIVIDAD,
+                    renderer: tipoActividad},
+                {header: 'Nombre denunciado', dataIndex: 'nombre_denunciado', sortable: true, width: 200, editor: textFieldDetalle},
+                {header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 200,  editor: comboZONA,
+                    renderer: zonaAdm},
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 200,  editor: textFieldDetalle},
+                //{header: 'Sumilla DMI', dataIndex: 'sumilla_dmi', sortable: true, width: 400, editor: textFieldDetalle, autoSave:true},
+                {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 200, readOnly:true},
+                //{header: 'Tipo de actividad', dataIndex: 'id_actividad', sortable: true, width: 200,  editor: comboACTIVIDAD,
+                //autoSave:true, renderer: tipoActividad},
+                {header: 'Funcionario Entrega', dataIndex: 'funcionario_entrega', sortable: true, width: 200, editor: comboPERDIS,
+                    renderer: tipoUnidadesPersonal},
+                //{header: 'Respuesta', dataIndex: 'respuesta', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
+                {header: 'Guia', dataIndex: 'guia', sortable: true, width: 150},
+                {header: 'Planificación', dataIndex: 'id_control_programado', sortable: true, width: 200, editor: comboCONTROLPROGRAMADO,
+                    renderer: controlProgramado},
+                {header: 'Motivo del acta', dataIndex: 'id_motivo_acta', sortable: true, width: 200, editor: comboMOTIVOACTA,
+                    renderer: motivoActa}
+            ],
+            viewConfig: {
+                forceFit: true
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }
+            ),
+            border: false,
+            stripeRows: true,
+            //Definición de barra de paginado
+            bbar: new Ext.PagingToolbar({
+                pageSize: limiteModuloInspeccion,
+                store: this.storeListadoTodosInspectores,
+                displayInfo: true,
+                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
+                emptyMsg: "Seleccione un trámite"
+            })
+        });
+        //Fin ventana Inspeccion
+
+        this.gridControlProgramadoInspeccion = new Ext.grid.EditorGridPanel({
+            id: 'gridControlProgramadoInspeccion',
+            //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
+            height: winHeight*0.32,
+            //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
+            width: winWidth*0.99,
+            readOnly: accesosSupervision,
+            store: this.storeControlProgramadoInspeccion,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
+                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 120},
+                {header: 'Fecha registro', dataIndex: 'fecha_registro', sortable: true, width: 200,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Código trámite', dataIndex: 'codigo_tramite', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Técnico', dataIndex: 'tecnico', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Sector', dataIndex: 'sector', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Parroquia', dataIndex: 'parroquia', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Zona', dataIndex: 'zona', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Calle', dataIndex: 'calle', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Clave catastral', dataIndex: 'clave_catastral', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Inventariado', dataIndex: 'inventariado', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Nombre propietario', dataIndex: 'nombre_propietario', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Cedula propietario', dataIndex: 'cedula_propietario', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Proyecto', dataIndex: 'proyecto', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Etapas', dataIndex: 'etapas', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Tramite', dataIndex: 'tramite', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Aprobacion registro', dataIndex: 'aprobacion_registro', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Telefono', dataIndex: 'telefono', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Registro actas licencias', dataIndex: 'registro_actas_licencias', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Gdoc', dataIndex: 'gdoc', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Responsable tecnico', dataIndex: 'responsable_tecnico', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Licencia profesional', dataIndex: 'licencia_profesional', sortable: true, width: 200, editor: textFieldControlProgramado},
+                {header: 'Licencia municipal', dataIndex: 'licencia_municipal', sortable: true, width: 200, editor: textFieldControlProgramado}
+            ],
+            viewConfig: {
+                forceFit: false
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }
+            ),
+            border: true,
+            stripeRows: true,
+            //Definición de barra de paginado
+            bbar: new Ext.PagingToolbar({
+                pageSize: limiteDetalleInspeccion,
+                store: this.storeControlProgramadoInspeccion,
+                displayInfo: true,
+                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
+                emptyMsg: "Seleccione un trámite"
+            })
+        });
+
+        this.gridCCFInspeccion = new Ext.grid.EditorGridPanel({
+            id: 'gridCCFInspeccion',
+            //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
+            height: winHeight*0.32,
+            //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
+            width: winWidth*0.99,
+            readOnly: accesosSupervision,
+            store: this.storeCCFInspeccion,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
+                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 120},
+                {header: 'Fecha recepción', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 200,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Número registro', dataIndex: 'num_registro', sortable: true, width: 200, editor: textFieldCCF},
+                {header: 'Fecha recepción', dataIndex: 'fecha_inicio', sortable: true, width: 200,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Fecha finalización', dataIndex: 'fecha_finalizacion', sortable: true, width: 200,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textFieldCCF},
+                {header: 'Tipo', dataIndex: 'tipo', sortable: true, width: 200, editor: textFieldCCF},
+                {header: 'Zona', dataIndex: 'zona', sortable: true, width: 200, editor: textFieldCCF},
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 200, editor: textFieldCCF},
+                {header: 'Clave Catastral', dataIndex: 'clave_catastral', sortable: true, width: 200, editor: textFieldCCF},
+                {header: 'Proyecto', dataIndex: 'proyecto', sortable: true, width: 200, editor: textFieldCCF},
+                {header: 'Etapa', dataIndex: 'etapa', sortable: true, width: 200, editor: textFieldCCF},
+                {header: 'Tecnico', dataIndex: 'tecnico', sortable: true, width: 200, editor: textFieldCCF},
+                {header: 'Fecha inspección', dataIndex: 'fecha_inspeccion', sortable: true, width: 200,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Fecha egreso verificación', dataIndex: 'fecha_egreso_verificacion', sortable: true, width: 200,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Fecha certificado informe', dataIndex: 'fecha_certificado_informe', sortable: true, width: 200,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Resultado', dataIndex: 'resultado', sortable: true, width: 200, editor: textFieldCCF},
+                {header: 'Numero informe ertificado', dataIndex: 'numero_informe_certificado', sortable: true, width: 200, editor: textFieldCCF},
+            ],
+            viewConfig: {
+                forceFit: false
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }
+            ),
+            border: true,
+            stripeRows: true,
+            //Definición de barra de paginado
+            bbar: new Ext.PagingToolbar({
+                pageSize: limiteDetalleInspeccion,
+                store: this.storeCCFInspeccion,
+                displayInfo: true,
+                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
+                emptyMsg: "Seleccione un trámite"
+            })
+        });
+
 
         //Creación variable ventana
         var win = desktop.getWindow('layout-win');
@@ -1038,51 +1445,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                 items: this.gridModuloInspeccion
                             },{
                                 flex: 2,
-                                bodyStyle: 'padding:0; background: #DFE8F6',
-                                layout: 'column',
-                                tbar: [
-                                    //Definición de botón nuevo
-                                    {
-                                        id: 'btnNuevoDetalleInspeccion',
-                                        text: 'Nuevo',
-                                        scope: this,
-                                        handler: this.addDetalleInspeccion,
-                                        disabled: !creacionDatosInspeccion,
-                                        iconCls: 'save-icon'
-                                    },
-                                    '-',
-                                    //Definición de botón eliminar
-                                    {
-                                        id: 'btnEliminarDetalleInspeccion',
-                                        text: "Eliminar",
-                                        scope: this,
-                                        handler: this.deleteDetalleInspeccion,
-                                        disabled: !creacionDatosInspeccion,
-                                        iconCls: 'delete-icon'
-                                    },
-                                    '-',
-                                    //Definición de botón regargar datos
-                                    {
-                                        id: 'btnRegargarDatosDetalleInspeccion',
-                                        iconCls: 'reload-icon',
-                                        handler: this.requestGridDataDetalleInspeccion,
-                                        disabled: false,
-                                        scope: this,
-                                        text: 'Recargar Datos'
-                                    }
-                                    /*,
-                                    '-',
-                                    //Definición de botón guardar datos
-                                    {
-                                        text: 'Guardar datos Inspección',
-                                        scope: this,
-                                        handler: this.grabardenuncias,
-                                        iconCls: 'save-icon',
-                                        disabled: !acceso,
-                                        id: 'tb_grabardenuncias'
-                                        , formBind: true
-                                    }*/
-                                ],
+                                bodyStyle: 'padding:0; background: #0f6dff',
+                                //layout: 'column',
+
                                 items: [
                                     {
                                         xtype: 'tabpanel',
@@ -1093,19 +1458,157 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                         items: [
                                             {
                                                 title: 'Datos inspección',
-                                                layout: 'column',
-                                                items: this.gridDetalleInspeccion
+                                                //layout: 'column',
+                                                //closable: true,
+                                                //titleCollapse: true,
+                                                //disabled: !accesosSecretaria
+                                                autoScroll: true,
+                                                height: winHeight*0.36,
+                                                tbar: [
+                                                    //Definición de botón nuevo
+                                                    {
+                                                        id: 'btnNuevoDetalleInspeccion',
+                                                        text: 'Nuevo',
+                                                        scope: this,
+                                                        handler: this.addDetalleInspeccion,
+                                                        disabled: !creacionDatosInspeccion,
+                                                        iconCls: 'save-icon'
+                                                    },
+                                                    '-',
+                                                    //Definición de botón eliminar
+                                                    {
+                                                        id: 'btnEliminarDetalleInspeccion',
+                                                        text: "Eliminar",
+                                                        scope: this,
+                                                        handler: this.deleteDetalleInspeccion,
+                                                        disabled: !creacionDatosInspeccion,
+                                                        iconCls: 'delete-icon'
+                                                    },
+                                                    '-',
+                                                    //Definición de botón regargar datos
+                                                    {
+                                                        id: 'btnRegargarDatosDetalleInspeccion',
+                                                        iconCls: 'reload-icon',
+                                                        handler: this.requestGridDataDetalleInspeccion,
+                                                        disabled: false,
+                                                        scope: this,
+                                                        text: 'Recargar Datos'
+                                                    }
+                                                    /*,
+                                                    '-',
+                                                    //Definición de botón guardar datos
+                                                    {
+                                                        text: 'Guardar datos Inspección',
+                                                        scope: this,
+                                                        handler: this.grabardenuncias,
+                                                        iconCls: 'save-icon',
+                                                        disabled: !acceso,
+                                                        id: 'tb_grabardenuncias'
+                                                        , formBind: true
+                                                    }*/
+                                                ],
+                                                items: this.gridDetalleInspeccion,
                                             },
                                             {
                                                 title: 'Control programado',
+                                                //titleCollapse: true,
                                                 layout: 'column',
-                                                disabled: !accesosSecretaria
-                                                //items: this.gridDetalleInspeccion
+                                                //disabled: !accesosSecretaria
+                                                autoScroll: true,
+                                                height: winHeight*0.36,
+                                                tbar: [
+                                                    //Definición de botón nuevo
+                                                    {
+                                                        id: 'btnNuevoControlProgramado',
+                                                        text: 'Nuevo',
+                                                        scope: this,
+                                                        handler: this.addControlProgramado,
+                                                        disabled: !creacionDatosInspeccion,
+                                                        iconCls: 'save-icon'
+                                                    },
+                                                    '-',
+                                                    //Definición de botón eliminar
+                                                    {
+                                                        id: 'btnEliminarControlProgramado',
+                                                        text: "Eliminar",
+                                                        scope: this,
+                                                        handler: this.deleteControlProgramado,
+                                                        disabled: !creacionDatosInspeccion,
+                                                        iconCls: 'delete-icon'
+                                                    },
+                                                    '-',
+                                                    //Definición de botón regargar datos
+                                                    {
+                                                        id: 'btnRegargarDatosControlProgramado',
+                                                        iconCls: 'reload-icon',
+                                                        handler: this.requestGridDataControlProgramado,
+                                                        disabled: false,
+                                                        scope: this,
+                                                        text: 'Recargar Datos'
+                                                    }
+                                                    /*,
+                                                    '-',
+                                                    //Definición de botón guardar datos
+                                                    {
+                                                        text: 'Guardar datos Inspección',
+                                                        scope: this,
+                                                        handler: this.grabardenuncias,
+                                                        iconCls: 'save-icon',
+                                                        disabled: !acceso,
+                                                        id: 'tb_grabardenuncias'
+                                                        , formBind: true
+                                                    }*/
+                                                ],
+                                                items: this.gridControlProgramadoInspeccion
                                             },{
                                                 title: 'CCF',
                                                 layout: 'column',
-                                                disabled: !accesosSecretaria
-                                                //items: this.gridDetalleInspeccion
+                                                //disabled: !accesosSecretaria
+                                                height: winHeight*0.36,
+                                                tbar: [
+                                                    //Definición de botón nuevo
+                                                    {
+                                                        id: 'btnNuevoCCF',
+                                                        text: 'Nuevo',
+                                                        scope: this,
+                                                        handler: this.addCCF,
+                                                        disabled: !creacionDatosInspeccion,
+                                                        iconCls: 'save-icon'
+                                                    },
+                                                    '-',
+                                                    //Definición de botón eliminar
+                                                    {
+                                                        id: 'btnEliminarCCF',
+                                                        text: "Eliminar",
+                                                        scope: this,
+                                                        handler: this.deleteCCF,
+                                                        disabled: !creacionDatosInspeccion,
+                                                        iconCls: 'delete-icon'
+                                                    },
+                                                    '-',
+                                                    //Definición de botón regargar datos
+                                                    {
+                                                        id: 'btnRegargarDatosCCF',
+                                                        iconCls: 'reload-icon',
+                                                        handler: this.requestGridDataCCF,
+                                                        disabled: false,
+                                                        scope: this,
+                                                        text: 'Recargar Datos'
+                                                    }
+                                                    /*,
+                                                    '-',
+                                                    //Definición de botón guardar datos
+                                                    {
+                                                        text: 'Guardar datos Inspección',
+                                                        scope: this,
+                                                        handler: this.grabardenuncias,
+                                                        iconCls: 'save-icon',
+                                                        disabled: !acceso,
+                                                        id: 'tb_grabardenuncias'
+                                                        , formBind: true
+                                                    }*/
+                                                ],
+                                                items: this.gridCCFInspeccion
                                             }
                                         ]
                                     }
@@ -1148,7 +1651,27 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                 flex: 1,
                                 autoScroll: true,
                                 layout: 'column',
-                                items: this.gridListadoInspeccion
+                                items: todosInspectores ? this.gridListadoInspeccion : this.gridListadoTodosInspectores
+                                //items: this.gridListadoInspeccion
+                            }]
+                        },{
+                            autoScroll: true,
+                            title: 'Geolocalización',
+                            closable: true,
+                            items: [{
+                                split: true,
+                                height: 400,
+                                minSize: 100,
+                                maxSize: 150,
+                                region: 'center',
+                                autoEl: {
+                                    id: 'iframemap',
+                                    tag: 'iframe',
+                                    style: 'height: 98%; width: 100%; border: none',
+                                    src: 'http://localhost/mapaRecorrido.html'
+                                    //src: 'http://agenciadecontrol.quito.gob.ec/mapaPersonal.html'
+                                },
+                                id: 'data_export_iframe'
                             }]
                         }
                     ]
@@ -1288,7 +1811,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             asunto: '',
             id_caracter_tramite: '',
             cantidad_fojas: '0',
-            procesado_inspeccion: '0'
+            procesado_inspeccion: '1'
         });
         this.gridModuloInspeccion.stopEditing();
         this.storeModuloInspeccion.insert(0, inspeccion);
@@ -1302,7 +1825,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
     //Función para actualizar los datos mostrados en pantalla de la pestaña de ModuloInspeccion
     requestGridDataListadoInspeccion: function () {
-        this.storeListadoInspeccion.load();
+        if(todosInspectores == true){
+            this.storeListadoInspeccion.load();
+        }else{
+            this.storeListadoTodosInspectores.load();
+        }
     },
 
     //Función para eliminación de registros de Inspeccion
@@ -1332,23 +1859,126 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             'id_denuncia' : select_codigo_tramite,
             'id_inspeccion' : '',
             'codificacion' : '',
-            'fecha_despacho' : '',
+            //'fecha_despacho' : '',
             'id_actividad' : '',
             'funcionario_entrega' : '',
             'id_zona': '',
             'respuesta' : '',
-            'guia' : '',
-            'id_control_programado' : ''
+            //'guia' : '',
+            'id_control_programado' : '',
+            //'funcionario_reasignacion' : '',
+            'fecha_asignacion' : (new Date())
         });
         this.gridDetalleInspeccion.stopEditing();
         this.storeDetalleInspeccion.insert(0, inspeccion);
         this.gridDetalleInspeccion.startEditing(0, 0);
     },
 
+    //Función para inserción de registros de detalle de inspeccion
+    addControlProgramado: function () {
+        var inspeccion = new this.storeControlProgramadoInspeccion.recordType({
+            'id_denuncia' : select_codigo_tramite,
+            'id_inspeccion' : '',
+            'codificacion' : '',
+            //'fecha_despacho' : '',
+            'id_actividad' : '',
+            'funcionario_entrega' : '',
+            'id_zona': '',
+            'respuesta' : '',
+            //'guia' : '',
+            'id_control_programado' : '',
+            //'funcionario_reasignacion' : '',
+            'fecha_asignacion' : ''
+        });
+        this.gridControlProgramadoInspeccion.stopEditing();
+        this.storeControlProgramadoInspeccion.insert(0, inspeccion);
+        this.gridControlProgramadoInspeccion.startEditing(0, 0);
+    },
+
+    //Función para eliminación de registros de Inspeccion
+    deleteControlProgramado: function () {
+        //Popup de confirmación
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de borrar el registro seleccionado?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridControlProgramadoInspeccion.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeControlProgramadoInspeccion.remove(rows);
+                }
+            }
+        });
+    },
+
+    //Función para inserción de registros de detalle de inspeccion
+    addCCF: function () {
+        var inspeccion = new this.storeCCFInspeccion.recordType({
+            'id_denuncia' : select_codigo_tramite,
+            'id_inspeccion' : '',
+            'codificacion' : '',
+            //'fecha_despacho' : '',
+            'id_actividad' : '',
+            'funcionario_entrega' : '',
+            'id_zona': '',
+            'respuesta' : '',
+            //'guia' : '',
+            'id_control_programado' : '',
+            //'funcionario_reasignacion' : '',
+            'fecha_asignacion' : ''
+        });
+        this.gridCCFInspeccion.stopEditing();
+        this.storeCCFInspeccion.insert(0, inspeccion);
+        this.gridCCFInspeccion.startEditing(0, 0);
+    },
+
+    //Función para eliminación de registros de Inspeccion
+    deleteCCF: function () {
+        //Popup de confirmación
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de borrar el registro seleccionado?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridCCFInspeccion.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeCCFInspeccion.remove(rows);
+                }
+            }
+        });
+    },
+
     //Función para actualizar los datos mostrados en pantalla de la pestaña de detalle inspeccion
     requestGridDataDetalleInspeccion: function () {
-        console.log(tramiteSeleccionado);
         this.storeDetalleInspeccion.load({
+            params:{
+                id: tramiteSeleccionado
+            }
+        });
+    },
+
+    //Función para actualizar los datos mostrados en pantalla de la pestaña de detalle inspeccion
+    requestGridDataControlProgramado: function () {
+        this.storeControlProgramadoInspeccion.load({
+            params:{
+                id: tramiteSeleccionado
+            }
+        });
+    },
+
+    //Función para actualizar los datos mostrados en pantalla de la pestaña de detalle inspeccion
+    requestGridDataCCF: function () {
+        this.storeCCFInspeccion.load({
             params:{
                 id: tramiteSeleccionado
             }

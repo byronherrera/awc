@@ -21,9 +21,8 @@ function selectInspeccion()
     if (isset($_POST['pendientesAprobar'])) {
         if ($_POST['pendientesAprobar'] == 'true') {
             ///cambio bh
-            //$where = " WHERE reasignacion = 3 and procesado_inspeccion = 0";
-            $where = " WHERE reasignacion = 3 and despacho_secretaria_insp = 0";
-            //$where = " WHERE reasignacion = 3 and ( procesado_inspeccion = 0 and despacho_secretaria_insp = 0) ";
+            $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0";
+            //$where = " WHERE reasignacion = 3 and despacho_secretaria_insp = 0 ";
         }
     }
 

@@ -319,7 +319,7 @@ function comboPersonalInspeccion()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT id, CONCAT(a.last_name,' ',a.first_name) AS nombre  FROM amc_personal WHERE active = 1  AND unidad = 3 ORDER BY id";
+    $sql = "SELECT id, CONCAT(last_name,' ',first_name) AS nombre  FROM qo_members WHERE active = 1  ORDER BY id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

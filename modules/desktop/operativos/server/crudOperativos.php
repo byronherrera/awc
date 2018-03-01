@@ -18,13 +18,13 @@ function verificarAnteriorOperativo($id_operativo)
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if ($row) {
         return $row;
-    }
-    else {
+    } else {
         return $row;
     }
 
 
 }
+
 function selectProcedimientosCadena($procLista)
 {
     global $os;
@@ -56,7 +56,7 @@ function selectOperativos()
 {
     global $os;
     //TODO cambiar columna por defecto en busquedas
-    $columnaBusqueda = 'id_zonal';
+    $columnaBusqueda = 'id';
 
     $where = '';
     $usuarioLog = $os->get_member_id();
@@ -70,7 +70,7 @@ function selectOperativos()
     if (isset($_POST['accesosAdministradorIns'])) {
         $accesosOperativos = $_POST['accesosAdministradorIns'];
         if ($accesosOperativos == 'true')
-                $where = " WHERE ($usuarioLog = id_persona_encargada or id_unidad = 3 ) ";
+            $where = " WHERE ($usuarioLog = id_persona_encargada or id_unidad = 3 ) ";
     }
 
 
@@ -87,7 +87,7 @@ function selectOperativos()
         $acceso = $_POST['acceso'];
         if ($acceso == 'false')
             $where = "";
-            //$where = " WHERE $usuarioLog = id_persona_encargada ";
+        //$where = " WHERE $usuarioLog = id_persona_encargada ";
     }
 
     if (isset($_POST['filterField'])) {
@@ -107,16 +107,24 @@ function selectOperativos()
         }
 
         if ($columnaBusqueda == 'id_persona_encargada') {
-            $sql = "SELECT id FROM qo_members WHERE UPPER(first_name) like UPPER('%$campo%') OR UPPER(last_name) like UPPER('%$campo%') OR UPPER(email_address) like UPPER('%$campo%') LIMIT 1";
+            $sql = "SELECT id FROM qo_members WHERE UPPER(first_name) like UPPER('%$campo%') OR UPPER(last_name) like UPPER('%$campo%') OR UPPER(email_address) like UPPER('%$campo%') ";
             $result = $os->db->conn->query($sql);
-            $row = $result->fetch(PDO::FETCH_ASSOC);
-            if (strlen($row['id']) > 0)
-                $campo = $row['id'];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                if (strlen($row['id']) > 0) {
+                    $campo = $row['id'];
+                    if ($where == '')
+                        $where = " WHERE $columnaBusqueda = '$campo'";
+                    else
+                        $where = $where . " OR $columnaBusqueda = '$campo'";
+                }
+            };
+        } else {
+            if ($where == '')
+                $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+            else
+                $where = $where . " AND $columnaBusqueda LIKE '%$campo%'";
         }
-        if ($where == '')
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-        else
-            $where = $where . " AND $columnaBusqueda LIKE '%$campo%'";
+
     }
 
     if (isset($_POST['unidadfiltro'])) {

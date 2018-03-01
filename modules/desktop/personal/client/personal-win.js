@@ -684,39 +684,45 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
 
         var readerPersonal = new Ext.data.JsonReader({
             totalProperty: 'total',
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
             fields: [
                 {name: 'id', allowBlank: false},
                 {name: 'cedula', allowBlank: false},
                 {name: 'apellidos', allowBlank: false},
                 {name: 'nombres', allowBlank: false},
-                {name: 'partida', allowBlank: false},
-                {name: 'rol', allowBlank: false},
-                {name: 'denominacion', allowBlank: false},
-                {name: 'grado', allowBlank: false},
-                {name: 'regimen', allowBlank: false},
-                {name: 'modalidad', allowBlank: false},
-                {name: 'rmu', allowBlank: false},
-                {name: 'unidad', allowBlank: false},
+                {name: 'partida', allowBlank: true},
+                {name: 'rol', allowBlank: true},
+                {name: 'denominacion', allowBlank: true},
+                {name: 'grado', allowBlank: true},
+                {name: 'regimen', allowBlank: true},
+                {name: 'modalidad', allowBlank: true},
+                {name: 'rmu', allowBlank: true},
+                {name: 'unidad', allowBlank: true},
                 {name: 'id_zonal', allowBlank: true},
-                {name: 'telefono_institucional', allowBlank: false},
-                {name: 'extencion', allowBlank: false},
-                {name: 'piso', allowBlank: false},
-                {name: 'id_estado', allowBlank: false},
+                {name: 'telefono_institucional', allowBlank: true},
+                {name: 'extencion', allowBlank: true},
+                {name: 'piso', allowBlank: true},
+                {name: 'id_estado', allowBlank: true},
                 {name: 'observaciones', allowBlank: true},
 
+                {name: 'email', allowBlank: true},
 
                 {name: 'fecha_salida', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_entrada', type: 'date', dateFormat: 'c', allowBlank: true},
 
-                {name: 'id_estado', allowBlank: false},
-                {name: 'email', allowBlank: false}
-
-
-            ]
+                {name: 'telefono1', allowBlank: true},
+                {name: 'telefono2', allowBlank: true},
+                {name: 'direccionprincipal', allowBlank: true},
+                {name: 'direccionsecundaria', allowBlank: true},
+                {name: 'direccionnumero', allowBlank: true},
+                {name: 'parroquia', allowBlank: true},
+                {name: 'barrio', allowBlank: true},
+                {name: 'recorrido', allowBlank: true},
+                {name: 'geoposicionamiento', allowBlank: true}
+            ],
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data'
         });
         var writerPersonal = new Ext.data.JsonWriter({
             encode: true,
@@ -760,7 +766,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 140, editor: textField},
                 {header: 'Partida', dataIndex: 'partida', sortable: true, width: 60, editor: textField, align: 'right'},
                 {header: 'Rol', dataIndex: 'rol', sortable: true, width: 240, editor: textField},
-                {header: 'Denominación', dataIndex: 'denominacion', sortable: true, width: 200, editor: textField},
+                {header: 'Grado Ocupacional', dataIndex: 'denominacion', sortable: true, width: 200, editor: textField},
                 {header: 'Grado', dataIndex: 'grado', sortable: true, width: 60, editor: textField, align: 'right'},
 
                 {header: 'Régimen', dataIndex: 'regimen', sortable: true, width: 200, editor: textField},
@@ -807,13 +813,28 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Email', dataIndex: 'email', sortable: true, width: 140, editor: textField},
                 {header: 'Piso', dataIndex: 'piso', sortable: true, width: 140, editor: textField},
                 {
-                    header: 'Obnservaciones',
+                    header: 'Observaciones',
                     dataIndex: 'observaciones',
                     sortable: true,
                     width: 280,
                     editor: textField
                 },
 
+                {header: 'Fecha salida', dataIndex: 'fecha_salida', sortable: true, width: 140, editor: textField  },
+                {header: 'Fecha entrada', dataIndex: 'fecha_entrada', sortable: true, width: 140, editor: textField},
+                {header: 'Teléfono 1', dataIndex: 'telefono1', sortable: true, width: 140, editor: textField},
+                {header: 'Teléfono 2', dataIndex: 'telefono2', sortable: true, width: 140, editor: textField},
+                {header: 'Direccion principal', dataIndex: 'direccionprincipal', sortable: true, width: 140, editor: textField},
+                {header: 'Direccion secundaria', dataIndex: 'direccionsecundaria', sortable: true, width: 140, editor: textField},
+                {header: 'Direccion número', dataIndex: 'direccionnumero', sortable: true, width: 140, editor: textField},
+                {header: 'Parroquia', dataIndex: 'parroquia', sortable: true, width: 140, editor: textField},
+                {header: 'Barrio', dataIndex: 'barrio', sortable: true, width: 140, editor: textField},
+                {header: 'Recorrido', dataIndex: 'recorrido', sortable: true, width: 140, editor: textField},
+                {header: 'Geoposicionamiento', dataIndex: 'geoposicionamiento',  width: 140,editor: textField,
+                    renderer: function (value) {
+                        return '<a href="https://www.google.com/maps?q='+ value+'" target="_blank">'+value+'</a> ';
+                    }
+                    },
 
             ],
             viewConfig: {
@@ -1303,6 +1324,14 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
+                            key: 'cedula',
+                            scope: this,
+                            text: 'Cédula'
+                        },
+                        {
+                            checked: true,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
                             key: 'apellidos',
                             scope: this,
                             text: 'Apellidos'
@@ -1325,7 +1354,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                         }
                     ]
                 })
-                , text: 'Apellidos'
+                , text: 'Cédula'
             });
 
             win = desktop.createWindow({
@@ -1545,11 +1574,13 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             id_nivel_complejidad: ' ',
             observaciones: ' ',
             punto_encuentro_planificado: ' ',
-            id_zonal: ' ',
+            id_zonal: 0,
+            rmu: 0,
+            unidad: 0,
             tipo_personal: '1',
             id_persona_encargada: ' ',
             fecha_entrada: (new Date()),
-            fecha_salida: (new Date()),
+            fecha_salida: '',
             id_estado: 1
         });
         this.gridPersonal.stopEditing();
