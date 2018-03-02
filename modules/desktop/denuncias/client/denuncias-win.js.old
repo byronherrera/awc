@@ -41,10 +41,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             data: {
                 documento: [
                     {"id": 2, "nombre": "Comunicados"},
-                    {"id": 1, "nombre": "Denuncias"},
-                    {"id": 3, "nombre": "Oficio"},
-                    {"id": 4, "nombre": "Memorando"}
-
+                    {"id": 1, "nombre": "Denuncias"}
                 ]
             }
         });
@@ -61,15 +58,17 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         });
 
         function personaTipoDocumento(id) {
-            var index = storeTID.find('id', id);
+            var index = storeTID.findExact('id', id);
             if (index > -1) {
                 var record = storeTID.getAt(index);
                 return record.get('nombre');
             }
         }
+
         //fin combo tipo documento  TID
 
         //inicio combo activo
+
         storeOFAC = new Ext.data.JsonStore({
             root: 'users',
             fields: ['id', 'nombre'],
@@ -215,7 +214,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         });
 
         function caracterTramite(id) {
-            var index = storeCDT.find('id', id);
+            var index = storeCDT.findExact('id', id);
             if (index > -1) {
                 var record = storeCDT.getAt(index);
                 // return record.get('nombre');
@@ -474,6 +473,77 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 // inicio pestañas de mantenimiento
 
 
+        //inicio mantenimiento Denuncias Procedimientos
+
+        var proxyDenunciasProcedimientos = new Ext.data.HttpProxy({
+            api: {
+                create: urlDenuncias + "crudDenunciasProcedimientos.php?operation=insert",
+                read: urlDenuncias + "crudDenunciasProcedimientos.php?operation=select",
+                update: urlDenuncias + "crudDenunciasProcedimientos.php?operation=update",
+                destroy: urlDenuncias + "crudDenunciasProcedimientos.php?operation=delete"
+            }
+        });
+
+        var readerDenunciasProcedimientos = new Ext.data.JsonReader({
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id', allowBlank: false},
+                {name: 'nombre', allowBlank: false},
+                {name: 'observacion', allowBlank: false}
+            ]
+        });
+
+        var writerDenunciasProcedimientos = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        this.storeDenunciasProcedimientos = new Ext.data.Store({
+            id: "id",
+            proxy: proxyDenunciasProcedimientos,
+            reader: readerDenunciasProcedimientos,
+            writer: writerDenunciasProcedimientos,
+            autoSave: true
+        });
+        this.storeDenunciasProcedimientos.load();
+
+        this.gridDenunciasProcedimientos = new Ext.grid.EditorGridPanel({
+
+            autoHeight: true,
+            autoScroll: true,
+            store: this.storeDenunciasProcedimientos, columns: [
+                new Ext.grid.RowNumberer(),
+                {
+                    header: 'ID',
+                    dataIndex: 'id',
+                    sortable: true,
+                    width: 10
+                },
+                {
+                    header: 'Nombre',
+                    dataIndex: 'nombre',
+                    sortable: true,
+                    width: 40,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'Observación',
+                    dataIndex: 'observacion',
+                    sortable: true,
+                    width: 40,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
+            ],
+            viewConfig: {forceFit: true},
+            sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
+            border: false,
+            stripeRows: true
+        });
+
+        // fin DenunciasProcedimientos
 
         //inicio mantenimiento DenunciasZonas
 
@@ -838,7 +908,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Tipo documento',
                     dataIndex: 'id_tipo_documento',
                     sortable: true,
-                    width: 30,
+                    width: 28,
                     editor: comboTID, renderer: personaTipoDocumento
                 },
                 {
@@ -909,7 +979,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Reasignación',
                     dataIndex: 'reasignacion',
                     sortable: true,
-                    width: 50,
+                    width: 60,
                     editor: comboREA, renderer: departamentoReasignacion
                 }
                 , {
@@ -1241,7 +1311,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         if (!win) {
             var winWidth = desktop.getWinWidth();
             var winHeight = desktop.getWinHeight();
- 
+
+            console.log(winWidth)
+            console.log(winHeight)
 
             this.seleccionDepar = 3;
 
@@ -1482,7 +1554,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                                                             if (field.getName() == 'guia') {
                                                                 if (oldVal != newVal) {
-                                                              
+                                                                    console.log("cambio")
                                                                     Ext.getCmp('tb_grabardenuncias').setDisabled(false);
 //                                                                        Ext.getCmp('reasignacion').enable();
                                                                 }
@@ -1892,13 +1964,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             key: 'institucion',
                             scope: this,
                             text: 'Institución'
-                        }, {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'asunto',
-                            scope: this,
-                            text: 'Asunto'
                         }
                     ]
                 })
@@ -2128,6 +2193,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                             //this.gridDenunciasGuia
                         }
+                        /*
                         , {
                             autoScroll: true,
                             title: 'Unidades',
@@ -2183,7 +2249,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ],
                             items: this.gridDenunciasZonas
-                        }
+                        }*/
                         , {
                             title: 'Reportes',
                             closable: true,
@@ -2195,6 +2261,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     handler: this.requestGridDataDocumentoReporte,
                                     scope: this,
                                     text: 'Buscar'
+
                                 },
                                 {
                                     iconCls: 'reload-icon',
@@ -2239,25 +2306,37 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                             //this.gridReportes
                         }
-
-
-                        ,{
+                        /*
+                        , {
                             autoScroll: true,
-                            title: 'Geolocalización',
+                            title: 'Procedimientos',
                             closable: true,
-                            items: [{
-                                split: true,
-                                height: 500,
-                                minSize: 100,
-                                maxSize: 150,
-                                region: 'center',
-                                html: "<div id=\"contenedor_marcadorGoogle\"  style=\"width: 100%; height: 400px;\"></div> \n" +
-                                "<div id=\"geoposicionamiento\"></div>\n" +
-                                "<p class=\"formDescription\">Ubicar el marcador de ubicación en el lugar de la infracción.</p>" ,
+                            disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
 
-                                id: 'geolocalizacion_tab'
-                            }]
-                        }
+                            tbar: [
+                                {
+                                    text: 'Nuevo',
+                                    scope: this,
+                                    handler: this.adddenunciasProcedimientos,
+                                    iconCls: 'save-icon'
+                                },
+                                '-',
+                                {
+                                    text: "Eliminar",
+                                    scope: this,
+                                    handler: this.deletedenunciasProcedimientos,
+                                    iconCls: 'delete-icon'
+                                },
+                                '-', {
+                                    iconCls: 'demo-grid-add',
+                                    handler: this.requestGridDataDenunciasProcedimientos,
+                                    scope: this,
+                                    text: 'Recargar Datos'
+                                }
+                            ],
+                            items: this.gridDenunciasProcedimientos
+                        }*/
+
                     ]
                 })
             });
@@ -2385,7 +2464,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
     },
 
     botonExportarReporte: function () {
-        
+        console.log(Ext.getCmp('tb_seleccionarUnidad').getValue());
         if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar Unidad')
             Ext.Msg.show({
                 title: 'Advertencia',
@@ -2485,7 +2564,36 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             , buttons: Ext.Msg.OK
         });
     },
-
+    deletedenunciasProcedimientos: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridDenunciasProcedimientos.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeDenunciasProcedimientos.remove(rows);
+                }
+            }
+        });
+    },
+    adddenunciasProcedimientos: function () {
+        var denunciasProcedimientos = new this.storeDenunciasProcedimientos.recordType({
+            id: ' ',
+            nombre: '',
+            observacion: ''
+        });
+        this.gridDenunciasProcedimientos.stopEditing();
+        this.storeDenunciasProcedimientos.insert(0, denunciasProcedimientos);
+        this.gridDenunciasProcedimientos.startEditing(0, 0);
+    },
+    requestGridDataDenunciasProcedimientos: function () {
+        this.storeDenunciasProcedimientos.load();
+    },
 
     deleteDenunciasZonas: function () {
         Ext.Msg.show({
