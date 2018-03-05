@@ -475,174 +475,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
 
 
-        //inicio mantenimiento DenunciasZonas
-
-        var proxyDenunciasZonas = new Ext.data.HttpProxy({
-            api: {
-                create: urlDenuncias + "crudDenunciasZonas.php?operation=insert",
-                read: urlDenuncias + "crudDenunciasZonas.php?operation=select",
-                update: urlDenuncias + "crudDenunciasZonas.php?operation=update",
-                destroy: urlDenuncias + "crudDenunciasZonas.php?operation=delete"
-            }
-        });
-
-        var readerDenunciasZonas = new Ext.data.JsonReader({
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id', allowBlank: false},
-                {name: 'nombre', allowBlank: false},
-                {name: 'activo', allowBlank: false}
-            ]
-        });
-
-        var writerDenunciasZonas = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeDenunciasZonas = new Ext.data.Store({
-            id: "id",
-            proxy: proxyDenunciasZonas,
-            reader: readerDenunciasZonas,
-            writer: writerDenunciasZonas,
-            autoSave: true
-        });
-        this.storeDenunciasZonas.load();
-
-        this.gridDenunciasZonas = new Ext.grid.EditorGridPanel({
-            autoHeight: true,
-            autoScroll: true,
-            store: this.storeDenunciasZonas, columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'ID',
-                    dataIndex: 'id',
-                    sortable: true,
-                    width: 10
-                },
-                {
-                    header: 'Nombre',
-                    dataIndex: 'nombre',
-                    sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Activo'
-                    , dataIndex: 'activo'
-                    , editor: {
-                    xtype: 'checkbox'
-                }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , sortable: true
-                    , width: 50
-                    , xtype: 'booleancolumn'
-                }
-            ],
-            viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
-            border: false,
-            stripeRows: true
-        });
-
-        //fin mantenimiento DenunciasZonas
-
-        //inicio mantenimiento DenunciasReasignacion
-
-        var proxyDenunciasReasignacion = new Ext.data.HttpProxy({
-            api: {
-                create: urlDenuncias + "crudDenunciasReasignacion.php?operation=insert",
-                read: urlDenuncias + "crudDenunciasReasignacion.php?operation=select",
-                update: urlDenuncias + "crudDenunciasReasignacion.php?operation=update",
-                destroy: urlDenuncias + "crudDenunciasReasignacion.php?operation=delete"
-            }
-        });
-
-        var readerDenunciasReasignacion = new Ext.data.JsonReader({
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id', allowBlank: false},
-                {name: 'nombre', allowBlank: false},
-                {name: 'nombre_completo', allowBlank: false},
-                {name: 'orden', allowBlank: false},
-                {name: 'activo', allowBlank: false}
-            ]
-        });
-
-        var writerDenunciasReasignacion = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeDenunciasReasignacion = new Ext.data.Store({
-            id: "id",
-            proxy: proxyDenunciasReasignacion,
-            reader: readerDenunciasReasignacion,
-            writer: writerDenunciasReasignacion,
-            autoSave: true
-        });
-        this.storeDenunciasReasignacion.load();
-
-        this.gridDenunciasReasignacion = new Ext.grid.EditorGridPanel({
-            autoHeight: true,
-            autoScroll: true,
-            store: this.storeDenunciasReasignacion, columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'ID',
-                    dataIndex: 'id',
-                    sortable: true,
-                    width: 10
-                },
-                {
-                    header: 'Nombre',
-                    dataIndex: 'nombre',
-                    sortable: true,
-                    width: 50,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Nombre completo',
-                    dataIndex: 'nombre_completo',
-                    sortable: true,
-                    width: 80,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Activo'
-                    , dataIndex: 'activo'
-                    , editor: {
-                    xtype: 'checkbox'
-                }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , sortable: true
-                    , width: 50
-                    , xtype: 'booleancolumn'
-                }, {
-                    header: 'Orden',
-                    dataIndex: 'orden',
-                    sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-            ],
-            viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({singleSelect: false}),
-            border: false,
-            stripeRows: true
-        });
-        //fin mantenimiento DenunciasReasignacion
-
         //inicio mantenimiento DenunciasGuia
         var proxyDenunciasGuia = new Ext.data.HttpProxy({
             api: {
@@ -1968,6 +1800,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 items: new Ext.TabPanel({
                     activeTab: 0,
                     border: false,
+                    id: 'panelPrincipal',
                     items: [
                         {
                             autoScroll: true,
@@ -2128,62 +1961,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                             //this.gridDenunciasGuia
                         }
-                        , {
-                            autoScroll: true,
-                            title: 'Unidades',
-                            closable: true,
-                            disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
-                            tbar: [
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addDenunciasReasignacion,
-                                    iconCls: 'save-icon'
-                                },
-                                '-',
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteDenunciasReasignacion,
-                                    iconCls: 'delete-icon'
-                                },
-                                '-', {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataDenunciasReasignacion,
-                                    scope: this,
-                                    text: 'Recargar Datos'
-                                }
-                            ],
-                            items: this.gridDenunciasReasignacion
-                        }
-                        , {
-                            autoScroll: true,
-                            title: 'Zonas',
-                            closable: true,
-                            disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
-                            tbar: [
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addDenunciasZonas,
-                                    iconCls: 'save-icon'
-                                },
-                                '-',
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteDenunciasZonas,
-                                    iconCls: 'delete-icon'
-                                },
-                                '-', {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataDenunciasZonas,
-                                    scope: this,
-                                    text: 'Recargar Datos'
-                                }
-                            ],
-                            items: this.gridDenunciasZonas
-                        }
+
                         , {
                             title: 'Reportes',
                             closable: true,
@@ -2245,17 +2023,47 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             autoScroll: true,
                             title: 'Geolocalización',
                             closable: true,
-                            items: [{
-                                split: true,
-                                height: 500,
-                                minSize: 100,
-                                maxSize: 150,
-                                region: 'center',
-                                html: "<div id=\"contenedor_marcadorGoogle\"  style=\"width: 100%; height: 400px;\"></div> \n" +
-                                "<div id=\"geoposicionamiento\"></div>\n" +
-                                "<p class=\"formDescription\">Ubicar el marcador de ubicación en el lugar de la infracción.</p>" ,
 
-                                id: 'geolocalizacion_tab'
+                            items: [{
+                                region: 'center',
+                                xtype: 'gmappanel',
+                                zoomLevel: 14,
+                                gmapType: 'map',
+                                id: 'my_map',
+                                border: false,
+                                fbar: [
+                                    {
+                                        text: 'Actualizar',
+                                        handler: function() {
+                                            //todo crear campo geolocalizacion
+
+                                            Ext.getCmp('panelPrincipal').setActiveTab(0);
+                                        }
+                                    } ],
+                                mapConfOpts: ['enableScrollWheelZoom','enableDoubleClickZoom','enableDragging'],
+                                mapControls: ['GSmallMapControl','GMapTypeControl'],
+                                setCenter: {
+                                    lat: -0.1756096,
+                                    lng: -78.4761627
+                                },
+                                markers: [{
+                                    lat: -0.1756096,
+                                    lng: -78.4761627,
+                                    marker: {title: 'Quito', draggable: true},
+                                    listeners: {
+                                        click: function(e){
+                                            console.log ("Click al boton");
+                                        },
+                                        dragend: function(e){
+                                            console.log (e.latLng.lng());
+                                            console.log (e.latLng.lat());
+                                        }
+                                    }
+                                },{
+                                    lat: 42.339419,
+                                    lng: -71.09077,
+                                    marker: {title: 'Northeastern University'}
+                                }]
                             }]
                         }
                     ]
@@ -2487,67 +2295,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
     },
 
 
-    deleteDenunciasZonas: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridDenunciasZonas.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeDenunciasZonas.remove(rows);
-                }
-            }
-        });
-    },
-    addDenunciasZonas: function () {
-        var DenunciasZonas = new this.storeDenunciasZonas.recordType({
-            id: ' ',
-            nombre: '',
-            activo: '1'
-        });
-        this.gridDenunciasZonas.stopEditing();
-        this.storeDenunciasZonas.insert(0, DenunciasZonas);
-        this.gridDenunciasZonas.startEditing(0, 0);
-    },
-    requestGridDataDenunciasZonas: function () {
-        this.storeDenunciasZonas.load();
-    },
-
-    deleteDenunciasReasignacion: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridDenunciasReasignacion.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeDenunciasReasignacion.remove(rows);
-                }
-            }
-        });
-    },
-    addDenunciasReasignacion: function () {
-        var DenunciasReasignacion = new this.storeDenunciasReasignacion.recordType({
-            id: ' ',
-            nombre: '',
-            activo: '1'
-        });
-        this.gridDenunciasReasignacion.stopEditing();
-        this.storeDenunciasReasignacion.insert(0, DenunciasReasignacion);
-        this.gridDenunciasReasignacion.startEditing(0, 0);
-    },
-    requestGridDataDenunciasReasignacion: function () {
-        this.storeDenunciasReasignacion.load();
-    },
     requestGridDataDenunciasGuia: function () {
         this.storeDenunciasGuia.load();
     },

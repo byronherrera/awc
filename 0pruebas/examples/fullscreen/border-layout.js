@@ -1,9 +1,7 @@
 /**
  * @author Shea
  */
-
 Ext.onReady(function(){
-
 	Ext.ux.LocSelectionList = Ext.extend(Ext.DataView, {
 		listItemTpl: '<tpl for="."><div class="ux-locitem-selector"><div>{title}</div></div></tpl>',
 		initComponent: function(){
@@ -32,7 +30,6 @@ Ext.onReady(function(){
 				var point = map.fixLatLng(new google.maps.LatLng(rec.data.lat, rec.data.lng));
 				map.getMap().setCenter(point);
 	        }, this);
-			
 			Ext.ux.LocSelectionList.superclass.initComponent.call(this);
 			
 		}
@@ -65,23 +62,33 @@ Ext.onReady(function(){
 	                title: 'Northeastern University'
 	            }]
 			}]
-		},{
+		},
+            {
 			region: 'center',
 			xtype: 'gmappanel',
-            zoomLevel: 16,
+            zoomLevel: 14,
             gmapType: 'map',
             id: 'my_map',
 			border: true,
             mapConfOpts: ['enableScrollWheelZoom','enableDoubleClickZoom','enableDragging'],
             mapControls: ['GSmallMapControl','GMapTypeControl'],
             setCenter: {
-                lat: 42.339641,
-                lng: -71.094224
+                lat: -0.1756096,
+                lng: -78.4761627
             },
 			markers: [{
-                lat: 42.339641,
-                lng: -71.094224,
-                marker: {title: 'Boston Museum of Fine Arts'}
+                lat: -0.1756096,
+                lng: -78.4761627,
+                marker: {title: 'Quito', draggable: true},
+                listeners: {
+                    click: function(e){
+                        console.log ("Click al boton");
+                    },
+                    dragend: function(e){
+                        console.log (e.latLng.lng());
+                        console.log (e.latLng.lat());
+                    }
+                }
             },{
                 lat: 42.339419,
                 lng: -71.09077,

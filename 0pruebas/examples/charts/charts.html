@@ -10,7 +10,7 @@
 
     <script src="../../src/Ext.ux.GMapPanel3.js"></script>
 <script type="text/javascript">
-Ext.chart.Chart.CHART_URL = '../../resources/charts.swf';
+Ext.chart.Chart.CHART_URL = '../../../ext-3.4.1/resources/charts.swf';
 
 Ext.ns('Ext.ux')
 
@@ -203,7 +203,8 @@ Ext.onReady(function(){
             },
             readOnly: true
         }],
-        fbar: [{
+        fbar: [
+            {
             text: 'Update',
             handler: function() {
                 trackpointEditForm.getForm().updateRecord(editTrackpoint);
