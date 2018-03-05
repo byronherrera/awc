@@ -819,7 +819,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             change: function (field, val, valOld) {
                                 //fecha inicial debe ser mayor que la final
                                 if (val > fecha_fin_planificacion)
-                                    AppMsg.setAlert("Alerta ", 'Fecha inicial no  debe ser mayor que fecha final');
+                                    //AppMsg.setAlert("Alerta ", 'Fecha inicial no  debe ser mayor que fecha final');
                                 fecha_inicio_planificacion = val
                                 //fecha inicial no debe ser mayor de 12 horas
                                 var diff = Math.abs(fecha_fin_planificacion - fecha_inicio_planificacion) / 3600000;
@@ -830,7 +830,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 // alerta fecha menor a la actual
                                 fecha_actual = new Date();
                                 if (val < fecha_actual ) {
-                                    AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
+                                    //AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
                                 }
                             }
                         }

@@ -352,6 +352,7 @@ function updateDenunciasForm()
     $cantidad_fojas = $_POST["cantidad_fojas"];
     $cedula = $_POST["cedula"];
     $email = $_POST["email"];
+    $georeferencia = $_POST["georeferenciaSecretaria"];
 
 
 
@@ -394,8 +395,8 @@ function updateDenunciasForm()
             cedula = '$cedula' ,
             email = '$email'  ,
             guia = '$guia'  ,
-            despacho_secretaria = '$despacho_secretaria'  
-         
+            despacho_secretaria = '$despacho_secretaria',
+            georeferencia = '$georeferencia'        
           WHERE id = '$id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();

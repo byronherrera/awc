@@ -16,6 +16,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
         var accesosZonales = this.app.isAllowedTo('accesosZonales', this.id);
 
+        var geoSecretaria = "";
+
         var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
 
         var desktop = this.app.getDesktop();
@@ -1230,6 +1232,23 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         anchor: '95%',
                                                         allowBlank: true
                                                         , vtype: 'email'
+                                                    },
+                                                    {
+                                                        fieldLabel: 'Georeferencia',
+                                                        id: 'georeferenciaSecretaria',
+                                                        name: 'georeferencia',
+                                                        anchor: '95%',
+                                                        allowBlank: true,
+                                                        handleMouseEvents: true,
+                                                        readOnly: true,
+                                                        listeners: {
+                                                            render: function(c){
+                                                                //evento click sobre el campo de geo referenciacion
+                                                                c.getEl().on('click', function(){
+                                                                    Ext.getCmp('panelPrincipal').setActiveTab(3);
+                                                                }, c);
+                                                            }
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -2026,16 +2045,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             items: [{
                                 region: 'center',
                                 xtype: 'gmappanel',
-                                zoomLevel: 14,
+                                zoomLevel: 12,
                                 gmapType: 'map',
                                 id: 'my_map',
                                 border: false,
                                 fbar: [
                                     {
-                                        text: 'Actualizar',
+                                        text: 'Confirmar dirección',
                                         handler: function() {
-                                            //todo crear campo geolocalizacion
-
+                                            Ext.getCmp('georeferenciaSecretaria').setValue(geoSecretaria);
                                             Ext.getCmp('panelPrincipal').setActiveTab(0);
                                         }
                                     } ],
@@ -2046,22 +2064,18 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     lng: -78.4761627
                                 },
                                 markers: [{
-                                    lat: -0.1756096,
-                                    lng: -78.4761627,
+                                    lat:  -0.17157021176359674,
+                                    lng: -78.47847476417087,
                                     marker: {title: 'Quito', draggable: true},
                                     listeners: {
                                         click: function(e){
-                                            console.log ("Click al boton");
+                                            //console.log ("Click al boton");
                                         },
                                         dragend: function(e){
-                                            console.log (e.latLng.lng());
-                                            console.log (e.latLng.lat());
+                                            geoSecretaria = e.latLng.lat() + ", " + e.latLng.lng()
+                                             
                                         }
                                     }
-                                },{
-                                    lat: 42.339419,
-                                    lng: -71.09077,
-                                    marker: {title: 'Northeastern University'}
                                 }]
                             }]
                         }
