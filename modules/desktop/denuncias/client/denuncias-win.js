@@ -1529,7 +1529,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     }
                 ]
             });
-
             this.formConsultaDocumentos = new Ext.FormPanel({
                 layout: 'column',
                 title: 'Ingrese los parámetros',
