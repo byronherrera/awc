@@ -141,6 +141,47 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo reasignacion REA
+
+
+        //inicio combo aprobación secretaría inspección
+        storeCONTROLPROGRAMADO = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 8, "nombre": "Denuncia"},
+                    {"id": 7, "nombre": "CCF"},
+                    {"id": 6, "nombre": "Operativos"},
+                    {"id": 5, "nombre": "Construcciones"},
+                    {"id": 4, "nombre": "Fauna Urbana"},
+                    {"id": 3, "nombre": "Operativo"},
+                    {"id": 2, "nombre": "Inspeccion"},
+                    {"id": 1, "nombre": "Inspeccion conjunta"},
+                    {"id": 0, "nombre": "Control programado"}
+                ]
+            }
+        });
+
+        var comboCONTROLPROGRAMADO= new Ext.form.ComboBox({
+            id: 'comboCONTROLPROGRAMADO',
+            store: storeCONTROLPROGRAMADO,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function controlProgramado(id) {
+            var index = storeCONTROLPROGRAMADO.find('id', id);
+            if (index > -1) {
+                var record = storeCONTROLPROGRAMADO.getAt(index);
+                return record.get('nombre');
+            } else {
+                return ''
+            }
+        }
+
         //inicio combo reasignacion  REATOT
         storeREATOT = new Ext.data.JsonStore({
             root: 'data',
@@ -616,6 +657,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'reasignacion', allowBlank: false},
                 {name: 'id_caracter_tramite', allowBlank: false},
                 {name: 'cantidad_fojas', allowBlank: false},
+                {name: 'id_planificacion', allowBlank: true},
                 {name: 'despacho_secretaria', type: 'boolean', allowBlank: false}
             ]
         });
@@ -691,7 +733,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
-                    header: 'Remitente',
+                    header: 'Remitente/denunciante',
                     dataIndex: 'remitente',
                     sortable: true,
                     width: 55,
@@ -756,7 +798,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     , sortable: true
                     , width: 20
                     , xtype: 'booleancolumn'
-                }
+                },
+                {header: 'Planificación', dataIndex: 'id_planificacion', sortable: true, width: 30, editor: comboCONTROLPROGRAMADO,
+                    renderer: controlProgramado}
             ],
             viewConfig: {
                 forceFit: true,
@@ -863,7 +907,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     width: 40
                 },
                 {
-                    header: 'Remitente',
+                    header: 'Remitente/denunciante',
                     dataIndex: 'remitente',
                     sortable: true,
                     width: 60
@@ -995,7 +1039,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     width: 40
                 },
                 {
-                    header: 'Remitente',
+                    header: 'Remitente/ Denunciante',
                     dataIndex: 'remitente',
                     sortable: true,
                     width: 60
@@ -1192,34 +1236,19 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                                                     },
                                                     {
-                                                        xtype: 'combo',
-                                                        fieldLabel: 'Ordenanza',
-                                                        id: 'id_ordenanza',
-                                                        name: 'id_ordenanza',
-                                                        anchor: '95%',
-
-                                                        hiddenName: 'id_ordenanza',
-                                                        store: storeDETIORD,
-                                                        valueField: 'id',
-                                                        displayField: 'nombre',
-                                                        typeAhead: true,
-                                                        triggerAction: 'all',
-                                                        mode: 'local'
-                                                    },
-                                                    {
                                                         fieldLabel: 'Núm documento',
                                                         id: 'num_documento',
                                                         name: 'num_documento',
                                                         anchor: '95%'
                                                     },
                                                     {
-                                                        fieldLabel: 'Remitente',
+                                                        fieldLabel: 'Remitente/ Denunciante',
                                                         id: 'remitente',
                                                         name: 'remitente',
                                                         anchor: '95%'
                                                     },
                                                     {
-                                                        fieldLabel: 'C:I. denunciante',
+                                                        fieldLabel: 'CI denunciante',
                                                         id: 'cedula',
                                                         name: 'cedula',
                                                         allowBlank: true,
@@ -1232,6 +1261,12 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         anchor: '95%',
                                                         allowBlank: true
                                                         , vtype: 'email'
+                                                    },
+                                                    {
+                                                        fieldLabel: 'Dirección denuncia',
+                                                        id: 'direccion_denuncia',
+                                                        name: 'direccion_denuncia',
+                                                        anchor: '95%'
                                                     },
                                                     {
                                                         fieldLabel: 'Georeferencia',
@@ -1257,6 +1292,21 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                 columnWidth: 1 / 3,
                                                 layout: 'form',
                                                 items: [
+                                                    {
+                                                        xtype: 'combo',
+                                                        fieldLabel: 'Ordenanza',
+                                                        id: 'id_ordenanza',
+                                                        name: 'id_ordenanza',
+                                                        anchor: '95%',
+
+                                                        hiddenName: 'id_ordenanza',
+                                                        store: storeDETIORD,
+                                                        valueField: 'id',
+                                                        displayField: 'nombre',
+                                                        typeAhead: true,
+                                                        triggerAction: 'all',
+                                                        mode: 'local'
+                                                    },
                                                     {
                                                         xtype: 'textfield',
                                                         fieldLabel: 'Descripción anexo',
@@ -1546,7 +1596,20 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                         ]
                     }
-                ]
+                ],
+                defaults: {
+                    listeners: {
+                        change: function (field, newVal, oldVal) {
+                            consolo.log ("ccc");
+                            var myForm = Ext.getCmp('formDenunciasDetalle').getForm();
+                            myForm.submit({
+                                url: 'modules/desktop/denuncias/server/crudDenuncias.php?operation=updateForm',
+                                method: 'POST'
+                            });
+                        }
+                    }
+                }
+
             });
             this.formConsultaDocumentos = new Ext.FormPanel({
                 layout: 'column',
@@ -1703,7 +1766,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             group: 'filterField',
                             key: 'remitente',
                             scope: this,
-                            text: 'Remitente'
+                            text: 'Remitente/ Denunciante'
                         }
                         , {
                             checked: false,
@@ -1714,7 +1777,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             text: 'Descripcion Anexos'
                         }
 
-                        , {
+                        ,
+                        {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
@@ -1728,7 +1792,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             key: 'cedula',
                             scope: this,
                             text: 'Cédula'
-                        }, {
+                        },
+                        {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
@@ -2282,14 +2347,16 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             Ext.getCmp('tb_grabardenuncias').setDisabled(true);
                         },
                         failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
-                            Ext.Msg.show({
-                                title: 'Error campos obligatorios'
-                                , msg: errorJson.msg
-                                , modal: true
-                                , icon: Ext.Msg.ERROR
-                                , buttons: Ext.Msg.OK
-                            });
+                            if (typeof action.response.responseText !== 'undefined') {
+                                var errorJson = JSON.parse(action.response.responseText);
+                                Ext.Msg.show({
+                                    title: 'Error campos obligatorios'
+                                    , msg: errorJson.msg
+                                    , modal: true
+                                    , icon: Ext.Msg.ERROR
+                                    , buttons: Ext.Msg.OK
+                                });
+                            }
                         }
                     });
                 }

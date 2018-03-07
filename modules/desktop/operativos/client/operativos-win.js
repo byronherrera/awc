@@ -1481,19 +1481,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             defaults: {
                 listeners: {
                     change: function (field, newVal, oldVal) {
-
+                        console.log ("cc")
                         var myForm = Ext.getCmp('formaDetalleOperativo').getForm();
                         myForm.submit({
                             url: 'modules/desktop/operativos/server/crudOperativos.php?operation=updateForm',
                             method: 'POST',
-
                             success: function (form, action) {
                             }
                         });
-
                     }
                 },
-            },
+            }
 
 
         });
