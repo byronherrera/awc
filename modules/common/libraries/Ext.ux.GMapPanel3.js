@@ -632,7 +632,9 @@ buttons: [
      * @param {Object} listeners a listeners config
      */
     geoCodeLookup : function(addr, marker, clear, center, listeners) {
-        
+
+
+
         if (!this.geocoder) {
             this.geocoder = new google.maps.Geocoder();
         }
@@ -670,7 +672,8 @@ buttons: [
             if (accuracy === 0) {
                 this.geoErrorMsg(this.geoErrorTitle, this.geoErrorMsgUnable);
             }else{
-                if (accuracy < reqAccuracy) {
+                //if (accuracy < reqAccuracy) {
+                if (false) {
                     this.geoErrorMsg(this.geoErrorTitle, String.format(this.geoErrorMsgAccuracy, response[0].geometry.location_type, this.getLocationTypeInfo(response[0].geometry.location_type,'msg')));
                 }else{
                     point = new google.maps.LatLng(place.lat(),place.lng());

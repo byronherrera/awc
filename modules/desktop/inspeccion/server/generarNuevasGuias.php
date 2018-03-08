@@ -352,11 +352,18 @@ function regresaNombre($id_dato)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
+
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id_dato != '') {
+        $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
             FROM qo_members WHERE id = " . $id_dato;
-    $nombre = $os->db->conn->query($sql);
-    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-    return $rownombre['nombre'];
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre'];
+    } else
+        return '* No asignado';
 
 }
 
