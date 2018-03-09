@@ -2919,20 +2919,31 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                                 },
                                 {
+                                    xtype: 'checkbox',
+                                    boxLabel: 'Detalle retiros',
+                                    id: 'checkDetalleRecibidos',
+                                    name: 'detalleretiros',
+                                    checked: false,
+                                    inputValue: '1',
+                                    tooltip: 'Detalle de los retiros efectuados en el reporte',
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                    }
+                                }, '-',
+
+                                {
                                     iconCls: 'excel-icon',
                                     handler: this.botonExportarDocumentoReporte,
                                     scope: this,
                                     text: 'Exportar listado',
-                                    tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    disabled: !acceso,
+                                    tooltip: 'Se genera archivo Excel con la información solicitada'
                                 },
                                 {
                                     iconCls: 'excel-icon',
                                     handler: this.botonExportarDocumentoReporteCalendarioPersonal,
                                     scope: this,
                                     text: 'Exportar calendario  personas',
-                                    tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    disabled: !acceso,
+                                    tooltip: 'Se genera archivo Excel con la información solicitada'
                                 }
                                 ,
                                 {
@@ -2940,8 +2951,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     handler: this.botonExportarDocumentoReporteCalendarioOperativos,
                                     scope: this,
                                     text: 'Exportar calendario  operativos',
-                                    tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    disabled: !acceso,
+                                    tooltip: 'Se genera archivo Excel con la información solicitada'
                                 }
                             ],
                             items: [
@@ -3343,7 +3353,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
-                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams;
+                    generaRetiros = checkDetalleRecibidos
+                    generaRetiros = (Ext.getCmp('checkDetalleRecibidos').getValue());
+                    window.location.href = 'moduless/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&retiros=' + generaRetiros;
                 }
             }
         });

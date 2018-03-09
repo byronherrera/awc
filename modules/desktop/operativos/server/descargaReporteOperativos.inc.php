@@ -27,6 +27,12 @@ if (!$os->session_exists()) {
 if (isset($_GET['param'])) {
     $data = json_decode(stripslashes($_GET["param"]));
 }
+if (isset($_GET['param'])) {
+    $data = json_decode(stripslashes($_GET["param"]));
+}
+if (isset($_GET['retiros'])) {
+    $generaRetiros  = $_GET['retiros'];
+}
 
 $today = date("Y-n-j-H-i-s");
 

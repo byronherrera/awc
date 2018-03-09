@@ -13,9 +13,38 @@ function selectDetalleInspecciones()
     global $os;
     //$id = (int)$_POST ['id'];
     //if($id!=0){
+
+    //Se inicializa el parámetro de búsqueda de código trámite
+    $columnaBusqueda = 'id_inspeccion';
+    $funcionario_entrega = $os->get_member_id();
+    $where = "";
+
+    if (isset($_POST['filterText'])) {
+        $campo = $_POST['filterText'];
+        $campo = str_replace(" ", "%", $campo);
+        if (isset($_POST['filterField'])){
+            $columnaBusqueda = $_POST['filterField'];
+        }
+        $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+    }
+
+
+    if (isset ($_POST['start']))
+        $start = $_POST['start'];
+    else
+        $start = 0;
+
+    if (isset ($_POST['limit']))
+        $limit = $_POST['limit'];
+    else
+        $limit = 100;
+
+    $orderby = 'ORDER BY id DESC';
+
+
         $os->db->conn->query("SET NAMES 'utf8'");
         //$sql = "SELECT * FROM amc_inspeccion_ccf WHERE amc_inspeccion_control_programado.id = $id";
-        $sql = "SELECT * FROM amc_inspeccion_ccf";
+        $sql = "SELECT * FROM amc_inspeccion_ccf $where $orderby LIMIT $start, $limit";
         $result = $os->db->conn->query($sql);
         $data = array();
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

@@ -12,6 +12,51 @@ function selectInspeccion()
 {
     global $os;
     //$id = (int)$_POST ['id'];
+
+    //Se inicializa el parámetro de búsqueda de código trámite
+    $columnaBusqueda = 'id_inspeccion';
+    $funcionario_entrega = $os->get_member_id();
+    $and = "";
+
+    if (isset($_POST['filterText'])) {
+        $campo = $_POST['filterText'];
+        $campo = str_replace(" ", "%", $campo);
+        if (isset($_POST['filterField'])){
+            $columnaBusqueda = $_POST['filterField'];
+        }
+        $and = " AND $columnaBusqueda LIKE '%$campo%'";
+    }
+
+
+    if (isset ($_POST['start']))
+        $start = $_POST['start'];
+    else
+        $start = 0;
+
+    if (isset ($_POST['limit']))
+        $limit = $_POST['limit'];
+    else
+        $limit = 100;
+    // cambio BH
+    $orderby = 'ORDER BY id DESC';
+
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+
+    $sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+        $data[] = $row;
+    };
+
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+    /*
+
     $funcionario_entrega = $os->get_member_id();
     //if($id!=0){
         $os->db->conn->query("SET NAMES 'utf8'");
@@ -28,17 +73,42 @@ function selectInspeccion()
                 "data" => $data)
         );
     //}
-
+*/
 }
 
 function selectInspeccionesCoordinadores()
 {
     global $os;
-    //$id = (int)$_POST ['id'];
+    //Se inicializa el parámetro de búsqueda de código trámite
+    $columnaBusqueda = 'id_inspeccion';
     $funcionario_entrega = $os->get_member_id();
-    //if($id!=0){
+    $where = "";
+
+    if (isset($_POST['filterText'])) {
+        $campo = $_POST['filterText'];
+        $campo = str_replace(" ", "%", $campo);
+        if (isset($_POST['filterField'])){
+            $columnaBusqueda = $_POST['filterField'];
+        }
+        $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+    }
+
+
+    if (isset ($_POST['start']))
+        $start = $_POST['start'];
+    else
+        $start = 0;
+
+    if (isset ($_POST['limit']))
+        $limit = $_POST['limit'];
+    else
+        $limit = 100;
+    // cambio BH
+    $orderby = 'ORDER BY id DESC';
+
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_inspeccion";
+
+    $sql = "SELECT * FROM amc_inspeccion $where $orderby LIMIT $start, $limit";
     //$sql = "SELECT * FROM amc_inspeccion";
     $result = $os->db->conn->query($sql);
     $data = array();

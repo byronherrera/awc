@@ -1,5 +1,6 @@
 var tramiteSeleccionado = '';
 var todosInspectores = '';
+var todasInspecciones = '';
 //var fecha = date('Y-m-d H:i:s');
 QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     id: 'moduloInspeccion',
@@ -716,7 +717,47 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 //var store = this.storeModuloInspeccion;
 
                 store.baseParams.filterField = item.key;
-                searchInpeccionesBtn.setText(item.text);
+                searchListadoInpeccionesBtn.setText(item.text);
+            }
+        };
+
+        var checkHandlerListadoControlProgramado = function (item, checked) {
+            if (checked) {
+                if(todosInspectores == true){
+                    var store = this.storeListadoControlProgramado;
+                }else{
+                    var store = this.storeListadoControlProgramadoTodos;
+                }
+                store.baseParams.filterField = item.key;
+                searchListadoControlProgramadoBtn.setText(item.text);
+            }
+        };
+
+        var checkHandlerListadoCCF = function (item, checked) {
+            if (checked) {
+                if(todosInspectores == true){
+                    var store = this.storeListadoCCFInspeccion;
+                }else{
+                    var store = this.storeListadoCCFInspeccionTodos;
+                }
+                store.baseParams.filterField = item.key;
+                searchListadoCCFBtn.setText(item.text);
+            }
+        };
+
+        var checkHandlerControlProgramado = function (item, checked) {
+            if (checked) {
+                var store = this.storeControlProgramadoInspeccion;
+                store.baseParams.filterField = item.key;
+                searchControlProgramadoBtn.setText(item.text);
+            }
+        };
+
+        var checkHandlerCCF = function (item, checked) {
+            if (checked) {
+                var store = this.storeCCFInspeccion;
+                store.baseParams.filterField = item.key;
+                searchCCFBtn.setText(item.text);
             }
         };
 
@@ -1318,7 +1359,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             , text: 'Código trámite'
         });
 
-                var searchInpeccionesBtn = new Ext.Button({
+                var searchListadoInpeccionesBtn = new Ext.Button({
                     menu: new Ext.menu.Menu({
                         items: [
                             {
@@ -1327,7 +1368,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                 group: 'filterField',
                                 key: 'id_inspeccion',
                                 scope: this,
-                                text: 'Cod inspección'
+                                text: 'Código inspección'
                             }
                             ,{
                                 checked: false,
@@ -1341,6 +1382,439 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     })
                     , text: 'Código trámite'
                 });
+
+        var searchListadoControlProgramadoBtn = new Ext.Button({
+            menu: new Ext.menu.Menu({
+                items: [
+                    {
+                        checked: true,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'id_inspeccion',
+                        scope: this,
+                        text: 'Código inspección'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'zona',
+                        scope: this,
+                        text: 'Zona'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'parroquia',
+                        scope: this,
+                        text: 'Parroquia'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'sector',
+                        scope: this,
+                        text: 'Sector'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'predio',
+                        scope: this,
+                        text: 'Predio'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'clave_catastral',
+                        scope: this,
+                        text: 'Clave catastral'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'asunto',
+                        scope: this,
+                        text: 'Asunto'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'nombre_propietario',
+                        scope: this,
+                        text: 'Nombre propietario'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'cedula_propietario',
+                        scope: this,
+                        text: 'Cedula propietario'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'proyecto',
+                        scope: this,
+                        text: 'Proyecto'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'registro_actas_licencias',
+                        scope: this,
+                        text: 'Registro actas licencias'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'gdoc',
+                        scope: this,
+                        text: 'Gdoc'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'licencia_municipal',
+                        scope: this,
+                        text: 'Licencia Municipal'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'licencia_profesional',
+                        scope: this,
+                        text: 'Licencia Profesional'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoControlProgramado,
+                        group: 'filterField',
+                        key: 'responsable_tecnico',
+                        scope: this,
+                        text: 'Responsable técnico'
+                    }
+                ]
+            })
+            , text: 'Código trámite'
+        });
+
+        var searchListadoCCFBtn = new Ext.Button({
+            menu: new Ext.menu.Menu({
+                items: [
+                    {
+                        checked: true,
+                        checkHandler: checkHandlerListadoCCF,
+                        group: 'filterField',
+                        key: 'id_inspeccion',
+                        scope: this,
+                        text: 'Código inspección'
+                    }
+                    ,{
+                        checked: true,
+                        checkHandler: checkHandlerListadoCCF,
+                        group: 'filterField',
+                        key: 'zona',
+                        scope: this,
+                        text: 'Zona'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoCCF,
+                        group: 'filterField',
+                        key: 'predio',
+                        scope: this,
+                        text: 'Predio'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoCCF,
+                        group: 'filterField',
+                        key: 'clave_catastral',
+                        scope: this,
+                        text: 'Clave catastral'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoCCF,
+                        group: 'filterField',
+                        key: 'proyecto',
+                        scope: this,
+                        text: 'Proyecto'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoCCF,
+                        group: 'filterField',
+                        key: 'asunto',
+                        scope: this,
+                        text: 'Asunto'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoCCF,
+                        group: 'filterField',
+                        key: 'tipo',
+                        scope: this,
+                        text: 'Tipo'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoCCF,
+                        group: 'filterField',
+                        key: 'numero_informe_certificado',
+                        scope: this,
+                        text: 'Número informe/certificado'
+                    }
+                    /*,{
+                        checked: false,
+                        checkHandler: checkHandlerListadoCCF,
+                        group: 'filterField',
+                        key: 'nombre_denunciado',
+                        scope: this,
+                        text: 'Nombre denunciado'
+                    }*/
+                ]
+            })
+            , text: 'Código trámite'
+        });
+
+        var searchInspeccionesBtn = new Ext.Button({
+            menu: new Ext.menu.Menu({
+                items: [
+                    {
+                        checked: true,
+                        checkHandler: checkHandlerInspecciones,
+                        group: 'filterField',
+                        key: 'id_inspeccion',
+                        scope: this,
+                        text: 'Código inspección'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerInspecciones,
+                        group: 'filterField',
+                        key: 'nombre_denunciado',
+                        scope: this,
+                        text: 'Nombre denunciado'
+                    }
+                ]
+            })
+            , text: 'Código trámite'
+        });
+
+        var searchControlProgramadoBtn = new Ext.Button({
+            menu: new Ext.menu.Menu({
+                items: [
+                    {
+                        checked: true,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'id_inspeccion',
+                        scope: this,
+                        text: 'Código inspección'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'zona',
+                        scope: this,
+                        text: 'Zona'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'parroquia',
+                        scope: this,
+                        text: 'Parroquia'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'sector',
+                        scope: this,
+                        text: 'Sector'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'predio',
+                        scope: this,
+                        text: 'Predio'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'clave_catastral',
+                        scope: this,
+                        text: 'Clave catastral'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'asunto',
+                        scope: this,
+                        text: 'Asunto'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'nombre_propietario',
+                        scope: this,
+                        text: 'Nombre propietario'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'cedula_propietario',
+                        scope: this,
+                        text: 'Cedula propietario'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'proyecto',
+                        scope: this,
+                        text: 'Proyecto'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'registro_actas_licencias',
+                        scope: this,
+                        text: 'Registro actas licencias'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'gdoc',
+                        scope: this,
+                        text: 'Gdoc'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'licencia_municipal',
+                        scope: this,
+                        text: 'Licencia Municipal'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'licencia_profesional',
+                        scope: this,
+                        text: 'Licencia Profesional'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramado,
+                        group: 'filterField',
+                        key: 'responsable_tecnico',
+                        scope: this,
+                        text: 'Responsable técnico'
+                    }
+                ]
+            })
+            , text: 'Código trámite'
+        });
+
+        var searchCCFBtn = new Ext.Button({
+            menu: new Ext.menu.Menu({
+                items: [
+                    {
+                        checked: true,
+                        checkHandler: checkHandlerCCF,
+                        group: 'filterField',
+                        key: 'id_inspeccion',
+                        scope: this,
+                        text: 'Código inspección'
+                    }
+                    ,{
+                        checked: true,
+                        checkHandler: checkHandlerCCF,
+                        group: 'filterField',
+                        key: 'zona',
+                        scope: this,
+                        text: 'Zona'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerCCF,
+                        group: 'filterField',
+                        key: 'predio',
+                        scope: this,
+                        text: 'Predio'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerCCF,
+                        group: 'filterField',
+                        key: 'clave_catastral',
+                        scope: this,
+                        text: 'Clave catastral'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerCCF,
+                        group: 'filterField',
+                        key: 'proyecto',
+                        scope: this,
+                        text: 'Proyecto'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerCCF,
+                        group: 'filterField',
+                        key: 'asunto',
+                        scope: this,
+                        text: 'Asunto'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerCCF,
+                        group: 'filterField',
+                        key: 'tipo',
+                        scope: this,
+                        text: 'Tipo'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerCCF,
+                        group: 'filterField',
+                        key: 'numero_informe_certificado',
+                        scope: this,
+                        text: 'Número informe/certificado'
+                    }
+                ]
+            })
+            , text: 'Código trámite'
+        });
+
 
         //this.storeModuloInspeccion.load();
         //this.storeDetalleInspeccion.load();
@@ -1419,6 +1893,13 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         storeDetalleInspeccion.load({params: {id: rec.id}});
                         tramiteSeleccionado = rec.id;
                         //storeDetalleInspeccion.load({params: {filterText: rec.data.codigo_tramite}});
+                        if(creacionDatosInspeccion){
+                            Ext.getCmp('btnNuevoDetalleInspeccion').setDisabled(false);
+                            Ext.getCmp('btnEliminarDetalleInspeccion').setDisabled(false);
+                            Ext.getCmp('checkTodasInspecciones').setValue(false);
+                            Ext.getCmp('gridDetalleTodasInspecciones').setVisible(false);
+                            Ext.getCmp('gridDetalleInspeccion').setVisible(true);
+                        }
                     }
                 }
             }),
@@ -2175,7 +2656,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         text: 'Nuevo',
                                                         scope: this,
                                                         handler: this.addDetalleInspeccion,
-                                                        disabled: !creacionDatosInspeccion,
+                                                        disabled: true,
                                                         iconCls: 'save-icon'
                                                     },
                                                     '-',
@@ -2185,7 +2666,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         text: "Eliminar",
                                                         scope: this,
                                                         handler: this.deleteDetalleInspeccion,
-                                                        disabled: !creacionDatosInspeccion,
+                                                        disabled: true,
                                                         iconCls: 'delete-icon'
                                                     },
                                                     '-',
@@ -2204,27 +2685,47 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         boxLabel: 'Mostrar todas las inspecciones',
                                                         id: 'checkTodasInspecciones',
                                                         name: 'todasInspecciones',
-                                                        checked: accesosInspectores,
+                                                        checked: false,
                                                         inputValue: '1',
                                                         tooltip: 'Muestra todas las inspecciones',
-                                                        //disabled: !acceso,
+                                                        disabled: !creacionDatosInspeccion,
                                                         cls: 'barramenu',
                                                         handler: function (checkbox, isChecked) {
                                                             Ext.getCmp('btnNuevoDetalleInspeccion').setDisabled(this.checked);
                                                             Ext.getCmp('btnEliminarDetalleInspeccion').setDisabled(this.checked);
-                                                            Ext.getCmp('btnRecargarDatosDetalleInspeccion').setDisabled(this.checked);
+                                                            //Ext.getCmp('btnRecargarDatosDetalleInspeccion').setDisabled(this.checked);
                                                             Ext.getCmp('gridDetalleTodasInspecciones').setVisible(this.checked);
                                                             Ext.getCmp('gridDetalleInspeccion').setVisible(!this.checked);
                                                             storeDetalleTodasInspecciones.baseParams = {
                                                                 pendientesAprobar: isChecked
                                                             };
+                                                            todasInspecciones = this.checked;
                                                             if (this.checked) {
                                                                 storeDetalleTodasInspecciones.load();
                                                             }else{
                                                                 storeDetalleInspeccion.load();
                                                             }
                                                         }
+                                                    },
+                                                    '-',
+                                                    '->'
+                                                    , {
+                                                        text: 'Buscar por:'
+                                                        , xtype: 'tbtext'
                                                     }
+
+                                                    , searchInspeccionesBtn
+                                                    , ' ', ' '
+                                                    , new QoDesk.QoAdmin.SearchField({
+                                                        paramName: 'filterText',
+                                                        store: this.storeDetalleTodasInspecciones
+                                                        store : Ext.getCmp('checkTodasInspecciones').getValue() ? this.storeListadoTodosInspectores : storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
+
+                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
+                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
+                                                        //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
+                                                        //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
+                                                    })
                                                     /*,
                                                     '-',
                                                     //Definición de botón guardar datos
@@ -2238,7 +2739,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         , formBind: true
                                                     }*/
                                                 ],
-                                                items: [this.gridDetalleInspeccion, this.gridDetalleTodasInspecciones]
+                                                //items: this.gridDetalleInspeccion
+                                                items: [this.gridDetalleInspeccion, this.gridDetalleTodasInspecciones.setVisible(false)]
                                                 //items: Ext.getCmp('checkTodasInspecciones').getValue() ? this.gridDetalleInspeccion : this.gridDetalleTodasInspecciones
 
                                             },
@@ -2278,19 +2780,24 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         disabled: false,
                                                         scope: this,
                                                         text: 'Recargar Datos'
-                                                    }
-                                                    /*,
+                                                    },
                                                     '-',
-                                                    //Definición de botón guardar datos
-                                                    {
-                                                        text: 'Guardar datos Inspección',
-                                                        scope: this,
-                                                        handler: this.grabardenuncias,
-                                                        iconCls: 'save-icon',
-                                                        disabled: !acceso,
-                                                        id: 'tb_grabardenuncias'
-                                                        , formBind: true
-                                                    }*/
+                                                    '->'
+                                                    , {
+                                                        text: 'Buscar por:'
+                                                        , xtype: 'tbtext'
+                                                    }
+                                                    //, searchInspeccionesBtn
+                                                    , searchControlProgramadoBtn
+                                                    , ' ', ' '
+                                                    , new QoDesk.QoAdmin.SearchField({
+                                                        paramName: 'filterText',
+                                                        store: this.storeControlProgramadoInspeccion
+                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
+                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
+                                                        //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
+                                                        //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
+                                                    })
                                                 ],
                                                 items: this.gridControlProgramadoInspeccion
                                             },{
@@ -2327,19 +2834,24 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         disabled: false,
                                                         scope: this,
                                                         text: 'Recargar Datos'
-                                                    }
-                                                    /*,
+                                                    },
                                                     '-',
-                                                    //Definición de botón guardar datos
-                                                    {
-                                                        text: 'Guardar datos Inspección',
-                                                        scope: this,
-                                                        handler: this.grabardenuncias,
-                                                        iconCls: 'save-icon',
-                                                        disabled: !acceso,
-                                                        id: 'tb_grabardenuncias'
-                                                        , formBind: true
-                                                    }*/
+                                                    '->'
+                                                    , {
+                                                        text: 'Buscar por:'
+                                                        , xtype: 'tbtext'
+                                                    }
+                                                    //, searchInspeccionesBtn
+                                                    , searchCCFBtn
+                                                    , ' ', ' '
+                                                    , new QoDesk.QoAdmin.SearchField({
+                                                        paramName: 'filterText',
+                                                        store: this.storeCCFInspeccion
+                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
+                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
+                                                        //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
+                                                        //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
+                                                    })
                                                 ],
                                                 items: this.gridCCFInspeccion
                                             }
@@ -2371,11 +2883,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     , xtype: 'tbtext'
                                 }
 
-                                , searchInpeccionesBtn
+                                , searchListadoInpeccionesBtn
                                 , ' ', ' '
                                 , new QoDesk.QoAdmin.SearchField({
                                     paramName: 'filterText'
-                                    , store: todosInspectores ? this.gridListadoInspeccion : this.gridListadoTodosInspectores
+                                    , store: todosInspectores ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
                                 })
                             ],items: [{
                                 id: 'formListadoInspeccion',
@@ -2409,13 +2921,13 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     text: 'Buscar por:'
                                     , xtype: 'tbtext'
                                 }
-/*
-                                , searchInpeccionesBtn
+
+                                , searchListadoControlProgramadoBtn
                                 , ' ', ' '
                                 , new QoDesk.QoAdmin.SearchField({
                                     paramName: 'filterText'
-                                    , store: this.storeListadoControlProgramado
-                                })*/
+                                    , store: todosInspectores ? this.storeListadoControlProgramado : this.storeListadoControlProgramadoTodos
+                                })
                             ],items: [{
                                 id: 'formListadoControlProgramado',
                                 titleCollapse: true,
@@ -2448,12 +2960,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     text: 'Buscar por:'
                                     , xtype: 'tbtext'
                                 }
-
-                                , searchInpeccionesBtn
+                                , searchListadoCCFBtn
                                 , ' ', ' '
                                 , new QoDesk.QoAdmin.SearchField({
                                     paramName: 'filterText'
-                                    , store: this.storeControlProgramadoInspeccion
+                                    , store: todosInspectores ? this.storeListadoCCFInspeccion : this.storeListadoCCFInspeccionTodos
                                 })
                             ],items: [{
                                 id: 'formListadoCCF',
