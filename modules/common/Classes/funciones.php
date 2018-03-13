@@ -14,7 +14,7 @@ function generaNuevoCodigoTramiteUnico()
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
     //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE recepcion_documento > DATE('2018-01-01 01:01:01')";
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE recepcion_documento > DATE('2018-01-09 17:20:01')";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {

@@ -1,6 +1,6 @@
 var tramiteSeleccionado = '';
 var todosInspectores = '';
-var todasInspecciones = '';
+var todasInspecciones = true;
 //var fecha = date('Y-m-d H:i:s');
 QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     id: 'moduloInspeccion',
@@ -59,9 +59,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         console.log('accesosSupervision '+accesosSupervision);
         console.log('creacionDatosInspeccion '+creacionDatosInspeccion);
         console.log('creacionTramites '+creacionTramites);
-        console.log('accesosSupervision '+accesosSupervision);
         console.log('pestInspeccion '+pestInspeccion);
         console.log('todosInspectores '+todosInspectores);
+        console.log('todasInspecciones '+todasInspecciones);
+
+
 
         if(accesosSecretaria){
             isChecked = true;
@@ -81,7 +83,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
         //Ubicación de la carpeta de Inspeccion
         var urlInspeccion = "modules/desktop/inspeccion/server/";
-
+        todasInspecciones = todosInspectores;
         var textField = new Ext.form.TextField({allowBlank: false, readOnly: accesosSupervision});
         var textFieldDetalle = new Ext.form.TextField({allowBlank: true, readOnly: accesosSupervision});
         var textFieldControlProgramado = new Ext.form.TextField({allowBlank: true, readOnly: accesosSupervision});
@@ -1854,35 +1856,35 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             id: 'gridModuloInspeccion',
             xtype: "grid",
             //Calculo de tamaño vertical frame superior de pestaña Trámites pendientes
-            height: winHeight*0.44,
+            height: winHeight*0.42,
             //Calculo de tamaño horizontal frame superior de pestaña Trámites pendientes
-            width: winWidth*0.99,
+            width: winWidth*0.98,
             store: this.storeModuloInspeccion,
             columns: [
                 //Definición de campos bdd Inspeccion
                 new Ext.grid.RowNumberer(),
-                {header: 'Trámite', dataIndex: 'codigo_tramite', sortable: true, width: 100},
-                {header: 'Fecha ingreso', dataIndex: 'recepcion_documento', sortable: true, width: 150, sorters: [{
+                {header: 'Trámite', dataIndex: 'codigo_tramite', sortable: true, width: 60},
+                {header: 'Fecha ingreso', dataIndex: 'recepcion_documento', sortable: true, width: 120, sorters: [{
                         direction: 'ASC'}]},
-                {header: 'Tipo documento', dataIndex: 'id_tipo_documento', sortable: true, width: 150,
+                {header: 'Tipo documento', dataIndex: 'id_tipo_documento', sortable: true, width: 100,
                     editor: comboTID, renderer: personaTipoDocumento},
-                {header: 'Núm documento', dataIndex: 'num_documento', sortable: true, width: 150, editor: textField},
-                {header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 250, editor: comboORD, renderer: listaOrdenanzas},
-                {header: 'Nombre remitente', dataIndex: 'remitente', sortable: true, width: 250, editor: textField},
-                {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 120, editor: textField},
-                {header: 'Email denunciante', dataIndex: 'email', sortable: true, width: 200, editor: textField},
-                {header: 'Entidad', dataIndex: 'institucion', sortable: true, width: 150, editor: textField},
-                {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 400, editor: textField},
-                {header: 'Urgencia', dataIndex: 'id_caracter_tramite', sortable: true, width: 100, editor: comboCDT,
+                {header: 'Núm documento', dataIndex: 'num_documento', sortable: true, width: 140, editor: textField},
+                {header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 180, editor: comboORD, renderer: listaOrdenanzas},
+                {header: 'Nombre remitente', dataIndex: 'remitente', sortable: true, width: 200, editor: textField},
+                {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 100, editor: textField},
+                {header: 'Email denunciante', dataIndex: 'email', sortable: true, width: 150, editor: textField},
+                {header: 'Entidad', dataIndex: 'institucion', sortable: true, width: 120, editor: textField},
+                {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textField},
+                {header: 'Urgencia', dataIndex: 'id_caracter_tramite', sortable: true, width: 80, editor: comboCDT,
                     renderer: caracterTramite},
-                {header: 'Fojas', dataIndex: 'cantidad_fojas', width: 70,editor: textField},
-                {header: 'Aceptación', dataIndex: 'procesado_inspeccion', sortable: true, width: 120, editor: comboAPROBADO,
+                {header: 'Fojas', dataIndex: 'cantidad_fojas', width: 50,editor: textField},
+                {header: 'Aceptación', dataIndex: 'procesado_inspeccion', sortable: true, width: 80, editor: comboAPROBADO,
                     renderer: aprobacion},
-                {header: 'Planificación', dataIndex: 'id_planificacion', sortable: true, width: 200, editor: comboCONTROLPROGRAMADO,
+                {header: 'Planificación', dataIndex: 'id_planificacion', sortable: true, width: 150, editor: comboCONTROLPROGRAMADO,
                     renderer: controlProgramado}
             ],
             viewConfig: {
-                forceFit: true
+                forceFit: false
             },
             sm: new Ext.grid.RowSelectionModel({
                 singleSelect: true,
@@ -1921,7 +1923,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
             height: winHeight*0.32,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth*0.98,
+            width: winWidth*0.97,
             readOnly: accesosSupervision,
             store: this.storeDetalleInspeccion,
             columns: [
@@ -1979,7 +1981,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
             height: winHeight*0.32,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth*0.98,
+            width: winWidth*0.97,
             readOnly: accesosSupervision,
             store: this.storeDetalleTodasInspecciones,
             columns: [
@@ -2568,7 +2570,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'reload-icon',
                                     handler: this.requestGridDataModuloInspeccion,
                                     scope: this,
-                                    text: 'Recargar Datos'
+                                    text: 'Recargar'
                                 },
                                 '-',
                                 {
@@ -2677,7 +2679,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         handler: this.requestGridDataDetalleInspeccion,
                                                         disabled: false,
                                                         scope: this,
-                                                        text: 'Recargar Datos'
+                                                        text: 'Recargar'
                                                     },
                                                     '-',
                                                     {
@@ -2719,8 +2721,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                     , new QoDesk.QoAdmin.SearchField({
                                                         paramName: 'filterText',
                                                         store: this.storeDetalleTodasInspecciones
-                                                        store : Ext.getCmp('checkTodasInspecciones').getValue() ? this.storeListadoTodosInspectores : storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
-
+                                                        //store: function(){this.storeDetalleInspeccion}
+                                                        //store: storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
+                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
                                                         //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
                                                         //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
                                                         //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
@@ -2779,7 +2782,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         handler: this.requestGridDataControlProgramado,
                                                         disabled: false,
                                                         scope: this,
-                                                        text: 'Recargar Datos'
+                                                        text: 'Recargar'
                                                     },
                                                     '-',
                                                     '->'
@@ -2803,7 +2806,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                             },{
                                                 title: 'CCF',
                                                 layout: 'column',
-                                                //disabled: !accesosSecretaria
+                                                disabled: true,
                                                 height: winHeight*0.36,
                                                 tbar: [
                                                     //Definición de botón nuevo
@@ -2833,7 +2836,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         handler: this.requestGridDataCCF,
                                                         disabled: false,
                                                         scope: this,
-                                                        text: 'Recargar Datos'
+                                                        text: 'Recargar'
                                                     },
                                                     '-',
                                                     '->'
@@ -2874,7 +2877,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'reload-icon',
                                     handler: this.requestGridDataListadoInspeccion,
                                     scope: this,
-                                    text: 'Recargar Datos'
+                                    text: 'Recargar'
                                 },
                                 '-',
                                 '->'
@@ -2913,7 +2916,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'reload-icon',
                                     //handler: this.requestGridDataListadoInspeccion,
                                     scope: this,
-                                    text: 'Recargar Datos'
+                                    text: 'Recargar'
                                 },
                                 '-',
                                 '->'
@@ -2944,7 +2947,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             closable: false,
                             //layout: 'fit',
                             //height: winHeight-70,
-                            disabled: !pestInspeccion,
+                            //disabled: !pestInspeccion,
+                            disabled: true,
                             //Barra de botones
                             tbar: [
                                 //Definición de botón Recargar datos
@@ -2952,7 +2956,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'reload-icon',
                                     handler: this.requestGridDataListadoInspeccion,
                                     scope: this,
-                                    text: 'Recargar Datos'
+                                    text: 'Recargar'
                                 },
                                 '-',
                                 '->'
@@ -2980,6 +2984,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             autoScroll: true,
                             title: 'Geolocalización',
                             closable: false,
+                            disabled: false,
                             items: [{
                                 split: true,
                                 height: 400,
@@ -3094,7 +3099,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     pendientesAprobar: isChecked
                 }
             });
-        }, 1000);
+        }, 1100);
     },
 
     //Función para eliminación de registros de Inspeccion
@@ -3123,14 +3128,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         var inspeccion = new this.storeModuloInspeccion.recordType({
             codigo_tramite: '',
             recepción_documento: '',
-            id_ordenanza: '',
+            //id_ordenanza: '0',
             id_tipo_documento: '0',
             num_documento: '',
-            remitente: '',
-            cedula: '',
-            email: '',
-            institucion: '',
-            asunto: '',
+            //remitente: '',
+            //cedula: '',
+            //email: '',
+            //institucion: '',
+            //asunto: '',
             id_caracter_tramite: '',
             cantidad_fojas: '0',
             procesado_inspeccion: '1'

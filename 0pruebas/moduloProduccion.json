@@ -1,0 +1,95 @@
+{
+  "id": "inspeccion",
+  "type": "desktop/inspeccion",
+  "about": {
+    "author": "",
+    "description": "AMC Inspeccion.",
+    "name": "Inspeccion",
+    "url": "",
+    "version": "1.0"
+  },
+  "server": {
+    "methods": [
+      {
+        "name": "accesosAdministradorIns",
+        "description": "Administrador inspeccion"
+      },
+      {
+        "name": "accesosInspeccion",
+        "description": "Usuario inspeccion"
+      },
+      {
+        "name": "accesosRecepciónIns",
+        "description": "Recepcion inspeccion"
+      }
+    ],
+    "class": "QoInspeccion",
+    "file": "desktop/inspeccion/inspeccion.php"
+  },
+  "client": {
+    "class": "QoDesk.InspeccionWindow",
+    "css": [
+      {
+        "directory": "desktop/inspeccion/client/resources/",
+        "files": [
+          "styles.css"
+        ]
+      },
+      {
+        "directory": "common/libraries/",
+        "files": [
+          "datetime/date-time-ux.css",
+          "Spinner/Spinner.css",
+          "MultiSelect.css"
+        ]
+      }
+    ],
+    "javascript": [
+      {
+        "directory": "common/libraries/",
+        "files": [
+          "AppMsg.js",
+          "datetime/date-time-ux.js",
+          "CheckColumn.js",
+          "Spinner/SpinnerField.js",
+          "Spinner/Spinner.js",
+          "MultiSelect.js"
+        ]
+      },
+      {
+        "directory": "desktop/inspeccion/client/",
+        "files": [
+          "inspeccion-win.js"
+        ]
+      },
+      {
+        "directory": "qwiki/admin/client/",
+        "files": [
+          "QoAdmin.js"
+        ]
+      },
+      {
+        "directory": "qwiki/admin/client/lib/",
+        "files": [
+          "ActiveColumn.js",
+          "ColumnNodeUI.js",
+          "Nav.js",
+          "SearchField.js",
+          "TooltipEditor.js",
+          "Ext.ux.GMapPanel3.js"
+        ]
+      }
+    ],
+    "launcher": {
+      "config": {
+        "iconCls": "inspeccion-icon",
+        "shortcutIconCls": "inspeccion-shortcut",
+        "text": "Inspeccion",
+        "tooltip": "<b>Inspeccion - AMC</b>"
+      },
+      "paths": {
+        "startmenu": "/"
+      }
+    }
+  }
+}

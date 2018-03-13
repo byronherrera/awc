@@ -79,7 +79,7 @@ body {
 .x-spotlight {
     background-color: #ccc;
 }.x-tab-panel-header, .x-tab-panel-footer {
-	background-color:#e18325;
+	background-color:#095a6e;
 	border-color:#8db2e3;
     overflow:hidden;
     zoom:1;
@@ -104,7 +104,7 @@ ul.x-tab-strip-bottom{
 .x-tab-panel-header-plain .x-tab-strip-spacer,
 .x-tab-panel-footer-plain .x-tab-strip-spacer {
     border-color:#222;
-    background-color:#e18325;
+    background-color:#095a6e;
 }
 
 .x-tab-strip span.x-tab-strip-text {
@@ -126,7 +126,7 @@ ul.x-tab-strip-bottom{
 }
 
 .x-tab-strip-top .x-tab-right, .x-tab-strip-top .x-tab-left, .x-tab-strip-top .x-tab-strip-inner{
-	background-image: url(../images/access/tabs/tabs-sprite.gif);
+	background-image: url(../images/access/tabs/tabs-sprite.png);
 }
 
 .x-tab-strip-bottom .x-tab-right {
@@ -756,7 +756,7 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
 }
 
 .x-grid3-row-selected {
-	background-color: #e5872c !important;
+	background-color: gray !important;
 	background-image: none;
 	border-style: solid;
 }
@@ -1089,7 +1089,7 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
 }
 
 .x-tree-node .x-tree-selected {
-	background-color: #e5872c;
+	background-color: gray;
 }
 
 .x-tree-drop-ok-append .x-dd-drop-icon{
@@ -1157,7 +1157,7 @@ td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-as
 }
 
 .x-date-inner .x-date-selected a{
-    background-color:#e5872c;
+    background-color:gray;
 	background-image:none;
 	border-color:#864900;
     padding:1px 6px 1px 2px; /* Structure to account for larger, bolder fonts in Access theme. */
@@ -1234,7 +1234,7 @@ td.x-date-mp-month a:hover,td.x-date-mp-year a:hover {
 }
 
 td.x-date-mp-sel a {
-    background-color: #e5872c;
+    background-color: gray;
 	background-image: none;
 	border-color:#864900;
 }
@@ -1451,8 +1451,8 @@ a.x-menu-item {
 }
 
 .x-combo-list .x-combo-selected {
-	border-color:#e5872c !important;
-    background-color:#e5872c;
+	border-color:gray !important;
+    background-color:gray;
 }
 
 .x-combo-list .x-toolbar {

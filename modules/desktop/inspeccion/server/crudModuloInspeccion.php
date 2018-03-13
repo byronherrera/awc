@@ -85,9 +85,11 @@ function insertInspeccion()
     //Registro el usuario logueado en persona que recepta el trámite al ser creado desde inspección
     $data->id_persona = $os->get_member_id();
     $data->reasignacion = 3;
+    $data->despacho_secretaria = 'true';
+
 
     //genero el listado de nombre de campos
-     $cadenaDatos = '';
+    $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
         $cadenaCampos = $cadenaCampos . $clave . ',';

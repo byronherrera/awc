@@ -2,7 +2,7 @@
 <project version="4">
   <component name="PhpProjectServersManager">
     <servers>
-      <server debugger_id="php.debugger.ZendDebugger" host="localhost" id="c0c1e3fb-29d7-472f-a230-eb8e1e03f635" name="local" />
+      <server debugger_id="php.debugger.ZendDebugger" host="localhost" id="c0c1e3fb-29d7-472f-a230-eb8e1e03f635" name="local" port="8080" />
     </servers>
   </component>
 </project>

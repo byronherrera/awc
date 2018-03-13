@@ -1,0 +1,95 @@
+{
+  "id": "inspeccion",
+  "type": "desktop/inspeccion",
+  "about": {
+    "author": "",
+    "description": "Inspeccion de Inspeccion.",
+    "name": "Ventana Inspeccion",
+    "url": "",
+    "version": "1.0"
+  },
+  "server": {
+    "methods": [
+      {
+        "name": "accesosAdministrador",
+        "description": "Full acceso"
+      },
+      {
+        "name": "accesosSecretaria",
+        "description": "Full acceso"
+      },
+      {
+        "name": "accesosZonales",
+        "description": "Personal de zonales"
+      }
+    ],
+    "class": "QoInspeccion",
+    "file": "desktop/inspeccion/moduloInspeccion.php"
+  },
+  "client": {
+    "class": "QoDesk.InspeccionWindow",
+    "css": [
+      {
+        "directory": "desktop/inspeccion/client/resources/",
+        "files": [
+          "styles.css"
+        ]
+      },
+      {
+        "directory": "common/libraries/",
+        "files": [
+          "datetime/date-time-ux.css",
+          "Spinner/Spinner.css",
+          "MultiSelect.css"
+        ]
+      }
+    ],
+    "javascript": [
+      {
+        "directory": "common/libraries/",
+        "files": [
+          "AppMsg.js",
+          "datetime/date-time-ux.js",
+          "CheckColumn.js",
+          "Spinner/SpinnerField.js",
+          "Spinner/Spinner.js",
+          "MultiSelect.js",
+          "Ext.ux.GMapPanel3.js"
+        ]
+      },
+      {
+        "directory": "desktop/inspeccion/client/",
+        "files": [
+          "moduloInspeccion-winB.js"
+        ]
+      },
+      {
+        "directory": "qwiki/admin/client/",
+        "files": [
+          "QoAdmin.js"
+        ]
+      },
+      {
+        "directory": "qwiki/admin/client/lib/",
+        "files": [
+          "ActiveColumn.js",
+          "ColumnNodeUI.js",
+          "Nav.js",
+          "SearchField.js",
+          "TooltipEditor.js"
+        ]
+      }
+    ],
+    "launcher": {
+      "config": {
+        "iconCls": "inspeccion-icon",
+        "shortcutIconCls": "inspeccion-shortcut",
+        "text": "Inspeccion",
+        "tooltip": "<b>Inspeccion</b>"
+      },
+      "paths": {
+        "startmenu": "/"
+      }
+    }
+  }
+}
