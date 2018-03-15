@@ -42,15 +42,19 @@ $sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario
         INNER JOIN amc_inspeccion ON b . id = amc_inspeccion . id_denuncia
         $where  ORDER BY b.recepcion_documento";
 
-echo $sql . " .." ;
+
 
 $resultFuncionarios = $os->db->conn->query($sql);
 $siguienteFila = 1;
 while ($rowFuncionario = $resultFuncionarios->fetch(PDO::FETCH_ASSOC)) {
-    $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario']);
+    if (($rowFuncionario['funcionario'] != '') and (!is_null($rowFuncionario['funcionario'])))
+        $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario']);
+        enviaEmail ($rowFuncionario['funcionario']);
 }
 
+function envioEmail ($funcionario) {
 
+}
 
 function imprimeActa($filaTitulo1, $funcionario)
 {
@@ -84,7 +88,7 @@ function imprimeActa($filaTitulo1, $funcionario)
     // se determina un filtro  para determinar las denuncias / tramites pendientes
     $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
     $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega = $funcionario ";
-    echo $funcionario . " - ";
+
 
     $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
             DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
