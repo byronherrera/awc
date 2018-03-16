@@ -298,6 +298,7 @@ function deleteDetalleInspecciones()
     ));
 }
 
+
 switch ($_GET['operation']) {
     case 'select' :
         selectDetalleInspecciones();

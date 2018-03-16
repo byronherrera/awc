@@ -799,7 +799,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     , width: 20
                     , xtype: 'booleancolumn'
                 },
-                {header: 'Planificación', dataIndex: 'id_planificacion', sortable: true, width: 30, editor: comboCONTROLPROGRAMADO,
+                {hidden: true, header: 'Planificación', dataIndex: 'id_planificacion', sortable: true, width: 30, editor: comboCONTROLPROGRAMADO,
                     renderer: controlProgramado}
             ],
             viewConfig: {
@@ -1598,7 +1598,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     }
                 ],
                 defaults: {
-                    listeners: {
+                  /*  listeners: {
                         change: function (field, newVal, oldVal) {
                             consolo.log ("ccc");
                             var myForm = Ext.getCmp('formDenunciasDetalle').getForm();
@@ -1607,7 +1607,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 method: 'POST'
                             });
                         }
-                    }
+                    }*/
                 }
 
             });
@@ -1620,7 +1620,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     {
                         columnWidth: 1 / 3,
                         layout: 'form',
-                        items: [    
+                        items: [
                             {
                                 xtype: 'datetimefield',
                                 fieldLabel: 'Fecha Inicio',

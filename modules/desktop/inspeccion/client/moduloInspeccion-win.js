@@ -1,4 +1,5 @@
 var tramiteSeleccionado = '';
+var inspeccionSeleccionada = '';
 var todosInspectores = '';
 var todasInspecciones = true;
 //var fecha = date('Y-m-d H:i:s');
@@ -63,8 +64,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         console.log('todosInspectores '+todosInspectores);
         console.log('todasInspecciones '+todasInspecciones);
 
-
-
         if(accesosSecretaria){
             isChecked = true;
         }
@@ -77,6 +76,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         var desktop = this.app.getDesktop();
         var winHeight = desktop.getWinHeight();
         var winWidth = desktop.getWinWidth();
+
+        console.log('winHeight '+winHeight);
+        console.log('winWidth '+winWidth);
 
         var AppMsg = new Ext.AppMsg({});
         var win = desktop.getWindow('grid-win-moduloInspeccion');
@@ -671,6 +673,16 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //baseParams: {}
         });
 
+        this.storeNIOInspeccion = new Ext.data.Store({
+            id: "id",
+            proxy: proxyCCFInspeccion,
+            reader: readerCCFInspeccion,
+            writer: writerCCFInspeccion,
+            autoSave: !accesosSupervision, // dependiendo de si se tiene acceso para grabar
+            //remoteSort: true,
+            //baseParams: {}
+        });
+
         this.storeCCFInspeccion = new Ext.data.Store({
             id: "id",
             proxy: proxyCCFInspeccion,
@@ -752,6 +764,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 var store = this.storeControlProgramadoInspeccion;
                 store.baseParams.filterField = item.key;
                 searchControlProgramadoBtn.setText(item.text);
+            }
+        };
+
+        var checkHandlerNIO = function (item, checked) {
+            if (checked) {
+                var store = this.storeNIOInspeccion;
+                store.baseParams.filterField = item.key;
+                searchNIOBtn.setText(item.text);
             }
         };
 
@@ -958,6 +978,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         //inicio combo unidad asignada Inspección
+        storeACTUALIZARFECHA = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'fecha_asignacion'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=actualizar_fecha'
+        });
+
+        //inicio combo unidad asignada Inspección
         storeFUNREA = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
@@ -1098,9 +1126,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 var record = storeCDT.getAt(index);
                 // return record.get('nombre');
                 if (record.get('nombre') == 'Ordinario') {
-                    return '<span style="color:green;">' + record.get('nombre') + '</span>';
+                    return '<span style="color:darkgreen; font-weight:bold !important">' + record.get('nombre') + '</span>';
                 } else {
-                    return '<span style="color:red;">' + record.get('nombre') + '</span>';
+                    return '<span style="color:red; font-weight:bold !important">' + record.get('nombre') + '</span>';
                 }
             }
         }
@@ -1111,11 +1139,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 var record = storePRIORIDAD.getAt(index);
                 // return record.get('nombre');
                 if (record.get('nombre') == 'Bajo') {
-                    return '<span style="color:green;">' + record.get('nombre') + '</span>';
+                    return '<span style="color:darkgreen; font-weight:bold !important">' + record.get('nombre') + '</span>';
                 } else if (record.get('nombre') == 'Medio') {
-                    return '<span style="color:darkorange;">' + record.get('nombre') + '</span>';
+                    return '<span style="color:darkorange; font-weight:bold !important">' + record.get('nombre') + '</span>';
                 }else{
-                    return '<span style="color:red;">' + record.get('nombre') + '</span>';
+                    return '<span style="color:red; font-weight:bold !important">' + record.get('nombre') + '</span>';
                 }
 
             }
@@ -1127,9 +1155,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 var record = storeAPROBADO.getAt(index);
                 // return record.get('nombre');
                 if (record.get('nombre') == 'Verificado') {
-                    return '<span style="color:green;">' + record.get('nombre') + '</span>';
+                    return '<span style="color:darkgreen; font-weight:bold !important">' + record.get('nombre') + '</span>';
                 } else {
-                    return '<span style="color:red;">' + record.get('nombre') + '</span>';
+                    return '<span style="color:red; font-weight:bold !important">' + record.get('nombre') + '</span>';
                 }
             }
         }
@@ -1201,33 +1229,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             allowBlank: false
         });
 
-        storePERDIS.sort('orden', 'ASC');
-        var comboPERDIS = new Ext.form.ComboBox({
-            id: 'comboPERDIS',
-            store: storePERDIS,
-            valueField: 'id',
-            displayField: 'nombre',
-            mode: 'local',
-            forceSelection: true,
-            triggerAction: 'all',
-            allowBlank: false,
-            typeAhead: true,
-            selectOnFocus: true,
-            disabled: false
-        });
-        comboPERDIS.on('select', function(){
-            //var fecha = date('Y-m-d H:i:s');
-            //AppMsg.setAlert("Alerta ", fecha);
-            AppMsg.setAlert("Alerta ", 'Funcionario asignado');
-            //Ext.getCmp('fecha_asignacion').setValue('t');
-            /*this.fecha_asignacion.set(date('Y-m-d H:i:s'));
-            var inspeccion = new this.storeDetalleInspeccion.recordType({
-                'fecha_asignacion' : '',
-            });
-            this.gridCCFInspeccion.stopEditing();
-            this.storeCCFInspeccion.insert(0, inspeccion);
-            */
-        })
+
 
         storePERDIS.sort('orden', 'ASC');
         var comboINSPECTOR = new Ext.form.ComboBox({
@@ -1244,17 +1246,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             disabled: false
         });
         comboINSPECTOR.on('select', function(){
-            //var fecha = date('Y-m-d H:i:s');
-            //AppMsg.setAlert("Alerta ", fecha);
             AppMsg.setAlert("Alerta ", 'Funcionario asignado');
-            //Ext.getCmp('fecha_asignacion').setValue('t');
-            /*this.fecha_asignacion.set(date('Y-m-d H:i:s'));
-            var inspeccion = new this.storeDetalleInspeccion.recordType({
-                'fecha_asignacion' : '',
-            });
             this.gridCCFInspeccion.stopEditing();
             this.storeCCFInspeccion.insert(0, inspeccion);
-            */
+
         })
 
         storeFUNREA.sort('orden', 'ASC');
@@ -1292,6 +1287,28 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
+        storePERDIS.sort('orden', 'ASC');
+        var comboPERDIS = new Ext.form.ComboBox({
+            id: 'comboPERDIS',
+            store: storePERDIS,
+            valueField: 'id',
+            displayField: 'nombre',
+            mode: 'local',
+            forceSelection: true,
+            triggerAction: 'all',
+            allowBlank: false,
+            typeAhead: true,
+            selectOnFocus: true,
+            disabled: false
+        });
+        comboPERDIS.on('select', function(){
+            //AppMsg.setAlert("Alerta ", inspeccionSeleccionada);
+            //AppMsg.setAlert("Alerta ", tramiteSeleccionado);
+            //storeACTUALIZARFECHA.load({params: {id_inspeccion: inspeccionSeleccionada}});
+            //storeACTUALIZARFECHA.load();
+        })
+
 
         var searchFieldBtn = new Ext.Button({
             menu: new Ext.menu.Menu({
@@ -1355,6 +1372,13 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         key: 'asunto',
                         scope: this,
                         text: 'Asunto'
+                    }, {
+                        checked: false,
+                        checkHandler: checkHandler,
+                        group: 'filterField',
+                        key: 'guia',
+                        scope: this,
+                        text: 'Guía'
                     }
                 ]
             })
@@ -1745,6 +1769,32 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             , text: 'Código trámite'
         });
 
+        var searchNIOBtn = new Ext.Button({
+            menu: new Ext.menu.Menu({
+                items: [
+                    {
+                        checked: true,
+                        checkHandler: checkHandlerNIO,
+                        group: 'filterField',
+                        key: 'id_inspeccion',
+                        scope: this,
+                        text: 'Código inspección'
+                    }
+                    /*t: 'Zona'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerCCF,
+                        group: 'filterField',
+                        key: 'predio',
+                        scope: this,
+                        text: 'Predio'
+                    }*/
+                ]
+            })
+            , text: 'Código trámite'
+        });
+
         var searchCCFBtn = new Ext.Button({
             menu: new Ext.menu.Menu({
                 items: [
@@ -1863,28 +1913,29 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 //Definición de campos bdd Inspeccion
                 new Ext.grid.RowNumberer(),
-                {header: 'Trámite', dataIndex: 'codigo_tramite', sortable: true, width: 60},
+                {header: 'Trámite', dataIndex: 'codigo_tramite', sortable: true, width: 62},
                 {header: 'Fecha ingreso', dataIndex: 'recepcion_documento', sortable: true, width: 120, sorters: [{
                         direction: 'ASC'}]},
-                {header: 'Tipo documento', dataIndex: 'id_tipo_documento', sortable: true, width: 100,
+                {header: 'Aceptación', dataIndex: 'procesado_inspeccion', sortable: true, width: 100, editor: comboAPROBADO,
+                    renderer: aprobacion},
+                {header: 'Tipo documento', dataIndex: 'id_tipo_documento', sortable: true, width: 110,
                     editor: comboTID, renderer: personaTipoDocumento},
-                {header: 'Núm documento', dataIndex: 'num_documento', sortable: true, width: 140, editor: textField},
+                {header: 'Núm documento', dataIndex: 'num_documento', sortable: true, width: 145, editor: textField},
                 {header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 180, editor: comboORD, renderer: listaOrdenanzas},
                 {header: 'Nombre remitente', dataIndex: 'remitente', sortable: true, width: 200, editor: textField},
                 {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 100, editor: textField},
                 {header: 'Email denunciante', dataIndex: 'email', sortable: true, width: 150, editor: textField},
                 {header: 'Entidad', dataIndex: 'institucion', sortable: true, width: 120, editor: textField},
                 {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textField},
-                {header: 'Urgencia', dataIndex: 'id_caracter_tramite', sortable: true, width: 80, editor: comboCDT,
+                {header: 'Urgencia', dataIndex: 'id_caracter_tramite', sortable: true, width: 100, editor: comboCDT,
                     renderer: caracterTramite},
-                {header: 'Fojas', dataIndex: 'cantidad_fojas', width: 50,editor: textField},
-                {header: 'Aceptación', dataIndex: 'procesado_inspeccion', sortable: true, width: 80, editor: comboAPROBADO,
-                    renderer: aprobacion},
+                {header: 'Fojas', dataIndex: 'cantidad_fojas', width: 55,editor: textField},
+
                 {header: 'Planificación', dataIndex: 'id_planificacion', sortable: true, width: 150, editor: comboCONTROLPROGRAMADO,
                     renderer: controlProgramado}
             ],
             viewConfig: {
-                forceFit: false
+                forceFit: winWidth>1024 ? true : false
             },
             sm: new Ext.grid.RowSelectionModel({
                 singleSelect: true,
@@ -1894,6 +1945,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         //select_codigo_tramite = rec.id;
                         storeDetalleInspeccion.load({params: {id: rec.id}});
                         tramiteSeleccionado = rec.id;
+                        inspeccionSeleccionada = rec.id_denuncia;
                         //storeDetalleInspeccion.load({params: {filterText: rec.data.codigo_tramite}});
                         if(creacionDatosInspeccion){
                             Ext.getCmp('btnNuevoDetalleInspeccion').setDisabled(false);
@@ -1975,6 +2027,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 emptyMsg: "Seleccione un trámite"
             })
         });
+
+
 
         this.gridDetalleTodasInspecciones = new Ext.grid.EditorGridPanel({
             id: 'gridDetalleTodasInspecciones',
@@ -2804,6 +2858,61 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                 ],
                                                 items: this.gridControlProgramadoInspeccion
                                             },{
+                                                title: 'NIO',
+                                                layout: 'column',
+                                                disabled: false,
+                                                height: winHeight*0.36,
+                                                tbar: [
+                                                    //Definición de botón nuevo
+                                                    {
+                                                        id: 'btnNuevoNIO',
+                                                        text: 'Nuevo',
+                                                        scope: this,
+                                                        handler: this.addNIO,
+                                                        disabled: !creacionDatosInspeccion,
+                                                        iconCls: 'save-icon'
+                                                    },
+                                                    '-',
+                                                    //Definición de botón eliminar
+                                                    {
+                                                        id: 'btnEliminarNIO',
+                                                        text: "Eliminar",
+                                                        scope: this,
+                                                        handler: this.deleteNIO,
+                                                        disabled: !creacionDatosInspeccion,
+                                                        iconCls: 'delete-icon'
+                                                    },
+                                                    '-',
+                                                    //Definición de botón Recargar datos
+                                                    {
+                                                        id: 'btnRecargarDatosNIO',
+                                                        iconCls: 'reload-icon',
+                                                        handler: this.requestGridDataNIO,
+                                                        disabled: false,
+                                                        scope: this,
+                                                        text: 'Recargar'
+                                                    },
+                                                    '-',
+                                                    '->'
+                                                    , {
+                                                        text: 'Buscar por:'
+                                                        , xtype: 'tbtext'
+                                                    }
+                                                    //, searchInspeccionesBtn
+                                                    , searchNIOBtn
+                                                    , ' ', ' '
+                                                    , new QoDesk.QoAdmin.SearchField({
+                                                        paramName: 'filterText',
+                                                        store: this.storeNIOInspeccion
+                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
+                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
+                                                        //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
+                                                        //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
+                                                    })
+                                                ],
+                                                items: this.gridNIOInspeccion
+                                            }
+                                            ,{
                                                 title: 'CCF',
                                                 layout: 'column',
                                                 disabled: true,

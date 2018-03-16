@@ -15,13 +15,14 @@ function selectInspeccion()
     $columnaBusqueda = 'codigo_tramite';
     //$where = '';
     //forzamos que solo sea los asignados a inspeccion
-     $where = 'WHERE reasignacion = 3';
+    $where = "WHERE reasignacion = 3 and despacho_secretaria='true' ";
 
      //
     if (isset($_POST['pendientesAprobar'])) {
         if ($_POST['pendientesAprobar'] == 'true') {
             ///cambio bh
-            $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0";
+           // $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0";
+            $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0 and despacho_secretaria='true' ";
             //$where = " WHERE reasignacion = 3 and despacho_secretaria_insp = 0 ";
         }
     }
@@ -147,6 +148,9 @@ function updateInspeccion()
             $data->despacho_secretaria = 'true';
     }
 
+
+
+
     $message = '';
     if (isset($data->id_tipo_documento)) {
         if ($data->id_tipo_documento == '1')
@@ -158,8 +162,14 @@ function updateInspeccion()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
+        if ($valor === null) {
+            $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
+        }
+        else {
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        }
     }
+
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_denuncias SET  $cadenaDatos  WHERE amc_denuncias.id = '$data->id' ";

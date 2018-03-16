@@ -209,6 +209,9 @@ function updateInspeccion()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
+        if ($valor === null)
+            $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
+        else
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
