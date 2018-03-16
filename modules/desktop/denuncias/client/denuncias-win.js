@@ -1620,7 +1620,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     {
                         columnWidth: 1 / 3,
                         layout: 'form',
-                        items: [
+                        items: [    
                             {
                                 xtype: 'datetimefield',
                                 fieldLabel: 'Fecha Inicio',

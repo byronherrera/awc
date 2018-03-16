@@ -34,7 +34,6 @@ $objPHPExcel = new PHPExcel();
 $objPHPExcel->setActiveSheetIndex(0);
 
 
-
 $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
 $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega IS NOT NULL ";
 $sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario  
@@ -43,17 +42,89 @@ $sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario
         $where  ORDER BY b.recepcion_documento";
 
 
-
 $resultFuncionarios = $os->db->conn->query($sql);
 $siguienteFila = 1;
 while ($rowFuncionario = $resultFuncionarios->fetch(PDO::FETCH_ASSOC)) {
     if (($rowFuncionario['funcionario'] != '') and (!is_null($rowFuncionario['funcionario'])))
         $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario']);
-        enviaEmail ($rowFuncionario['funcionario']);
+    envioEmail($rowFuncionario['funcionario']);
 }
 
-function envioEmail ($funcionario) {
+function envioEmail($funcionario)
+{
+    global $os;
+    $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
+    $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
+
+    $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
+            DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
+            FROM amc_denuncias as b 
+            INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
+            $where  ORDER BY b.recepcion_documento";
+
+    $result = $os->db->conn->query($sql);
+    $number_of_rows = $result->rowCount();
+    $fila = 0;
+    $detalle= "";
+    $detalle .=  'No ' . ' Trámite DMI' . ' Tipo documento' . ' Remitente' . ' Sumillado' . ' Para' . ' Guia';
+    while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
+        $fila ++;
+        $detalle .= $fila .  $rowdetalle['codigo_tramite'] .  $rowdetalle['num_documento'] .  $rowdetalle['remitente'] .  $rowdetalle['fechasumilla'] .
+        regresaNombre($rowdetalle['funcionario']) .   $rowdetalle['guia'];
+    }
+
+
+    $fechaActual = date('d-m-Y H:i:s');
+    $mensaje = getmensaje('Byron Herrera', $detalle, $fechaActual);
+    $email = "byronherrera@hotmail.com";
+    $nombre = "testNombre";
+    $apellido = "testApellido";
+    $envio = enviarEmail($email, $nombre . ' ' . $apellido, $mensaje);
+
+    echo($envio);
+
+}
+
+function getmensaje($nombre = '', $inspecciones = '', $fecha = '')
+{
+    $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
+                <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
+                <div style="clear: both; margin: 50px 10%; float: left;">
+                <p><br><br>
+                 Estimado ' . $nombre . ' ha sido asignado los siguientes trámites para su inspección  <br>
+                 <br>
+                 <br>
+                 ' . $inspecciones . '
+                 <br>
+                 <br>
+                 Favor ingresar en MatisAMC, para verificar las inspecciones.
+                <br>	
+                <br>	
+                Se les recuerda acercarse a la Secretaría de inspeccion para retirar sus trámites, además que el tiempo para realizar los mismos se contabilizarán a partir del envío de este correo
+                <br>
+                </p>
+                <p>Fecha : ' . $fecha . '</p>
+                
+                </div>
+                <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                </div>
+                ';
+    return $texto;
+
+
+}
+
+function enviarEmail($email, $nombre, $mensaje)
+{
+
+    $headers = "From: " . strip_tags("byron.herrera@quito.gob.ec") . "\r\n";
+    //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
+    //$headers .= "CC: susan@example.com\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+    mail($email, $nombre, $mensaje, $headers);
 }
 
 function imprimeActa($filaTitulo1, $funcionario)
@@ -270,7 +341,7 @@ function imprimeActa($filaTitulo1, $funcionario)
     );
 
 
-    $objPHPExcel->getActiveSheet()->getStyle('A'.$filaTitulo1.':H'. ($filasPiePagina + 9))->applyFromArray(
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaTitulo1 . ':H' . ($filasPiePagina + 9))->applyFromArray(
         array(
             'alignment' => array(
                 'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -278,7 +349,7 @@ function imprimeActa($filaTitulo1, $funcionario)
         )
     );
 
-    $objPHPExcel->getActiveSheet()->getStyle('A'.$filaTitulo1.':H'. ($filasPiePagina + 9))->applyFromArray(
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaTitulo1 . ':H' . ($filasPiePagina + 9))->applyFromArray(
         array(
             'alignment' => array(
                 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
@@ -286,7 +357,7 @@ function imprimeActa($filaTitulo1, $funcionario)
         )
     );
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . ($filaTitulo1 + 3).':H' . ($filaTitulo1 + 5))->applyFromArray(
+    $objPHPExcel->getActiveSheet()->getStyle('A' . ($filaTitulo1 + 3) . ':H' . ($filaTitulo1 + 5))->applyFromArray(
         array(
             'alignment' => array(
                 'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
@@ -306,9 +377,9 @@ function imprimeActa($filaTitulo1, $funcionario)
     $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . ($filaTitulo1 + 3).':F' . ($filasPiePagina ))->getFont()->setSize(10);
-    $objPHPExcel->getActiveSheet()->getStyle('G' . ($filaTitulo1 + 3).':H' . ($filasPiePagina ))->getFont()->setSize(9);
-    $objPHPExcel->getActiveSheet()->getStyle('A'. $filaTitulo1 . ':H' . ($filaTitulo1 + 2))->getFont()->setSize(14);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . ($filaTitulo1 + 3) . ':F' . ($filasPiePagina))->getFont()->setSize(10);
+    $objPHPExcel->getActiveSheet()->getStyle('G' . ($filaTitulo1 + 3) . ':H' . ($filasPiePagina))->getFont()->setSize(9);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaTitulo1 . ':H' . ($filaTitulo1 + 2))->getFont()->setSize(14);
     // retorno ultima fila
     return $filasPiePagina + 9;
 }
