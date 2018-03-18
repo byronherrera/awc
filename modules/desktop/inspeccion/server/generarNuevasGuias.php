@@ -47,8 +47,182 @@ $siguienteFila = 1;
 while ($rowFuncionario = $resultFuncionarios->fetch(PDO::FETCH_ASSOC)) {
     if (($rowFuncionario['funcionario'] != '') and (!is_null($rowFuncionario['funcionario'])))
         $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario']);
-    envioEmail($rowFuncionario['funcionario']);
+        envioEmail($rowFuncionario['funcionario']);
 }
+
+$pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
+
+
+// margin is set in inches (0.5cm)
+$margin = 0.5 / 2.54;
+
+$pageMargins->setTop($margin);
+$pageMargins->setBottom($margin);
+$pageMargins->setLeft($margin);
+$pageMargins->setRight($margin);
+
+
+$objPHPExcel->getActiveSheet()->setShowGridLines(false);
+
+//echo date('H:i:s') , " Set orientation to landscape" , PHP_EOL;
+$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
+
+////////////////////////////////////////////////
+// se crea la cabecera de archivo y se lo graba al archivo
+header('Content-Type: application/xlsx');
+header('Content-Disposition: attachment;filename="acta-entrega-recepcion-inspeccion-' . $today . '.xlsx"');
+header('Cache-Control: max-age=0');
+
+$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+$objWriter->save('php://output');
+exit;
+function quitar_tildes($cadena)
+{
+    $no_permitidas = array("á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "ñ", "À", "Ã", "Ì", "Ò", "Ù", "Ã™", "Ã ", "Ã¨", "Ã¬", "Ã²", "Ã¹", "ç", "Ç", "Ã¢", "ê", "Ã®", "Ã´", "Ã»", "Ã‚", "ÃŠ", "ÃŽ", "Ã”", "Ã›", "ü", "Ã¶", "Ã–", "Ã¯", "Ã¤", "«", "Ò", "Ã", "Ã„", "Ã‹");
+    $permitidas = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "n", "N", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "c", "C", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "u", "o", "O", "i", "a", "e", "U", "I", "A", "E");
+    $texto = str_replace($no_permitidas, $permitidas, $cadena);
+    return $texto;
+}
+
+function quitar_espacio($cadena)
+{
+    $no_permitidas = array(" ");
+    $permitidas = array("-");
+    $texto = str_replace($no_permitidas, $permitidas, $cadena);
+    return $texto;
+}
+
+function nombreZonal($tipo)
+{
+    global $os;
+    $sql = "SELECT  nombre_largo as nombre FROM amc_zonas WHERE id = '" . $tipo . "'";
+    $nombres = $os->db->conn->query($sql);
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $nombresUsuarios[] = $nombreDetalle['nombre'];
+    }
+    $cadena_personal = implode(", ", $nombresUsuarios);
+    return $cadena_personal;
+
+}
+
+function regresaNombre($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id_dato != '') {
+        $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
+            FROM qo_members WHERE id = " . $id_dato;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre'];
+    } else
+        return '* No asignado';
+
+}
+
+function regresaEmail($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id_dato != '') {
+        $sql = "SELECT email_address
+            FROM qo_members WHERE id = " . $id_dato;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['email_address'];
+    } else
+        return '* No asignado';
+
+}
+
+function totalesPorTipo($filaTitulo1, $where)
+{
+    global $objPHPExcel;
+    global $os;
+    global $styleArray;
+    $sql = "SELECT * FROM amc_ordenanzas";
+    $nombres = $os->db->conn->query($sql);
+
+    $j = 0;
+
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        //$totalOrdenanza = recuperarTotales($nombreDetalle['id'], $where);
+        $totalOrdenanza = 0;
+        if ($totalOrdenanza != 0) {
+            $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filaTitulo1 + $j), $nombreDetalle['nombre_completo']);
+            $objPHPExcel->getActiveSheet()->setCellValue('H' . ($filaTitulo1 + $j), $totalOrdenanza);
+            $objPHPExcel->getActiveSheet()->getStyle('G' . ($filaTitulo1 + $j) . ':H' . ($filaTitulo1 + $j))->applyFromArray($styleArray);
+            $j++;
+        };
+    }
+    return $j;
+}
+
+function recuperarTotales($id, $where)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($where == '') {
+        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b WHERE id_tipo_control like '%$id%'";
+    } else {
+        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b $where AND id_tipo_control like '%$id%'";
+    }
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+
+    return $rownombre['total'];
+}
+
+function total_guias()
+{
+    global $os;
+    $nombre = $os->db->conn->query("SELECT COUNT(*) AS total FROM amc_guias_inspeccion");
+    $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rowguia['total'];
+}
+
+function fecha_actual()
+{
+    $date = new DateTime();
+    $inicio = $date->format('H:i');
+
+    $dias = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
+    $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+    return "Quito, " . $dias[$date->format('w')] . ", " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
+
+}
+
+function actualizar_estado_tramite($id, $codigo_tramite, $numeroGuia)
+{
+    global $os;
+    // actualizo denuncia con el numero de acta de despacho y se cambia la bandera a tramite realizadoo
+
+    $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_inspeccion`='$numeroGuia' WHERE (`id`='$id')";
+    $os->db->conn->query($sql);
+
+    $sql = "UPDATE `amc_inspeccion` SET `guia`='$numeroGuia', `fecha_despacho`=NOW() WHERE (`id_denuncia`='$id')";
+    $os->db->conn->query($sql);
+
+};
+
+function actualizar_guia_inspeccion($numeroGuia)
+{
+    global $os;
+    $idMember = $os->get_member_id();
+    $sql = "INSERT INTO `amc_guias_inspeccion`
+            (`numero`, `id_unidad`, `unidad`, `id_member`) 
+            VALUES ('$numeroGuia', '3', 'Inspeccion', '$idMember')";
+    $os->db->conn->query($sql);
+};
 
 function envioEmail($funcionario)
 {
@@ -66,24 +240,38 @@ function envioEmail($funcionario)
     $result = $os->db->conn->query($sql);
     $number_of_rows = $result->rowCount();
     $fila = 0;
-    $detalle= "";
-    $detalle .=  'No ' . ' Trámite DMI' . ' Tipo documento' . ' Remitente' . ' Sumillado' . ' Para' . ' Guia';
+    $detalle = '<table border="1">
+    <tr>
+        <td>No</td>
+        <td valign="top">Trámite DMI</td>
+        <td valign="top">Tipo documento</td>
+        <td valign="top">Remitente</td>
+        <td valign="top">Sumillado</td>
+        <td valign="top">Para</td>
+        <td valign="top">Guia</td>
+    </tr>';
     while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
-        $fila ++;
-        $detalle .= $fila .  $rowdetalle['codigo_tramite'] .  $rowdetalle['num_documento'] .  $rowdetalle['remitente'] .  $rowdetalle['fechasumilla'] .
-        regresaNombre($rowdetalle['funcionario']) .   $rowdetalle['guia'];
+        $fila++;
+        $detalle .= "<tr>" .
+            '<td valign="top">'.$fila.'</td>' .
+            '<td valign="top">' . $rowdetalle['codigo_tramite'] . "</td>" .
+            '<td valign="top">' . $rowdetalle['num_documento'] . "</td>" .
+            '<td valign="top">' . $rowdetalle['remitente'] . "</td>" .
+            '<td valign="top">' . $rowdetalle['fechasumilla'] . "</td>" .
+            '<td valign="top">' . regresaNombre($funcionario) . "</td>" .
+            '<td valign="top">'. $rowdetalle['guia'] . "</td>" .
+            "</tr>";
     }
-
+    $detalle .= "</table>";
 
     $fechaActual = date('d-m-Y H:i:s');
-    $mensaje = getmensaje('Byron Herrera', $detalle, $fechaActual);
-    $email = "byronherrera@hotmail.com";
-    $nombre = "testNombre";
-    $apellido = "testApellido";
-    $envio = enviarEmail($email, $nombre . ' ' . $apellido, $mensaje);
-
-    echo($envio);
-
+    $fechaActual2 = date('d-m-Y');
+    $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
+    $email =regresaEmail($funcionario);
+    $email = "byron.herrera@quito.gob.ec";
+    $asunto = "Nueva inspección asignada, " . $fechaActual2 . " - " . regresaEmail($funcionario);
+    $envio = enviarEmail($email, $asunto, $mensaje);
+//    echo($envio);
 }
 
 function getmensaje($nombre = '', $inspecciones = '', $fecha = '')
@@ -98,10 +286,10 @@ function getmensaje($nombre = '', $inspecciones = '', $fecha = '')
                  ' . $inspecciones . '
                  <br>
                  <br>
-                 Favor ingresar en MatisAMC, para verificar las inspecciones.
+                 Favor ingresar en MatisAMC, para verificar las inspecciones <a href="http://172.20.136.60/procesos-amc">aquí</a> .
                 <br>	
                 <br>	
-                Se les recuerda acercarse a la Secretaría de inspeccion para retirar sus trámites, además que el tiempo para realizar los mismos se contabilizarán a partir del envío de este correo
+                Se les recuerda acercarse a la Secretaría de InspecciÓn para retirar sus trámites, además que el tiempo para realizar los mismos se contabilizarán a partir del envío de este correo
                 <br>
                 </p>
                 <p>Fecha : ' . $fecha . '</p>
@@ -111,16 +299,15 @@ function getmensaje($nombre = '', $inspecciones = '', $fecha = '')
                 </div>
                 ';
     return $texto;
-
-
 }
 
 function enviarEmail($email, $nombre, $mensaje)
 {
 
-    $headers = "From: " . strip_tags("byron.herrera@quito.gob.ec") . "\r\n";
+    $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
     //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
     //$headers .= "CC: susan@example.com\r\n";
+
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
@@ -383,164 +570,3 @@ function imprimeActa($filaTitulo1, $funcionario)
     // retorno ultima fila
     return $filasPiePagina + 9;
 }
-
-$pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
-
-
-// margin is set in inches (0.5cm)
-$margin = 0.5 / 2.54;
-
-$pageMargins->setTop($margin);
-$pageMargins->setBottom($margin);
-$pageMargins->setLeft($margin);
-$pageMargins->setRight($margin);
-
-
-$objPHPExcel->getActiveSheet()->setShowGridLines(false);
-
-//echo date('H:i:s') , " Set orientation to landscape" , PHP_EOL;
-$objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
-
-////////////////////////////////////////////////
-// se crea la cabecera de archivo y se lo graba al archivo
-header('Content-Type: application/xlsx');
-header('Content-Disposition: attachment;filename="acta-entrega-recepcion-inspeccion-' . $today . '.xlsx"');
-header('Cache-Control: max-age=0');
-
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-$objWriter->save('php://output');
-exit;
-function quitar_tildes($cadena)
-{
-    $no_permitidas = array("á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "ñ", "À", "Ã", "Ì", "Ò", "Ù", "Ã™", "Ã ", "Ã¨", "Ã¬", "Ã²", "Ã¹", "ç", "Ç", "Ã¢", "ê", "Ã®", "Ã´", "Ã»", "Ã‚", "ÃŠ", "ÃŽ", "Ã”", "Ã›", "ü", "Ã¶", "Ã–", "Ã¯", "Ã¤", "«", "Ò", "Ã", "Ã„", "Ã‹");
-    $permitidas = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "n", "N", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "c", "C", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "u", "o", "O", "i", "a", "e", "U", "I", "A", "E");
-    $texto = str_replace($no_permitidas, $permitidas, $cadena);
-    return $texto;
-}
-
-function quitar_espacio($cadena)
-{
-    $no_permitidas = array(" ");
-    $permitidas = array("-");
-    $texto = str_replace($no_permitidas, $permitidas, $cadena);
-    return $texto;
-}
-
-
-function nombreZonal($tipo)
-{
-    global $os;
-    $sql = "SELECT  nombre_largo as nombre FROM amc_zonas WHERE id = '" . $tipo . "'";
-    $nombres = $os->db->conn->query($sql);
-    $nombresUsuarios = array();
-    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
-        $nombresUsuarios[] = $nombreDetalle['nombre'];
-    }
-    $cadena_personal = implode(", ", $nombresUsuarios);
-    return $cadena_personal;
-
-}
-
-function regresaNombre($id_dato)
-{
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-
-
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    if ($id_dato != '') {
-        $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
-            FROM qo_members WHERE id = " . $id_dato;
-        $nombre = $os->db->conn->query($sql);
-        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre'];
-    } else
-        return '* No asignado';
-
-}
-
-function totalesPorTipo($filaTitulo1, $where)
-{
-    global $objPHPExcel;
-    global $os;
-    global $styleArray;
-    $sql = "SELECT * FROM amc_ordenanzas";
-    $nombres = $os->db->conn->query($sql);
-
-    $j = 0;
-
-    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
-        //$totalOrdenanza = recuperarTotales($nombreDetalle['id'], $where);
-        $totalOrdenanza = 0;
-        if ($totalOrdenanza != 0) {
-            $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filaTitulo1 + $j), $nombreDetalle['nombre_completo']);
-            $objPHPExcel->getActiveSheet()->setCellValue('H' . ($filaTitulo1 + $j), $totalOrdenanza);
-            $objPHPExcel->getActiveSheet()->getStyle('G' . ($filaTitulo1 + $j) . ':H' . ($filaTitulo1 + $j))->applyFromArray($styleArray);
-            $j++;
-        };
-    }
-    return $j;
-}
-
-function recuperarTotales($id, $where)
-{
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    if ($where == '') {
-        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b WHERE id_tipo_control like '%$id%'";
-    } else {
-        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b $where AND id_tipo_control like '%$id%'";
-    }
-    $nombre = $os->db->conn->query($sql);
-    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-
-    return $rownombre['total'];
-}
-
-function total_guias()
-{
-    global $os;
-    $nombre = $os->db->conn->query("SELECT COUNT(*) AS total FROM amc_guias_inspeccion");
-    $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
-    return $rowguia['total'];
-}
-
-function fecha_actual()
-{
-    $date = new DateTime();
-    $inicio = $date->format('H:i');
-
-    $dias = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
-    $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-    return "Quito, " . $dias[$date->format('w')] . ", " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
-
-}
-
-function actualizar_estado_tramite($id, $codigo_tramite, $numeroGuia)
-{
-    global $os;
-    // actualizo denuncia con el numero de acta de despacho y se cambia la bandera a tramite realizadoo
-
-    $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_inspeccion`='$numeroGuia' WHERE (`id`='$id')";
-    $os->db->conn->query($sql);
-
-    $sql = "UPDATE `amc_inspeccion` SET `guia`='$numeroGuia', `fecha_despacho`=NOW() WHERE (`id_denuncia`='$id')";
-    $os->db->conn->query($sql);
-
-}
-
-;
-
-function actualizar_guia_inspeccion($numeroGuia)
-{
-    global $os;
-    $idMember = $os->get_member_id();
-    $sql = "INSERT INTO `amc_guias_inspeccion`
-            (`numero`, `id_unidad`, `unidad`, `id_member`) 
-            VALUES ('$numeroGuia', '3', 'Inspeccion', '$idMember')";
-    $os->db->conn->query($sql);
-}
-
-;
-
