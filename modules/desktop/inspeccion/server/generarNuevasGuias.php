@@ -274,6 +274,7 @@ function envioEmail($funcionario)
 //    echo($envio);
 }
 
+
 function getmensaje($nombre = '', $inspecciones = '', $fecha = '')
 {
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
