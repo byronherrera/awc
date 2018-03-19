@@ -45,9 +45,10 @@ $sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario
 $resultFuncionarios = $os->db->conn->query($sql);
 $siguienteFila = 1;
 while ($rowFuncionario = $resultFuncionarios->fetch(PDO::FETCH_ASSOC)) {
-    if (($rowFuncionario['funcionario'] != '') and (!is_null($rowFuncionario['funcionario'])))
+    if (($rowFuncionario['funcionario'] != '') and (!is_null($rowFuncionario['funcionario']))) {
+        envioEmail($rowFuncionario['funcionario']);
         $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario']);
-    envioEmail($rowFuncionario['funcionario']);
+    }
 }
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -227,9 +228,8 @@ function actualizar_guia_inspeccion($numeroGuia)
 function envioEmail($funcionario)
 {
     global $os;
-    $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
-//    $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
+    $where = " WHERE reasignacion = 3 AND  procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
     $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
             DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
@@ -238,7 +238,7 @@ function envioEmail($funcionario)
             $where  ORDER BY b.recepcion_documento";
 
     $result = $os->db->conn->query($sql);
-    $number_of_rows = $result->rowCount();
+//    $number_of_rows = $result->rowCount();
     $fila = 0;
     $detalle = '<table border="1">
     <tr>
@@ -263,15 +263,13 @@ function envioEmail($funcionario)
             "</tr>";
     }
     $detalle .= "</table>";
-
     $fechaActual = date('d-m-Y H:i:s');
     $fechaActual2 = date('d-m-Y');
     $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
     $email =regresaEmail($funcionario);
-    //$email = "byron.herrera@quito.gob.ec";
+    $email = "byron.herrera@quito.gob.ec";
     $asunto = "Nueva inspección asignada, " . $fechaActual2 . " - " . regresaEmail($funcionario);
     $envio = enviarEmail($email, $asunto, $mensaje);
-//    echo($envio);
 }
 
 
@@ -287,14 +285,22 @@ function getmensaje($nombre = '', $inspecciones = '', $fecha = '')
                  ' . $inspecciones . '
                  <br>
                  <br>
-                 Favor ingresar en MatisAMC, para verificar las inspecciones <a href="http://172.20.136.60/procesos-amc">aquí</a> .
+                 Favor ingresar en Matis AMC, para verificar las inspecciones <a href="http://172.20.136.60/procesos-amc">aquí</a> .
                 <br>	
                 <br>	
-                Se les recuerda acercarse a la Secretaría de InspecciÓn para retirar sus trámites, además que el tiempo para realizar los mismos se contabilizarán a partir del envío de este correo
+                Se les recuerda acercarse a la Secretaría de Inspección para retirar sus trámites, además que el tiempo para realizar los mismos se contabilizarán a partir del envío de este correo
                 <br>
                 </p>
                 <p>Fecha : ' . $fecha . '</p>
+                <p>Atentamente </p>
+                <p>COORDINACION INSPECCION</p>
+                <p></p>
+                <p>INFORMACIÓN IMPORTANTE</p>
+                <p>************************************************</p>
+                <p>- No responder este correo ya que es un Mensaje Automático.</p>
                 
+                <p>- Para sugerencias, escribe a tu coordinador.</p>
+
                 </div>
                 <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
                 </div>
@@ -345,6 +351,7 @@ function imprimeActa($filaTitulo1, $funcionario)
 
     $os->db->conn->query("SET NAMES 'utf8'");
     // se determina un filtro  para determinar las denuncias / tramites pendientes
+
     $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
 //    $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
