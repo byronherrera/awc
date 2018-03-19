@@ -296,6 +296,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_control_programado', readOnly:false, allow:true},
                 {name: 'id_motivo_acta', readOnly:false, allow:true},
                 {name: 'id_acta', readOnly:false, allow:true},
+                {name: 'num_fojas', readOnly:false, allowBlank:true},
                 {name: 'acta_verificacion', readOnly:false, allowBlank:true}
             ]
         });
@@ -1345,6 +1346,26 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //storeACTUALIZARFECHA.load();
         })
 
+        storePERDIS.sort('orden', 'ASC');
+        var comboINSP = new Ext.form.ComboBox({
+            id: 'comboINSP',
+            store: storePERDIS,
+            valueField: 'id',
+            displayField: 'nombre',
+            mode: 'local',
+            forceSelection: true,
+            triggerAction: 'all',
+            allowBlank: false,
+            typeAhead: true,
+            selectOnFocus: true,
+            disabled: false
+        });
+        comboINSP.on('select', function(){
+            //AppMsg.setAlert("Alerta ", inspeccionSeleccionada);
+            //AppMsg.setAlert("Alerta ", tramiteSeleccionado);
+            //storeACTUALIZARFECHA.load({params: {id_inspeccion: inspeccionSeleccionada}});
+            //storeACTUALIZARFECHA.load();
+        })
 
         var searchFieldBtn = new Ext.Button({
             menu: new Ext.menu.Menu({
@@ -2160,6 +2181,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 150, editor: textFieldDetalle},
                         {header: 'Acta verificación', dataIndex: 'acta_verificacion', sortable: true, width: 200, editor: comboACTAVERIFICACION,
                             renderer: actaVerificacion},
+                        {header: 'Fojas', dataIndex: 'num_fojas', sortable: true, width: 200, editor: textFieldDetalle},
                         {header: 'Motivo del acta', hidden:true, dataIndex: 'id_motivo_acta', sortable: true, width: 200, editor: comboMOTIVOACTA,
                             renderer: motivoActa}
                     ],
@@ -2217,6 +2239,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 150, editor: textFieldDetalle},
                 {header: 'Acta verificación', dataIndex: 'acta_verificacion', sortable: true, width: 200, editor: comboACTAVERIFICACION,
                     renderer: actaVerificacion},
+                {header: 'Fojas', dataIndex: 'num_fojas', sortable: true, width: 200, editor: textFieldDetalle},
                 {header: 'Motivo del acta', hidden:true, dataIndex: 'id_motivo_acta', sortable: true, width: 200, editor: comboMOTIVOACTA,
                     renderer: motivoActa}
             ],
@@ -2256,7 +2279,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Fecha registro', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150,
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'}), renderer: formatDate},
                 {header: 'Código trámite', dataIndex: 'codigo_tramite', sortable: true, width: 100, editor: textFieldControlProgramado},
-                {header: 'Inspector', dataIndex: 'tecnico', sortable: true, width: 150, editor: comboPERDIS,
+                {header: 'Inspector', dataIndex: 'tecnico', sortable: true, width: 150, editor: comboINSP,
                     renderer: tipoUnidadesPersonal},
                 //{header: 'Técnico', dataIndex: 'tecnico', sortable: true, width: 200, editor: textFieldControlProgramado},
                 {header: 'Fecha asignación inspector', dataIndex: 'fecha_asignacion_inspector', sortable: true, width: 150,
@@ -3491,6 +3514,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuias.php';
                     setTimeout(function () {
+                        AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());
                         storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkPendientesAprobar').getValue()}});
                     }, 1000);
                 }

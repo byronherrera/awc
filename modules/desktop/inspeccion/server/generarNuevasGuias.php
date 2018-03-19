@@ -267,7 +267,7 @@ function envioEmail($funcionario)
     $fechaActual2 = date('d-m-Y');
     $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
     $email =regresaEmail($funcionario);
-    $email = "byron.herrera@quito.gob.ec";
+ //   $email = "byron.herrera@quito.gob.ec";
     $asunto = "Nueva inspección asignada, " . $fechaActual2 . " - " . regresaEmail($funcionario);
     $envio = enviarEmail($email, $asunto, $mensaje);
 }
