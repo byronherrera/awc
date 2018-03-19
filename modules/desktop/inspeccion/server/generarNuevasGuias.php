@@ -35,7 +35,7 @@ $objPHPExcel->setActiveSheetIndex(0);
 
 
 $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
-$where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega IS NOT NULL ";
+//$where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega IS NOT NULL ";
 $sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario  
         FROM amc_denuncias as b 
         INNER JOIN amc_inspeccion ON b . id = amc_inspeccion . id_denuncia
@@ -47,7 +47,7 @@ $siguienteFila = 1;
 while ($rowFuncionario = $resultFuncionarios->fetch(PDO::FETCH_ASSOC)) {
     if (($rowFuncionario['funcionario'] != '') and (!is_null($rowFuncionario['funcionario'])))
         $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario']);
-        envioEmail($rowFuncionario['funcionario']);
+    envioEmail($rowFuncionario['funcionario']);
 }
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -228,7 +228,7 @@ function envioEmail($funcionario)
 {
     global $os;
     $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
-    $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega = $funcionario ";
+//    $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
 
     $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
@@ -268,7 +268,7 @@ function envioEmail($funcionario)
     $fechaActual2 = date('d-m-Y');
     $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
     $email =regresaEmail($funcionario);
-    $email = "byron.herrera@quito.gob.ec";
+    //$email = "byron.herrera@quito.gob.ec";
     $asunto = "Nueva inspección asignada, " . $fechaActual2 . " - " . regresaEmail($funcionario);
     $envio = enviarEmail($email, $asunto, $mensaje);
 //    echo($envio);
@@ -346,7 +346,7 @@ function imprimeActa($filaTitulo1, $funcionario)
     $os->db->conn->query("SET NAMES 'utf8'");
     // se determina un filtro  para determinar las denuncias / tramites pendientes
     $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
-    $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega = $funcionario ";
+//    $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
 
     $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
