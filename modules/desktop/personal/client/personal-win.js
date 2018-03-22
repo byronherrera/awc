@@ -818,10 +818,30 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 280,
                     editor: textField
+                },{
+                    header: 'Fecha salida',
+                    dataIndex: 'fecha_salida',
+                    sortable: true,
+                    width: 120,
+                    renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({
+                        dateFormat: 'Y-m-d',
+                        timeFormat: 'H:i:s'
+                    })
+                },{
+                    header: 'Fecha entrada',
+                    dataIndex: 'fecha_entrada',
+                    sortable: true,
+                    width: 120,
+                    renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({
+                        dateFormat: 'Y-m-d',
+                        timeFormat: 'H:i:s'
+                    })
                 },
 
-                {header: 'Fecha salida', dataIndex: 'fecha_salida', sortable: true, width: 140, editor: textField  },
-                {header: 'Fecha entrada', dataIndex: 'fecha_entrada', sortable: true, width: 140, editor: textField},
+
+
                 {header: 'Teléfono 1', dataIndex: 'telefono1', sortable: true, width: 140, editor: textField},
                 {header: 'Teléfono 2', dataIndex: 'telefono2', sortable: true, width: 140, editor: textField},
                 {header: 'Direccion principal', dataIndex: 'direccionprincipal', sortable: true, width: 140, editor: textField},
@@ -1324,18 +1344,19 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'cedula',
+                            key: 'apellidos',
                             scope: this,
-                            text: 'Cédula'
+                            text: 'Apellidos'
                         },
                         {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'apellidos',
+                            key: 'cedula',
                             scope: this,
-                            text: 'Apellidos'
+                            text: 'Cédula'
                         },
+
                         {
                             checked: true,
                             checkHandler: checkHandler,
@@ -1354,7 +1375,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                         }
                     ]
                 })
-                , text: 'Cédula'
+                , text: 'Apellidos'
             });
 
             win = desktop.createWindow({
@@ -1580,7 +1601,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             tipo_personal: '1',
             id_persona_encargada: ' ',
             fecha_entrada: (new Date()),
-            fecha_salida: '',
+
             id_estado: 1
         });
         this.gridPersonal.stopEditing();

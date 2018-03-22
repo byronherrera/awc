@@ -385,6 +385,13 @@ function updateOperativos()
             }
     }
 
+    if (isset($data->id_estado)) {
+
+        if ($data->id_estado === "2") {
+            $datetime = new DateTime();
+            $data->fecha_informe = $datetime->format('Y-m-d h:i:s');
+        }
+    };
 
     // genero el listado de valores a insertar
     $cadenaDatos = '';
@@ -396,7 +403,10 @@ function updateOperativos()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $test = verificarAnteriorOperativo($data->id);
+    verificarAnteriorOperativo($data->id);
+
+
+
     $sql = "UPDATE amc_operativos SET  $cadenaDatos  WHERE amc_operativos . id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -433,7 +443,6 @@ function updateOperativosForm()
     $parroquias = $_POST["parroquias"];
     $barrios = $_POST["barrios"];
     $detalle = $_POST["detalle"];
-
 
     $sql = "UPDATE `amc_operativos` SET `detalle`='$detalle', `parroquias`='$parroquias', `barrios`='$barrios' WHERE (`id`='$id')";
     $sql = $os->db->conn->prepare($sql);

@@ -1,10 +1,10 @@
 {
-  "id": "personalmapa",
-  "type": "desktop/personalmapa",
+  "id": "bodega",
+  "type": "desktop/bodega",
   "about": {
     "author": "",
-    "description": "Mantenimiento de Personalmapa.",
-    "name": "Ventana Personalmapa",
+    "description": "Mantenimiento de Bodega.",
+    "name": "Ventana Bodega",
     "url": "",
     "version": "1.0"
   },
@@ -15,14 +15,14 @@
       { "name": "accesosZonales", "description": "Personal de zonales" }
 
     ],
-    "class": "QoPersonalmapa",
-    "file": "desktop/personalmapa/personalmapa.php"
+    "class": "QoBodega",
+    "file": "desktop/bodega/bodega.php"
   },
   "client": {
-    "class": "QoDesk.PersonalmapaWindow",
+    "class": "QoDesk.BodegaWindow",
     "css": [
       {
-        "directory": "desktop/personalmapa/client/resources/",
+        "directory": "desktop/bodega/client/resources/",
         "files": [ "styles.css" ]
       },
       {
@@ -36,8 +36,8 @@
         "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
       },
       {
-        "directory": "desktop/personalmapa/client/",
-        "files": [  "personalmapa-win.js" ]
+        "directory": "desktop/bodega/client/",
+        "files": [  "bodega-win.js" ]
       },
       {
         "directory": "qwiki/admin/client/",
@@ -50,10 +50,10 @@
     ],
     "launcher": {
       "config": {
-        "iconCls": "personalmapa-icon",
-        "shortcutIconCls": "personalmapa-shortcut",
-        "text": "Personalmapa",
-        "tooltip": "<b>Personalmapa</b>"
+        "iconCls": "bodega-icon",
+        "shortcutIconCls": "bodega-shortcut",
+        "text": "Bodega",
+        "tooltip": "<b>Bodega</b>"
       },
       "paths": {
         "startmenu": "/"

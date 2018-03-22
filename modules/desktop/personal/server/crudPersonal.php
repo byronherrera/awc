@@ -37,7 +37,7 @@ function selectOperativos()
 {
     global $os;
     //TODO cambiar columna por defecto en busquedas
-    $columnaBusqueda = 'cedula';
+    $columnaBusqueda = 'apellidos';
 
     $where = '';
     $usuarioLog = $os->get_member_id();
@@ -356,11 +356,12 @@ function updateOperativos()
 // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        if (isset($valor))
-            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
-        else
+        if (($valor === null) or ($valor === ''))
             $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
+        else
+            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
     }
+
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_personal_distributivo SET  $cadenaDatos  WHERE amc_personal_distributivo.id = '$data->id' ";

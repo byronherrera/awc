@@ -335,8 +335,12 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             var index = storePRD.findExact('id', id);
             if (index > -1) {
                 var record = storePRD.getAt(index);
-                return record.get('nombre');
+                return  '<span style="font-size: 10px!important">' + record.get('nombre') + '</span>';
             }
+        }
+
+        function smalltext (id) {
+                    return '<span style="font-size: 10px!important">' + id + '</span>';
         }
 
         //fin combo persona recepta la denuncia PRD
@@ -646,9 +650,11 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             fields: [
                 {name: 'codigo_tramite', allowBlank: false},
                 {name: 'id_persona', allowBlank: false},
-                {name: 'recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: false},
                 {name: 'id_tipo_documento', allowBlank: false},
                 {name: 'id_ordenanza', allowBlank: true},
+                {name: 'cedula', allowBlank: true},
+                {name: 'email', allowBlank: true},
                 {name: 'num_documento', allowBlank: false},
                 {name: 'remitente', allowBlank: false},
                 {name: 'asunto', allowBlank: false},
@@ -691,19 +697,19 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Código',
                     dataIndex: 'codigo_tramite',
                     sortable: true,
-                    width: 24
+                    width: 20
                 },
                 {
                     header: 'Persona recepta',
                     dataIndex: 'id_persona',
                     sortable: true,
-                    width: 30,
+                    width: 28,
                     renderer: personaReceptaDenuncia
                 }, {
                     header: 'Recepción documento',
                     dataIndex: 'recepcion_documento',
                     sortable: true,
-                    width: 42,
+                    width: 40,
                     renderer: formatDate,
                     editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
@@ -721,7 +727,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Ordenanza',
                     dataIndex: 'id_ordenanza',
                     sortable: true,
-                    width: 28,
+                    width: 24,
                     editor: comboDETIORD, renderer: denunciasListaOrdenanza
 
                 },
@@ -729,15 +735,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'N. documento',
                     dataIndex: 'num_documento',
                     sortable: true,
-                    width: 38,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    width: 36,
+                    editor: new Ext.form.TextField({allowBlank: false}), renderer: smalltext
                 },
                 {
                     header: 'Remitente/denunciante',
                     dataIndex: 'remitente',
                     sortable: true,
-                    width: 55,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    width: 50,
+                    editor: new Ext.form.TextField({allowBlank: false}), renderer: smalltext
                 },
                 {
                     header: 'Institución',
@@ -753,15 +759,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Asunto',
                     dataIndex: 'asunto',
                     sortable: true,
-                    width: 55,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    width: 50,
+                    editor: new Ext.form.TextField({allowBlank: false}), renderer: smalltext
                 },
                 {
                     header: 'Descripción anexos',
                     dataIndex: 'descripcion_anexos',
                     sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    width: 38,
+                    editor: new Ext.form.TextField({allowBlank: false}), renderer: smalltext
                 }
                 , {
                     header: 'Caracter trámite',
@@ -877,7 +883,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Código',
                     dataIndex: 'codigo_tramite',
                     sortable: true,
-                    width: 20
+                    width: 15
                 },
                 {
                     header: 'Persona recepta',
@@ -1002,7 +1008,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Código',
                     dataIndex: 'codigo_tramite',
                     sortable: true,
-                    width: 20
+                    width: 15
                 },
                 {
                     header: 'Persona recepta',

@@ -728,6 +728,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'fecha_inicio_planificacion', type: 'date', dateFormat: 'c', allowBlank: false},
                 {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: false},
                 {name: 'fecha_informe', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_impresion_informe', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'id_tipo_control', allowBlank: false},
@@ -974,6 +975,17 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Fecha informe',
                     dataIndex: 'fecha_informe',
+                    sortable: true,
+                    width: 100, hidden: true,
+                    renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({
+                        dateFormat: 'Y-m-d',
+                        timeFormat: 'H:i'
+                    })
+                },
+                {
+                    header: 'fecha_impresion_informe',
+                    dataIndex: 'fecha_impresion_informe',
                     sortable: true,
                     width: 100, hidden: true,
                     renderer: formatDate,

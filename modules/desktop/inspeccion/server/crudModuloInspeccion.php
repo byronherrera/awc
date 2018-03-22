@@ -14,6 +14,11 @@ function selectInspeccion()
     //Se inicializa el parámetro de búsqueda de código trámite
     $columnaBusqueda = 'codigo_tramite';
     //$where = '';
+    if (isset($_POST['filterField'])) {
+        $columnaBusqueda = $_POST['filterField'];
+
+    }
+
     //forzamos que solo sea los asignados a inspeccion
     $where = "WHERE reasignacion = 3 and despacho_secretaria='true' ";
 
@@ -27,14 +32,29 @@ function selectInspeccion()
         }
     }
 
+
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
-            $columnaBusqueda = $_POST['filterField'];
-        }
-        $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+
+        //para el caso de busqueda por guia, recuperamos el id de la guia
+        if ($columnaBusqueda == 'guia') {
+            $sql = "SELECT id FROM amc_guias WHERE numero LIKE '%$campo%'";
+            $numguia = $os->db->conn->query($sql);
+            if ($numguia) {
+                $resultados  = array();
+                while ($row = $numguia->fetch(PDO::FETCH_ASSOC)) {
+                    $resultados[] = $row['id'];
+                };
+                $campo = implode(', ', $resultados);
+            }
+            $where = " WHERE $columnaBusqueda IN ($campo)";
+        } else
+            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
     }
+
+
+
 
 
     if (isset ($_POST['start']))
