@@ -39,3 +39,5 @@ INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_me
 INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('144','1','','170');
 INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('308','1','','1');
 INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('308','1','','274');
+INSERT INTO amc_operativos_personal (id_operativo,asistencia,observaciones,id_member) values('569','1','','4');
+

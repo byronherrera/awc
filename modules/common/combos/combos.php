@@ -370,6 +370,24 @@ function comboInstituciones()
             "data" => $data)
     );
 }
+function comboRemitente()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+    // limito la busqueda a los ultimos 200 dias
+    $sql = "SELECT DISTINCT  remitente AS nombre FROM amc_denuncias WHERE length(remitente) > 0 AND recepcion_documento  > DATE_ADD(NOW(), INTERVAL -200 DAY)  ORDER BY remitente";
+//    $sql = "SELECT DISTINCT  remitente AS nombre FROM amc_denuncias WHERE length(remitente) > 0   ORDER BY remitente";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 
 function comboCargo()
 {
@@ -490,6 +508,10 @@ switch ($_GET['tipo']) {
 
     case 'instituciones' :
         comboInstituciones();
+        break;
+
+    case 'remitente' :
+        comboRemitente();
         break;
 
     case 'tipo_actividad' :

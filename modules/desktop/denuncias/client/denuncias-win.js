@@ -371,6 +371,30 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo instituciones INST
+        //inicio combo instituciones REMITENTE
+        storeREMI = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=remitente'
+
+        });
+
+        var comboREMI = new Ext.form.ComboBox({
+            id: 'comboREMI',
+            store: storeREMI,
+            valueField: 'nombre',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            allowBlank: false
+        });
+
+        function listadoRemitentes(id) {
+            return id;
+        }
+
+        //fin combo instituciones REMI
 
 // fin combos secretaria
 
@@ -637,6 +661,22 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
                         }
                     }
+                },
+                exception: function (proxy, response, operation ) {
+                    if (operation == 'create') {
+
+                        console.log (proxy)
+                    }
+                },
+                loadexception: function (proxy, response, operation ) {
+                    console.log (proxy)
+                    console.log (response)
+                    console.log (operation)
+
+                    if (operation == 'create') {
+
+                        console.log (proxy)
+                    }
                 }
             }
         });
@@ -663,7 +703,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'reasignacion', allowBlank: false},
                 {name: 'id_caracter_tramite', allowBlank: false},
                 {name: 'cantidad_fojas', allowBlank: false},
-                {name: 'id_planificacion', allowBlank: true},
+
                 {name: 'despacho_secretaria', type: 'boolean', allowBlank: false}
             ]
         });
@@ -692,12 +732,11 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             store: this.storeDenuncias,
             columns: [
                 new Ext.grid.RowNumberer(),
-
                 {
                     header: 'Código',
                     dataIndex: 'codigo_tramite',
                     sortable: true,
-                    width: 20
+                    width: 18
                 },
                 {
                     header: 'Persona recepta',
@@ -743,7 +782,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'remitente',
                     sortable: true,
                     width: 50,
-                    editor: new Ext.form.TextField({allowBlank: false}), renderer: smalltext
+                    editor: comboREMI, renderer: listadoRemitentes
                 },
                 {
                     header: 'Institución',
@@ -751,8 +790,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 30,
                     editor: comboINST, renderer: listadoInstituciones,
-
-
                     cls: 'expand-panel'
                 },
                 {
@@ -770,16 +807,16 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.form.TextField({allowBlank: false}), renderer: smalltext
                 }
                 , {
-                    header: 'Caracter trámite',
+                    header: 'Caracter',
                     dataIndex: 'id_caracter_tramite',
                     sortable: true,
-                    width: 30,
+                    width: 22,
                     editor: comboCDT, renderer: caracterTramite
                 }, {
                     header: 'Fojas',
                     dataIndex: 'cantidad_fojas',
-
-                    width: 20,
+                    align: 'center',
+                    width: 16,
                     editor: new Ext.ux.form.SpinnerField({
                         fieldLabel: 'Age',
                         name: 'age',
@@ -791,7 +828,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Reasignación',
                     dataIndex: 'reasignacion',
                     sortable: true,
-                    width: 50,
+                    width: 45,
                     editor: comboREA, renderer: departamentoReasignacion
                 }
                 , {
@@ -802,11 +839,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     , menuDisabled: true
                     , trueText: 'Si'
                     , sortable: true
-                    , width: 20
+                    , width: 18
                     , xtype: 'booleancolumn'
-                },
-                {hidden: true, header: 'Planificación', dataIndex: 'id_planificacion', sortable: true, width: 30, editor: comboCONTROLPROGRAMADO,
-                    renderer: controlProgramado}
+                }
             ],
             viewConfig: {
                 forceFit: true,
@@ -859,7 +894,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     } else {
                         return false;
                     }
+                },
+                afteredit: function (sm) {
+                    //rowselect: function (sm, row, rec) {
+                        /*cargar el formulario*/
+                         cargaDetalle(sm.record.i, this.formDenunciaswebDetalle, false);
+
+
                 }
+
             }
         });
 
@@ -2260,6 +2303,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             institucion: '',
             remitente: '',
             reasignacion: '',
+            asunto:'',
             id_caracter_tramite: '1',
             cantidad_fojas: '0',
             despacho_secretaria: false

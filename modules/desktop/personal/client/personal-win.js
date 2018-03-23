@@ -764,6 +764,14 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 90, editor: textField},
                 {header: 'Apellidos', dataIndex: 'apellidos', sortable: true, width: 140, editor: textField},
                 {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 140, editor: textField},
+                {
+                    header: 'Extensión',
+                    dataIndex: 'extencion',
+                    sortable: true,
+                    width: 80,
+                    editor: textField,
+                    align: 'right'
+                },
                 {header: 'Partida', dataIndex: 'partida', sortable: true, width: 60, editor: textField, align: 'right'},
                 {header: 'Rol', dataIndex: 'rol', sortable: true, width: 240, editor: textField},
                 {header: 'Grado Ocupacional', dataIndex: 'denominacion', sortable: true, width: 200, editor: textField},
@@ -802,14 +810,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                     align: 'right'
                 },
 
-                {
-                    header: 'Extensión',
-                    dataIndex: 'extencion',
-                    sortable: true,
-                    width: 80,
-                    editor: textField,
-                    align: 'right'
-                },
+
                 {header: 'Email', dataIndex: 'email', sortable: true, width: 140, editor: textField},
                 {header: 'Piso', dataIndex: 'piso', sortable: true, width: 140, editor: textField},
                 {

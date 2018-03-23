@@ -208,12 +208,23 @@ function insertDenuncias()
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
 
+   /* $message = '';
+    if (isset($data->id_tipo_documento)) {
+        if ($data->id_tipo_documento == '1')
+            if (validarCedulaCorreo($data->id)) {
+                $message = 'Ingresar número de cédula y correo electrónico';
+            }
+    }*/
+
 
     echo json_encode(array(
-        "success" => true,
+        "success" => false,
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
-        "data" => array($data)
+        "data" => array($data),
+        "message" => "se inserto "
     ));
+
+
 }
 
 function generaCodigoProcesoDenuncia()

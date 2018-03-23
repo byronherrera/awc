@@ -977,22 +977,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'fecha_informe',
                     sortable: true,
                     width: 100, hidden: true,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
+                    renderer: formatDate
                 },
                 {
                     header: 'fecha_impresion_informe',
                     dataIndex: 'fecha_impresion_informe',
                     sortable: true,
                     width: 100, hidden: true,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
+                    renderer: formatDate
                 },
                 {
                     header: 'Fecha Real Inicio',
