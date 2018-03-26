@@ -16,6 +16,7 @@ error_reporting(E_ALL);
 /** Include PHPExcel */
 //echo dirname(__FILE__);
 require_once '../../../common/Classes/PHPExcel.php';
+require_once '../../../common/Classes/funciones.php';
 require_once '../../../../server/os.php';
 
 $os = new os();
@@ -107,43 +108,6 @@ function nombreZonal($tipo)
 
 }
 
-function regresaNombre($id_dato)
-{
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-
-
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    if ($id_dato != '') {
-        $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
-            FROM qo_members WHERE id = " . $id_dato;
-        $nombre = $os->db->conn->query($sql);
-        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre'];
-    } else
-        return '* No asignado';
-
-}
-
-function regresaEmail($id_dato)
-{
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-
-
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    if ($id_dato != '') {
-        $sql = "SELECT email_address
-            FROM qo_members WHERE id = " . $id_dato;
-        $nombre = $os->db->conn->query($sql);
-        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['email_address'];
-    } else
-        return '* No asignado';
-
-}
 
 function totalesPorTipo($filaTitulo1, $where)
 {
@@ -265,6 +229,7 @@ function envioEmail($funcionario)
     $detalle .= "</table>";
     $fechaActual = date('d-m-Y H:i:s');
     $fechaActual2 = date('d-m-Y');
+
     $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
     $email =regresaEmail($funcionario);
  //   $email = "byron.herrera@quito.gob.ec";

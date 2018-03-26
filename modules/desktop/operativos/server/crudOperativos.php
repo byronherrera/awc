@@ -1,5 +1,7 @@
 <?php
 require_once '../../../../server/os.php';
+require_once '../../../common/Classes/funciones.php';
+
 
 $os = new os();
 if (!$os->session_exists()) {
@@ -364,11 +366,55 @@ function updateOperativos()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
 
-    if (isset($data->finalizado)) {
-        if (!$data->finalizado)
-            $data->finalizado = 'false';
-        else
-            $data->finalizado = 'true';
+    if (isset($data->visible)) {
+        if ($data->visible) {
+
+            if (verificaEnvioEmail()) {
+                $fechaActual = date('d-m-Y H:i:s');
+                $fechaActual2 = date('d-m-Y');
+
+                // todo
+                //$funcionario = $data->id_persona_encargada;
+                $funcionario = 1;
+                $detalle = '<table border="1">
+                            <tr>
+                                <td>Código</td>
+                                <td valign="top">Fecha Inicio</td>
+                                <td valign="top">Fecha Fin</td>
+                                <td valign="top">Lugar Intervencion</td>
+                                <td valign="top">Punto Encuentro</td>
+                            </tr>';
+                $detalle .= "<tr>" .
+                    '<td valign="top">' . $data->id . '</td>' .
+                    '<td valign="top">' . $data->fecha_inicio_planificacion . "</td>" .
+                    '<td valign="top">' . $data->fecha_fin_planificacion . "</td>" .
+                    '<td valign="top">' . $data->punto_encuentro_planificado . "</td>" .
+                    '<td valign="top">' . $data->zona . "</td>" .
+                    "</tr></table><br>";
+
+                // pedimos listado de funcionarios que van al mismo operativo
+                $listado = getListdoFuncionariosOperativo($data->id);
+
+                if (count($listado) > 0)
+                    $detalle .= "<p>Personal asignado</p>";
+                $detalle .= "<table>";
+                $funcionarios = array();
+                foreach ($listado as &$funcionario2) {
+                    $detalle .= "<tr><td>" . regresaNombre($funcionario2). "</td></tr>";
+                    $funcionarios[] = regresaEmail($funcionario2);
+                }
+                $detalle .= "</table>";
+
+                $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
+
+                $email = regresaEmail($funcionario);
+                //   $email = "byron.herrera@quito.gob.ec";
+                $asunto = "Nuevo operativo asignado, " . $fechaActual2 . " - " . regresaEmail($funcionario);
+                enviarEmail($email, $asunto, $mensaje, $funcionarios);
+
+
+            }
+        }
     }
 
 
@@ -393,6 +439,7 @@ function updateOperativos()
         }
     };
 
+
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
@@ -404,7 +451,6 @@ function updateOperativos()
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     verificarAnteriorOperativo($data->id);
-
 
 
     $sql = "UPDATE amc_operativos SET  $cadenaDatos  WHERE amc_operativos . id = '$data->id' ";
@@ -503,4 +549,76 @@ function validarCedulaCorreo($id)
     } else {
         return false;
     }
+}
+
+
+function getmensaje($nombre = '', $operativos = '', $fecha = '')
+{
+    $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
+                <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
+                <div style="clear: both; margin: 50px 10%; float: left;">
+                <p><br><br>
+                 Estimado, ' . $nombre . ' ha sido asignado al  siguiente operativo como responsable:<br>
+                 <br>
+                 <br>
+                 ' . $operativos . '
+                 <br>
+                 <br>
+                 Favor ingresar en Matis AMC, para verificar el operativo asignado <a href="http://172.20.136.60/procesos-amc">aquí</a> .
+                <br>	
+                <br>	
+                <p>De conformidad con el Memorando No. AMC-SM-JA-2018-003, del 4 de enero de 2018, mediente el cual la 
+                Máxima Autoridad dispone</p>
+                <p>"Todo el personal de la Agencia Metropolitana de Control, deberá utilizar de manera obligatoria el módulo de operativos que se encuentra dentro de la INTRANET de la Institución, a fin de generar los informes de los operativos realizados. En el sistema se deberá llenar los datos solicitados dentro de las 24 horas siguientes de haber realizado el operativo, con el objetivo de que se genere el informe respectivo."</p>
+                <br>
+                </p>
+                <p>Fecha : ' . $fecha . '</p>
+                <p>Atentamente </p>
+                
+                <p>DIRECCION INSPECCION</p>
+                <p></p>
+                <p>INFORMACIÓN IMPORTANTE</p>
+                <p>************************************************</p>
+                <p>- No responder este correo ya que es un Mensaje Automático.</p>
+                
+                <p>- Para sugerencias, escribe a tu coordinador.</p>
+
+                </div>
+                <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                </div>
+                ';
+    return $texto;
+}
+
+function enviarEmail($email, $nombre, $mensaje,$funcionarios)
+{
+    $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
+    //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
+
+    if (count($funcionarios) > 0 ){
+        $conCopia = implode(",", $funcionarios);
+        $headers .= "CC: $conCopia \r\n";
+    }
+
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+    mail($email, $nombre, $mensaje, $headers);
+}
+
+
+function verificaEnvioEmail()
+{
+    return true;
+}
+
+function getListdoFuncionariosOperativo($id)
+{
+    global $os;
+    $nombre = $os->db->conn->query("SELECT id FROM amc_operativo
+    $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rowguia['total'];
+
+    $funcionarios = array(67, 207, 2);
+    return $funcionarios;
 }
