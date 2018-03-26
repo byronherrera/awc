@@ -2247,17 +2247,17 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
             height: winHeight*0.32,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth*0.97,
+            width: winWidth*0.98,
             readOnly: accesosSupervision,
             store: this.storeDetalleInspeccion,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
-                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 120},
+                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
                 //{header: 'Codificacion', dataIndex: 'codificacion', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
-                {header: 'Codificacion', dataIndex: 'id_actividad', sortable: true, width: 180,  editor: comboACTIVIDAD,
+                {header: 'Codificacion', dataIndex: 'id_actividad', sortable: true, width: 140,  editor: comboACTIVIDAD,
                     renderer: tipoActividad},
-                {header: 'Nombre denunciado', dataIndex: 'nombre_denunciado', sortable: true, width: 200, editor: textFieldDetalle},
+                {header: 'Nombre denunciado', dataIndex: 'nombre_denunciado', sortable: true, width: 180, editor: textFieldDetalle},
                 {header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 120,  editor: comboZONA,
                     renderer: zonaAdm},
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 150,  editor: textFieldDetalle},
@@ -2266,23 +2266,34 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 //autoSave:true, renderer: tipoActividad},
                 {header: 'Inspector', dataIndex: 'funcionario_entrega', sortable: true, width: 200, editor: comboPERDIS,
                     renderer: tipoUnidadesPersonal},
-                {header: 'Fecha asignación', dataIndex: 'fecha_asignacion', sortable: true, width: 150, allowBlank: true
+                {header: 'Fecha asignación', dataIndex: 'fecha_asignacion', sortable: true, width: 120, allowBlank: true
                     ,renderer: formatDate, editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})},
                 {header: 'Funcionario Reasignación', dataIndex: 'funcionario_reasignacion', sortable: true, width: 200, editor: comboFUNREA,
                     renderer: tipoFuncionarioReasignacion},
                 //{header: 'Respuesta', dataIndex: 'respuesta', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
                 //{header: 'Guia', dataIndex: 'guia', sortable: true, width: 100, editor: textFieldDetalle},
                 {header: 'Guia', dataIndex: 'guia', sortable: true, width: 100},
-                {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 150, allowBlank: true},
+                {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 120, allowBlank: true},
                 //{header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 100, editor: textFieldDetalle},
                 {header: 'Prioridad', dataIndex: 'prioridad', sortable: true, width: 100, editor: comboPRIORIDAD,
-                    renderer: prioridad}
+                    renderer: prioridad},
                 //{header: 'Tipo documento', dataIndex: 'id_control_programado', sortable: true, width: 200, editor: comboCONTROLPROGRAMADO,
                     //renderer: controlProgramado}
+                {header: 'Fecha memo/oficio', dataIndex: 'fecha_memo_oficio', sortable: true, width: 150, allowBlank: true
+                    ,renderer: formatDate, editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})},
+                {header: 'Num memo/oficio', dataIndex: 'numero_memo_oficio', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Cargo (enviado)', dataIndex: 'cargo_enviado', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Institución recibe', dataIndex: 'institucion_recibe', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Num acta', dataIndex: 'numero_acta', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Num informe', dataIndex: 'numero_informe', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Ordenanza aplicada', dataIndex: 'id_ordenanza', sortable: true, width: 180, editor: comboORD, renderer: listaOrdenanzas},
+                {header: 'Infraccion', dataIndex: 'infraccion', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 150,  editor: textFieldDetalle}
             ],
             viewConfig: {
-                forceFit: true
+                forceFit: false
             },
+
             sm: new Ext.grid.RowSelectionModel(
                 {
                     singleSelect: true
@@ -2307,17 +2318,17 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
             height: winHeight*0.32,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth*0.97,
+            width: winWidth*0.98,
             readOnly: accesosSupervision,
             store: this.storeDetalleTodasInspecciones,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
-                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 120},
+                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
                 //{header: 'Codificacion', dataIndex: 'codificacion', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
-                {header: 'Codificacion', dataIndex: 'id_actividad', sortable: true, width: 180,  editor: comboACTIVIDAD,
+                {header: 'Codificacion', dataIndex: 'id_actividad', sortable: true, width: 140,  editor: comboACTIVIDAD,
                     renderer: tipoActividad},
-                {header: 'Nombre denunciado', dataIndex: 'nombre_denunciado', sortable: true, width: 200, editor: textFieldDetalle},
+                {header: 'Nombre denunciado', dataIndex: 'nombre_denunciado', sortable: true, width: 180, editor: textFieldDetalle},
                 {header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 120,  editor: comboZONA,
                     renderer: zonaAdm},
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 150,  editor: textFieldDetalle},
@@ -2326,22 +2337,32 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 //autoSave:true, renderer: tipoActividad},
                 {header: 'Inspector', dataIndex: 'funcionario_entrega', sortable: true, width: 200, editor: comboPERDIS,
                     renderer: tipoUnidadesPersonal},
-                {header: 'Fecha asignación', dataIndex: 'fecha_asignacion', sortable: true, width: 150, allowBlank: true
+                {header: 'Fecha asignación', dataIndex: 'fecha_asignacion', sortable: true, width: 120, allowBlank: true
                     ,renderer: formatDate, editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})},
                 {header: 'Funcionario Reasignación', dataIndex: 'funcionario_reasignacion', sortable: true, width: 200, editor: comboFUNREA,
                     renderer: tipoFuncionarioReasignacion},
                 //{header: 'Respuesta', dataIndex: 'respuesta', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
                 //{header: 'Guia', dataIndex: 'guia', sortable: true, width: 100, editor: textFieldDetalle},
                 {header: 'Guia', dataIndex: 'guia', sortable: true, width: 100},
-                {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 150, allowBlank: true},
+                {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 120, allowBlank: true},
                 //{header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 100, editor: textFieldDetalle},
                 {header: 'Prioridad', dataIndex: 'prioridad', sortable: true, width: 100, editor: comboPRIORIDAD,
-                    renderer: prioridad}
+                    renderer: prioridad},
                 //{header: 'Tipo documento', dataIndex: 'id_control_programado', sortable: true, width: 200, editor: comboCONTROLPROGRAMADO,
                 //renderer: controlProgramado}
+                {header: 'Fecha memo/oficio', dataIndex: 'fecha_memo_oficio', sortable: true, width: 150, allowBlank: true
+                    ,renderer: formatDate, editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})},
+                {header: 'Num memo/oficio', dataIndex: 'numero_memo_oficio', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Cargo (enviado)', dataIndex: 'cargo_enviado', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Institución recibe', dataIndex: 'institucion_recibe', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Num acta', dataIndex: 'numero_acta', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Num informe', dataIndex: 'numero_informe', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Ordenanza aplicada', dataIndex: 'id_ordenanza', sortable: true, width: 180, editor: comboORD, renderer: listaOrdenanzas},
+                {header: 'Infraccion', dataIndex: 'infraccion', sortable: true, width: 150,  editor: textFieldDetalle},
+                {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 150,  editor: textFieldDetalle}
             ],
             viewConfig: {
-                forceFit: true
+                forceFit: false
             },
             sm: new Ext.grid.RowSelectionModel(
                 {
@@ -3053,7 +3074,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                         cls: 'no-border',
                                         items: [
                                             {
-                                                title: 'Datos inspección',
+                                                title: 'Asignación inspección',
                                                 //layout: 'column',
                                                 //closable: true,
                                                 //titleCollapse: true,
