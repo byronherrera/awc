@@ -65,7 +65,7 @@ function insertDetalleInspecciones()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
     $data->id = generaCodigoProcesoOrdenanza();
-    $data->id_inspeccion = generaNuevoCodigoInspeccion();
+    $data->id_inspeccion = generaNuevoCodigoControlProgramado();
     $data->fecha_recepcion_documento = date('Y-m-d H:i:s');
     //genero el listado de nombre de campos
 

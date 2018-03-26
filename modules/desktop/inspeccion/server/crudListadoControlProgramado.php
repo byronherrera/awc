@@ -196,7 +196,7 @@ function updateInspeccion()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_inspeccion SET  $cadenaDatos  WHERE amc_inspeccion.id = '$data->id' ";
+    $sql = "UPDATE amc_inspeccion_control_programado SET  $cadenaDatos  WHERE amc_inspeccion_control_programado.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 

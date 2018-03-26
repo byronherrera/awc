@@ -39,6 +39,7 @@ function selectInspeccion()
 
         //para el caso de busqueda por guia, recuperamos el id de la guia
         if ($columnaBusqueda == 'guia') {
+
             $sql = "SELECT id FROM amc_guias WHERE numero LIKE '%$campo%'";
             $numguia = $os->db->conn->query($sql);
             if ($numguia) {
