@@ -91,6 +91,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         var textFieldControlProgramado = new Ext.form.TextField({allowBlank: true, readOnly: accesosSupervision});
         var textFieldListadoControlProgramado = new Ext.form.TextField({allowBlank: true, readOnly: accesosSupervision});
         var textFieldCCF = new Ext.form.TextField({allowBlank: true, readOnly: accesosSupervision});
+        var textFieldNIO = new Ext.form.TextField({allowBlank: true, readOnly: accesosSupervision});
         var textFieldListadoCCF = new Ext.form.TextField({allowBlank: true, readOnly: accesosSupervision});
 
         //Definición del formato de fecha
@@ -459,6 +460,16 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         //Definición de url CRUD
+        var proxyNIOInspeccion = new Ext.data.HttpProxy({
+            api: {
+                create: urlInspeccion + "crudInspeccionNIO.php?operation=insert",
+                read: urlInspeccion + "crudInspeccionNIO.php?operation=select",
+                update: urlInspeccion + "crudInspeccionNIO.php?operation=update",
+                destroy: urlInspeccion + "crudInspeccionNIO.php?operation=delete"
+            }
+        });
+
+        //Definición de url CRUD
         var proxyListadoCCFInspeccionTodos = new Ext.data.HttpProxy({
             api: {
                 create: urlInspeccion + "crudListadoCCF.php?operation=insert",
@@ -507,6 +518,26 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'fecha_certificado_informe', readOnly:false, allow:true},
                 {name: 'resultado', readOnly:false, allow:true},
                 {name: 'numero_informe_certificado', readOnly:false, allow:true}
+            ]
+        });
+
+        //Definición de lectura de campos bdd Inspeccion
+        var readerNIOInspeccion = new Ext.data.JsonReader({
+            //totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                //{name: 'id_denuncia', readOnly: false, allowBlank: true},
+                {name: 'id_inspeccion', readOnly: false, allowBlank: true},
+                {name: 'num_nio', readOnly: false, allowBlank: true},
+                {name: 'proyecto', readOnly: false, allowBlank: true},
+                {name: 'predio', readOnly: false, allowBlank: true},
+                {name: 'zona', readOnly: false, allowBlank: true},
+                {name: 'guia', readOnly: false, allowBlank: true},
+                {name: 'certificado', readOnly: false, allowBlank: true},
+                {name: 'fecha_ingreso', readOnly: false, allowBlank: true}
             ]
         });
 
@@ -575,6 +606,12 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
         //Definición de escritura en campos bdd Inspeccion
         var writerCCFInspeccion = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        //Definición de escritura en campos bdd Inspeccion
+        var writerNIOInspeccion = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
@@ -678,9 +715,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
         this.storeNIOInspeccion = new Ext.data.Store({
             id: "id",
-            proxy: proxyCCFInspeccion,
-            reader: readerCCFInspeccion,
-            writer: writerCCFInspeccion,
+            proxy: proxyNIOInspeccion,
+            reader: readerNIOInspeccion,
+            writer: writerNIOInspeccion,
             autoSave: !accesosSupervision, // dependiendo de si se tiene acceso para grabar
             //remoteSort: true,
             //baseParams: {}
@@ -1002,13 +1039,13 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     {"id": 9, "nombre": "Insistencia a informes"},
                     {"id": 8, "nombre": "Denuncia"},
                     {"id": 7, "nombre": "CCF"},
-                    {"id": 6, "nombre": "Operativos"},
                     {"id": 5, "nombre": "Construcciones"},
                     {"id": 4, "nombre": "Fauna Urbana"},
                     {"id": 3, "nombre": "Operativo"},
                     {"id": 2, "nombre": "Inspeccion"},
                     {"id": 1, "nombre": "Inspeccion conjunta"},
-                    {"id": 0, "nombre": "Control programado"}
+                    {"id": 0, "nombre": "Control programado"},
+                    {"id": 6, "nombre": "Otros"}
                 ]
             }
         });
@@ -2145,6 +2182,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.storeControlProgramadoInspeccion.load();
 
         this.storeCCFInspeccion.load();
+        this.storeNIOInspeccion.load();
 
         if(todosInspectores == true){
             this.storeListadoInspeccion.load();
@@ -2752,7 +2790,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             })
         });
 
-
         this.gridCCFInspeccion = new Ext.grid.EditorGridPanel({
             id: 'gridCCFInspeccion',
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
@@ -2806,6 +2843,47 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             bbar: new Ext.PagingToolbar({
                 pageSize: limiteDetalleInspeccion,
                 store: this.storeCCFInspeccion,
+                displayInfo: true,
+                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
+                emptyMsg: "Seleccione un trámite"
+            })
+        });
+
+        this.gridNIOInspeccion = new Ext.grid.EditorGridPanel({
+            id: 'gridNIOInspeccion',
+            //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
+            height: winHeight*0.32,
+            //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
+            width: winWidth*0.99,
+            readOnly: accesosSupervision,
+            store: this.storeNIOInspeccion,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                //{header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
+                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
+                {header: 'Número NIO', dataIndex: 'num_nio', sortable: true, width: 100, editor: textFieldNIO},
+                {header: 'Proyecto', dataIndex: 'proyecto', sortable: true, width: 100, editor: textFieldNIO},
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldNIO},
+                {header: 'Zona', dataIndex: 'zona', sortable: true, width: 100, editor: textFieldNIO},
+                {header: 'Guía', dataIndex: 'guia', sortable: true, width: 100, editor: textFieldNIO},
+                {header: 'Certificado', dataIndex: 'certificado', sortable: true, width: 100, editor: textFieldNIO},
+                {header: 'Fecha ingreso', dataIndex: 'fecha_ingreso', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+            ],
+            viewConfig: {
+                forceFit: false
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }
+            ),
+            border: true,
+            stripeRows: true,
+            //Definición de barra de paginado
+            bbar: new Ext.PagingToolbar({
+                pageSize: limiteDetalleInspeccion,
+                store: this.storeNIOInspeccion,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
                 emptyMsg: "Seleccione un trámite"
@@ -3294,7 +3372,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                             {
                                                 title: 'NIO',
                                                 layout: 'column',
-                                                disabled: true,
+                                                disabled: false,
                                                 height: winHeight*0.36,
                                                 tbar: [
                                                     //Definición de botón nuevo
@@ -3349,7 +3427,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                             ,{
                                                 title: 'CCF',
                                                 layout: 'column',
-                                                disabled: true,
+                                                disabled: false,
                                                 height: winHeight*0.36,
                                                 tbar: [
                                                     //Definición de botón nuevo
@@ -3493,7 +3571,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             //layout: 'fit',
                             //height: winHeight-70,
                             //disabled: !pestInspeccion,
-                            disabled: true,
+                            disabled: false,
                             //Barra de botones
                             tbar: [
                                 //Definición de botón Recargar datos
@@ -3828,6 +3906,44 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         return false;
                     }
                     this.storeCCFInspeccion.remove(rows);
+                }
+            }
+        });
+    },
+
+    //Función para inserción de registros de detalle de inspeccion
+    addNIO: function () {
+        var nio = new this.storeNIOInspeccion.recordType({
+            'id_inspeccion' : '',
+            'num_nio' : '0',
+            'proyecto' : '',
+            'predio' : '',
+            'zona': '',
+            'guia' : '',
+            'certificado' : '',
+            'fecha_ingreso' : ''
+        });
+        this.gridNIOInspeccion.stopEditing();
+        this.storeNIOInspeccion.insert(0, nio);
+        this.gridNIOInspeccion.startEditing(0, 0);
+    },
+
+    //Función para eliminación de registros de Inspeccion
+    deleteNIO: function () {
+        //Popup de confirmación
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de borrar el registro seleccionado?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridNIOInspeccion.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeNIOInspeccion.remove(rows);
                 }
             }
         });
