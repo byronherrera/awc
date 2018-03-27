@@ -369,13 +369,12 @@ function updateOperativos()
     if (isset($data->visible)) {
         if ($data->visible) {
 
-            if (verificaEnvioEmail()) {
+            if (verificaEnvioEmail($data->id)) {
                 $fechaActual = date('d-m-Y H:i:s');
                 $fechaActual2 = date('d-m-Y');
 
-                // todo
-                //$funcionario = $data->id_persona_encargada;
-                $funcionario = 1;
+                $funcionario = $data->id_persona_encargada;
+
                 $detalle = '<table border="1">
                             <tr>
                                 <td>Código</td>
@@ -400,7 +399,7 @@ function updateOperativos()
                 $detalle .= "<table>";
                 $funcionarios = array();
                 foreach ($listado as &$funcionario2) {
-                    $detalle .= "<tr><td>" . regresaNombre($funcionario2). "</td></tr>";
+                    $detalle .= "<tr><td>" . regresaNombre($funcionario2) . "</td></tr>";
                     $funcionarios[] = regresaEmail($funcionario2);
                 }
                 $detalle .= "</table>";
@@ -411,12 +410,9 @@ function updateOperativos()
                 //   $email = "byron.herrera@quito.gob.ec";
                 $asunto = "Nuevo operativo asignado, " . $fechaActual2 . " - " . regresaEmail($funcionario);
                 enviarEmail($email, $asunto, $mensaje, $funcionarios);
-
-
             }
         }
     }
-
 
     if (isset($data->fecha_informe)) {
         $data->fecha_informe = NULL;
@@ -590,12 +586,12 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
     return $texto;
 }
 
-function enviarEmail($email, $nombre, $mensaje,$funcionarios)
+function enviarEmail($email, $nombre, $mensaje, $funcionarios)
 {
     $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
     //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
 
-    if (count($funcionarios) > 0 ){
+    if (count($funcionarios) > 0) {
         $conCopia = implode(",", $funcionarios);
         $headers .= "CC: $conCopia \r\n";
     }
@@ -606,19 +602,28 @@ function enviarEmail($email, $nombre, $mensaje,$funcionarios)
     mail($email, $nombre, $mensaje, $headers);
 }
 
-
-function verificaEnvioEmail()
+function verificaEnvioEmail($id)
 {
-    return true;
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT id_persona_encargada FROM amc_operativos WHERE id= $id";
+    $result = $os->db->conn->query($sql);
+
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    if ($row['id_persona_encargada'] == " ") {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function getListdoFuncionariosOperativo($id)
 {
     global $os;
-    $nombre = $os->db->conn->query("SELECT id FROM amc_operativo
-    $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
-    return $rowguia['total'];
-
-    $funcionarios = array(67, 207, 2);
+    $result = $os->db->conn->query("SELECT id_member FROM amc_operativos_personal WHERE id_operativo = $id;");
+    $funcionarios = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $funcionarios[] = $row ['id_member'];
+    }
     return $funcionarios;
 }
