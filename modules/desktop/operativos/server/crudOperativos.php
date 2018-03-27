@@ -606,15 +606,19 @@ function verificaEnvioEmail($id)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT id_persona_encargada FROM amc_operativos WHERE id= $id";
+    $sql = "SELECT id_persona_encargada, visible FROM amc_operativos WHERE id= $id";
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);
-    if ($row['id_persona_encargada'] == " ") {
+    if ($row['visible'] == "") {
+        if ($row['id_persona_encargada'] == " ") {
+            return false;
+        } else {
+            return true;
+        }
+
+    } else
         return false;
-    } else {
-        return true;
-    }
 }
 
 function getListdoFuncionariosOperativo($id)
