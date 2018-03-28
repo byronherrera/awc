@@ -29,12 +29,13 @@ class config {
     * Using PHP Data Objects (PDO)
     */
  
-   public $DB_CONN_STRING = 'mysql:dbname=amc-seguimiento;host=localhost';
+   public $DB_CONN_STRING = 'mysql:dbname=procesos-amc;host=localhost';
+  // public $DB_CONN_STRING = 'mysql:dbname=amc-seguimiento;host=localhost';
    public $DB_USERNAME = 'root';
    public $DB_PASSWORD = '111111';
 
 
-   public $URLBASE = 'http://172.20.136.71:8080/amc-seguimiento//';
+   public $URLBASE = 'http://172.20.136.71:8080/amc-procesos/';
  
 
    
