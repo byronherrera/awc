@@ -644,6 +644,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         //fin mantenimiento DenunciasGuías
 
 
+
 // fin pestañas de mantenimiento
 
         // inicio ventana denuncias

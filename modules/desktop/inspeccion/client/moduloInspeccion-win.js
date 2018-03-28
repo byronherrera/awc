@@ -2381,7 +2381,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 singleSelect: false,
                 listeners: {
                     rowselect: function (sm, row, rec) {
-                        storeDenunciasSimple.load({params: {filterField: 'guia', filterText: rec.get("id")}})
+                        storeInspeccionActaSimple.load({params: {filterField: 'guia', filterText: rec.get("id")}})
                     }
                 }
             }),
@@ -2397,6 +2397,138 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         //fin mantenimiento InspeccionActa
+
+        // Inicio mantenimiento InspeccionActa simple
+        this.storeInspeccionActaSimple = new Ext.data.Store({
+            id: "id",
+            proxy: proxyDetalleInspeccion,
+            reader: readerDetalleInspeccion,
+            writer: writerDetalleInspeccion,
+            autoSave: accesosSupervision, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true
+        });
+        storeInspeccionActaSimple = this.storeInspeccionActaSimple
+        this.gridInspeccionActaSimple = new Ext.grid.EditorGridPanel({
+            autoHeight: true,
+            autoScroll: true,
+            height:100,
+            store: this.storeInspeccionActaSimple,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
+                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
+                //{header: 'Codificacion', dataIndex: 'codificacion', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
+                {
+                    header: 'Codificacion',
+                    dataIndex: 'id_actividad',
+                    sortable: true,
+                    width: 140,
+                    renderer: tipoActividad
+                },
+                {
+                    header: 'Nombre denunciado',
+                    dataIndex: 'nombre_denunciado',
+                    sortable: true,
+                    width: 180,
+                },
+                {
+                    header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 120,
+                    renderer: zonaAdm
+                },
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 150},
+                {
+                    header: 'Inspector',
+                    dataIndex: 'funcionario_entrega',
+                    sortable: true,
+                    width: 200,
+                    renderer: tipoUnidadesPersonal
+                },
+                {
+                    header: 'Fecha asignación',
+                    dataIndex: 'fecha_asignacion',
+                    sortable: true,
+                    width: 120,
+                    allowBlank: true
+                    ,
+                    renderer: formatDate
+                },
+                {
+                    header: 'Funcionario Reasignación',
+                    dataIndex: 'funcionario_reasignacion',
+                    sortable: true,
+                    width: 200,
+                    renderer: tipoFuncionarioReasignacion
+                },
+                {header: 'Guia', dataIndex: 'guia', sortable: true, width: 100},
+                {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 120, allowBlank: true},
+                //{header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 100 },
+                {
+                    header: 'Prioridad', dataIndex: 'prioridad', sortable: true, width: 100 ,
+                    renderer: prioridad
+                },
+                {
+                    header: 'Fecha memo/oficio',
+                    dataIndex: 'fecha_memo_oficio',
+                    sortable: true,
+                    width: 150,
+                    allowBlank: true
+                    ,
+                    renderer: formatDate
+                },
+                {
+                    header: 'Num memo/oficio',
+                    dataIndex: 'numero_memo_oficio',
+                    sortable: true,
+                    width: 150
+                },
+                {
+                    header: 'Cargo (enviado)',
+                    dataIndex: 'cargo_enviado',
+                    sortable: true,
+                    width: 150
+                },
+                {
+                    header: 'Institución recibe',
+                    dataIndex: 'institucion_recibe',
+                    sortable: true,
+                    width: 150
+                },
+                {header: 'Num acta', dataIndex: 'numero_acta', sortable: true, width: 150, editor: textFieldDetalle},
+                {
+                    header: 'Num informe',
+                    dataIndex: 'numero_informe',
+                    sortable: true,
+                    width: 150
+                },
+                {
+                    header: 'Ordenanza aplicada',
+                    dataIndex: 'id_ordenanza',
+                    sortable: true,
+                    width: 180 ,
+                    renderer: listaOrdenanzas
+                },
+                {header: 'Infraccion', dataIndex: 'infraccion', sortable: true, width: 150 },
+                {
+                    header: 'Observaciones',
+                    dataIndex: 'observaciones',
+                    sortable: true,
+                    width: 150
+                }
+            ],
+
+            viewConfig: {
+                forceFit: true
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+
+        });
+        // Inicio mantenimiento InspeccionActa simple
 
         //////////////////////////////////////////
 
@@ -2977,20 +3109,20 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     writeAllFields: true
                 });
 
-                this.storeDenunciasGuia = new Ext.data.Store({
+                this.gridInspeccionActa = new Ext.data.Store({
                     id: "id",
                     proxy: proxyDenunciasGuia,
                     reader: readerDenunciasGuia,
                     writer: writerDenunciasGuia,
                     autoSave: true
                 });
-                this.storeDenunciasGuia.load();
+                this.gridInspeccionActa.load();
 
                 this.gridDenunciasGuia = new Ext.grid.EditorGridPanel({
                     id: 'gridDenunciasGuia',
                     xtype: "grid",
                     height: 200,
-                    store: this.storeDenunciasGuia,
+                    store: this.gridInspeccionActa,
                     columns: [
                         new Ext.grid.RowNumberer(),
                         {
@@ -3028,7 +3160,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         singleSelect: false,
                         listeners: {
                             rowselect: function (sm, row, rec) {
-                                storeDenunciasSimple.load({params: {filterField: 'guia', filterText: rec.get("id")}})
+                                storeInspeccionActaSimple.load({params: {filterField: 'guia', filterText: rec.get("id")}})
                             }
                         }
                     }),
@@ -3036,7 +3168,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     stripeRows: true,
                     bbar: new Ext.PagingToolbar({
                         pageSize: 100,
-                        store: this.storeDenunciasGuia,
+                        store: this.gridInspeccionActa,
                         displayInfo: true,
                         displayMsg: 'Mostrando denuncias {0} - {1} of {2}',
                         emptyMsg: "No existen denuncias que mostrar"
@@ -4828,7 +4960,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
 
             requestGridDataDenunciasGuia: function () {
-                this.storeDenunciasGuia.load();
+                this.gridInspeccionActa.load();
             },
             requestGridDataDocumentoReporte: function () {
                 this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
@@ -5440,20 +5572,20 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     writeAllFields: true
                 });
 
-                this.storeDenunciasGuia = new Ext.data.Store({
+                this.gridInspeccionActa = new Ext.data.Store({
                     id: "id",
                     proxy: proxyDenunciasGuia,
                     reader: readerDenunciasGuia,
                     writer: writerDenunciasGuia,
                     autoSave: true
                 });
-                this.storeDenunciasGuia.load();
+                this.gridInspeccionActa.load();
 
                 this.gridDenunciasGuia = new Ext.grid.EditorGridPanel({
                     id: 'gridDenunciasGuia',
                     xtype: "grid",
                     height: 200,
-                    store: this.storeDenunciasGuia,
+                    store: this.gridInspeccionActa,
                     columns: [
                         new Ext.grid.RowNumberer(),
                         {
@@ -5499,7 +5631,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     stripeRows: true,
                     bbar: new Ext.PagingToolbar({
                         pageSize: 100,
-                        store: this.storeDenunciasGuia,
+                        store: this.gridInspeccionActa,
                         displayInfo: true,
                         displayMsg: 'Mostrando denuncias {0} - {1} of {2}',
                         emptyMsg: "No existen denuncias que mostrar"
@@ -5771,128 +5903,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     }
                 });
 
-                // datastore and datagrid in Guia
-                this.storeDenunciasSimple = new Ext.data.Store({
-                    id: "id",
-                    proxy: proxyDenuncias,
-                    reader: readerDenuncias,
-                    writer: writerDenuncias,
-                    autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-                    remoteSort: true
-                });
-                storeDenunciasSimple = this.storeDenunciasSimple
-                this.gridDenunciasSimple = new Ext.grid.EditorGridPanel({
-                    autoHeight: true,
-                    autoScroll: true,
-                    store: this.storeDenunciasSimple,
-                    columns: [
-                        new Ext.grid.RowNumberer(),
-                        {
-                            header: 'Código',
-                            dataIndex: 'codigo_tramite',
-                            sortable: true,
-                            width: 15
-                        },
-                        {
-                            header: 'Persona recepta',
-                            dataIndex: 'id_persona',
-                            sortable: true,
-                            width: 35,
-                            renderer: personaReceptaDenuncia
-                        }, {
-                            header: 'Recepción documento',
-                            dataIndex: 'recepcion_documento',
-                            sortable: true,
-                            width: 45,
-                            renderer: formatDate
-                        },
-                        {
-                            header: 'Tipo documento',
-                            dataIndex: 'id_tipo_documento',
-                            sortable: true,
-                            width: 30,
-                            renderer: personaTipoDocumento
-                        },
 
-                        {
-                            header: 'N. documento',
-                            dataIndex: 'num_documento',
-                            sortable: true,
-                            width: 40
-                        },
-                        {
-                            header: 'Remitente/denunciante',
-                            dataIndex: 'remitente',
-                            sortable: true,
-                            width: 60
-                        },
-                        {
-                            header: 'Asunto',
-                            dataIndex: 'asunto',
-                            sortable: true,
-                            width: 55
-                        },
-                        {
-                            header: 'Descripción anexos',
-                            dataIndex: 'descripcion_anexos',
-                            sortable: true,
-                            width: 55
-                        }
-                        , {
-                            header: 'Caracter trámite',
-                            dataIndex: 'id_caracter_tramite',
-                            sortable: true,
-                            width: 30,
-                            renderer: caracterTramite
-                        }, {
-                            header: 'Fojas',
-                            dataIndex: 'cantidad_fojas',
-                            sortable: true,
-                            width: 20
-                        }
-                        , {
-                            header: 'Reasignación',
-                            dataIndex: 'reasignacion',
-                            sortable: true,
-                            width: 60,
-                            renderer: departamentoReasignacion
-                        }
-                        , {
-                            header: 'Despachado'
-                            , dataIndex: 'despacho_secretaria'
-                            , align: 'center'
-                            , falseText: 'No'
-                            , menuDisabled: true
-                            , trueText: 'Si'
-                            , sortable: true
-                            , width: 20
-                            , xtype: 'booleancolumn'
-                        }
-                    ],
-                    viewConfig: {
-                        forceFit: true
-                    },
-                    sm: new Ext.grid.RowSelectionModel(
-                        {
-                            singleSelect: true
-                        }),
-                    border: false,
-                    stripeRows: true,
-                    // paging bar on the bottom
-                    listeners: {
-                        beforeedit: function (e) {
-                            if (acceso) {
-                                if (e.record.get("despacho_secretaria")) {
-                                    return false;
-                                }
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                    }
-                });
-                // fin datastore and datagrid in Guia
 
                 // datastore and datagrid in Guia
                 this.storeDocumentosReporte = new Ext.data.Store({
@@ -7291,7 +7302,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
 
             requestGridDataDenunciasGuia: function () {
-                this.storeDenunciasGuia.load();
+                this.gridInspeccionActa.load();
             },
             requestGridDataDocumentoReporte: function () {
                 this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
@@ -9351,7 +9362,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     minSize: 100,
                                     maxSize: 150,
                                     margins: '0 0 0 0',
-                                    //   items: this.gridActasSimple
+                                       items: this.gridInspeccionActaSimple
                                 }
                             ]
 

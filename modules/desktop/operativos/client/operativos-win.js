@@ -3359,7 +3359,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
                     generaRetiros = checkDetalleRecibidos
                     generaRetiros = (Ext.getCmp('checkDetalleRecibidos').getValue());
-                    window.location.href = 'moduless/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&retiros=' + generaRetiros;
+                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&retiros=' + generaRetiros;
                 }
             }
         });
