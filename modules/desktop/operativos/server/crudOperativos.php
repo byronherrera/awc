@@ -591,6 +591,7 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
     //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
 
+
     if (count($funcionarios) > 0) {
         $conCopia = implode(",", $funcionarios);
         $headers .= "CC: $conCopia \r\n";
