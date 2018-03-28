@@ -4424,8 +4424,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                             iconCls: 'excel-icon',
                                             handler: this.botonExportarReporte,
                                             scope: this,
-                                            text: 'Generar Reporte',
-                                            tooltip: 'Se genera el reporte de los items',
+                                            text: 'Generar copia Acta',
+                                            tooltip: 'Se genera la descarga del acta seleccionada',
                                             id: 'tb_repoteDenuncias',
                                             disabled: true
                                         },
