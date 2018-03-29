@@ -23,7 +23,7 @@ function generaNuevoCodigoTramiteUnico()
     } else {
         // valor inicial proceso
 
-        return 10759;
+        return 11759;
 
     }
 }
@@ -43,7 +43,38 @@ function generaNuevoCodigoInspeccion()
         return $nuevoCodogo;
     } else {
         // valor inicial proceso
-        return 1548;
+        return 1648;
+    }
+}
+
+function generaNuevoCodigoConstrucciones()
+{
+    global $os;
+
+    $usuario = $os->get_member_id();
+    $os->db->conn->query("SET NAMES 'utf8'");
+    //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
+    $sql = "SELECT COUNT(num_nio) AS cant_nio FROM amc_inspeccion_nio WHERE fecha_ingreso > '" .date("Y"). "-01-01 01:01:01';";
+    $result = $os->db->conn->query($sql);
+    $row1 = $result->fetch(PDO::FETCH_ASSOC);
+
+    $sql = "SELECT COUNT(id_ccf) AS cant_ccf FROM amc_inspeccion_ccf WHERE fecha_recepcion_documento > '" .date("Y"). "-01-01 01:01:01';";
+    $result = $os->db->conn->query($sql);
+    $row2 = $result->fetch(PDO::FETCH_ASSOC);
+
+    if (isset($row1['cant_nio'])||($row2['cant_ccf'])) {
+        /*
+        if(($row1['maximo_nio'])>($row2['maximo_ccf'])){
+            $nuevoCodigo = $row1['maximo_nio'] + 1;
+        }else{
+            $nuevoCodigo = $row2['maximo_ccf']+ 1;
+        }
+        */
+        $nuevoCodigo = $row1['cant_nio'] + $row2['cant_ccf'] + 1;
+         return $nuevoCodigo;
+    } else {
+        // valor inicial proceso
+        return 134;
     }
 }
 

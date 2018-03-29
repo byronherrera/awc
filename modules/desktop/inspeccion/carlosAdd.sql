@@ -19,3 +19,27 @@ ADD COLUMN `zona` varchar(255) NULL AFTER `predio`,
 ADD COLUMN `guia` varchar(255) NULL AFTER `zona`,
 ADD COLUMN `certificado` varchar(255) NULL AFTER `guia`;
 ADD COLUMN `fecha_ingreso` datetime NULL AFTER `certificado`;
+
+ALTER TABLE `prueba`.`amc_inspeccion_ccf`
+ADD COLUMN `id_ccf` int(11) NULL AFTER `id_inspeccion`;
+
+ALTER TABLE `prueba`.`amc_inspeccion_ccf`
+MODIFY COLUMN `id_ccf` varchar(20) NULL DEFAULT NULL AFTER `id_inspeccion`;
+
+ALTER TABLE `prueba`.`amc_inspeccion_nio`
+MODIFY COLUMN `num_nio` varchar(20) NULL DEFAULT NULL AFTER `id_inspeccion`;
+
+ALTER TABLE `prueba`.`amc_inspeccion_control_programado`
+DROP COLUMN `id_inspeccion`;
+
+ALTER TABLE `prueba`.`amc_inspeccion_ccf`
+DROP COLUMN `id_inspeccion`;
+
+ALTER TABLE `prueba`.`amc_inspeccion_nio`
+DROP COLUMN `id_inspeccion`;
+
+ALTER TABLE `prueba`.`amc_inspeccion_ccf`
+MODIFY COLUMN `proyecto` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `id_ccf`,
+MODIFY COLUMN `predio` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `proyecto`,
+MODIFY COLUMN `zona` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `predio`,
+ADD COLUMN `guia` varchar(255) NULL AFTER `zona`;
