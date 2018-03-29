@@ -4520,7 +4520,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Recargar Datos'
 
-                                },
+                                }/*,
                                 {
                                     iconCls: 'excel-icon',
                                     handler: this.botonExportarReporteReimpresion,
@@ -4529,7 +4529,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     tooltip: 'Se genera el reporte de la guía seleccionada',
                                     id: 'tb_repoteActas',
                                     // disabled: !acceso
-                                }
+                                }*/
                             ],
                             items: [
                                 {
