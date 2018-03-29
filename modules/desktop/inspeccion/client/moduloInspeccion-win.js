@@ -3418,6 +3418,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         disabled: true
                                                     },
                                                     '-',
+
                                                     '->'
                                                     , {
                                                         text: 'Buscar por:'
