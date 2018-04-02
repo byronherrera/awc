@@ -5084,7 +5084,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     // ?reimpresion=true&guia=' + rows[0].get('id')
     botonImprimirActa: function () {
         // recuperamos registro seleccionado de datagrid denunciaguia
-        var rows = this.gridDenunciasGuia.getSelectionModel().getSelections();
+        var rows = this.gridInspeccionActa.getSelectionModel().getSelections();
         //validamos si existe seleccion  y mensaje error
         if (rows.length === 0) {
             Ext.Msg.show({
@@ -5095,7 +5095,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             });
             return false;
         }
-        window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuias.php?reimpresion=true&guia=' + rows[0].get('id')';
+        window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuias.php?reimpresion=true&guia=' + rows[0].get('id');
     },
 
 });

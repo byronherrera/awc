@@ -24,10 +24,16 @@ if (!$os->session_exists()) {
     die('No existe sesión!');
 }
 
-// si no existe unidad es para reimpresion se envia como parametro guia, obtenemos id unidad
-if (isset($_GET['param'])) {
-    $data = json_decode(stripslashes($_GET["param"]));
+// para el caso de reimpresion se lee si existen los parametros guia y reimpresion
+if (isset($_GET['guia'])) {
+    $acta =  $_GET["guia"] ;
 }
+
+if (isset($_GET['reimpresion']))
+    $reimpresion = settype($_GET['reimpresion'], 'boolean');
+else
+    $reimpresion = false;
+
 
 $today = date("Y-n-j-H-i-s");
 
@@ -35,25 +41,29 @@ $objPHPExcel = new PHPExcel();
 $objPHPExcel->setActiveSheetIndex(0);
 
 
-$where = " WHERE  ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
-//$where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
-$sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario  
+if (!$reimpresion) {
+    $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
+
+    $sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario  
         FROM amc_denuncias as b 
         INNER JOIN amc_inspeccion ON b . id = amc_inspeccion . id_denuncia
         $where  ORDER BY b.recepcion_documento";
 
 
-$resultFuncionarios = $os->db->conn->query($sql);
-$siguienteFila = 1;
-while ($rowFuncionario = $resultFuncionarios->fetch(PDO::FETCH_ASSOC)) {
-    if (($rowFuncionario['funcionario'] != '') and (!is_null($rowFuncionario['funcionario']))) {
-        envioEmail($rowFuncionario['funcionario']);
-        $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario']);
+    $resultFuncionarios = $os->db->conn->query($sql);
+    $siguienteFila = 1;
+    while ($rowFuncionario = $resultFuncionarios->fetch(PDO::FETCH_ASSOC)) {
+        if (($rowFuncionario['funcionario'] != '') and (!is_null($rowFuncionario['funcionario']))) {
+            envioEmail($rowFuncionario['funcionario']);
+            $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario']);
+        }
     }
+} else {
+    envioEmail($rowFuncionario['funcionario']  );
+    $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario'], $reimpresion, $acta);
 }
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
-
 
 // margin is set in inches (0.5cm)
 $margin = 0.5 / 2.54;
@@ -63,10 +73,8 @@ $pageMargins->setBottom($margin);
 $pageMargins->setLeft($margin);
 $pageMargins->setRight($margin);
 
-
 $objPHPExcel->getActiveSheet()->setShowGridLines(false);
 
-//echo date('H:i:s') , " Set orientation to landscape" , PHP_EOL;
 $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
 
 ////////////////////////////////////////////////
@@ -193,8 +201,7 @@ function envioEmail($funcionario)
 {
     global $os;
 
-    //$where = " WHERE reasignacion = 3 AND  procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
-    $where = " WHERE   procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
+    $where = " WHERE reasignacion = 3 AND  procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
     $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
             DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
@@ -319,8 +326,8 @@ function imprimeActa($filaTitulo1, $funcionario)
     $os->db->conn->query("SET NAMES 'utf8'");
     // se determina un filtro  para determinar las denuncias / tramites pendientes
 
-   // $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
-    $where = " WHERE  ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
+    $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
+//    $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
 
     $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
