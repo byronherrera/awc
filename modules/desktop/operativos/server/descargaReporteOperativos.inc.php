@@ -170,7 +170,7 @@ if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')
 
 $os->db->conn->query("SET NAMES 'utf8'");
 
-$sql = "SELECT * FROM amc_operativos as b  $where  ORDER BY b.fecha_inicio_planificacion";
+$sql = "SELECT *, (SELECT nombre FROM amc_operativos_estados c WHERE  C.id = b.id_estado ) estado FROM amc_operativos as b  $where  ORDER BY b.fecha_inicio_planificacion";
 
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
@@ -278,6 +278,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('K')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('L')->setAutoSize(false);
 
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(26);
@@ -290,6 +291,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(32);
 $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(16);
+$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(16);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Cod');
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Fecha');
@@ -300,8 +302,9 @@ $objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Tipo control'
 $objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Complejidad');
 $objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Observaciones');
 $objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Punto Encuentro');
-$objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Lugar Intervecion');
+$objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Lugar Intervención');
 $objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Zonal');
+$objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Estado');
 
 $noExistenFilas = true;
 
@@ -371,8 +374,9 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, strip_tags($rowdetalle['punto_encuentro_planificado']));
     $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['zona']);
     $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['id_zonal']);
+    $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, $rowdetalle['estado']);
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':K' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':L' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -398,7 +402,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:K600')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:L600')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -406,7 +410,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:K600')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:K200')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:L200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -414,10 +418,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:K200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:K3000')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:L3000')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':K' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':L' . $filacabecera)->applyFromArray($styleArray);
 
 
 // Set page orientation and size
@@ -427,9 +431,9 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:K3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A1:L3')->getFont()->setSize(14);
 $objPHPExcel->getActiveSheet()->getStyle('A4:F40')->getFont()->setSize(10);
-$objPHPExcel->getActiveSheet()->getStyle('G4:K40')->getFont()->setSize(9);
+$objPHPExcel->getActiveSheet()->getStyle('G4:L40')->getFont()->setSize(9);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
