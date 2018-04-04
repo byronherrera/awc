@@ -434,7 +434,7 @@ function updateOperativos()
 
         if ($data->id_estado === "2") {
             $datetime = new DateTime();
-            $data->fecha_informe = $datetime->format('Y-m-d h:i:s');
+            $data->fecha_informe = $datetime->format('Y-m-d H:i:s');
         }
     };
 
@@ -600,8 +600,8 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
         $headers .= "CC: $conCopia \r\n";
     }
 
-    $headers .= "CCO: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec \r\n";
-    $headers .= "Bcc: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec \r\n";
+    $headers .= "CCO: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec, paul.hidalgo@quito.gob.ec, galo.salazar@quito.gob.ec, eduardo.chicaiza@quito.gob.ec \r\n";
+    $headers .= "Bcc: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec, paul.hidalgo@quito.gob.ec, galo.salazar@quito.gob.ec, eduardo.chicaiza@quito.gob.ec \r\n";
 
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";

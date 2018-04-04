@@ -2697,6 +2697,10 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             disabled: true,
                                                             id: 'savedetalleoperativo',
                                                             //disabled: !acceso
+                                                        },
+                                                        {
+                                                            text: 'Ingresar el detalle de las acciones realizadas, retenciones y actas en la pestaña respectiva.'
+                                                            , xtype: 'tbtext'
                                                         }
                                                     ]
                                                 },
