@@ -37,11 +37,11 @@ $objPHPExcel->setActiveSheetIndex(0);
 
 $where = " WHERE  ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
 //$where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
+
 $sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario  
         FROM amc_denuncias as b 
         INNER JOIN amc_inspeccion ON b . id = amc_inspeccion . id_denuncia
         $where  ORDER BY b.recepcion_documento";
-
 
 $resultFuncionarios = $os->db->conn->query($sql);
 $siguienteFila = 1;
@@ -177,7 +177,9 @@ function actualizar_estado_tramite($id, $codigo_tramite, $numeroGuia)
     $sql = "UPDATE `amc_inspeccion` SET `guia`='$numeroGuia', `fecha_despacho`=NOW() WHERE (`id_denuncia`='$id')";
     $os->db->conn->query($sql);
 
-};
+}
+
+;
 
 function actualizar_guia_inspeccion($numeroGuia)
 {
@@ -187,7 +189,9 @@ function actualizar_guia_inspeccion($numeroGuia)
             (`numero`, `id_unidad`, `unidad`, `id_member`) 
             VALUES ('$numeroGuia', '3', 'Inspeccion', '$idMember')";
     $os->db->conn->query($sql);
-};
+}
+
+;
 
 function envioEmail($funcionario)
 {
@@ -218,13 +222,13 @@ function envioEmail($funcionario)
     while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
         $fila++;
         $detalle .= "<tr>" .
-            '<td valign="top">'.$fila.'</td>' .
+            '<td valign="top">' . $fila . '</td>' .
             '<td valign="top">' . $rowdetalle['codigo_tramite'] . "</td>" .
             '<td valign="top">' . $rowdetalle['num_documento'] . "</td>" .
             '<td valign="top">' . $rowdetalle['remitente'] . "</td>" .
             '<td valign="top">' . $rowdetalle['fechasumilla'] . "</td>" .
             '<td valign="top">' . regresaNombre($funcionario) . "</td>" .
-            '<td valign="top">'. $rowdetalle['guia'] . "</td>" .
+            '<td valign="top">' . $rowdetalle['guia'] . "</td>" .
             "</tr>";
     }
     $detalle .= "</table>";
@@ -232,7 +236,7 @@ function envioEmail($funcionario)
     $fechaActual2 = date('d-m-Y');
 
     $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
-    $email =regresaEmail($funcionario);
+    $email = regresaEmail($funcionario);
 //   $email = "byron.herrera@quito.gob.ec";
     $asunto = "Nueva inspección asignada, " . $fechaActual2 . " - " . regresaEmail($funcionario);
     $envio = enviarEmail($email, $asunto, $mensaje);
@@ -285,7 +289,10 @@ function enviarEmail($email, $nombre, $mensaje)
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-    mail($email, $nombre, $mensaje, $headers);
+    require('os-config.php');
+    $config = new config();
+    if ($config->AMBIENTE == "PRODUCCION")
+        mail($email, $nombre, $mensaje, $headers);
 }
 
 function imprimeActa($filaTitulo1, $funcionario)
@@ -319,7 +326,7 @@ function imprimeActa($filaTitulo1, $funcionario)
     $os->db->conn->query("SET NAMES 'utf8'");
     // se determina un filtro  para determinar las denuncias / tramites pendientes
 
-   // $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
+    // $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
     $where = " WHERE  ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
 
