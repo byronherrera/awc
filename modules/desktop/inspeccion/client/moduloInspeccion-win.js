@@ -16,6 +16,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
     },
     createWindow: function () {
+        //charlie
         //Variables de acceso
         var accesosCoordinadorInspeccion = this.app.isAllowedTo('accesosAdministrador', this.id); //Todos los accesos, visualiza todos los trámites
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id); //Todos los accesos, visualiza trámites pendientes
