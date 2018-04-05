@@ -387,8 +387,8 @@ function updateOperativos()
                             </tr>';
                 $detalle .= "<tr>" .
                     '<td valign="top">' . $data->id . '</td>' .
-                    '<td valign="top">' . $data->fecha_inicio_planificacion . "</td>" .
-                    '<td valign="top">' . $data->fecha_fin_planificacion . "</td>" .
+                    '<td valign="top">' . date("Y-m-d <br> H:m", strtotime($data->fecha_inicio_planificacion)) . "</td>" .
+                    '<td valign="top">' . date("Y-m-d <br> H:m", strtotime($data->fecha_fin_planificacion))  . "</td>" .
                     '<td valign="top">' . $data->punto_encuentro_planificado . "</td>" .
                     '<td valign="top">' . $data->zona . "</td>" .
                     '<td valign="top">' . $data->observaciones  . "</td>" .
