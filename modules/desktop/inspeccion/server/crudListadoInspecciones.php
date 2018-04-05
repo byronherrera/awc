@@ -42,8 +42,8 @@ function selectInspeccion()
 
     $os->db->conn->query("SET NAMES 'utf8'");
 
-
-    $sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
+    $sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion WHERE funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
+    //$sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

@@ -286,6 +286,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
+                {name: 'codigo_tramite', readOnly: false, allowBlank: true},
                 {name: 'id_denuncia', readOnly: false, allowBlank: true},
                 {name: 'id_inspeccion', readOnly: false, allowBlank: true},
                 //{name: 'codificacion', readOnly: false, allowBlank: true},
@@ -2816,8 +2817,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeListadoInspeccion,
             columns: [
                 new Ext.grid.RowNumberer(),
-                {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
-                {header: 'Cód inspección', dataIndex: 'id_inspeccion', sortable: true, width: 200},
+                {header: 'Código trámite', dataIndex: 'codigo_tramite', sortable: true, width: 150},
+                {header: 'Código inspección', dataIndex: 'id_denuncia', hidden: true},
+                {header: 'Cód inspección', dataIndex: 'id_inspeccion', sortable: true, width: 150},
                 {
                     header: 'Codificacion',
                     dataIndex: 'id_actividad',
@@ -2915,8 +2917,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeListadoTodosInspectores,
             columns: [
                 new Ext.grid.RowNumberer(),
-                {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
-                {header: 'Cód inspección', dataIndex: 'id_inspeccion', sortable: true, width: 200},
+                {header: 'Código trámite', dataIndex: 'codigo_tramite',  sortable: true, width: 150},
+                {header: 'Código inspección', dataIndex: 'id_denuncia', hidden: true},
+                {header: 'Cód inspección', dataIndex: 'id_inspeccion', sortable: true, width: 150},
                 {
                     header: 'Codificacion',
                     dataIndex: 'id_actividad',
