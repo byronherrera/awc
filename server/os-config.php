@@ -31,11 +31,15 @@ class config {
 
    public $DB_CONN_STRING = 'mysql:dbname=prueba;host=localhost';
    //public $DB_CONN_STRING = 'mysql:dbname=amc-seguimiento-prueba;host=localhost';
+ 
+   //public $DB_CONN_STRING = 'mysql:dbname=procesos-amc;host=localhost';
+
   // public $DB_CONN_STRING = 'mysql:dbname=amc-seguimiento;host=localhost';
    public $DB_USERNAME = 'root';
    public $DB_PASSWORD = '111111';
     //public $DB_PASSWORD = '';
 
+    public $AMBIENTE = 'PRUEBAS';
 
    public $URLBASE = 'http://172.20.136.71:8080/amc-procesos/';
  

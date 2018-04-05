@@ -43,3 +43,15 @@ MODIFY COLUMN `proyecto` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci
 MODIFY COLUMN `predio` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `proyecto`,
 MODIFY COLUMN `zona` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `predio`,
 ADD COLUMN `guia` varchar(255) NULL AFTER `zona`;
+
+ALTER TABLE `prueba`.`amc_inspeccion_nio`
+ADD COLUMN `guia_generada` int(1) NULL AFTER `fecha_ingreso`;
+
+ALTER TABLE `prueba`.`amc_guias_nio`
+MODIFY COLUMN `numero` varchar(20) NULL DEFAULT NULL AFTER `id`;
+
+ALTER TABLE `prueba`.`amc_guias_nio`
+CHANGE COLUMN `creado` `fecha_registro` timestamp NULL DEFAULT CURRENT_TIMESTAMP AFTER `unidad`;
+
+ALTER TABLE `amc_inspeccion_ccf`
+ADD COLUMN `guia_generada` int(1) NULL AFTER `numero_informe_certificado`;

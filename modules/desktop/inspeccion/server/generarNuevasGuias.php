@@ -34,8 +34,8 @@ $today = date("Y-n-j-H-i-s");
 $objPHPExcel = new PHPExcel();
 $objPHPExcel->setActiveSheetIndex(0);
 
-
-$where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
+//$where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
+$where = " WHERE   procesado_inspeccion = 1 and despacho_secretaria_insp = 0 AND amc_inspeccion.funcionario_entrega IS NOT NULL";
 //$where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega IS NOT NULL ";
 $sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario  
         FROM amc_denuncias as b 
@@ -193,7 +193,8 @@ function envioEmail($funcionario)
 {
     global $os;
 
-    $where = " WHERE reasignacion = 3 AND  procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
+//    $where = " WHERE reasignacion = 3 AND  procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
+    $where = " WHERE procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
     $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
             DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
@@ -232,7 +233,7 @@ function envioEmail($funcionario)
 
     $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
     $email =regresaEmail($funcionario);
- //   $email = "byron.herrera@quito.gob.ec";
+//   $email = "byron.herrera@quito.gob.ec";
     $asunto = "Nueva inspección asignada, " . $fechaActual2 . " - " . regresaEmail($funcionario);
     $envio = enviarEmail($email, $asunto, $mensaje);
 }
@@ -278,7 +279,8 @@ function enviarEmail($email, $nombre, $mensaje)
 
     $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
     //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
-    //$headers .= "CC: susan@example.com\r\n";
+    $headers .= "CCO: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec\r\n";
+    $headers .= "Bcc: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec\r\n";
 
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
@@ -317,8 +319,9 @@ function imprimeActa($filaTitulo1, $funcionario)
     $os->db->conn->query("SET NAMES 'utf8'");
     // se determina un filtro  para determinar las denuncias / tramites pendientes
 
-    $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
-//    $where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega = $funcionario ";
+    $where = " WHERE   procesado_inspeccion = 1 and despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
+//    $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
+
 
 
     $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,

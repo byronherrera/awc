@@ -28,14 +28,14 @@ $numeroGuia = '';
 $os->db->conn->query("SET NAMES 'utf8'");
 
 //  validacion para la primera vez
-if (total_guias() > 0) {
+/*if (total_guias() > 0) {
     $nombre = $os->db->conn->query("SELECT id_unidad, SUBSTRING(numero,10) as num FROM amc_guias_inspeccion WHERE id = $newIdGuia");
     $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
     $numeroGuia = $rowguia['num'];
 } else {
     $unidad = 0;
 }
-
+*/
 if (isset($_GET['reimpresion']))
     $reimpresion = settype($_GET['reimpresion'], 'boolean');
 else
@@ -48,14 +48,14 @@ $today = date("Y-n-j");
 $os->db->conn->query("SET NAMES 'utf8'");
 if ($reimpresion)
     $sql = "SELECT *
-        FROM amc_denuncias 
-        WHERE guia = $newIdGuia 
-        ORDER BY codigo_tramite";
+        FROM amc_inspeccion_nio 
+        WHERE guia_generada = 0 
+        ORDER BY num_nio";
 else
     $sql = "SELECT *
-        FROM amc_denuncias 
-        WHERE reasignacion = 3 and ( procesado_inspeccion = 0 and despacho_secretaria_insp = 0)
-        ORDER BY codigo_tramite";
+        FROM amc_inspeccion_nio
+        WHERE guia_generada = 0
+        ORDER BY num_nio";
 
 //se carga el listado de
 $result = $os->db->conn->query($sql);
@@ -80,7 +80,7 @@ $styleArray = array(
 //get nombre largo unidad
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $unidad = 3;
+    $unidad = 2;
     $sql = "SELECT nombre_completo FROM amc_unidades WHERE id = $unidad";
     $resultguia = $os->db->conn->query($sql);
     if ($resultguia) {
@@ -93,15 +93,13 @@ $styleArray = array(
 //get numero de guia
 
 $os->db->conn->query("SET NAMES 'utf8'");
-$sql = "SELECT SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias_nio ORDER BY a DESC, num DESC LIMIT 1";
+$sql = "SELECT COUNT(id) num FROM amc_guias_nio WHERE fecha_registro > '" .date("Y"). "-01-01 01:01:01';";
 $resultguia = $os->db->conn->query($sql);
 if ($resultguia) {
     $row = $resultguia->fetch(PDO::FETCH_ASSOC);
     if ($row) {
         if (!$reimpresion)
             $numeroGuia = $row['num'] + 1;
-
-
     }
 }
 $year = date("Y");
@@ -119,13 +117,14 @@ if ($number_of_rows > 0) {
 
     $idUsuario = $os->get_member_id();
     if (!$reimpresion) {
-        $sql = "INSERT INTO amc_guias_nio (numero, unidad, id_member, id_unidad) VALUES ('SGE-$year-$numeroGuia', '$nombreUnidad', '$idUsuario', '$unidad')";
+        $sql = "INSERT INTO amc_guias_nio (numero, unidad, id_member, id_unidad) VALUES ('GUIA-NIO-$numeroGuia-$year', '$nombreUnidad', '$idUsuario', '$unidad')";
         $resultguia = $os->db->conn->query($sql);
         $newIdGuia = $os->db->conn->lastInsertId();
     }
 
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "GUIA NIOs No. -$numeroGuia-$year");
+    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "GUIA NIOs No. $numeroGuia-$year");
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, $nombreUnidad);
+
 
 //insert  numero de guia
 }
@@ -141,15 +140,22 @@ $filascabecera = $number_of_rows + $filaInicio + 2;
 $objPHPExcel->getActiveSheet()->mergeCells('C' . ($filascabecera) . ':D' . ($filascabecera));
 $objPHPExcel->getActiveSheet()->mergeCells('C' . ($filascabecera + 1) . ':D' . ($filascabecera + 1));
 $objPHPExcel->getActiveSheet()->mergeCells('C' . ($filascabecera + 2) . ':D' . ($filascabecera + 2));
+$objPHPExcel->getActiveSheet()->mergeCells('C' . ($filascabecera + 3) . ':D' . ($filascabecera + 3));
 
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filascabecera, '__________________');
-$objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 1), $nombreUsuario);
-$objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 2), "ENTREGADO POR");
+$objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 1), "ENTREGADO POR:");
+$objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 2), $nombreUsuario);
+$objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 3), "SECRETARIA GENERAL:");
 
 $objPHPExcel->getActiveSheet()->mergeCells('F' . ($filascabecera + 1) . ':I' . ($filascabecera + 2));
-$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 1), "RECIBIDO POR");
-$objPHPExcel->getActiveSheet()->mergeCells('F' . $filascabecera . ':I' . $filascabecera);
+$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 1), "RECIBIDO POR:");
+$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 3), "ARCHIVO GENERAL");
 $objPHPExcel->getActiveSheet()->setCellValue('C' . $filascabecera, '__________________');
+
+$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 5), '__________________');
+$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 6), "APROBADO POR:");
+$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 7), "AB. FERNANDO AGUILAR");
+$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 8), "SECRETARIO GENERAL");
 
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
@@ -162,7 +168,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(50);
 
 
 
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'CCF No');
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'NIO No');
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'PROYECTO');
 $objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'PREDIO');
 $objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'ZONA');
@@ -175,34 +181,17 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     if (strlen($newIdGuia) > 0) {
         if (!$reimpresion) {
             $os->db->conn->query("SET NAMES 'utf8'");
-            $sql = "UPDATE amc_denuncias SET guia='$newIdGuia', despacho_secretaria = 'true' WHERE (id='" . $rowdetalle['id'] . "')";
+            $sql = "UPDATE amc_inspeccion_nio SET guia_generada = 1 WHERE (id='" . $rowdetalle['id'] . "')";
             $os->db->conn->query($sql);
         }
     }
 
     $noExistenFilas = false;
-    switch ($rowdetalle['id_tipo_documento']) {
-        case 1:
-            $rowdetalle['id_tipo_documento'] = 'Denuncias';
-            break;
-        case 2:
-            $rowdetalle['id_tipo_documento'] = 'Comunicados';
-            break;
-    }
 
-    switch ($rowdetalle['id_caracter_tramite']) {
-        case 1:
-            $rowdetalle['id_caracter_tramite'] = 'Ordinario';
-            break;
-        case 2:
-            $rowdetalle['id_caracter_tramite'] = 'Urgente';
-            break;
-    }
-
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['codigo_tramite']);
-    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['recepcion_documento']);
-    $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['id_tipo_documento']);
-    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['num_documento']);
+    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['num_nio']);
+    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['proyecto']);
+    $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['predio']);
+    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['zona']);
 
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':D' . $filaInicio)->applyFromArray($styleArray);
@@ -212,12 +201,12 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 
 // Set document properties
 //echo date('H:i:s') , " Set document properties" , PHP_EOL;
-$objPHPExcel->getProperties()->setCreator("Byron Herrera")
-    ->setLastModifiedBy("Byron Herrera")
-    ->setTitle("AMC reporte")
+$objPHPExcel->getProperties()->setCreator("Carlos Cevallos")
+    ->setLastModifiedBy("Carlos Cevallos")
+    ->setTitle("AMC reporte NIO")
     ->setSubject("")
-    ->setDescription("AMC reporte, generated using PHP classes.")
-    ->setKeywords("AMC reporte")
+    ->setDescription("AMC reporte NIO, generated using PHP classes.")
+    ->setKeywords("AMC reporte NIO")
     ->setCategory("Archivo");
 
 

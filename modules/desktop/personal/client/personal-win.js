@@ -1447,12 +1447,22 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'excel-icon',
                                     handler: this.botonExportarReportePersonal,
                                     scope: this,
-                                    text: 'Generar Reporte',
-                                    tooltip: 'Se genera el reporte de los personal',
+                                    text: 'Generar Distributivo personal',
+                                    tooltip: 'Se genera el distributivo de personal',
                                     disabled: false
                                 },
-
+                                 '-',
+                                {
+                                    id: 'tb_repotePersonalTodo',
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarReportePersonalTodo,
+                                    scope: this,
+                                    text: 'Generar Reporte',
+                                    tooltip: 'Se genera el reporte con todos los campos',
+                                    disabled: false
+                                },
                                 '->'
+
                                 , {
                                     text: 'Buscar por:'
                                     , xtype: 'tbtext'
@@ -1624,6 +1634,20 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     window.location.href = 'modules/desktop/personal/server/descargaPersonalId.inc.php?personal=' + selectPersonal;
+                }
+            }
+        });
+    },
+    botonExportarReportePersonalTodo: function () {
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo con el informe<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/personal/server/descargaPersonalTodo.php?personal=' + selectPersonal;
                 }
             }
         });

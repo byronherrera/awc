@@ -1,4 +1,3 @@
-
 <?php
 require_once '../../../../server/os.php';
 require_once '../../../common/Classes/funciones.php';
@@ -11,55 +10,33 @@ if (!$os->session_exists()) {
 function selectDetalleInspecciones()
 {
     global $os;
-    if($_POST ['id'] != null){
-        $id = (int)$_POST ['id'];
-    }else{
-        $id = '';
+    if (isset($_POST['id'])) {
+            $id = (int)$_POST ['id'];
+            $where = " id_denuncia  = '$id'";
     }
-
-    //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'id_inspeccion';
-    $funcionario_entrega = $os->get_member_id();
-    $and = "";
 
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
-        $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
+        if (isset($_POST['filterField'])) {
             $columnaBusqueda = $_POST['filterField'];
         }
-        $and = " AND $columnaBusqueda LIKE '%$campo%'";
+        $where  = " $columnaBusqueda = '$campo'";
     }
 
-
-    if (isset ($_POST['start']))
-        $start = $_POST['start'];
-    else
-        $start = 0;
-
-    if (isset ($_POST['limit']))
-        $limit = $_POST['limit'];
-    else
-        $limit = 100;
     // cambio BH
     $orderby = 'ORDER BY id DESC';
 
     $os->db->conn->query("SET NAMES 'utf8'");
-
-    if($id!=0){
-        $os->db->conn->query("SET NAMES 'utf8'");
-        $sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.id_denuncia = $id $and $orderby LIMIT $start, $limit";
-        $result = $os->db->conn->query($sql);
-        $data = array();
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
-            $data[] = $row;
-        }
-        echo json_encode(array(
-                "success" => true,
-                "data" => $data)
-        );
+    $sql = "SELECT * FROM amc_inspeccion WHERE $where  $orderby ";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
     }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
 }
 
 function selectDetalleTodasInspecciones()
@@ -73,7 +50,7 @@ function selectDetalleTodasInspecciones()
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
+        if (isset($_POST['filterField'])) {
             $columnaBusqueda = $_POST['filterField'];
         }
         $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
@@ -130,7 +107,7 @@ function insertDetalleInspecciones()
 
     $sql = "INSERT INTO amc_inspeccion($cadenaCampos)
 	values($cadenaDatos);";
-     $sql = $os->db->conn->prepare($sql);
+    $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
@@ -188,9 +165,9 @@ function updateDetalleInspecciones()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        if($clave=='funcionario_reasignacion'){
-            if($valor==''){
-                $valor='0';
+        if ($clave == 'funcionario_reasignacion') {
+            if ($valor == '') {
+                $valor = '0';
             }
         }
         $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
@@ -232,7 +209,7 @@ function selectDetalleInspeccionesForm()
 {
     global $os;
     $id = (int)$_POST ['id'];
-    if($id!=0){
+    if ($id != 0) {
         $os->db->conn->query("SET NAMES 'utf8'");
         $sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.id_denuncia = $id";
         $result = $os->db->conn->query($sql);

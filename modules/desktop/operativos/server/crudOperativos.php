@@ -382,6 +382,7 @@ function updateOperativos()
                                 <td valign="top">Fecha Fin</td>
                                 <td valign="top">Lugar Intervencion</td>
                                 <td valign="top">Punto Encuentro</td>
+                                <td valign="top">Estado</td>
                             </tr>';
                 $detalle .= "<tr>" .
                     '<td valign="top">' . $data->id . '</td>' .
@@ -389,10 +390,12 @@ function updateOperativos()
                     '<td valign="top">' . $data->fecha_fin_planificacion . "</td>" .
                     '<td valign="top">' . $data->punto_encuentro_planificado . "</td>" .
                     '<td valign="top">' . $data->zona . "</td>" .
+                    '<td valign="top"><strong>' . nombreEstado($data->id_estado) . "</strong></td>" .
                     "</tr></table><br>";
 
                 // pedimos listado de funcionarios que van al mismo operativo
                 $listado = getListdoFuncionariosOperativo($data->id);
+
 
                 if (count($listado) > 0)
                     $detalle .= "<p>Personal asignado</p>";
@@ -591,10 +594,14 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
     //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
 
+
     if (count($funcionarios) > 0) {
         $conCopia = implode(",", $funcionarios);
         $headers .= "CC: $conCopia \r\n";
     }
+
+    $headers .= "CCO: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec \r\n";
+    $headers .= "Bcc: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec \r\n";
 
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
@@ -630,4 +637,17 @@ function getListdoFuncionariosOperativo($id)
         $funcionarios[] = $row ['id_member'];
     }
     return $funcionarios;
+}
+
+function nombreEstado($data)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+    $sql = "SELECT nombre FROM amc_operativos_estados WHERE id = " . $data;
+    $nombre = $os->db->conn->query($sql);
+
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['nombre'];
+
 }
