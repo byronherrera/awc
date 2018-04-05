@@ -382,14 +382,16 @@ function updateOperativos()
                                 <td valign="top">Fecha Fin</td>
                                 <td valign="top">Lugar Intervencion</td>
                                 <td valign="top">Punto Encuentro</td>
+                                <td valign="top">Observaciones</td>
                                 <td valign="top">Estado</td>
                             </tr>';
                 $detalle .= "<tr>" .
                     '<td valign="top">' . $data->id . '</td>' .
-                    '<td valign="top">' . $data->fecha_inicio_planificacion . "</td>" .
-                    '<td valign="top">' . $data->fecha_fin_planificacion . "</td>" .
+                    '<td valign="top">' . date("Y-m-d <br> H:m", strtotime($data->fecha_inicio_planificacion)) . "</td>" .
+                    '<td valign="top">' . date("Y-m-d <br> H:m", strtotime($data->fecha_fin_planificacion))  . "</td>" .
                     '<td valign="top">' . $data->punto_encuentro_planificado . "</td>" .
                     '<td valign="top">' . $data->zona . "</td>" .
+                    '<td valign="top">' . $data->observaciones  . "</td>" .
                     '<td valign="top"><strong>' . nombreEstado($data->id_estado) . "</strong></td>" .
                     "</tr></table><br>";
 
@@ -411,7 +413,7 @@ function updateOperativos()
 
                 $email = regresaEmail($funcionario);
                 //   $email = "byron.herrera@quito.gob.ec";
-                $asunto = "Nuevo operativo asignado, " . $fechaActual2 . " - " . regresaEmail($funcionario);
+                $asunto = "Nuevo operativo asignado, " . " - " . regresaEmail($funcionario);
                 enviarEmail($email, $asunto, $mensaje, $funcionarios);
             }
         }
@@ -434,7 +436,7 @@ function updateOperativos()
 
         if ($data->id_estado === "2") {
             $datetime = new DateTime();
-            $data->fecha_informe = $datetime->format('Y-m-d h:i:s');
+            $data->fecha_informe = $datetime->format('Y-m-d H:i:s');
         }
     };
 
@@ -569,12 +571,17 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
                 <p>De conformidad con el Memorando No. AMC-SM-JA-2018-003, del 4 de enero de 2018, mediente el cual la 
                 Máxima Autoridad dispone</p>
                 <p>"Todo el personal de la Agencia Metropolitana de Control, deberá utilizar de manera obligatoria el módulo de operativos que se encuentra dentro de la INTRANET de la Institución, a fin de generar los informes de los operativos realizados. En el sistema se deberá llenar los datos solicitados dentro de las 24 horas siguientes de haber realizado el operativo, con el objetivo de que se genere el informe respectivo."</p>
+
                 <br>
-                </p>
+                <p>"Se les recuerda a los funcionarios incluir toda la información recopilada del operativo en los campos respectivos, se dará seguimiento al mismo."</p>
+
+                <br>
+
                 <p>Fecha : ' . $fecha . '</p>
                 <p>Atentamente </p>
                 
-                <p>DIRECCION INSPECCION</p>
+                <p>SUPERVISION METROPOLITANA</p>
+                <p>GAD MDMQ AGENCIA METROPOLITANA DE CONTROL</p>
                 <p></p>
                 <p>INFORMACIÓN IMPORTANTE</p>
                 <p>************************************************</p>
@@ -594,19 +601,24 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
     //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
 
-
     if (count($funcionarios) > 0) {
         $conCopia = implode(",", $funcionarios);
         $headers .= "CC: $conCopia \r\n";
     }
 
-    $headers .= "CCO: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec \r\n";
-    $headers .= "Bcc: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec \r\n";
+    $headers .= "CCO: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec, paul.hidalgo@quito.gob.ec, galo.salazar@quito.gob.ec, eduardo.chicaiza@quito.gob.ec \r\n";
+    $headers .= "Bcc: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec, paul.hidalgo@quito.gob.ec, galo.salazar@quito.gob.ec, eduardo.chicaiza@quito.gob.ec \r\n";
 
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-    mail($email, $nombre, $mensaje, $headers);
+    // VALIDAMOS QUE SOLO SE ENVIE EL CORREO EN PRODUCCION
+    //require('../../../../server/os-config.php');
+    $config = new config();
+    if ($config->AMBIENTE == "PRODUCCION") {
+        mail($email, $nombre, $mensaje, $headers);
+    }
+
 }
 
 function verificaEnvioEmail($id)

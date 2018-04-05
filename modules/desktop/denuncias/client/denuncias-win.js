@@ -644,7 +644,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         //fin mantenimiento DenunciasGuías
 
 
-
 // fin pestañas de mantenimiento
 
         // inicio ventana denuncias
@@ -694,8 +693,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: false},
                 {name: 'id_tipo_documento', allowBlank: false},
                 {name: 'id_ordenanza', allowBlank: true},
-                {name: 'cedula', allowBlank: true},
-                {name: 'email', allowBlank: true},
+               /// {name: 'cedula', allowBlank: true},
+               // {name: 'email', allowBlank: true},
                 {name: 'num_documento', allowBlank: false},
                 {name: 'remitente', allowBlank: false},
                 {name: 'asunto', allowBlank: false},

@@ -201,7 +201,7 @@ textoSiguieteFila('RETIROS EFECTUADOS', 'A', 'F', 'left', true, "B");
 
 textoSiguieteFila("Nombre Administrado", 'A', 'A', 'center', true, "B");
 textoSiguieteFila("Dirección", 'B', 'B', 'center', false, "B");
-textoSiguieteFila("tipo", 'C', 'C', 'center', false, "B");
+textoSiguieteFila("Tipo", 'C', 'C', 'center', false, "B");
 textoSiguieteFila("Código bodega ", 'D', 'D', 'center', false, "B");
 textoSiguieteFila("Detalle", 'E', 'F', 'center', false, "B");
 $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
@@ -221,6 +221,33 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
 }
+
+
+// recuperamos el listado de acciones
+$sql = "SELECT * FROM amc_operativos_acciones WHERE id_operativo = '" . $operativo['id'] . "'";
+$nombres = $os->db->conn->query($sql);
+$number_of_rows = $nombres->rowCount();
+
+if ($number_of_rows > 0) {
+    textoSiguieteFila('ACCIONES REALIZADAS', 'A', 'F', 'left', true, "B");
+
+    textoSiguieteFila("Acciones realizadas", 'A', 'B', 'center', true, "B");
+    textoSiguieteFila("Totales", 'C', 'D', 'center', false, "B");
+    textoSiguieteFila("Detalle", 'E', 'F', 'center', false, "B");
+
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
+
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        // declarar tamaños de letra
+        textoSiguieteFila(regresaTipoAccion($nombreDetalle['id_accion']) , 'A', 'B', 'center');
+        textoSiguieteFila( $nombreDetalle['cantidad'] , 'C', 'D', 'center', false);
+        textoSiguieteFila($nombreDetalle['observaciones'], 'E', 'F', 'center', false);
+
+        $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
+    }
+}
+
 
 
 textoSiguieteFila("6. RESULTADOS", 'A', 'F', 'left', true, "B");
@@ -455,6 +482,20 @@ function regresaUnidad($id_dato)
     if ($id_dato != '') {
         $sql = "SELECT *
             FROM amc_unidades WHERE id = " . $id_dato;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre_completo'];
+    } else
+        return '';
+
+}
+
+function regresaTipoAccion($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id_dato != '') {
+        $sql = "SELECT * FROM amc_operativos_acciones_tipos WHERE id = " . $id_dato;
         $nombre = $os->db->conn->query($sql);
         $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
         return $rownombre['nombre_completo'];

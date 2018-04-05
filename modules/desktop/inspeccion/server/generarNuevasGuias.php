@@ -24,32 +24,45 @@ if (!$os->session_exists()) {
     die('No existe sesión!');
 }
 
-// si no existe unidad es para reimpresion se envia como parametro guia, obtenemos id unidad
-if (isset($_GET['param'])) {
-    $data = json_decode(stripslashes($_GET["param"]));
+// para el caso de reimpresion se lee si existen los parametros guia y reimpresion
+if (isset($_GET['guia'])) {
+    $acta =  $_GET["guia"] ;
 }
+
+if (isset($_GET['reimpresion']))
+    $reimpresion = settype($_GET['reimpresion'], 'boolean');
+else
+    $reimpresion = false;
+
 
 $today = date("Y-n-j-H-i-s");
 
 $objPHPExcel = new PHPExcel();
 $objPHPExcel->setActiveSheetIndex(0);
 
+
+if (!$reimpresion) {
+$where = " WHERE  ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
 //$where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
-$where = " WHERE   procesado_inspeccion = 1 and despacho_secretaria_insp = 0 AND amc_inspeccion.funcionario_entrega IS NOT NULL";
-//$where = " WHERE reasignacion = 3   AND amc_inspeccion.funcionario_entrega IS NOT NULL ";
-$sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario  
+
+    $sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario  
         FROM amc_denuncias as b 
         INNER JOIN amc_inspeccion ON b . id = amc_inspeccion . id_denuncia
         $where  ORDER BY b.recepcion_documento";
 
 
-$resultFuncionarios = $os->db->conn->query($sql);
-$siguienteFila = 1;
-while ($rowFuncionario = $resultFuncionarios->fetch(PDO::FETCH_ASSOC)) {
-    if (($rowFuncionario['funcionario'] != '') and (!is_null($rowFuncionario['funcionario']))) {
-        envioEmail($rowFuncionario['funcionario']);
-        $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario']);
+    $resultFuncionarios = $os->db->conn->query($sql);
+    $siguienteFila = 1;
+    while ($rowFuncionario = $resultFuncionarios->fetch(PDO::FETCH_ASSOC)) {
+        if (($rowFuncionario['funcionario'] != '') and (!is_null($rowFuncionario['funcionario']))) {
+            envioEmail($rowFuncionario['funcionario']);
+            $siguienteFila = imprimeActa($siguienteFila, $rowFuncionario['funcionario']);
+        }
     }
+} else {
+ //   envioEmail($rowFuncionario['funcionario']);
+    $siguienteFila = 1;
+    imprimeActa($siguienteFila, 0, $reimpresion, $acta);
 }
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -63,10 +76,8 @@ $pageMargins->setBottom($margin);
 $pageMargins->setLeft($margin);
 $pageMargins->setRight($margin);
 
-
 $objPHPExcel->getActiveSheet()->setShowGridLines(false);
 
-//echo date('H:i:s') , " Set orientation to landscape" , PHP_EOL;
 $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
 
 ////////////////////////////////////////////////
@@ -109,7 +120,7 @@ function nombreZonal($tipo)
 }
 
 
-function totalesPorTipo($filaTitulo1, $where)
+function totalesPorTipo($filaTitulo1 )
 {
     global $objPHPExcel;
     global $os;
@@ -193,8 +204,8 @@ function envioEmail($funcionario)
 {
     global $os;
 
-//    $where = " WHERE reasignacion = 3 AND  procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
-    $where = " WHERE procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
+    //$where = " WHERE reasignacion = 3 AND  procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
+    $where = " WHERE   procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
     $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
             DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
@@ -232,7 +243,7 @@ function envioEmail($funcionario)
     $fechaActual2 = date('d-m-Y');
 
     $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
-    $email =regresaEmail($funcionario);
+    $email = regresaEmail($funcionario);
 //   $email = "byron.herrera@quito.gob.ec";
     $asunto = "Nueva inspección asignada, " . $fechaActual2 . " - " . regresaEmail($funcionario);
     $envio = enviarEmail($email, $asunto, $mensaje);
@@ -285,10 +296,13 @@ function enviarEmail($email, $nombre, $mensaje)
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-    mail($email, $nombre, $mensaje, $headers);
+
+    $config = new config();
+    if ($config->AMBIENTE == "PRODUCCION")
+        mail($email, $nombre, $mensaje, $headers);
 }
 
-function imprimeActa($filaTitulo1, $funcionario)
+function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0)
 {
     $filaTitulo2 = $filaTitulo1 + 1;
     $filacabecera = $filaTitulo1 + 6;
@@ -313,43 +327,72 @@ function imprimeActa($filaTitulo1, $funcionario)
     }
     $titulosegundo = '';
     $numeroGuia = '';
+
     // si no existe unidad es para reimpresion se envia como parametro guia, obtenemos id unidad
+    if (!$reimpresion ) {
+        $os->db->conn->query("SET NAMES 'utf8'");
 
 
-    $os->db->conn->query("SET NAMES 'utf8'");
-    // se determina un filtro  para determinar las denuncias / tramites pendientes
+        // se determina un filtro  para determinar las denuncias / tramites pendientes
 
-    $where = " WHERE   procesado_inspeccion = 1 and despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
-//    $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
-
+        // $where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
+        $where = " WHERE  ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
 
 
-    $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
+        $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
             DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
             FROM amc_denuncias as b 
             INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
             $where  ORDER BY b.recepcion_documento";
 
-    $result = $os->db->conn->query($sql);
-    $number_of_rows = $result->rowCount();
+        $result = $os->db->conn->query($sql);
+        $number_of_rows = $result->rowCount();
 
 
-    if ($number_of_rows > 0) {
-        if (total_guias() > 0) {
-            //$nombre = $os->db->conn->query("SELECT id_unidad, SUBSTRING(numero,10) as num FROM amc_guias_inspeccion WHERE id = $newIdGuia");
-            $nombre = $os->db->conn->query("SELECT MAX(numero) as num FROM amc_guias_inspeccion ");
-            $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
-            $numeroGuia = $rowguia['num'] + 1;
+        if ($number_of_rows > 0) {
+            if (total_guias() > 0) {
+                //$nombre = $os->db->conn->query("SELECT id_unidad, SUBSTRING(numero,10) as num FROM amc_guias_inspeccion WHERE id = $newIdGuia");
+                $nombre = $os->db->conn->query("SELECT MAX(numero) as num FROM amc_guias_inspeccion ");
+                $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
+                $numeroGuia = $rowguia['num'] + 1;
+            } else {
+                // se valida para la primera vez,
+                $numeroGuia = 1;
+            }
+            $titulosegundo = "ACTA DE ENTREGA  $year-$numeroGuia";
+            actualizar_guia_inspeccion($numeroGuia);
         } else {
-            // se valida para la primera vez,
-            $numeroGuia = 1;
+            $titulosegundo = "ACTA SIN DATOS";
+            $numeroGuia = 'SIN-DATOS';
         }
-        $titulosegundo = "ACTA DE ENTREGA  $year-$numeroGuia";
-        actualizar_guia_inspeccion($numeroGuia);
+
     } else {
-        $titulosegundo = "ACTA SIN DATOS";
-        $numeroGuia = 'SIN-DATOS';
+
+        $os->db->conn->query("SET NAMES 'utf8'");
+
+        $where = " WHERE  amc_inspeccion.guia = $acta ";
+
+
+        $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
+            DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
+            FROM amc_denuncias as b 
+            INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
+            $where  ORDER BY b.recepcion_documento";
+
+        $result = $os->db->conn->query($sql);
+        $number_of_rows = $result->rowCount();
+
+
+        if ($number_of_rows > 0) {
+                $numeroGuia = $acta;
+            $titulosegundo = "ACTA DE ENTREGA  $year-$numeroGuia";
+
+        } else {
+            $titulosegundo = "ACTA SIN DATOS";
+            $numeroGuia = 'SIN-DATOS';
+        }
     }
+
 
     $styleArray = array(
         'borders' => array(
@@ -374,7 +417,7 @@ function imprimeActa($filaTitulo1, $funcionario)
     $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 4) . ':H' . ($filaTitulo2 + 4));
     $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 + 4), "Cargo: SECRETARIA DIRECCION DE INSPECCION.");
 
-    $offsetTotalesTipo = totalesPorTipo($number_of_rows + $filaInicio, $where);
+    $offsetTotalesTipo = totalesPorTipo($number_of_rows + $filaInicio );
     $filasPiePagina = $number_of_rows + $filaInicio + 2 + $offsetTotalesTipo;
 
 
