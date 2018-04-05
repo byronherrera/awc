@@ -15,7 +15,7 @@ function selectDetalleInspecciones()
     //if($id!=0){
 
     //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'id_inspeccion';
+    //$columnaBusqueda = 'id_inspeccion';
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
@@ -65,8 +65,9 @@ function insertDetalleInspecciones()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
-    //$data->id = generaCodigoProcesoOrdenanza();
-    $data->id_inspeccion = generaNuevoCodigoInspeccion();
+    $data->id = generaCodigoProcesoOrdenanza();
+    //$data->id_inspeccion = generaNuevoCodigoInspeccion();
+    $data->num_nio = 'AMC-NIO-'.date("y").'-'.generaNuevoCodigoConstrucciones().'_C';
     $data->fecha_ingreso = date('Y-m-d H:i:s');
 
     //genero el listado de nombre de campos
@@ -84,7 +85,7 @@ function insertDetalleInspecciones()
 	values($cadenaDatos);";
      $sql = $os->db->conn->prepare($sql);
     $sql->execute();
-
+/*
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
 
@@ -92,7 +93,7 @@ function insertDetalleInspecciones()
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
-
+*/
 
     echo json_encode(array(
         "success" => true,
@@ -107,7 +108,7 @@ function generaCodigoProcesoOrdenanza()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(id) AS maximo FROM amc_inspeccion";
+    $sql = "SELECT MAX(id) AS maximo FROM amc_inspeccion_nio";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -116,7 +117,7 @@ function generaCodigoProcesoOrdenanza()
     } else {
         // valor inicial proceso
 
-        return 10759;
+        return 33;
 
     }
 }

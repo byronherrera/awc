@@ -193,6 +193,7 @@ $styleArray = array(
 );
 
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
+
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO OPERATIVOS");
@@ -298,9 +299,9 @@ $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Fecha');
 $objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Inicio');
 $objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'Fin');
 $objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Funcionarios Operantes');
-$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Tipo control');
-$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Complejidad');
-$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Observaciones');
+$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Observaciones');
+$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Tipo control');
+$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Complejidad');
 $objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Punto Encuentro');
 $objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Lugar Intervención');
 $objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Zonal');
@@ -368,9 +369,9 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $inicio);
     $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $fin);
     $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['personal']);
-    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['id_tipo_control']);
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, substr($rowdetalle['id_nivel_complejidad'], 0, 200));
-    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['observaciones']);
+    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['observaciones']);
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, $rowdetalle['id_tipo_control']);
+    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, substr($rowdetalle['id_nivel_complejidad'], 0, 200));
     $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, strip_tags($rowdetalle['punto_encuentro_planificado']));
     $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['zona']);
     $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['id_zonal']);

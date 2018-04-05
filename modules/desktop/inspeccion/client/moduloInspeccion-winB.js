@@ -501,13 +501,15 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 //{name: 'id_denuncia', readOnly: false, allowBlank: true},
-                {name: 'id_inspeccion', readOnly: false, allowBlank: true},
+                //{name: 'id_inspeccion', readOnly: false, allowBlank: true},
+                {name: 'id_ccf', readOnly: false, allowBlank: true},
+                {name: 'fecha_recepcion_documento',  type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'num_registro', readOnly: false, allowBlank: true},
                 {name: 'tecnico', readOnly: false, allowBlank: true},
-                {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
-                {name: 'fecha_inicio', readOnly: false, allowBlank: true},
-                {name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
+               // {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
+                //{name: 'fecha_inicio', readOnly: false, allowBlank: true},
+                //{name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
                 {name: 'asunto', readOnly: false, allowBlank: true},
                 {name: 'tipo', readOnly: false, allowBlank: true},
                 {name: 'zona', readOnly: false, allowBlank: true},
@@ -516,11 +518,12 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'proyecto', readOnly: false, allow: true},
                 {name: 'etapa', readOnly: false, allow: true},
                 {name: 'tecnico', readOnly: false, allow: true},
-                {name: 'fecha_inspeccion', readOnly: false, allow: true},
-                {name: 'fecha_egreso_verificacion', readOnly: false, allow: true},
-                {name: 'fecha_certificado_informe', readOnly: false, allow: true},
-                {name: 'resultado', readOnly: false, allow: true},
-                {name: 'numero_informe_certificado', readOnly: false, allow: true}
+                //{name: 'fecha_inspeccion', readOnly: false, allow: true},
+                //{name: 'fecha_egreso_verificacion', readOnly: false, allow: true},
+                //{name: 'fecha_certificado_informe', readOnly: false, allow: true},
+                //{name: 'resultado', readOnly: false, allow: true},
+                {name: 'numero_informe_certificado', readOnly: false, allow: true},
+                {name: 'guia_generada', readOnly: false, allowBlank: true}
             ]
         });
 
@@ -533,14 +536,15 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 //{name: 'id_denuncia', readOnly: false, allowBlank: true},
-                {name: 'id_inspeccion', readOnly: false, allowBlank: true},
+                //{name: 'id_inspeccion', readOnly: false, allowBlank: true},
                 {name: 'num_nio', readOnly: false, allowBlank: true},
                 {name: 'proyecto', readOnly: false, allowBlank: true},
                 {name: 'predio', readOnly: false, allowBlank: true},
                 {name: 'zona', readOnly: false, allowBlank: true},
                 {name: 'guia', readOnly: false, allowBlank: true},
                 {name: 'certificado', readOnly: false, allowBlank: true},
-                {name: 'fecha_ingreso', readOnly: false, allowBlank: true}
+                {name: 'fecha_ingreso', readOnly: false, allowBlank: true},
+                {name: 'guia_generada', readOnly: false, allowBlank: true}
             ]
         });
 
@@ -553,13 +557,13 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 //{name: 'id_denuncia', readOnly: false, allowBlank: true},
-                {name: 'id_inspeccion', readOnly: false, allowBlank: true},
+                //{name: 'id_inspeccion', readOnly: false, allowBlank: true},
                 {name: 'fecha_recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'num_registro', readOnly: false, allowBlank: true},
                 {name: 'tecnico', readOnly: false, allowBlank: true},
-                {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
-                {name: 'fecha_inicio', readOnly: false, allowBlank: true},
-                {name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
+               // {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
+                //{name: 'fecha_inicio', readOnly: false, allowBlank: true},
+                //{name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
                 {name: 'asunto', readOnly: false, allowBlank: true},
                 {name: 'tipo', readOnly: false, allowBlank: true},
                 {name: 'zona', readOnly: false, allowBlank: true},
@@ -568,11 +572,12 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'proyecto', readOnly: false, allow: true},
                 {name: 'etapa', readOnly: false, allow: true},
                 {name: 'tecnico', readOnly: false, allow: true},
-                {name: 'fecha_inspeccion', readOnly: false, allow: true},
-                {name: 'fecha_egreso_verificacion', readOnly: false, allow: true},
-                {name: 'fecha_certificado_informe', readOnly: false, allow: true},
-                {name: 'resultado', readOnly: false, allow: true},
-                {name: 'numero_informe_certificado', readOnly: false, allow: true}
+                //{name: 'fecha_inspeccion', readOnly: false, allow: true},
+                //{name: 'fecha_egreso_verificacion', readOnly: false, allow: true},
+                //{name: 'fecha_certificado_informe', readOnly: false, allow: true},
+                //{name: 'resultado', readOnly: false, allow: true},
+                {name: 'numero_informe_certificado', readOnly: false, allow: true},
+                {name: 'guia_generada', readOnly: false, allowBlank: true}
             ]
         });
 
@@ -585,13 +590,13 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 //{name: 'id_denuncia', readOnly: false, allowBlank: true},
-                {name: 'id_inspeccion', readOnly: false, allowBlank: true},
+                //{name: 'id_inspeccion', readOnly: false, allowBlank: true},
                 {name: 'fecha_recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'num_registro', readOnly: false, allowBlank: true},
                 {name: 'tecnico', readOnly: false, allowBlank: true},
-                {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
-                {name: 'fecha_inicio', readOnly: false, allowBlank: true},
-                {name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
+                //{name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
+                //{name: 'fecha_inicio', readOnly: false, allowBlank: true},
+                //{name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
                 {name: 'asunto', readOnly: false, allowBlank: true},
                 {name: 'tipo', readOnly: false, allowBlank: true},
                 {name: 'zona', readOnly: false, allowBlank: true},
@@ -599,11 +604,12 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'clave_catastral', readOnly: false, allowBlank: true},
                 {name: 'proyecto', readOnly: false, allow: true},
                 {name: 'etapa', readOnly: false, allow: true},
-                {name: 'fecha_inspeccion', readOnly: false, allow: true},
-                {name: 'fecha_egreso_verificacion', readOnly: false, allow: true},
-                {name: 'fecha_certificado_informe', readOnly: false, allow: true},
-                {name: 'resultado', readOnly: false, allow: true},
-                {name: 'numero_informe_certificado', readOnly: false, allow: true}
+                //{name: 'fecha_inspeccion', readOnly: false, allow: true},
+                //{name: 'fecha_egreso_verificacion', readOnly: false, allow: true},
+                //{name: 'fecha_certificado_informe', readOnly: false, allow: true},
+                //{name: 'resultado', readOnly: false, allow: true},
+                {name: 'numero_informe_certificado', readOnly: false, allow: true},
+                {name: 'guia_generada', readOnly: false, allowBlank: true}
             ]
         });
 
@@ -1855,10 +1861,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         checked: true,
                         checkHandler: checkHandlerListadoCCF,
                         group: 'filterField',
-                        key: 'id_inspeccion',
+                        key: 'id_ccf',
                         scope: this,
-                        text: 'Código inspección'
+                        text: 'Número CCF'
                     }
+                    /*
                     , {
                         checked: true,
                         checkHandler: checkHandlerListadoCCF,
@@ -1915,7 +1922,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         scope: this,
                         text: 'Número informe/certificado'
                     }
-                    /*,{
+                    ,{
                         checked: false,
                         checkHandler: checkHandlerListadoCCF,
                         group: 'filterField',
@@ -1925,7 +1932,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     }*/
                 ]
             })
-            , text: 'Código trámite'
+            , text: 'Número CCF'
         });
 
         var searchInspeccionesBtn = new Ext.Button({
@@ -2089,7 +2096,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         group: 'filterField',
                         key: 'id_inspeccion',
                         scope: this,
-                        text: 'Código inspección'
+                        text: 'Número NIO'
                     }
                     /*t: 'Zona'
                     }
@@ -2103,7 +2110,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     }*/
                 ]
             })
-            , text: 'Código trámite'
+            , text: 'Número NIO'
         });
 
         var searchCCFBtn = new Ext.Button({
@@ -2115,8 +2122,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         group: 'filterField',
                         key: 'id_inspeccion',
                         scope: this,
-                        text: 'Código inspección'
+                        text: 'Número CCF'
                     }
+                    /*
                     , {
                         checked: true,
                         checkHandler: checkHandlerCCF,
@@ -2133,49 +2141,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         scope: this,
                         text: 'Predio'
                     }
-                    , {
-                        checked: false,
-                        checkHandler: checkHandlerCCF,
-                        group: 'filterField',
-                        key: 'clave_catastral',
-                        scope: this,
-                        text: 'Clave catastral'
-                    }
-                    , {
-                        checked: false,
-                        checkHandler: checkHandlerCCF,
-                        group: 'filterField',
-                        key: 'proyecto',
-                        scope: this,
-                        text: 'Proyecto'
-                    }
-                    , {
-                        checked: false,
-                        checkHandler: checkHandlerCCF,
-                        group: 'filterField',
-                        key: 'asunto',
-                        scope: this,
-                        text: 'Asunto'
-                    }
-                    , {
-                        checked: false,
-                        checkHandler: checkHandlerCCF,
-                        group: 'filterField',
-                        key: 'tipo',
-                        scope: this,
-                        text: 'Tipo'
-                    }
-                    , {
-                        checked: false,
-                        checkHandler: checkHandlerCCF,
-                        group: 'filterField',
-                        key: 'numero_informe_certificado',
-                        scope: this,
-                        text: 'Número informe/certificado'
-                    }
+*/
                 ]
             })
-            , text: 'Código trámite'
+            , text: 'Número CCF'
         });
 
 
@@ -2894,7 +2863,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 150, editor: textFieldDetalle},
                 {
-                    header: 'Acta verificación',
+                    header: 'Tipo Documento',
                     dataIndex: 'acta_verificacion',
                     sortable: true,
                     width: 200,
@@ -3687,15 +3656,23 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 new Ext.grid.RowNumberer(),
                 //{header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
-                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
-                {
-                    header: 'Fecha recepción',
-                    dataIndex: 'fecha_recepcion_documento',
-                    sortable: true,
-                    width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'}),
-                    renderer: formatDate
-                },
+                //{header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
+                {header: 'Código CCF', dataIndex: 'id_ccf', sortable: true, width: 150},
+                {header: 'Fecha recepción', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150, renderer: formatDate},
+                {header: 'Proyecto', dataIndex: 'proyecto', sortable: true, width: 300, editor: textFieldCCF},
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldCCF},
+                {header: 'Zona', dataIndex: 'zona', sortable: true, width: 150, editor: textFieldCCF},
+                {header: 'Clave Catastral', dataIndex: 'clave_catastral', sortable: true, width: 100, editor: textFieldCCF},
+                {header: 'Etapa', dataIndex: 'etapa', sortable: true, width: 80, editor: textFieldCCF},
+                {header: 'Número registro', dataIndex: 'num_registro', sortable: true, width: 100, editor: textFieldCCF},
+                {header: 'Inspector', dataIndex: 'tecnico', sortable: true, width: 150, editor: comboINSPECTOR,
+                    renderer: tipoUnidadesPersonal},
+                {header: 'Fecha asignación inspector', dataIndex: 'fecha_asignacion_inspector', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Fecha inicio', dataIndex: 'fecha_inicio', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Fecha finalización', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
                 {
                     header: 'Número registro',
                     dataIndex: 'num_registro',
@@ -3724,17 +3701,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textFieldCCF},
                 {header: 'Tipo', dataIndex: 'tipo', sortable: true, width: 100, editor: textFieldCCF},
-                {header: 'Zona', dataIndex: 'zona', sortable: true, width: 100, editor: textFieldCCF},
-                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldCCF},
-                {
-                    header: 'Clave Catastral',
-                    dataIndex: 'clave_catastral',
-                    sortable: true,
-                    width: 100,
-                    editor: textFieldCCF
-                },
-                {header: 'Proyecto', dataIndex: 'proyecto', sortable: true, width: 100, editor: textFieldCCF},
-                {header: 'Etapa', dataIndex: 'etapa', sortable: true, width: 80, editor: textFieldCCF},
                 {
                     header: 'Fecha inspección', dataIndex: 'fecha_inspeccion', sortable: true, width: 150,
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
@@ -3793,17 +3759,15 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 new Ext.grid.RowNumberer(),
                 //{header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
-                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
-                {header: 'Número NIO', dataIndex: 'num_nio', sortable: true, width: 100, editor: textFieldNIO},
-                {header: 'Proyecto', dataIndex: 'proyecto', sortable: true, width: 100, editor: textFieldNIO},
-                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldNIO},
-                {header: 'Zona', dataIndex: 'zona', sortable: true, width: 100, editor: textFieldNIO},
-                {header: 'Guía', dataIndex: 'guia', sortable: true, width: 100, editor: textFieldNIO},
-                {header: 'Certificado', dataIndex: 'certificado', sortable: true, width: 100, editor: textFieldNIO},
-                {
-                    header: 'Fecha ingreso', dataIndex: 'fecha_ingreso', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
-                },
+                //{header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 150},
+                {header: 'Número NIO', dataIndex: 'num_nio', sortable: true, width: 150, editor: textFieldNIO},
+                {header: 'Fecha ingreso', dataIndex: 'fecha_ingreso', sortable: true, width: 150},
+                {header: 'Proyecto', dataIndex: 'proyecto', sortable: true, width: 300, editor: textFieldNIO},
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 150, editor: textFieldNIO},
+                {header: 'Zona', dataIndex: 'zona', sortable: true, width: 200, editor: textFieldNIO},
+                {header: 'Guía', dataIndex: 'guia', sortable: true, width: 150, editor: textFieldNIO},
+                {header: 'Certificado', dataIndex: 'certificado', sortable: true, width: 200, editor: textFieldNIO},
+                //{header: 'Guía generada', dataIndex: 'guia_generada', sortable: true, width: 50}
             ],
             viewConfig: {
                 forceFit: false
@@ -3835,8 +3799,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeListadoCCFInspeccion,
             columns: [
                 new Ext.grid.RowNumberer(),
-                {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
-                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
+                //{header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
+                //{header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
+                {header: 'Fecha recepción', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'}), renderer: formatDate},
+                {header: 'Número registro', dataIndex: 'num_registro', sortable: true, width: 100, editor: textFieldListadoCCF},
                 {
                     header: 'Fecha recepción',
                     dataIndex: 'fecha_recepcion_documento',
@@ -3858,10 +3825,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'fecha_asignacion_inspector',
                     sortable: true,
                     width: 150
-                },
-                {
-                    header: 'Fecha recepción', dataIndex: 'fecha_inicio', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
                 },
                 {
                     header: 'Fecha finalización', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
@@ -3937,8 +3900,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeListadoCCFInspeccionTodos,
             columns: [
                 new Ext.grid.RowNumberer(),
-                {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
-                {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
+                //{header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
+                //{header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
+                {header: 'Fecha recepción', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'}), renderer: formatDate},
+                {header: 'Número registro', dataIndex: 'num_registro', sortable: true, width: 100, editor: textFieldListadoCCF},
                 {
                     header: 'Fecha recepción',
                     dataIndex: 'fecha_recepcion_documento',
@@ -3960,10 +3926,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'fecha_asignacion_inspector',
                     sortable: true,
                     width: 150
-                },
-                {
-                    header: 'Fecha recepción', dataIndex: 'fecha_inicio', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
                 },
                 {
                     header: 'Fecha finalización', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
@@ -4052,6 +4014,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 layout: 'fit',
                 //Creación de panel de pestañas
                 items: new Ext.TabPanel({
+                    id: 'tabPrincipal',
                     activeTab: 0,
                     border: false,
                     items: [
@@ -4074,8 +4037,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             closable: false,
                             //layout: 'fit',
                             //height: winHeight-70,
-                            //disabled: accesosInspectores,
-                            //hidden:true,
+                            disabled: accesosInspectores,
+                            hidden:true,
                             id: 'tramites-pendientes',
                             //Barra de botones
                             tbar: [
@@ -4397,7 +4360,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                             {
                                                 title: 'NIO',
                                                 layout: 'column',
-                                                disabled: true,
+                                                disabled: false,
                                                 height: winHeight * 0.36,
                                                 tbar: [
                                                     //Definición de botón nuevo
@@ -4406,7 +4369,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         text: 'Nuevo',
                                                         scope: this,
                                                         handler: this.addNIO,
-                                                        disabled: !creacionDatosInspeccion,
+                                                        disabled: !accesosSecretaria,
                                                         iconCls: 'save-icon'
                                                     },
                                                     '-',
@@ -4416,7 +4379,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         text: "Eliminar",
                                                         scope: this,
                                                         handler: this.deleteNIO,
-                                                        disabled: !creacionDatosInspeccion,
+                                                        disabled: true,
                                                         iconCls: 'delete-icon'
                                                     },
                                                     '-',
@@ -4430,6 +4393,18 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         text: 'Recargar'
                                                     },
                                                     '-',
+                                                    //bh boton generar
+                                                    {
+                                                        iconCls: 'excel-icon',
+                                                        handler: this.botonGenerarGuiaNIO,
+                                                        scope: this,
+                                                        text: 'Generar Nueva Guía NIO',
+                                                        tooltip: 'Se genera guía con NIOs',
+                                                        id: 'tb_reporteNIO',
+                                                        disabled: false
+                                                    },
+                                                    '-',
+
                                                     '->'
                                                     , {
                                                         text: 'Buscar por:'
@@ -4452,7 +4427,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                             , {
                                                 title: 'CCF',
                                                 layout: 'column',
-                                                disabled: true,
+                                                disabled: false,
                                                 height: winHeight * 0.36,
                                                 tbar: [
                                                     //Definición de botón nuevo
@@ -4461,7 +4436,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         text: 'Nuevo',
                                                         scope: this,
                                                         handler: this.addCCF,
-                                                        disabled: !creacionDatosInspeccion,
+                                                        disabled: !accesosSecretaria,
                                                         iconCls: 'save-icon'
                                                     },
                                                     '-',
@@ -4471,7 +4446,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         text: "Eliminar",
                                                         scope: this,
                                                         handler: this.deleteCCF,
-                                                        disabled: !creacionDatosInspeccion,
+                                                        disabled: true,
                                                         iconCls: 'delete-icon'
                                                     },
                                                     '-',
@@ -4483,6 +4458,18 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         disabled: false,
                                                         scope: this,
                                                         text: 'Recargar'
+                                                    }
+                                                    ,
+                                                    '-',
+                                                    //bh boton generar
+                                                    {
+                                                        iconCls: 'excel-icon',
+                                                        handler: this.botonGenerarGuiaCCF,
+                                                        scope: this,
+                                                        text: 'Generar Nueva Guía CCF',
+                                                        tooltip: 'Se genera guía con CCF',
+                                                        id: 'tb_reporteNIO',
+                                                        disabled: false
                                                     },
                                                     '-',
                                                     '->'
@@ -4513,6 +4500,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             title: 'Actas',
                             closable: true,
                             layout: 'border',
+                            id : 'actas',
+                            disabled: accesosInspectores,
                             tbar: [
                                 {
                                     iconCls: 'reload-icon',
@@ -4562,6 +4551,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             autoScroll: true,
                             title: 'Inspecciones',
                             closable: false,
+                            id: 'inspecciones',
                             //layout: 'fit',
                             //height: winHeight-70,
                             disabled: !pestInspeccion,
@@ -4682,7 +4672,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             autoScroll: true,
                             title: 'Geolocalización',
                             closable: false,
-                            disabled: false,
+                            disabled: true,
                             items: [{
                                 split: true,
                                 height: 400,
@@ -4705,6 +4695,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
         //Llamado a función que muestra la ventana en pantalla
         win.show();
+
+        //Ext.getCmp("tabPrincipal").setActiveTab("inspecciones");
+        //Ext.getCmp('tabPrincipal').hideTabStripItem('tramites-pendientes');
 
         /*
        if(accesosSecretaria){
@@ -4948,7 +4941,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     addCCF: function () {
         var inspeccion = new this.storeCCFInspeccion.recordType({
             //'id_denuncia' : tramiteSeleccionado,
-            'id_inspeccion': '',
+            //'id_inspeccion': '',
             'codificacion': '',
             //'fecha_despacho' : '',
             'id_actividad': '',
@@ -4958,7 +4951,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //'guia' : '',
             'id_control_programado': '',
             //'funcionario_reasignacion' : '',
-            ' _asignacion': ''
+            ' _asignacion': '',
+            'guia_generada': 0
         });
         this.gridCCFInspeccion.stopEditing();
         this.storeCCFInspeccion.insert(0, inspeccion);
@@ -4989,14 +4983,15 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     //Función para inserción de registros de detalle de inspeccion
     addNIO: function () {
         var nio = new this.storeNIOInspeccion.recordType({
-            'id_inspeccion': '',
+            //'id_inspeccion': '',
             'num_nio': '0',
             'proyecto': '',
             'predio': '',
             'zona': '',
             'guia': '',
             'certificado': '',
-            'fecha_ingreso': ''
+            'fecha_ingreso': '',
+            'guia_generada': 0
         });
         this.gridNIOInspeccion.stopEditing();
         this.storeNIOInspeccion.insert(0, nio);
@@ -5072,6 +5067,46 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuias.php';
+                    setTimeout(function () {
+                        AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());
+                        storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkPendientesAprobar').getValue()}});
+                    }, 1000);
+                }
+            }
+        });
+    },
+
+    //Boton generar nueva guía NIOs
+    botonGenerarGuiaNIO: function () {
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Descargar acta<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuiasNIO.php';
+                    setTimeout(function () {
+                        AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());
+                        storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkPendientesAprobar').getValue()}});
+                    }, 1000);
+                }
+            }
+        });
+    },
+
+    //Boton generar nueva guía CCFs
+    botonGenerarGuiaCCF: function () {
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Descargar acta<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuiasCCF.php';
                     setTimeout(function () {
                         AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());
                         storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkPendientesAprobar').getValue()}});

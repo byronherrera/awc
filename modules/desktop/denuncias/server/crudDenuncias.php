@@ -218,7 +218,7 @@ function insertDenuncias()
 
 
     echo json_encode(array(
-        "success" => false,
+        "success" => true,
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
         "data" => array($data),
         "message" => "se inserto "
