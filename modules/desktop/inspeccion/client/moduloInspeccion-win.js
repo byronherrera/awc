@@ -4552,7 +4552,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     minSize: 100,
                                     maxSize: 150,
                                     margins: '0 0 0 0',
-                                       items: this.gridInspeccionActaSimple
+                                    items: this.gridInspeccionActaSimple
                                 }
                             ]
 

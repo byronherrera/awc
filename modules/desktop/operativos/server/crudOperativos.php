@@ -382,6 +382,7 @@ function updateOperativos()
                                 <td valign="top">Fecha Fin</td>
                                 <td valign="top">Lugar Intervencion</td>
                                 <td valign="top">Punto Encuentro</td>
+                                <td valign="top">Observaciones</td>
                                 <td valign="top">Estado</td>
                             </tr>';
                 $detalle .= "<tr>" .
@@ -390,6 +391,7 @@ function updateOperativos()
                     '<td valign="top">' . $data->fecha_fin_planificacion . "</td>" .
                     '<td valign="top">' . $data->punto_encuentro_planificado . "</td>" .
                     '<td valign="top">' . $data->zona . "</td>" .
+                    '<td valign="top">' . $data->observaciones  . "</td>" .
                     '<td valign="top"><strong>' . nombreEstado($data->id_estado) . "</strong></td>" .
                     "</tr></table><br>";
 
@@ -611,10 +613,11 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
     // VALIDAMOS QUE SOLO SE ENVIE EL CORREO EN PRODUCCION
-    require('os-config.php');
+    //require('../../../../server/os-config.php');
     $config = new config();
-    if ($config->AMBIENTE == "PRODUCCION")
+    if ($config->AMBIENTE == "PRODUCCION") {
         mail($email, $nombre, $mensaje, $headers);
+    }
 
 }
 

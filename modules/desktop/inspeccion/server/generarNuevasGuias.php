@@ -289,7 +289,7 @@ function enviarEmail($email, $nombre, $mensaje)
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-    require('os-config.php');
+
     $config = new config();
     if ($config->AMBIENTE == "PRODUCCION")
         mail($email, $nombre, $mensaje, $headers);
