@@ -16,7 +16,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
     },
     createWindow: function () {
-        //charlieo
         //Variables de acceso
         var accesosCoordinadorInspeccion = this.app.isAllowedTo('accesosAdministrador', this.id); //Todos los accesos, visualiza todos los trámites
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id); //Todos los accesos, visualiza trámites pendientes
@@ -4018,6 +4017,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 layout: 'fit',
                 //Creación de panel de pestañas
                 items: new Ext.TabPanel({
+                    id: 'tabPrincipal',
                     activeTab: 0,
                     border: false,
                     items: [
@@ -4100,7 +4100,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                 //bh boton generar
                                 {
                                     iconCls: 'excel-icon',
-                                    handler: this.botonGenerarGuia,
+                                    handler: this.botonGenerarActa,
                                     scope: this,
                                     text: 'Generar Nueva Acta',
                                     tooltip: 'Se genera acta con las ',
@@ -4503,6 +4503,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             title: 'Actas',
                             closable: true,
                             layout: 'border',
+                            id : 'actas',
                             disabled: accesosInspectores,
                             tbar: [
                                 {
@@ -4511,16 +4512,16 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Recargar Datos'
 
-                                }/*,
+                                },
                                 {
                                     iconCls: 'excel-icon',
-                                    handler: this.botonExportarReporteReimpresion,
+                                    handler: this.botonImprimirActa,
                                     scope: this,
-                                    text: 'Generar Reporte',
-                                    tooltip: 'Se genera el reporte de la guía seleccionada',
+                                    text: 'Imprimir Acta',
+                                    tooltip: 'Se reimprime el acta seleccionada.',
                                     id: 'tb_repoteActas',
                                     // disabled: !acceso
-                                }*/
+                                }
                             ],
                             items: [
                                 {
@@ -4543,7 +4544,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     minSize: 100,
                                     maxSize: 150,
                                     margins: '0 0 0 0',
-                                       items: this.gridInspeccionActaSimple
+                                    items: this.gridInspeccionActaSimple
                                 }
                             ]
 
@@ -4553,6 +4554,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             autoScroll: true,
                             title: 'Inspecciones',
                             closable: false,
+                            id: 'inspecciones',
                             //layout: 'fit',
                             //height: winHeight-70,
                             disabled: !pestInspeccion,
@@ -4696,6 +4698,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
         //Llamado a función que muestra la ventana en pantalla
         win.show();
+
+        //Ext.getCmp("tabPrincipal").setActiveTab("inspecciones");
+        //Ext.getCmp('tabPrincipal').hideTabStripItem('tramites-pendientes');
 
         /*
        if(accesosSecretaria){
@@ -5055,7 +5060,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         });
     },
     // bh boton generar nueva guía
-    botonGenerarGuia: function () {
+    botonGenerarActa: function () {
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Descargar acta<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
@@ -5113,5 +5118,23 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             }
         });
     },
+    // bh boton generar nueva guía
+    // ?reimpresion=true&guia=' + rows[0].get('id')
+    botonImprimirActa: function () {
+        // recuperamos registro seleccionado de datagrid denunciaguia
+        var rows = this.gridInspeccionActa.getSelectionModel().getSelections();
+        //validamos si existe seleccion  y mensaje error
+        if (rows.length === 0) {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Seleccione una guía a imprimir',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+        window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuias.php?reimpresion=true&guia=' + rows[0].get('id');
+    },
+
 });
 
