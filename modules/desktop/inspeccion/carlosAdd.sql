@@ -55,3 +55,12 @@ CHANGE COLUMN `creado` `fecha_registro` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 
 ALTER TABLE `amc_inspeccion_ccf`
 ADD COLUMN `guia_generada` int(1) NULL AFTER `numero_informe_certificado`;
+
+ALTER TABLE `prueba`.`amc_inspeccion`
+ADD COLUMN `acta_verificacion` int(1) NULL AFTER `fecha_memo_oficio`;
+
+ALTER TABLE `prueba`.`amc_inspeccion`
+DROP COLUMN `respuesta`;
+
+ALTER TABLE `prueba`.`amc_inspeccion`
+ADD COLUMN `num_fojas` int(11) NULL AFTER `acta_verificacion`;

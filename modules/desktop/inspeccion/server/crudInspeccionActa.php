@@ -20,7 +20,7 @@ function selectInspeccionActa()
     if (isset ($_POST['limit']))
         $limit = $_POST['limit'];
     else
-        $limit = 50;
+        $limit = 100;
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT amc_guias_inspeccion.numero,
