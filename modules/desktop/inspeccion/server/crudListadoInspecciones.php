@@ -210,7 +210,7 @@ function updateInspeccion()
     $cadenaDatos = '';
 
     foreach ($data as $clave => $valor) {
-        if ($clave!='codigo_tramite'){
+        if ($clave!='codigo_tramite' && $clave!=NULL){
             if ($valor === null)
                 $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
             else
