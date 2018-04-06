@@ -11,8 +11,8 @@ function selectDetalleInspecciones()
 {
     global $os;
     if (isset($_POST['id'])) {
-            $id = (int)$_POST ['id'];
-            $where = " id_denuncia  = '$id'";
+        $id = (int)$_POST ['id'];
+        $where = " id_denuncia  = '$id'";
     }
 
     if (isset($_POST['filterText'])) {
@@ -20,7 +20,7 @@ function selectDetalleInspecciones()
         if (isset($_POST['filterField'])) {
             $columnaBusqueda = $_POST['filterField'];
         }
-        $where  = " $columnaBusqueda = '$campo'";
+        $where = " $columnaBusqueda = '$campo'";
     }
 
     // cambio BH
@@ -108,17 +108,35 @@ function insertDetalleInspecciones()
     $sql = "INSERT INTO amc_inspeccion($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
+
+    $verificaInsert = $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
 
+    if ($verificaInsert) {
+        echo json_encode(array(
+            "success" => true,
+            "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
+            "data" => array($data)
+        ));
+        // para el caso que ya se haya procesado o sea reinspeccion
+        actualizar_estado_tramite_usado ($data->id_denuncia);
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "msg" => $sql->errorCode() == 0 ? "Erorr insercion" : $sql->errorCode(),
+            "data" => array($data)
+        ));
+    }
+}
 
-    echo json_encode(array(
-        "success" => true,
-        "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
-        "data" => array($data)
-    ));
+function actualizar_estado_tramite_usado ($id_tramite) {
+    global $os;
+    // 8755
+    $sql = "UPDATE `procesos-amc`.`amc_denuncias` SET `despacho_secretaria_insp` = 0 WHERE `id` = $id_tramite";
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
 }
 
 function generaCodigoProcesoOrdenanza()
