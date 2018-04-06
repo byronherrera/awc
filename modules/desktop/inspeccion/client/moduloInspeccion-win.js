@@ -1713,17 +1713,47 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         checked: true,
                         checkHandler: checkHandlerInspecciones,
                         group: 'filterField',
+                        key: 'id_denuncia',
+                        scope: this,
+                        text: 'Código trámite'
+                    }
+                    ,{
+                        checked: true,
+                        checkHandler: checkHandlerInspecciones,
+                        group: 'filterField',
                         key: 'id_inspeccion',
                         scope: this,
                         text: 'Código inspección'
                     }
-                    , {
+                    ,{
                         checked: false,
                         checkHandler: checkHandlerInspecciones,
                         group: 'filterField',
                         key: 'nombre_denunciado',
                         scope: this,
                         text: 'Nombre denunciado'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerInspecciones,
+                        group: 'filterField',
+                        key: 'predio',
+                        scope: this,
+                        text: 'Predio'
+                    },{
+                        checked: false,
+                        checkHandler: checkHandlerInspecciones,
+                        group: 'filterField',
+                        key: 'guia',
+                        scope: this,
+                        text: 'Guia'
+                    },{
+                        checked: false,
+                        checkHandler: checkHandlerInspecciones,
+                        group: 'filterField',
+                        key: 'guia',
+                        scope: this,
+                        text: 'Número documento'
                     }
                 ]
             })

@@ -108,7 +108,8 @@ function selectInspeccionesCoordinadores()
 
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    $sql = "SELECT * FROM amc_inspeccion $where $orderby LIMIT $start, $limit";
+    //$sql = "SELECT * FROM amc_inspeccion $where $orderby LIMIT $start, $limit";
+    $sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion $where $orderby LIMIT $start, $limit";
     //$sql = "SELECT * FROM amc_inspeccion";
     $result = $os->db->conn->query($sql);
     $data = array();
