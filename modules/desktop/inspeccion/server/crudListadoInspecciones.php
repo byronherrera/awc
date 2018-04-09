@@ -42,8 +42,13 @@ function selectInspeccion()
 
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    $sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion WHERE funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
+    //$sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion WHERE funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
     //$sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
+    $sql = "(SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
+                WHERE funcionario_entrega = $funcionario_entrega AND funcionario_reasignacion = 0)
+	    union
+	        (SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
+                WHERE funcionario_reasignacion = $funcionario_entrega )";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -51,7 +56,13 @@ function selectInspeccion()
         $data[] = $row;
     };
 
+    $sql = "SELECT count(*) AS total FROM amc_inspeccion WHERE funcionario_entrega = $funcionario_entrega";
+    $result = $os->db->conn->query($sql);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total = $row['total'];
+
     echo json_encode(array(
+            "total" => $total,
             "success" => true,
             "data" => $data)
     );
@@ -114,10 +125,16 @@ function selectInspeccionesCoordinadores()
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
         $data[] = $row;
     }
+
+    $sql = "SELECT count(*) AS total FROM amc_inspeccion $where";
+    $result = $os->db->conn->query($sql);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total = $row['total'];
+
     echo json_encode(array(
+            "total" => $total,
             "success" => true,
             "data" => $data)
     );

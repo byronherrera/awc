@@ -2852,14 +2852,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeListadoInspeccion,
             columns: [
                 new Ext.grid.RowNumberer(),
-                {header: 'Código trámite', dataIndex: 'codigo_tramite', sortable: true, width: 80},
+                {header: 'Código trámite', dataIndex: 'codigo_tramite', sortable: true, width: 70},
                 {header: 'Código inspección', dataIndex: 'id_denuncia', hidden: true},
-                {header: 'Cód inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
+                {header: 'Cód inspección', dataIndex: 'id_inspeccion', sortable: true, width: 150},
                 {
                     header: 'Codificacion',
                     dataIndex: 'id_actividad',
                     sortable: true,
-                    width: 150,
+                    width: 200,
                     editor: comboACTIVIDAD,
                     renderer: tipoActividad
                 },
@@ -2867,17 +2867,17 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Nombre denunciado',
                     dataIndex: 'nombre_denunciado',
                     sortable: true,
-                    width: 150,
+                    width: 200,
                     editor: textFieldDetalle
                 },
                 // {header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 150, editor: comboORD, renderer: listaOrdenanzas},
                 {
-                    header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 100, editor: comboZONA,
+                    header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 200, editor: comboZONA,
                     renderer: zonaAdm
                 },
-                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 80, editor: textFieldDetalle},
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 200, editor: textFieldDetalle},
                 //{header: 'Sumilla DMI', dataIndex: 'sumilla_dmi', sortable: true, width: 400, editor: textFieldDetalle, autoSave:true},
-                {header: 'Guia', dataIndex: 'guia', sortable: true, width: 80},
+                {header: 'Guia', dataIndex: 'guia', sortable: true, width: 150},
                 {header: 'Sumilla DMI', dataIndex: 'fecha_despacho', sortable: true, width: 150, readOnly: true},
                 //{header: 'Tipo de actividad', dataIndex: 'id_actividad', sortable: true, width: 200,  editor: comboACTIVIDAD,
                 //autoSave:true, renderer: tipoActividad},
@@ -2885,7 +2885,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Inspector',
                     dataIndex: 'funcionario_entrega',
                     sortable: true,
-                    width: 180,
+                    width: 200,
                     //editor: comboPERDIS,
                     renderer: tipoUnidadesPersonal
                 },
@@ -2893,7 +2893,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Funcionario Reasignación',
                     dataIndex: 'funcionario_reasignacion',
                     sortable: true,
-                    width: 180,
+                    width: 200,
                     //editor: comboFUNREA,
                     renderer: tipoFuncionarioReasignacion
                 },
@@ -4954,7 +4954,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //'respuesta': '',
             //'guia' : '',
             'id_control_programado': '',
-            'funcionario_reasignacion': '',
+            'funcionario_reasignacion': '0',
             'fecha_asignacion': '',
             'prioridad': '0'
         });
