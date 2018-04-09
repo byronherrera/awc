@@ -48,7 +48,7 @@ function selectInspeccion()
                 WHERE funcionario_entrega = $funcionario_entrega AND funcionario_reasignacion = 0)
 	    union
 	        (SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
-                WHERE funcionario_reasignacion = $funcionario_entrega ))";
+                WHERE funcionario_reasignacion = $funcionario_entrega )";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

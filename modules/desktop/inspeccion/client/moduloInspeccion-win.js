@@ -296,6 +296,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_actividad', readOnly: false, allowBlank: true},
                 //{name: 'respuesta', readOnly: false, allowBlank: true},
                 {name: 'funcionario_entrega', readOnly: false, allowBlank: true},
+                {name: 'funcionario_reasignacion', readOnly: false, allowBlank: true},
                 {name: 'guia', readOnly: false, allowBlank: true},
                 {name: 'id_zona', readOnly: false, allowBlank: true},
                 {name: 'predio', readOnly: false, allowBlank: true},
@@ -2851,7 +2852,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeListadoInspeccion,
             columns: [
                 new Ext.grid.RowNumberer(),
-                {header: 'Código trámite', dataIndex: 'codigo_tramite', sortable: true, width: 150},
+                {header: 'Código trámite', dataIndex: 'codigo_tramite', sortable: true, width: 70},
                 {header: 'Código inspección', dataIndex: 'id_denuncia', hidden: true},
                 {header: 'Cód inspección', dataIndex: 'id_inspeccion', sortable: true, width: 150},
                 {
@@ -2887,6 +2888,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     width: 200,
                     //editor: comboPERDIS,
                     renderer: tipoUnidadesPersonal
+                },
+                {
+                    header: 'Funcionario Reasignación',
+                    dataIndex: 'funcionario_reasignacion',
+                    sortable: true,
+                    width: 200,
+                    //editor: comboFUNREA,
+                    renderer: tipoFuncionarioReasignacion
                 },
                 //{header: 'Respuesta', dataIndex: 'respuesta', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
                 {
@@ -2926,7 +2935,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 }
             ],
             viewConfig: {
-                forceFit: true
+                forceFit: false
             },
             sm: new Ext.grid.RowSelectionModel(
                 {
@@ -2993,6 +3002,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     width: 200,
                     editor: comboPERDIS,
                     renderer: tipoUnidadesPersonal
+                },
+                {
+                    header: 'Funcionario Reasignación',
+                    dataIndex: 'funcionario_reasignacion',
+                    sortable: true,
+                    width: 200,
+                    editor: comboFUNREA,
+                    renderer: tipoFuncionarioReasignacion
                 },
                 //{header: 'Respuesta', dataIndex: 'respuesta', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},
                 {
