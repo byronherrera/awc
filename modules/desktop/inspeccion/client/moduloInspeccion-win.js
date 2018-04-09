@@ -305,7 +305,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'num_fojas', readOnly: false, allowBlank: true},
                 {name: 'acta_verificacion', readOnly: false, allowBlank: true},
                 {name: 'prioridad', readOnly: false, allowBlank: true},
-                {name: 'fecha_acta', readOnly: false, allowBlank: true}
+                {name: 'fecha_acta', readOnly: false, allowBlank: true} 
             ]
         });
 
