@@ -42,7 +42,7 @@ $objPHPExcel->setActiveSheetIndex(0);
 
 
 if (!$reimpresion) {
-$where = " WHERE  ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
+$where = " WHERE  b.guia <> '' AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND (amc_inspeccion.funcionario_entrega IS NOT NULL AND amc_inspeccion.funcionario_entrega <> '' ) ";
 //$where = " WHERE reasignacion = 3 AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega IS NOT NULL";
 
     $sql = "SELECT DISTINCT amc_inspeccion . funcionario_entrega funcionario  
