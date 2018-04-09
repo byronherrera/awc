@@ -64,3 +64,6 @@ DROP COLUMN `respuesta`;
 
 ALTER TABLE `prueba`.`amc_inspeccion`
 ADD COLUMN `num_fojas` int(11) NULL AFTER `acta_verificacion`;
+
+ALTER TABLE `prueba`.`amc_inspeccion`
+ADD COLUMN `fecha_acta` date NULL AFTER `num_fojas`;

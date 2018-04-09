@@ -305,6 +305,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'num_fojas', readOnly: false, allowBlank: true},
                 {name: 'acta_verificacion', readOnly: false, allowBlank: true},
                 {name: 'prioridad', readOnly: false, allowBlank: true},
+                {name: 'fecha_acta', readOnly: false, allowBlank: true}
             ]
         });
 
@@ -2906,6 +2907,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboACTAVERIFICACION,
                     renderer: actaVerificacion
                 },
+                {
+                    header: 'Fecha documento', dataIndex: 'fecha_acta', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'}), renderer: formatDate
+                },
                 {header: 'Fojas', dataIndex: 'num_fojas', sortable: true, width: 70, editor: textFieldDetalle},
                 {
                     header: 'Motivo del acta',
@@ -3007,6 +3012,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     width: 200,
                     editor: comboACTAVERIFICACION,
                     renderer: actaVerificacion
+                },
+                {
+                    header: 'Fecha documento', dataIndex: 'fecha_acta', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'}), renderer: formatDate
                 },
                 {header: 'Fojas', dataIndex: 'num_fojas', sortable: true, width: 70, editor: textFieldDetalle},
                 {
