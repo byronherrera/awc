@@ -99,15 +99,28 @@ function insertDetalleInspecciones()
     $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaCampos = $cadenaCampos . $clave . ',';
-        $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+
+        if (($clave == 'funcionario_reasignacion') OR ($clave == 'guia') OR ($clave == 'acta_verificacion') OR ($clave == 'id_zona') OR ($clave == 'id_actividad')) {
+            if ($valor == '') {
+                $valor = 'NULL';
+            }
+        }
+
+        if ($valor === 'NULL') {
+            $cadenaCampos = $cadenaCampos . $clave . ',';
+            $cadenaDatos = $cadenaDatos . " " . $valor . " ,";
+        } else {
+            $cadenaCampos = $cadenaCampos . $clave . ',';
+            $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        }
+
     }
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_inspeccion($cadenaCampos)
+    $sql1 = "INSERT INTO amc_inspeccion($cadenaCampos)
 	values($cadenaDatos);";
-    $sql = $os->db->conn->prepare($sql);
+    $sql = $os->db->conn->prepare($sql1);
 
     $verificaInsert = $sql->execute();
 
@@ -121,20 +134,21 @@ function insertDetalleInspecciones()
             "data" => array($data)
         ));
         // para el caso que ya se haya procesado o sea reinspeccion
-        actualizar_estado_tramite_usado ($data->id_denuncia);
+        actualizar_estado_tramite_usado($data->id_denuncia);
     } else {
         echo json_encode(array(
             "success" => false,
-            "msg" => $sql->errorCode() == 0 ? "Erorr insercion" : $sql->errorCode(),
+            "msg" => $sql->errorCode() . $sql1,
             "data" => array($data)
         ));
     }
 }
 
-function actualizar_estado_tramite_usado ($id_tramite) {
+function actualizar_estado_tramite_usado($id_tramite)
+{
     global $os;
     // 8755
-    $sql = "UPDATE `procesos-amc`.`amc_denuncias` SET `despacho_secretaria_insp` = 0 WHERE `id` = $id_tramite";
+    $sql = "UPDATE  `amc_denuncias` SET `despacho_secretaria_insp` = 0 WHERE `id` = $id_tramite";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 }
@@ -183,12 +197,18 @@ function updateDetalleInspecciones()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        if ($clave == 'funcionario_reasignacion') {
+        if (($clave == 'funcionario_reasignacion') OR ($clave == 'guia') OR ($clave == 'acta_verificacion') OR ($clave == 'id_zona')) {
             if ($valor == '') {
-                $valor = '0';
+                $valor = 'NULL';
             }
         }
-        $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+
+        if ($valor === 'NULL') {
+            $cadenaDatos = $cadenaDatos . $clave . " = " . $valor . " ,";
+        } else {
+            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        }
+
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
