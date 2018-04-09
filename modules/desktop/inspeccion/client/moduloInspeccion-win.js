@@ -305,7 +305,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'num_fojas', readOnly: false, allowBlank: true},
                 {name: 'acta_verificacion', readOnly: false, allowBlank: true},
                 {name: 'prioridad', readOnly: false, allowBlank: true},
-                {name: 'fecha_acta', readOnly: false, allowBlank: true} 
+                {name: 'fecha_acta', readOnly: false, allowBlank: true}
             ]
         });
 
@@ -5122,7 +5122,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     setTimeout(function () {
                         AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());
                         storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkPendientesAprobar').getValue()}});
-                    }, 1000);
+                    }, 1500);
                 }
             }
         });
@@ -5139,10 +5139,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuiasNIO.php';
-                    setTimeout(function () {
+                    set (function () {
                         AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());
                         storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkPendientesAprobar').getValue()}});
-                    }, 1000);
+                    }, 1500);
                 }
             }
         });
@@ -5162,7 +5162,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     setTimeout(function () {
                         AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());
                         storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkPendientesAprobar').getValue()}});
-                    }, 1000);
+                    }, 1500);
                 }
             }
         });
