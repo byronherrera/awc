@@ -8,14 +8,13 @@ if (!$os->session_exists()) {
     die('No existe sesión!');
 }
 
-function selectInspeccion()
+function  selectInspeccion()
 {
     global $os;
-    //$id = (int)$_POST ['id'];
-
     //Se inicializa el parámetro de búsqueda de código trámite
     $columnaBusqueda = 'id_inspeccion';
-    $funcionario_entrega = $os->get_member_id();
+    $inspector = $os->get_member_id();
+
     $and = "";
 
     if (isset($_POST['filterText'])) {
@@ -42,57 +41,30 @@ function selectInspeccion()
 
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    //$sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion WHERE funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
-    //$sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
-    $sql = "(SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
-                WHERE funcionario_entrega = $funcionario_entrega AND funcionario_reasignacion IS NULL)
-	    union
-	        (SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
-                WHERE funcionario_reasignacion = $funcionario_entrega )";
+    $sql = "SELECT * FROM amc_inspeccion_ccf WHERE amc_inspeccion_ccf.tecnico = $inspector $and $orderby LIMIT $start, $limit";
+    //$sql = "SELECT * FROM amc_inspeccion_ccf $and $orderby LIMIT $start, $limit";
+    //$sql = "SELECT * FROM amc_inspeccion_ccf";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
         $data[] = $row;
     };
-
-    $sql = "SELECT count(*) AS total FROM amc_inspeccion WHERE funcionario_entrega = $funcionario_entrega";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    $total = $row['total'];
-
     echo json_encode(array(
-            "total" => $total,
             "success" => true,
             "data" => $data)
     );
-    /*
 
-    $funcionario_entrega = $os->get_member_id();
-    //if($id!=0){
-        $os->db->conn->query("SET NAMES 'utf8'");
-        $sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega";
-        //$sql = "SELECT * FROM amc_inspeccion";
-        $result = $os->db->conn->query($sql);
-        $data = array();
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
-            $data[] = $row;
-        }
-        echo json_encode(array(
-                "success" => true,
-                "data" => $data)
-        );
-    //}
-*/
 }
 
 function selectInspeccionesCoordinadores()
 {
     global $os;
+    //$id = (int)$_POST ['id'];
+
     //Se inicializa el parámetro de búsqueda de código trámite
     $columnaBusqueda = 'id_inspeccion';
-    $funcionario_entrega = $os->get_member_id();
+    $inspector = $os->get_member_id();
     $where = "";
 
     if (isset($_POST['filterText'])) {
@@ -119,26 +91,19 @@ function selectInspeccionesCoordinadores()
 
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    //$sql = "SELECT * FROM amc_inspeccion $where $orderby LIMIT $start, $limit";
-    $sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion $where $orderby LIMIT $start, $limit";
-    //$sql = "SELECT * FROM amc_inspeccion";
+    $sql = "SELECT * FROM amc_inspeccion_ccf $where $orderby LIMIT $start, $limit";
+    //$sql = "SELECT * FROM amc_inspeccion_ccf WHERE amc_inspeccion_ccf.tecnico = $inspector $and $orderby LIMIT $start, $limit";
+    //$sql = "SELECT * FROM amc_inspeccion_ccf";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
         $data[] = $row;
-    }
-
-    $sql = "SELECT count(*) AS total FROM amc_inspeccion $where";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    $total = $row['total'];
-
+    };
     echo json_encode(array(
-            "total" => $total,
             "success" => true,
             "data" => $data)
     );
-    //}
 
 }
 
@@ -226,14 +191,8 @@ function updateInspeccion()
 
     // genero el listado de valores a insertar
     $cadenaDatos = '';
-
     foreach ($data as $clave => $valor) {
-        if ($clave!='codigo_tramite' && $clave!=NULL){
-            if ($valor === null)
-                $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
-            else
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
-        }
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 

@@ -1,3 +1,4 @@
+
 <?php
 require_once '../../../../server/os.php';
 
@@ -38,7 +39,10 @@ function selectDenuncias()
     global $os;
 
     $columnaBusqueda = 'codigo_tramite';
-    $where = '';
+    //$where = '';
+
+    //forzamos que solo sea los asignados a inspeccion
+    $where = 'WHERE reasignacion = 3';
 
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
@@ -51,6 +55,7 @@ function selectDenuncias()
 
         //para el caso de busqueda por guia, recuperamos el id de la guia
         if ($columnaBusqueda == 'guia') {
+
             $sql = "SELECT id FROM amc_guias WHERE numero = '$campo'";
             $numguia = $os->db->conn->query($sql);
             if ($numguia) {
@@ -93,7 +98,7 @@ function selectDenuncias()
     else
         $limit = 100;
 
-    $orderby = 'ORDER BY recepcion_documento DESC, codigo_tramite DESC';
+    $orderby = 'ORDER BY codigo_tramite DESC';
     if (isset($_POST['sort'])) {
         $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
     }
@@ -160,6 +165,8 @@ function selectDenuncias()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
+
+
     $sql = "SELECT * FROM amc_denuncias $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
@@ -208,30 +215,12 @@ function insertDenuncias()
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
 
-   $message = '';
-    if (isset($data->id_tipo_documento)) {
-        if ($data->id_tipo_documento == '1'){
-            if ((isset($data->cedula)) and (isset($data->email)))  {
-                $success = true;
-                $message = 'Datos correctos';
-            }  else {
-                $success = false;
-                $message = 'Falta cedula';
-            }
-        } else {
-            $success = true;
-            $message = 'Datos ok';
-        }
-    }
 
     echo json_encode(array(
-        "success" => $success,
-        "msg" => $sql->errorCode() == 0 ? $message : $sql->errorCode(),
-        "data" => array($data),
-        "message" => $message
+        "success" => true,
+        "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
+        "data" => array($data)
     ));
-
-
 }
 
 function generaCodigoProcesoDenuncia()
@@ -240,8 +229,7 @@ function generaCodigoProcesoDenuncia()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE codigo_tramite < 11000 AND recepcion_documento > DATE('2018-01-01 01:01:01')";
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -276,73 +264,22 @@ function updateDenuncias()
             }
     }
 
-    if ($data->id_ordenanza== NULL)
-            unset($data->id_ordenanza);
-    
-
-    // genero el listado de valores a insertar
+// genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
         $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    if (isset($data->id_tipo_documento)) {
-        if ($data->id_tipo_documento == '1'){
-            if (($data->cedula!='') and ($data->email!= ''))  {
-                $success = true;
-                $message = 'Datos correctos';
-                $grabar= true;
-
-            }  else {
-                $success = false;
-                $message = 'Falta cedula o correo electrónico como requisito obligatorio';
-            }
-        } else {
-            $success = true;
-            $message = 'Datos correctos';
-            $grabar= true;
-        }
-    }
-
-    if ($grabar) {
-        $sql = "UPDATE amc_denuncias SET  $cadenaDatos  WHERE amc_denuncias.id = '$data->id' ";
-        $sql = $os->db->conn->prepare($sql);
-        $sql->execute();
-        echo json_encode(array(
-            "success" => $sql->errorCode() == 0,
-            "msg" => $sql->errorCode() == 0 ? $message : $sql->errorCode(),
-            "message" => $message
-        ));
-    } else {
-        echo json_encode(array(
-            "success" => false,
-            "msg" => 'Error datos ',
-            "message" => $message
-        ));
-    }
+    $sql = "UPDATE amc_denuncias SET  $cadenaDatos  WHERE amc_denuncias . id = '$data->id' ";
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
+    echo json_encode(array(
+        "success" => $sql->errorCode() == 0,
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_denuncias actualizado exitosamente" : $sql->errorCode(),
+        "message" => $message
+    ));
 }
-
-function validarCedulaCorreo($id) {
-    // true en caso que no exista ni correo ni cedula
-    // false  en caso que exista correo y cedula
-    //return false;
-
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT cedula, email FROM amc_denuncias WHERE id = $id";
-    $result = $os->db->conn->query($sql);
-
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    if ((strlen($row['cedula']) == 0 ) or (strlen($row['email']) == 0 )){
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-
 
 function selectDenunciasForm()
 {
@@ -395,12 +332,11 @@ function updateDenunciasForm()
     $cantidad_fojas = $_POST["cantidad_fojas"];
     $cedula = $_POST["cedula"];
     $email = $_POST["email"];
-    $georeferencia = $_POST["georeferencia"];
-    $direccion_denuncia = $_POST["direccion_denuncia"];
+
 
 
     //para el caso de denuncias se valida que exista cedula y correo
-   /* if ($id_tipo_documento == 1) {
+    if ($id_tipo_documento == 1) {
         // se valida que se envio cedula, email
         $error = false;
         $msjError = '';
@@ -421,8 +357,7 @@ function updateDenunciasForm()
             return;
         }
 
-    }*/
-
+    }
     /*codigo_tramite='$codigo_tramite',*/
     $sql = "UPDATE amc_denuncias SET 
             id_persona = '$id_persona',
@@ -439,9 +374,8 @@ function updateDenunciasForm()
             cedula = '$cedula' ,
             email = '$email'  ,
             guia = '$guia'  ,
-            despacho_secretaria = '$despacho_secretaria',
-            direccion_denuncia = '$direccion_denuncia',
-            georeferencia = '$georeferencia'        
+            despacho_secretaria = '$despacho_secretaria'  
+         
           WHERE id = '$id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -483,4 +417,22 @@ switch ($_GET['operation']) {
     case 'delete' :
         deleteDenuncias();
         break;
+}
+function validarCedulaCorreo($id) {
+    // true en caso que no exista ni correo ni cedula
+    // false  en caso que exista correo y cedula
+    //return false;
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT cedula, email FROM amc_denuncias WHERE id = $id";
+    $result = $os->db->conn->query($sql);
+
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    if ((strlen($row['cedula']) == 0 ) or (strlen($row['email']) == 0 )){
+        return true;
+    }
+    else {
+        return false;
+    }
 }

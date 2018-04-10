@@ -124,7 +124,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'codigo_tramite', readOnly: true, allowBlank: true},
                 {name: 'recepcion_documento', readOnly: true, allowBlank: true},
                 //{name: 'id_ordenanza', readOnly: true, allowBlank: true},
-                {name: 'id_tipo_documento', readOnly: true, allowBlank: true},
+                {name: 'id_tipo_documento', readOnly: true, allowBlank: false},
                 {name: 'num_documento', readOnly: true, allowBlank: true},
                 {name: 'remitente', readOnly: true, allowBlank: true},
                 {name: 'cedula', readOnly: true, allowBlank: true},
@@ -303,8 +303,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_motivo_acta', readOnly: false, allow: true},
                 {name: 'id_acta', readOnly: false, allow: true},
                 {name: 'num_fojas', readOnly: false, allowBlank: true},
-                {name: 'acta_verificacion', readOnly: false, allowBlank: true},
-                {name: 'prioridad', readOnly: false, allowBlank: true},
+                {name: 'acta_verificacion', readOnly: false, allowBlank: true}
             ]
         });
 
@@ -510,7 +509,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'fecha_recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'num_registro', readOnly: false, allowBlank: true},
                 {name: 'tecnico', readOnly: false, allowBlank: true},
-                // {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
+               // {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
                 //{name: 'fecha_inicio', readOnly: false, allowBlank: true},
                 //{name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
                 {name: 'asunto', readOnly: false, allowBlank: true},
@@ -564,7 +563,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'fecha_recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'num_registro', readOnly: false, allowBlank: true},
                 {name: 'tecnico', readOnly: false, allowBlank: true},
-                // {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
+               // {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
                 //{name: 'fecha_inicio', readOnly: false, allowBlank: true},
                 //{name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
                 {name: 'asunto', readOnly: false, allowBlank: true},
@@ -1714,7 +1713,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         checked: true,
                         checkHandler: checkHandlerInspecciones,
                         group: 'filterField',
-                        key: 'codigo_tramite',
+                        key: 'id_denuncia',
                         scope: this,
                         text: 'Código trámite'
                     }
@@ -1752,7 +1751,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         checked: false,
                         checkHandler: checkHandlerInspecciones,
                         group: 'filterField',
-                        key: 'id_acta',
+                        key: 'guia',
                         scope: this,
                         text: 'Número documento'
                     }
@@ -2897,16 +2896,16 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboCONTROLPROGRAMADO,
                     renderer: controlProgramado
                 },
-                {header: 'Número documento', dataIndex: 'id_acta', sortable: true, width: 150, editor: textFieldDetalle},
                 {
-                    header: 'Tipo documento',
+                    header: 'Tipo Documento',
                     dataIndex: 'acta_verificacion',
                     sortable: true,
                     width: 200,
                     editor: comboACTAVERIFICACION,
                     renderer: actaVerificacion
                 },
-                {header: 'Fojas', dataIndex: 'num_fojas', sortable: true, width: 70, editor: textFieldDetalle},
+                {header: 'Número de documento', dataIndex: 'id_acta', sortable: true, width: 150, editor: textFieldDetalle},
+                {header: 'Fojas', dataIndex: 'num_fojas', sortable: true, width: 200, editor: textFieldDetalle},
                 {
                     header: 'Motivo del acta',
                     hidden: true,
@@ -2915,9 +2914,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     width: 200,
                     editor: comboMOTIVOACTA,
                     renderer: motivoActa
-                },{
-                    header: 'Prioridad', dataIndex: 'prioridad', sortable: true, width: 100, editor: comboPRIORIDAD,
-                    renderer: prioridad
                 }
             ],
             viewConfig: {
@@ -2999,16 +2995,16 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboCONTROLPROGRAMADO,
                     renderer: controlProgramado
                 },
-                {header: 'Número documento', dataIndex: 'id_acta', sortable: true, width: 150, editor: textFieldDetalle},
+                {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 150, editor: textFieldDetalle},
                 {
-                    header: 'Tipo documento',
+                    header: 'Acta verificación',
                     dataIndex: 'acta_verificacion',
                     sortable: true,
                     width: 200,
                     editor: comboACTAVERIFICACION,
                     renderer: actaVerificacion
                 },
-                {header: 'Fojas', dataIndex: 'num_fojas', sortable: true, width: 70, editor: textFieldDetalle},
+                {header: 'Fojas', dataIndex: 'num_fojas', sortable: true, width: 200, editor: textFieldDetalle},
                 {
                     header: 'Motivo del acta',
                     hidden: true,
@@ -3017,9 +3013,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     width: 200,
                     editor: comboMOTIVOACTA,
                     renderer: motivoActa
-                },{
-                    header: 'Prioridad', dataIndex: 'prioridad', sortable: true, width: 100, editor: comboPRIORIDAD,
-                    renderer: prioridad
                 }
             ],
             viewConfig: {
@@ -4928,7 +4921,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //'respuesta': '',
             //'guia' : '',
             'id_control_programado': '',
-            'funcionario_reasignacion': '',
+            'funcionario_reasignacion': '0',
             'fecha_asignacion': '',
             'prioridad': '0'
         });

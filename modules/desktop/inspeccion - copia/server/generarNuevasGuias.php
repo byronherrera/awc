@@ -181,12 +181,15 @@ function actualizar_estado_tramite($id, $funcionario, $numeroGuia)
     global $os;
     // actualizo denuncia con el numero de acta de despacho y se cambia la bandera a tramite realizadoo
 
-    $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_inspeccion`='$numeroGuia' WHERE id='$id' AND  ";
+    $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_inspeccion`='$numeroGuia' WHERE id='$id'  ";
     $os->db->conn->query($sql);
 
     $sql = "UPDATE `amc_inspeccion` SET `guia`='$numeroGuia', `fecha_despacho`=NOW() WHERE id_denuncia= '$id' ";
     $os->db->conn->query($sql);
-};
+
+}
+
+;
 
 function actualizar_guia_inspeccion($numeroGuia)
 {

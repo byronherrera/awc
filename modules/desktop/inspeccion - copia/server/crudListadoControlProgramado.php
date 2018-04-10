@@ -8,86 +8,7 @@ if (!$os->session_exists()) {
     die('No existe sesión!');
 }
 
-function selectInspeccion()
-{
-    global $os;
-    //$id = (int)$_POST ['id'];
-
-    //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'id_inspeccion';
-    $funcionario_entrega = $os->get_member_id();
-    $and = "";
-
-    if (isset($_POST['filterText'])) {
-        $campo = $_POST['filterText'];
-        $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
-            $columnaBusqueda = $_POST['filterField'];
-        }
-        $and = " AND $columnaBusqueda LIKE '%$campo%'";
-    }
-
-
-    if (isset ($_POST['start']))
-        $start = $_POST['start'];
-    else
-        $start = 0;
-
-    if (isset ($_POST['limit']))
-        $limit = $_POST['limit'];
-    else
-        $limit = 100;
-    // cambio BH
-    $orderby = 'ORDER BY id DESC';
-
-    $os->db->conn->query("SET NAMES 'utf8'");
-
-    //$sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion WHERE funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
-    //$sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
-    $sql = "(SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
-                WHERE funcionario_entrega = $funcionario_entrega AND funcionario_reasignacion IS NULL)
-	    union
-	        (SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
-                WHERE funcionario_reasignacion = $funcionario_entrega )";
-    $result = $os->db->conn->query($sql);
-    $data = array();
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
-        $data[] = $row;
-    };
-
-    $sql = "SELECT count(*) AS total FROM amc_inspeccion WHERE funcionario_entrega = $funcionario_entrega";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    $total = $row['total'];
-
-    echo json_encode(array(
-            "total" => $total,
-            "success" => true,
-            "data" => $data)
-    );
-    /*
-
-    $funcionario_entrega = $os->get_member_id();
-    //if($id!=0){
-        $os->db->conn->query("SET NAMES 'utf8'");
-        $sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega";
-        //$sql = "SELECT * FROM amc_inspeccion";
-        $result = $os->db->conn->query($sql);
-        $data = array();
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
-            $data[] = $row;
-        }
-        echo json_encode(array(
-                "success" => true,
-                "data" => $data)
-        );
-    //}
-*/
-}
-
-function selectInspeccionesCoordinadores()
+function  selectInspeccionesCoordinadores()
 {
     global $os;
     //Se inicializa el parámetro de búsqueda de código trámite
@@ -119,27 +40,71 @@ function selectInspeccionesCoordinadores()
 
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    //$sql = "SELECT * FROM amc_inspeccion $where $orderby LIMIT $start, $limit";
-    $sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion $where $orderby LIMIT $start, $limit";
-    //$sql = "SELECT * FROM amc_inspeccion";
+
+    //$sql = "SELECT * FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.tecnico = $inspector $and $orderby LIMIT $start, $limit";
+    //$sql = "SELECT * FROM amc_inspeccion_control_programado $and $orderby LIMIT $start, $limit";
+    $sql = "SELECT * FROM amc_inspeccion_control_programado $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
         $data[] = $row;
-    }
-
-    $sql = "SELECT count(*) AS total FROM amc_inspeccion $where";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    $total = $row['total'];
-
+    };
     echo json_encode(array(
-            "total" => $total,
             "success" => true,
             "data" => $data)
     );
-    //}
 
+}
+
+function selectInspeccion()
+{
+    global $os;
+    //$id = (int)$_POST ['id'];
+
+    //Se inicializa el parámetro de búsqueda de código trámite
+    $columnaBusqueda = 'id_inspeccion';
+    $inspector = $os->get_member_id();
+    $and = "";
+
+    if (isset($_POST['filterText'])) {
+        $campo = $_POST['filterText'];
+        $campo = str_replace(" ", "%", $campo);
+        if (isset($_POST['filterField'])){
+            $columnaBusqueda = $_POST['filterField'];
+        }
+        $and = " AND $columnaBusqueda LIKE '%$campo%'";
+    }
+
+
+    if (isset ($_POST['start']))
+        $start = $_POST['start'];
+    else
+        $start = 0;
+
+    if (isset ($_POST['limit']))
+        $limit = $_POST['limit'];
+    else
+        $limit = 100;
+    // cambio BH
+    $orderby = 'ORDER BY id DESC';
+
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+
+    $sql = "SELECT * FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.tecnico = $inspector $and $orderby LIMIT $start, $limit";
+    //$sql = "SELECT * FROM amc_inspeccion_control_programado $and $orderby LIMIT $start, $limit";
+    //$sql = "SELECT * FROM amc_inspeccion_control_programado";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+        $data[] = $row;
+    };
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
 }
 
 function insertInspeccion()
@@ -226,18 +191,12 @@ function updateInspeccion()
 
     // genero el listado de valores a insertar
     $cadenaDatos = '';
-
     foreach ($data as $clave => $valor) {
-        if ($clave!='codigo_tramite' && $clave!=NULL){
-            if ($valor === null)
-                $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
-            else
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
-        }
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_inspeccion SET  $cadenaDatos  WHERE amc_inspeccion.id = '$data->id' ";
+    $sql = "UPDATE amc_inspeccion_control_programado SET  $cadenaDatos  WHERE amc_inspeccion_control_programado.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
