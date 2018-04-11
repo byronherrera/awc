@@ -961,12 +961,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Trámite',
                     dataIndex: 'tramite',
                     sortable: true,
-                    width: 50,
-                    editor: new Ext.form.NumberField({
+                    width: 90,
+                    editor: new Ext.form.TextField({allowBlank: false})
+/*                    editor: new Ext.form.NumberField({
                         allowBlank: false,
                         allowNegative: false,
                         maxValue: 100000
-                    })
+                    }) */
                 },
                 {
                     header: 'Elaborado',

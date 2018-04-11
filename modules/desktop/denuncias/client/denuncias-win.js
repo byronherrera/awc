@@ -732,7 +732,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Código',
                     dataIndex: 'codigo_tramite',
                     sortable: true,
-                    width: 18
+                    width: 16
                 },
                 {
                     header: 'Persona recepta',
@@ -1517,6 +1517,31 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         triggerAction: 'all',
                                                         mode: 'local'
                                                     }
+                                                    /*,
+                                                    {
+                                                        xtype: 'combo',
+                                                        fieldLabel: 'Despachado2',
+                                                        name: 'despacho_secretaria',
+                                                        id: 'despacho_secretaria',
+                                                        anchor: '95%',
+                                                        hiddenName: 'despacho_secretaria',
+                                                        store: storeOFAC,
+                                                        valueField: 'id',
+                                                        displayField: 'nombre',
+                                                        typeAhead: true,
+                                                        triggerAction: 'all',
+                                                        mode: 'local'
+                                                    },
+                                                    {
+                                                        xtype: 'textarea',
+                                                        fieldLabel: 'Observaciones secretaria',
+                                                        id: 'observacion_secretaria',
+                                                        name: 'observacion_secretaria',
+                                                        height: 45,
+                                                        anchor: '95%'
+                                                    },*/
+
+
                                                 ]
                                             }
                                         ]
