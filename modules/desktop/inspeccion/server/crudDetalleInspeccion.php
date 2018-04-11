@@ -221,8 +221,21 @@ function updateDetalleInspecciones()
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_denuncias actualizado exitosamente" : $sql->errorCode(),
         "message" => $message
     ));
+
+    cambioEstadoReasignacion ($data->funcionario_reasignacion, $data->id);
+
 }
 
+
+function cambioEstadoReasignacion ($id_reasignacion, $idInspeccion ) {
+    global $os;
+    // en caso de que sea una reasignacion entonces se cambia de estado
+    if (!is_null($id_reasignacion)){
+        $sql = "UPDATE `procesos-amc`.`amc_inspeccion` SET `estado_asignacion` = 3 WHERE `id` = $idInspeccion";
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
+    }
+}
 function validarCedulaCorreo($id)
 {
     // true en caso que no exista ni correo ni cedula

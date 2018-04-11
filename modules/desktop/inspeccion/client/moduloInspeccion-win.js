@@ -306,7 +306,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'num_fojas', readOnly: false, allowBlank: true},
                 {name: 'acta_verificacion', readOnly: false, allowBlank: true},
                 {name: 'prioridad', readOnly: false, allowBlank: true},
-                {name: 'fecha_acta', type: 'date', dateFormat: 'c', allowBlank: true}
+                {name: 'fecha_acta', readOnly: false, allowBlank: true}
             ]
         });
 
@@ -1585,7 +1585,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
 
         function tipoFuncionarioReasignacion(id) {
-            var index = storeFUNREA.find('id', id);
+            var index = storeFUNREA.findExact('id', id);
             if (index > -1) {
                 var record = storeFUNREA.getAt(index);
                 return record.get('nombre');

@@ -47,7 +47,14 @@ if (!$reimpresion) {
     $sql = "SELECT DISTINCT amc_inspeccion.funcionario_entrega funcionario  
         FROM amc_denuncias as b 
         INNER JOIN amc_inspeccion ON b . id = amc_inspeccion . id_denuncia
-        $where  ORDER BY b.recepcion_documento";
+        $where   UNION
+        SELECT DISTINCT
+            amc_inspeccion.funcionario_reasignacion funcionario 
+        FROM
+            amc_denuncias AS b
+            INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia 
+        WHERE
+            amc_inspeccion.estado_asignacion = 3";
 
 
     $resultFuncionarios = $os->db->conn->query($sql);
@@ -181,12 +188,14 @@ function actualizar_estado_tramite($id, $funcionario, $numeroGuia)
     global $os;
     // actualizo denuncia con el numero de acta de despacho y se cambia la bandera a tramite realizadoo
 
-    $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_inspeccion`='$numeroGuia' WHERE id='$id' AND  ";
+    $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_inspeccion`='$numeroGuia' WHERE id='$id' ";
     $os->db->conn->query($sql);
 
     $sql = "UPDATE `amc_inspeccion` SET `guia`='$numeroGuia', `fecha_despacho`=NOW() WHERE id_denuncia= '$id' ";
     $os->db->conn->query($sql);
-};
+}
+
+;
 
 function actualizar_guia_inspeccion($numeroGuia)
 {
@@ -204,14 +213,21 @@ function envioEmail($funcionario)
 {
     global $os;
 
-   // $where = " WHERE   procesado_inspeccion = 1 AND despacho_secretaria_insp = 0  AND amc_inspeccion.funcionario_entrega = $funcionario ";
     $where = " WHERE   amc_inspeccion.guia IS NULL AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND (amc_inspeccion.funcionario_entrega IS NOT NULL AND amc_inspeccion.funcionario_entrega <> '' ) AND amc_inspeccion.funcionario_entrega = $funcionario  ";
 
     $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
             DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
             FROM amc_denuncias as b 
             INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
-            $where  ORDER BY b.recepcion_documento";
+            $where  UNION
+            SELECT *,
+                amc_inspeccion.funcionario_reasignacion funcionario ,
+            DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
+            FROM
+                amc_denuncias AS b
+                INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia 
+            WHERE
+                amc_inspeccion.estado_asignacion = 3";
 
     $result = $os->db->conn->query($sql);
 //    $number_of_rows = $result->rowCount();
@@ -332,14 +348,21 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
 
 
         // se determina un filtro  para determinar las denuncias / tramites pendientes
-   //     $where = " WHERE  ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND amc_inspeccion.funcionario_entrega = $funcionario ";
         $where = " WHERE   amc_inspeccion.guia IS NULL AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND (amc_inspeccion.funcionario_entrega IS NOT NULL AND amc_inspeccion.funcionario_entrega <> '' ) AND amc_inspeccion.funcionario_entrega = $funcionario  ";
 
         $sql = "SELECT *, amc_inspeccion.funcionario_entrega funcionario,
+                DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
+                FROM amc_denuncias as b 
+                INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
+                $where  UNION
+                SELECT *,
+                amc_inspeccion.funcionario_reasignacion funcionario ,
             DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
-            FROM amc_denuncias as b 
-            INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
-            $where  ORDER BY b.recepcion_documento";
+            FROM
+                amc_denuncias AS b
+                INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia 
+            WHERE
+                amc_inspeccion.estado_asignacion = 3  ";
 
         $result = $os->db->conn->query($sql);
         $number_of_rows = $result->rowCount();
@@ -369,7 +392,13 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
             DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
             FROM amc_denuncias as b 
             INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
-            $where  ORDER BY b.recepcion_documento";
+            $where   UNION
+            SELECT *, amc_inspeccion.funcionario_reasignacion funcionario,
+            DATE_FORMAT(amc_inspeccion.fecha_despacho, \" % d /%m /%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
+            FROM amc_denuncias as b 
+            INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
+            $where
+            ";
 
         $result = $os->db->conn->query($sql);
         $number_of_rows = $result->rowCount();
@@ -442,7 +471,7 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
     $objDrawing->setName('test_img2');
     $objDrawing->setDescription('test_img2');
     $objDrawing->setPath('image1.png');
-    $objDrawing->setCoordinates('H' . $filaTitulo1);
+    $objDrawing->setCoordinates('G' . $filaTitulo1);
 //setOffsetX works properly
     $objDrawing->setOffsetX(0);
     $objDrawing->setOffsetY(0);
@@ -461,7 +490,7 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
     $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('E')->setAutoSize(false);
     $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('F')->setAutoSize(false);
     $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('G')->setAutoSize(false);
-    $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
+    //$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
 
     $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(4);
     $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(8);
@@ -501,10 +530,10 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
         $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['num_documento']);
         $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['remitente']);
         $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, regresaNombre($rowdetalle['funcionario']));
-        $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio,' ');
+        $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, ' ');
         $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, '  ');
 
-        $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':H' . $filaInicio)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':G' . $filaInicio)->applyFromArray($styleArray);
         $filaInicio++;
 
         // ACTUALIZAR ESTADO DEL REGISTRO

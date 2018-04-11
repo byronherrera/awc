@@ -148,7 +148,7 @@ function selectDenuncias()
         if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin'] != '')) {
             $fechafin = $_POST['busqueda_fecha_fin'];
         } else {
-            $fechafin = date('Y\m\d H:i:s');;
+            $fechafin = date("Y-m-d H:i:s");;
         }
 
         if ($where == '') {
@@ -216,7 +216,7 @@ function insertDenuncias()
                 $message = 'Datos correctos';
             }  else {
                 $success = false;
-                $message = 'Falta cedula';
+                $message = 'Falta cedula / email';
             }
         } else {
             $success = true;
@@ -398,6 +398,17 @@ function updateDenunciasForm()
     $georeferencia = $_POST["georeferencia"];
     $direccion_denuncia = $_POST["direccion_denuncia"];
 
+    $respuesta_devolucion  = $_POST["respuesta_devolucion"];
+
+    if ((isset($_POST["respuesta_devolucion"])) AND ($_POST["respuesta_devolucion"] <> '')) {
+        $fecha_respuesta_devolucion = "'" . date("Y-m-d H:i:s") ."'";
+        $tipo_respuesta_devolucion  = $_POST["tipo_respuesta_devolucion"];
+
+    } else {
+        $fecha_respuesta_devolucion = "NULL";
+        $tipo_respuesta_devolucion  = '';
+    }
+
 
     //para el caso de denuncias se valida que exista cedula y correo
    /* if ($id_tipo_documento == 1) {
@@ -441,7 +452,10 @@ function updateDenunciasForm()
             guia = '$guia'  ,
             despacho_secretaria = '$despacho_secretaria',
             direccion_denuncia = '$direccion_denuncia',
-            georeferencia = '$georeferencia'        
+            georeferencia = '$georeferencia', 
+            tipo_respuesta_devolucion = '$tipo_respuesta_devolucion',
+            respuesta_devolucion = '$respuesta_devolucion',
+            fecha_respuesta_devolucion = $fecha_respuesta_devolucion   
           WHERE id = '$id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();

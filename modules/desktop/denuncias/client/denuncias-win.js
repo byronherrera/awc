@@ -104,6 +104,39 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo activo
 
+        //inicio combo tipo respuesta
+        storeTIPPES = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 'email', "nombre": "Email"},
+                    {"id": 'oficio', "nombre": "Oficiio"},
+                    {"id": 'memo', "nombre": "Memo"}
+                ]
+            }
+        });
+
+        var comboTIPPES = new Ext.form.ComboBox({
+            id: 'comboOFAC',
+            store: storeTIPPES,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function tipoRespuetaDevolucion(id) {
+            var index = storeTIPPES.find('id', id);
+            if (index > -1) {
+                var record = storeTIPPES.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo activo
+
 
         //inicio combo reasignacion  REA
         storeREA = new Ext.data.JsonStore({
@@ -667,11 +700,11 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 },
                 exception: function (proxy, response, operation ) {
                     if (operation == 'update') {
-                        AppMsg.setAlert("Error actualización", "Faltan datos, cédula o email");
+                        AppMsg.setAlert("Requisito obligatorio", "Faltan datos, cédula o email");
                     }
 
                     if (operation == 'create') {
-                        AppMsg.setAlert("Error", "Faltan datos, cédula o email");
+                        AppMsg.setAlert("Requisito obligatorio", "Faltan datos, cédula o email");
                     }
                 } ,
 
@@ -732,7 +765,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Código',
                     dataIndex: 'codigo_tramite',
                     sortable: true,
-                    width: 16
+                    width: 18
                 },
                 {
                     header: 'Persona recepta',
@@ -1508,7 +1541,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         name: 'despacho_secretaria',
                                                         id: 'despacho_secretaria',
                                                         anchor: '95%',
-
                                                         hiddenName: 'despacho_secretaria',
                                                         store: storeOFAC,
                                                         valueField: 'id',
@@ -1516,16 +1548,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         typeAhead: true,
                                                         triggerAction: 'all',
                                                         mode: 'local'
-                                                    }
-                                                    /*,
+                                                    }                                                    ,
                                                     {
                                                         xtype: 'combo',
-                                                        fieldLabel: 'Despachado2',
-                                                        name: 'despacho_secretaria',
-                                                        id: 'despacho_secretaria',
+                                                        fieldLabel: 'Tipo respuesta',
+                                                        name: 'tipo_respuesta_devolucion',
+                                                        id: 'tipo_respuesta_devolucion',
                                                         anchor: '95%',
-                                                        hiddenName: 'despacho_secretaria',
-                                                        store: storeOFAC,
+                                                        hiddenName: 'tipo_respuesta_devolucion',
+                                                        store: storeTIPPES,
                                                         valueField: 'id',
                                                         displayField: 'nombre',
                                                         typeAhead: true,
@@ -1534,12 +1565,18 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                     },
                                                     {
                                                         xtype: 'textarea',
-                                                        fieldLabel: 'Observaciones secretaria',
-                                                        id: 'observacion_secretaria',
-                                                        name: 'observacion_secretaria',
+                                                        fieldLabel: 'Respuesta devolución',
+                                                        id: 'respuesta_devolucion',
+                                                        name: 'respuesta_devolucion',
                                                         height: 45,
                                                         anchor: '95%'
-                                                    },*/
+                                                    },
+                                                    {
+                                                        xtype: 'displayfield',
+                                                        fieldLabel: 'Fecha respuesta devolución',
+                                                        name: 'fecha_respuesta_devolucion',
+                                                        anchor: '95%'
+                                                    }
 
 
                                                 ]
