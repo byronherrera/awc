@@ -310,6 +310,7 @@ Generado por: " . regresaNombre($os->get_member_id());
 $calcularAlto = calculaAltoTexto($operativo['detalle']);
 $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight(110);
 
+
 textoSiguieteFila($textoElaboradoPor, 'A', 'F', 'left');
 
 $filacabecera++;
