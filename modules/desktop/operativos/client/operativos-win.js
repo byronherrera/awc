@@ -2700,7 +2700,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             //disabled: !acceso
                                                         },
                                                         {
-                                                            text: 'Ingresar el detalle de las acciones realizadas, retenciones y actas en la pestaña respectiva.'
+                                                            text: 'Ingresar el detalle de las acciones realizadas, retiros y actas en la pestaña respectiva.'
                                                             , xtype: 'tbtext'
                                                         }
                                                     ]
