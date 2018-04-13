@@ -99,15 +99,28 @@ function insertDetalleInspecciones()
     $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaCampos = $cadenaCampos . $clave . ',';
-        $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+
+        if (($clave == 'funcionario_reasignacion') OR ($clave == 'guia') OR ($clave == 'acta_verificacion') OR ($clave == 'id_zona') OR ($clave == 'id_actividad')) {
+            if ($valor == '') {
+                $valor = 'NULL';
+            }
+        }
+
+        if ($valor === 'NULL') {
+            $cadenaCampos = $cadenaCampos . $clave . ',';
+            $cadenaDatos = $cadenaDatos . " " . $valor . " ,";
+        } else {
+            $cadenaCampos = $cadenaCampos . $clave . ',';
+            $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        }
+
     }
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_inspeccion($cadenaCampos)
+    $sql1 = "INSERT INTO amc_inspeccion($cadenaCampos)
 	values($cadenaDatos);";
-    $sql = $os->db->conn->prepare($sql);
+    $sql = $os->db->conn->prepare($sql1);
 
     $verificaInsert = $sql->execute();
 
@@ -121,20 +134,21 @@ function insertDetalleInspecciones()
             "data" => array($data)
         ));
         // para el caso que ya se haya procesado o sea reinspeccion
-        actualizar_estado_tramite_usado ($data->id_denuncia);
+        actualizar_estado_tramite_usado($data->id_denuncia);
     } else {
         echo json_encode(array(
             "success" => false,
-            "msg" => $sql->errorCode() == 0 ? "Erorr insercion" : $sql->errorCode(),
+            "msg" => $sql->errorCode() . $sql1,
             "data" => array($data)
         ));
     }
 }
 
-function actualizar_estado_tramite_usado ($id_tramite) {
+function actualizar_estado_tramite_usado($id_tramite)
+{
     global $os;
     // 8755
-    $sql = "UPDATE `procesos-amc`.`amc_denuncias` SET `despacho_secretaria_insp` = 0 WHERE `id` = $id_tramite";
+    $sql = "UPDATE  `amc_denuncias` SET `despacho_secretaria_insp` = 0 WHERE `id` = $id_tramite";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 }
@@ -183,14 +197,22 @@ function updateDetalleInspecciones()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        if ($clave == 'funcionario_reasignacion') {
+        if (($clave == 'funcionario_reasignacion') OR ($clave == 'guia') OR ($clave == 'acta_verificacion') OR ($clave == 'id_zona') OR ($clave == 'fecha_memo_oficio') OR ($clave == 'id_actividad') OR ($clave == 'id_ordenanza') OR ($clave == 'infraccion')) {
             if ($valor == '') {
-                $valor = '0';
+                $valor = 'NULL';
             }
         }
-        $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+
+        if ($valor === 'NULL') {
+            $cadenaDatos = $cadenaDatos . $clave . " = " . $valor . " ,";
+        } else {
+            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        }
+
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
+
+    cambioEstadoReasignacion ($data->funcionario_reasignacion, $data->id);
 
     $sql = "UPDATE amc_inspeccion SET  $cadenaDatos  WHERE amc_inspeccion.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
@@ -201,6 +223,36 @@ function updateDetalleInspecciones()
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_denuncias actualizado exitosamente" : $sql->errorCode(),
         "message" => $message
     ));
+
+
+}
+
+function cambioEstadoReasignacion ($id_reasignacion, $idInspeccion ) {
+    global $os;
+    // en caso de que sea una reasignacion entonces se cambia de estado
+    if (!is_null($id_reasignacion) AND $id_reasignacion != ''){
+
+        // en caso de que ya exista se consulta si es el mimso dato o uno nuevo
+
+        if ( verificaAnteriorReasignacion ($id_reasignacion, $idInspeccion)) {
+            $sql = "UPDATE `procesos-amc`.`amc_inspeccion` SET `estado_asignacion` = 3 WHERE `id` = $idInspeccion";
+            $sql = $os->db->conn->prepare($sql);
+            $sql->execute();
+
+        }
+    }
+}
+
+function verificaAnteriorReasignacion ($id_reasignacion, $idInspeccion) {
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT funcionario_reasignacion FROM  `amc_inspeccion` WHERE  id = $idInspeccion";
+    $result = $os->db->conn->query($sql);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    if ($row['funcionario_reasignacion'] === $id_reasignacion )
+        return false;
+    else
+        return true;
 }
 
 function validarCedulaCorreo($id)

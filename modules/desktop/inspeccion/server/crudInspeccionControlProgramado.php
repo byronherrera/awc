@@ -65,7 +65,7 @@ function insertDetalleInspecciones()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
     $data->id = generaCodigoProcesoOrdenanza();
-    $data->id_inspeccion = generaNuevoCodigoControlProgramado();
+    $data->gdoc = 'ITCC '.date("y").' '.generaNuevoCodigoControlProgramado();
     $data->fecha_recepcion_documento = date('Y-m-d H:i:s');
     //genero el listado de nombre de campos
 
@@ -85,14 +85,14 @@ function insertDetalleInspecciones()
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
-
+/*
     $sql = "INSERT INTO amc_inspeccion($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
-
+*/
     echo json_encode(array(
         "success" => true,
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),

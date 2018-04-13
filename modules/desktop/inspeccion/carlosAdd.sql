@@ -65,5 +65,22 @@ DROP COLUMN `respuesta`;
 ALTER TABLE `prueba`.`amc_inspeccion`
 ADD COLUMN `num_fojas` int(11) NULL AFTER `acta_verificacion`;
 
+ALTER TABLE `amc_inspeccion`
+ADD COLUMN `inspeccion_finalizada` int(1) NULL AFTER `estado_obra`;
+
 ALTER TABLE `prueba`.`amc_inspeccion`
 ADD COLUMN `fecha_acta` date NULL AFTER `num_fojas`;
+
+	ALTER TABLE `prueba`.`amc_inspeccion`
+ADD COLUMN `fecha_memo_oficio` datetime NULL AFTER `numero_memo_oficio`;
+ADD COLUMN `observaciones` varchar(255) NULL AFTER `fecha_memo_oficio`;
+
+ALTER TABLE `prueba`.`amc_inspeccion`
+MODIFY COLUMN `infraccion` varchar(255) NULL DEFAULT NULL AFTER `id_ordenanza`;
+
+ALTER TABLE `prueba`.`amc_inspeccion_control_programado`
+DROP COLUMN `id_inspeccion`;
+
+ALTER TABLE `prueba`.`amc_inspeccion_control_programado`
+MODIFY COLUMN `fecha_asignacion_inspector` datetime NULL DEFAULT NULL AFTER `tecnico`,
+MODIFY COLUMN `gdoc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL AFTER `registro_actas_licencias`;

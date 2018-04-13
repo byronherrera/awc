@@ -78,6 +78,26 @@ function generaNuevoCodigoConstrucciones()
     }
 }
 
+function generaNuevoCodigoControlProgramado ()
+{
+    global $os;
+
+    $usuario = $os->get_member_id();
+    $os->db->conn->query("SET NAMES 'utf8'");
+    //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
+    $sql = "SELECT COUNT(gdoc) AS cant_cp FROM amc_inspeccion_control_programado WHERE fecha_recepcion_documento > '" .date("Y"). "-01-01 01:01:01';";
+    $result = $os->db->conn->query($sql);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    if (isset($row['cant_cp'])) {
+        $nuevoCodigo = $row['cant_cp'] + 1;
+        return $nuevoCodigo;
+    } else {
+        // valor inicial proceso
+        return 1;
+    }
+
+}
+
 function regresaNombre($id_dato)
 {
     global $os;
