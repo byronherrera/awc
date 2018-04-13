@@ -148,7 +148,7 @@ function selectDenuncias()
         if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin'] != '')) {
             $fechafin = $_POST['busqueda_fecha_fin'];
         } else {
-            $fechafin = date('Y\m\d H:i:s');;
+            $fechafin = date("Y-m-d H:i:s");;
         }
 
         if ($where == '') {
@@ -208,20 +208,27 @@ function insertDenuncias()
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
 
-   /* $message = '';
+   $message = '';
     if (isset($data->id_tipo_documento)) {
-        if ($data->id_tipo_documento == '1')
-            if (validarCedulaCorreo($data->id)) {
-                $message = 'Ingresar número de cédula y correo electrónico';
+        if ($data->id_tipo_documento == '1'){
+            if ((isset($data->cedula)) and (isset($data->email)))  {
+                $success = true;
+                $message = 'Datos correctos';
+            }  else {
+                $success = false;
+                $message = 'Falta cedula / email';
             }
-    }*/
-
+        } else {
+            $success = true;
+            $message = 'Datos ok';
+        }
+    }
 
     echo json_encode(array(
-        "success" => true,
-        "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
+        "success" => $success,
+        "msg" => $sql->errorCode() == 0 ? $message : $sql->errorCode(),
         "data" => array($data),
-        "message" => "se inserto "
+        "message" => $message
     ));
 
 
@@ -280,15 +287,40 @@ function updateDenuncias()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_denuncias SET  $cadenaDatos  WHERE amc_denuncias.id = '$data->id' ";
-    $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
+    if (isset($data->id_tipo_documento)) {
+        if ($data->id_tipo_documento == '1'){
+            if (($data->cedula!='') and ($data->email!= ''))  {
+                $success = true;
+                $message = 'Datos correctos';
+                $grabar= true;
 
-    echo json_encode(array(
-        "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_denuncias actualizado exitosamente" : $sql->errorCode(),
-        "message" => $message
-    ));
+            }  else {
+                $success = false;
+                $message = 'Falta cedula o correo electrónico como requisito obligatorio';
+            }
+        } else {
+            $success = true;
+            $message = 'Datos correctos';
+            $grabar= true;
+        }
+    }
+
+    if ($grabar) {
+        $sql = "UPDATE amc_denuncias SET  $cadenaDatos  WHERE amc_denuncias.id = '$data->id' ";
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
+        echo json_encode(array(
+            "success" => $sql->errorCode() == 0,
+            "msg" => $sql->errorCode() == 0 ? $message : $sql->errorCode(),
+            "message" => $message
+        ));
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "msg" => 'Error datos ',
+            "message" => $message
+        ));
+    }
 }
 
 function validarCedulaCorreo($id) {
@@ -366,10 +398,20 @@ function updateDenunciasForm()
     $georeferencia = $_POST["georeferencia"];
     $direccion_denuncia = $_POST["direccion_denuncia"];
 
+    $respuesta_devolucion  = $_POST["respuesta_devolucion"];
+
+    if ((isset($_POST["respuesta_devolucion"])) AND ($_POST["respuesta_devolucion"] <> '')) {
+        $fecha_respuesta_devolucion = "'" . date("Y-m-d H:i:s") ."'";
+        $tipo_respuesta_devolucion  = $_POST["tipo_respuesta_devolucion"];
+
+    } else {
+        $fecha_respuesta_devolucion = "NULL";
+        $tipo_respuesta_devolucion  = '';
+    }
 
 
     //para el caso de denuncias se valida que exista cedula y correo
-    if ($id_tipo_documento == 1) {
+   /* if ($id_tipo_documento == 1) {
         // se valida que se envio cedula, email
         $error = false;
         $msjError = '';
@@ -390,7 +432,8 @@ function updateDenunciasForm()
             return;
         }
 
-    }
+    }*/
+
     /*codigo_tramite='$codigo_tramite',*/
     $sql = "UPDATE amc_denuncias SET 
             id_persona = '$id_persona',
@@ -409,7 +452,10 @@ function updateDenunciasForm()
             guia = '$guia'  ,
             despacho_secretaria = '$despacho_secretaria',
             direccion_denuncia = '$direccion_denuncia',
-            georeferencia = '$georeferencia'        
+            georeferencia = '$georeferencia', 
+            tipo_respuesta_devolucion = '$tipo_respuesta_devolucion',
+            respuesta_devolucion = '$respuesta_devolucion',
+            fecha_respuesta_devolucion = $fecha_respuesta_devolucion   
           WHERE id = '$id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
