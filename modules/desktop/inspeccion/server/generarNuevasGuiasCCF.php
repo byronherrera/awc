@@ -26,7 +26,7 @@ $numeroGuia = '';
 
 // si no existe unidad es para reimpresion se envia como parametro guia, obtenemos id unidad
 $os->db->conn->query("SET NAMES 'utf8'");
-
+/*
 //  validacion para la primera vez
 if (total_guias() > 0) {
     $nombre = $os->db->conn->query("SELECT id_unidad, SUBSTRING(numero,10) as num FROM amc_guias_inspeccion WHERE id = $newIdGuia");
@@ -35,7 +35,7 @@ if (total_guias() > 0) {
 } else {
     $unidad = 0;
 }
-
+*/
 if (isset($_GET['reimpresion']))
     $reimpresion = settype($_GET['reimpresion'], 'boolean');
 else

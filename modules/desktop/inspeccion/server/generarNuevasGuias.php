@@ -531,7 +531,7 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
         $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['num_documento']);
         $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['remitente']);
         if  ($rowdetalle['estado_asignacion'] == "4") {
-            $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, regresaNombre($rowdetalle['funcionario_reasignacion']));
+            $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, regresaNombre($rowdetalle['funcionario']));
          } else {
             $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, regresaNombre($rowdetalle['funcionario']));
         }

@@ -91,7 +91,7 @@ function selectInspeccionesCoordinadores()
 {
     global $os;
     //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'id_inspeccion';
+        $columnaBusqueda = 'codigo_tramite';
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
@@ -101,9 +101,12 @@ function selectInspeccionesCoordinadores()
         if (isset($_POST['filterField'])){
             $columnaBusqueda = $_POST['filterField'];
         }
-        $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+        if  ($columnaBusqueda ==  'codigo_tramite' AND length($campo) > 0) {
+            $where = " WHERE $campo IN  (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) ";
+        } else {
+            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+        }
     }
-
 
     if (isset ($_POST['start']))
         $start = $_POST['start'];
@@ -121,7 +124,7 @@ function selectInspeccionesCoordinadores()
 
     //$sql = "SELECT * FROM amc_inspeccion $where $orderby LIMIT $start, $limit";
     $sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion $where $orderby LIMIT $start, $limit";
-    //$sql = "SELECT * FROM amc_inspeccion";
+
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
