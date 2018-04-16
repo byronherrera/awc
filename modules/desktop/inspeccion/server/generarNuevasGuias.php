@@ -211,6 +211,7 @@ function verificaMasInspeccionesAsignadas($id){
 }
 
 
+
 function actualizar_guia_inspeccion($numeroGuia)
 {
     global $os;
