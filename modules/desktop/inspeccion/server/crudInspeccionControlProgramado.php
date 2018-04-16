@@ -19,13 +19,18 @@ function selectDetalleInspecciones()
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
+    if (isset($_POST['id'])) {
+        $id = (int)$_POST ['id'];
+        $where = "id_denuncia  = '$id'";
+    }
+
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
         if (isset($_POST['filterField'])){
             $columnaBusqueda = $_POST['filterField'];
         }
-        $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+        $where = " $columnaBusqueda LIKE '%$campo%'";
     }
 
 
@@ -39,11 +44,11 @@ function selectDetalleInspecciones()
     else
         $limit = 100;
 
-    $orderby = 'ORDER BY id DESC';
+    $orderby = 'ORDER BY fecha_recepcion_documento DESC';
 
         $os->db->conn->query("SET NAMES 'utf8'");
         //$sql = "SELECT * FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.id = $id";
-        $sql = "SELECT * FROM amc_inspeccion_control_programado $where $orderby LIMIT $start, $limit";
+        $sql = "SELECT * FROM amc_inspeccion_control_programado WHERE $where $orderby LIMIT $start, $limit";
         $result = $os->db->conn->query($sql);
         $data = array();
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -64,8 +69,8 @@ function insertDetalleInspecciones()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
-    $data->id = generaCodigoProcesoOrdenanza();
-    $data->gdoc = 'ITCC '.date("y").' '.generaNuevoCodigoControlProgramado();
+    $data->id = generaNuevoCodigoControlProgramado();
+    $data->codigo_tramite = 'ITCC '.date("y").' '.generaNuevoCodigoControlProgramado();
     $data->fecha_recepcion_documento = date('Y-m-d H:i:s');
     //genero el listado de nombre de campos
 
@@ -106,7 +111,7 @@ function generaCodigoProcesoOrdenanza()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(id) AS maximo FROM amc_inspeccion";
+    $sql = "SELECT MAX(id) AS maximo FROM amc_inspeccion_control_programado";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -115,7 +120,7 @@ function generaCodigoProcesoOrdenanza()
     } else {
         // valor inicial proceso
 
-        return 10759;
+        return 40;
 
     }
 }
