@@ -183,7 +183,7 @@ function fecha_actual()
 
 }
 
-function actualizar_estado_tramite($id,  $numeroGuia)
+function actualizar_estado_tramite($id,  $numeroGuia, $id_inspeccion)
 {
     global $os;
     // actualizo denuncia con el numero de acta de despacho y se cambia la bandera a tramite realizadoo
@@ -192,10 +192,10 @@ function actualizar_estado_tramite($id,  $numeroGuia)
         $os->db->conn->query($sql);
     }
 
-    $sql = "UPDATE `amc_inspeccion` SET `guia`='$numeroGuia', `fecha_despacho`=NOW() WHERE id_denuncia= '$id' ";
+    $sql = "UPDATE `amc_inspeccion` SET `guia`='$numeroGuia', `fecha_despacho`=NOW() WHERE id = '$id_inspeccion' ";
     $os->db->conn->query($sql);
 
-    $sql = "UPDATE `amc_inspeccion` SET `estado_asignacion` = 4 WHERE id_denuncia= '$id' ";
+    $sql = "UPDATE `amc_inspeccion` SET `estado_asignacion` = 4 WHERE id= '$id_inspeccion' ";
 
     $os->db->conn->query($sql);
 }
@@ -204,13 +204,11 @@ function verificaMasInspeccionesAsignadas($id){
     global  $os;
     $nombre = $os->db->conn->query("select COUNT(*) AS total   FROM amc_inspeccion where id_denuncia= $id AND (guia = '' OR ISNULL(guia))");
     $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
-    if ($rowguia['total'] == 1)
+    if ($rowguia['total'] == "1")
     return true;
     else
     return false;
 }
-
-
 
 function actualizar_guia_inspeccion($numeroGuia)
 {
@@ -221,8 +219,6 @@ function actualizar_guia_inspeccion($numeroGuia)
             VALUES ('$numeroGuia', '3', 'Inspeccion', '$idMember')";
     $os->db->conn->query($sql);
 }
-
-;
 
 function envioEmail($funcionario)
 {
@@ -277,7 +273,6 @@ function envioEmail($funcionario)
     $asunto = "Nueva inspección asignada, " . $fechaActual2 . " - " . regresaEmail($funcionario);
     $envio = enviarEmail($email, $asunto, $mensaje);
 }
-
 
 function getmensaje($nombre = '', $inspecciones = '', $fecha = '')
 {
@@ -552,7 +547,7 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
         $filaInicio++;
         if (!$reimpresion) {
             // ACTUALIZAR ESTADO DEL REGISTRO
-            actualizar_estado_tramite($rowdetalle['id_denuncia'],  $numeroGuia);
+            actualizar_estado_tramite($rowdetalle['id_denuncia'],  $numeroGuia, $rowdetalle['id']);
         }
     }
 
