@@ -60,6 +60,61 @@ function selectDetalleInspecciones()
                 "data" => $data)
         );
     //}
+}
+
+function selectDetalleAsignacion()
+{
+    global $os;
+    //$id = (int)$_POST ['id'];
+    //if($id!=0){
+
+    //Se inicializa el parámetro de búsqueda de código trámite
+    $columnaBusqueda = 'id_inspeccion';
+    $funcionario_entrega = $os->get_member_id();
+    $where = "";
+
+    if (isset($_POST['pendientesAsignar'])) {
+        if ($_POST['pendientesAsignar'] == 'true') {
+            $where = " WHERE tecnico IS NULL ";
+        }
+    }
+
+    if (isset($_POST['filterText'])) {
+        $campo = $_POST['filterText'];
+        $campo = str_replace(" ", "%", $campo);
+        if (isset($_POST['filterField'])){
+            $columnaBusqueda = $_POST['filterField'];
+        }
+        $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+    }
+
+
+    if (isset ($_POST['start']))
+        $start = $_POST['start'];
+    else
+        $start = 0;
+
+    if (isset ($_POST['limit']))
+        $limit = $_POST['limit'];
+    else
+        $limit = 100;
+
+    $orderby = 'ORDER BY fecha_recepcion_documento DESC';
+
+    $os->db->conn->query("SET NAMES 'utf8'");
+    //$sql = "SELECT * FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.id = $id";
+    $sql = "SELECT * FROM amc_inspeccion_control_programado $where $orderby LIMIT $start, $limit";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+    //}
 
 }
 
@@ -257,6 +312,9 @@ function deleteDetalleInspecciones()
 switch ($_GET['operation']) {
     case 'select' :
         selectDetalleInspecciones();
+        break;
+    case 'selectAsignacion':
+        selectDetalleAsignacion();
         break;
     case 'insert' :
         insertDetalleInspecciones();

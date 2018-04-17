@@ -95,16 +95,23 @@ function selectInspeccionesCoordinadores()
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
-    if (isset($_POST['filterText'])) {
+        if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
         if (isset($_POST['filterField'])){
             $columnaBusqueda = $_POST['filterField'];
         }
-        if  ($columnaBusqueda ==  'codigo_tramite' AND length($campo) > 0) {
+
+        if  ($columnaBusqueda ==  'codigo_tramite' AND strlen($campo) > 0) {
             $where = " WHERE $campo IN  (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) ";
         } else {
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+            if (strlen($campo) == 0) {
+                $where = " ";
+            } else {
+                $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+
+            }
+
         }
     }
 

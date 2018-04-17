@@ -483,7 +483,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         var proxyControlProgramadoAsignacion = new Ext.data.HttpProxy({
             api: {
                 create: urlInspeccion + "crudInspeccionControlProgramado.php?operation=insert",
-                read: urlInspeccion + "crudInspeccionControlProgramado.php?operation=select",
+                read: urlInspeccion + "crudInspeccionControlProgramado.php?operation=selectAsignacion",
                 update: urlInspeccion + "crudInspeccionControlProgramado.php?operation=update",
                 destroy: urlInspeccion + "crudInspeccionControlProgramado.php?operation=delete"
             }
@@ -2397,6 +2397,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             this.storeListadoCCFInspeccionTodos.load();
         }
         storeControlProgramadoInspeccion = this.storeControlProgramadoInspeccion;
+        storeControlProgramadoAsignacion = this.storeControlProgramadoAsignacion;
         storeCCFInspeccion = this.storeCCFInspeccion;
         storeCCFInspeccionPendientes = this.storeCCFInspeccionPendientes;
         storeModuloInspeccion = this.storeModuloInspeccion;
@@ -3528,9 +3529,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: tipoTramite
                 },
                 {header: 'Gdoc', dataIndex: 'gdoc', sortable: true, width: 100, editor: textFieldControlProgramado},
-
             ],
-
             viewConfig: {
                 forceFit: true
             },
@@ -4625,6 +4624,31 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         disabled: false,
                                                         scope: this,
                                                         text: 'Recargar'
+                                                    },
+                                                    '-',
+                                                    {
+                                                        xtype: 'checkbox',
+                                                        boxLabel: 'Pendientes por asignar ',
+                                                        id: 'checkPendientesAsignar',
+                                                        name: 'pendientesAsignar',
+                                                        checked: accesosCoordinadorInspeccion,
+                                                        inputValue: '1',
+                                                        tooltip: 'Pendientes por asignar',
+                                                        //disabled: !acceso,
+                                                        cls: 'barramenu',
+                                                        handler: function (checkbox, isChecked) {
+                                                            //Ext.getCmp('tb_repoteDenuncias').setDisabled(!this.checked);
+                                                            //Ext.getCmp('tb_seleccionarUnidad').setDisabled(!this.checked);
+                                                            //Ext.getCmp('tb_seleccionarUnidad').getValue();
+                                                            //storeDenuncias.load({params: {noenviados: isChecked}});
+                                                            storeControlProgramadoAsignacion.baseParams = {
+                                                                pendientesAsignar: isChecked
+                                                            };
+                                                            storeControlProgramadoAsignacion.load();
+                                                            // if (!this.checked) {
+                                                            //Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
+                                                            //}
+                                                        }
                                                     },
                                                     '-',
                                                     '->'

@@ -183,24 +183,32 @@ function fecha_actual()
 
 }
 
-function actualizar_estado_tramite($id,  $numeroGuia)
+function actualizar_estado_tramite($id,  $numeroGuia, $id_inspeccion)
 {
     global $os;
     // actualizo denuncia con el numero de acta de despacho y se cambia la bandera a tramite realizadoo
+    if (verificaMasInspeccionesAsignadas($id)) {
+        $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_inspeccion`='$numeroGuia' WHERE id='$id' ";
+        $os->db->conn->query($sql);
+    }
 
-    $sql = "UPDATE `amc_denuncias` SET `despacho_secretaria_insp`='1', `guia_inspeccion`='$numeroGuia' WHERE id='$id' ";
+    $sql = "UPDATE `amc_inspeccion` SET `guia`='$numeroGuia', `fecha_despacho`=NOW() WHERE id = '$id_inspeccion' ";
     $os->db->conn->query($sql);
 
-    $sql = "UPDATE `amc_inspeccion` SET `guia`='$numeroGuia', `fecha_despacho`=NOW() WHERE id_denuncia= '$id' ";
-    $os->db->conn->query($sql);
-
-    $sql = "UPDATE `amc_inspeccion` SET `estado_asignacion` = 4 WHERE id_denuncia= '$id' ";
+    $sql = "UPDATE `amc_inspeccion` SET `estado_asignacion` = 4 WHERE id= '$id_inspeccion' ";
 
     $os->db->conn->query($sql);
-
 }
 
-;
+function verificaMasInspeccionesAsignadas($id){
+    global  $os;
+    $nombre = $os->db->conn->query("select COUNT(*) AS total   FROM amc_inspeccion where id_denuncia= $id AND (guia = '' OR ISNULL(guia))");
+    $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
+    if ($rowguia['total'] == "1")
+    return true;
+    else
+    return false;
+}
 
 function actualizar_guia_inspeccion($numeroGuia)
 {
@@ -211,8 +219,6 @@ function actualizar_guia_inspeccion($numeroGuia)
             VALUES ('$numeroGuia', '3', 'Inspeccion', '$idMember')";
     $os->db->conn->query($sql);
 }
-
-;
 
 function envioEmail($funcionario)
 {
@@ -267,7 +273,6 @@ function envioEmail($funcionario)
     $asunto = "Nueva inspección asignada, " . $fechaActual2 . " - " . regresaEmail($funcionario);
     $envio = enviarEmail($email, $asunto, $mensaje);
 }
-
 
 function getmensaje($nombre = '', $inspecciones = '', $fecha = '')
 {
@@ -346,12 +351,12 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
     }
     $titulosegundo = '';
     $numeroGuia = '';
+    $number_of_rows = 0;
 
     // si no existe unidad es para reimpresion se envia como parametro guia, obtenemos id unidad
     if (!$reimpresion)
     {
         $os->db->conn->query("SET NAMES 'utf8'");
-
 
         // se determina un filtro  para determinar las denuncias / tramites pendientes
         $where = " WHERE   amc_inspeccion.guia IS NULL AND ( procesado_inspeccion = 1 and despacho_secretaria_insp = 0) AND (amc_inspeccion.funcionario_entrega IS NOT NULL AND amc_inspeccion.funcionario_entrega <> '' ) AND amc_inspeccion.funcionario_entrega = $funcionario  ";
@@ -514,7 +519,7 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
 
     while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
         $fila++;
-// actualizar detalle idGuia
+        // actualizar detalle idGuia
         $noExistenFilas = false;
         //cambio para impresiono el nivel de complejidad
         $niveles_complejidad = array("Alto", "Medio", "Bajo", "");
@@ -540,9 +545,10 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
 
         $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':G' . $filaInicio)->applyFromArray($styleArray);
         $filaInicio++;
-
-        // ACTUALIZAR ESTADO DEL REGISTRO
-        actualizar_estado_tramite($rowdetalle['id_denuncia'],  $numeroGuia);
+        if (!$reimpresion) {
+            // ACTUALIZAR ESTADO DEL REGISTRO
+            actualizar_estado_tramite($rowdetalle['id_denuncia'],  $numeroGuia, $rowdetalle['id']);
+        }
     }
 
 
