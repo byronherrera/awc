@@ -1914,6 +1914,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         scope: this,
                         text: 'Nombre denunciado'
                     }
+
                     ,{
                         checked: false,
                         checkHandler: checkHandlerInspecciones,
