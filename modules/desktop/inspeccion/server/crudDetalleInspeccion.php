@@ -212,6 +212,7 @@ function updateDetalleInspecciones()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
+    cambioEstadoAsignacion ($data->funcionario_entrega, $data->id);
     cambioEstadoReasignacion ($data->funcionario_reasignacion, $data->id);
 
     $sql = "UPDATE amc_inspeccion SET  $cadenaDatos  WHERE amc_inspeccion.id = '$data->id' ";
@@ -225,6 +226,33 @@ function updateDetalleInspecciones()
     ));
 
 
+}
+
+function cambioEstadoAsignacion ($id_asignacion, $idInspeccion ) {
+    global $os;
+    // en caso de que sea una reasignacion entonces se cambia de estado
+    if (!is_null($id_asignacion) AND $id_asignacion != ''){
+
+        // en caso de que ya exista se consulta si es el mimso dato o uno nuevo
+
+        if ( verificaAnteriorReasignacion ($id_asignacion, $idInspeccion)) {
+            $sql = "UPDATE `procesos-amc`.`amc_inspeccion` SET `estado_asignacion` = 1 WHERE `id` = $idInspeccion";
+            $sql = $os->db->conn->prepare($sql);
+            $sql->execute();
+        }
+    }
+}
+
+function verificaAnteriorAsignacion ($id_reasignacion, $idInspeccion) {
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT funcionario_entrega FROM  `amc_inspeccion` WHERE  id = $idInspeccion";
+    $result = $os->db->conn->query($sql);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    if ($row['funcionario_entrega'] === $id_reasignacion )
+        return false;
+    else
+        return true;
 }
 
 function cambioEstadoReasignacion ($id_reasignacion, $idInspeccion ) {
