@@ -95,7 +95,7 @@ function selectInspeccionesCoordinadores()
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
-    if (isset($_POST['filterText'])) {
+        if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
         if (isset($_POST['filterField'])){
