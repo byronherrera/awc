@@ -2373,8 +2373,20 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
         //this.storeModuloInspeccion.load();
         //this.storeDetalleInspeccion.load();
+
+        storeControlProgramadoInspeccion = this.storeControlProgramadoInspeccion;
+        storeControlProgramadoAsignacion = this.storeControlProgramadoAsignacion;
+
         this.storeControlProgramadoInspeccion.load();
-        this.storeControlProgramadoAsignacion.load();
+        if(accesosCoordinadorInspeccion==true){
+            storeControlProgramadoAsignacion.baseParams = {
+                pendientesAsignar: isChecked
+            };
+            storeControlProgramadoAsignacion.load();
+        }else{
+            this.storeControlProgramadoAsignacion.load();
+
+        }
 
         this.storeCCFInspeccion.load();
         this.storeNIOInspeccion.load();
@@ -2396,8 +2408,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         } else {
             this.storeListadoCCFInspeccionTodos.load();
         }
-        storeControlProgramadoInspeccion = this.storeControlProgramadoInspeccion;
-        storeControlProgramadoAsignacion = this.storeControlProgramadoAsignacion;
+
         storeCCFInspeccion = this.storeCCFInspeccion;
         storeCCFInspeccionPendientes = this.storeCCFInspeccionPendientes;
         storeModuloInspeccion = this.storeModuloInspeccion;
@@ -3970,6 +3981,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 //{header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
                 {header: 'Código CCF', dataIndex: 'id_ccf', sortable: true, width: 150},
                 {header: 'Fecha recepción', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150, renderer: formatDate},
+                {header: 'Fecha finalización obra', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
                 {header: 'Proyecto', dataIndex: 'proyecto', sortable: true, width: 300, editor: textFieldCCF},
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldCCF},
                 {header: 'Zona', dataIndex: 'zona', sortable: true, width: 150, editor: textFieldCCF},
@@ -3982,8 +3995,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
                 //{header: 'Fecha inicio', dataIndex: 'fecha_inicio', sortable: true, width: 150,
                     //editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
-                {header: 'Fecha finalización', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
                 {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textFieldCCF},
                 {header: 'Tipo', dataIndex: 'tipo', sortable: true, width: 100, editor: textFieldCCF},
                 {
@@ -4088,6 +4099,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 //{header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
                 {header: 'Fecha recepción', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150,
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'}), renderer: formatDate},
+                {
+                    header: 'Fecha finalización obra', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
+                },
                 {header: 'Número registro', dataIndex: 'num_registro', sortable: true, width: 100, editor: textFieldListadoCCF},
                 {
                     header: 'Fecha recepción',
@@ -4110,10 +4125,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'fecha_asignacion_inspector',
                     sortable: true,
                     width: 150
-                },
-                {
-                    header: 'Fecha finalización', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
                 },
                 {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textFieldListadoCCF},
                 {header: 'Tipo', dataIndex: 'tipo', sortable: true, width: 100, editor: textFieldListadoCCF},
@@ -4189,6 +4200,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 //{header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
                 {header: 'Fecha recepción', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150,
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'}), renderer: formatDate},
+                {
+                    header: 'Fecha finalización obra', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
+                },
                 {header: 'Número registro', dataIndex: 'num_registro', sortable: true, width: 100, editor: textFieldListadoCCF},
                 {
                     header: 'Fecha recepción',
@@ -4211,10 +4226,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'fecha_asignacion_inspector',
                     sortable: true,
                     width: 150
-                },
-                {
-                    header: 'Fecha finalización', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
                 },
                 {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textFieldListadoCCF},
                 {header: 'Tipo', dataIndex: 'tipo', sortable: true, width: 100, editor: textFieldListadoCCF},
