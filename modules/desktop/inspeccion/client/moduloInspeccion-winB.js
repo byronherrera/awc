@@ -125,6 +125,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'recepcion_documento', readOnly: true, allowBlank: true},
                 //{name: 'id_ordenanza', readOnly: true, allowBlank: true},
                 {name: 'id_tipo_documento', readOnly: true, allowBlank: true},
+                {name: 'razon_devolucion', readOnly: true, allowBlank: true},
                 {name: 'num_documento', readOnly: true, allowBlank: true},
                 {name: 'remitente', readOnly: true, allowBlank: true},
                 {name: 'cedula', readOnly: true, allowBlank: true},
@@ -965,6 +966,41 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo tipo documento  TID
+
+
+        //inicio combo RAZON DEVOLUCIÓN
+        storeRazonDevolucion = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 1, "nombre": "No es competencia de AMC (humedad)"},
+                    {"id": 2, "nombre": "Requisitos incompletos"},
+                    {"id": 3, "nombre": "Inicio de trámite en otra dependencia"},
+                ]
+            }
+        });
+
+        var comboRazonDevolucion = new Ext.form.ComboBox({
+            id: 'comboRazonDevolucion',
+            store: storeRazonDevolucion,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            //forceSelection: true,
+            //allowBlank: true
+        });
+
+        function razonDevolucion(id) {
+            var index = storeRazonDevolucion.find('id', id);
+            if (index > -1) {
+                var record = storeRazonDevolucion.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //fin combo Razon Devolucion
 
         //inicio combo reasignacion  REATOT
         storeREATOT = new Ext.data.JsonStore({
@@ -2382,7 +2418,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             storeControlProgramadoAsignacion.baseParams = {
                 pendientesAsignar: isChecked
             };
-            storeControlProgramadoAsignacion.load();
+            this.storeControlProgramadoAsignacion.load();
         }else{
             this.storeControlProgramadoAsignacion.load();
 
@@ -2447,6 +2483,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboAPROBADO,
                     renderer: aprobacion
                 },
+                {
+                    header: 'Razón devolución', dataIndex: 'razon_devolucion', sortable: true, width: 120,
+                    editor: comboRazonDevolucion, renderer: razonDevolucion
+                },
+
                 {
                     header: 'Tipo documento', dataIndex: 'id_tipo_documento', sortable: true, width: 110,
                     editor: comboTID, renderer: personaTipoDocumento

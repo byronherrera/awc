@@ -964,6 +964,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo tipo documento  TID
 
 
@@ -2451,6 +2452,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         storeDetalleInspeccion = this.storeDetalleInspeccion;
         storeDetalleTodasInspecciones = this.storeDetalleTodasInspecciones;
         limiteDetalleInspeccion = 10;
+        limiteDetalleInspeccionLarge = 100;
         storeModuloInspeccion.baseParams = {
             limit: limiteModuloInspeccion
         };
@@ -3074,7 +3076,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             stripeRows: true,
             //Definición de barra de paginado
             bbar: new Ext.PagingToolbar({
-                pageSize: limiteDetalleInspeccion,
+                pageSize: limiteDetalleInspeccionLarge,
                 store: storeDetalleTodasInspecciones,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
@@ -3513,7 +3515,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             stripeRows: true,
             //Definición de barra de paginado
             bbar: new Ext.PagingToolbar({
-                pageSize: limiteDetalleInspeccion,
+                pageSize: limiteDetalleInspeccionLarge,
                 store: this.storeControlProgramadoInspeccion,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
@@ -3593,7 +3595,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             stripeRows: true,
             //Definición de barra de paginado
             bbar: new Ext.PagingToolbar({
-                pageSize: limiteDetalleInspeccion,
+                pageSize: limiteDetalleInspeccionLarge,
                 store: this.storeControlProgramadoAsignacion,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
@@ -4076,7 +4078,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             stripeRows: true,
             //Definición de barra de paginado
             bbar: new Ext.PagingToolbar({
-                pageSize: limiteDetalleInspeccion,
+                pageSize: limiteDetalleInspeccionLarge,
                 store: this.storeCCFInspeccion,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
@@ -4117,7 +4119,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             stripeRows: true,
             //Definición de barra de paginado
             bbar: new Ext.PagingToolbar({
-                pageSize: limiteDetalleInspeccion,
+                pageSize: limiteDetalleInspeccionLarge,
                 store: this.storeNIOInspeccion,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
