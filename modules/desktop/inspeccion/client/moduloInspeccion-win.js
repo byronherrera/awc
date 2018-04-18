@@ -2643,7 +2643,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 pageSize: 100,
                 store: this.storeInspeccionActa,
                 displayInfo: true,
-                displayMsg: 'Mostrando denuncias {0} - {1} de {2} AMC',
+                displayMsg: 'Mostrando actas {0} - {1} de {2} AMC',
                 emptyMsg: "No existen nada  que mostrar"
             }),
         });
@@ -4898,7 +4898,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             tbar: [
                                 {
                                     iconCls: 'reload-icon',
-                                    handler: this.requestGridDataDenunciasGuia,
+                                    handler: this.requestGridDataDenunciasActa,
                                     scope: this,
                                     text: 'Recargar Datos'
 
@@ -5242,6 +5242,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         } else {
             this.storeListadoTodosInspectores.load();
         }
+    },
+    //Función para actualizar los datos mostrados en pantalla de la pestaña de ModuloInspeccion
+    requestGridDataDenunciasActa: function () {
+
+        this.storeInspeccionActa.load();
     },
 
     //Función para eliminación de registros de Inspeccion
