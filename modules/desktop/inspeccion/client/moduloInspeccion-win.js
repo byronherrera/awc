@@ -2485,6 +2485,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Razón devolución', dataIndex: 'razon_devolucion', sortable: true, width: 120,
                     editor: comboRazonDevolucion, renderer: razonDevolucion
                 },
+
                 {
                     header: 'Tipo documento', dataIndex: 'id_tipo_documento', sortable: true, width: 110,
                     editor: comboTID, renderer: personaTipoDocumento
