@@ -86,10 +86,4 @@ MODIFY COLUMN `fecha_asignacion_inspector` datetime NULL DEFAULT NULL AFTER `tec
 MODIFY COLUMN `gdoc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL AFTER `registro_actas_licencias`;
 
 ALTER TABLE `amc_inspeccion`
-ADD COLUMN `id_tipo_acta` int(1) NULL AFTER `inspeccion_finalizada`;
-
-ALTER TABLE `prueba`.`amc_inspeccion_control_programado`
-ADD COLUMN `estado_obra` varchar(255) NULL AFTER `licencia_municipal`;
-
-ALTER TABLE `amc_denuncias`
-ADD COLUMN `razon_devolucion` varchar(255) NULL AFTER `id_motivo_acta`;
+ADD COLUMN `id_tipo_acta` int(1) NOT NULL AFTER `inspeccion_finalizada`;
