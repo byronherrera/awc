@@ -14,7 +14,7 @@ function selectInspeccion()
     //$id = (int)$_POST ['id'];
 
     //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'id_inspeccion';
+    $columnaBusqueda = 'codigo_tramite';
     $funcionario_entrega = $os->get_member_id();
     $and = "";
 
@@ -24,7 +24,20 @@ function selectInspeccion()
         if (isset($_POST['filterField'])){
             $columnaBusqueda = $_POST['filterField'];
         }
-        $and = " AND $columnaBusqueda LIKE '%$campo%'";
+        if (strlen($campo) > 0) {
+
+            switch ($columnaBusqueda) {
+                case 'codigo_tramite':
+                    $and = " AND '$campo' in (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) ";
+                    break;
+                case 'funcionario_entrega':
+                    $and = " AND funcionario_entrega  in (SELECT c.id FROM qo_members c WHERE c.last_name like '%$campo%' ) ";
+                    break;
+                default:
+                    $and = " AND $columnaBusqueda LIKE '%$campo%' ";
+                    break;
+            }
+        }
     }
 
 
@@ -45,10 +58,10 @@ function selectInspeccion()
     //$sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion WHERE funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
     //$sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
     $sql = "(SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
-                WHERE funcionario_entrega = $funcionario_entrega AND funcionario_reasignacion IS NULL)
+                WHERE funcionario_entrega = $funcionario_entrega AND funcionario_reasignacion IS NULL $and)
 	    union
 	        (SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
-                WHERE funcionario_reasignacion = $funcionario_entrega )";
+                WHERE funcionario_reasignacion = $funcionario_entrega $and)";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -329,7 +342,7 @@ function updateInspeccionForm()
 
 
     //para el caso de denuncias se valida que exista cedula y correo
-    if ($id_tipo_documento == 1) {
+    /*if ($id_tipo_documento     == 1) {
         // se valida que se envio cedula, email
         $error = false;
         $msjError = '';
@@ -351,6 +364,7 @@ function updateInspeccionForm()
         }
 
     }
+    */
     /*codigo_tramite='$codigo_tramite',*/
     $sql = "UPDATE amc_denuncias SET 
             id = '$id',

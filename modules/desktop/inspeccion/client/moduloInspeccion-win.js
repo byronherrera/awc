@@ -807,8 +807,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             reader: readerControlProgramadoAsignacion,
             writer: writerControlProgramadoAsignacion,
             autoSave: !accesosSupervision, // dependiendo de si se tiene acceso para grabar
-            //remoteSort: true,
-            //baseParams: {}
+            baseParams: {
+                pendientesAsignar:true
+            }
         });
 
         this.storeNIOInspeccion = new Ext.data.Store({
@@ -2416,7 +2417,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.storeControlProgramadoInspeccion.load();
         if(accesosCoordinadorInspeccion==true){
             storeControlProgramadoAsignacion.baseParams = {
-                pendientesAsignar: isChecked
+                pendientesAsignar: true
             };
             this.storeControlProgramadoAsignacion.load();
         }else{
