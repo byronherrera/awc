@@ -24,10 +24,7 @@ function selectInspeccion()
      //
     if (isset($_POST['pendientesAprobar'])) {
         if ($_POST['pendientesAprobar'] == 'true') {
-            ///cambio bh
-           // $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0";
             $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0 and despacho_secretaria='true' ";
-            //$where = " WHERE reasignacion = 3 and despacho_secretaria_insp = 0 ";
         }
     }
 
@@ -52,10 +49,6 @@ function selectInspeccion()
         } else
             $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
     }
-
-
-
-
 
     if (isset ($_POST['start']))
         $start = $_POST['start'];

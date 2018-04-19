@@ -1,4 +1,3 @@
-
 <?php
 require_once '../../../../server/os.php';
 require_once '../../../common/Classes/funciones.php';
@@ -21,7 +20,7 @@ function selectInspeccion()
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
+        if (isset($_POST['filterField'])) {
             $columnaBusqueda = $_POST['filterField'];
         }
         if (strlen($campo) > 0) {
@@ -105,27 +104,28 @@ function selectInspeccionesCoordinadores()
 {
     global $os;
     //Se inicializa el parámetro de búsqueda de código trámite
-        $columnaBusqueda = 'codigo_tramite';
+    $columnaBusqueda = 'codigo_tramite';
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
-        if (isset($_POST['filterText'])) {
+    if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
+        if (isset($_POST['filterField'])) {
             $columnaBusqueda = $_POST['filterField'];
         }
-
-        if  ($columnaBusqueda ==  'codigo_tramite' AND strlen($campo) > 0) {
-            $where = " WHERE $campo IN  (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) ";
-        } else {
-            if (strlen($campo) == 0) {
-                $where = " ";
-            } else {
-                $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-
+        if (strlen($campo) > 0) {
+            switch ($columnaBusqueda) {
+                case 'codigo_tramite':
+                    $where = " WHERE '$campo' in (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) ";
+                    break;
+                case 'funcionario_entrega':
+                    $where = " WHERE funcionario_entrega  in (SELECT c.id FROM qo_members c WHERE c.last_name like '%$campo%' ) ";
+                    break;
+                default:
+                    $where = " WHERE $columnaBusqueda LIKE '%$campo%' ";
+                    break;
             }
-
         }
     }
 
@@ -144,7 +144,7 @@ function selectInspeccionesCoordinadores()
     $os->db->conn->query("SET NAMES 'utf8'");
 
     //$sql = "SELECT * FROM amc_inspeccion $where $orderby LIMIT $start, $limit";
-    $sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion $where $orderby LIMIT $start, $limit";
+    $sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion $where   $orderby LIMIT $start, $limit";
 
     $result = $os->db->conn->query($sql);
     $data = array();
@@ -182,7 +182,7 @@ function insertInspeccion()
     $data->reasignacion = 3;
 
     //genero el listado de nombre de campos
-     $cadenaDatos = '';
+    $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
         $cadenaCampos = $cadenaCampos . $clave . ',';
@@ -193,7 +193,7 @@ function insertInspeccion()
 
     $sql = "INSERT INTO amc_denuncias($cadenaCampos)
 	values($cadenaDatos);";
-     $sql = $os->db->conn->prepare($sql);
+    $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
@@ -252,11 +252,11 @@ function updateInspeccion()
     $cadenaDatos = '';
 
     foreach ($data as $clave => $valor) {
-        if ($clave!='codigo_tramite' && $clave!=NULL){
+        if ($clave != 'codigo_tramite' && $clave != NULL) {
             if ($valor === null)
                 $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
             else
-            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+                $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
         }
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
