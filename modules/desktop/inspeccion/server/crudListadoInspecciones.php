@@ -63,6 +63,7 @@ function selectInspeccion()
                 WHERE funcionario_reasignacion = $funcionario_entrega $and)";
     $result = $os->db->conn->query($sql);
 
+
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
