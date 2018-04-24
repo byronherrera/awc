@@ -128,7 +128,9 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                 {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'telefono1', allowBlank: false},
                 {name: 'cedula', allowBlank: false},
-                {name: 'tipo', allowBlank: false}
+                {name: 'tipo', allowBlank: false},
+                {name: 'direcciondenunciado', allowBlank: false},
+                {name: 'geoposicionamiento', allowBlank: false}
             ]
         });
 
@@ -165,6 +167,8 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'telefono', dataIndex: 'telefono1', sortable: true, width: 20, scope: this}
                 , {header: 'Fecha', dataIndex: 'fecha', sortable: true, width: 30, renderer: formatDate}
                 , {header: 'Tipo', dataIndex: 'tipo', sortable: true, width: 20, scope: this}
+                , {header: 'Dirección denunciado', dataIndex: 'direcciondenunciado', sortable: true, width: 30, scope: this}
+                , {header: 'Geoposicionamiento', dataIndex: 'geoposicionamiento', sortable: true, width: 30, scope: this}
 
             ],
             viewConfig: {
@@ -352,6 +356,8 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                                             {xtype: 'hidden', name: 'cedula'},
                                             {xtype: 'hidden', name: 'email'},
                                             {xtype: 'hidden', name: 'ampliaciondenuncia'},
+                                            {xtype: 'hidden', name: 'direcciondenunciado'},
+                                            {xtype: 'hidden', name: 'geoposicionamiento2'},
                                             {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Fecha',

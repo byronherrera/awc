@@ -47,6 +47,8 @@ function aprobarDenuncia()
     $data->id_caracter_tramite = 1;
     $data->cedula = $_POST["cedula"];
     $data->email = $_POST["email"];
+    $data->direccion_denuncia = $_POST["direcciondenunciado"];
+    $data->georeferencia = $_POST["geoposicionamiento2"];
 
     //genero el listado de nombre de campos
 

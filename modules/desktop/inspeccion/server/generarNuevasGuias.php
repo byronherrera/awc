@@ -403,8 +403,7 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
             DATE_FORMAT(amc_inspeccion.fecha_despacho, \"%d/%m/%Y\") fechasumilla, (SELECT numero FROM amc_guias AS a WHERE a.id = b.guia) guia 
             FROM amc_denuncias as b 
             INNER JOIN amc_inspeccion ON b.id = amc_inspeccion.id_denuncia
-            $where    
-            ";
+            $where ";
 
         $result = $os->db->conn->query($sql);
         $number_of_rows = $result->rowCount();
@@ -535,8 +534,9 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
         $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['codigo_tramite']);
         $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['num_documento']);
         $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['remitente']);
-        if  ($rowdetalle['estado_asignacion'] == "4") {
-            $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, regresaNombre($rowdetalle['funcionario']));
+
+        if  (!is_null($rowdetalle['funcionario_reasignacion']) ) {
+            $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, regresaNombre($rowdetalle['funcionario_reasignacion']));
          } else {
             $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, regresaNombre($rowdetalle['funcionario']));
         }

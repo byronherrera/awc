@@ -1,44 +1,49 @@
 {
-  "id": "bodega",
-  "type": "desktop/bodega",
+  "id": "resolucion",
+  "type": "desktop/resolucion",
   "about": {
     "author": "",
-    "description": "Mantenimiento de Bodega.",
-    "name": "Ventana Bodega",
+    "description": "AMC Resolucion.",
+    "name": "Resolucion",
     "url": "",
     "version": "1.0"
   },
+
+  "dependencies": [
+    { "id": "checkbox", "type": "library" }
+  ],
   "server": {
     "methods": [
-      { "name": "accesosAdministrador", "description": "Full acceso" },
-      { "name": "accesosSecretaria", "description": "Full acceso" },
-      { "name": "accesosZonales", "description": "Personal de zonales" }
-
+      { "name": "accesosAdministradorOpe", "description": "Administrador resolucion" },
+      { "name": "accesosAdministradorIns", "description": "Administrador resolucion solo inspeccion" },
+      { "name": "accesosResolucion", "description": "Usuario opeativos" },
+      { "name": "accesosRecepcionOpe", "description": "Recepcion resolucion" }
     ],
-    "class": "QoBodega",
-    "file": "desktop/bodega/bodega.php"
+    "class": "QoResolucion",
+    "file": "desktop/resolucion/resolucion.php"
   },
   "client": {
-    "class": "QoDesk.BodegaWindow",
+    "class": "QoDesk.ResolucionWindow",
     "css": [
       {
-        "directory": "desktop/bodega/client/resources/",
+        "directory": "desktop/resolucion/client/resources/",
         "files": [ "styles.css" ]
       },
       {
         "directory": "common/libraries/",
-        "files": [  "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css"   ]
+        "files": [ "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css", "fileuploadfield/FileUploadField.css" ]
       }
     ],
     "javascript": [
       {
         "directory": "common/libraries/",
-        "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
+        "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js", "fileuploadfield/FileUploadField.js"  ]
       },
       {
-        "directory": "desktop/bodega/client/",
-        "files": [  "bodega-win.js" ]
+        "directory": "desktop/resolucion/client/",
+        "files": [  "resolucion-win.js" ]
       },
+
       {
         "directory": "qwiki/admin/client/",
         "files": [ "QoAdmin.js" ]
@@ -50,10 +55,10 @@
     ],
     "launcher": {
       "config": {
-        "iconCls": "bodega-icon",
-        "shortcutIconCls": "bodega-shortcut",
-        "text": "Bodega",
-        "tooltip": "<b>Bodega</b>"
+        "iconCls": "resolucion-icon",
+        "shortcutIconCls": "resolucion-shortcut",
+        "text": "Resolucion",
+        "tooltip": "<b>Resolucion - AMC</b>"
       },
       "paths": {
         "startmenu": "/"

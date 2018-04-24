@@ -39,7 +39,7 @@ function selectDetalleInspecciones()
     );
 }
 
-function selectDetalleTodasInspecciones()
+function    selectDetalleTodasInspecciones()
 {
     global $os;
     //Se inicializa el parámetro de búsqueda de código trámite
@@ -236,7 +236,7 @@ function cambioEstadoAsignacion ($id_asignacion, $idInspeccion ) {
         // en caso de que ya exista se consulta si es el mimso dato o uno nuevo
 
         if ( verificaAnteriorReasignacion ($id_asignacion, $idInspeccion)) {
-            $sql = "UPDATE `procesos-amc`.`amc_inspeccion` SET `estado_asignacion` = 1 WHERE `id` = $idInspeccion";
+            $sql = "UPDATE `amc_inspeccion` SET `estado_asignacion` = 1 WHERE `id` = $idInspeccion";
             $sql = $os->db->conn->prepare($sql);
             $sql->execute();
         }
@@ -263,7 +263,7 @@ function cambioEstadoReasignacion ($id_reasignacion, $idInspeccion ) {
         // en caso de que ya exista se consulta si es el mimso dato o uno nuevo
 
         if ( verificaAnteriorReasignacion ($id_reasignacion, $idInspeccion)) {
-            $sql = "UPDATE `procesos-amc`.`amc_inspeccion` SET `estado_asignacion` = 3 WHERE `id` = $idInspeccion";
+            $sql = "UPDATE `amc_inspeccion` SET `estado_asignacion` = 3 WHERE `id` = $idInspeccion";
             $sql = $os->db->conn->prepare($sql);
             $sql->execute();
 
