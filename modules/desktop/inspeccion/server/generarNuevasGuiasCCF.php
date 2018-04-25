@@ -154,7 +154,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('C' . $filascabecera, '____________
 
 $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 5), '__________________');
 $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 6), "APROBADO POR:");
-$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 7), "AB. FERNANDO AGUILAR");
+$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 7), "NATALYA MEJIA");
 $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 8), "SECRETARIO GENERAL");
 
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
