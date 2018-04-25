@@ -87,3 +87,5 @@ MODIFY COLUMN `gdoc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NUL
 
 ALTER TABLE `amc_inspeccion`
 ADD COLUMN `id_tipo_acta` int(1) NOT NULL AFTER `inspeccion_finalizada`;
+
+razon_devolucion
