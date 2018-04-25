@@ -1,4 +1,3 @@
-
 <?php
 require_once '../../../../server/os.php';
 require_once '../../../common/Classes/funciones.php';
@@ -15,14 +14,14 @@ function selectDetalleInspecciones()
     //if($id!=0){
 
     //Se inicializa el parámetro de búsqueda de código trámite
-    //$columnaBusqueda = 'id_inspeccion';
+    $columnaBusqueda = 'id_ccf';
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
+        if (isset($_POST['filterField'])) {
             $columnaBusqueda = $_POST['filterField'];
         }
         $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
@@ -42,19 +41,19 @@ function selectDetalleInspecciones()
     $orderby = 'ORDER BY id DESC';
 
 
-        $os->db->conn->query("SET NAMES 'utf8'");
-        //$sql = "SELECT * FROM amc_inspeccion_ccf WHERE amc_inspeccion_control_programado.id = $id";
-        $sql = "SELECT * FROM amc_inspeccion_ccf $where $orderby LIMIT $start, $limit";
-        $result = $os->db->conn->query($sql);
-        $data = array();
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+    $os->db->conn->query("SET NAMES 'utf8'");
+    //$sql = "SELECT * FROM amc_inspeccion_ccf WHERE amc_inspeccion_control_programado.id = $id";
+    $sql = "SELECT * FROM amc_inspeccion_ccf $where $orderby LIMIT $start, $limit";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
-            $data[] = $row;
-        }
-        echo json_encode(array(
-                "success" => true,
-                "data" => $data)
-        );
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
     //}
 
 }
@@ -73,7 +72,7 @@ function selectDetalleInspeccionesTodos()
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
+        if (isset($_POST['filterField'])) {
             $columnaBusqueda = $_POST['filterField'];
         }
         $where = " AND $columnaBusqueda LIKE '%$campo%'";
@@ -118,7 +117,7 @@ function insertDetalleInspecciones()
     $data = json_decode(stripslashes($_POST["data"]));
     $data->id = generaCodigoProcesoOrdenanza();
     //$data->id_inspeccion = generaNuevoCodigoInspeccion();
-    $data->id_ccf = 'AMC-CCF-'.date("y").'-'.generaNuevoCodigoConstrucciones().'_C';
+    $data->id_ccf = 'AMC-CCF-' . date("y") . '-' . generaNuevoCodigoConstrucciones() . '_C';
     $data->fecha_recepcion_documento = date('Y-m-d H:i:s');
 
     //genero el listado de nombre de campos
@@ -134,7 +133,7 @@ function insertDetalleInspecciones()
 
     $sql = "INSERT INTO amc_inspeccion_ccf($cadenaCampos)
 	values($cadenaDatos);";
-     $sql = $os->db->conn->prepare($sql);
+    $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
 
@@ -228,7 +227,7 @@ function selectDetalleInspeccionesForm()
 {
     global $os;
     $id = (int)$_POST ['id'];
-    if($id!=0){
+    if ($id != 0) {
         $os->db->conn->query("SET NAMES 'utf8'");
         $sql = "SELECT * FROM amc_inspeccion_ccf WHERE amc_inspeccion_ccf.id_denuncia = $id";
         $result = $os->db->conn->query($sql);

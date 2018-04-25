@@ -15,7 +15,7 @@ function selectDetalleInspecciones()
     //if($id!=0){
 
     //Se inicializa el parámetro de búsqueda de código trámite
-    //$columnaBusqueda = 'id_inspeccion';
+    $columnaBusqueda = 'num_nio';
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
