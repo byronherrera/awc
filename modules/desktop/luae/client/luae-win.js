@@ -18,9 +18,7 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
         var desktop = this.app.getDesktop();
         var AppMsg = new Ext.AppMsg({});
         var win = desktop.getWindow('grid-win-luae');
-
         var urlLuae = "modules/desktop/luae/server/";
-
         var textField = new Ext.form.TextField({allowBlank: false});
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i:s') : '';
@@ -33,6 +31,15 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
                 read: urlLuae + "crudLuae.php?operation=select",
                 update: urlLuae + "crudLuae.php?operation=update",
                 destroy: urlLuae + "crudLuae.php?operation=delete"
+            },
+            listeners: {
+                write: function (proxy, action, result, res, rs) {
+                    if (typeof res.message !== 'undefined') {
+                        if (res.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
+                        }
+                    }
+                }
             }
         });
 
@@ -106,6 +113,7 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Categoria', dataIndex: 'categoria', sortable: true,width: 80},
                 {header: 'Secretaria Otorgante', dataIndex: 'secretaria_otorgante', sortable: true,width: 60},
                 {header: 'Zonal', dataIndex: 'zonal', sortable: true,width: 100}
+
             ],
             viewConfig: {
                 forceFit: false
@@ -146,7 +154,6 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
                     this.targetFieldBtn.setText(item.text);
                 }
             };
-
             var searchFieldBtn = new Ext.Button({
                 menu: new Ext.menu.Menu({
                     items: [
@@ -212,7 +219,7 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
 
             win = desktop.createWindow({
                 id: 'grid-win-luae',
-                title: 'Consulta LUAE',
+                title: 'Consulta LUAE - PUCAS',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'luae-icon',
