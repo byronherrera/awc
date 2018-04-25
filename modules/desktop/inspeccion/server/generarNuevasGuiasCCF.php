@@ -147,7 +147,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 1), "ENTREG
 $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 2), $nombreUsuario);
 $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 3), "SECRETARIA GENERAL:");
 
-$objPHPExcel->getActiveSheet()->mergeCells('F' . ($filascabecera + 1) . ':I' . ($filascabecera + 2));
+//$objPHPExcel->getActiveSheet()->mergeCells('F' . ($filascabecera + 1) . ':I' . ($filascabecera + 2));
 $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 1), "RECIBIDO POR:");
 $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 3), "COORDINADOR INSPECCIÓN");
 $objPHPExcel->getActiveSheet()->setCellValue('C' . $filascabecera, '__________________');
@@ -164,7 +164,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(50);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(50);
+$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(40);
 
 
 
