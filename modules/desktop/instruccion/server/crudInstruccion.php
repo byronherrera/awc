@@ -14,7 +14,7 @@ function verificarAnteriorOperativo($id_operativo)
     global $os;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_operativos WHERE id = $id_operativo ";
+    $sql = "SELECT * FROM amc_expediente WHERE id = $id_operativo ";
     $result = $os->db->conn->query($sql);
     $data = array();
     $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -54,7 +54,7 @@ function selectProcedimientosCadena($procLista)
     return implode(",\n", $data);
 }
 
-function selectOperativos()
+function selectInstruccion()
 {
     global $os;
     //TODO cambiar columna por defecto en busquedas
@@ -62,29 +62,29 @@ function selectOperativos()
 
     $where = '';
     $usuarioLog = $os->get_member_id();
-    if (isset($_POST['accesosOperativos'])) {
-        $accesosOperativos = $_POST['accesosOperativos'];
-        if ($accesosOperativos == 'true')
+    if (isset($_POST['accesosInstruccion'])) {
+        $accesosInstruccion = $_POST['accesosInstruccion'];
+        if ($accesosInstruccion == 'true')
             $where = " WHERE $usuarioLog = id_persona_encargada ";
     }
 
 
     if (isset($_POST['accesosAdministradorIns'])) {
-        $accesosOperativos = $_POST['accesosAdministradorIns'];
-        if ($accesosOperativos == 'true')
+        $accesosInstruccion = $_POST['accesosAdministradorIns'];
+        if ($accesosInstruccion == 'true')
             $where = " WHERE ($usuarioLog = id_persona_encargada or id_unidad = 3 ) ";
     }
 
 
     if (isset($_POST['accesosAdministradorOpe'])) {
-        $accesosOperativos = $_POST['accesosAdministradorOpe'];
-        if ($accesosOperativos == 'false')
+        $accesosInstruccion = $_POST['accesosAdministradorOpe'];
+        if ($accesosInstruccion == 'false')
             if ($where == '')
                 $where = " WHERE visible  = 1 ";
             else
                 $where = $where . " AND visible  = 1";
     }
-    // se muestran todos los operativos
+    // se muestran todos los instruccion
     if (isset($_POST['acceso'])) {
         $acceso = $_POST['acceso'];
         if ($acceso == 'false')
@@ -235,19 +235,19 @@ function selectOperativos()
     if (isset($_POST['busqueda_informe']) and ($_POST['busqueda_informe'] != '')) {
         $tipo = $_POST['busqueda_informe'];
         if ($where == '') {
-            $where = "WHERE (select count(*) from amc_operativos_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
+            $where = "WHERE (select count(*) from amc_expediente_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
             UPPER(a.direccion) like UPPER('%$tipo%') OR
             UPPER(a.hecho) like UPPER('%$tipo%') OR
             UPPER(a.medida) like UPPER('%$tipo%') OR
             UPPER(a.observaciones) like UPPER('%$tipo%')) AND
-            a.id_operativo = amc_operativos.id ) > 0 ";
+            a.id_operativo = amc_expediente.id ) > 0 ";
         } else {
-            $where = $where . " AND (select count(*) from amc_operativos_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
+            $where = $where . " AND (select count(*) from amc_expediente_informes a WHERE (UPPER(a.administrado) like UPPER('%$tipo%') OR
             UPPER(a.direccion) like UPPER('%$tipo%') OR
             UPPER(a.hecho) like UPPER('%$tipo%') OR
             UPPER(a.medida) like UPPER('%$tipo%') OR
             UPPER(a.observaciones) like UPPER('%$tipo%')) AND
-            a.id_operativo = amc_operativos.id ) > 0               ";
+            a.id_operativo = amc_expediente.id ) > 0               ";
         }
     }
 
@@ -263,9 +263,9 @@ function selectOperativos()
     if (isset($_POST['busqueda_personal_asignado']) and ($_POST['busqueda_personal_asignado'] != '')) {
         $tipo = $_POST['busqueda_personal_asignado'];
         if ($where == '') {
-            $where = "WHERE (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0 ";
+            $where = "WHERE (select count(*) from amc_expediente_personal a where a.id_member = '$tipo' and a.id_operativo = amc_expediente.id ) > 0 ";
         } else {
-            $where = $where . " AND (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0  ";
+            $where = $where . " AND (select count(*) from amc_expediente_personal a where a.id_member = '$tipo' and a.id_operativo = amc_expediente.id ) > 0  ";
         }
     }
     if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
@@ -283,14 +283,14 @@ function selectOperativos()
         }
     }
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_operativos $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT * FROM amc_expediente $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
     };
 
-    $sql = "SELECT count(*) AS total FROM amc_operativos $where";
+    $sql = "SELECT count(*) AS total FROM amc_expediente $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
@@ -302,7 +302,7 @@ function selectOperativos()
     );
 }
 
-function insertOperativos()
+function insertInstruccion()
 {
     global $os;
 
@@ -326,7 +326,7 @@ function insertOperativos()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_operativos($cadenaCampos)
+    $sql = "INSERT INTO amc_expediente($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -348,7 +348,7 @@ function generaCodigoProcesoDenuncia()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_operativos";
+    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_expediente";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -360,7 +360,7 @@ function generaCodigoProcesoDenuncia()
     }
 }
 
-function updateOperativos()
+function updateInstruccion()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -454,22 +454,22 @@ function updateOperativos()
     verificarAnteriorOperativo($data->id);
 
 
-    $sql = "UPDATE amc_operativos SET  $cadenaDatos  WHERE amc_operativos . id = '$data->id' ";
+    $sql = "UPDATE amc_expediente SET  $cadenaDatos  WHERE amc_expediente . id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "mail" => "aa",
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos actualizado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_expediente actualizado exitosamente" : $sql->errorCode()
     ));
 }
 
-function selectOperativosForm()
+function selectInstruccionForm()
 {
     global $os;
     $id = (int)$_POST ['id'];
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_operativos WHERE id = $id";
+    $sql = "SELECT * FROM amc_expediente WHERE id = $id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -481,7 +481,7 @@ function selectOperativosForm()
     );
 }
 
-function updateOperativosForm()
+function updateInstruccionForm()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -491,7 +491,7 @@ function updateOperativosForm()
     $barrios = $_POST["barrios"];
     $detalle = $_POST["detalle"];
 
-    $sql = "UPDATE `amc_operativos` SET `detalle`='$detalle', `parroquias`='$parroquias', `barrios`='$barrios' WHERE (`id`='$id')";
+    $sql = "UPDATE `amc_expediente` SET `detalle`='$detalle', `parroquias`='$parroquias', `barrios`='$barrios' WHERE (`id`='$id')";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
@@ -500,37 +500,37 @@ function updateOperativosForm()
     ));
 }
 
-function deleteOperativos()
+function deleteInstruccion()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_operativos WHERE id = $id";
+    $sql = "DELETE FROM amc_expediente WHERE id = $id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos, eliminado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_expediente, eliminado exitosamente" : $sql->errorCode()
     ));
 }
 
 switch ($_GET['operation']) {
     case 'select' :
-        selectOperativos();
+        selectInstruccion();
         break;
     case 'insert' :
-        insertOperativos();
+        insertInstruccion();
         break;
     case 'update' :
-        updateOperativos();
+        updateInstruccion();
         break;
     case 'selectForm' :
-        selectOperativosForm();
+        selectInstruccionForm();
         break;
     case 'updateForm' :
-        updateOperativosForm();
+        updateInstruccionForm();
         break;
     case 'delete' :
-        deleteOperativos();
+        deleteInstruccion();
         break;
 }
 function validarCedulaCorreo($id)
@@ -541,7 +541,7 @@ function validarCedulaCorreo($id)
 
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT cedula, email FROM amc_operativos WHERE id = $id";
+    $sql = "SELECT cedula, email FROM amc_expediente WHERE id = $id";
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -553,7 +553,7 @@ function validarCedulaCorreo($id)
 }
 
 
-function getmensaje($nombre = '', $operativos = '', $fecha = '')
+function getmensaje($nombre = '', $instruccion = '', $fecha = '')
 {
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
                 <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
@@ -562,7 +562,7 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
                  Estimado, ' . $nombre . ' ha sido asignado al  siguiente operativo como responsable:<br>
                  <br>
                  <br>
-                 ' . $operativos . '
+                 ' . $instruccion . '
                  <br>
                  <br>
                  Favor ingresar en Matis AMC, para verificar el operativo asignado <a href="http://172.20.136.60/procesos-amc">aquí</a> .
@@ -570,7 +570,7 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
                 <br>	
                 <p>De conformidad con el Memorando No. AMC-SM-JA-2018-003, del 4 de enero de 2018, mediente el cual la 
                 Máxima Autoridad dispone</p>
-                <p>"Todo el personal de la Agencia Metropolitana de Control, deberá utilizar de manera obligatoria el módulo de operativos que se encuentra dentro de la INTRANET de la Institución, a fin de generar los informes de los operativos realizados. En el sistema se deberá llenar los datos solicitados dentro de las 24 horas siguientes de haber realizado el operativo, con el objetivo de que se genere el informe respectivo."</p>
+                <p>"Todo el personal de la Agencia Metropolitana de Control, deberá utilizar de manera obligatoria el módulo de instruccion que se encuentra dentro de la INTRANET de la Institución, a fin de generar los informes de los instruccion realizados. En el sistema se deberá llenar los datos solicitados dentro de las 24 horas siguientes de haber realizado el operativo, con el objetivo de que se genere el informe respectivo."</p>
 
                 <br>
                 <p>"Se les recuerda a los funcionarios incluir toda la información recopilada del operativo en los campos respectivos, se dará seguimiento al mismo."</p>
@@ -625,7 +625,7 @@ function verificaEnvioEmail($id)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT id_persona_encargada, visible FROM amc_operativos WHERE id= $id";
+    $sql = "SELECT id_persona_encargada, visible FROM amc_expediente WHERE id= $id";
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -643,7 +643,7 @@ function verificaEnvioEmail($id)
 function getListdoFuncionariosOperativo($id)
 {
     global $os;
-    $result = $os->db->conn->query("SELECT id_member FROM amc_operativos_personal WHERE id_operativo = $id;");
+    $result = $os->db->conn->query("SELECT id_member FROM amc_expediente_personal WHERE id_operativo = $id;");
     $funcionarios = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $funcionarios[] = $row ['id_member'];
@@ -656,7 +656,7 @@ function nombreEstado($data)
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    $sql = "SELECT nombre FROM amc_operativos_estados WHERE id = " . $data;
+    $sql = "SELECT nombre FROM amc_expediente_estados WHERE id = " . $data;
     $nombre = $os->db->conn->query($sql);
 
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);

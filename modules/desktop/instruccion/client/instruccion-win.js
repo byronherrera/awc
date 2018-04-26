@@ -4,7 +4,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
     init: function () {
         this.launcher = {
-            text: 'Inspección',
+            text: 'Instrucción',
             iconCls: 'instruccion-icon',
             handler: this.createWindow,
             scope: this
@@ -12,6 +12,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
     },
 
     createWindow: function () {
+        //todo ver que perfiles dejar
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
         var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
         var accesosInstruccion = this.app.isAllowedTo('accesosInstruccion', this.id);
@@ -21,14 +22,20 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         var accesosInspectores = this.app.isAllowedTo('accesosInspeccion', this.id); //Sin acceso a pestaña trámites pendientes, acceso a inspecciones asignadas
         var accesosSupervision = this.app.isAllowedTo('accesosSupervision', this.id); //Solo modo lectura
 
+        // todo eliminar estas fechas ?
         var fecha_inicio_planificacion;
         var fecha_fin_planificacion;
 
-        finalizados = true;
-        limiteinstruccion = 100;
-        this.selectInstruccion = 0;
+        //variable define que registro de instruccion se seleccion
         selectInstruccion = 0;
 
+        // variable define
+        finalizados = true;
+
+        // variable para paginamiento
+        limiteinstruccion = 100;
+
+        // todo revisar los accesp
         var acceso = (accesosAdministradorOpe || accesosInstruccion) ? true : false
 
         var gridBlockInstruccion = false;
@@ -36,6 +43,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         var AppMsg = new Ext.AppMsg({});
 
         var win = desktop.getWindow('grid-win-instruccion');
+
         var urlInstruccion = "modules/desktop/instruccion/server/";
 
         var textField = new Ext.form.TextField({allowBlank: false});
@@ -752,29 +760,33 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id', allowBlank: false},
                 {name: 'id_persona', allowBlank: false},
-                {name: 'fecha_planificacion', type: 'date', dateFormat: 'c', allowBlank: false},
-                {name: 'fecha_inicio_planificacion', type: 'date', dateFormat: 'c', allowBlank: false},
-                {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: false},
-                {name: 'fecha_informe', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'fecha_impresion_informe', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'id_tipo_control', allowBlank: false},
-                {name: 'id_nivel_complejidad', allowBlank: false},
-                {name: 'id_zonal', allowBlank: true},
-                {name: 'observaciones', allowBlank: true},
-                {name: 'tramite', allowBlank: true},
-                {name: 'tipo_operativo', allowBlank: false},
-                {name: 'zona', allowBlank: true},
-                {name: 'id_unidad', allowBlank: true},
-                {name: 'punto_encuentro_planificado', allowBlank: true},
+                {name: 'codigo_expediente', allowBlank: false},
                 {name: 'id_persona_encargada', allowBlank: false},
-                /* {name: 'fallido', type: 'boolean', allowBlank: false},*/
-                /* {name: 'finalizado', type: 'boolean', allowBlank: false},*/
-                {name: 'id_estado', allowBlank: false},
-                {name: 'visible', type: 'boolean', allowBlank: true}
+                {name: 'id_persona_reasignado', allowBlank: false},
+                {name: 'id_acta', allowBlank: false},
+                {name: 'fecha_asignación', type: 'date', dateFormat: 'c', allowBlank: false},
+                {name: 'id_tramite', allowBlank: false},
+                {name: 'detalle', allowBlank: false},
+                {name: 'observaciones', allowBlank: false},
+                {name: 'clausura', allowBlank: false},
+                {name: 'predio', allowBlank: false},
+                {name: 'nombre_administrado', allowBlank: false},
+                {name: 'nombre_establecimiento', allowBlank: false},
+                {name: 'direccion', allowBlank: false},
+                {name: 'ruc', allowBlank: false},
+                {name: 'cedula', allowBlank: false},
+                {name: 'casillero_judicial', allowBlank: false},
+                {name: 'id_ordenanza', allowBlank: false},
+                {name: 'id_articulo', allowBlank: false},
+                {name: 'id_literal', allowBlank: false},
+                {name: 'auto', allowBlank: false},
+                {name: 'dmi', allowBlank: false},
+                {name: 'informe_otros', allowBlank: false},
+                {name: 'entidad', allowBlank: false},
+                {name: 'informe', allowBlank: false},
+                {name: 'medida_cautelar', allowBlank: false},
+                {name: 'ultima_actividad', allowBlank: false}
             ]
         });
         var writerInstruccion = new Ext.data.JsonWriter({
@@ -803,23 +815,10 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeInstruccion,
             columns: [
                 new Ext.grid.RowNumberer(),
-                /* {
-                 header: 'Código',
-                 dataIndex: 'codigo_operativo',
-                 sortable: true,
-                 width: 45
-                 },*/
-                {
-                    header: 'Código',
-                    dataIndex: 'id',
-                    sortable: true,
-                    width: 45
-                },
-                {
-                    header: 'Visible',
-                    dataIndex: 'visible',
-                    sortable: true,
-                    width: 45,
+
+
+/*                { header: 'Código', dataIndex: 'id', sortable: true, width: 45 },
+                { header: 'Visible', dataIndex: 'visible', sortable: true, width: 45,
                     align: 'center',
                     editor: {
                         xtype: 'checkbox'
@@ -933,9 +932,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     width: 190,
                     editor: comboPRD,
                     renderer: personaReceptaDenuncia,
-                    /*
-                     editor: comboOPPERENC,
-                     renderer: instruccionPersonalEncargado,*/
+
                     id: 'id_persona_encargada'
                 },
                 {
@@ -965,11 +962,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 90,
                     editor: new Ext.form.TextField({allowBlank: false})
-                    /*                    editor: new Ext.form.NumberField({
-                                            allowBlank: false,
-                                            allowNegative: false,
-                                            maxValue: 100000
-                                        }) */
                 },
                 {
                     header: 'Elaborado',
@@ -1038,7 +1030,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                         dateFormat: 'Y-m-d',
                         timeFormat: 'H:i'
                     })
-                }
+                }*/
             ],
             viewConfig: {
                 forceFit: false,
