@@ -2465,7 +2465,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame superior de pestaña Trámites pendientes
             height: winHeight * 0.42,
             //Calculo de tamaño horizontal frame superior de pestaña Trámites pendientes
-            width: winWidth * 0.98,
+            width: winWidth - 16,
             store: this.storeModuloInspeccion,
             columns: [
                 //Definición de campos bdd Inspeccion
@@ -2788,7 +2788,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
             height: winHeight * 0.32,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth * 0.98,
+            width: winWidth - 15,
             readOnly: accesosSupervision,
             store: this.storeDetalleInspeccion,
             columns: [
@@ -2939,7 +2939,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
             height: winHeight * 0.32,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth * 0.98,
+            width: winWidth - 15,
             readOnly: accesosSupervision,
             store: this.storeDetalleTodasInspecciones,
             columns: [
@@ -3090,9 +3090,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridListadoInspeccion = new Ext.grid.EditorGridPanel({
             id: 'gridListadoInspeccion',
             //Calculo de tamaño vertical frame inferior de pestaña Inspecciones
-            height: winHeight * 0.85,
+            height: winHeight -15,
             //Calculo de tamaño vertical frame inferior de pestaña Inspecciones
-            width: winWidth * 0.99,
+            width: winWidth - 15,
             //readOnly: accesosSupervision,
             store: this.storeListadoInspeccion,
             columns: [
@@ -3244,9 +3244,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridListadoTodosInspectores = new Ext.grid.EditorGridPanel({
             id: 'gridListadoTodosInspectores',
             //Calculo de tamaño vertical frame inferior de pestaña Inspecciones
-            height: winHeight * 0.85,
+            height: winHeight -93,
             //Calculo de tamaño vertical frame inferior de pestaña Inspecciones
-            width: winWidth * 0.99,
+            width: winWidth -15,
             //readOnly: accesosSupervision,
             store: this.storeListadoTodosInspectores,
             columns: [
@@ -4548,17 +4548,12 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                 items: [
                                     {
                                         xtype: 'tabpanel',
-
                                         activeTab: 0,
-                                        width: winWidth,
+                                        width: winWidth - 15,
                                         cls: 'no-border',
                                         items: [
                                             {
                                                 title: 'Asignación inspección',
-                                                //layout: 'column',
-                                                //closable: true,
-                                                //titleCollapse: true,
-                                                //disabled: !accesosSecretaria
                                                 autoScroll: true,
                                                 height: winHeight * 0.36,
                                                 tbar: [
@@ -4852,7 +4847,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         text: 'Buscar por:'
                                                         , xtype: 'tbtext'
                                                     }
-                                                    //, searchInspeccionesBtn
                                                     , searchNIOBtn
                                                     , ' ', ' '
                                                     , new QoDesk.QoAdmin.SearchField({
@@ -4862,7 +4856,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
                                                         //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
                                                         //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
-                                                    }), '-','-',
+                                                    }),
                                                 ],
                                                 items: this.gridNIOInspeccion
                                             }
@@ -4956,7 +4950,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
                                                         //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
                                                         //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
-                                                    }),'-','-',
+                                                    }),
                                                 ],
                                                 items: this.gridCCFInspeccion
                                             }
@@ -5047,7 +5041,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     ,
                                     store: todosInspectores ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
                                 })
-                            ], items: [{
+                            ],
+                            items: [{
                                 id: 'formListadoInspeccion',
                                 titleCollapse: true,
                                 flex: 1,
