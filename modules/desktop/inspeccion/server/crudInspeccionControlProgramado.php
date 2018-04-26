@@ -1,4 +1,3 @@
-
 <?php
 require_once '../../../../server/os.php';
 require_once '../../../common/Classes/funciones.php';
@@ -15,7 +14,7 @@ function selectDetalleInspecciones()
     //if($id!=0){
 
     //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'id_inspeccion';
+    $columnaBusqueda = 'codigo_tramite';
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
@@ -27,7 +26,7 @@ function selectDetalleInspecciones()
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
+        if (isset($_POST['filterField'])) {
             $columnaBusqueda = $_POST['filterField'];
         }
         $where = " $columnaBusqueda LIKE '%$campo%'";
@@ -46,19 +45,21 @@ function selectDetalleInspecciones()
 
     $orderby = 'ORDER BY fecha_recepcion_documento DESC';
 
-        $os->db->conn->query("SET NAMES 'utf8'");
-        //$sql = "SELECT * FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.id = $id";
+    $os->db->conn->query("SET NAMES 'utf8'");
+    //$sql = "SELECT * FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.id = $id";
+    if (strlen($where) > 0)
         $sql = "SELECT * FROM amc_inspeccion_control_programado WHERE $where $orderby LIMIT $start, $limit";
+    else
+        $sql = "SELECT * FROM amc_inspeccion_control_programado  $orderby LIMIT $start, $limit";
         $result = $os->db->conn->query($sql);
-        $data = array();
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
-            $data[] = $row;
-        }
-        echo json_encode(array(
-                "success" => true,
-                "data" => $data)
-        );
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
     //}
 }
 
@@ -82,7 +83,7 @@ function selectDetalleAsignacion()
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
-        if (isset($_POST['filterField'])){
+        if (isset($_POST['filterField'])) {
             $columnaBusqueda = $_POST['filterField'];
         }
         $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
@@ -125,7 +126,7 @@ function insertDetalleInspecciones()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
     $data->id = generaNuevoCodigoControlProgramado();
-    $data->codigo_tramite = 'ITCC '.date("y").' '.generaNuevoCodigoControlProgramado();
+    $data->codigo_tramite = 'ITCC ' . date("y") . ' ' . generaNuevoCodigoControlProgramado();
     $data->fecha_recepcion_documento = date('Y-m-d H:i:s');
     //genero el listado de nombre de campos
 
@@ -140,19 +141,19 @@ function insertDetalleInspecciones()
 
     $sql = "INSERT INTO amc_inspeccion_control_programado($cadenaCampos)
 	values($cadenaDatos);";
-     $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
-
-    $data->id = $os->db->conn->lastInsertId();
-    // genero el nuevo codigo de proceso
-/*
-    $sql = "INSERT INTO amc_inspeccion($cadenaCampos)
-	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
-*/
+    // genero el nuevo codigo de proceso
+    /*
+        $sql = "INSERT INTO amc_inspeccion($cadenaCampos)
+        values($cadenaDatos);";
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
+
+        $data->id = $os->db->conn->lastInsertId();
+    */
     echo json_encode(array(
         "success" => true,
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
@@ -243,7 +244,7 @@ function selectDetalleInspeccionesForm()
 {
     global $os;
     $id = (int)$_POST ['id'];
-    if($id!=0){
+    if ($id != 0) {
         $os->db->conn->query("SET NAMES 'utf8'");
         $sql = "SELECT * FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.id_denuncia = $id";
         $result = $os->db->conn->query($sql);

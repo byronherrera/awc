@@ -3244,7 +3244,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridListadoTodosInspectores = new Ext.grid.EditorGridPanel({
             id: 'gridListadoTodosInspectores',
             //Calculo de tamaño vertical frame inferior de pestaña Inspecciones
-            height: winHeight -93,
+            height: winHeight -94,
             //Calculo de tamaño vertical frame inferior de pestaña Inspecciones
             width: winWidth -15,
             //readOnly: accesosSupervision,
@@ -3633,9 +3633,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridListadoControlProgramado = new Ext.grid.EditorGridPanel({
             id: 'gridListadoControlProgramado',
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
-            height: winHeight * 0.85,
+            height: winHeight - 94,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth * 0.99,
+            width: winWidth - 15,
             readOnly: accesosSupervision,
             store: this.storeListadoControlProgramado,
             columns: [
@@ -3836,9 +3836,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridListadoControlProgramadoTodos = new Ext.grid.EditorGridPanel({
             id: 'gridListadoControlProgramadoTodos',
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
-            height: winHeight * 0.85,
+            height: winHeight -94,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth * 0.99,
+            width: winWidth -15,
             readOnly: accesosSupervision,
             store: this.storeListadoControlProgramadoTodos,
             columns: [
@@ -4544,7 +4544,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                 flex: 2,
                                 bodyStyle: 'padding:0; background: #0f6dff',
                                 //layout: 'column',
-
                                 items: [
                                     {
                                         xtype: 'tabpanel',
@@ -4555,7 +4554,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                             {
                                                 title: 'Asignación inspección',
                                                 autoScroll: true,
-                                                height: winHeight * 0.36,
+                                                height: winHeight - 94,
                                                 tbar: [
                                                     //Definición de botón nuevo
                                                     {
