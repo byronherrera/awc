@@ -26,6 +26,10 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         var fecha_inicio_planificacion;
         var fecha_fin_planificacion;
 
+        //todo borrar variable
+
+        var fechaOperativo;
+
         //variable define que registro de instruccion se seleccion
         selectInstruccion = 0;
 
@@ -37,6 +41,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
         // todo revisar los accesp
         var acceso = (accesosAdministradorOpe || accesosInstruccion) ? true : false
+        var acceso = true;
 
         var gridBlockInstruccion = false;
         var desktop = this.app.getDesktop();
@@ -815,30 +820,14 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeInstruccion,
             columns: [
                 new Ext.grid.RowNumberer(),
+                { header: 'id_persona', dataIndex: 'id_persona', sortable: true, width: 100 },
 
+                { header: 'codigo_expediente', dataIndex: 'codigo_expediente', sortable: true, width: 100 },
+                { header: 'id_persona_reasignado', dataIndex: 'id_persona_reasignado', sortable: true, width: 100 },
 
-/*                { header: 'Código', dataIndex: 'id', sortable: true, width: 45 },
-                { header: 'Visible', dataIndex: 'visible', sortable: true, width: 45,
-                    align: 'center',
-                    editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , xtype: 'booleancolumn'
-                },
                 {
-                    header: 'Estado',
-                    dataIndex: 'id_estado',
-                    sortable: true,
-                    width: 100,
-                    editor: comboOPESTA,
-                    renderer: instruccionEstados
-                },
-                {
-                    header: 'Fecha inicio',
-                    dataIndex: 'fecha_inicio_planificacion',
+                    header: 'fecha_asignación',
+                    dataIndex: 'fecha_asignación',
                     sortable: true,
                     width: 100,
                     renderer: formatDate,
@@ -847,196 +836,255 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                         timeFormat: 'H:i',
                         listeners: {
                             change: function (field, val, valOld) {
-                                //fecha inicial debe ser mayor que la final
-                                if (val > fecha_fin_planificacion)
-                                //AppMsg.setAlert("Alerta ", 'Fecha inicial no  debe ser mayor que fecha final');
-                                    fecha_inicio_planificacion = val
-                                //fecha inicial no debe ser mayor de 12 horas
-                                var diff = Math.abs(fecha_fin_planificacion - fecha_inicio_planificacion) / 3600000;
-                                if (diff > 12)
-                                    AppMsg.setAlert("Alerta ", 'Fecha final supera las 12 horas de operativo, están ' + parseFloat(diff).toFixed(1) + " horas");
-                                else
-                                    AppMsg.setAlert("Observación ", 'Están ' + parseFloat(diff).toFixed(1) + " horas de operativo");
-                                // alerta fecha menor a la actual
-                                fecha_actual = new Date();
-                                if (val < fecha_actual) {
-                                    //AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
-                                }
                             }
                         }
                     })
                 },
-                {
-                    header: 'Fecha Fin',
-                    dataIndex: 'fecha_fin_planificacion',
-                    sortable: true,
-                    width: 100,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i',
-                        listeners: {
-                            change: function (field, val, valOld) {
-                                //fecha inicial debe ser mayor que la final
-                                if (val < fecha_inicio_planificacion)
-                                    AppMsg.setAlert("Alerta ", 'Fecha final debe ser mayor que fecha inicial');
-                                fecha_fin_planificacion = val
-                                //fecha inicial no debe ser mayor de 12 horas
-                                var diff = Math.abs(fecha_fin_planificacion - fecha_inicio_planificacion) / 3600000;
-                                if (diff > 12)
-                                    AppMsg.setAlert("Alerta ", 'Fecha final supera las 12 horas de operativo, están ' + parseFloat(diff).toFixed(1) + " horas");
-                                else
-                                    AppMsg.setAlert("Observación ", 'Están ' + parseFloat(diff).toFixed(1) + " horas de operativo");
-                                // alerta fecha menor a la actual
-                                fecha_actual = new Date();
-                                if (val < fecha_actual) {
-                                    AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
-                                }
-                            }
-                        }
-                    })
-                },
-                {
-                    header: 'Zonal',
-                    dataIndex: 'id_zonal',
-                    sortable: true,
-                    width: 100,
-                    editor: comboZONA, renderer: zonaAdm
-                },
-                {
-                    header: 'Tipo de control',
-                    dataIndex: 'id_tipo_control',
-                    sortable: true,
-                    width: 100,
-                    editor: comboOPTID, renderer: instruccionTipoInstruccion
-                },
-                {
-                    header: 'Unidad',
-                    dataIndex: 'id_unidad',
-                    sortable: true,
-                    width: 120, editor: comboOPREA,
-                    renderer: instruccionUnidades
-                },
+                { header: 'id_tramite', dataIndex: 'id_tramite', sortable: true, width: 100 },
+                { header: 'id_acta', dataIndex: 'id_acta', sortable: true, width: 100 },
+                { header: 'id_estado', dataIndex: 'id_estado', sortable: true, width: 100 },
+                { header: 'detalle', dataIndex: 'detalle', sortable: true, width: 100 },
+                { header: 'observaciones', dataIndex: 'observaciones', sortable: true, width: 100 },
+                { header: 'clausura', dataIndex: 'clausura', sortable: true, width: 100 },
+                { header: 'predio', dataIndex: 'predio', sortable: true, width: 100 },
+                { header: 'nombre_administrado', dataIndex: 'nombre_administrado', sortable: true, width: 100 },
+                { header: 'nombre_establecimiento', dataIndex: 'nombre_establecimiento', sortable: true, width: 100 },
+                { header: 'direccion', dataIndex: 'direccion', sortable: true, width: 100 },
+                { header: 'ruc', dataIndex: 'ruc', sortable: true, width: 100 },
+                { header: 'cedula', dataIndex: 'cedula', sortable: true, width: 100 },
+                { header: 'casillero_judicial', dataIndex: 'casillero_judicial', sortable: true, width: 100 },
+                { header: 'id_ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100 },
+                { header: 'id_articulo', dataIndex: 'id_articulo', sortable: true, width: 100 },
+                { header: 'id_literal', dataIndex: 'id_literal', sortable: true, width: 100 },
+                { header: 'auto', dataIndex: 'auto', sortable: true, width: 100 },
+                { header: 'dmi', dataIndex: 'dmi', sortable: true, width: 100 },
+                { header: 'informe_otros', dataIndex: 'informe_otros', sortable: true, width: 100 },
+                { header: 'entidad', dataIndex: 'entidad', sortable: true, width: 100 },
+                { header: 'informe', dataIndex: 'informe', sortable: true, width: 100 },
+                { header: 'medida_cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 100 },
+                { header: 'ultima_actividad', dataIndex: 'ultima_actividad', sortable: true, width: 100 },
 
-                {
-                    header: 'Complejidad',
-                    dataIndex: 'id_nivel_complejidad',
-                    sortable: true,
-                    width: 60,
-                    editor: comboOPNICO, renderer: instruccionNivelComplejidad
-                },
-                {
-                    header: 'Responsable',
-                    dataIndex: 'id_persona_encargada',
-                    sortable: true,
-                    width: 190,
-                    editor: comboPRD,
-                    renderer: personaReceptaDenuncia,
 
-                    id: 'id_persona_encargada'
-                },
-                {
-                    header: 'Lugar intervención',
-                    dataIndex: 'zona',
-                    sortable: true,
-                    width: 160,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Punto Encuentro',
-                    dataIndex: 'punto_encuentro_planificado',
-                    sortable: true,
-                    width: 160,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Observaciones',
-                    dataIndex: 'observaciones',
-                    sortable: true,
-                    width: 200,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Trámite',
-                    dataIndex: 'tramite',
-                    sortable: true,
-                    width: 90,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Elaborado',
-                    dataIndex: 'id_persona',
-                    sortable: true,
-                    width: 100,
-                    hidden: true,
-                    //editor: comboPRD,
-                    renderer: personaReceptaDenuncia
-                },
-                {
-                    header: 'Fecha elaboracion',
-                    dataIndex: 'fecha_planificacion',
-                    sortable: true,
-                    width: 100, hidden: true,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
-                },
-                {
-                    header: 'Tipo planificación'
-                    , dataIndex: 'tipo_operativo'
-                    , align: 'left'
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , sortable: true
-                    , width: 140
-                    , editor: comboOPTIPO
-                    , renderer: instruccionTipo
-                },
-                {
-                    header: 'Fecha informe',
-                    dataIndex: 'fecha_informe',
-                    sortable: true,
-                    width: 100, hidden: true,
-                    renderer: formatDate
-                },
-                {
-                    header: 'fecha_impresion_informe',
-                    dataIndex: 'fecha_impresion_informe',
-                    sortable: true,
-                    width: 100, hidden: true,
-                    renderer: formatDate
-                },
-                {
-                    header: 'Fecha Real Inicio',
-                    dataIndex: 'fecha_real_inicio',
-                    sortable: true,
-                    width: 100, hidden: true,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
-                },
-                {
-                    header: 'Fecha Real Fin',
-                    dataIndex: 'fecha_real_fin',
-                    sortable: true,
-                    width: 100, hidden: true,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })
-                }*/
+                /*                { header: 'Código', dataIndex: 'id', sortable: true, width: 45 },
+                                { header: 'Visible', dataIndex: 'visible', sortable: true, width: 45,
+                                    align: 'center',
+                                    editor: {
+                                        xtype: 'checkbox'
+                                    }
+                                    , falseText: 'No'
+                                    , menuDisabled: true
+                                    , trueText: 'Si'
+                                    , xtype: 'booleancolumn'
+                                },
+                                {
+                                    header: 'Estado',
+                                    dataIndex: 'id_estado',
+                                    sortable: true,
+                                    width: 100,
+                                    editor: comboOPESTA,
+                                    renderer: instruccionEstados
+                                },
+                                {
+                                    header: 'Fecha inicio',
+                                    dataIndex: 'fecha_inicio_planificacion',
+                                    sortable: true,
+                                    width: 100,
+                                    renderer: formatDate,
+                                    editor: new Ext.ux.form.DateTimeField({
+                                        dateFormat: 'Y-m-d',
+                                        timeFormat: 'H:i',
+                                        listeners: {
+                                            change: function (field, val, valOld) {
+                                                //fecha inicial debe ser mayor que la final
+                                                if (val > fecha_fin_planificacion)
+                                                //AppMsg.setAlert("Alerta ", 'Fecha inicial no  debe ser mayor que fecha final');
+                                                    fecha_inicio_planificacion = val
+                                                //fecha inicial no debe ser mayor de 12 horas
+                                                var diff = Math.abs(fecha_fin_planificacion - fecha_inicio_planificacion) / 3600000;
+                                                if (diff > 12)
+                                                    AppMsg.setAlert("Alerta ", 'Fecha final supera las 12 horas de operativo, están ' + parseFloat(diff).toFixed(1) + " horas");
+                                                else
+                                                    AppMsg.setAlert("Observación ", 'Están ' + parseFloat(diff).toFixed(1) + " horas de operativo");
+                                                // alerta fecha menor a la actual
+                                                fecha_actual = new Date();
+                                                if (val < fecha_actual) {
+                                                    //AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
+                                                }
+                                            }
+                                        }
+                                    })
+                                },
+                                {
+                                    header: 'Fecha Fin',
+                                    dataIndex: 'fecha_fin_planificacion',
+                                    sortable: true,
+                                    width: 100,
+                                    renderer: formatDate,
+                                    editor: new Ext.ux.form.DateTimeField({
+                                        dateFormat: 'Y-m-d',
+                                        timeFormat: 'H:i',
+                                        listeners: {
+                                            change: function (field, val, valOld) {
+                                                //fecha inicial debe ser mayor que la final
+                                                if (val < fecha_inicio_planificacion)
+                                                    AppMsg.setAlert("Alerta ", 'Fecha final debe ser mayor que fecha inicial');
+                                                fecha_fin_planificacion = val
+                                                //fecha inicial no debe ser mayor de 12 horas
+                                                var diff = Math.abs(fecha_fin_planificacion - fecha_inicio_planificacion) / 3600000;
+                                                if (diff > 12)
+                                                    AppMsg.setAlert("Alerta ", 'Fecha final supera las 12 horas de operativo, están ' + parseFloat(diff).toFixed(1) + " horas");
+                                                else
+                                                    AppMsg.setAlert("Observación ", 'Están ' + parseFloat(diff).toFixed(1) + " horas de operativo");
+                                                // alerta fecha menor a la actual
+                                                fecha_actual = new Date();
+                                                if (val < fecha_actual) {
+                                                    AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
+                                                }
+                                            }
+                                        }
+                                    })
+                                },
+                                {
+                                    header: 'Zonal',
+                                    dataIndex: 'id_zonal',
+                                    sortable: true,
+                                    width: 100,
+                                    editor: comboZONA, renderer: zonaAdm
+                                },
+                                {
+                                    header: 'Tipo de control',
+                                    dataIndex: 'id_tipo_control',
+                                    sortable: true,
+                                    width: 100,
+                                    editor: comboOPTID, renderer: instruccionTipoInstruccion
+                                },
+                                {
+                                    header: 'Unidad',
+                                    dataIndex: 'id_unidad',
+                                    sortable: true,
+                                    width: 120, editor: comboOPREA,
+                                    renderer: instruccionUnidades
+                                },
+
+                                {
+                                    header: 'Complejidad',
+                                    dataIndex: 'id_nivel_complejidad',
+                                    sortable: true,
+                                    width: 60,
+                                    editor: comboOPNICO, renderer: instruccionNivelComplejidad
+                                },
+                                {
+                                    header: 'Responsable',
+                                    dataIndex: 'id_persona_encargada',
+                                    sortable: true,
+                                    width: 190,
+                                    editor: comboPRD,
+                                    renderer: personaReceptaDenuncia,
+
+                                    id: 'id_persona_encargada'
+                                },
+                                {
+                                    header: 'Lugar intervención',
+                                    dataIndex: 'zona',
+                                    sortable: true,
+                                    width: 160,
+                                    editor: new Ext.form.TextField({allowBlank: false})
+                                },
+                                {
+                                    header: 'Punto Encuentro',
+                                    dataIndex: 'punto_encuentro_planificado',
+                                    sortable: true,
+                                    width: 160,
+                                    editor: new Ext.form.TextField({allowBlank: false})
+                                },
+                                {
+                                    header: 'Observaciones',
+                                    dataIndex: 'observaciones',
+                                    sortable: true,
+                                    width: 200,
+                                    editor: new Ext.form.TextField({allowBlank: false})
+                                },
+                                {
+                                    header: 'Trámite',
+                                    dataIndex: 'tramite',
+                                    sortable: true,
+                                    width: 90,
+                                    editor: new Ext.form.TextField({allowBlank: false})
+                                },
+                                {
+                                    header: 'Elaborado',
+                                    dataIndex: 'id_persona',
+                                    sortable: true,
+                                    width: 100,
+                                    hidden: true,
+                                    //editor: comboPRD,
+                                    renderer: personaReceptaDenuncia
+                                },
+                                {
+                                    header: 'Fecha elaboracion',
+                                    dataIndex: 'fecha_planificacion',
+                                    sortable: true,
+                                    width: 100, hidden: true,
+                                    renderer: formatDate,
+                                    editor: new Ext.ux.form.DateTimeField({
+                                        dateFormat: 'Y-m-d',
+                                        timeFormat: 'H:i'
+                                    })
+                                },
+                                {
+                                    header: 'Tipo planificación'
+                                    , dataIndex: 'tipo_operativo'
+                                    , align: 'left'
+                                    , falseText: 'No'
+                                    , menuDisabled: true
+                                    , trueText: 'Si'
+                                    , sortable: true
+                                    , width: 140
+                                    , editor: comboOPTIPO
+                                    , renderer: instruccionTipo
+                                },
+                                {
+                                    header: 'Fecha informe',
+                                    dataIndex: 'fecha_informe',
+                                    sortable: true,
+                                    width: 100, hidden: true,
+                                    renderer: formatDate
+                                },
+                                {
+                                    header: 'fecha_impresion_informe',
+                                    dataIndex: 'fecha_impresion_informe',
+                                    sortable: true,
+                                    width: 100, hidden: true,
+                                    renderer: formatDate
+                                },
+                                {
+                                    header: 'Fecha Real Inicio',
+                                    dataIndex: 'fecha_real_inicio',
+                                    sortable: true,
+                                    width: 100, hidden: true,
+                                    renderer: formatDate,
+                                    editor: new Ext.ux.form.DateTimeField({
+                                        dateFormat: 'Y-m-d',
+                                        timeFormat: 'H:i'
+                                    })
+                                },
+                                {
+                                    header: 'Fecha Real Fin',
+                                    dataIndex: 'fecha_real_fin',
+                                    sortable: true,
+                                    width: 100, hidden: true,
+                                    renderer: formatDate,
+                                    editor: new Ext.ux.form.DateTimeField({
+                                        dateFormat: 'Y-m-d',
+                                        timeFormat: 'H:i'
+                                    })
+                                }*/
             ],
             viewConfig: {
                 forceFit: false,
                 getRowClass: function (record, index) {
                     // validamos la fecha
-                    fechaActual = new Date();
+                  /*  fechaActual = new Date();
                     fechaOperativo = record.get('fecha_fin_planificacion')
 
                     var diasDif = fechaActual.getTime() - fechaOperativo.getTime();
@@ -1055,7 +1103,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     // registros que ya estan realizados
                     if (record.get('id_estado') == 4) {
                         return 'bluestate';
-                    }
+                    }*/
                 }
             },
             sm: new Ext.grid.RowSelectionModel(
@@ -1077,6 +1125,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                             storeInstruccionImagenes.load({params: {id_operativo: rec.id}});
 
                             // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
+
                             if (acceso) {
                                 if (rec.get("id_estado") != 1) {
                                     Ext.getCmp('informesAccionesTab').setDisabled(acceso ? false : true);
@@ -1169,6 +1218,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('savedetalleoperativo').setDisabled(false);
                                 }
                             }
+
                         }
                     }
                 }
