@@ -1993,9 +1993,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         checked: true,
                         checkHandler: checkHandlerListadoControlProgramado,
                         group: 'filterField',
-                        key: 'id_inspeccion',
+                        key: 'codigo_tramite',
                         scope: this,
-                        text: 'Código inspección'
+                        text: 'Código trámite'
                     }
                     , {
                         checked: false,

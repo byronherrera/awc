@@ -254,13 +254,14 @@ function updateInspeccion()
 
     foreach ($data as $clave => $valor) {
         if ($clave != 'codigo_tramite' && $clave != NULL) {
-            if ($valor === null)
+            if (($valor === null) or ($valor === ''))
                 $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
             else
                 $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
         }
     }
-    $cadenaDatos = substr($cadenaDatos, 0, -1);
+
+        $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_inspeccion SET  $cadenaDatos  WHERE amc_inspeccion.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);

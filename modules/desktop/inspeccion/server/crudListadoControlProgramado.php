@@ -1,4 +1,3 @@
-
 <?php
 require_once '../../../../server/os.php';
 require_once '../../../common/Classes/funciones.php';
@@ -12,7 +11,7 @@ function  selectInspeccionesCoordinadores()
 {
     global $os;
     //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'id_inspeccion';
+    $columnaBusqueda = 'codigo_tramite';
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
@@ -63,7 +62,7 @@ function selectInspeccion()
     //$id = (int)$_POST ['id'];
 
     //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'id_inspeccion';
+    $columnaBusqueda = 'codigo_tramite';
     $inspector = $os->get_member_id();
     $and = "";
 
