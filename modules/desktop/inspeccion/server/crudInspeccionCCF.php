@@ -188,7 +188,10 @@ function updateDetalleInspecciones()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        if (($valor === '') or  is_null ($valor))
+            $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
+        else
+            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 

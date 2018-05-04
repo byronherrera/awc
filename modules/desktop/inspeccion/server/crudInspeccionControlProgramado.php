@@ -10,8 +10,7 @@ if (!$os->session_exists()) {
 function selectDetalleInspecciones()
 {
     global $os;
-    //$id = (int)$_POST ['id'];
-    //if($id!=0){
+
 
     //Se inicializa el parámetro de búsqueda de código trámite
     $columnaBusqueda = 'codigo_tramite';
@@ -43,13 +42,14 @@ function selectDetalleInspecciones()
     else
         $limit = 100;
 
-    $orderby = 'ORDER BY fecha_recepcion_documento DESC';
+    //$orderby = 'ORDER BY fecha_recepcion_documento DESC';
+    $orderby = 'ORDER BY zona, parroquia, sector DESC';
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    //$sql = "SELECT * FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.id = $id";
     if (strlen($where) > 0)
         $sql = "SELECT * FROM amc_inspeccion_control_programado WHERE $where $orderby LIMIT $start, $limit";
     else
+
         $sql = "SELECT * FROM amc_inspeccion_control_programado  $orderby LIMIT $start, $limit";
         $result = $os->db->conn->query($sql);
     $data = array();
@@ -66,8 +66,6 @@ function selectDetalleInspecciones()
 function selectDetalleAsignacion()
 {
     global $os;
-    //$id = (int)$_POST ['id'];
-    //if($id!=0){
 
     //Se inicializa el parámetro de búsqueda de código trámite
     $columnaBusqueda = 'id_inspeccion';

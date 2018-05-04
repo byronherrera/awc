@@ -1935,14 +1935,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                         scope: this,
                         text: 'Código trámite'
                     }
-                    , {
-                        checked: true,
-                        checkHandler: checkHandlerInspecciones,
-                        group: 'filterField',
-                        key: 'id_inspeccion',
-                        scope: this,
-                        text: 'Código inspección'
-                    }
+
                     , {
                         checked: false,
                         checkHandler: checkHandlerInspecciones,
@@ -2219,16 +2212,16 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             , text: 'Código trámite'
         });
 
-        var searchControlProgramadoBtn = new Ext.Button({
+        var     searchControlProgramadoBtn = new Ext.Button({
             menu: new Ext.menu.Menu({
                 items: [
                     {
                         checked: true,
                         checkHandler: checkHandlerControlProgramado,
                         group: 'filterField',
-                        key: 'id_inspeccion',
+                        key: 'codigo_tramite',
                         scope: this,
-                        text: 'Código inspección'
+                        text: 'Código trámite'
                     }
                     , {
                         checked: false,
@@ -4703,10 +4696,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                     , new QoDesk.QoAdmin.SearchField({
                                                         paramName: 'filterText',
                                                         store: this.storeControlProgramadoInspeccion
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
-                                                        //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
-                                                        //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
                                                     })
                                                 ],
                                                 items: this.gridControlProgramadoInspeccion

@@ -1111,8 +1111,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     singleSelect: true,
                     listeners: {
                         rowselect: function (sm, row, rec) {
-                            fecha_inicio_planificacion = rec.get('fecha_inicio_planificacion')
-                            fecha_fin_planificacion = rec.get('fecha_fin_planificacion');
+                            //fecha_inicio_planificacion = rec.get('fecha_inicio_planificacion')
+                            //fecha_fin_planificacion = rec.get('fecha_fin_planificacion');
 
                             // recuperamos la informacion de personal asignado a ese operativo
                             selectInstruccion = rec.id;

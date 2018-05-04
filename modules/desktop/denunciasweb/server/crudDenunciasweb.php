@@ -15,7 +15,7 @@ function generaCodigoProcesoDenuncia()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE codigo_tramite < 11000 AND recepcion_documento > DATE('2018-01-01 01:01:01')";
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE recepcion_documento > DATE('2018-02-01 01:01:01')";
 
     //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
     $result = $os->db->conn->query($sql);
