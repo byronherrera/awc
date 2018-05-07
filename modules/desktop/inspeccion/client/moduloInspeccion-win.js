@@ -3466,8 +3466,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {header: 'Etapas', dataIndex: 'etapas', sortable: true, width: 80, editor: textFieldControlProgramado},
                 {
-                    //header: 'Tipo Tramite', dataIndex: 'tramite', sortable: true, width: 100, editor: comboTIPOTRAMITE, renderer: tipoTramite
-                    header: 'Tipo Tramite', dataIndex: 'tramite', sortable: true, width: 200, editor: textFieldControlProgramado
+                    header: 'Tipo Tramite', dataIndex: 'tramite', sortable: true, width: 100, editor: comboTIPOTRAMITE, renderer: tipoTramite
+                    //header: 'Tipo Tramite', dataIndex: 'tramite', sortable: true, width: 200, editor: textFieldControlProgramado
                 },
                 {
                     header: 'Aprobacion/registro',
@@ -3598,8 +3598,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {header: 'Etapas', dataIndex: 'etapas', sortable: true, width: 80, editor: textFieldControlProgramado},
                 {
-                    //header: 'Tipo Tramite', dataIndex: 'tramite', sortable: true, width: 100, editor: comboTIPOTRAMITE, renderer: tipoTramite
-                    header: 'Tipo Tramite', dataIndex: 'tramite', sortable: true, width: 200, editor: textFieldControlProgramado
+                    header: 'Tipo Tramite', dataIndex: 'tramite', sortable: true, width: 100, editor: comboTIPOTRAMITE, renderer: tipoTramite
+                    //header: 'Tipo Tramite', dataIndex: 'tramite', sortable: true, width: 200, editor: textFieldControlProgramado
                 },
                 {header: 'Gdoc', dataIndex: 'gdoc', sortable: true, width: 100, editor: textFieldControlProgramado},
             ],
