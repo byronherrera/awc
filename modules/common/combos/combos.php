@@ -30,6 +30,39 @@ function comboProcedimiento()
             "data" => $data)
     );
 }
+
+function comboParroquias()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT id, nombre FROM amc_parroquias WHERE activo = 1 ORDER BY id";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
+function comboSectores()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT id, nombre FROM amc_sectores WHERE activo = 1 ORDER BY id";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
 function comboZonas()
 {
     global $os;
@@ -45,6 +78,7 @@ function comboZonas()
             "data" => $data)
     );
 }
+
 function comboOrdenanzas()
 {
     global $os;
@@ -466,6 +500,12 @@ switch ($_GET['tipo']) {
         break;
     case 'zonas' :
         comboZonas();
+        break;
+    case 'parroquias' :
+        comboParroquias();
+        break;
+    case 'sectores' :
+        comboSectores();
         break;
     case 'ordenanzas' :
         comboOrdenanzas();
