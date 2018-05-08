@@ -11,7 +11,6 @@ function selectDetalleInspecciones()
 {
     global $os;
 
-
     //Se inicializa el parámetro de búsqueda de código trámite
     $columnaBusqueda = 'codigo_tramite';
     $funcionario_entrega = $os->get_member_id();
@@ -31,7 +30,6 @@ function selectDetalleInspecciones()
         $where = " $columnaBusqueda LIKE '%$campo%'";
     }
 
-
     if (isset ($_POST['start']))
         $start = $_POST['start'];
     else
@@ -42,16 +40,16 @@ function selectDetalleInspecciones()
     else
         $limit = 100;
 
-    //$orderby = 'ORDER BY fecha_recepcion_documento DESC';
     $orderby = 'ORDER BY zona, parroquia, sector DESC';
 
     $os->db->conn->query("SET NAMES 'utf8'");
+
     if (strlen($where) > 0)
         $sql = "SELECT * FROM amc_inspeccion_control_programado WHERE $where $orderby LIMIT $start, $limit";
     else
 
         $sql = "SELECT * FROM amc_inspeccion_control_programado  $orderby LIMIT $start, $limit";
-        $result = $os->db->conn->query($sql);
+    $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
@@ -60,7 +58,6 @@ function selectDetalleInspecciones()
             "success" => true,
             "data" => $data)
     );
-    //}
 }
 
 function selectDetalleAsignacion()
@@ -87,7 +84,6 @@ function selectDetalleAsignacion()
         $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
     }
 
-
     if (isset ($_POST['start']))
         $start = $_POST['start'];
     else
@@ -113,7 +109,6 @@ function selectDetalleAsignacion()
             "success" => true,
             "data" => $data)
     );
-    //}
 
 }
 
@@ -203,12 +198,15 @@ function updateDetalleInspecciones()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        if ($valor != '')
+            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        else
+            $cadenaDatos = $cadenaDatos . $clave . " = NULL ,";
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_inspeccion_control_programado SET  $cadenaDatos  WHERE amc_inspeccion_control_programado.id = '$data->id' ";
-    $sql = $os->db->conn->prepare($sql);
+        $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     echo json_encode(array(
