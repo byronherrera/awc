@@ -4763,6 +4763,17 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         }
                                                     },
                                                     '-',
+                                                    //bh boton generar
+                                                    {
+                                                        iconCls: 'excel-icon',
+                                                        handler: this.botonGenerarGuiaControlesProgramados,
+                                                        scope: this,
+                                                        text: 'Generar Nueva Guía Controles programados',
+                                                        tooltip: 'Se genera guía de controles programados',
+                                                        id: 'tb_reporteControlesProgramados',
+                                                        disabled: false
+                                                    },
+                                                    '-',
                                                     '->'
                                                     , {
                                                         text: 'Buscar por:'
@@ -4885,7 +4896,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                     }
                                                     ,
                                                     '-',
-                                                    //bh boton generar
+                                                    //bh boton generar guia CCF
                                                     {
                                                         iconCls: 'excel-icon',
                                                         handler: this.botonGenerarGuiaCCF,
@@ -5537,7 +5548,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     botonGenerarGuiaNIO: function () {
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Descargar acta<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
+            msg: 'Descargar acta NIO?<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
@@ -5557,7 +5568,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     botonGenerarGuiaCCF: function () {
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Descargar acta<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
+            msg: 'Descargar acta CCF?<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
@@ -5589,6 +5600,27 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
         window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuias.php?reimpresion=true&guia=' + rows[0].get('id');
     },
+
+    //Boton generar nueva guía Controles Programados
+    botonGenerarGuiaControlesProgramados: function () {
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Descargar acta de Controles programados?<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuiasControlesProgramados.php';
+                    setTimeout(function () {
+                        AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());
+                        storeModuloInspeccion.load({params: {noenviados: Ext.getCmp('checkPendientesAprobar').getValue()}});
+                    }, 1500);
+                }
+            }
+        });
+    },
+
 
 });
 
