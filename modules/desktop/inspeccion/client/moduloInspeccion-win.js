@@ -588,7 +588,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'tecnico', readOnly: false, allowBlank: true},
                 // {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
                 //{name: 'fecha_inicio', readOnly: false, allowBlank: true},
-                //{name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
+                {name: 'fecha_finalizacion',  type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'asunto', readOnly: false, allowBlank: true},
                 {name: 'tipo', readOnly: false, allowBlank: true},
                 {name: 'zona', readOnly: false, allowBlank: true},
@@ -641,8 +641,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'num_registro', readOnly: false, allowBlank: true},
                 {name: 'tecnico', readOnly: false, allowBlank: true},
                 // {name: 'fecha_asignacion_inspector', readOnly: false, allowBlank: true},
-                //{name: 'fecha_inicio', readOnly: false, allowBlank: true},
-                //{name: 'fecha_finalizacion', readOnly: false, allowBlank: true},
+                //{name: 'fecha_inicio', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_finalizacion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'asunto', readOnly: false, allowBlank: true},
                 {name: 'tipo', readOnly: false, allowBlank: true},
                 {name: 'zona', readOnly: false, allowBlank: true},
@@ -1436,6 +1436,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             triggerAction: 'all',
             mode: 'local'
         });
+        var comboZONA2 = new Ext.form.ComboBox({
+            id: 'comboZONA',
+            store: storeZONA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
 
         function zonaAdm(id) {
             var index = storeZONA.find('id', id);
@@ -1446,6 +1454,59 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo ZONA
+
+        //inicio combo PARROQUIA
+        storePARROQUIA = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=parroquias'
+        });
+
+        var comboPARROQUIA = new Ext.form.ComboBox({
+            id: 'comboPARROQUIA',
+            store: storePARROQUIA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function parroquiaAdm(id) {
+            var index = storePARROQUIA.findExact('id', id);
+            if (index > -1) {
+                var record = storePARROQUIA.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo
+
+        //inicio combo SECTORES
+        storeSECTORES = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=sectores'
+        });
+
+        var comboSECTORES = new Ext.form.ComboBox({
+            id: 'comboSECTORES',
+            store: storeSECTORES,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function sectoresAdm(id) {
+            var index = storeSECTORES.findExact('id', id);
+            if (index > -1) {
+                var record = storeSECTORES.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //fin combo
 
         //inicio combo denuncias ordenanza DETIORD
         storeORD = new Ext.data.JsonStore({
@@ -3558,16 +3619,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     width: 150,
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'}), renderer: formatDate
                 },
-                {header: 'Sector', dataIndex: 'sector', sortable: true, width: 100, editor: textFieldControlProgramado},
-                {
-                    header: 'Parroquia',
-                    dataIndex: 'parroquia',
-                    sortable: true,
-                    width: 100,
-                    editor: textFieldControlProgramado
-                },
-                {header: 'Zona', dataIndex: 'zona', sortable: true, width: 100, editor: textFieldControlProgramado},
-                //{header: 'Calle', dataIndex: 'calle', sortable: true, width: 150, editor: textFieldControlProgramado},
+                {header: 'Zona', dataIndex: 'zona', sortable: true, width: 100, editor: comboZONA2, renderer: zonaAdm},
+                { header: 'Parroquia', dataIndex: 'parroquia', sortable: true, width: 100, editor: comboPARROQUIA, renderer: parroquiaAdm},
+                {header: 'Sector', dataIndex: 'sector', sortable: true, width: 100, editor: comboSECTORES, renderer: sectoresAdm},
+
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldControlProgramado},
                 {
                     header: 'Clave catastral',
@@ -4023,8 +4078,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 //{header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
                 {header: 'Código CCF', dataIndex: 'id_ccf', sortable: true, width: 150},
                 {header: 'Fecha recepción', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150, renderer: formatDate},
-                {header: 'Fecha finalización obra', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
+                {header: 'Fecha finalización obra', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})},
                 {header: 'Proyecto', dataIndex: 'proyecto', sortable: true, width: 300, editor: textFieldCCF},
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldCCF},
                 {header: 'Zona', dataIndex: 'zona', sortable: true, width: 150, editor: textFieldCCF},
@@ -4142,8 +4197,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Fecha recepción', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150,
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'}), renderer: formatDate},
                 {
-                    header: 'Fecha finalización obra', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
+                    header: 'Fecha finalización obra', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
                 },
                 {header: 'Número registro', dataIndex: 'num_registro', sortable: true, width: 100, editor: textFieldListadoCCF},
                 {
@@ -4243,8 +4298,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Fecha recepción', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150,
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'}), renderer: formatDate},
                 {
-                    header: 'Fecha finalización obra', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
+                    header: 'Fecha finalización obra', dataIndex: 'fecha_finalizacion', sortable: true, width: 150,renderer: formatDate,
+            editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
                 },
                 {header: 'Número registro', dataIndex: 'num_registro', sortable: true, width: 100, editor: textFieldListadoCCF},
                 {
