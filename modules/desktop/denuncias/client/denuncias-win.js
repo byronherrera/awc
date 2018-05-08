@@ -948,10 +948,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     //rowselect: function (sm, row, rec) {
                         /*cargar el formulario*/
                          cargaDetalle(sm.record.i, this.formDenunciaswebDetalle, false);
-
-
                 }
-
             }
         });
 
@@ -1217,7 +1214,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         if (!win) {
             var winWidth = desktop.getWinWidth();
             var winHeight = desktop.getWinHeight();
- 
+
 
             this.seleccionDepar = 3;
 
@@ -2262,7 +2259,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                         },
                                         dragend: function(e){
                                             geoSecretaria = e.latLng.lat() + ", " + e.latLng.lng()
-                                             
+
                                         }
                                     }
                                 }]
@@ -2396,7 +2393,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
     },
 
     botonExportarReporte: function () {
-        
+
         if (Ext.getCmp('tb_seleccionarUnidad').getValue() == 'Seleccionar Unidad')
             Ext.Msg.show({
                 title: 'Advertencia',
