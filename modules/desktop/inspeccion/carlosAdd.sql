@@ -87,3 +87,6 @@ MODIFY COLUMN `gdoc` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NUL
 
 ALTER TABLE `amc_inspeccion`
 ADD COLUMN `id_tipo_acta` int(1) NOT NULL AFTER `inspeccion_finalizada`;
+
+ALTER TABLE `amc_inspeccion_control_programado`
+ADD COLUMN `guia_generada` int(1) NULL AFTER `estado_obra`;

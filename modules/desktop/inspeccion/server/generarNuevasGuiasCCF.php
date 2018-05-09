@@ -284,7 +284,7 @@ if ($number_of_rows == 0) {
 }
 
 header('Content-Type: application/xlsx');
-header('Content-Disposition: attachment;filename="guia-secretaria-inspeccion-' . strtolower(quitar_espacio(quitar_tildes($nombreUnidad))) . '-SGE-' . $year . '-' . $numeroGuia . '-' . $today . '.xlsx"');
+header('Content-Disposition: attachment;filename="guia-ccf-' . strtolower(quitar_espacio(quitar_tildes($nombreUnidad))) . '-SGE-' . $year . '-' . $numeroGuia . '-' . $today . '.xlsx"');
 header('Cache-Control: max-age=0');
 
 //$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');

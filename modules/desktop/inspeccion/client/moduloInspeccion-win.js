@@ -4707,9 +4707,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                     //bh boton generar
                                                     {
                                                         iconCls: 'excel-icon',
-                                                        handler: this.botonGenerarGuiaControlesProgramados,
+                                                        handler: this.botonGenerarGuiaControlProgramado,
                                                         scope: this,
-                                                        text: 'Generar Nueva Guía Controles programados',
+                                                        text: 'Generar guía controles programados',
                                                         tooltip: 'Se genera guía de controles programados',
                                                         id: 'tb_reporteControlesProgramados',
                                                         disabled: false
@@ -5543,13 +5543,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     },
 
     //Boton generar nueva guía Controles Programados
-    botonGenerarGuiaControlesProgramados: function () {
+    botonGenerarGuiaControlProgramado : function () {
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Descargar acta de Controles programados?<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
+
             fn: function (btn) {
                 if (btn == 'yes') {
                     window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuiasControlesProgramados.php';
