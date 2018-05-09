@@ -15,6 +15,7 @@ function usuario()
             "data" => $usuario)
     );
 }
+
 function comboProcedimiento()
 {
     global $os;
@@ -35,7 +36,12 @@ function comboParroquias()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT id, nombre FROM amc_parroquias WHERE activo = 1 ORDER BY id";
+
+    if (isset($_POST['id']))
+        $where = " AND id_zona = " . $_POST['id'];
+    else
+        $where = '';
+    $sql = "SELECT id, nombre FROM amc_parroquias WHERE activo = 1  $where ORDER BY id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -50,8 +56,13 @@ function comboParroquias()
 function comboSectores()
 {
     global $os;
+    if (isset($_POST['id']))
+        $where = " AND id_parroquia = " . $_POST['id'];
+    else
+        $where = '';
+
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT id, nombre FROM amc_sectores WHERE activo = 1 ORDER BY id";
+    $sql = "SELECT id, nombre FROM amc_sectores WHERE activo = 1  $where ORDER BY id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -110,6 +121,7 @@ function comboTiposOperativos()
             "data" => $data)
     );
 }
+
 function comboTiposMedidasOperativos()
 {
     global $os;
@@ -201,10 +213,10 @@ function comboPersonalSecretaria()
 function comboPersonalOperativos()
 {
     global $os;
-    $todos  = " AND (b.qo_groups_id = 8 OR b.qo_groups_id = 9 OR b.qo_groups_id = 1) ";
+    $todos = " AND (b.qo_groups_id = 8 OR b.qo_groups_id = 9 OR b.qo_groups_id = 1) ";
     if (isset($_POST['todos'])) {
         if ($_POST['todos'] == 'true') {
-            $todos  = "";
+            $todos = "";
         }
     }
 // EN CASO QUE SOLO SEA UN USUARIO SOLO MUESTRA EL USUARIO LOGEADO
@@ -212,7 +224,7 @@ function comboPersonalOperativos()
 
         if ($_POST['accesosOperativos'] == 'true') {
             $id_user = $os->get_member_id();
-            $todos  = $todos  . " AND a.id = $id_user ";
+            $todos = $todos . " AND a.id = $id_user ";
         }
     }
 
@@ -236,6 +248,7 @@ function comboPersonalOperativos()
             "data" => $data)
     );
 }
+
 function comboUnidades()
 {
     global $os;
@@ -350,6 +363,7 @@ function comboDepInspeccion()
             "data" => $data)
     );
 }
+
 function comboGuia()
 {
     global $os;
@@ -384,9 +398,9 @@ function comboPersonalInspeccion()
 
 function comboSexo()
 {
-    $data[] = array("id" => "I", "nombre"=>"Indistino");
-    $data[] = array("id" => "H", "nombre"=>"Hombre");
-    $data[] = array("id" => "M", "nombre"=>"Mujer");
+    $data[] = array("id" => "I", "nombre" => "Indistino");
+    $data[] = array("id" => "H", "nombre" => "Hombre");
+    $data[] = array("id" => "M", "nombre" => "Mujer");
 
     echo json_encode(array(
             "success" => true,
@@ -397,8 +411,8 @@ function comboSexo()
 
 function comboActivo()
 {
-    $data[] = array("id" => "1", "nombre"=>"Si");
-    $data[] = array("id" => "0", "nombre"=>"No");
+    $data[] = array("id" => "1", "nombre" => "Si");
+    $data[] = array("id" => "0", "nombre" => "No");
 
     echo json_encode(array(
             "success" => true,
@@ -406,6 +420,7 @@ function comboActivo()
     );
 
 }
+
 function comboInstituciones()
 {
     global $os;
@@ -421,6 +436,7 @@ function comboInstituciones()
             "data" => $data)
     );
 }
+
 function comboRemitente()
 {
     global $os;

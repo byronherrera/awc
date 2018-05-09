@@ -56,7 +56,8 @@ function aprobarDenuncia()
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
         $cadenaCampos = $cadenaCampos . $clave . ',';
-        $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        $valor = str_replace("'", "", $valor);
+        $cadenaDatos = $cadenaDatos . "'" .  $valor . "',";
     }
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
