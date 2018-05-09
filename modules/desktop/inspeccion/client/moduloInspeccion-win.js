@@ -99,7 +99,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
         //Definición del formato de fecha
         function formatDate(value) {
-            return value ? value.dateFormat('Y-m-d H:i') : '';
+            return value ? value.dateFormat('Y-m-d H:i:s') : '';
         }
 
         //Inicio ventana inspeccion
@@ -196,16 +196,16 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_acta', readOnly: false, allowBlank: true},
                 {name: 'prioridad', readOnly: false, allowBlank: true},
                 {name: 'funcionario_reasignacion', readOnly: false, allowBlank: true},
-                {name: 'acta_verificacion', readOnly: false, allowBlank: true},
-                {name: 'fecha_memo_oficio', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'observaciones', readOnly: false, allowBlank: true},
-                {name: 'numero_informe', readOnly: false, allowBlank: true},
-                {name: 'institucion_recibe', readOnly: false, allowBlank: true},
-                {name: 'cargo_enviado', readOnly: false, allowBlank: true},
-                {name: 'numero_memo_oficio', readOnly: false, allowBlank: true},
-                {name: 'numero_acta', readOnly: false, allowBlank: true},
-                {name: 'id_ordenanza', readOnly: false, allowBlank: true},
-                {name: 'infraccion', readOnly: false, allowBlank: true}
+                {name: 'acta_verificacion', readOnly:false, allowBlank:true},
+                {name: 'fecha_memo_oficio',  type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'observaciones', readOnly:false, allowBlank:true},
+                {name: 'numero_informe', readOnly:false, allowBlank:true},
+                {name: 'institucion_recibe', readOnly:false, allowBlank:true},
+                {name: 'cargo_enviado', readOnly:false, allowBlank:true},
+                {name: 'numero_memo_oficio', readOnly:false, allowBlank:true},
+                {name: 'numero_acta', readOnly:false, allowBlank:true},
+                {name: 'id_ordenanza', readOnly:false, allowBlank:true},
+                {name: 'infraccion', readOnly:false, allowBlank:true}
             ]
         });
 
@@ -234,14 +234,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'funcionario_reasignacion', readOnly: false, allowBlank: true},
                 {name: 'acta_verificacion', readOnly: false, allowBlank: true},
                 {name: 'fecha_memo_oficio', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'observaciones', readOnly: false, allowBlank: true},
-                {name: 'numero_informe', readOnly: false, allowBlank: true},
-                {name: 'institucion_recibe', readOnly: false, allowBlank: true},
-                {name: 'cargo_enviado', readOnly: false, allowBlank: true},
-                {name: 'numero_memo_oficio', readOnly: false, allowBlank: true},
-                {name: 'numero_acta', readOnly: false, allowBlank: true},
-                {name: 'id_ordenanza', readOnly: false, allowBlank: true},
-                {name: 'infraccion', readOnly: false, allowBlank: true}
+                {name: 'observaciones', readOnly:false, allowBlank:true},
+                {name: 'numero_informe', readOnly:false, allowBlank:true},
+                {name: 'institucion_recibe', readOnly:false, allowBlank:true},
+                {name: 'cargo_enviado', readOnly:false, allowBlank:true},
+                {name: 'numero_memo_oficio', readOnly:false, allowBlank:true},
+                {name: 'numero_acta', readOnly:false, allowBlank:true},
+                {name: 'id_ordenanza', readOnly:false, allowBlank:true},
+                {name: 'infraccion', readOnly:false, allowBlank:true}
             ]
         });
 

@@ -1429,7 +1429,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
         var comboZONA2 = new Ext.form.ComboBox({
-            id: 'comboZONA',
+            id: 'comboZONA2',
             store: storeZONA,
             valueField: 'id',
             displayField: 'nombre',
@@ -1446,6 +1446,25 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 });
              }
         }
+        });
+        var comboZONA3 = new Ext.form.ComboBox({
+            id: 'comboZONA3',
+            store: storeZONA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            listeners: {
+                select: function (combo, record) {
+                    comboPARROQUIA2.enable();			//step 2
+                    comboPARROQUIA2.clearValue();		//step 3
+                    storePARROQUIA.load({			//step 4
+                        params:{
+                            id:record.get('id')	//step 5
+                        }
+                    });
+                }
+            }
         });
 
         function zonaAdm(id) {
@@ -1488,6 +1507,27 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
+        var comboPARROQUIA2 = new Ext.form.ComboBox({
+            id: 'comboPARROQUIA2',
+            store: storePARROQUIA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            listeners: {
+                select: function (combo, record) {
+                    comboSECTORES2.enable();			//step 2
+                    comboSECTORES2.clearValue();		//step 3
+                    storeSECTORES.load({			//step 4
+                        params:{
+                            id:record.get('id')	//step 5
+                        }
+                    });
+                }
+            }
+        });
+
+
         function parroquiaAdm(id) {
             var index = storePARROQUIA.findExact('id', id);
             if (index > -1) {
@@ -1508,6 +1548,16 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
 
         var comboSECTORES = new Ext.form.ComboBox({
             id: 'comboSECTORES',
+            store: storeSECTORES,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+
+        var comboSECTORES2 = new Ext.form.ComboBox({
+            id: 'comboSECTORES2',
             store: storeSECTORES,
             valueField: 'id',
             displayField: 'nombre',
@@ -3506,15 +3556,29 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: textFieldControlProgramado
                     //header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: comboASUNTO, renderer: asunto
                 },
-                {header: 'Sector', dataIndex: 'sector', sortable: true, width: 100, editor: textFieldControlProgramado},
+                {   header: 'Zona',
+                    dataIndex: 'zona',
+                    sortable: true,
+                    width: 100,
+                    editor: comboZONA2,
+                    editor: comboZONA3,
+                    renderer: zonaAdm
+                },
                 {
                     header: 'Parroquia',
                     dataIndex: 'parroquia',
                     sortable: true,
-                    width: 100,
-                    editor: textFieldControlProgramado
+                    editor: comboPARROQUIA2,
+                    renderer: parroquiaAdm
+
                 },
-                {header: 'Zona', dataIndex: 'zona', sortable: true, width: 100, editor: textFieldControlProgramado},
+                {   header: 'Sector',
+                    dataIndex: 'sector',
+                    sortable: true,
+                    width: 100,
+                    editor: comboSECTORES2,
+                    renderer: sectoresAdm
+                },
                 {header: 'Calle', dataIndex: 'calle', sortable: true, width: 150, editor: textFieldControlProgramado},
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldControlProgramado},
                 {
