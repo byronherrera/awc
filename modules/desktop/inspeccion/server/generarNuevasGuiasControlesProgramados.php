@@ -145,7 +145,8 @@ $objPHPExcel->getActiveSheet()->mergeCells('C' . ($filascabecera + 3) . ':D' . (
 $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filaTitulo2 + 2), "GUÍA No. ");
 $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filaTitulo2 + 3), "FECHA");
 
-$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filaTitulo2 + 2), $numeroGuia);
+$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filaTitulo2 + 2), $numeroGuia
+);
 $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filaTitulo2 + 3), $today);
 
 $objPHPExcel->getActiveSheet()->setCellValue('F' . ($filaTitulo2 + 2), 'FECHA RECEPCIÓN');

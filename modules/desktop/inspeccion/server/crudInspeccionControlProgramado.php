@@ -200,9 +200,7 @@ function updateDetalleInspecciones()
     foreach ($data as $clave => $valor) {
         if ($valor != '')
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
-        else
-            $cadenaDatos = $cadenaDatos . $clave . " = NULL ,";
-    }
+         }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_inspeccion_control_programado SET  $cadenaDatos  WHERE amc_inspeccion_control_programado.id = '$data->id' ";
