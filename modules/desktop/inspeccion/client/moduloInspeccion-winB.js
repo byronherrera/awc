@@ -1429,7 +1429,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
         var comboZONA2 = new Ext.form.ComboBox({
-            id: 'comboZONA2',
+            id: 'comboZONA24',
             store: storeZONA,
             valueField: 'id',
             displayField: 'nombre',

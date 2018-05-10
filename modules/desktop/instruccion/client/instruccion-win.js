@@ -1126,7 +1126,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
                             // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
 
-                            if (acceso) {
+/*                            if (acceso) {
                                 if (rec.get("id_estado") != 1) {
                                     Ext.getCmp('informesAccionesTab').setDisabled(acceso ? false : true);
                                     Ext.getCmp('informesInstruccionTab').setDisabled(acceso ? false : true);
@@ -1218,7 +1218,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('savedetalleoperativo').setDisabled(false);
                                 }
                             }
-
+*/
                         }
                     }
                 }
@@ -1237,7 +1237,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             listeners: {
                 beforeedit: function (e) {
                     // si el operativo esta identificado como estado o planificado (1) o informe (4) se peude editar
-                    if (acceso) {
+                    /*if (acceso) {
                         if ((e.record.get("id_estado") == 1) || (e.record.get("id_estado") == 4)) {
                             return true;
                         }
@@ -1245,6 +1245,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     } else {
                         return false;
                     }
+                    */
                 }
             }
         });

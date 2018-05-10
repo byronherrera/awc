@@ -44,17 +44,27 @@ function selectDetalleInspecciones()
 
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    if (strlen($where) > 0)
+    if (strlen($where) > 0) {
         $sql = "SELECT * FROM amc_inspeccion_control_programado WHERE $where $orderby LIMIT $start, $limit";
-    else
-
+        $sqlTotal = "SELECT count(*) AS total FROM amc_inspeccion_control_programado WHERE $where $orderby LIMIT $start, $limit";
+    }
+    else {
         $sql = "SELECT * FROM amc_inspeccion_control_programado  $orderby LIMIT $start, $limit";
+        $sqlTotal = "SELECT count(*) AS total FROM amc_inspeccion_control_programado  $orderby LIMIT $start, $limit";
+    }
+
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
     }
+
+    $result = $os->db->conn->query($sqlTotal);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total = $row['total'];
+
     echo json_encode(array(
+            "total" => $total,
             "success" => true,
             "data" => $data)
     );
@@ -200,11 +210,11 @@ function updateDetalleInspecciones()
     foreach ($data as $clave => $valor) {
         if ($valor != '')
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
-         }
+    }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_inspeccion_control_programado SET  $cadenaDatos  WHERE amc_inspeccion_control_programado.id = '$data->id' ";
-        $sql = $os->db->conn->prepare($sql);
+    $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     echo json_encode(array(

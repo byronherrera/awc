@@ -42,7 +42,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
         }
 
         function formatDateFull(value) {
-            return value ? value.dateFormat('Y-m-d H:i:s') : '';
+            return value ? value.dateFormat('Y-m-d H:i') : '';
         }
 
 // inicio combos secretaria
@@ -717,7 +717,12 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {name: 'parroquia', allowBlank: true},
                 {name: 'barrio', allowBlank: true},
                 {name: 'recorrido', allowBlank: true},
-                {name: 'geoposicionamiento', allowBlank: true}
+                {name: 'geoposicionamiento', allowBlank: true},
+
+                {name: 'fecha_nacimiento', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'cargas_familiares', allowBlank: true},
+                {name: 'discapacidades', allowBlank: true},
+                {name: 'enfermedades', allowBlank: true},
             ],
             successProperty: 'success',
             messageProperty: 'message',
@@ -823,21 +828,21 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                     header: 'Fecha salida',
                     dataIndex: 'fecha_salida',
                     sortable: true,
-                    width: 120,
-                    renderer: formatDate,
+                    width: 100,
+                    renderer: formatDateMin,
                     editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i:s'
+                        timeFormat: ''
                     })
                 },{
                     header: 'Fecha entrada',
                     dataIndex: 'fecha_entrada',
                     sortable: true,
-                    width: 120,
-                    renderer: formatDate,
+                    width: 100,
+                    renderer: formatDateMin,
                     editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i:s'
+                        timeFormat: ''
                     })
                 },
 
@@ -851,6 +856,21 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Parroquia', dataIndex: 'parroquia', sortable: true, width: 140, editor: textField},
                 {header: 'Barrio', dataIndex: 'barrio', sortable: true, width: 140, editor: textField},
                 {header: 'Recorrido', dataIndex: 'recorrido', sortable: true, width: 140, editor: textField},
+                {
+                    header: 'Fecha nacimiento',
+                    dataIndex: 'fecha_nacimiento',
+                    sortable: true,
+                    width: 100,
+                    renderer: formatDateMin,
+                    editor: new Ext.ux.form.DateTimeField({
+                        dateFormat: 'Y-m-d',
+                        timeFormat: ''
+                    })
+                },
+                {header: 'Cargas familiares', dataIndex: 'cargas_familiares', sortable: true, width: 200, editor: textField},
+                {header: 'Discapacidades', dataIndex: 'discapacidades', sortable: true, width: 200, editor: textField},
+                {header: 'Enfermedades', dataIndex: 'enfermedades', sortable: true, width: 200, editor: textField},
+
                 {header: 'Geoposicionamiento', dataIndex: 'geoposicionamiento',  width: 140,editor: textField,
                     renderer: function (value) {
                         return '<a href="https://www.google.com/maps?q='+ value+'" target="_blank">'+value+'</a> ';
@@ -1462,7 +1482,6 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                                     disabled: false
                                 },
                                 '->'
-
                                 , {
                                     text: 'Buscar por:'
                                     , xtype: 'tbtext'
