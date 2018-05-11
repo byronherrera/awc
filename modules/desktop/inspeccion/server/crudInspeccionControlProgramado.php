@@ -75,7 +75,7 @@ function selectDetalleAsignacion()
     global $os;
 
     //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'id_inspeccion';
+    $columnaBusqueda = 'codigo_tramite';
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
