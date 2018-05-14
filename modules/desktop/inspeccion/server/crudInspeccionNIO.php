@@ -1,4 +1,3 @@
-
 <?php
 require_once '../../../../server/os.php';
 require_once '../../../common/Classes/funciones.php';
@@ -51,11 +50,19 @@ function selectDetalleInspecciones()
 
             $data[] = $row;
         }
-        echo json_encode(array(
-                "success" => true,
-                "data" => $data)
-        );
-    //}
+
+    $sqlTotal = "SELECT count(*) total FROM amc_inspeccion_nio $where";
+    $result = $os->db->conn->query($sqlTotal);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total = $row['total'];
+
+    echo json_encode(array(
+            "total" => $total,
+            "success" => true,
+            "data" => $data)
+    );
+
+
 
 }
 

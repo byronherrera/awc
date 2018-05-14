@@ -50,11 +50,20 @@ function selectDetalleInspecciones()
 
         $data[] = $row;
     }
+
+    $sqlTotal = "SELECT count(*) total FROM amc_inspeccion_ccf $where";
+    $result = $os->db->conn->query($sqlTotal);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total = $row['total'];
+
     echo json_encode(array(
+            "total" => $total,
             "success" => true,
             "data" => $data)
     );
-    //}
+
+
+
 
 }
 

@@ -3533,8 +3533,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeControlProgramadoInspeccion,
             columns: [
                 new Ext.grid.RowNumberer(),
-                {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
-                //{header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
+                {header: 'id', dataIndex: 'id_denuncia', width:10},
                 {
                     header: 'Código trámite',
                     dataIndex: 'codigo_tramite',
@@ -3572,7 +3571,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     editor: comboPARROQUIA2,
                     renderer: parroquiaAdm
-
                 },
                 {   header: 'Sector',
                     dataIndex: 'sector',
@@ -3581,8 +3579,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboSECTORES2,
                     renderer: sectoresAdm
                 },
-                {header: 'Calle', dataIndex: 'calle', sortable: true, width: 150, editor: textFieldControlProgramado},
-                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldControlProgramado},
+                {   header: 'Calle', dataIndex: 'calle', sortable: true, width: 150, editor: textFieldControlProgramado},
+                {   header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldControlProgramado},
                 {
                     header: 'Clave catastral',
                     dataIndex: 'clave_catastral',

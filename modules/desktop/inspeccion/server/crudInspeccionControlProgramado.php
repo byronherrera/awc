@@ -108,17 +108,31 @@ function selectDetalleAsignacion()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     //$sql = "SELECT * FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.id = $id";
-    $sql = "SELECT * FROM amc_inspeccion_control_programado $where $orderby LIMIT $start, $limit";
+    if (strlen($where) > 0) {
+        $sql = "SELECT * FROM amc_inspeccion_control_programado WHERE $where $orderby LIMIT $start, $limit";
+        $sqlTotal = "SELECT count(*) AS total FROM amc_inspeccion_control_programado WHERE $where ";
+    }
+    else {
+        $sql = "SELECT * FROM amc_inspeccion_control_programado  $orderby LIMIT $start, $limit";
+        $sqlTotal = "SELECT count(*) AS total FROM amc_inspeccion_control_programado  ";
+    }
+
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
         $data[] = $row;
     }
+
+    $result = $os->db->conn->query($sqlTotal);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total = $row['total'];
+
     echo json_encode(array(
+            "total" => $total,
             "success" => true,
             "data" => $data)
     );
+
 
 }
 
