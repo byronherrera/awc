@@ -3787,6 +3787,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: formatDate,
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i'})
                 },
+
                 {
                     header: 'Zona',
                     dataIndex: 'zona',
