@@ -1,0 +1,43 @@
+gridControlProgramadoInspeccion
+this.storeControlProgramadoInspeccion
+
+
+
+                                                    , searchControlProgramadoInspeccionBtn
+                                                    , ' ', ' '
+                                                    , new QoDesk.QoAdmin.SearchField({
+                                                        paramName: 'filterText',
+                                                        store: this.storeControlProgramadoInspeccion
+                                                    })
+-----------------
+        var searchControlProgramadoInspeccionBtn = new Ext.Button({
+            menu: new Ext.menu.Menu({
+                items: [
+                    {
+                        checked: true,
+                        checkHandler: checkHandlerControlProgramadoInspeccion,
+                        group: 'filterField',
+                        key: 'id_inspeccion',
+                        scope: this,
+                        text: 'Código inspección'
+                    }
+                    , {
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramadoInspeccion,
+                        group: 'filterField',
+                        key: 'nombre_denunciado',
+                        scope: this,
+                        text: 'Nombre denunciado'
+                    }
+                ]
+            })
+            , text: 'Código trámite'
+        });
+-----------------------
+        var checkHandlerControlProgramadoInspeccion = function (item, checked) {
+            if (checked) {
+                 var store = this.storeControlProgramadoInspeccion;
+                store.baseParams.filterField = item.key;
+                searchControlProgramadoBtn.setText(item.text);
+            }
+        };

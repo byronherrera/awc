@@ -2,7 +2,6 @@ var tramiteSeleccionado = '';
 var inspeccionSeleccionada = '';
 var todosInspectores = '';
 var todasInspecciones = true;
-//var fecha = date('Y-m-d H:i:s');
 QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     id: 'moduloInspeccion',
     type: 'desktop/moduloInspeccion',
@@ -54,15 +53,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         }
 
         todosInspectores = accesosInspectores;
-        console.log('accesosAdministrador ' + accesosCoordinadorInspeccion);
-        console.log('accesosSecretaria ' + accesosSecretaria);
-        console.log('accesosInspeccion ' + accesosInspectores);
-        console.log('accesosSupervision ' + accesosSupervision);
-        console.log('creacionDatosInspeccion ' + creacionDatosInspeccion);
-        console.log('creacionTramites ' + creacionTramites);
-        console.log('pestInspeccion ' + pestInspeccion);
-        console.log('todosInspectores ' + todosInspectores);
-        console.log('todasInspecciones ' + todasInspecciones);
 
         if (accesosSecretaria) {
             isChecked = true;
@@ -76,9 +66,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         var desktop = this.app.getDesktop();
         var winHeight = desktop.getWinHeight();
         var winWidth = desktop.getWinWidth();
-
-        console.log('winHeight ' + winHeight);
-        console.log('winWidth ' + winWidth);
 
         var AppMsg = new Ext.AppMsg({});
         var win = desktop.getWindow('grid-win-moduloInspeccion');
@@ -907,6 +894,13 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 }
                 store.baseParams.filterField = item.key;
                 searchListadoCCFBtn.setText(item.text);
+            }
+        };
+        var checkHandlerControlProgramadoInspeccion = function (item, checked) {
+            if (checked) {
+                var store = this.storeControlProgramadoInspeccion;
+                store.baseParams.filterField = item.key;
+                searchControlProgramadoInspeccionBtn.setText(item.text);
             }
         };
 
@@ -2349,6 +2343,46 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             , text: 'Código trámite'
         });
 
+        var searchControlProgramadoInspeccionBtn = new Ext.Button({
+            menu: new Ext.menu.Menu({
+                items: [
+                    {
+                        checked: true,
+                        checkHandler: checkHandlerControlProgramadoInspeccion,
+                        group: 'filterField',
+                        key: 'id_inspeccion',
+                        scope: this,
+                        text: 'Código inspección'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramadoInspeccion,
+                        group: 'filterField',
+                        key: 'predio',
+                        scope: this,
+                        text: 'Predio'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramadoInspeccion,
+                        group: 'filterField',
+                        key: 'clave_catastral',
+                        scope: this,
+                        text: 'Clave catastral'
+                    }
+                    ,{
+                        checked: false,
+                        checkHandler: checkHandlerControlProgramadoInspeccion,
+                        group: 'filterField',
+                        key: 'nombre_denunciado',
+                        scope: this,
+                        text: 'Nombre denunciado'
+                    }
+                ]
+            })
+            , text: 'Código trámite'
+        });
+
         var searchControlProgramadoBtn = new Ext.Button({
             menu: new Ext.menu.Menu({
                 items: [
@@ -3749,9 +3783,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Fecha asignación inspector',
                     dataIndex: 'fecha_asignacion_inspector',
                     sortable: true,
-                    width: 150,
+                    width: 100,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i'})
                 },
                 {
                     header: 'Zona',
@@ -4764,8 +4798,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                             }, {
                                 flex: 2,
                                 bodyStyle: 'padding:0; background: #0f6dff',
-                                //layout: 'column',
-
                                 items: [
                                     {
                                         xtype: 'tabpanel',
@@ -4852,14 +4884,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                     , new QoDesk.QoAdmin.SearchField({
                                                         paramName: 'filterText',
                                                         store: this.storeDetalleTodasInspecciones
-                                                        //store: function(){this.storeDetalleInspeccion}
-                                                        //store: storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
-                                                        //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
-                                                        //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.
-                                                        // ListadoTodosInspectores
                                                     })
                                                     /*,
                                                     '-',
@@ -4924,16 +4948,11 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         text: 'Buscar por:'
                                                         , xtype: 'tbtext'
                                                     }
-                                                    //, searchInspeccionesBtn
-                                                    , searchControlProgramadoBtn
+                                                    , searchControlProgramadoInspeccionBtn
                                                     , ' ', ' '
                                                     , new QoDesk.QoAdmin.SearchField({
                                                         paramName: 'filterText',
                                                         store: this.storeControlProgramadoInspeccion
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
-                                                        //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
-                                                        //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
                                                     })
                                                 ],
                                                 items: this.gridControlProgramadoInspeccion
@@ -4987,17 +5006,10 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         //disabled: !acceso,
                                                         cls: 'barramenu',
                                                         handler: function (checkbox, isChecked) {
-                                                            //Ext.getCmp('tb_repoteDenuncias').setDisabled(!this.checked);
-                                                            //Ext.getCmp('tb_seleccionarUnidad').setDisabled(!this.checked);
-                                                            //Ext.getCmp('tb_seleccionarUnidad').getValue();
-                                                            //storeDenuncias.load({params: {noenviados: isChecked}});
                                                             storeControlProgramadoAsignacion.baseParams = {
                                                                 pendientesAsignar: isChecked
                                                             };
                                                             storeControlProgramadoAsignacion.load();
-                                                            // if (!this.checked) {
-                                                            //Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
-                                                            //}
                                                         }
                                                     },
                                                     '-',
@@ -5023,10 +5035,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                     , new QoDesk.QoAdmin.SearchField({
                                                         paramName: 'filterText',
                                                         store: this.storeControlProgramadoAsignacion
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
-                                                        //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
-                                                        //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
                                                     })
                                                     , ' ', ' '
 
@@ -5092,10 +5100,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                     , new QoDesk.QoAdmin.SearchField({
                                                         paramName: 'filterText',
                                                         store: this.storeNIOInspeccion
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
-                                                        //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
-                                                        //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
                                                     })
                                                 ],
                                                 items: this.gridNIOInspeccion
@@ -5159,10 +5163,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         disabled: !creacionDatosInspeccion,
                                                         cls: 'barramenu',
                                                         handler: function (checkbox, isChecked) {
-                                                            //Ext.getCmp('btnNuevoDetalleInspeccion').setDisabled(this.checked);
-                                                            //Ext.getCmp('btnEliminarDetalleInspeccion').setDisabled(this.checked);
-                                                            //Ext.getCmp('gridDetalleTodasInspecciones').setVisible(this.checked);
-                                                            //Ext.getCmp('gridDetalleInspeccion').setVisible(!this.checked);
                                                             storeCCFInspeccionPendientes.baseParams = {
                                                                 pendientesAprobar: isChecked
                                                             };
@@ -5186,10 +5186,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                     , new QoDesk.QoAdmin.SearchField({
                                                         paramName: 'filterText',
                                                         store: this.storeCCFInspeccion
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion.load({params: {id: tramiteSeleccionado}})
-                                                        //store: todasInspecciones ? this.storeDetalleTodasInspecciones : this.storeDetalleInspeccion
-                                                        //store: todosInspectores ? this.storeDetalleInspeccion : this.storeDetalleTodasInspecciones
-                                                        //store:  Ext.getCmp('checkTodasInspecciones').getChecked() ? this.storeListadoInspeccion : this.storeListadoTodosInspectores
                                                     })
                                                 ],
                                                 items: this.gridCCFInspeccion
@@ -5399,93 +5395,6 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         //Llamado a función que muestra la ventana en pantalla
         win.show();
 
-        //Ext.getCmp("tabPrincipal").setActiveTab("inspecciones");
-        //Ext.getCmp('tabPrincipal').hideTabStripItem('tramites-pendientes');
-
-        /*
-       if(accesosSecretaria){
-           var activar = true;
-
-           Ext.getCmp('id_tipo_documento').setReadOnly(activar);
-           Ext.getCmp('num_documento').setReadOnly(activar);
-           Ext.getCmp('id_ordenanza').setReadOnly(activar);
-           Ext.getCmp('remitente').setReadOnly(activar);
-           Ext.getCmp('cedula').setReadOnly(activar);
-           Ext.getCmp('email').setReadOnly(activar);
-           Ext.getCmp('institucion').setReadOnly(activar);
-           Ext.getCmp('asunto').setReadOnly(activar);
-           Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
-           Ext.getCmp('cantidad_fojas').setReadOnly(activar);
-           Ext.getCmp('procesado_inspeccion').setReadOnly(activar);
-       }
-
-                function cargaDetalle(idModuloInspeccion) {
-                    forma = Ext.getCmp('formModuloInspeccion');
-                    console.log(idModuloInspeccion);
-                    console.log(urlInspeccion);
-                    forma.getForm().load({
-                        url: urlInspeccion + 'crudModuloInspeccion.php?operation=selectForm',
-                        params: {
-                            id: idModuloInspeccion
-                        }
-                        ,
-                        success: function (response, opts) {
-                            mensaje = Ext.getCmp('textRecepcionAnteriores');
-                            if (response.findField('totaldocumentos').getValue() != '0')
-                                mensaje.setText('Total documentos anteriores: ' + response.findField('totaldocumentos').getValue())
-                            else
-                                mensaje.setText('')
-                        }
-                    });
-                    //console.log(url);
-
-                    bloquearLectura(forma, bloqueo);
-                };
-
-        function bloquearLectura(forma, activar) {
-            //en caso que se pueda editar .. revisamos permiso por perfil
-
-            //validate if have access adminsitrator
-            if (activar)
-                activar2 = activar
-            else
-                activar2 = !accesosCoordinadorInspeccion
-
-            //en caso que es solo lectura
-            if (!acceso) {
-                activar2 = activar = true;
-            }
-
-            Ext.getCmp('id_persona').setReadOnly(activar2);
-            Ext.getCmp('recepcion_documento').setReadOnly(activar);
-            Ext.getCmp('id_tipo_documento').setReadOnly(activar);
-            Ext.getCmp('num_documento').setReadOnly(activar);
-            Ext.getCmp('remitente').setReadOnly(activar);
-            Ext.getCmp('cedula').setReadOnly(activar);
-            Ext.getCmp('email').setReadOnly(activar);
-            Ext.getCmp('descripcion_anexos').setReadOnly(activar);
-            Ext.getCmp('cantidad_fojas').setReadOnly(activar);
-            Ext.getCmp('asunto').setReadOnly(activar);
-            Ext.getCmp('institucion').setReadOnly(activar);
-            Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
-            Ext.getCmp('observacion_secretaria').setReadOnly(activar);
-
-
-            Ext.getCmp('despacho_secretaria').setReadOnly(!acceso);
-            Ext.getCmp('guia').setReadOnly(!acceso);
-
-
-            if (accesosZonales)
-                Ext.getCmp('reasignacion').disable();
-            else {
-                if (!activar)
-                    Ext.getCmp('reasignacion').enable();
-                else
-                    Ext.getCmp('reasignacion').disable();
-            }
-
-        };
-*/
         setTimeout(function () {
             this.storeModuloInspeccion.load({
                 params: {
@@ -5860,8 +5769,5 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
-    },
-
-
+    }
 });
-
