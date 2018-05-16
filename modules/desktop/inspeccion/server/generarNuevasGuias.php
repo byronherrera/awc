@@ -68,7 +68,7 @@ if (!$reimpresion) {
 } else {
     //   envioEmail($rowFuncionario['funcionario']);
     $siguienteFila = 1;
-    imprimeActa($siguienteFila, 0, $reimpresion, $acta);
+    imprimeActa($siguienteFila,   0, $reimpresion, $acta);
 }
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -240,7 +240,7 @@ function envioEmail($funcionario)
             WHERE
                 amc_inspeccion.estado_asignacion = 3 AND amc_inspeccion.funcionario_reasignacion = $funcionario ";
 
-    $result = $os->db->conn->query($sql);
+            $result = $os->db->conn->query($sql);
 //    $number_of_rows = $result->rowCount();
     $fila = 0;
     $detalle = '<table border="1">

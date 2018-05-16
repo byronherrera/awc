@@ -91,5 +91,8 @@ ADD COLUMN `id_tipo_acta` int(1) NOT NULL AFTER `inspeccion_finalizada`;
 ALTER TABLE `amc_inspeccion_control_programado`
 ADD COLUMN `guia_generada` int(1) NULL AFTER `estado_obra`;
 
-ALTER TABLE `prueba`.`amc_inspeccion_control_programado`
+ALTER TABLE `amc_inspeccion_control_programado`
 ADD COLUMN `area_construccion` varchar(255) NULL AFTER `etapas`;
+
+ALTER TABLE `amc_inspeccion_control_programado`
+ADD COLUMN `estado_asignacion` int(2) NULL AFTER `guia_generada`;
