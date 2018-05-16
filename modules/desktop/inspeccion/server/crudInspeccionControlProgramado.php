@@ -75,7 +75,7 @@ function selectDetalleAsignacion()
     global $os;
 
     //Se inicializa el parámetro de búsqueda de código trámite
-    $columnaBusqueda = 'codigo_tramite';
+    $columnaBusqueda = 'predio';
     $funcionario_entrega = $os->get_member_id();
     $where = "";
 
@@ -109,8 +109,8 @@ function selectDetalleAsignacion()
     $os->db->conn->query("SET NAMES 'utf8'");
     //$sql = "SELECT * FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.id = $id";
     if (strlen($where) > 0) {
-        $sql = "SELECT * FROM amc_inspeccion_control_programado WHERE $where $orderby LIMIT $start, $limit";
-        $sqlTotal = "SELECT count(*) AS total FROM amc_inspeccion_control_programado WHERE $where ";
+        $sql = "SELECT * FROM amc_inspeccion_control_programado  $where $orderby LIMIT $start, $limit";
+        $sqlTotal = "SELECT count(*) AS total FROM amc_inspeccion_control_programado   $where ";
     }
     else {
         $sql = "SELECT * FROM amc_inspeccion_control_programado  $orderby LIMIT $start, $limit";
@@ -224,11 +224,14 @@ function updateDetalleInspecciones()
     foreach ($data as $clave => $valor) {
         if ($valor != '')
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+
+         if(is_null($valor))
+             $cadenaDatos = $cadenaDatos . $clave . " = NULL ,";
     }
-    $cadenaDatos = substr($cadenaDatos, 0, -1);
+         $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_inspeccion_control_programado SET  $cadenaDatos  WHERE amc_inspeccion_control_programado.id = '$data->id' ";
-    $sql = $os->db->conn->prepare($sql);
+        $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     echo json_encode(array(

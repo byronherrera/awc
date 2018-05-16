@@ -69,6 +69,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo tipo documento  TID
 
         //inicio combo activo
@@ -196,7 +197,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var comboCONTROLPROGRAMADO= new Ext.form.ComboBox({
+        var comboCONTROLPROGRAMADO = new Ext.form.ComboBox({
             id: 'comboCONTROLPROGRAMADO',
             store: storeCONTROLPROGRAMADO,
             valueField: 'id',
@@ -368,12 +369,12 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             var index = storePRD.findExact('id', id);
             if (index > -1) {
                 var record = storePRD.getAt(index);
-                return  '<span style="font-size: 10px!important">' + record.get('nombre') + '</span>';
+                return '<span style="font-size: 10px!important">' + record.get('nombre') + '</span>';
             }
         }
 
-        function smalltext (id) {
-                    return '<span style="font-size: 10px!important">' + id + '</span>';
+        function smalltext(id) {
+            return '<span style="font-size: 10px!important">' + id + '</span>';
         }
 
         //fin combo persona recepta la denuncia PRD
@@ -578,7 +579,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 // inicio pestañas de mantenimiento
 
 
-
         //inicio mantenimiento DenunciasGuia
         var proxyDenunciasGuia = new Ext.data.HttpProxy({
             api: {
@@ -698,7 +698,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         }
                     }
                 },
-                exception: function (proxy, response, operation ) {
+                exception: function (proxy, response, operation) {
                     if (operation == 'update') {
                         AppMsg.setAlert("Requisito obligatorio", "Faltan datos, cédula o email");
                     }
@@ -706,7 +706,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     if (operation == 'create') {
                         AppMsg.setAlert("Requisito obligatorio", "Faltan datos, cédula o email");
                     }
-                } ,
+                },
 
             }
         });
@@ -946,9 +946,12 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 },
                 afteredit: function (sm) {
                     //rowselect: function (sm, row, rec) {
-                        /*cargar el formulario*/
-                         cargaDetalle(sm.record.i, this.formDenunciaswebDetalle, false);
+                    /*cargar el formulario*/
+                    cargaDetalle(sm.record.i, this.formDenunciaswebDetalle, false);
+
+
                 }
+
             }
         });
 
@@ -1372,9 +1375,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         handleMouseEvents: true,
                                                         readOnly: true,
                                                         listeners: {
-                                                            render: function(c){
+                                                            render: function (c) {
                                                                 //evento click sobre el campo de geo referenciacion
-                                                                c.getEl().on('click', function(){
+                                                                c.getEl().on('click', function () {
                                                                     Ext.getCmp('panelPrincipal').setActiveTab(3);
                                                                 }, c);
                                                             }
@@ -1545,7 +1548,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         typeAhead: true,
                                                         triggerAction: 'all',
                                                         mode: 'local'
-                                                    }                                                    ,
+                                                    },
                                                     {
                                                         xtype: 'combo',
                                                         fieldLabel: 'Tipo respuesta',
@@ -1719,16 +1722,16 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     }
                 ],
                 defaults: {
-                  /*  listeners: {
-                        change: function (field, newVal, oldVal) {
-                            consolo.log ("ccc");
-                            var myForm = Ext.getCmp('formDenunciasDetalle').getForm();
-                            myForm.submit({
-                                url: 'modules/desktop/denuncias/server/crudDenuncias.php?operation=updateForm',
-                                method: 'POST'
-                            });
-                        }
-                    }*/
+                    /*  listeners: {
+                          change: function (field, newVal, oldVal) {
+                              consolo.log ("ccc");
+                              var myForm = Ext.getCmp('formDenunciasDetalle').getForm();
+                              myForm.submit({
+                                  url: 'modules/desktop/denuncias/server/crudDenuncias.php?operation=updateForm',
+                                  method: 'POST'
+                              });
+                          }
+                      }*/
                 }
 
             });
@@ -2192,9 +2195,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     text: 'Exportar listado',
                                     tooltip: 'Se genera archivo Excel con la información solicitada',
                                     id: 'tb_repoteDenunciasGuias',
-                                    disabled: !acceso,
-
-
+//                                    disabled: !acceso,
                                 }
                             ],
                             items: [
@@ -2223,7 +2224,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         }
 
 
-                        ,{
+                        , {
                             autoScroll: true,
                             title: 'Geolocalización',
                             closable: true,
@@ -2238,26 +2239,26 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 fbar: [
                                     {
                                         text: 'Confirmar dirección',
-                                        handler: function() {
+                                        handler: function () {
                                             Ext.getCmp('georeferenciaSecretaria').setValue(geoSecretaria);
                                             Ext.getCmp('panelPrincipal').setActiveTab(0);
                                         }
-                                    } ],
-                                mapConfOpts: ['enableScrollWheelZoom','enableDoubleClickZoom','enableDragging'],
-                                mapControls: ['GSmallMapControl','GMapTypeControl'],
+                                    }],
+                                mapConfOpts: ['enableScrollWheelZoom', 'enableDoubleClickZoom', 'enableDragging'],
+                                mapControls: ['GSmallMapControl', 'GMapTypeControl'],
                                 setCenter: {
                                     lat: -0.1756096,
                                     lng: -78.4761627
                                 },
                                 markers: [{
-                                    lat:  -0.17157021176359674,
+                                    lat: -0.17157021176359674,
                                     lng: -78.47847476417087,
                                     marker: {title: 'Quito', draggable: true},
                                     listeners: {
-                                        click: function(e){
+                                        click: function (e) {
                                             //console.log ("Click al boton");
                                         },
-                                        dragend: function(e){
+                                        dragend: function (e) {
                                             geoSecretaria = e.latLng.lat() + ", " + e.latLng.lng()
 
                                         }
@@ -2271,6 +2272,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
         }
         win.show();
+
         function cargaDetalle(denuncias, forma, bloqueo) {
             forma = Ext.getCmp('formDenunciasDetalle');
             forma.getForm().load({
@@ -2375,7 +2377,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             institucion: '',
             remitente: '',
             reasignacion: '',
-            asunto:'',
+            asunto: '',
             id_caracter_tramite: '1',
             cantidad_fojas: '0',
             despacho_secretaria: false
