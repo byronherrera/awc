@@ -96,3 +96,6 @@ ADD COLUMN `area_construccion` varchar(255) NULL AFTER `etapas`;
 
 ALTER TABLE `amc_inspeccion_control_programado`
 ADD COLUMN `estado_asignacion` int(2) NULL AFTER `guia_generada`;
+
+ALTER TABLE `amc_inspeccion_control_programado`
+ADD COLUMN `envio_zonal` int(2) NULL AFTER `estado_asignacion`;
