@@ -431,6 +431,7 @@ function updateOperativos()
 
 
     $message = '';
+
     if (isset($data->id_tipo_documento)) {
         if ($data->id_tipo_documento == '1')
             if (validarCedulaCorreo($data->id)) {
