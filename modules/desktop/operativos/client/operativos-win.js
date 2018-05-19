@@ -772,7 +772,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 /* {name: 'fallido', type: 'boolean', allowBlank: false},*/
                 /* {name: 'finalizado', type: 'boolean', allowBlank: false},*/
                 {name: 'id_estado', allowBlank: false},
-                {name: 'visible', type: 'boolean', allowBlank: true}
+                {name: 'visible', type: 'boolean', allowBlank: true},
+                {name: 'envio_mail', allowBlank: true}
             ]
         });
         var writerOperativos = new Ext.data.JsonWriter({
@@ -813,6 +814,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 45
                 },
+                {
+                    header: 'Enviado',
+                    dataIndex: 'envio_mail',
+                    sortable: true,
+                    width: 30 
+                },
+
                 {
                     header: 'Visible',
                     dataIndex: 'visible',
@@ -963,11 +971,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 90,
                     editor: new Ext.form.TextField({allowBlank: false})
-/*                    editor: new Ext.form.NumberField({
-                        allowBlank: false,
-                        allowNegative: false,
-                        maxValue: 100000
-                    }) */
+                    /*                    editor: new Ext.form.NumberField({
+                                            allowBlank: false,
+                                            allowNegative: false,
+                                            maxValue: 100000
+                                        }) */
                 },
                 {
                     header: 'Elaborado',

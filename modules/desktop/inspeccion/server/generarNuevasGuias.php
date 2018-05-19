@@ -269,7 +269,6 @@ function envioEmail($funcionario)
 
     $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
     $email = regresaEmail($funcionario);
-//   $email = "byron.herrera@quito.gob.ec";
     $asunto = "Nueva inspección asignada, " . $fechaActual2 . " - " . regresaEmail($funcionario);
     $envio = enviarEmail($email, $asunto, $mensaje);
 }
@@ -314,8 +313,8 @@ function enviarEmail($email, $nombre, $mensaje)
 
     $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
     //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
-    $headers .= "CCO: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec\r\n";
-    $headers .= "Bcc: byron.herrera@quito.gob.ec, paul.cevallos@quito.gob.ec\r\n";
+    $headers .= "CCO: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec\r\n";
+    $headers .= "Bcc: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec\r\n";
 
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
@@ -567,9 +566,9 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
         'borders' => array(
             'outline' => array(
                 'style' => PHPExcel_Style_Border::BORDER_THIN,
-                'color' => array('argb' => '00000000'),
-            ),
-        ),
+                'color' => array('argb' => '00000000')
+            )
+        )
     );
 
 
