@@ -773,7 +773,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 /* {name: 'finalizado', type: 'boolean', allowBlank: false},*/
                 {name: 'id_estado', allowBlank: false},
                 {name: 'visible', type: 'boolean', allowBlank: true},
-                {name: 'envio_mail', allowBlank: true}
+                {name: 'mail_enviado', allowBlank: true}
             ]
         });
         var writerOperativos = new Ext.data.JsonWriter({
@@ -816,7 +816,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Enviado',
-                    dataIndex: 'envio_mail',
+                    dataIndex: 'mail_enviado',
                     sortable: true,
                     width: 30 
                 },
