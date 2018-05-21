@@ -21,7 +21,7 @@ function selectInspeccion()
     //forzamos que solo sea los asignados a inspeccion
     $where = "WHERE reasignacion = 3 and despacho_secretaria='true' ";
 
-     //
+    //
     if (isset($_POST['pendientesAprobar'])) {
         if ($_POST['pendientesAprobar'] == 'true') {
             $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0 and despacho_secretaria='true' ";
@@ -39,7 +39,7 @@ function selectInspeccion()
             $sql = "SELECT id FROM amc_guias WHERE numero LIKE '%$campo%'";
             $numguia = $os->db->conn->query($sql);
             if ($numguia) {
-                $resultados  = array();
+                $resultados = array();
                 while ($row = $numguia->fetch(PDO::FETCH_ASSOC)) {
                     $resultados[] = $row['id'];
                 };
@@ -66,7 +66,7 @@ function selectInspeccion()
 
 
     $sql = "SELECT * FROM amc_denuncias $where $orderby LIMIT $start, $limit";
-     $result = $os->db->conn->query($sql);
+    $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
@@ -106,15 +106,18 @@ function insertInspeccion()
     $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaCampos = $cadenaCampos . $clave . ',';
-        $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        if ($valor != '') {
+            $cadenaCampos = $cadenaCampos . $clave . ',';
+            $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        }
     }
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
+
     $sql = "INSERT INTO amc_denuncias($cadenaCampos)
 	values($cadenaDatos);";
-     $sql = $os->db->conn->prepare($sql);
+    $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
@@ -162,8 +165,6 @@ function updateInspeccion()
     }
 
 
-
-
     $message = '';
     if (isset($data->id_tipo_documento)) {
         if ($data->id_tipo_documento == '1')
@@ -177,8 +178,7 @@ function updateInspeccion()
     foreach ($data as $clave => $valor) {
         if ($valor === null) {
             $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
-        }
-        else {
+        } else {
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
         }
     }
