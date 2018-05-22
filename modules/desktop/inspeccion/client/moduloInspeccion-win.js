@@ -2992,7 +2992,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true
                     ,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {
                     header: 'Funcionario Reasignación',
@@ -3021,7 +3021,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true
                     ,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {
                     header: 'Num memo/oficio',
@@ -3143,7 +3143,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true
                     ,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {
                     header: 'Funcionario Reasignación',
@@ -3172,7 +3172,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true
                     ,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {
                     header: 'Num memo/oficio',
@@ -3330,7 +3330,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Fecha documento', dataIndex: 'fecha_acta', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'}), renderer: formatDate
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'}), renderer: formatDate
                 },
                 {header: 'Fojas', dataIndex: 'num_fojas', sortable: true, width: 70, editor: textFieldDetalle},
                 {
@@ -3483,7 +3483,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Fecha documento', dataIndex: 'fecha_acta', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'}), renderer: formatDate
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'}), renderer: formatDate
                 },
                 {header: 'Fojas', dataIndex: 'num_fojas', sortable: true, width: 70, editor: textFieldDetalle},
                 {
@@ -3569,7 +3569,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Fecha registro', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'}), renderer: formatDate
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'}), renderer: formatDate
                 },
                 //{header: 'Inspector', dataIndex: 'tecnico', sortable: true, width: 150, editor: comboINSP,
                 //renderer: tipoUnidadesPersonal},
@@ -3760,7 +3760,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Fecha registro', dataIndex: 'fecha_recepcion_documento', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'}), renderer: formatDate
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'}), renderer: formatDate
                 },
                 {
                     header: 'Inspector',
@@ -3777,9 +3777,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 100,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
-
                 {
                     header: 'Zona',
                     dataIndex: 'zona',
@@ -3809,7 +3808,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'predio',
                     sortable: true,
                     width: 100,
-                    editor: textFieldControlProgramado},
+                    editor: textFieldControlProgramado
+                },
                 {
                     header: 'Clave catastral',
                     dataIndex: 'clave_catastral',
@@ -3824,7 +3824,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     width: 80,
                     editor: textFieldControlProgramado
                 },
-                {   header: 'Área',
+                {
+                    header: 'Área',
                     dataIndex: 'area_construccion',
                     sortable: true,
                     width: 80,
@@ -3848,7 +3849,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Envío zona',
-                    dataIndex: 'envio_zonal',
+                    dataIndex: 'envio_zona',
                     sortable: true,
                     width: 45,
                     align: 'center',
@@ -4313,7 +4314,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 150,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {header: 'Proyecto', dataIndex: 'proyecto', sortable: true, width: 300, editor: textFieldCCF},
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldCCF},
@@ -4332,33 +4333,38 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: tipoUnidadesPersonal
                 },
                 {
+                    header: 'Fecha inspección', dataIndex: 'fecha_inspeccion', sortable: true, width: 150,
+                    renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
+                },
+                {
                     header: 'Fecha asignación inspector',
                     dataIndex: 'fecha_asignacion_inspector',
                     sortable: true,
+                    hidden: true,
                     width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
+                    renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 //{header: 'Fecha inicio', dataIndex: 'fecha_inicio', sortable: true, width: 150,
                 //editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})},
                 {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textFieldCCF},
                 {header: 'Tipo', dataIndex: 'tipo', sortable: true, width: 100, editor: textFieldCCF},
                 {
-                    header: 'Fecha inspección', dataIndex: 'fecha_inspeccion', sortable: true, width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
-                },
-                {
                     header: 'Fecha egreso verificación',
                     dataIndex: 'fecha_egreso_verificacion',
                     sortable: true,
                     width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
+                    renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {
                     header: 'Fecha certificado informe',
                     dataIndex: 'fecha_certificado_informe',
                     sortable: true,
                     width: 150,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i:s'})
+                    renderer: formatDate,
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {header: 'Resultado', dataIndex: 'resultado', sortable: true, width: 80, editor: textFieldCCF},
                 /*{
@@ -4456,7 +4462,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 150,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {
                     header: 'Número registro',
@@ -4487,7 +4493,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 150,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textFieldListadoCCF},
                 {header: 'Tipo', dataIndex: 'tipo', sortable: true, width: 100, editor: textFieldListadoCCF},
@@ -4575,7 +4581,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 150,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {
                     header: 'Número registro',
@@ -4606,7 +4612,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 150,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d H:i:s'})
+                    editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {header: 'Asunto', dataIndex: 'asunto', sortable: true, width: 200, editor: textFieldListadoCCF},
                 {header: 'Tipo', dataIndex: 'tipo', sortable: true, width: 100, editor: textFieldListadoCCF},
@@ -5032,7 +5038,15 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         disabled: false
                                                     },
                                                     '-',
-
+                                                    {
+                                                        iconCls: 'excel-icon',
+                                                        handler: this.botonGenerarHojaRuta,
+                                                        scope: this,
+                                                        text: 'Generar guía controles programados',
+                                                        tooltip: 'Se genera guía de controles programados',
+                                                        id: 'tb_reporteControlesProgramados',
+                                                        disabled: false
+                                                    },
                                                     '-',
                                                     '->'
                                                     , {
@@ -5443,14 +5457,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             codigo_tramite: '',
             recepción_documento: '',
             //id_ordenanza: '0',
-            id_tipo_documento: '0',
+//            id_tipo_documento: '0',
             num_documento: '',
             //remitente: '',
             //cedula: '',
             //email: '',
             //institucion: '',
             //asunto: '',
-            id_caracter_tramite: '',
+            id_caracter_tramite: '1',
             cantidad_fojas: '0',
             procesado_inspeccion: '1'
         });
@@ -5764,7 +5778,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     },
 
     //Boton generar nueva guía Controles Programados
-    botonGenerarGuiaControlProgramado : function () {
+    botonGenerarGuiaControlProgramado: function () {
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Descargar acta de Controles programados?<br>El estado del trámite será actualizado.<br>¿Desea continuar?',
@@ -5784,7 +5798,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         });
     },
 
-    // bh boton generar nueva guía
+    //bh boton generar nueva guía
     botonGenerarHojaRuta: function () {
         Ext.Msg.show({
             title: 'Advertencia',
