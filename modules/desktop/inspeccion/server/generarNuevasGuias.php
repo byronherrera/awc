@@ -140,9 +140,9 @@ function totalesPorTipo($filaTitulo1)
         //$totalOrdenanza = recuperarTotales($nombreDetalle['id'], $where);
         $totalOrdenanza = 0;
         if ($totalOrdenanza != 0) {
-            $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filaTitulo1 + $j), $nombreDetalle['nombre_completo']);
-            $objPHPExcel->getActiveSheet()->setCellValue('H' . ($filaTitulo1 + $j), $totalOrdenanza);
-            $objPHPExcel->getActiveSheet()->getStyle('G' . ($filaTitulo1 + $j) . ':H' . ($filaTitulo1 + $j))->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->setCellValue('F' . ($filaTitulo1 + $j), $nombreDetalle['nombre_completo']);
+            $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filaTitulo1 + $j), $totalOrdenanza);
+            $objPHPExcel->getActiveSheet()->getStyle('F' . ($filaTitulo1 + $j) . ':G' . ($filaTitulo1 + $j))->applyFromArray($styleArray);
             $j++;
         };
     }
@@ -426,19 +426,19 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
         )
     );
 
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':H' . $filaTitulo1);
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':H' . $filaTitulo2);
+    $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':G' . $filaTitulo1);
+    $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':G' . $filaTitulo2);
 
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, $tituloPrimero);
 
 
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, $titulosegundo);
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 2) . ':H' . ($filaTitulo2 + 2));
+    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 2) . ':G' . ($filaTitulo2 + 2));
 
     $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 + 2), "Fecha: " . fecha_actual());
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 3) . ':H' . ($filaTitulo2 + 3));
+    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 3) . ':G' . ($filaTitulo2 + 3));
     //$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 + 3), "Responsable: " . regresaNombre($os->get_member_id()));
-    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 4) . ':H' . ($filaTitulo2 + 4));
+    $objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 4) . ':G' . ($filaTitulo2 + 4));
     $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 + 4), "Cargo: SECRETARIA DIRECCION DE INSPECCION.");
 
     $offsetTotalesTipo = totalesPorTipo($number_of_rows + $filaInicio);
@@ -572,7 +572,7 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
     );
 
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaTitulo1 . ':H' . ($filasPiePagina + 9))->applyFromArray(
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaTitulo1 . ':G' . ($filasPiePagina + 9))->applyFromArray(
         array(
             'alignment' => array(
                 'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -580,7 +580,7 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
         )
     );
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaTitulo1 . ':H' . ($filasPiePagina + 9))->applyFromArray(
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaTitulo1 . ':G' . ($filasPiePagina + 9))->applyFromArray(
         array(
             'alignment' => array(
                 'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
@@ -588,7 +588,7 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
         )
     );
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . ($filaTitulo1 + 3) . ':H' . ($filaTitulo1 + 5))->applyFromArray(
+    $objPHPExcel->getActiveSheet()->getStyle('A' . ($filaTitulo1 + 3) . ':G' . ($filaTitulo1 + 5))->applyFromArray(
         array(
             'alignment' => array(
                 'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
@@ -609,8 +609,8 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
 
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . ($filaTitulo1 + 3) . ':F' . ($filasPiePagina))->getFont()->setSize(10);
-    $objPHPExcel->getActiveSheet()->getStyle('G' . ($filaTitulo1 + 3) . ':H' . ($filasPiePagina))->getFont()->setSize(9);
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaTitulo1 . ':H' . ($filaTitulo1 + 2))->getFont()->setSize(14);
+    $objPHPExcel->getActiveSheet()->getStyle('G' . ($filaTitulo1 + 3) . ':G' . ($filasPiePagina))->getFont()->setSize(9);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaTitulo1 . ':G' . ($filaTitulo1 + 2))->getFont()->setSize(14);
     // retorno ultima fila
     return $filasPiePagina + 9;
 }

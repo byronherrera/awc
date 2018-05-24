@@ -503,7 +503,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'area_construccion', readOnly: false, allow: true},
                 {name: 'tramite', readOnly: false, allow: true},
                 {name: 'gdoc', readOnly: false, allowBlank: true},
-                {name: 'envio_zonal', readOnly: false, allowBlank: true},
+                {name: 'envio_zonal',type: 'boolean', readOnly: false, allowBlank: true},
             ]
         });
 
@@ -3737,7 +3737,18 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
                 emptyMsg: "Seleccione un trámite"
-            })
+            }),
+            listeners: {
+                beforeedit: function (e) {
+                        console.log (e.record.get("despacho_secretaria"))
+                        //if (e.record.get("despacho_secretaria")) {
+                },
+                afteredit: function (sm) {
+                    //rowselect: function (sm, row, rec) {
+                    /*cargar el formulario*/
+                    cargaDetalle(sm.record.i, this.formDenunciaswebDetalle, false);
+                }
+            }
         });
 
         this.gridControlProgramadoAsignacion = new Ext.grid.EditorGridPanel({
@@ -3773,7 +3784,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 //{header: 'Técnico', dataIndex: 'tecnico', sortable: true, width: 200, editor: textFieldControlProgramado},
                 {
-                    header: 'Fecha asignación inspector',
+                    header: 'Fecha asignación inspector111',
                     dataIndex: 'fecha_asignacion_inspector',
                     sortable: true,
                     width: 100,
@@ -3848,7 +3859,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     width: 100,
                     editor: textFieldControlProgramado
                 },
-                {
+                { //prueba
                     header: 'Envío zonal',
                     dataIndex: 'envio_zonal',
                     sortable: true,
@@ -5040,7 +5051,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         text: 'Generar guía controles programados',
                                                         tooltip: 'Se genera guía de controles programados',
                                                         id: 'tb_reporteControlesProgramados',
-                                                        disabled: false
+                                                        disabled: false,
                                                     },
                                                     '-',
                                                     {
