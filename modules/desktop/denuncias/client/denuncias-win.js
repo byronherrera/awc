@@ -700,7 +700,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 },
                 exception: function (proxy, response, operation) {
                     if (operation == 'update') {
-                        AppMsg.setAlert("Requisito obligatorio", "Faltan datos, cédula o email");
+                        AppMsg.setAlert("   Requisito obligatorio", "Faltan datos, cédula o email");
                     }
 
                     if (operation == 'create') {

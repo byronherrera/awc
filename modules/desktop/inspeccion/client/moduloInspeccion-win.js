@@ -2996,7 +2996,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {
-                    header: 'Funcionario Reasignación',
+                    header: 'Funcionario Reasignación1',
                     dataIndex: 'funcionario_reasignacion',
                     sortable: true,
                     width: 200,
@@ -3147,7 +3147,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
                 {
-                    header: 'Funcionario Reasignación',
+                    header: 'Funcionario Reasignación2',
                     dataIndex: 'funcionario_reasignacion',
                     sortable: true,
                     width: 200,
