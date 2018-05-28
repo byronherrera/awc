@@ -234,8 +234,6 @@ function updateDetalleInspecciones()
         $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
-    echo($sql);
-
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_denuncias actualizado exitosamente" : $sql->errorCode(),

@@ -56,10 +56,7 @@ if ($reimpresion) {
     $siguienteZona = 1;
     imprimeActa($siguienteFila, 0, $reimpresion, $acta);
 }else{
-
-    $sql = "SELECT DISTINCT zona FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.tecnico <> '' AND estado_asignacion = 3 AND envio_zonal = 0;";
-
-
+    $sql = "SELECT DISTINCT zona FROM amc_inspeccion_control_programado WHERE amc_inspeccion_control_programado.tecnico <> '' AND estado_asignacion = 3 AND envio_zonal = 1 AND guia_generada IS NULL;";
     $resultZonas = $os->db->conn->query($sql);
     $siguienteZona = 1;
     $test = 0;
@@ -121,8 +118,11 @@ function imprimeActa($filaTitulo1, $zona, $reimpresion = false, $acta = 0)
 
     $sql = "SELECT *
         FROM amc_inspeccion_control_programado 
-        WHERE envio_zonal = 0
-        AND amc_inspeccion_control_programado.zona = $zona 
+        WHERE envio_zonal = 1
+        AND amc_inspeccion_control_programado.zona = $zona
+        AND estado_asignacion = 3 
+	    AND envio_zonal = 1 
+	    AND guia_generada IS NULL 
         ORDER BY id";
     $result = $os->db->conn->query($sql);
     $number_of_rows = $result->rowCount();
@@ -157,7 +157,7 @@ function imprimeActa($filaTitulo1, $zona, $reimpresion = false, $acta = 0)
 //get numero de guia
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT COUNT(id) num FROM amc_guias_controles_programados WHERE fecha_registro > '" . date("Y") . "-01-01 01:01:01';";
+    $sql = "SELECT COUNT(id) num FROM amc_guias_controles_programados WHERE creado > '" . date("Y") . "-01-01 01:01:01';";
     $resultguia = $os->db->conn->query($sql);
     if ($resultguia) {
         $row = $resultguia->fetch(PDO::FETCH_ASSOC);
@@ -233,8 +233,7 @@ function imprimeActa($filaTitulo1, $zona, $reimpresion = false, $acta = 0)
     $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filaTitulo2 + 2), "GUÍA No. ");
     $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filaTitulo2 + 3), "FECHA");
 
-    $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filaTitulo2 + 2), $numeroGuia
-    );
+    $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filaTitulo2 + 2), $numeroGuia);
     $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filaTitulo2 + 3), $today);
 
     $objPHPExcel->getActiveSheet()->setCellValue('F' . ($filaTitulo2 + 2), 'FECHA RECEPCIÓN');
@@ -284,7 +283,7 @@ function imprimeActa($filaTitulo1, $zona, $reimpresion = false, $acta = 0)
         if (strlen($newIdGuia) > 0) {
             if (!$reimpresion) {
                 $os->db->conn->query("SET NAMES 'utf8'");
-                $sql = "UPDATE amc_inspeccion_control_programado SET envio_zonal = 1 WHERE (id='" . $rowdetalle['id'] . "')";
+                $sql = "UPDATE amc_inspeccion_control_programado SET envio_zonal = 1, guia_generada = '$numeroGuia' WHERE id= " . $rowdetalle['id'];
                 $os->db->conn->query($sql);
             }
         }

@@ -3863,7 +3863,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Envío zonal',
                     dataIndex: 'envio_zonal',
                     sortable: true,
-                    width: 45,
+                    width: 60,
                     align: 'center',
                     editor: {
                         xtype: 'checkbox'
@@ -5060,7 +5060,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         scope: this,
                                                         text: 'Generar guía controles programados',
                                                         tooltip: 'Se genera guía de controles programados',
-                                                        id: 'tb_reporteControlesProgramados',
+                                                        id: 'tb_reporteControlesProgramadoss',
                                                         disabled: false
                                                     },
                                                     '-',
