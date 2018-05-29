@@ -345,6 +345,35 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
         //fin  combo denuncias ordenanza
 
+        //inicio combo denuncias ordenanza crolProgramado
+        storecrolProgramado = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=tipo_control'
+        });
+
+        var comboCROLPROGRAMADO = new Ext.form.ComboBox({
+            id: 'comboCROLPROGRAMADO',
+            store: storecrolProgramado,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            forceSelection: true,
+            allowBlank: false
+        });
+
+        function crolProgramado(id) {
+            var index = storeDETIORD.findExact('id', id);
+            if (index > -1) {
+                var record = storeDETIORD.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin  combo denuncias ordenanza
+
         //inicio combo persona recepta la denuncia PRD
         storePRD = new Ext.data.JsonStore({
             root: 'data',
@@ -723,6 +752,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: false},
                 {name: 'id_tipo_documento', allowBlank: false},
                 {name: 'id_ordenanza', allowBlank: true},
+                {name: 'id_planificacion', allowBlank: true},
                 {name: 'cedula', allowBlank: true},
                 {name: 'email', allowBlank: true},
                 {name: 'num_documento', allowBlank: false},
@@ -808,7 +838,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         allowBlank: true
                     }
                 },
-
                 {
                     header: 'Ordenanza',
                     dataIndex: 'id_ordenanza',
@@ -816,6 +845,14 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     width: 22,
                     editor: comboDETIORD, renderer: denunciasListaOrdenanza
 
+                },
+                {
+                    header: 'Planificación',
+                    dataIndex: 'id_planificacion',
+                    sortable: true,
+                    width: 24,
+                    editor: comboCROLPROGRAMADO,
+                    renderer: crolProgramado
                 },
                 {
                     header: 'N. documento',

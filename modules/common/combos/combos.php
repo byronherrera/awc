@@ -489,6 +489,22 @@ function comboTipoActividad()
             "data" => $data)
     );
 }
+function comboTipoControl()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM  amc_tipo_control WHERE activo = 1 ORDER BY orden";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 
 function comboPersonalDistributivo()
 {
@@ -592,6 +608,9 @@ switch ($_GET['tipo']) {
 
     case 'tipo_actividad' :
         comboTipoActividad();
+        break;
+    case 'tipo_control' :
+        comboTipoControl();
         break;
 
     case 'personal_distributivo' :
