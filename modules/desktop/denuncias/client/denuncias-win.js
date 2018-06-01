@@ -365,9 +365,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         });
 
         function crolProgramado(id) {
-            var index = storeDETIORD.findExact('id', id);
+            var index = storecrolProgramado.findExact('id', id);
             if (index > -1) {
-                var record = storeDETIORD.getAt(index);
+                var record = storecrolProgramado.getAt(index);
                 return record.get('nombre');
             }
         }
@@ -729,14 +729,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 },
                 exception: function (proxy, response, operation) {
                     if (operation == 'update') {
-                        AppMsg.setAlert("   Requisito obligatorio", "Faltan datos, cédula o email");
+                        AppMsg.setAlert("Requisito obligatorio", "Faltan datos, cédula, email o tipo");
                     }
 
                     if (operation == 'create') {
-                        AppMsg.setAlert("Requisito obligatorio", "Faltan datos, cédula o email");
+                        AppMsg.setAlert("Requisito obligatorio", "Faltan datos, cédula, email o tipo");
                     }
                 },
-
             }
         });
 
@@ -752,7 +751,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: false},
                 {name: 'id_tipo_documento', allowBlank: false},
                 {name: 'id_ordenanza', allowBlank: true},
-                {name: 'id_planificacion', allowBlank: true},
+                {name: 'id_tipo', allowBlank: true},
                 {name: 'cedula', allowBlank: true},
                 {name: 'email', allowBlank: true},
                 {name: 'num_documento', allowBlank: false},
@@ -839,20 +838,20 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     }
                 },
                 {
+                    header: 'Motivo',
+                    dataIndex: 'id_tipo',
+                    sortable: true,
+                    width: 24,
+                    editor: comboCROLPROGRAMADO,
+                    renderer: crolProgramado
+                },
+                {
                     header: 'Ordenanza',
                     dataIndex: 'id_ordenanza',
                     sortable: true,
                     width: 22,
                     editor: comboDETIORD, renderer: denunciasListaOrdenanza
 
-                },
-                {
-                    header: 'Planificación',
-                    dataIndex: 'id_planificacion',
-                    sortable: true,
-                    width: 24,
-                    editor: comboCROLPROGRAMADO,
-                    renderer: crolProgramado
                 },
                 {
                     header: 'N. documento',
@@ -1165,6 +1164,14 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 28,
                     renderer: denunciasListaOrdenanza
+
+                },
+                {
+                    header: 'Tipo',
+                    dataIndex: 'id_tipo',
+                    sortable: true,
+                    width: 28,
+                    renderer: crolProgramado
 
                 },
                 {
@@ -2407,6 +2414,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         var denuncias = new this.storeDenuncias.recordType({
             codigo_tramite: ' ',
             id_persona: ' ',
+            id_tipo: '',
             recepcion_documento: (new Date()),
             id_tipo_documento: '2',
             num_documento: 'S/N',

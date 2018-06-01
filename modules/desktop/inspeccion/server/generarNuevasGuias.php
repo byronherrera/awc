@@ -66,7 +66,6 @@ if (!$reimpresion) {
         }
     }
 } else {
-    //   envioEmail($rowFuncionario['funcionario']);
     $siguienteFila = 1;
     imprimeActa($siguienteFila,   0, $reimpresion, $acta);
 }
@@ -313,8 +312,8 @@ function enviarEmail($email, $nombre, $mensaje)
 
     $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
     //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
-    $headers .= "CCO: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec\r\n";
-    $headers .= "Bcc: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec\r\n";
+    $headers .= "CCO: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec,andrea.caicedo@quito.gob.ec\r\n";
+    $headers .= "Bcc: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec,andrea.caicedo@quito.gob.ec\r\n";
 
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
@@ -323,6 +322,8 @@ function enviarEmail($email, $nombre, $mensaje)
     $config = new config();
     if ($config->AMBIENTE == "PRODUCCION")
         mail($email, $nombre, $mensaje, $headers);
+    else
+        mail('byron.herrera@quito.gob.ec', $nombre, $mensaje, $headers); 
 }
 
 function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0)

@@ -125,7 +125,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_caracter_tramite', readOnly: true, allowBlank: false},
                 {name: 'cantidad_fojas', readOnly: true, allowBlank: true},
                 {name: 'procesado_inspeccion', allowBlank: true},
-                {name: 'id_planificacion', allowBlank: true}
+                {name: 'id_planificacion', allowBlank: true},
+                {name: 'id_tipo', allowBlank: true}
                 /*
                 {name: 'despacho_secretaria', allowBlank: true},
                 {name: 'email', allowBlank: true},
@@ -1809,6 +1810,35 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             }
         }
 
+        //inicio combo denuncias ordenanza crolProgramadoIns
+        storecrolProgramadoIns = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=tipo_control'
+        });
+
+        var combocrolProgramadoIns = new Ext.form.ComboBox({
+            id: 'combocrolProgramadoIns',
+            store: storecrolProgramadoIns,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            forceSelection: true,
+            allowBlank: false
+        });
+
+        function crolProgramadoIns(id) {
+            var index = storecrolProgramadoIns.findExact('id', id);
+            if (index > -1) {
+                var record = storecrolProgramadoIns.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin  combo denuncias ordenanza
+
         //inicio combo reasignacion  REA
         storeREA = new Ext.data.JsonStore({
             root: 'data',
@@ -2666,9 +2696,17 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Planificación',
                     dataIndex: 'id_planificacion',
                     sortable: true,
-                    width: 150,
+                    width: 80,
                     editor: comboCONTROLPROGRAMADO,
                     renderer: controlProgramado
+                },
+                {
+                    header: 'Tipo ',
+                    dataIndex: 'id_tipo',
+                    sortable: true,
+                    width: 80,
+                    editor: combocrolProgramadoIns,
+                    renderer: crolProgramadoIns
                 }
 
             ],
@@ -2791,7 +2829,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 singleSelect: false,
                 listeners: {
                     rowselect: function (sm, row, rec) {
-                        storeInspeccionActaSimple.load({params: {filterField: 'guia', filterText: rec.get("id")}})
+                        storeInspeccionActaSimple.load({params: {filterField: 'guia', filterText: rec.get("numero")}})
                     }
                 }
             }),
@@ -5842,7 +5880,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
 
             fn: function (btn) {
-                if (btn == 'yes') {
+                if (btn === 'yes') {
                     window.location.href = 'modules/desktop/inspeccion/server/generarNuevasGuiasControlesProgramados.php';
                     setTimeout(function () {
                         AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());
@@ -5862,7 +5900,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
-                if (btn == 'yes') {
+                if ( btn === 'yes' ) {
                     window.location.href = 'modules/desktop/inspeccion/server/generarHojaRuta.php';
                     /*setTimeout(function () {
                         AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());
@@ -5872,7 +5910,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
-    },
+    }
 
 });
 

@@ -613,8 +613,8 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios )
         $headers .= "CC: $conCopia \r\n";
     }
 
-    $headers .= "CCO: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec, galo.salazar@quito.gob.ec, eduardo.chicaiza@quito.gob.ec, paulina.trujillo@quito.gob.ec \r\n";
-    $headers .= "Bcc: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec, galo.salazar@quito.gob.ec, eduardo.chicaiza@quito.gob.ec, paulina.trujillo@quito.gob.ec \r\n";
+    $headers .= "CCO: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec, galo.salazar@quito.gob.ec, eduardo.chicaiza@quito.gob.ec, paulina.trujillo@quito.gob.ec,andrea.caicedo@quito.gob.ec \r\n";
+    $headers .= "Bcc: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec, galo.salazar@quito.gob.ec, eduardo.chicaiza@quito.gob.ec, paulina.trujillo@quito.gob.ec,andrea.caicedo@quito.gob.ec \r\n";
 
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";

@@ -194,8 +194,10 @@ function insertDenuncias()
     $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaCampos = $cadenaCampos . $clave . ',';
-        $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        if ($valor != '') {
+            $cadenaCampos = $cadenaCampos . $clave . ',';
+            $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        }
     }
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
@@ -208,15 +210,15 @@ function insertDenuncias()
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
 
-   $message = '';
+    $message = '';
     if (isset($data->id_tipo_documento)) {
-        if ($data->id_tipo_documento == '1'){
-            if ((isset($data->cedula)) and (isset($data->email)))  {
+        if ($data->id_tipo_documento == '1') {
+            if ((isset($data->cedula)) and (isset($data->email)) and (strlen($data->id_tipo) > 0)) {
                 $success = true;
                 $message = 'Datos correctos';
-            }  else {
+            } else {
                 $success = false;
-                $message = 'Falta cedula / email';
+                $message = 'Falta cedula / email / tipo';
             }
         } else {
             $success = true;
@@ -272,13 +274,13 @@ function updateDenuncias()
     if (isset($data->id_tipo_documento)) {
         if ($data->id_tipo_documento == '1')
             if (validarCedulaCorreo($data->id)) {
-                $message = 'Ingresar número de cédula y correo electrónico';
+                $message = 'Ingresar número de cédula, correo electrónico y tipo';
             }
     }
 
-    if ($data->id_ordenanza== NULL)
-            unset($data->id_ordenanza);
-    
+    if ($data->id_ordenanza == NULL)
+        unset($data->id_ordenanza);
+
 
     // genero el listado de valores a insertar
     $cadenaDatos = '';
@@ -288,20 +290,20 @@ function updateDenuncias()
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     if (isset($data->id_tipo_documento)) {
-        if ($data->id_tipo_documento == '1'){
-            if (($data->cedula!='') and ($data->email!= ''))  {
+        if ($data->id_tipo_documento == '1') {
+            if (($data->cedula != '') and ($data->email != '') and ($data->id_tipo != '')) {
                 $success = true;
                 $message = 'Datos correctos';
-                $grabar= true;
+                $grabar = true;
 
-            }  else {
+            } else {
                 $success = false;
-                $message = 'Falta cedula o correo electrónico como requisito obligatorio';
+                $message = 'Falta cedula, correo electrónico y tipo como requisito obligatorio';
             }
         } else {
             $success = true;
             $message = 'Datos correctos';
-            $grabar= true;
+            $grabar = true;
         }
     }
 
@@ -323,25 +325,24 @@ function updateDenuncias()
     }
 }
 
-function validarCedulaCorreo($id) {
+function validarCedulaCorreo($id)
+{
     // true en caso que no exista ni correo ni cedula
     // false  en caso que exista correo y cedula
     //return false;
 
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT cedula, email FROM amc_denuncias WHERE id = $id";
+    $sql = "SELECT cedula, email, id_tipo FROM amc_denuncias WHERE id = $id";
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);
-    if ((strlen($row['cedula']) == 0 ) or (strlen($row['email']) == 0 )){
+    if ((strlen($row['cedula']) == 0) or (strlen($row['email']) == 0) or (strlen($row['id_tipo']) == 0)) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
-
 
 
 function selectDenunciasForm()
@@ -398,41 +399,41 @@ function updateDenunciasForm()
     $georeferencia = $_POST["georeferencia"];
     $direccion_denuncia = $_POST["direccion_denuncia"];
 
-    $respuesta_devolucion  = $_POST["respuesta_devolucion"];
+    $respuesta_devolucion = $_POST["respuesta_devolucion"];
 
     if ((isset($_POST["respuesta_devolucion"])) AND ($_POST["respuesta_devolucion"] <> '')) {
-        $fecha_respuesta_devolucion = "'" . date("Y-m-d H:i:s") ."'";
-        $tipo_respuesta_devolucion  = $_POST["tipo_respuesta_devolucion"];
+        $fecha_respuesta_devolucion = "'" . date("Y-m-d H:i:s") . "'";
+        $tipo_respuesta_devolucion = $_POST["tipo_respuesta_devolucion"];
 
     } else {
         $fecha_respuesta_devolucion = "NULL";
-        $tipo_respuesta_devolucion  = '';
+        $tipo_respuesta_devolucion = '';
     }
 
 
     //para el caso de denuncias se valida que exista cedula y correo
-   /* if ($id_tipo_documento == 1) {
-        // se valida que se envio cedula, email
-        $error = false;
-        $msjError = '';
-        if (!isset ($cedula) or $cedula == '') {
-            $error = true;
-            $msjError = 'Falta cédula. ' . $msjError;
-        }
-        if (!isset ($email) or $email == '') {
-            $error = true;
-            $msjError = $msjError . 'Falta email';
-        }
+    /* if ($id_tipo_documento == 1) {
+         // se valida que se envio cedula, email
+         $error = false;
+         $msjError = '';
+         if (!isset ($cedula) or $cedula == '') {
+             $error = true;
+             $msjError = 'Falta cédula. ' . $msjError;
+         }
+         if (!isset ($email) or $email == '') {
+             $error = true;
+             $msjError = $msjError . 'Falta email';
+         }
 
-        if ($error) {
-            echo json_encode(array(
-                "success" => false,
-                "msg" => $msjError
-            ));
-            return;
-        }
+         if ($error) {
+             echo json_encode(array(
+                 "success" => false,
+                 "msg" => $msjError
+             ));
+             return;
+         }
 
-    }*/
+     }*/
 
     /*codigo_tramite='$codigo_tramite',*/
     $sql = "UPDATE amc_denuncias SET 

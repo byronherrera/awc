@@ -117,8 +117,8 @@ $styleArray = array(
 
 
 
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':L' . $filaTitulo1);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':L' . $filaTitulo2);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':M' . $filaTitulo1);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':M' . $filaTitulo2);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO DOCUMENTOS RECIBIDOS");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Secretaría General');
@@ -172,8 +172,8 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('K')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(16.30);
 
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('L')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('M')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(16.30);
 
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Codigo');
@@ -188,6 +188,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Cantidad de f
 $objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Unidad');
 $objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Observaciones');
 $objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Ordenanza');
+$objPHPExcel->getActiveSheet()->setCellValue('M' . $filacabecera, 'Tipo');
 
 $noExistenFilas = true;
 
@@ -226,8 +227,10 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['nombre_unidad']);
     $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['observacion_secretaria']);
     $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, regresaOrdenanza($rowdetalle['id_ordenanza']));
+  //  $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, regresaOrdenanza($rowdetalle['id_ordenanza']));
+    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, $rowdetalle['id_planificacion']);
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':L' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':M' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -269,10 +272,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:L200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:L30')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:M30')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':L' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':M' . $filacabecera)->applyFromArray($styleArray);
 
 //$objPHPExcel->getActiveSheet()->getStyle('A7:D7')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
@@ -284,8 +287,8 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:L3')->getFont()->setSize(14);
-$objPHPExcel->getActiveSheet()->getStyle('A4:L40')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A1:M3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A4:M40')->getFont()->setSize(10);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
