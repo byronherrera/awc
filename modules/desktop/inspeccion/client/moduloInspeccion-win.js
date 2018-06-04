@@ -1148,7 +1148,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         //inicio combo estado de obra
-        storeESTADOOBRA = new Ext.data.JsonStore({
+            storeESTADOOBRA = new Ext.data.JsonStore({
             root: 'datos',
             fields: ['id', 'nombre'],
             autoLoad: true,
