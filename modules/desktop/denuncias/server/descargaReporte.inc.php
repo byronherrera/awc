@@ -228,7 +228,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['observacion_secretaria']);
     $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, regresaOrdenanza($rowdetalle['id_ordenanza']));
   //  $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, regresaOrdenanza($rowdetalle['id_ordenanza']));
-    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, $rowdetalle['id_planificacion']);
+    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, regresaTipoControl($rowdetalle['id_tipo']));
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':M' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
@@ -343,3 +343,14 @@ function regresaOrdenanza($id_dato)
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['nombre'];
 }
+function regresaTipoControl($id_dato)
+{
+    global $os;
+    if (!isset($id_dato) ) return '';
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT nombre FROM amc_tipo_control WHERE id = " . $id_dato;
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['nombre'];
+}
+

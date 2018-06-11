@@ -2652,7 +2652,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame superior de pestaña Trámites pendientes
             height: winHeight * 0.42,
             //Calculo de tamaño horizontal frame superior de pestaña Trámites pendientes
-            width: winWidth * 0.98,
+            width: winWidth - 16,
             store: this.storeModuloInspeccion,
             columns: [
                 //Definición de campos bdd Inspeccion
@@ -2982,9 +2982,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridDetalleInspeccion = new Ext.grid.EditorGridPanel({
             id: 'gridDetalleInspeccion',
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
-            height: winHeight * 0.32,
+            height: winHeight * 0.37,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth * 0.98,
+            width: winWidth - 16,
             readOnly: accesosSupervision,
             store: this.storeDetalleInspeccion,
             columns: [
@@ -3033,8 +3033,8 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: formatDate,
                     editor: new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
                 },
-                {
-                    header: 'Funcionario Reasignación1',
+                {// todo combo validar
+                    header: 'Funcionario Reasignación',
                     dataIndex: 'funcionario_reasignacion',
                     sortable: true,
                     width: 200,
@@ -3153,9 +3153,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridDetalleTodasInspecciones = new Ext.grid.EditorGridPanel({
             id: 'gridDetalleTodasInspecciones',
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
-            height: winHeight * 0.32,
+            height: winHeight * 0.37,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth * 0.98,
+            width: winWidth -16,
             readOnly: accesosSupervision,
             store: this.storeDetalleTodasInspecciones,
             columns: [
@@ -3619,9 +3619,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridControlProgramadoInspeccion = new Ext.grid.EditorGridPanel({
             id: 'gridControlProgramadoInspeccion',
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
-            height: winHeight * 0.32,
+            height: winHeight * 0.37,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth * 0.99,
+            width: winWidth -16,
             readOnly: accesosSupervision,
             store: this.storeControlProgramadoInspeccion,
             columns: [
@@ -3827,9 +3827,9 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         this.gridControlProgramadoAsignacion = new Ext.grid.EditorGridPanel({
             id: 'gridControlProgramadoInspeccion',
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
-            height: winHeight * 0.32,
+            height: winHeight * 0.37,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth * 0.99,
+            width: winWidth -16,
             readOnly: accesosSupervision,
             store: this.storeControlProgramadoAsignacion,
             columns: [
@@ -4794,19 +4794,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     activeTab: 0,
                     border: false,
                     items: [
-                        //Pestaña Secretaría murillo edw torres alba haro
-                        /*{
-                            autoScroll: true,
-                            title: 'Secretaría',
-                            closable: true,
-                            layout: 'fit',
-                            height: winHeight-70
-
-                            //Llamado a función que arma la tabla de datos
-                            ,items: this.gridInspeccion
-                        }
                         //Pestaña Inspección
-                        ,*/
                         {
                             autoScroll: true,
                             title: 'Trámites pendientes',
@@ -4908,19 +4896,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                 items: [
                                     {
                                         xtype: 'tabpanel',
-
                                         activeTab: 0,
-                                        width: winWidth,
+                                        width: winWidth-15,
                                         cls: 'no-border',
                                         items: [
                                             {
                                                 title: 'Asignación inspección',
-                                                //layout: 'column',
-                                                //closable: true,
-                                                //titleCollapse: true,
-                                                //disabled: !accesosSecretaria
                                                 autoScroll: true,
-                                                height: winHeight * 0.36,
+                                                height: winHeight * 0.41,
                                                 tbar: [
                                                     //Definición de botón nuevo
                                                     {
@@ -5005,10 +4988,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                         , formBind: true
                                                     }*/
                                                 ],
-                                                //items: this.gridDetalleInspeccion
                                                 items: [this.gridDetalleInspeccion, this.gridDetalleTodasInspecciones.setVisible(false)]
-                                                //items: Ext.getCmp('checkTodasInspecciones').getValue() ? this.gridDetalleInspeccion : this.gridDetalleTodasInspecciones
-
                                             },
                                             {
                                                 title: 'Control programado',
@@ -5016,7 +4996,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                 layout: 'column',
                                                 //disabled: !accesosSecretaria
                                                 autoScroll: true,
-                                                height: winHeight * 0.36,
+                                                height: winHeight * 0.41,
                                                 tbar: [
                                                     //Definición de botón nuevo
                                                     {
@@ -5069,7 +5049,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                 layout: 'column',
                                                 //disabled: !accesosSecretaria
                                                 autoScroll: true,
-                                                height: winHeight * 0.36,
+                                                height: winHeight * 0.41,
                                                 tbar: [
                                                     /*
                                                     //Definición de botón nuevo
@@ -5162,7 +5142,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                                 title: 'NIO',
                                                 layout: 'column',
                                                 disabled: false,
-                                                height: winHeight * 0.36,
+                                                height: winHeight * 0.41,
                                                 tbar: [
                                                     //Definición de botón nuevo
                                                     {

@@ -329,14 +329,14 @@ function insertOperativos()
     $sql = "INSERT INTO amc_operativos($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
+    $resultado = $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
 
 
     echo json_encode(array(
-        "success" => true,
+        "success" => $resultado,
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
         "data" => array($data)
     ));

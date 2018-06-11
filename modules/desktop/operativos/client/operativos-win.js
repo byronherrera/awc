@@ -3195,11 +3195,11 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
     addoperativosParticipantes: function () {
         var operativos = new this.storeOperativosParticipantes.recordType({
-            id_persona: '-',
+            id_persona: '',
             id_operativo: selectOperativos,
             asistencia: true,
             observaciones: '',
-            id_entidad: '-',
+            id_entidad: '',
             jefe_grupo: '-',
             personas: 0
         });
