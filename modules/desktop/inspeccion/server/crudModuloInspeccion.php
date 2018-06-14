@@ -118,14 +118,14 @@ function insertInspeccion()
     $sql = "INSERT INTO amc_denuncias($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
+    $resultado = $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
 
 
     echo json_encode(array(
-        "success" => true,
+        "success" => $resultado,
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
         "data" => array($data)
     ));
@@ -176,7 +176,7 @@ function updateInspeccion()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        if ($valor === null) {
+        if (($valor === null) or ($valor === '')) {
             $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
         } else {
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
