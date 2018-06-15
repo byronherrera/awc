@@ -365,80 +365,80 @@ function updateInstruccion()
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
+    /*
+        if (isset($data->visible)) {
+            if ($data->visible) {
 
-    if (isset($data->visible)) {
-        if ($data->visible) {
+                if (verificaEnvioEmail($data->id)) {
+                    $fechaActual = date('d-m-Y H:i:s');
+                    $fechaActual2 = date('d-m-Y');
 
-            if (verificaEnvioEmail($data->id)) {
-                $fechaActual = date('d-m-Y H:i:s');
-                $fechaActual2 = date('d-m-Y');
+                    $funcionario = $data->id_persona_encargada;
 
-                $funcionario = $data->id_persona_encargada;
+                    $detalle = '<table border="1">
+                                <tr>
+                                    <td>Código</td>
+                                    <td valign="top">Fecha Inicio</td>
+                                    <td valign="top">Fecha Fin</td>
+                                    <td valign="top">Lugar Intervencion</td>
+                                    <td valign="top">Punto Encuentro</td>
+                                    <td valign="top">Observaciones</td>
+                                    <td valign="top">Estado</td>
+                                </tr>';
+                    $detalle .= "<tr>" .
+                        '<td valign="top">' . $data->id . '</td>' .
+                        '<td valign="top">' . date("Y-m-d <br> H:m", strtotime($data->fecha_inicio_planificacion)) . "</td>" .
+                        '<td valign="top">' . date("Y-m-d <br> H:m", strtotime($data->fecha_fin_planificacion))  . "</td>" .
+                        '<td valign="top">' . $data->punto_encuentro_planificado . "</td>" .
+                        '<td valign="top">' . $data->zona . "</td>" .
+                        '<td valign="top">' . $data->observaciones  . "</td>" .
+                        '<td valign="top"><strong>' . nombreEstado($data->id_estado) . "</strong></td>" .
+                        "</tr></table><br>";
 
-                $detalle = '<table border="1">
-                            <tr>
-                                <td>Código</td>
-                                <td valign="top">Fecha Inicio</td>
-                                <td valign="top">Fecha Fin</td>
-                                <td valign="top">Lugar Intervencion</td>
-                                <td valign="top">Punto Encuentro</td>
-                                <td valign="top">Observaciones</td>
-                                <td valign="top">Estado</td>
-                            </tr>';
-                $detalle .= "<tr>" .
-                    '<td valign="top">' . $data->id . '</td>' .
-                    '<td valign="top">' . date("Y-m-d <br> H:m", strtotime($data->fecha_inicio_planificacion)) . "</td>" .
-                    '<td valign="top">' . date("Y-m-d <br> H:m", strtotime($data->fecha_fin_planificacion))  . "</td>" .
-                    '<td valign="top">' . $data->punto_encuentro_planificado . "</td>" .
-                    '<td valign="top">' . $data->zona . "</td>" .
-                    '<td valign="top">' . $data->observaciones  . "</td>" .
-                    '<td valign="top"><strong>' . nombreEstado($data->id_estado) . "</strong></td>" .
-                    "</tr></table><br>";
-
-                // pedimos listado de funcionarios que van al mismo operativo
-                $listado = getListdoFuncionariosOperativo($data->id);
+                    // pedimos listado de funcionarios que van al mismo operativo
+                    $listado = getListdoFuncionariosOperativo($data->id);
 
 
-                if (count($listado) > 0)
-                    $detalle .= "<p>Personal asignado</p>";
-                $detalle .= "<table>";
-                $funcionarios = array();
-                foreach ($listado as &$funcionario2) {
-                    $detalle .= "<tr><td>" . regresaNombre($funcionario2) . "</td></tr>";
-                    $funcionarios[] = regresaEmail($funcionario2);
+                    if (count($listado) > 0)
+                        $detalle .= "<p>Personal asignado</p>";
+                    $detalle .= "<table>";
+                    $funcionarios = array();
+                    foreach ($listado as &$funcionario2) {
+                        $detalle .= "<tr><td>" . regresaNombre($funcionario2) . "</td></tr>";
+                        $funcionarios[] = regresaEmail($funcionario2);
+                    }
+                    $detalle .= "</table>";
+
+                    $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
+
+                    $email = regresaEmail($funcionario);
+                    //   $email = "byron.herrera@quito.gob.ec";
+                    $asunto = "Nuevo operativo asignado, " . " - " . regresaEmail($funcionario);
+                   // enviarEmail($email, $asunto, $mensaje, $funcionarios);
                 }
-                $detalle .= "</table>";
-
-                $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
-
-                $email = regresaEmail($funcionario);
-                //   $email = "byron.herrera@quito.gob.ec";
-                $asunto = "Nuevo operativo asignado, " . " - " . regresaEmail($funcionario);
-                enviarEmail($email, $asunto, $mensaje, $funcionarios);
             }
         }
-    }
 
-    if (isset($data->fecha_informe)) {
-        $data->fecha_informe = NULL;
-    }
-
-
-    $message = '';
-    if (isset($data->id_tipo_documento)) {
-        if ($data->id_tipo_documento == '1')
-            if (validarCedulaCorreo($data->id)) {
-                $message = 'Ingresar número de cédula y correo electrónico';
+         if (isset($data->fecha_informe)) {
+                $data->fecha_informe = NULL;
             }
-    }
 
-    if (isset($data->id_estado)) {
 
-        if ($data->id_estado === "2") {
-            $datetime = new DateTime();
-            $data->fecha_informe = $datetime->format('Y-m-d H:i:s');
-        }
-    };
+            $message = '';
+            if (isset($data->id_tipo_documento)) {
+                if ($data->id_tipo_documento == '1')
+                    if (validarCedulaCorreo($data->id)) {
+                        $message = 'Ingresar número de cédula y correo electrónico';
+                    }
+            }
+
+            if (isset($data->id_estado)) {
+                if ($data->id_estado === "2") {
+                    $datetime = new DateTime();
+                    $data->fecha_informe = $datetime->format('Y-m-d H:i:s');
+                }
+            };
+        */
 
 
     // genero el listado de valores a insertar
@@ -451,15 +451,14 @@ function updateInstruccion()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    verificarAnteriorOperativo($data->id);
+ //   verificarAnteriorOperativo($data->id);
 
 
-    $sql = "UPDATE amc_expediente SET  $cadenaDatos  WHERE amc_expediente . id = '$data->id' ";
+    $sql = "UPDATE amc_expediente SET  $cadenaDatos  WHERE amc_expediente.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "mail" => "aa",
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_expediente actualizado exitosamente" : $sql->errorCode()
     ));
 }
