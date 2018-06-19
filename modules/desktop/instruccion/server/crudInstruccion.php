@@ -446,8 +446,8 @@ function updateInstruccion()
     foreach ($data as $clave => $valor) {
         if (isset($valor))
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
-        else
-            $cadenaDatos = $cadenaDatos . $clave . " = NULL, ";
+        /*else
+            $cadenaDatos = $cadenaDatos . $clave . " = NULL, ";*/
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 

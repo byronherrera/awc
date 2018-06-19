@@ -28,7 +28,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
         //todo borrar variable
 
-        var fechaOperativo;
+        var fechaExpediente;
 
         //variable define que registro de instruccion se seleccion
         selectInstruccion = 0;
@@ -53,685 +53,33 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
         var textField = new Ext.form.TextField({allowBlank: false});
 
-        var editorDate = new Ext.ux.form.DateTimeField({ dateFormat: 'Y-m-d',timeFormat: 'H:i' })
+        var editorDate = new Ext.ux.form.DateTimeField({dateFormat: 'Y-m-d', timeFormat: 'H:i'})
 
         function formatDate(value, field) {
             return value ? value.dateFormat('Y-m-d H:i') : '';
         }
-        // inicio combos secretaria
 
-        //inicio combo tipo documento  OPTID
-        storeOPTID = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=ordenanzas'
-        });
-
-        var comboOPTID = new Ext.ux.form.CheckboxCombo({
-            width: 250,
-            mode: 'local',
-            store: storeOPTID,
-            valueField: 'id',
-            displayField: 'nombre',
-            allowBlank: false,
-            listeners: {
-                'change': function (cmb, arr) {
-                }
-            }
-        });
-
-        var comboOPTIDSimple = new Ext.form.ComboBox({
-            id: 'comboOPNICO',
-            store: storeOPTID,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function instruccionTipoInstruccionSimple(id) {
-            var index = storeOPTID.findExact('id', id);
-            if (index > -1) {
-                var record = storeOPTID.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-
-        var comboOPTIDSimple2 = new Ext.form.ComboBox({
-            id: 'comboOPNICO',
-            store: storeOPTID,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function instruccionTipoInstruccionSimple2(id) {
-            var index = storeOPTID.findExact('id', id);
-            if (index > -1) {
-                var record = storeOPTID.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-
-        function instruccionTipoInstruccion(id) {
-            if (id === '') return '';
-            var nombres = id.split(",");
-            retorno = '';
-            for (var i = 0; i < nombres.length; i++) {
-                index = storeOPTID.findExact('id', nombres[i]);
-                var record = storeOPTID.getAt(index);
-                if (typeof record !== 'undefined') {
-                    retorno = record.data.nombre + ',' + retorno
-                }
-            }
-            return retorno
-        }
-
-        //fin combo tipo documento  OPTID
-        //inicio combo tipo MEDIDA operativo
-        storeOPINFOMEDIDA = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=tiposMedidasInstruccion'
-        });
-
-        var comboOPINFOMEDIDA = new Ext.form.ComboBox({
-            id: 'comboOPINFOMEDIDA',
-            store: storeOPINFOMEDIDA,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function instruccionTipoMedida(id) {
-            var index = storeOPINFOMEDIDA.findExact('id', id);
-            if (index > -1) {
-                var record = storeOPINFOMEDIDA.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo nivel MEDIDA OPERATIVO
-
-        //inicio combo tipo TIPO ACCION operativo
-        storeOPTIPOACC = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=tiposAccioInstruccion'
-        });
-
-        var comboOPTIPOACC = new Ext.form.ComboBox({
-            id: 'comboOPTIPOACC',
-            store: storeOPTIPOACC,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function instruccionTipoAccion(id) {
-            var index = storeOPTIPOACC.findExact('id', id);
-            if (index > -1) {
-                var record = storeOPTIPOACC.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo tipo TIPO ACCION operativo
-
-
-        //inicio combo activo
-        storeOPOFAC = new Ext.data.JsonStore({
-            root: 'users',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                users: [
-                    {"id": 'true', "nombre": "Si"},
-                    {"id": 'false', "nombre": "No"}
-                ]
-            }
-        });
-
-        var comboOPOFAC = new Ext.form.ComboBox({
-            id: 'comboOPOFAC',
-            store: storeOPOFAC,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function instruccionDespachadoActivo(id) {
-            var index = storeOPOFAC.findExact('id', id);
-            if (index > -1) {
-                var record = storeOPOFAC.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo activo
-
-        //inicio combo nivel complejidad
-        storeOPNICO = new Ext.data.JsonStore({
-            root: 'users',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                users: [
-                    {"id": '1', "nombre": "Alto"},
-                    {"id": '2', "nombre": "Medio"},
-                    {"id": '3', "nombre": "Bajo"}
-                ]
-            }
-        });
-
-        var comboOPNICO = new Ext.form.ComboBox({
-            id: 'comboOPNICO',
-            store: storeOPNICO,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function instruccionNivelComplejidad(id) {
-            var index = storeOPNICO.findExact('id', id);
-            if (index > -1) {
-                var record = storeOPNICO.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo nivel complejidad
-
-        //inicio combo tipo operativo
-        storeOPTIPO = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=tiposinstruccion'
-        });
-
-        var comboOPTIPO = new Ext.form.ComboBox({
-            id: 'comboOPTIPO',
-            store: storeOPTIPO,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function instruccionTipo(id) {
-            var index = storeOPTIPO.findExact('id', id);
-            if (index > -1) {
-                var record = storeOPTIPO.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo nivel complejidad
-
-        //inicio combo tipo operativo
-        storeOPENTT = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=tiposentidades'
-        });
-
-        var comboOPENTT = new Ext.form.ComboBox({
-            id: 'comboOPENTT',
-            store: storeOPENTT,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function entidadesTipo(id) {
-            var index = storeOPENTT.findExact('id', id);
-            if (index > -1) {
-                var record = storeOPENTT.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo nivel complejidad
-
-        //inicio combo Unidades
-        storeOPREA = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre', 'orden'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=unidadessinfiltro',
-            remoteSort: true, //true for server sorting
-            sorters: [{
-                property: 'orden',
-                direction: 'ASC' // or 'ASC'
-            }],
-        });
-
-        storeOPREA.sort('orden', 'ASC');
-        var comboOPREA = new Ext.form.ComboBox({
-            id: 'comboOPREA',
-            store: storeOPREA,
-            valueField: 'id',
-            displayField: 'nombre',
-            mode: 'local',
-            forceSelection: true,
-            allowBlank: false
-        });
-
-        function instruccionUnidades(id) {
-            var index = storeOPREA.findExact('id', id);
-            if (index > -1) {
-                var record = storeOPREA.getAt(index);
-                return record.get('nombre');
-            } else {
-                return ''
-            }
-
-        }
-
-        //fin combo reasignacion OPREA
-
-
-        //inicio combo reasignacion  OPREATOT
-        storeOPREATOT = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=unidadestotal'
-        });
-
-        var comboOPREATOT = new Ext.form.ComboBox({
-            id: 'comboOPREATOT',
-            store: storeOPREATOT,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function departamentoOPREATOTsignacion(id) {
-            var index = storeOPREATOT.findExact('id', id);
-            var record = storeOPREATOT.getAt(index);
-            return record.get('nombre');
-        }
-
-        //fin combo reasignacion OPREATOT
-        //inicio combo instruccion estado
-        storeOPESTA = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=instruccionestados'
-        });
-
-        var comboOPESTA = new Ext.form.ComboBox({
-            id: 'comboOPESTA',
-            store: storeOPESTA,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function instruccionEstados(id) {
-            var index = storeOPESTA.findExact('id', id);
-            if (index > -1) {
-                var record = storeOPESTA.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo instruccion estado
-        //inicio combo guia  OPREAGUIA
-        storeOPREAGUIA = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=guia'
-        });
-
-        var comboOPREAGUIA = new Ext.form.ComboBox({
-            id: 'comboOPREAGUIA',
-            store: storeOPREAGUIA,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function departamentoOPREAGUIAS(id) {
-            var index = storeOPREAGUIA.findExact('id', id);
-            var record = storeOPREAGUIA.getAt(index);
-            return record.get('nombre');
-        }
-
-        //fin combo reasignacion OPREAGUIA
-
-        //inicio combo tipo documento  OPPERENC
-        storeOPPERENC = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=personalinstruccion',
-            baseParams: {
-                accesosAdministradorOpe: accesosAdministradorOpe,
-                accesosInstruccion: accesosInstruccion,
-                acceso: acceso
-            }
-        });
-
-        var comboOPPERENC = new Ext.ux.form.CheckboxCombo({
-            width: 250,
-            mode: 'local',
-            store: storeOPPERENC,
-            valueField: 'id',
-            displayField: 'nombre',
-            allowBlank: false,
-            listeners: {
-                'change': function (cmb, arr) {
-                }
-            }
-        });
-
-        function instruccionPersonalEncargado(id) {
-
-            if (id === '') return ' ';
-            if (id === null) return ' ';
-            var nombres = id.split(",");
-            retorno = '';
-
-            for (var i = 0; i < nombres.length; i++) {
-                index = storeOPPERENC.findExact('id', nombres[i]);
-                var record = storeOPPERENC.getAt(index);
-                if (typeof record !== 'undefined') {
-                    retorno = record.data.nombre + ',' + retorno
-                }
-            }
-            return retorno
-        }
-
-        //fin combo tipo documento  OPPERENC
-
-
-        //inicio combo persona recepta la instruccion PRD
-        storePRD = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=personalinstruccion',
-            baseParams: {
-                todos: 'true',
-                accesosAdministradorOpe: accesosAdministradorOpe,
-                accesosInstruccion: accesosInstruccion,
-                acceso: acceso
-            }
-
-        });
-
-
-        var comboPRD = new Ext.form.ComboBox({
-            id: 'comboPRD',
-            store: storePRD,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local',
-            //forceSelection: true,
-            allowBlank: true
-        });
-
-        var comboPRD2 = new Ext.form.ComboBox({
-            id: 'comboPRD2',
-            store: storePRD,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local',
-            //forceSelection: true,
-            allowBlank: true
-        });
-
-        function personaReceptaDenuncia(id) {
-            var index = storePRD.findExact('id', id);
-            if (index > -1) {
-                var record = storePRD.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        storePRD2 = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=personalinstruccion',
-            baseParams: {
-                todos: 'true',
-                accesosAdministradorOpe: true,
-                accesosInstruccion: false,
-                acceso: acceso
-            }
-
-        });
-
-        var comboPRD2 = new Ext.form.ComboBox({
-            id: 'comboPRD2',
-            store: storePRD2,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local',
-            //forceSelection: true,
-            allowBlank: true
-        });
-
-        function personaReceptaDenuncia2(id) {
-            //var index = storePRD2.findExact('id', id);
-            var index = storePRD2.findExact('id', id);
-            if (index > -1) {
-                var record = storePRD2.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo persona recepta la instruccion PRD
-
-// fin combos secretaria
 
 // inicio combos instruccion
 
-        //inicio combo ZONA
-        storeZONA = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=zonas'
-        });
-
-        var comboZONA = new Ext.form.ComboBox({
-            id: 'comboZONA',
-            store: storeZONA,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function zonaAdm(id) {
-            var index = storeZONA.findExact('id', id);
-            if (index > -1) {
-                var record = storeZONA.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo ZONA
-
-        //inicio combo actividad  ACTA
-        storeACTA = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=depInstruccion'
-        });
-
-        var comboACTA = new Ext.form.ComboBox({
-            id: 'comboACTA',
-            store: storeACTA,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function actividadAdm(id) {
-            var index = storeACTA.findExact('id', id);
-            if (index > -1) {
-                var record = storeACTA.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo actividad  ACTA
-        storeSINO = new Ext.data.JsonStore({
-            root: 'datos',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                datos: [
-                    {"id": 'false', "nombre": "NO"},
-                    {"id": 'true', "nombre": "SI"}
-                ]
-            }
-        });
-        //inicio combo Estado Recepcion Información Instruccion ESOPREA
-        storeESOPREA = new Ext.data.JsonStore({
-            root: 'datos',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                datos: [
-                    {"id": 0, "nombre": "Sin información"},
-                    {"id": 1, "nombre": "Conforme"},
-                    {"id": 2, "nombre": "Inconforme"}
-                ]
-            }
-        });
-
-        var comboESOPREA = new Ext.form.ComboBox({
-            id: 'comboESOPREA',
-            store: storeESOPREA,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function estadoRecepcionAdm(id) {
-            var index = storeESOPREA.findExact('id', id);
-            if (index > -1) {
-                var record = storeESOPREA.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo Estado Recepcion Información Instruccion ESOPREA
-
-        //inicio combo estado retiros operativo ESREOP
-        storeESREOP = new Ext.data.JsonStore({
-            root: 'datos',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                datos: [
-                    {"id": "Perecible", "nombre": "Perecible"},
-                    {"id": "No perecible", "nombre": "No perecible"},
-                    {"id": "Vehículos", "nombre": "Vehículos"},
-                    {"id": "Otros", "nombre": "Otros"}
-                ]
-            }
-        });
-
-        var comboESREOP = new Ext.form.ComboBox({
-            id: 'comboESREOP',
-            store: storeESREOP,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function estadoRetirosAdm(id) {
-            return id;
-        }
-
-        //fin combo Estado Recepcion Información Instruccion ESREOP
-
-        //inicio combo procedimientos PRSA
-        storePRSA = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=procedimiento'
-        });
-
-        var comboPRSA = new Ext.form.ComboBox({
-            id: 'comboPRSA',
-            store: storePRSA,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function procedimientosAdm(id) {
-            var index = storePRSA.findExact('id', id);
-            if (index > -1) {
-                var record = storePRSA.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo procedimientos PRSA
-
-        //inicio combo persona asignada PRASA
-        storePRASA = new Ext.data.JsonStore({
+        //inicio combo persona asignada INSPRASA
+        storeINSPRASA = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=personalinstruccion'
         });
 
-        var comboPRASA = new Ext.form.ComboBox({
-            id: 'comboPRASA',
-            store: storePRASA,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function personaAsignadaAdm(id) {
-            var index = storePRASA.findExact('id', id);
+        function personaAsignadaInstr(id) {
+            var index = storeINSPRASA.findExact('id', id);
             if (index > -1) {
-                var record = storePRASA.getAt(index);
+                var record = storeINSPRASA.getAt(index);
                 return record.get('nombre');
             }
         }
 
-        //fin combo caracter del tramite PRASA
-// inicio combos instruccion
+        //fin combo caracter del tramite INSPRASA
+
 
 // inicio pestañas de mantenimiento
 
@@ -833,72 +181,104 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeInstruccion,
             columns: [
                 new Ext.grid.RowNumberer(),
-                { header: 'fecha_ingreso',dataIndex: 'fecha_ingreso', sortable: true, width: 100, renderer: formatDate, editor: editorDate },
-                { header: 'id_persona', dataIndex: 'id_persona', sortable: true, width: 100 },
-                { header: 'codigo_expediente', dataIndex: 'codigo_expediente', sortable: true, width: 100 },
-                { header: 'id_persona_encargada', dataIndex: 'id_persona_encargada', sortable: true, width: 100 },
-                { header: 'id_persona_reasignado', dataIndex: 'id_persona_reasignado', sortable: true, width: 100 },
-                { header: 'fecha_asignacion',dataIndex: 'fecha_asignacion', sortable: true, width: 100, renderer: formatDate, editor: editorDate },
-                { header: 'fecha_reasignacion',dataIndex: 'fecha_reasignacion', sortable: true, width: 100, renderer: formatDate, editor: editorDate },
-                { header: 'id_tramite', dataIndex: 'id_tramite', sortable: true, width: 100 },
-                { header: 'id_acta', dataIndex: 'id_acta', sortable: true, width: 100 },
-                { header: 'id_estado', dataIndex: 'id_estado', sortable: true, width: 100 },
-                { header: 'detalle', dataIndex: 'detalle', sortable: true, width: 100 },
-                { header: 'observaciones', dataIndex: 'observaciones', sortable: true, width: 100 },
-                { header: 'clausura', dataIndex: 'clausura', sortable: true, width: 100 },
-                { header: 'skelta', dataIndex: 'skelta', sortable: true, width: 100 },
-                { header: 'predio', dataIndex: 'predio', sortable: true, width: 100 },
-                { header: 'reincidencia_predio', dataIndex: 'reincidencia_predio', sortable: true, width: 100 },
-                { header: 'nombre_administrado', dataIndex: 'nombre_administrado', sortable: true, width: 100 },
-                { header: 'reincidencia_administrado', dataIndex: 'reincidencia_administrado', sortable: true, width: 100 },
-                { header: 'nombre_establecimiento', dataIndex: 'nombre_establecimiento', sortable: true, width: 100 },
-                { header: 'direccion', dataIndex: 'direccion', sortable: true, width: 100 },
-                { header: 'ruc', dataIndex: 'ruc', sortable: true, width: 100 },
-                { header: 'cedula', dataIndex: 'cedula', sortable: true, width: 100 },
-                { header: 'casillero_judicial', dataIndex: 'casillero_judicial', sortable: true, width: 100 },
-                { header: 'actividad verificada', dataIndex: 'actividad verificada', sortable: true, width: 100 },
-                { header: 'ciiu', dataIndex: 'ciiu', sortable: true, width: 100 },
-                { header: 'luae', dataIndex: 'luae', sortable: true, width: 100 },
-                { header: 'luae_anio', dataIndex: 'luae_anio', sortable: true, width: 100 },
-                { header: 'categoria', dataIndex: 'categoria', sortable: true, width: 100 },
-                { header: 'trabajos varios', dataIndex: 'trabajos varios', sortable: true, width: 100 },
-                { header: 'construcciones', dataIndex: 'construcciones', sortable: true, width: 100 },
-                { header: 'id_ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100 },
-                { header: 'id_articulo', dataIndex: 'id_articulo', sortable: true, width: 100 },
-                { header: 'id_literal', dataIndex: 'id_literal', sortable: true, width: 100 },
-                { header: 'auto', dataIndex: 'auto', sortable: true, width: 100 },
-                { header: 'dmi', dataIndex: 'dmi', sortable: true, width: 100 },
-                { header: 'informe_otros', dataIndex: 'informe_otros', sortable: true, width: 100 },
-                { header: 'entidad', dataIndex: 'entidad', sortable: true, width: 100 },
-                { header: 'informe', dataIndex: 'informe', sortable: true, width: 100 },
-                { header: 'medida_cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 100 },
-                { header: 'ultima_actividad', dataIndex: 'ultima_actividad', sortable: true, width: 100 },
-                { header: 'creado', dataIndex: 'creado', sortable: true, width: 100 }
+                {
+                    header: 'fecha_ingreso',
+                    dataIndex: 'fecha_ingreso',
+                    sortable: true,
+                    width: 100,
+                    renderer: formatDate,
+                    editor: editorDate
+                },
+                {
+                    header: 'Funcionario',
+                    dataIndex: 'id_persona',
+                    sortable: true,
+                    width: 100,
+                    renderer: personaAsignadaInstr
+                },
+                {header: 'codigo_expediente', dataIndex: 'codigo_expediente', sortable: true, width: 100},
+                {header: 'id_persona_encargada', dataIndex: 'id_persona_encargada', sortable: true, width: 100},
+                {header: 'id_persona_reasignado', dataIndex: 'id_persona_reasignado', sortable: true, width: 100},
+                {
+                    header: 'fecha_asignacion',
+                    dataIndex: 'fecha_asignacion',
+                    sortable: true,
+                    width: 100,
+                    renderer: formatDate,
+                    editor: editorDate
+                },
+                {
+                    header: 'fecha_reasignacion',
+                    dataIndex: 'fecha_reasignacion',
+                    sortable: true,
+                    width: 100,
+                    renderer: formatDate,
+                    editor: editorDate
+                },
+                {header: 'id_tramite', dataIndex: 'id_tramite', sortable: true, width: 100},
+                {header: 'id_acta', dataIndex: 'id_acta', sortable: true, width: 100},
+                {header: 'id_estado', dataIndex: 'id_estado', sortable: true, width: 100},
+                {header: 'detalle', dataIndex: 'detalle', sortable: true, width: 100},
+                {header: 'observaciones', dataIndex: 'observaciones', sortable: true, width: 100},
+                {header: 'clausura', dataIndex: 'clausura', sortable: true, width: 100},
+                {header: 'skelta', dataIndex: 'skelta', sortable: true, width: 100},
+                {header: 'predio', dataIndex: 'predio', sortable: true, width: 100},
+                {header: 'reincidencia_predio', dataIndex: 'reincidencia_predio', sortable: true, width: 100},
+                {header: 'nombre_administrado', dataIndex: 'nombre_administrado', sortable: true, width: 100},
+                {
+                    header: 'reincidencia_administrado',
+                    dataIndex: 'reincidencia_administrado',
+                    sortable: true,
+                    width: 100
+                },
+                {header: 'nombre_establecimiento', dataIndex: 'nombre_establecimiento', sortable: true, width: 100},
+                {header: 'direccion', dataIndex: 'direccion', sortable: true, width: 100},
+                {header: 'ruc', dataIndex: 'ruc', sortable: true, width: 100},
+                {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 100},
+                {header: 'casillero_judicial', dataIndex: 'casillero_judicial', sortable: true, width: 100},
+                {header: 'actividad verificada', dataIndex: 'actividad verificada', sortable: true, width: 100},
+                {header: 'ciiu', dataIndex: 'ciiu', sortable: true, width: 100},
+                {header: 'luae', dataIndex: 'luae', sortable: true, width: 100},
+                {header: 'luae_anio', dataIndex: 'luae_anio', sortable: true, width: 100},
+                {header: 'categoria', dataIndex: 'categoria', sortable: true, width: 100},
+                {header: 'trabajos varios', dataIndex: 'trabajos_varios', sortable: true, width: 100},
+                {header: 'construcciones', dataIndex: 'construcciones', sortable: true, width: 100},
+                {header: 'id_ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100},
+                {header: 'id_articulo', dataIndex: 'id_articulo', sortable: true, width: 100},
+                {header: 'id_literal', dataIndex: 'id_literal', sortable: true, width: 100},
+                {header: 'auto', dataIndex: 'auto', sortable: true, width: 100},
+                {header: 'dmi', dataIndex: 'dmi', sortable: true, width: 100},
+                {header: 'informe_otros', dataIndex: 'informe_otros', sortable: true, width: 100},
+                {header: 'entidad', dataIndex: 'entidad', sortable: true, width: 100},
+                {header: 'informe', dataIndex: 'informe', sortable: true, width: 100},
+                {header: 'medida_cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 100},
+                {header: 'ultima_actividad', dataIndex: 'ultima_actividad', sortable: true, width: 100},
+                {header: 'creado', dataIndex: 'creado', sortable: true, width: 100}
             ],
             viewConfig: {
                 forceFit: false,
                 getRowClass: function (record, index) {
                     // validamos la fecha
-                  /*  fechaActual = new Date();
-                    fechaOperativo = record.get('fecha_fin_planificacion')
+                    /*  fechaActual = new Date();
+                      fechaExpediente = record.get('fecha_fin_planificacion')
 
-                    var diasDif = fechaActual.getTime() - fechaOperativo.getTime();
-                    var horas = Math.round(diasDif / (1000 * 60 * 60));
+                      var diasDif = fechaActual.getTime() - fechaExpediente.getTime();
+                      var horas = Math.round(diasDif / (1000 * 60 * 60));
 
 
-                    if ((record.get('id_estado') == 1) && (horas > 86)) {
-                        return 'redstate';
-                    }
+                      if ((record.get('id_estado') == 1) && (horas > 86)) {
+                          return 'redstate';
+                      }
 
-                    // registros que estan en planificacion
-                    if (record.get('id_estado') == 1) {
-                        // Ext.getCmp('id_persona_encargada').setReadOnly(true);
-                        return 'gold';
-                    }
-                    // registros que ya estan realizados
-                    if (record.get('id_estado') == 4) {
-                        return 'bluestate';
-                    }*/
+                      // registros que estan en planificacion
+                      if (record.get('id_estado') == 1) {
+                          // Ext.getCmp('id_persona_encargada').setReadOnly(true);
+                          return 'gold';
+                      }
+                      // registros que ya estan realizados
+                      if (record.get('id_estado') == 4) {
+                          return 'bluestate';
+                      }*/
                 }
             },
             sm: new Ext.grid.RowSelectionModel(
@@ -910,110 +290,109 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                             //fecha_fin_planificacion = rec.get('fecha_fin_planificacion');
 
                             // recuperamos la informacion de personal asignado a ese operativo
+                            // todo quitar
                             selectInstruccion = rec.id;
-                            storeInstruccionPersonal.load({params: {id_operativo: rec.id}});
-                            storeInstruccionAcciones.load({params: {id_operativo: rec.id}});
-                            storeInstruccionInforme.load({params: {id_operativo: rec.id}});
-                            storeInstruccionAcciones.load({params: {id_operativo: rec.id}});
-                            storeInstruccionParticipantes.load({params: {id_operativo: rec.id}});
-                            storeInstruccionRetiros.load({params: {id_operativo: rec.id}});
-                            storeInstruccionImagenes.load({params: {id_operativo: rec.id}});
+                            storeInstruccionAcciones.load({params: {id_expediente: rec.id}});
+
+                            Ext.getCmp('borrarexpedientedetalleacciones').setDisabled(false);
+                            Ext.getCmp('addexpedientedetalleacciones').setDisabled(false);
+
 
                             // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
 
-/*                            if (acceso) {
-                                if (rec.get("id_estado") != 1) {
-                                    Ext.getCmp('informesAccionesTab').setDisabled(acceso ? false : true);
-                                    Ext.getCmp('informesInstruccionTab').setDisabled(acceso ? false : true);
-                                    Ext.getCmp('imagenesInstruccionTab').setDisabled(acceso ? false : true);
-                                    Ext.getCmp('detalleInstruccionTab').setDisabled(acceso ? false : true);
-                                    Ext.getCmp('retirosInstruccionTab').setDisabled(acceso ? false : true);
-                                    cargaDetalle(rec.id);
-                                }
-                                else {
-                                    Ext.getCmp('informesAccionesTab').setDisabled(true);
-                                    Ext.getCmp('informesInstruccionTab').setDisabled(true);
-                                    Ext.getCmp('imagenesInstruccionTab').setDisabled(true);
-                                    Ext.getCmp('detalleInstruccionTab').setDisabled(true);
-                                    Ext.getCmp('retirosInstruccionTab').setDisabled(true);
-                                    cargaDetalle(rec.id);
-                                }
+                            /*                            if (acceso) {
+                                                            if (rec.get("id_estado") != 1) {
+                                                                Ext.getCmp('informesAccionesTab').setDisabled(acceso ? false : true);
+                                                                Ext.getCmp('informesInstruccionTab').setDisabled(acceso ? false : true);
+                                                                Ext.getCmp('imagenesInstruccionTab').setDisabled(acceso ? false : true);
+                                                                Ext.getCmp('detalleInstruccionTab').setDisabled(acceso ? false : true);
+                                                                Ext.getCmp('retirosInstruccionTab').setDisabled(acceso ? false : true);
+                                                                cargaDetalle(rec.id);
+                                                            }
+                                                            else {
+                                                                Ext.getCmp('informesAccionesTab').setDisabled(true);
+                                                                Ext.getCmp('informesInstruccionTab').setDisabled(true);
+                                                                Ext.getCmp('imagenesInstruccionTab').setDisabled(true);
+                                                                Ext.getCmp('detalleInstruccionTab').setDisabled(true);
+                                                                Ext.getCmp('retirosInstruccionTab').setDisabled(true);
+                                                                cargaDetalle(rec.id);
+                                                            }
 
-                                if ((rec.get("id_estado") == 1) || (rec.get("id_estado") == 4)) {
-                                    gridBlockInstruccion = false;
-                                    Ext.getCmp('savedetalleoperativo').setDisabled(false);
+                                                            if ((rec.get("id_estado") == 1) || (rec.get("id_estado") == 4)) {
+                                                                gridBlockInstruccion = false;
+                                                                Ext.getCmp('savedetalleoperativo').setDisabled(false);
 
-                                    Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
-                                    Ext.getCmp('addinstruccion').setDisabled(accesosAdministradorOpe ? false : true);
+                                                                Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
+                                                                Ext.getCmp('addinstruccion').setDisabled(accesosAdministradorOpe ? false : true);
 
-                                    Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
-                                    Ext.getCmp('addoperativoparticipantes').setDisabled(false);
-                                    // en caso que se tenga acceso tambien se habilitan o deshabilitan los botones para agregar detalle
-                                    // valido si es el caso operativo tipo Permanentes Zonales
-
-
-                                    if (rec.get("tipo_operativo") == 2) {
-                                        Ext.getCmp('borraroperativodetalle').setDisabled(false);
-                                        Ext.getCmp('addoperativodetalle').setDisabled(false);
-                                        //Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
-                                        // Ext.getCmp('addoperativoparticipantes').setDisabled(false);
-                                    } else {
-                                        Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
-                                        Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
-                                        // Ext.getCmp('borraroperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
-                                        // Ext.getCmp('addoperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
-                                    }
-
-                                    Ext.getCmp('borraroperativodetalleacciones').setDisabled(false);
-                                    Ext.getCmp('addoperativodetalleacciones').setDisabled(false);
-
-                                    Ext.getCmp('borraroperativodetalleInforme').setDisabled(false);
-                                    Ext.getCmp('addoperativodetalleInforme').setDisabled(false);
-
-                                    Ext.getCmp('borraroperativoimagenes').setDisabled(false);
-
-                                    Ext.getCmp('addoperativoimagenes').setDisabled(false);
-                                    Ext.getCmp('subirimagen').setDisabled(false);
-                                    // solamente para el caso
-                                }
-                                else {
-                                    gridBlockInstruccion = true;
-                                    Ext.getCmp('savedetalleoperativo').setDisabled(true);
-
-                                    Ext.getCmp('borraroperativo').setDisabled(true);
-                                    Ext.getCmp('addinstruccion').setDisabled(true);
-
-                                    Ext.getCmp('borraroperativodetalle').setDisabled(true);
-                                    Ext.getCmp('addoperativodetalle').setDisabled(true);
-
-                                    Ext.getCmp('borraroperativoparticipantes').setDisabled(true);
-                                    Ext.getCmp('addoperativoparticipantes').setDisabled(true);
-
-                                    Ext.getCmp('borraroperativodetalleacciones').setDisabled(true);
-                                    Ext.getCmp('addoperativodetalleacciones').setDisabled(true);
-
-                                    Ext.getCmp('borraroperativodetalleInforme').setDisabled(true);
-                                    Ext.getCmp('addoperativodetalleInforme').setDisabled(true);
-
-                                    Ext.getCmp('borraroperativoimagenes').setDisabled(true);
-                                    Ext.getCmp('addoperativoimagenes').setDisabled(true);
-                                    Ext.getCmp('subirimagen').setDisabled(true);
-
-                                }
+                                                                Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
+                                                                Ext.getCmp('addoperativoparticipantes').setDisabled(false);
+                                                                // en caso que se tenga acceso tambien se habilitan o deshabilitan los botones para agregar detalle
+                                                                // valido si es el caso operativo tipo Permanentes Zonales
 
 
-                                //para el caso  de los botones
-                                if ((rec.get("id_estado") == 2) || (rec.get("id_estado") == 3) || (rec.get("id_estado") == 5)) {
-                                    Ext.getCmp('tb_repoteInstruccion').setDisabled(false);
-                                } else {
-                                    Ext.getCmp('tb_repoteInstruccion').setDisabled(true);
-                                }
-                                //para el caso que se es administrador
-                                if (accesosAdministradorOpe) {
-                                    Ext.getCmp('savedetalleoperativo').setDisabled(false);
-                                }
-                            }
-*/
+                                                                if (rec.get("tipo_operativo") == 2) {
+                                                                    Ext.getCmp('borraroperativodetalle').setDisabled(false);
+                                                                    Ext.getCmp('addoperativodetalle').setDisabled(false);
+                                                                    //Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
+                                                                    // Ext.getCmp('addoperativoparticipantes').setDisabled(false);
+                                                                } else {
+                                                                    Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
+                                                                    Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
+                                                                    // Ext.getCmp('borraroperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
+                                                                    // Ext.getCmp('addoperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
+                                                                }
+
+                                                                Ext.getCmp('borrarexpedientedetalleacciones').setDisabled(false);
+                                                                Ext.getCmp('addexpedientedetalleacciones').setDisabled(false);
+
+                                                                Ext.getCmp('borraroperativodetalleInforme').setDisabled(false);
+                                                                Ext.getCmp('addoperativodetalleInforme').setDisabled(false);
+
+                                                                Ext.getCmp('borraroperativoimagenes').setDisabled(false);
+
+                                                                Ext.getCmp('addoperativoimagenes').setDisabled(false);
+                                                                Ext.getCmp('subirimagen').setDisabled(false);
+                                                                // solamente para el caso
+                                                            }
+                                                            else {
+                                                                gridBlockInstruccion = true;
+                                                                Ext.getCmp('savedetalleoperativo').setDisabled(true);
+
+                                                                Ext.getCmp('borraroperativo').setDisabled(true);
+                                                                Ext.getCmp('addinstruccion').setDisabled(true);
+
+                                                                Ext.getCmp('borraroperativodetalle').setDisabled(true);
+                                                                Ext.getCmp('addoperativodetalle').setDisabled(true);
+
+                                                                Ext.getCmp('borraroperativoparticipantes').setDisabled(true);
+                                                                Ext.getCmp('addoperativoparticipantes').setDisabled(true);
+
+                                                                Ext.getCmp('borrarexpedientedetalleacciones').setDisabled(true);
+                                                                Ext.getCmp('addexpedientedetalleacciones').setDisabled(true);
+
+                                                                Ext.getCmp('borraroperativodetalleInforme').setDisabled(true);
+                                                                Ext.getCmp('addoperativodetalleInforme').setDisabled(true);
+
+                                                                Ext.getCmp('borraroperativoimagenes').setDisabled(true);
+                                                                Ext.getCmp('addoperativoimagenes').setDisabled(true);
+                                                                Ext.getCmp('subirimagen').setDisabled(true);
+
+                                                            }
+
+
+                                                            //para el caso  de los botones
+                                                            if ((rec.get("id_estado") == 2) || (rec.get("id_estado") == 3) || (rec.get("id_estado") == 5)) {
+                                                                Ext.getCmp('tb_repoteInstruccion').setDisabled(false);
+                                                            } else {
+                                                                Ext.getCmp('tb_repoteInstruccion').setDisabled(true);
+                                                            }
+                                                            //para el caso que se es administrador
+                                                            if (accesosAdministradorOpe) {
+                                                                Ext.getCmp('savedetalleoperativo').setDisabled(false);
+                                                            }
+                                                        }
+                            */
                         }
                     }
                 }
@@ -1046,276 +425,9 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         });
         // fin ventana instruccion
 
-        // inicio ventana instruccion detalle personal
-        var proxyInstruccionPersonal = new Ext.data.HttpProxy({
-            api: {
-                create: urlInstruccion + "crudInstruccionPersonal.php?operation=insert",
-                read: urlInstruccion + "crudInstruccionPersonal.php?operation=select",
-                update: urlInstruccion + "crudInstruccionPersonal.php?operation=update",
-                destroy: urlInstruccion + "crudInstruccionPersonal.php?operation=delete"
-            },
-            listeners: {
-                write: function (proxy, action, result, res, rs) {
-                    if (typeof res.message !== 'undefined') {
-                        if (res.message != '') {
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
-                        }
-                    }
-                }
-            }
-        });
 
-        var readerInstruccionPersonal = new Ext.data.JsonReader({
-            totalProperty: 'total',
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id_member', allowBlank: false},
-                {name: 'id_operativo', allowBlank: false},
-                {name: 'observaciones', allowBlank: true},
-                {name: 'asistencia', type: 'boolean', allowBlank: true}
-            ]
-        });
-        var writerInstruccionPersonal = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeInstruccionPersonal = new Ext.data.Store({
-            id: "id",
-            proxy: proxyInstruccionPersonal,
-            reader: readerInstruccionPersonal,
-            writer: writerInstruccionPersonal,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true
-        });
-
-        storeInstruccionPersonal = this.storeInstruccionPersonal;
-
-        this.gridInstruccionPersonal = new Ext.grid.EditorGridPanel({
-            id: 'gridInstruccionPersonal',
-
-            autoHeight: true,
-            autoScroll: true,
-            store: this.storeInstruccionPersonal,
-            columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'Personal',
-                    dataIndex: 'id_member',
-                    sortable: true,
-                    width: 30,
-                    editor: comboPRD2,
-                    renderer: personaReceptaDenuncia2
-                },
-                {
-                    header: 'Operativo',
-                    dataIndex: 'id_operativo',
-                    sortable: true,
-                    width: 30, hidden: true
-
-                },
-                {
-                    header: 'Asistencia',
-                    dataIndex: 'asistencia',
-                    sortable: true,
-                    width: 30,
-                    editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , xtype: 'booleancolumn'
-                },
-                {
-                    header: 'Observaciones',
-                    dataIndex: 'observaciones',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-            ],
-            viewConfig: {
-                forceFit: true
-            },
-            sm: new Ext.grid.RowSelectionModel(
-                {
-                    singleSelect: true
-                }
-            ),
-            border: false,
-            stripeRows: true,
-            // paging bar on the bottom
-            listeners: {
-                beforeedit: function (e) {
-                    // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (acceso) {
-                        // verifico variable que permite editar o no
-                        if (gridBlockInstruccion) {
-                            //verifico que si no es administrador se bloque la edicion
-                            if (!accesosAdministradorOpe)
-                                return false;
-                        }
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-            }
-        });
-
-        var gridInstruccionPersonal = this.gridInstruccionPersonal
-        // fin  ventana instruccion detalle personal
-
-        // inicio ventana instruccion detalle participantes
-        var proxyInstruccionParticipantes = new Ext.data.HttpProxy({
-            api: {
-                create: urlInstruccion + "crudInstruccionParticipantes.php?operation=insert",
-                read: urlInstruccion + "crudInstruccionParticipantes.php?operation=select",
-                update: urlInstruccion + "crudInstruccionParticipantes.php?operation=update",
-                destroy: urlInstruccion + "crudInstruccionParticipantes.php?operation=delete"
-            },
-            listeners: {
-                write: function (proxy, action, result, res, rs) {
-                    if (typeof res.message !== 'undefined') {
-                        if (res.message != '') {
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
-                        }
-                    }
-                }
-            }
-        });
-
-        var readerInstruccionParticipantes = new Ext.data.JsonReader({
-            totalProperty: 'total',
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id_entidad', allowBlank: false},
-                {name: 'id_operativo', allowBlank: false},
-                {name: 'jefe_grupo', allowBlank: false},
-                {name: 'personas', allowBlank: true},
-                {name: 'observaciones', allowBlank: true},
-                {name: 'asistencia', type: 'boolean', allowBlank: true}
-            ]
-        });
-        var writerInstruccionParticipantes = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeInstruccionParticipantes = new Ext.data.Store({
-            id: "id",
-            proxy: proxyInstruccionParticipantes,
-            reader: readerInstruccionParticipantes,
-            writer: writerInstruccionParticipantes,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true
-        });
-
-        storeInstruccionParticipantes = this.storeInstruccionParticipantes;
-
-        this.gridInstruccionParticipantes = new Ext.grid.EditorGridPanel({
-            id: 'gridInstruccionParticipantes',
-            autoHeight: true,
-            autoScroll: true,
-            store: this.storeInstruccionParticipantes,
-            columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'Participantes',
-                    dataIndex: 'id_entidad',
-                    sortable: true,
-                    width: 30,
-                    editor: comboOPENTT,
-                    renderer: entidadesTipo
-                },
-                {
-                    header: 'Operativo',
-                    dataIndex: 'id_operativo',
-                    sortable: true,
-                    width: 30, hidden: true
-                },
-                {
-                    header: 'Jefe Grupo',
-                    dataIndex: 'jefe_grupo',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Total personal',
-                    dataIndex: 'personas',
-                    sortable: true,
-                    width: 20,
-                    align: 'right',
-                    editor: new Ext.form.NumberField({
-                        allowBlank: false,
-                        allowNegative: false,
-                        maxValue: 100000
-                    })
-                },
-                {
-                    header: 'Observaciones',
-                    dataIndex: 'observaciones',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Asistencia',
-                    dataIndex: 'asistencia',
-                    sortable: true,
-                    width: 30,
-                    editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , xtype: 'booleancolumn'
-                }
-            ],
-            viewConfig: {
-                forceFit: true
-            },
-            sm: new Ext.grid.RowSelectionModel(
-                {
-                    singleSelect: true
-                }
-            ),
-            border: false,
-            stripeRows: true,
-            // paging bar on the bottom
-            listeners: {
-                beforeedit: function (e) {
-                    // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (acceso) {
-                        // verifico variable que permite editar o no
-                        if (gridBlockInstruccion) {
-                            //verifico que si no es administrador se bloque la edicion
-                            if (!accesosAdministradorOpe)
-                                return false;
-                        }
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        });
-
-        var gridInstruccionParticipantes = this.gridInstruccionParticipantes
-        // fin ventana instruccion detalle participantes
-
-        var detalleOperativo = new Ext.FormPanel({
-            id: 'formaDetalleOperativo',
+        var detalleExpediente = new Ext.FormPanel({
+            id: 'formaDetalleExpediente',
             frame: true,
             bodyStyle: 'padding:0',
             width: '100%',
@@ -1349,7 +461,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             }, {
                 xtype: 'textarea',
                 id: 'detalle',
-                fieldLabel: 'Resumen Operativo',
+                fieldLabel: 'Resumen Expediente',
                 height: 145,
                 anchor: '98%',
                 name: 'detalle'
@@ -1357,7 +469,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             defaults: {
                 listeners: {
                     change: function (field, newVal, oldVal) {
-                        var myForm = Ext.getCmp('formaDetalleOperativo').getForm();
+                        var myForm = Ext.getCmp('formaDetalleExpediente').getForm();
                         myForm.submit({
                             url: 'modules/desktop/instruccion/server/crudInstruccion.php?operation=updateForm',
                             method: 'POST',
@@ -1371,418 +483,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
         });
 
-        // inicio ventana instruccion detalle imagenes
-        var proxyInstruccionImagenes = new Ext.data.HttpProxy({
-            api: {
-                create: urlInstruccion + "crudInstruccionImagenes.php?operation=insert",
-                read: urlInstruccion + "crudInstruccionImagenes.php?operation=select",
-                update: urlInstruccion + "crudInstruccionImagenes.php?operation=update",
-                destroy: urlInstruccion + "crudInstruccionImagenes.php?operation=delete"
-            },
-            listeners: {
-                write: function (proxy, action, result, res, rs) {
-                    if (typeof res.message !== 'undefined') {
-                        if (res.message != '') {
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
-                        }
-                    }
-                }
-            }
-        });
 
-        var readerInstruccionImagenes = new Ext.data.JsonReader({
-            totalProperty: 'total',
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id_operativo', allowBlank: false},
-                {name: 'url', allowBlank: false},
-
-            ]
-        });
-        var writerInstruccionImagenes = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeInstruccionImagenes = new Ext.data.Store({
-            id: "id",
-            proxy: proxyInstruccionImagenes,
-            reader: readerInstruccionImagenes,
-            writer: writerInstruccionImagenes,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true
-        });
-
-        storeInstruccionImagenes = this.storeInstruccionImagenes;
-
-        this.gridInstruccionImagenes = new Ext.grid.EditorGridPanel({
-            id: 'gridInstruccionImagenes',
-            autoHeight: true,
-            store: this.storeInstruccionImagenes,
-            columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'Url imagen',
-                    dataIndex: 'url',
-                    sortable: true,
-                    width: 100,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Imagen',
-                    dataIndex: 'url',
-                    renderer: function (value) {
-                        return '<img src="' + value + '" width="300" />';
-                    }
-                }
-                /*, {
-                 header: 'Test',
-                 dataIndex: 'url',
-                 sortable: true,
-                 width: 60,
-                 editor: new Ext.ux.form.FileUploadField({
-                 buttonOnly: true,
-
-                 })
-                 }
-                 */
-            ],
-            viewConfig: {
-                forceFit: true
-            },
-            sm: new Ext.grid.RowSelectionModel(
-                {
-                    singleSelect: true
-                }
-            ),
-            border: false,
-            stripeRows: true,
-            // paging bar on the bottom
-            listeners: {
-                beforeedit: function (e) {
-                    // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (acceso) {
-                        if (gridBlockInstruccion) {
-                            //verifico que si no es administrador se bloque la edicion
-                            if (!accesosAdministradorOpe)
-                                return false;
-                        }
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        });
-
-        var gridInstruccionImagenes = this.gridInstruccionImagenes
-        // fin ventana instruccion detalle imagenes
-
-
-        // inicio ventana instruccion detalle informe
-        var proxyInstruccionInforme = new Ext.data.HttpProxy({
-            api: {
-                create: urlInstruccion + "crudInstruccionInforme.php?operation=insert",
-                read: urlInstruccion + "crudInstruccionInforme.php?operation=select",
-                update: urlInstruccion + "crudInstruccionInforme.php?operation=update",
-                destroy: urlInstruccion + "crudInstruccionInforme.php?operation=delete"
-            },
-            listeners: {
-                write: function (proxy, action, result, res, rs) {
-                    if (typeof res.message !== 'undefined') {
-                        if (res.message != '') {
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
-                        }
-                    }
-                }
-            }
-        });
-
-        var readerInstruccionInforme = new Ext.data.JsonReader({
-            totalProperty: 'total',
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id_operativo', allowBlank: false},
-                {name: 'id_ordenanza', allowBlank: false},
-                {name: 'administrado', allowBlank: true},
-                {name: 'direccion', allowBlank: true},
-                {name: 'hecho', allowBlank: false},
-                {name: 'medida', allowBlank: true},
-                {name: 'numero_auto_inicio', allowBlank: true},
-                {name: 'observaciones', allowBlank: true}
-
-            ]
-        });
-        var writerInstruccionInforme = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeInstruccionInforme = new Ext.data.Store({
-            id: "id",
-            proxy: proxyInstruccionInforme,
-            reader: readerInstruccionInforme,
-            writer: writerInstruccionInforme,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true
-        });
-
-        storeInstruccionInforme = this.storeInstruccionInforme;
-
-        this.gridInstruccionInforme = new Ext.grid.EditorGridPanel({
-            id: 'gridInstruccionInforme',
-
-            autoHeight: true,
-            autoScroll: true,
-            store: this.storeInstruccionInforme,
-            columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'Ordenanza',
-                    dataIndex: 'id_ordenanza',
-                    sortable: true,
-                    width: 30,
-                    editor: comboOPTIDSimple2,
-                    renderer: instruccionTipoInstruccionSimple2
-                },
-                {
-                    header: 'Operativo',
-                    dataIndex: 'id_operativo',
-                    sortable: true,
-                    width: 30, hidden: true
-                },
-                {
-                    header: 'Nombre administrado',
-                    dataIndex: 'administrado',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Dirección infracción',
-                    dataIndex: 'direccion',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Hecho constatado',
-                    dataIndex: 'hecho',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Número documento',
-                    dataIndex: 'numero_auto_inicio',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Medida',
-                    dataIndex: 'medida',
-                    sortable: true,
-                    width: 60,
-                    editor: comboOPINFOMEDIDA,
-                    renderer: instruccionTipoMedida
-                },
-                {
-                    header: 'Observaciones',
-                    dataIndex: 'observaciones',
-                    sortable: true,
-                    width: 120,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-            ],
-            viewConfig: {
-                forceFit: true
-            },
-            sm: new Ext.grid.RowSelectionModel(
-                {
-                    singleSelect: true
-                }
-            ),
-            border: false,
-            stripeRows: true,
-            // paging bar on the bottom
-            listeners: {
-                beforeedit: function (e) {
-                    // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (acceso) {
-                        if (gridBlockInstruccion) {
-                            //verifico que si no es administrador se bloque la edicion
-                            if (!accesosAdministradorOpe)
-                                return false;
-                        }
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        });
-
-        var gridInstruccionInforme = this.storeInstruccionInforme
-        // inicio ventana instruccion detalle personal
-
-
-        // inicio ventana retiros detalle personal
-        var proxyInstruccionRetiros = new Ext.data.HttpProxy({
-            api: {
-                create: urlInstruccion + "crudInstruccionRetiros.php?operation=insert",
-                read: urlInstruccion + "crudInstruccionRetiros.php?operation=select",
-                update: urlInstruccion + "crudInstruccionRetiros.php?operation=update",
-                destroy: urlInstruccion + "crudInstruccionRetiros.php?operation=delete"
-            },
-            listeners: {
-                write: function (proxy, action, result, res, rs) {
-                    if (typeof res.message !== 'undefined') {
-                        if (res.message != '') {
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
-                        }
-                    }
-                }
-            }
-        });
-
-        var readerInstruccionRetiros = new Ext.data.JsonReader({
-            totalProperty: 'total',
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id_operativo', allowBlank: false},
-                {name: 'nombre', allowBlank: true},
-                {name: 'direccion', allowBlank: false},
-                {name: 'tipo', allowBlank: true},
-                {name: 'codigo_bodega', allowBlank: false},
-                {name: 'detalle', allowBlank: true}
-            ]
-        });
-        var writerInstruccionRetiros = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeInstruccionRetiros = new Ext.data.Store({
-            id: "id",
-            proxy: proxyInstruccionRetiros,
-            reader: readerInstruccionRetiros,
-            writer: writerInstruccionRetiros,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true
-        });
-
-        storeInstruccionRetiros = this.storeInstruccionRetiros;
-
-        this.gridInstruccionRetiros = new Ext.grid.EditorGridPanel({
-            id: 'gridInstruccionRetiros',
-
-            autoHeight: true,
-            autoScroll: true,
-            store: this.storeInstruccionRetiros,
-            columns: [
-                new Ext.grid.RowNumberer(),
-                /*       {
-                           header: 'Retiros',
-                           dataIndex: 'id_member',
-                           sortable: true,
-                           width: 30,
-                           editor: comboPRD2,
-                           renderer: personaReceptaDenuncia2
-
-                       },*/
-                {
-                    header: 'Operativo',
-                    dataIndex: 'id_operativo',
-                    sortable: true,
-                    width: 30, hidden: true
-
-                },
-                {
-                    header: 'nombre',
-                    dataIndex: 'nombre',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-                ,
-                {
-                    header: 'Dirección',
-                    dataIndex: 'direccion',
-                    sortable: true,
-                    width: 80,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-                ,
-                {
-                    header: 'Tipo',
-                    dataIndex: 'tipo',
-                    sortable: true,
-                    width: 25,
-                    editor: comboESREOP,
-                    renderer: estadoRetirosAdm
-                }
-                ,
-                {
-                    header: 'Código bodega',
-                    dataIndex: 'codigo_bodega',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-                ,
-                {
-                    header: 'Detalle',
-                    dataIndex: 'detalle',
-                    sortable: true,
-                    width: 200,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-            ],
-            viewConfig: {
-                forceFit: true
-            },
-            sm: new Ext.grid.RowSelectionModel(
-                {
-                    singleSelect: true
-                }
-            ),
-            border: false,
-            stripeRows: true,
-            // paging bar on the bottom
-            listeners: {
-                beforeedit: function (e) {
-                    // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (acceso) {
-                        // verifico variable que permite editar o no
-                        if (gridBlockInstruccion) {
-                            //verifico que si no es administrador se bloque la edicion
-                            if (!accesosAdministradorOpe)
-                                return false;
-                        }
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-            }
-        });
-
-        var gridInstruccionRetiros = this.gridInstruccionRetiros
-        // fin  ventana retiros detalle personal
-
-
-        // inicio ventana instruccion detalle vehiculos
+        // inicio ventana instruccion detalle acciones
         var proxyInstruccionAcciones = new Ext.data.HttpProxy({
             api: {
                 create: urlInstruccion + "crudInstruccionAcciones.php?operation=insert",
@@ -1808,12 +510,17 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id_operativo', allowBlank: false},
-                {name: 'id_accion', allowBlank: false},
-                {name: 'cantidad', allowBlank: false},
+                {name: 'id_expediente', allowBlank: false},
+                {name: 'id_persona', allowBlank: false},
+                {name: 'amc_expedientes_tipos', allowBlank: false},
+                {name: 'estado', allowBlank: true},
+                {name: 'sancion', allowBlank: true},
+                {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'num_resolucion', allowBlank: true},
                 {name: 'observaciones', allowBlank: true}
             ]
         });
+
         var writerInstruccionAcciones = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
@@ -1838,37 +545,61 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeInstruccionAcciones,
             columns: [
                 {
-                    header: 'Operativo',
-                    dataIndex: 'id_operativo',
+                    header: 'id_expediente',
+                    dataIndex: 'id_expediente',
                     sortable: true,
                     width: 30, hidden: true
 
                 },
                 {
-                    header: 'Accion',
-                    dataIndex: 'id_accion',
+                    header: 'Funcionario',
+                    dataIndex: 'id_persona',
                     sortable: true,
+                    hidden: true,
                     width: 60,
-                    editor: comboOPTIPOACC,
-                    renderer: instruccionTipoAccion
+                    renderer: personaAsignadaInstr
                 },
                 {
-                    header: 'Cantidad',
-                    dataIndex: 'cantidad',
+                    header: 'amc_expedientes_tipos',
+                    dataIndex: 'amc_expedientes_tipos',
                     sortable: true,
                     width: 60,
-                    align: 'right',
-                    editor: new Ext.ux.form.SpinnerField({
-                        minValue: 0,
-                        maxValue: 200
-                    })
+                    editor: textField
+                },
+                {
+                    header: 'estado',
+                    dataIndex: 'estado',
+                    sortable: true,
+                    width: 60,
+                    editor: textField
+                },
+                {
+                    header: 'sancion',
+                    dataIndex: 'sancion',
+                    sortable: true,
+                    width: 60,
+                    editor: textField
+                },
+                {
+                    header: 'fecha',
+                    dataIndex: 'fecha',
+                    sortable: true,
+                    width: 60,
+                    editor: textField
+                },
+                {
+                    header: 'num_resolucion',
+                    dataIndex: 'num_resolucion',
+                    sortable: true,
+                    width: 60,
+                    editor: textField
                 },
                 {
                     header: 'Observaciones',
                     dataIndex: 'observaciones',
                     sortable: true,
                     width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    editor: textField
                 }
             ],
             viewConfig: {
@@ -1953,35 +684,35 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_tipo_control',
                     sortable: true,
                     width: 45,
-                    renderer: instruccionTipoInstruccion
+                    // renderer: instruccionTipoInstruccion
                 },
                 {
                     header: 'Estado',
                     dataIndex: 'id_estado',
                     sortable: true,
                     width: 45,
-                    renderer: instruccionEstados
+                    //renderer: instruccionEstados
                 },
                 {
                     header: 'Complejidad',
                     dataIndex: 'id_nivel_complejidad',
                     sortable: true,
                     width: 30,
-                    renderer: instruccionNivelComplejidad
+                    //renderer: instruccionNivelComplejidad
                 },
                 {
                     header: 'Zonal',
                     dataIndex: 'id_zonal',
                     sortable: true,
                     width: 40,
-                    renderer: zonaAdm
+                    //renderer: zonaAdm
                 },
                 {
                     header: 'Responsable',
                     dataIndex: 'id_persona_encargada',
                     sortable: true,
                     width: 40,
-                    renderer: personaReceptaDenuncia
+                    // renderer: personaReceptaDenuncia
                 },
                 /*                {
                  header: 'Participantes',
@@ -2019,7 +750,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 30,
                     hidden: true,
-                    renderer: personaReceptaDenuncia
+                    //  renderer: personaReceptaDenuncia
                 },
                 {
                     header: 'Fecha elaboracion',
@@ -2035,30 +766,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     , sortable: true
                     , width: 30
                     //,hidden: true
-                    , renderer: instruccionTipo
-                },
-                /* {
-                 header: 'Fallido'
-                 , dataIndex: 'fallido'
-                 , align: 'center'
-                 , falseText: 'No'
-                 , menuDisabled: true
-                 , trueText: 'Si'
-                 , sortable: true
-                 , width: 25
-                 , xtype: 'booleancolumn'
-                 },*/
-                /*{
-                 header: 'Finalizado'
-                 , dataIndex: 'finalizado'
-                 , align: 'center'
-                 , falseText: 'No'
-                 , menuDisabled: true
-                 , trueText: 'Si'
-                 , sortable: true
-                 , width: 25
-                 , xtype: 'booleancolumn'
-                 }*/
+                    //, renderer: instruccionTipo
+                }
             ],
             viewConfig: {
                 forceFit: true
@@ -2124,7 +833,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_tipo_control',
 
                                 anchor: '95%',
-                                store: storeOPTID,
+                                //store: storeOPTID,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2139,7 +848,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_nivel_complejidad',
 
                                 anchor: '95%',
-                                store: storeOPNICO,
+                                //store: storeOPNICO,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2154,7 +863,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_persona_encargada',
 
                                 anchor: '95%',
-                                store: storePRD,
+                                //store: storeIPRD,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2175,7 +884,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_zonal',
 
                                 anchor: '95%',
-                                store: storeZONA,
+                                // store: storeZONA,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2190,7 +899,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_unidad_asignado',
 
                                 anchor: '95%',
-                                store: storeOPREA,
+                                //store: storeOPREA,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2205,7 +914,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_tipo_operativo',
 
                                 anchor: '95%',
-                                store: storeOPTIPO,
+                                //store: storeOPTIPO,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2222,7 +931,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
 
                                 anchor: '95%',
-                                store: storeOPESTA,
+                                //store: storeOPESTA,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2238,7 +947,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_personal_asignado',
 
                                 anchor: '95%',
-                                store: storePRD,
+                                // store: storeIPRD,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2296,7 +1005,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_elaborado_por',
 
                                 anchor: '95%',
-                                store: storePRD,
+                                // store: storeIPRD,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2312,7 +1021,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_revisado_por',
 
                                 anchor: '95%',
-                                store: storePRD,
+                                // store: storeIPRD,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2327,7 +1036,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_aprobado_por',
 
                                 anchor: '95%',
-                                store: storePRD,
+                                //  store: storeIPRD,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2467,7 +1176,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 {
                                     id: 'tb_repoteInstruccion',
                                     iconCls: 'excel-icon',
-                                    handler: this.botonExportarReporteOperativo,
+                                    handler: this.botonExportarReporteExpediente,
                                     scope: this,
                                     text: 'Generar Reporte',
                                     tooltip: 'Se genera el reporte de los operativo',
@@ -2485,7 +1194,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                  disabled: !acceso,
                                  cls: 'barramenu',
                                  handler: function (checkbox, isChecked) {
-                                 storePRD.load({params: {todos: isChecked}});
+                                 storeIPRD.load({params: {todos: isChecked}});
                                  }
                                  },*/
                                 '->'
@@ -2522,101 +1231,19 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                             cls: 'no-border',
                                             items: [
                                                 {
-                                                    title: 'Resumen Operativo',
-                                                    layout: 'column',
-                                                    id: 'detalleInstruccionTab',
-                                                    height: 250,
-                                                    items: detalleOperativo,
-                                                    disabled: true,
-                                                    autoScroll: true,
-                                                    tbar: [
-                                                        {
-                                                            text: 'Grabar',
-                                                            scope: this,
-                                                            handler: this.updateOperativo,
-                                                            iconCls: 'save-icon',
-                                                            disabled: true,
-                                                            id: 'savedetalleoperativo',
-                                                            //disabled: !acceso
-                                                        },
-                                                        {
-                                                            text: 'Ingresar el detalle de las acciones realizadas, retiros y actas en la pestaña respectiva.'
-                                                            , xtype: 'tbtext'
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    title: 'Instituciones Participantes',
-                                                    layout: 'column',
-                                                    height: 250,
-                                                    items: this.gridInstruccionParticipantes,
-                                                    autoScroll: true,
-                                                    tbar: [
-                                                        {
-                                                            text: 'Nuevo',
-                                                            scope: this,
-                                                            //handler: this.addinstruccionPersonal,
-                                                            handler: this.addinstruccionParticipantes,
-                                                            iconCls: 'save-icon',
-                                                            disabled: true,
-                                                            id: 'addoperativoparticipantes'
-                                                            //disabled: !acceso
-                                                        },
-                                                        '-',
-                                                        {
-                                                            text: "Eliminar",
-                                                            scope: this,
-                                                            handler: this.deleteinstruccionPersonal,
-                                                            handler: this.deleteinstruccionParticipantes,
-                                                            id: 'borraroperativoparticipantes',
-                                                            iconCls: 'delete-icon',
-                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                            disabled: true
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    title: 'Personal asignado',
-                                                    layout: 'column',
-                                                    height: 250,
-                                                    items: this.gridInstruccionPersonal,
-                                                    autoScroll: true,
-                                                    tbar: [
-                                                        {
-                                                            text: 'Nuevo',
-                                                            scope: this,
-                                                            handler: this.addinstruccionPersonal,
-                                                            iconCls: 'save-icon',
-                                                            //disabled: true,
-                                                            id: 'addoperativodetalle',
-                                                            //disabled: !acceso
-                                                        },
-                                                        '-',
-                                                        {
-                                                            text: "Eliminar",
-                                                            scope: this,
-                                                            handler: this.deleteinstruccionPersonal,
-                                                            id: 'borraroperativodetalle',
-                                                            iconCls: 'delete-icon',
-                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                            //disabled: true
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    title: 'Acciones Operativo',
+                                                    title: 'Acciones',
                                                     layout: 'column',
                                                     height: 250,
                                                     items: this.gridInstruccionAcciones,
                                                     id: 'informesAccionesTab',
                                                     autoScroll: true,
-                                                    disabled: true,
+                                                    disabled: false,
                                                     tbar: [
                                                         {
                                                             text: 'Nuevo',
                                                             scope: this,
                                                             handler: this.addAcciones,
-                                                            id: 'addoperativodetalleacciones',
+                                                            id: 'addexpedientedetalleacciones',
                                                             iconCls: 'save-icon',
                                                             disabled: true
                                                         },
@@ -2625,161 +1252,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                                             text: "Eliminar",
                                                             scope: this,
                                                             handler: this.deleteAcciones,
-                                                            id: 'borraroperativodetalleacciones',
+                                                            id: 'borrarexpedientedetalleacciones',
                                                             iconCls: 'delete-icon',
-                                                            disabled: true
-                                                        }
-                                                    ]
-                                                },
-
-                                                {
-                                                    title: 'Auto Inicio  / Actas',
-                                                    layout: 'column',
-                                                    id: 'informesInstruccionTab',
-                                                    disabled: true,
-                                                    height: 250,
-                                                    items: this.gridInstruccionInforme,
-                                                    autoScroll: true,
-                                                    tbar: [
-                                                        {
-                                                            text: 'Nuevo',
-                                                            scope: this,
-                                                            handler: this.addInforme,
-                                                            id: 'addoperativodetalleInforme',
-                                                            iconCls: 'save-icon',
-                                                            disabled: true
-                                                        },
-                                                        '-',
-                                                        {
-                                                            text: "Eliminar",
-                                                            scope: this,
-                                                            handler: this.deleteInforme,
-                                                            id: 'borraroperativodetalleInforme',
-                                                            iconCls: 'delete-icon',
-                                                            disabled: true
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    title: 'Retiros',
-                                                    layout: 'column',
-                                                    disabled: true,
-                                                    height: 250,
-                                                    id: 'retirosInstruccionTab',
-                                                    items: this.gridInstruccionRetiros,
-                                                    autoScroll: true,
-                                                    tbar: [
-                                                        {
-                                                            text: 'Nuevo',
-                                                            scope: this,
-                                                            handler: this.addretirosRetiros,
-                                                            iconCls: 'save-icon',
-                                                            //disabled: true,
-                                                            id: 'addoperativodetalle2',
-                                                            //disabled: !acceso
-                                                        },
-                                                        '-',
-                                                        {
-                                                            text: "Eliminar",
-                                                            scope: this,
-                                                            handler: this.deleteretirosRetiros,
-                                                            id: 'borraroperativodetalle2',
-                                                            iconCls: 'delete-icon',
-                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                            //disabled: true
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    title: 'Imágenes',
-                                                    id: 'imagenesInstruccionTab',
-                                                    layout: 'column',
-                                                    height: 235,
-                                                    disabled: true,
-                                                    items: this.gridInstruccionImagenes,
-                                                    autoScroll: true,
-                                                    tbar: [
-                                                        {
-                                                            text: 'Nuevo',
-                                                            scope: this,
-                                                            handler: this.addinstruccionImagenes,
-                                                            iconCls: 'save-icon',
-                                                            disabled: true,
-                                                            id: 'addoperativoimagenes',
-                                                            hidden: true
-                                                            //disabled: !acceso
-                                                        },
-                                                        '-',
-                                                        {
-                                                            text: "Eliminar",
-                                                            scope: this,
-                                                            handler: this.deleteinstruccionImagenes,
-                                                            id: 'borraroperativoimagenes',
-                                                            iconCls: 'delete-icon',
-                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                            disabled: true
-                                                        },
-                                                        '-',
-                                                        {
-                                                            xtype: 'form',
-                                                            fileUpload: true,
-                                                            width: 300,
-                                                            frame: true,
-                                                            autoHeight: 60,
-                                                            defaults: {
-                                                                anchor: '100%',
-                                                                allowBlank: false
-
-                                                            },
-                                                            id: "fp",
-                                                            items: [
-                                                                {
-                                                                    xtype: 'fileuploadfield',
-                                                                    id: 'form-file',
-                                                                    emptyText: 'Seleccione imagen a subir',
-                                                                    fieldLabel: 'Imagen',
-                                                                    name: 'photo-path',
-                                                                    regex: /^.*.(jpg|JPG|jpeg|JPEG)$/,
-                                                                    regexText: 'Solo imagenes ',
-                                                                    buttonText: '',
-                                                                    //buttonOnly: true,
-                                                                    buttonCfg: {
-                                                                        iconCls: 'ux-start-menu-submenu'
-                                                                    }
-                                                                }
-                                                            ]
-                                                        },
-                                                        '-',
-                                                        {
-                                                            text: "Subir Imagen",
-                                                            scope: this,
-                                                            handler: function () {
-                                                                if (Ext.getCmp('fp').getForm().isValid()) {
-                                                                    Ext.getCmp('fp').getForm().submit({
-                                                                        url: urlInstruccion + 'file-upload.php',
-                                                                        params: {data: selectInstruccion},
-                                                                        waitMsg: 'Subiendo Imagen...',
-                                                                        success: function (fp, o) {
-
-                                                                            storeInstruccionImagenes.load({params: {id_operativo: selectInstruccion}});
-                                                                            Ext.getCmp('fp').getForm().reset();
-                                                                        },
-                                                                        failure: function (form, action) {
-                                                                            var errorJson = JSON.parse(action.response.responseText);
-                                                                            Ext.Msg.show({
-                                                                                title: 'Error '
-                                                                                , msg: errorJson.msg
-                                                                                , modal: true
-                                                                                , icon: Ext.Msg.ERROR
-                                                                                , buttons: Ext.Msg.OK
-                                                                            });
-                                                                        }
-                                                                    });
-                                                                }
-                                                            },
-                                                            id: 'subirimagen',
-                                                            iconCls: 'subir-icon',
-                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                                                             disabled: true
                                                         }
                                                     ]
@@ -2929,8 +1403,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         win.show();
 
         function cargaDetalle(instruccion) {
-            //forma = Ext.getCmp('formaDetalleOperativo');
-            detalleOperativo.getForm().load({
+            //forma = Ext.getCmp('formaDetalleExpediente');
+            detalleExpediente.getForm().load({
                 url: urlInstruccion + 'crudInstruccion.php?operation=selectForm',
                 params: {
                     id: instruccion
@@ -3012,7 +1486,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
     addinstruccionPersonal: function () {
         var instruccion = new this.storeInstruccionPersonal.recordType({
             id_persona: '-',
-            id_operativo: selectInstruccion,
+            id_expediente: selectInstruccion,
             asistencia: true,
             observaciones: ''
         });
@@ -3041,7 +1515,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             }
         });
     },
-    updateOperativo: function () {
+    updateExpediente: function () {
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Desea Guardar los cambios.<br>¿Desea continuar?',
@@ -3050,7 +1524,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var myForm = Ext.getCmp('formaDetalleOperativo').getForm();
+                    var myForm = Ext.getCmp('formaDetalleExpediente').getForm();
                     myForm.submit({
                         url: 'modules/desktop/instruccion/server/crudInstruccion.php?operation=updateForm',
                         method: 'POST',
@@ -3079,7 +1553,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
     addinstruccionParticipantes: function () {
         var instruccion = new this.storeInstruccionParticipantes.recordType({
             id_persona: '-',
-            id_operativo: selectInstruccion,
+            id_expediente: selectInstruccion,
             asistencia: true,
             observaciones: '',
             id_entidad: '-',
@@ -3115,7 +1589,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
     addinstruccionImagenes: function () {
         var instruccion = new this.storeInstruccionImagenes.recordType({
             id_persona: '-',
-            id_operativo: selectInstruccion,
+            id_expediente: selectInstruccion,
             asistencia: true,
             observaciones: '',
             id_entidad: '-',
@@ -3150,7 +1624,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
     addretirosRetiros: function () {
         var retiros = new this.storeInstruccionRetiros.recordType({
             id_persona: '-',
-            id_operativo: selectInstruccion,
+            id_expediente: selectInstruccion,
             asistencia: true,
             observaciones: ''
         });
@@ -3182,7 +1656,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
     addAcciones: function () {
         var vehiculos = new this.storeInstruccionAcciones.recordType({
 
-            id_operativo: selectInstruccion,
+            id_expediente: selectInstruccion,
             conductor: '',
             telefono: '',
             observaciones: ''
@@ -3216,7 +1690,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
     },
     addInforme: function () {
         var informe = new this.storeInstruccionInforme.recordType({
-            id_operativo: selectInstruccion
+            id_expediente: selectInstruccion
         });
 
         this.gridInstruccionInforme.stopEditing();
@@ -3227,7 +1701,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         this.storeInstruccionInforme.load();
     },
 
-    botonExportarReporteOperativo: function () {
+    botonExportarReporteExpediente: function () {
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Se descarga el archivo con el informe<br>¿Desea continuar?',

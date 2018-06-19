@@ -248,6 +248,44 @@ function comboPersonalOperativos()
             "data" => $data)
     );
 }
+function comboPersonalInstruccion()
+{
+    global $os;
+    $todos = " AND (b.qo_groups_id = 8 OR b.qo_groups_id = 9 OR b.qo_groups_id = 1) ";
+    if (isset($_POST['todos'])) {
+        if ($_POST['todos'] == 'true') {
+            $todos = "";
+        }
+    }
+// EN CASO QUE SOLO SEA UN USUARIO SOLO MUESTRA EL USUARIO LOGEADO
+    if (isset($_POST['accesosOperativos'])) {
+
+        if ($_POST['accesosOperativos'] == 'true') {
+            $id_user = $os->get_member_id();
+            $todos = $todos . " AND a.id = $id_user ";
+        }
+    }
+
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT DISTINCT a.id,
+            CONCAT(a.last_name,' ',a.first_name) AS nombre
+            FROM
+            qo_members a,qo_groups_has_members b
+            WHERE
+                a.id = b.qo_members_id AND a.active = 1 $todos   
+            ORDER BY
+                a.last_name ASC,a.first_name ASC";
+
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 
 function comboUnidades()
 {
@@ -583,6 +621,9 @@ switch ($_GET['tipo']) {
         break;
     case 'personaloperativos' :
         comboPersonalOperativos();
+        break;
+    case 'personalinstruccion' :
+        comboPersonalInstruccion();
         break;
     //case 'personalinspeccion' :
         //comboPersonalInspeccion();

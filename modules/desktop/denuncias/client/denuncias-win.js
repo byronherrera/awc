@@ -883,7 +883,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.form.TextField({allowBlank: false}), renderer: smalltext
                 },
                 {
-                    header: 'Descripción anexos',
+                    header: 'GDoc / Desc. anexos',
                     dataIndex: 'descripcion_anexos',
                     sortable: true,
                     width: 38,
@@ -1053,7 +1053,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     width: 55
                 },
                 {
-                    header: 'Descripción anexos',
+                    header: 'GDoc / Desc. anexos',
                     dataIndex: 'descripcion_anexos',
                     sortable: true,
                     width: 55
@@ -1199,7 +1199,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     width: 55
                 },
                 {
-                    header: 'Descripción anexos',
+                    header: 'GDoc / Desc. anexos',
                     dataIndex: 'descripcion_anexos',
                     sortable: true,
                     width: 55
