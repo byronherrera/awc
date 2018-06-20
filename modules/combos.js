@@ -643,7 +643,7 @@
             }
         });
 
-        var comboESOPREA = new Ext.form.ComboBox({
+        var comboESOPREA = new Ext.form.  ({
             id: 'comboESOPREA',
             store: storeESOPREA,
             valueField: 'id',

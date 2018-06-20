@@ -113,9 +113,9 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
+                {name: 'codigo_expediente', allowBlank: true},
                 {name: 'id_persona', allowBlank: true},
                 {name: 'fecha_ingreso', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'codigo_expediente', allowBlank: true},
                 {name: 'id_persona_encargada', allowBlank: true},
                 {name: 'id_persona_reasignado', allowBlank: true},
                 {name: 'fecha_asignacion', type: 'date', dateFormat: 'c', allowBlank: true},
@@ -1466,176 +1466,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         this.storeInstruccion.load();
     },
 
-    deleteinstruccionPersonal: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridInstruccionPersonal.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeInstruccionPersonal.remove(rows);
-                }
-            }
-        });
-    },
-    addinstruccionPersonal: function () {
-        var instruccion = new this.storeInstruccionPersonal.recordType({
-            id_persona: '-',
-            id_expediente: selectInstruccion,
-            asistencia: true,
-            observaciones: ''
-        });
-        this.gridInstruccionPersonal.stopEditing();
-        this.storeInstruccionPersonal.insert(0, instruccion);
-        this.gridInstruccionPersonal.startEditing(0, 0);
-    },
-    requestGridDataPersonal: function () {
-        this.storeInstruccionPersonal.load();
-    },
-    // controles insercion eliminar reload Participantes
-    deleteinstruccionParticipantes: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridInstruccionParticipantes.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeInstruccionParticipantes.remove(rows);
-                }
-            }
-        });
-    },
-    updateExpediente: function () {
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Desea Guardar los cambios.<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var myForm = Ext.getCmp('formaDetalleExpediente').getForm();
-                    myForm.submit({
-                        url: 'modules/desktop/instruccion/server/crudInstruccion.php?operation=updateForm',
-                        method: 'POST',
-                        waitMsg: 'Saving data',
-                        success: function (form, action) {
-                            //storeDenuncias.load({params: {noenviados: Ext.getCmp('checkNoEnviados').getValue()}});
-                            //Ext.getCmp('tb_grabardenuncias').setDisabled(true);
-                        },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
-                            Ext.Msg.show({
-                                title: 'Error campos obligatorios'
-                                , msg: errorJson.msg
-                                , modal: true
-                                , icon: Ext.Msg.ERROR
-                                , buttons: Ext.Msg.OK
-                            });
-                        }
-                    });
-                }
-            }
-        });
-    },
-
-
-    addinstruccionParticipantes: function () {
-        var instruccion = new this.storeInstruccionParticipantes.recordType({
-            id_persona: '-',
-            id_expediente: selectInstruccion,
-            asistencia: true,
-            observaciones: '',
-            id_entidad: '-',
-            jefe_grupo: '-',
-            personas: 0
-        });
-        this.gridInstruccionParticipantes.stopEditing();
-        this.storeInstruccionParticipantes.insert(0, instruccion);
-        this.gridInstruccionParticipantes.startEditing(0, 0);
-    },
-    requestGridDataParticipantes: function () {
-        this.storeInstruccionParticipantes.load();
-    },
-
-    // controles insercion eliminar reload Imagenes
-    deleteinstruccionImagenes: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridInstruccionImagenes.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeInstruccionImagenes.remove(rows);
-                }
-            }
-        });
-    },
-    addinstruccionImagenes: function () {
-        var instruccion = new this.storeInstruccionImagenes.recordType({
-            id_persona: '-',
-            id_expediente: selectInstruccion,
-            asistencia: true,
-            observaciones: '',
-            id_entidad: '-',
-            jefe_grupo: '-',
-            personas: 0
-        });
-        this.gridInstruccionImagenes.stopEditing();
-        this.storeInstruccionImagenes.insert(0, instruccion);
-        this.gridInstruccionImagenes.startEditing(0, 0);
-    },
-    requestGridDataImagenes: function () {
-        this.storeInstruccionImagenes.load();
-    },
-
-    deleteretirosRetiros: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridInstruccionRetiros.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeInstruccionRetiros.remove(rows);
-                }
-            }
-        });
-    },
-    addretirosRetiros: function () {
-        var retiros = new this.storeInstruccionRetiros.recordType({
-            id_persona: '-',
-            id_expediente: selectInstruccion,
-            asistencia: true,
-            observaciones: ''
-        });
-        this.gridInstruccionRetiros.stopEditing();
-        this.storeInstruccionRetiros.insert(0, retiros);
-        this.gridInstruccionRetiros.startEditing(0, 0);
-    },
-    requestGridDataRetiros: function () {
-        this.storeInstruccionRetiros.load();
-    },
-
     deleteAcciones: function () {
         Ext.Msg.show({
             title: 'Confirmación',
@@ -1671,35 +1501,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         this.storeInstruccionAcciones.load();
     },
 
-    deleteInforme: function () {
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridInstruccionInforme.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeInstruccionInforme.remove(rows);
-                }
-            }
-        });
-    },
-    addInforme: function () {
-        var informe = new this.storeInstruccionInforme.recordType({
-            id_expediente: selectInstruccion
-        });
-
-        this.gridInstruccionInforme.stopEditing();
-        this.storeInstruccionInforme.insert(0, informe);
-        this.gridInstruccionInforme.startEditing(0, 0);
-    },
-    requestGridDataInforme: function () {
-        this.storeInstruccionInforme.load();
-    },
 
     botonExportarReporteExpediente: function () {
         Ext.Msg.show({
