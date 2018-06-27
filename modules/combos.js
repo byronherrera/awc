@@ -724,3 +724,77 @@
         }
 
         //fin combo Estado Recepcion Expediente Instruccion ESTEXP
+
+
+
+        //inicio combo años luae ANILUAIN
+        storeANILUAIN = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "Sin información"},
+                    {"id": 1, "nombre": "Conforme"},
+                    {"id": 2, "nombre": "Inconforme"}
+                ]
+            }
+        });
+
+        var comboANILUAIN = new Ext.form.  ({
+            id: 'comboANILUAIN',
+            store: storeANILUAIN,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function aniosluaeInstruccion(id) {
+            var index = storeANILUAIN.findExact('id', id);
+            if (index > -1) {
+                var record = storeANILUAIN.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo años luae ANILUAIN
+        CATEGORIA (I)
+        CATEGORIA (II)
+        CATEGORIA (III)
+        C. DESCONCIDA
+
+        //inicio combo categoria instruccion CATINTR
+        storeCATINTR = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "CATEGORIA (I)"},
+                    {"id": 1, "nombre": "CATEGORIA (II)"},
+                    {"id": 2, "nombre": "CATEGORIA (III)"},
+                    {"id": 3, "nombre": "CATEGORIA DESCONCIDA"}
+                ]
+            }
+        });
+
+        var comboCATINTR = new Ext.form.  ({
+            id: 'comboCATINTR',
+            store: storeCATINTR,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function categoriaInstruccion(id) {
+            var index = storeCATINTR.findExact('id', id);
+            if (index > -1) {
+                var record = storeCATINTR.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo categoria instruccion CATINTR
+

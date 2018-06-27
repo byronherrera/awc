@@ -115,6 +115,37 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo caracter del tramite INSPRFULA
+
+        //inicio combo ordenanzas  ORDINSTR
+        storeORDINSTR = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=ordenanzas'
+        });
+        //var comboORDINSTR = new Ext.ux.form.CheckboxCombo({
+
+
+        var comboORDINSTR = new Ext.form.ComboBox({
+            id: 'comboINSPRFULA',
+            //store: storeINSPRFULA,
+            store: storeORDINSTR,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function ordenanzasInstruccion(id) {
+            var index = storeORDINSTR.findExact('id', id);
+            if (index > -1) {
+                var record = storeORDINSTR.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //inicio combo ordenanzas  ORDINSTR
+
         //inicio combo Estado Recepcion Expediente Instruccion ESTEXP
         storeESTEXP = new Ext.data.JsonStore({
             root: 'datos',
@@ -131,7 +162,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var comboESTEXP = new Ext.form.ComboBox  ({
+        var comboESTEXP = new Ext.form.ComboBox({
             id: 'comboESTEXP',
             store: storeESTEXP,
             valueField: 'id',
@@ -150,6 +181,76 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo Estado Recepcion Expediente Instruccion ESTEXP
 
+        //inicio combo años luae ANILUAIN
+        storeANILUAIN = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 2017, "nombre": "2017"},
+                    {"id": 2018, "nombre": "2018"},
+                    {"id": 2019, "nombre": "2019"},
+                    {"id": 2020, "nombre": "2020"},
+                    {"id": 2021, "nombre": "2021"},
+                    {"id": 2022, "nombre": "2022"}
+                ]
+            }
+        });
+
+        var comboANILUAIN = new Ext.form.ComboBox({
+            id: 'comboANILUAIN',
+            store: storeANILUAIN,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function aniosluaeInstruccion(id) {
+            var index = storeANILUAIN.find ('id', id);
+            if (index > -1) {
+                var record = storeANILUAIN.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo años luae ANILUAIN
+
+
+        //inicio combo categoria instruccion CATINTR
+        storeCATINTR = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "CATEGORIA (I)"},
+                    {"id": 1, "nombre": "CATEGORIA (II)"},
+                    {"id": 2, "nombre": "CATEGORIA (III)"},
+                    {"id": 3, "nombre": "CATEGORIA DESCONCIDA"}
+                ]
+            }
+        });
+
+        var comboCATINTR = new Ext.form.ComboBox({
+            id: 'comboCATINTR',
+            store: storeCATINTR,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function categoriaInstruccion(id) {
+            var index = storeCATINTR.find ('id', id);
+            if (index > -1) {
+                var record = storeCATINTR.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo categoria instruccion CATINTR
 
 
 // inicio pestañas de mantenimiento
@@ -207,7 +308,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'ruc', allowBlank: true},
                 {name: 'cedula', allowBlank: true},
                 {name: 'casillero_judicial', allowBlank: true},
-                {name: 'actividad verificada', allowBlank: true},
+                {name: 'actividad_verificada', allowBlank: true},
                 {name: 'ciiu', allowBlank: true},
                 {name: 'luae', type: 'boolean', allowBlank: true},
                 {name: 'luae_anio', allowBlank: true},
@@ -300,70 +401,158 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {header: 'Trámite', dataIndex: 'id_tramite', sortable: true, width: 70, editor: textField},
                 {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 80, editor: textField},
-                {header: 'Estado', dataIndex: 'id_estado', sortable: true, width: 100, renderer: estadoRecepcionExpediente,
-                    editor: comboESTEXP},
+                {
+                    header: 'Estado',
+                    dataIndex: 'id_estado',
+                    sortable: true,
+                    width: 100,
+                    renderer: estadoRecepcionExpediente,
+                    editor: comboESTEXP
+                },
                 {header: 'Detalle', dataIndex: 'detalle', sortable: true, width: 100, editor: textField},
                 {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 120, editor: textField},
                 {
-                    header: 'Clausura' , dataIndex: 'clausura' ,sortable: true ,width: 60,align: 'center',
-                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
-                    ,xtype: 'booleancolumn'
+                    header: 'Clausura', dataIndex: 'clausura', sortable: true, width: 60, align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si', menuDisabled: true, trueText: 'No'
+                    , xtype: 'booleancolumn'
                 },
                 {header: 'Skelta', dataIndex: 'skelta', sortable: true, width: 100, editor: textField},
-                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 60,   editor: textField , xtype: 'numbercolumn',format: '00000000'},
                 {
-                    header: 'Reincidencia Predio' , dataIndex: 'reincidencia_predio' ,sortable: true ,width: 80,align: 'center',
-                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
-                    ,xtype: 'booleancolumn'
+                    header: 'Predio',
+                    dataIndex: 'predio',
+                    sortable: true,
+                    width: 60,
+                    editor: textField,
+                    xtype: 'numbercolumn',
+                    format: '00000000'
                 },
-                {header: 'nombre_administrado', dataIndex: 'nombre_administrado', sortable: true, width: 120, editor: textField},
+                {
+                    header: 'Reincidencia Predio',
+                    dataIndex: 'reincidencia_predio',
+                    sortable: true,
+                    width: 80,
+                    align: 'center',
+                    editor: {xtype: 'checkbox'},
+                    falseText: 'Si',
+                    menuDisabled: true,
+                    trueText: 'No'
+                    ,
+                    xtype: 'booleancolumn'
+                },
+                {
+                    header: 'nombre_administrado',
+                    dataIndex: 'nombre_administrado',
+                    sortable: true,
+                    width: 120,
+                    editor: textField
+                },
 
                 {
-                    header: 'reincidencia_administrado' , dataIndex: 'reincidencia_administrado' ,sortable: true ,width: 80,align: 'center',
-                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
-                    ,xtype: 'booleancolumn'
+                    header: 'reincidencia_administrado',
+                    dataIndex: 'reincidencia_administrado',
+                    sortable: true,
+                    width: 80,
+                    align: 'center',
+                    editor: {xtype: 'checkbox'},
+                    falseText: 'Si',
+                    menuDisabled: true,
+                    trueText: 'No'
+                    ,
+                    xtype: 'booleancolumn'
                 },
-                {header: 'nombre_establecimiento', dataIndex: 'nombre_establecimiento', sortable: true, width: 100, editor: textField},
+                {
+                    header: 'nombre_establecimiento',
+                    dataIndex: 'nombre_establecimiento',
+                    sortable: true,
+                    width: 100,
+                    editor: textField
+                },
                 {header: 'direccion', dataIndex: 'direccion', sortable: true, width: 100, editor: textField},
-                {header: 'ruc', dataIndex: 'ruc', sortable: true, width: 100, editor: textField , xtype: 'numbercolumn',format: '00000000'},
-                {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 100, editor: textField , xtype: 'numbercolumn',format: '00000000'},
-                {header: 'casillero_judicial', dataIndex: 'casillero_judicial', sortable: true, width: 100, editor: textField},
-                {header: 'actividad verificada', dataIndex: 'actividad verificada', sortable: true, width: 100, editor: textField},
-                {header: 'ciiu', dataIndex: 'ciiu', sortable: true, width: 100, editor: textField},
+                {
+                    header: 'ruc',
+                    dataIndex: 'ruc',
+                    sortable: true,
+                    width: 100,
+                    editor: textField,
+                    xtype: 'numbercolumn',
+                    format: '00000000'
+                },
+                {
+                    header: 'cedula',
+                    dataIndex: 'cedula',
+                    sortable: true,
+                    width: 100,
+                    editor: textField,
+                    xtype: 'numbercolumn',
+                    format: '00000000'
+                },
+                {
+                    header: 'casillero_judicial',
+                    dataIndex: 'casillero_judicial',
+                    sortable: true,
+                    width: 100,
+                    editor: textField
+                },
+                {
+                    header: 'actividad verificada',
+                    dataIndex: 'actividad_verificada',
+                    sortable: true,
+                    width: 100,
+                    editor: textField
+                },
+                {header: 'ciiu', dataIndex: 'ciiu', sortable: true, width:30, editor: textField},
 
                 {
-                    header: 'LUAE' , dataIndex: 'luae' ,sortable: true ,width: 70,align: 'center',
-                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
-                    ,xtype: 'booleancolumn'
-                },
-
-                {header: 'luae_anio', dataIndex: 'luae_anio', sortable: true, width: 100},
-                {header: 'categoria', dataIndex: 'categoria', sortable: true, width: 100},
-                {
-                    header: 'trabajos_varios' , dataIndex: 'trabajos_varios' ,sortable: true ,width: 70,align: 'center',
-                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
-                    ,xtype: 'booleancolumn'
+                    header: 'LUAE', dataIndex: 'luae', sortable: true, width: 70, align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si', menuDisabled: true, trueText: 'No'
+                    , xtype: 'booleancolumn'
                 },
 
                 {
-                    header: 'construcciones' , dataIndex: 'construcciones' ,sortable: true ,width: 70,align: 'center',
-                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
-                    ,xtype: 'booleancolumn'
+                    header: 'luae_anio',
+                    dataIndex: 'luae_anio',
+                    sortable: true,
+                    width: 100,
+                    renderer: aniosluaeInstruccion,
+                    editor: comboANILUAIN
                 },
-                {header: 'id_ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100},
-                {header: 'id_articulo', dataIndex: 'id_articulo', sortable: true, width: 100},
-                {header: 'id_literal', dataIndex: 'id_literal', sortable: true, width: 100},
+                {
+                    header: 'categoria',
+                    dataIndex: 'categoria',
+                    sortable: true,
+                    width: 100,
+                    renderer: categoriaInstruccion,
+                    editor: comboCATINTR
+                },
+
+                {
+                    header: 'trabajos_varios', dataIndex: 'trabajos_varios', sortable: true, width: 70, align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si', menuDisabled: true, trueText: 'No'
+                    , xtype: 'booleancolumn'
+                },
+
+                {
+                    header: 'construcciones', dataIndex: 'construcciones', sortable: true, width: 70, align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si', menuDisabled: true, trueText: 'No'
+                    , xtype: 'booleancolumn'
+                },
+
+                {header: 'id_ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100,
+                    renderer: ordenanzasInstruccion,
+                    editor: comboORDINSTR},
+                {header: 'id_articulo', dataIndex: 'id_articulo', sortable: true, width: 100, editor: textField},
+                {header: 'id_literal', dataIndex: 'id_literal', sortable: true, width: 100, editor: textField},
                 {header: 'auto', dataIndex: 'auto', sortable: true, width: 100},
                 {header: 'dmi', dataIndex: 'dmi', sortable: true, width: 100},
                 {
-                    header: 'informe_otros' , dataIndex: 'informe_otros' ,sortable: true ,width: 70,align: 'center',
-                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
-                    ,xtype: 'booleancolumn'
+                    header: 'informe_otros', dataIndex: 'informe_otros', sortable: true, width: 70, align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si', menuDisabled: true, trueText: 'No'
+                    , xtype: 'booleancolumn'
                 },
-                {header: 'entidad', dataIndex: 'entidad', sortable: true, width: 100},
-                {header: 'informe', dataIndex: 'informe', sortable: true, width: 100},
+                {header: 'entidad', dataIndex: 'entidad', sortable: true, width: 100, editor: textField},
+                {header: 'informe', dataIndex: 'informe', sortable: true, width: 100, editor: textField},
                 {header: 'medida_cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 100},
-                {header: 'ultima_actividad', dataIndex: 'ultima_actividad', sortable: true, width: 100}
+                {header: 'ultima_actividad', dataIndex: 'ultima_actividad', sortable: true, width: 100, editor: textField},
             ],
             viewConfig: {
                 forceFit: false,
@@ -1557,12 +1746,12 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             , fecha_ingreso: (new Date())
             , fecha_asignacion: (new Date())
             , clausura: false
-            ,reincidencia_predio: false
-            ,reincidencia_administrado: false
-            ,luae: false
-            ,trabajos_varios: false
-            ,construcciones: false
-            ,informe_otros: false
+            , reincidencia_predio: false
+            , reincidencia_administrado: false
+            , luae: false
+            , trabajos_varios: false
+            , construcciones: false
+            , informe_otros: false
 
         });
 
