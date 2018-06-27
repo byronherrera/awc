@@ -197,8 +197,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'detalle', allowBlank: true},
                 {name: 'observaciones', allowBlank: true},
                 {name: 'clausura', type: 'boolean', allowBlank: true},
-
-
                 {name: 'skelta', allowBlank: true},
                 {name: 'predio', allowBlank: true},
                 {name: 'reincidencia_predio', type: 'boolean', allowBlank: true},
@@ -262,7 +260,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: formatDate
                 },
                 {
-                    header: 'Persona recepta',
+                    header: 'Elaborado',
                     dataIndex: 'id_persona',
                     sortable: true,
                     width: 100,
@@ -312,7 +310,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     ,xtype: 'booleancolumn'
                 },
                 {header: 'Skelta', dataIndex: 'skelta', sortable: true, width: 100, editor: textField},
-                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 60, editor: textField},
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 60,   editor: textField , xtype: 'numbercolumn',format: '00000000'},
                 {
                     header: 'Reincidencia Predio' , dataIndex: 'reincidencia_predio' ,sortable: true ,width: 80,align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
@@ -325,30 +323,47 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
                     ,xtype: 'booleancolumn'
                 },
+                {header: 'nombre_establecimiento', dataIndex: 'nombre_establecimiento', sortable: true, width: 100, editor: textField},
+                {header: 'direccion', dataIndex: 'direccion', sortable: true, width: 100, editor: textField},
+                {header: 'ruc', dataIndex: 'ruc', sortable: true, width: 100, editor: textField , xtype: 'numbercolumn',format: '00000000'},
+                {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 100, editor: textField , xtype: 'numbercolumn',format: '00000000'},
+                {header: 'casillero_judicial', dataIndex: 'casillero_judicial', sortable: true, width: 100, editor: textField},
+                {header: 'actividad verificada', dataIndex: 'actividad verificada', sortable: true, width: 100, editor: textField},
+                {header: 'ciiu', dataIndex: 'ciiu', sortable: true, width: 100, editor: textField},
 
-                {header: 'nombre_establecimiento', dataIndex: 'nombre_establecimiento', sortable: true, width: 100},
-                {header: 'direccion', dataIndex: 'direccion', sortable: true, width: 100},
-                {header: 'ruc', dataIndex: 'ruc', sortable: true, width: 100},
-                {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 100},
-                {header: 'casillero_judicial', dataIndex: 'casillero_judicial', sortable: true, width: 100},
-                {header: 'actividad verificada', dataIndex: 'actividad verificada', sortable: true, width: 100},
-                {header: 'ciiu', dataIndex: 'ciiu', sortable: true, width: 100},
-                {header: 'luae', dataIndex: 'luae', sortable: true, width: 100},
+                {
+                    header: 'LUAE' , dataIndex: 'luae' ,sortable: true ,width: 70,align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
+                    ,xtype: 'booleancolumn'
+                },
+
                 {header: 'luae_anio', dataIndex: 'luae_anio', sortable: true, width: 100},
                 {header: 'categoria', dataIndex: 'categoria', sortable: true, width: 100},
-                {header: 'trabajos varios', dataIndex: 'trabajos_varios', sortable: true, width: 100},
-                {header: 'construcciones', dataIndex: 'construcciones', sortable: true, width: 100},
+                {
+                    header: 'trabajos_varios' , dataIndex: 'trabajos_varios' ,sortable: true ,width: 70,align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
+                    ,xtype: 'booleancolumn'
+                },
+
+                {
+                    header: 'construcciones' , dataIndex: 'construcciones' ,sortable: true ,width: 70,align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
+                    ,xtype: 'booleancolumn'
+                },
                 {header: 'id_ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100},
                 {header: 'id_articulo', dataIndex: 'id_articulo', sortable: true, width: 100},
                 {header: 'id_literal', dataIndex: 'id_literal', sortable: true, width: 100},
                 {header: 'auto', dataIndex: 'auto', sortable: true, width: 100},
                 {header: 'dmi', dataIndex: 'dmi', sortable: true, width: 100},
-                {header: 'informe_otros', dataIndex: 'informe_otros', sortable: true, width: 100},
+                {
+                    header: 'informe_otros' , dataIndex: 'informe_otros' ,sortable: true ,width: 70,align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
+                    ,xtype: 'booleancolumn'
+                },
                 {header: 'entidad', dataIndex: 'entidad', sortable: true, width: 100},
                 {header: 'informe', dataIndex: 'informe', sortable: true, width: 100},
                 {header: 'medida_cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 100},
-                {header: 'ultima_actividad', dataIndex: 'ultima_actividad', sortable: true, width: 100},
-                {header: 'creado', dataIndex: 'creado', sortable: true, width: 100}
+                {header: 'ultima_actividad', dataIndex: 'ultima_actividad', sortable: true, width: 100}
             ],
             viewConfig: {
                 forceFit: false,
@@ -1540,7 +1555,15 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         var instruccion = new this.storeInstruccion.recordType({
             id_persona: ''
             , fecha_ingreso: (new Date())
-            //, fecha_asignacion: (new Date())
+            , fecha_asignacion: (new Date())
+            , clausura: false
+            ,reincidencia_predio: false
+            ,reincidencia_administrado: false
+            ,luae: false
+            ,trabajos_varios: false
+            ,construcciones: false
+            ,informe_otros: false
+
         });
 
         this.gridInstruccion.stopEditing();
