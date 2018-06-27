@@ -13,7 +13,8 @@ function generaNuevoCodigoTramiteUnico()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE recepcion_documento > '" .date("Y"). "-01-01 01:01:01';";
+    //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE recepcion_documento > DATE('2018-01-09 17:20:01')";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -21,18 +22,20 @@ function generaNuevoCodigoTramiteUnico()
         return $nuevoCodogo;
     } else {
         // valor inicial proceso
-        return 1;
+
+        return 11759;
 
     }
 }
-
 
 function generaNuevoCodigoInspeccion()
 {
     global $os;
+
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(id_inspeccion) AS maximo FROM amc_inspeccion WHERE fecha_recepcion_documento > '" .date("Y"). "-01-01 01:01:01';";
+    //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
+    $sql = "SELECT MAX(id_inspeccion) AS maximo FROM amc_inspeccion WHERE fecha_recepcion_documento > DATE('2018-01-01 01:01:01')";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -40,31 +43,9 @@ function generaNuevoCodigoInspeccion()
         return $nuevoCodogo;
     } else {
         // valor inicial proceso
-        return 1;
+        return 1648;
     }
 }
-// funcion para crear los nuevos codigos de los expedintes creados en instruccion
-
-function generaNuevoCodigoIntruccion()
-{
-    global $os;
-
-    $os->db->conn->query("SET NAMES 'utf8'");
-
-    $sql = "SELECT MAX( CAST(codigo_expediente AS UNSIGNED)) AS maximo FROM amc_expediente  WHERE fecha_ingreso > '" .date("Y"). "-01-01 01:01:01';";
-    $result = $os->db->conn->query($sql);
-
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-
-    if (isset($row['maximo'])) {
-        $nuevoCodigo = $row['maximo'] + 1;
-        return $nuevoCodigo;
-    } else {
-        // valor inicial proceso
-        return 1;
-    }
-}
-
 
 function generaNuevoCodigoConstrucciones()
 {
@@ -154,4 +135,3 @@ function regresaEmail($id_dato)
         return '* No asignado';
 
 }
-

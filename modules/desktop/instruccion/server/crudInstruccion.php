@@ -309,8 +309,9 @@ function insertInstruccion()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
 
+// todo generar estado por defecto
 
-    $data->finalizado = 'false';
+  //  $data->finalizado = 'false';
     $data->codigo_expediente = generaNuevoCodigoIntruccion();
     $data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos

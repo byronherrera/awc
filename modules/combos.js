@@ -692,3 +692,35 @@
 
         //fin combo Estado Recepcion Información Instruccion ESREOP
 
+        //inicio combo Estado Recepcion Expediente Instruccion ESTEXP
+        storeESTEXP = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "Sin información"},
+                    {"id": 1, "nombre": "Conforme"},
+                    {"id": 2, "nombre": "Inconforme"}
+                ]
+            }
+        });
+
+        var comboESTEXP = new Ext.form.  ({
+            id: 'comboESTEXP',
+            store: storeESTEXP,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function estadoRecepcionAdm(id) {
+            var index = storeESTEXP.findExact('id', id);
+            if (index > -1) {
+                var record = storeESTEXP.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo Estado Recepcion Expediente Instruccion ESTEXP

@@ -631,7 +631,7 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios )
             $actual .= "Enviado -".date(" Y-m-d ")."\n----\n";
         }
         else
-            $actual .= "Error-".date(" Y-m-d ")."\n----\n";
+            $actual .= "?" .$resultado . "Error-".date(" Y-m-d ")."\n----\n";
 
         $actual .= $email . "\n----\n";
         $actual .= $nombre . "\n----\n";

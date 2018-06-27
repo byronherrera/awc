@@ -80,6 +80,77 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo caracter del tramite INSPRASA
 
+        //inicio combo persona asignada INSPRFULA
+        storeINSPRFULA = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=personalinstruccion'
+        });
+
+        var comboINSPRFULA = new Ext.form.ComboBox({
+            id: 'comboINSPRFULA',
+            //store: storeINSPRFULA,
+            store: storeINSPRASA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        /*        function personaAsignadaAdm(id) {
+                    var index = storeINSPRFULA.findExact('id', id);
+                    if (index > -1) {
+                        var record = storeINSPRFULA.getAt(index);
+                        return record.get('nombre');
+                    }
+                }*/
+
+        function personaAsignadaInstruccion(id) {
+            var index = storeINSPRASA.findExact('id', id);
+            if (index > -1) {
+                var record = storeINSPRASA.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo caracter del tramite INSPRFULA
+        //inicio combo Estado Recepcion Expediente Instruccion ESTEXP
+        storeESTEXP = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "Expediente sin asignar"},
+                    {"id": 1, "nombre": "Expediente asignado a funcionario"},
+                    {"id": 2, "nombre": "Expediente entregado tramite con acta"},
+                    {"id": 3, "nombre": "Expediente finalizado"},
+                    {"id": 4, "nombre": "Expediente fallido"}
+                ]
+            }
+        });
+
+        var comboESTEXP = new Ext.form.ComboBox  ({
+            id: 'comboESTEXP',
+            store: storeESTEXP,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function estadoRecepcionExpediente(id) {
+            var index = storeESTEXP.find('id', id);
+            if (index > -1) {
+                var record = storeESTEXP.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo Estado Recepcion Expediente Instruccion ESTEXP
+
+
 
 // inicio pestañas de mantenimiento
 
@@ -125,12 +196,14 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_estado', allowBlank: true},
                 {name: 'detalle', allowBlank: true},
                 {name: 'observaciones', allowBlank: true},
-                {name: 'clausura', allowBlank: true},
+                {name: 'clausura', type: 'boolean', allowBlank: true},
+
+
                 {name: 'skelta', allowBlank: true},
                 {name: 'predio', allowBlank: true},
-                {name: 'reincidencia_predio', allowBlank: true},
+                {name: 'reincidencia_predio', type: 'boolean', allowBlank: true},
                 {name: 'nombre_administrado', allowBlank: true},
-                {name: 'reincidencia_administrado', allowBlank: true},
+                {name: 'reincidencia_administrado', type: 'boolean', allowBlank: true},
                 {name: 'nombre_establecimiento', allowBlank: true},
                 {name: 'direccion', allowBlank: true},
                 {name: 'ruc', allowBlank: true},
@@ -138,17 +211,17 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'casillero_judicial', allowBlank: true},
                 {name: 'actividad verificada', allowBlank: true},
                 {name: 'ciiu', allowBlank: true},
-                {name: 'luae', allowBlank: true},
+                {name: 'luae', type: 'boolean', allowBlank: true},
                 {name: 'luae_anio', allowBlank: true},
                 {name: 'categoria', allowBlank: true},
-                {name: 'trabajos_varios', allowBlank: true},
-                {name: 'construcciones', allowBlank: true},
+                {name: 'trabajos_varios', type: 'boolean', allowBlank: true},
+                {name: 'construcciones', type: 'boolean', allowBlank: true},
                 {name: 'id_ordenanza', allowBlank: true},
                 {name: 'id_articulo', allowBlank: true},
                 {name: 'id_literal', allowBlank: true},
                 {name: 'auto', allowBlank: true},
                 {name: 'dmi', allowBlank: true},
-                {name: 'informe_otros', allowBlank: true},
+                {name: 'informe_otros', type: 'boolean', allowBlank: true},
                 {name: 'entidad', allowBlank: true},
                 {name: 'informe', allowBlank: true},
                 {name: 'medida_cautelar', allowBlank: true},
@@ -182,25 +255,30 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
-                    header: 'fecha_ingreso',
+                    header: 'Fecha Ingreso',
                     dataIndex: 'fecha_ingreso',
                     sortable: true,
                     width: 100,
-                    renderer: formatDate,
-                    editor: editorDate
+                    renderer: formatDate
                 },
                 {
-                    header: 'Funcionario',
+                    header: 'Persona recepta',
                     dataIndex: 'id_persona',
                     sortable: true,
                     width: 100,
                     renderer: personaAsignadaInstr
                 },
-                {header: 'codigo_expediente', dataIndex: 'codigo_expediente', sortable: true, width: 100},
-                {header: 'id_persona_encargada', dataIndex: 'id_persona_encargada', sortable: true, width: 100},
-                {header: 'id_persona_reasignado', dataIndex: 'id_persona_reasignado', sortable: true, width: 100},
+                {header: 'Código', dataIndex: 'codigo_expediente', sortable: true, width: 100, align: 'left'},
                 {
-                    header: 'fecha_asignacion',
+                    header: 'Asignación',
+                    dataIndex: 'id_persona_encargada',
+                    renderer: personaAsignadaInstruccion,
+                    editor: comboINSPRFULA,
+                    sortable: true,
+                    width: 120
+                },
+                {
+                    header: 'Fecha asignación',
                     dataIndex: 'fecha_asignacion',
                     sortable: true,
                     width: 100,
@@ -208,29 +286,46 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: editorDate
                 },
                 {
-                    header: 'fecha_reasignacion',
+                    header: 'Persona reasignado',
+                    dataIndex: 'id_persona_reasignado',
+                    sortable: true,
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    header: 'Fecha reasignación',
                     dataIndex: 'fecha_reasignacion',
                     sortable: true,
                     width: 100,
                     renderer: formatDate,
-                    editor: editorDate
+                    editor: editorDate, hidden: true
                 },
-                {header: 'id_tramite', dataIndex: 'id_tramite', sortable: true, width: 100},
-                {header: 'id_acta', dataIndex: 'id_acta', sortable: true, width: 100},
-                {header: 'id_estado', dataIndex: 'id_estado', sortable: true, width: 100},
-                {header: 'detalle', dataIndex: 'detalle', sortable: true, width: 100},
-                {header: 'observaciones', dataIndex: 'observaciones', sortable: true, width: 100},
-                {header: 'clausura', dataIndex: 'clausura', sortable: true, width: 100},
-                {header: 'skelta', dataIndex: 'skelta', sortable: true, width: 100},
-                {header: 'predio', dataIndex: 'predio', sortable: true, width: 100},
-                {header: 'reincidencia_predio', dataIndex: 'reincidencia_predio', sortable: true, width: 100},
-                {header: 'nombre_administrado', dataIndex: 'nombre_administrado', sortable: true, width: 100},
+                {header: 'Trámite', dataIndex: 'id_tramite', sortable: true, width: 70, editor: textField},
+                {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 80, editor: textField},
+                {header: 'Estado', dataIndex: 'id_estado', sortable: true, width: 100, renderer: estadoRecepcionExpediente,
+                    editor: comboESTEXP},
+                {header: 'Detalle', dataIndex: 'detalle', sortable: true, width: 100, editor: textField},
+                {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 120, editor: textField},
                 {
-                    header: 'reincidencia_administrado',
-                    dataIndex: 'reincidencia_administrado',
-                    sortable: true,
-                    width: 100
+                    header: 'Clausura' , dataIndex: 'clausura' ,sortable: true ,width: 60,align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
+                    ,xtype: 'booleancolumn'
                 },
+                {header: 'Skelta', dataIndex: 'skelta', sortable: true, width: 100, editor: textField},
+                {header: 'Predio', dataIndex: 'predio', sortable: true, width: 60, editor: textField},
+                {
+                    header: 'Reincidencia Predio' , dataIndex: 'reincidencia_predio' ,sortable: true ,width: 80,align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
+                    ,xtype: 'booleancolumn'
+                },
+                {header: 'nombre_administrado', dataIndex: 'nombre_administrado', sortable: true, width: 120, editor: textField},
+
+                {
+                    header: 'reincidencia_administrado' , dataIndex: 'reincidencia_administrado' ,sortable: true ,width: 80,align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si' , menuDisabled: true, trueText: 'No'
+                    ,xtype: 'booleancolumn'
+                },
+
                 {header: 'nombre_establecimiento', dataIndex: 'nombre_establecimiento', sortable: true, width: 100},
                 {header: 'direccion', dataIndex: 'direccion', sortable: true, width: 100},
                 {header: 'ruc', dataIndex: 'ruc', sortable: true, width: 100},
@@ -1443,21 +1538,11 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
     },
     addinstruccion: function () {
         var instruccion = new this.storeInstruccion.recordType({
-            id_persona: '-',
-            id: ' ',
-            visible: '',
-            fecha_planificacion: (new Date()),
-            fecha_inicio_planificacion: (new Date()),
-            fecha_fin_planificacion: (new Date()),
-            id_tipo_control: '',
-            id_nivel_complejidad: ' ',
-            observaciones: ' ',
-            punto_encuentro_planificado: ' ',
-            id_zonal: ' ',
-            tipo_operativo: '2',
-            id_persona_encargada: ' ',
-            id_estado: 1
+            id_persona: ''
+            , fecha_ingreso: (new Date())
+            //, fecha_asignacion: (new Date())
         });
+
         this.gridInstruccion.stopEditing();
         this.storeInstruccion.insert(0, instruccion);
         this.gridInstruccion.startEditing(0, 0);
@@ -1496,9 +1581,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         this.gridInstruccionAcciones.stopEditing();
         this.storeInstruccionAcciones.insert(0, vehiculos);
         this.gridInstruccionAcciones.startEditing(0, 0);
-    },
-    requestGridDataVehiculos: function () {
-        this.storeInstruccionAcciones.load();
     },
 
 

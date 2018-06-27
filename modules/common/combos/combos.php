@@ -251,12 +251,15 @@ function comboPersonalOperativos()
 function comboPersonalInstruccion()
 {
     global $os;
-    $todos = " AND (b.qo_groups_id = 8 OR b.qo_groups_id = 9 OR b.qo_groups_id = 1) ";
+    $todos = '';
+/*    $todos = " AND (b.qo_groups_id = 8 OR b.qo_groups_id = 9 OR b.qo_groups_id = 1) ";
     if (isset($_POST['todos'])) {
         if ($_POST['todos'] == 'true') {
             $todos = "";
         }
     }
+*/
+
 // EN CASO QUE SOLO SEA UN USUARIO SOLO MUESTRA EL USUARIO LOGEADO
     if (isset($_POST['accesosOperativos'])) {
 

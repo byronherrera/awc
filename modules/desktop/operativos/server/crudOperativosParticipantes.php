@@ -64,7 +64,7 @@ function insertParticipantes()
     $sql = "INSERT INTO amc_operativos_participantes ($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
-    $resultado = $sql->execute();
+    $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
