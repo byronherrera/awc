@@ -40,14 +40,13 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         limiteinstruccion = 100;
 
         // todo revisar los accesp
-        var acceso = (accesosAdministradorOpe || accesosInstruccion) ? true : false
+        // var acceso = (accesosAdministradorOpe || accesosInstruccion) ? true : false
         var acceso = true;
 
         var gridBlockInstruccion = false;
         var desktop = this.app.getDesktop();
         var AppMsg = new Ext.AppMsg({});
 
-        var win = desktop.getWindow('grid-win-instruccion');
 
         var urlInstruccion = "modules/desktop/instruccion/server/";
 
@@ -146,6 +145,34 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
         //inicio combo ordenanzas  ORDINSTR
 
+        //inicio combo instruccion tipo expedientes  INSTIEXP
+        storeINSTIEXP = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=tiposexpedientes'
+        });
+
+        var comboINSTIEXP = new Ext.form.ComboBox({
+            id: 'comboINSTIEXP',
+            //store: storeINSPRFULA,
+            store: storeINSTIEXP,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function instruccionTiposExpedientes(id) {
+            var index = storeINSTIEXP.findExact('id', id);
+            if (index > -1) {
+                var record = storeINSTIEXP.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //inicio combo ordenanzas  INSTIEXP
+
         //inicio combo Estado Recepcion Expediente Instruccion ESTEXP
         storeESTEXP = new Ext.data.JsonStore({
             root: 'datos',
@@ -208,7 +235,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function aniosluaeInstruccion(id) {
-            var index = storeANILUAIN.find ('id', id);
+            var index = storeANILUAIN.find('id', id);
             if (index > -1) {
                 var record = storeANILUAIN.getAt(index);
                 return record.get('nombre');
@@ -243,7 +270,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function categoriaInstruccion(id) {
-            var index = storeCATINTR.find ('id', id);
+            var index = storeCATINTR.find('id', id);
             if (index > -1) {
                 var record = storeCATINTR.getAt(index);
                 return record.get('nombre');
@@ -251,8 +278,102 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo categoria instruccion CATINTR
+        //inicio combo instruccion auto INSTRAUTO
+        storeINSTRAUTO = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": '1', "nombre": "AUTO FLAGRANCIA"},
+                    {"id": '2', "nombre": "AUTO ORDINARIO"}
+                ]
+            }
+        });
 
+        var comboINSTRAUTO = new Ext.form.ComboBox({
+            id: 'comboINSTRAUTO',
+            store: storeINSTRAUTO,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
 
+        function instruccionAuto(id) {
+            var index = storeINSTRAUTO.find('id', id);
+            if (index > -1) {
+                var record = storeINSTRAUTO.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin  combo instruccion auto INSTRAUTO
+
+        //inicio  combo instruccion dmi INSTRDMI
+        storeINSTRDMI = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": '1', "nombre": "ACTA INFRACCION"},
+                    {"id": '2', "nombre": "INFORME TÉCNICO"}
+                ]
+            }
+        });
+
+        var comboINSTRDMI = new Ext.form.ComboBox({
+            id: 'comboINSTRDMI',
+            store: storeINSTRDMI,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function instruccionDmi(id) {
+            var index = storeINSTRDMI.find('id', id);
+            if (index > -1) {
+                var record = storeINSTRDMI.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin  combo instruccion auto INSTRDMI
+
+        //inicio combo instruccion medida cautelar INSTRMED
+        storeINSTRMED = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": '1', "nombre": "CLAUSURA"},
+                    {"id": '2', "nombre": "SUSPENSION DE ACTIVIDAD"},
+                    {"id": '3', "nombre": "RETIRO DE BIENESD"}
+                ]
+            }
+        });
+
+        var comboINSTRMED = new Ext.form.ComboBox({
+            id: 'comboINSTRMED',
+            store: storeINSTRMED,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function instruccionMedidaCautelar(id) {
+            var index = storeINSTRMED.find('id', id);
+            if (index > -1) {
+                var record = storeINSTRMED.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin  combo instruccion medida cautelar INSTRMED
 // inicio pestañas de mantenimiento
 
 
@@ -500,7 +621,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     width: 100,
                     editor: textField
                 },
-                {header: 'ciiu', dataIndex: 'ciiu', sortable: true, width:30, editor: textField},
+                {header: 'ciiu', dataIndex: 'ciiu', sortable: true, width: 30, editor: textField},
 
                 {
                     header: 'LUAE', dataIndex: 'luae', sortable: true, width: 70, align: 'center',
@@ -537,13 +658,23 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     , xtype: 'booleancolumn'
                 },
 
-                {header: 'id_ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100,
+                {
+                    header: 'id_ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100,
                     renderer: ordenanzasInstruccion,
-                    editor: comboORDINSTR},
+                    editor: comboORDINSTR
+                },
                 {header: 'id_articulo', dataIndex: 'id_articulo', sortable: true, width: 100, editor: textField},
                 {header: 'id_literal', dataIndex: 'id_literal', sortable: true, width: 100, editor: textField},
-                {header: 'auto', dataIndex: 'auto', sortable: true, width: 100},
-                {header: 'dmi', dataIndex: 'dmi', sortable: true, width: 100},
+                {
+                    header: 'auto', dataIndex: 'auto', sortable: true, width: 100,
+                    renderer: instruccionAuto,
+                    editor: comboINSTRAUTO
+                },
+                {
+                    header: 'dmi', dataIndex: 'dmi', sortable: true, width: 100,
+                    renderer: instruccionDmi,
+                    editor: comboINSTRDMI
+                },
                 {
                     header: 'informe_otros', dataIndex: 'informe_otros', sortable: true, width: 70, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'Si', menuDisabled: true, trueText: 'No'
@@ -551,8 +682,18 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {header: 'entidad', dataIndex: 'entidad', sortable: true, width: 100, editor: textField},
                 {header: 'informe', dataIndex: 'informe', sortable: true, width: 100, editor: textField},
-                {header: 'medida_cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 100},
-                {header: 'ultima_actividad', dataIndex: 'ultima_actividad', sortable: true, width: 100, editor: textField},
+                {
+                    header: 'medida_cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 100,
+                    renderer: instruccionMedidaCautelar,
+                    editor: comboINSTRMED
+                },
+                {
+                    header: 'ultima_actividad',
+                    dataIndex: 'ultima_actividad',
+                    sortable: true,
+                    width: 100,
+                    editor: textField
+                },
             ],
             viewConfig: {
                 forceFit: false,
@@ -813,7 +954,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_persona', allowBlank: false},
                 {name: 'amc_expedientes_tipos', allowBlank: false},
                 {name: 'estado', allowBlank: true},
-                {name: 'sancion', allowBlank: true},
+                {name: 'sancion', type: 'boolean', allowBlank: true},
                 {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'num_resolucion', allowBlank: true},
                 {name: 'observaciones', allowBlank: true}
@@ -863,41 +1004,43 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'amc_expedientes_tipos',
                     sortable: true,
                     width: 60,
-                    editor: textField
+                    renderer: instruccionTiposExpedientes,
+                    editor: comboINSTIEXP
                 },
                 {
-                    header: 'estado',
+                    header: 'Estado',
                     dataIndex: 'estado',
                     sortable: true,
                     width: 60,
                     editor: textField
                 },
                 {
-                    header: 'sancion',
-                    dataIndex: 'sancion',
-                    sortable: true,
-                    width: 60,
-                    editor: textField
+                    header: 'Sanción', dataIndex: 'sancion', sortable: true, width: 30, align: 'center',
+                    editor: {xtype: 'checkbox'}, falseText: 'Si', menuDisabled: true, trueText: 'No'
+                    , xtype: 'booleancolumn'
                 },
+
                 {
-                    header: 'fecha',
+                    header: 'Fecha',
                     dataIndex: 'fecha',
                     sortable: true,
-                    width: 60,
-                    editor: textField
+                    width: 40,
+                    renderer: formatDate,
+                    editor: editorDate
+
                 },
                 {
-                    header: 'num_resolucion',
+                    header: 'Num resolución',
                     dataIndex: 'num_resolucion',
                     sortable: true,
-                    width: 60,
+                    width: 80,
                     editor: textField
                 },
                 {
                     header: 'Observaciones',
                     dataIndex: 'observaciones',
                     sortable: true,
-                    width: 60,
+                    width: 80,
                     editor: textField
                 }
             ],
@@ -1089,8 +1232,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         });
         // fin datastore and datagrid in Guia
 
-
-        var win = desktop.getWindow('layout-win');
+        var win = desktop.getWindow('grid-win-instruccion');
 
         if (!win) {
             var winWidth = desktop.getWinWidth();

@@ -798,3 +798,129 @@
 
         //fin combo categoria instruccion CATINTR
 
+XXXXXXXXXXXXXXXXXXX
+
+        //inicio combo instruccion auto INSTRAUTO
+        storeINSTRAUTO = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": '1', "nombre": "AUTO FLAGRANCIA"},
+                    {"id": '2', "nombre": "AUTO ORDINARIO"}
+                ]
+            }
+        });
+
+        var comboINSTRAUTO = new Ext.form.ComboBox({
+            id: 'comboINSTRAUTO',
+            store: storeINSTRAUTO,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function instruccionAuto(id) {
+            var index = storeINSTRAUTO.find('id', id);
+            if (index > -1) {
+                var record = storeINSTRAUTO.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin  combo instruccion auto INSTRAUTO
+
+        //inicio  combo instruccion dmi INSTRDMI
+        storeINSTRDMI = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": '1', "nombre": "ACTA INFRACCION"},
+                    {"id": '2', "nombre": "INFORME TÉCNICO"}
+                ]
+            }
+        });
+
+        var comboINSTRDMI = new Ext.form.ComboBox({
+            id: 'comboINSTRDMI',
+            store: storeINSTRDMI,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function instruccionDmi(id) {
+            var index = storeINSTRDMI.find('id', id);
+            if (index > -1) {
+                var record = storeINSTRDMI.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin  combo instruccion auto INSTRDMI
+
+        //inicio combo instruccion medida cautelar INSTRMED
+        storeINSTRMED = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": '1', "nombre": "CLAUSURA"},
+                    {"id": '2', "nombre": "SUSPENSION DE ACTIVIDAD"},
+                    {"id": '2', "nombre": "RETIRO DE BIENESD"}
+                ]
+            }
+        });
+
+        var comboINSTRMED = new Ext.form.ComboBox({
+            id: 'comboINSTRMED',
+            store: storeINSTRMED,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function instruccionDespachadoActivo(id) {
+            var index = storeINSTRMED.find('id', id);
+            if (index > -1) {
+                var record = storeINSTRMED.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin  combo instruccion medida cautelar INSTRMED
+
+        //inicio combo instruccion tipo expedientes  INSTIEXP
+        storeINSTIEXP = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=tiposexpedientes'
+        });
+
+        var comboINSTIEXP = new Ext.form.ComboBox({
+            id: 'comboINSPRFULA',
+            //store: storeINSPRFULA,
+            store: storeINSTIEXP,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function instruccionTiposExpedientes(id) {
+            var index = storeINSTIEXP.findExact('id', id);
+            if (index > -1) {
+                var record = storeINSTIEXP.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //inicio combo ordenanzas  INSTIEXP
