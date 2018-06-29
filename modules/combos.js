@@ -798,8 +798,6 @@
 
         //fin combo categoria instruccion CATINTR
 
-XXXXXXXXXXXXXXXXXXX
-
         //inicio combo instruccion auto INSTRAUTO
         storeINSTRAUTO = new Ext.data.JsonStore({
             root: 'users',
