@@ -10,7 +10,7 @@ if (!$os->session_exists()) {
 function selectAcciones()
 {
     global $os;
-    $id_expediente =  $_POST["id_expediente"] ;
+    $id_expediente = $_POST["id_expediente"];
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_expedientes_procesos_administrativos WHERE id_expediente = $id_expediente ";
@@ -25,14 +25,15 @@ function selectAcciones()
     );
 }
 
-function validarAcciones($id_member, $id_expediente) {
+function validarAcciones($id_member, $id_expediente)
+{
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT COUNT(*) AS total FROM amc_expedientes_procesos_administrativos WHERE id_member = $id_member AND id_expediente = $id_expediente  " ;
+    $sql = "SELECT COUNT(*) AS total FROM amc_expedientes_procesos_administrativos WHERE id_member = $id_member AND id_expediente = $id_expediente  ";
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);
-    if ($row['total'] == 0 ) {
+    if ($row['total'] == 0) {
         return '';
     } else {
         return 'El usuario ya existe';
@@ -83,10 +84,25 @@ function updateAcciones()
     $data = json_decode($_POST["data"]);
     //$message = validarAcciones($data->id_member,$data->id_expediente );
     $message = "";
-     // genero el listado de valores a insertar
+    // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        $valBoolean = false;
+
+        if ($valor === true) {
+            $valor = 'true';
+            $valBoolean = true;
+        }
+        if ($valor === false) {
+            $valor = 'false';
+            $valBoolean = true;
+        }
+        if (isset($valor)) {
+            if ($valBoolean)
+                $cadenaDatos = $cadenaDatos . $clave . " = " . $valor . " ,";
+            else
+                $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        }
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
     $sql = "UPDATE amc_expedientes_procesos_administrativos SET  $cadenaDatos  WHERE id = '$data->id' ";

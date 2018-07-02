@@ -141,9 +141,9 @@ function selectInstruccion()
     if (isset($_POST['finalizados'])) {
         if ($_POST['finalizados'] == 'true') {
             if ($where == '') {
-                $where = " WHERE (id_estado = 1 OR id_estado = 4) ";
+                $where = " WHERE (id_estado = 0 OR id_estado = 2) ";
             } else {
-                $where = $where . " AND (id_estado = 1 OR id_estado = 4) ";
+                $where = $where . " AND (id_estado = 1 OR id_estado = 2) ";
             }
         }
     }
@@ -311,7 +311,7 @@ function insertInstruccion()
 
 // todo generar estado por defecto
 
-  //  $data->finalizado = 'false';
+    //  $data->finalizado = 'false';
     $data->codigo_expediente = generaNuevoCodigoIntruccion();
     $data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
@@ -444,14 +444,26 @@ function updateInstruccion()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        if (isset($valor))
-            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
-        /*else
-            $cadenaDatos = $cadenaDatos . $clave . " = NULL, ";*/
+        $valBoolean = false;
+
+        if ($valor === true) {
+            $valor = 'true';
+            $valBoolean = true;
+        }
+        if ($valor === false) {
+            $valor = 'false';
+            $valBoolean = true;
+        }
+        if (isset($valor)) {
+            if ($valBoolean)
+                $cadenaDatos = $cadenaDatos . $clave . " = " . $valor . " ,";
+            else
+                $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        }
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
- //   verificarAnteriorOperativo($data->id);
+    //   verificarAnteriorOperativo($data->id);
 
 
     $sql = "UPDATE amc_expediente SET  $cadenaDatos  WHERE amc_expediente.id = '$data->id' ";

@@ -527,20 +527,20 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Estado',
                     dataIndex: 'id_estado',
                     sortable: true,
-                    width: 100,
+                    width: 120,
                     renderer: estadoRecepcionExpediente,
                     editor: comboESTEXP
                 },
-                {header: 'Detalle', dataIndex: 'detalle', sortable: true, width: 100, editor: textField},
-                {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 120, editor: textField},
+                {header: 'Detalle', dataIndex: 'detalle', sortable: true, width: 170, editor: textField},
+                {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 170, editor: textField},
                 {
                     header: 'Clausura', dataIndex: 'clausura', sortable: true, width: 60, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
                     , xtype: 'booleancolumn'
                 },
-                {header: 'Skelta', dataIndex: 'skelta', sortable: true, width: 100, editor: textField},
+                {header: 'Skelta', dataIndex: 'skelta', sortable: true, width: 80, editor: textField},
                 {
-                    header: 'Predio',
+                    header: 'Predio Número',
                     dataIndex: 'predio',
                     sortable: true,
                     width: 60,
@@ -552,17 +552,16 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Reincidencia Predio',
                     dataIndex: 'reincidencia_predio',
                     sortable: true,
-                    width: 80,
+                    width: 120,
                     align: 'center',
                     editor: {xtype: 'checkbox'},
                     falseText: 'No',
                     menuDisabled: true,
-                    trueText: 'Si'
-                    ,
+                    trueText: 'Si',
                     xtype: 'booleancolumn'
                 },
                 {
-                    header: 'nombre_administrado',
+                    header: 'Nombre Administrado',
                     dataIndex: 'nombre_administrado',
                     sortable: true,
                     width: 120,
@@ -570,10 +569,10 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 },
 
                 {
-                    header: 'reincidencia_administrado',
+                    header: 'Reincidencia_administrado',
                     dataIndex: 'reincidencia_administrado',
                     sortable: true,
-                    width: 80,
+                    width: 130,
                     align: 'center',
                     editor: {xtype: 'checkbox'},
                     falseText: 'No',
@@ -583,55 +582,53 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     xtype: 'booleancolumn'
                 },
                 {
-                    header: 'nombre_establecimiento',
+                    header: 'Nombre Establecimiento',
                     dataIndex: 'nombre_establecimiento',
                     sortable: true,
-                    width: 100,
+                    width: 120,
                     editor: textField
                 },
-                {header: 'direccion', dataIndex: 'direccion', sortable: true, width: 100, editor: textField},
+                {header: 'Dirección', dataIndex: 'direccion', sortable: true, width: 100, editor: textField},
                 {
-                    header: 'ruc',
+                    header: 'RUC',
                     dataIndex: 'ruc',
                     sortable: true,
-                    width: 100,
+                    width: 120,
                     editor: textField,
                     xtype: 'numbercolumn',
                     format: '00000000'
                 },
                 {
-                    header: 'cedula',
+                    header: 'Cédula',
                     dataIndex: 'cedula',
                     sortable: true,
-                    width: 100,
+                    width: 80   ,
                     editor: textField,
                     xtype: 'numbercolumn',
                     format: '00000000'
                 },
                 {
-                    header: 'casillero_judicial',
+                    header: 'Casillero Judicial',
                     dataIndex: 'casillero_judicial',
                     sortable: true,
                     width: 100,
                     editor: textField
                 },
                 {
-                    header: 'actividad verificada',
+                    header: 'Actividad Verificada',
                     dataIndex: 'actividad_verificada',
                     sortable: true,
                     width: 100,
                     editor: textField
                 },
-                {header: 'ciiu', dataIndex: 'ciiu', sortable: true, width: 30, editor: textField},
-
+                {header: 'CIIU', dataIndex: 'ciiu', sortable: true, width: 30, editor: textField},
                 {
-                    header: 'LUAE', dataIndex: 'luae', sortable: true, width: 70, align: 'center',
+                    header: 'TIENE LUAE', dataIndex: 'luae', sortable: true, width: 70, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
                     , xtype: 'booleancolumn'
                 },
-
                 {
-                    header: 'luae_anio',
+                    header: 'Año LUAE',
                     dataIndex: 'luae_anio',
                     sortable: true,
                     width: 100,
@@ -639,57 +636,56 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboANILUAIN
                 },
                 {
-                    header: 'categoria',
+                    header: 'Categoría LUAE',
                     dataIndex: 'categoria',
                     sortable: true,
                     width: 100,
                     renderer: categoriaInstruccion,
                     editor: comboCATINTR
                 },
-
                 {
-                    header: 'trabajos_varios', dataIndex: 'trabajos_varios', sortable: true, width: 70, align: 'center',
+                    header: 'Trabajos Varios', dataIndex: 'trabajos_varios', sortable: true, width: 70, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
                     , xtype: 'booleancolumn'
                 },
 
                 {
-                    header: 'construcciones', dataIndex: 'construcciones', sortable: true, width: 70, align: 'center',
+                    header: 'Construcciones', dataIndex: 'construcciones', sortable: true, width: 70, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
                     , xtype: 'booleancolumn'
                 },
 
                 {
-                    header: 'id_ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100,
+                    header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100,
                     renderer: ordenanzasInstruccion,
                     editor: comboORDINSTR
                 },
-                {header: 'id_articulo', dataIndex: 'id_articulo', sortable: true, width: 100, editor: textField},
-                {header: 'id_literal', dataIndex: 'id_literal', sortable: true, width: 100, editor: textField},
+                {header: 'Artículo', dataIndex: 'id_articulo', sortable: true, width: 100, editor: textField},
+                {header: 'Literal', dataIndex: 'id_literal', sortable: true, width: 100, editor: textField},
                 {
-                    header: 'auto', dataIndex: 'auto', sortable: true, width: 100,
+                    header: 'Auto', dataIndex: 'auto', sortable: true, width: 130,
                     renderer: instruccionAuto,
                     editor: comboINSTRAUTO
                 },
                 {
-                    header: 'dmi', dataIndex: 'dmi', sortable: true, width: 100,
+                    header: 'Dmi', dataIndex: 'dmi', sortable: true, width: 100,
                     renderer: instruccionDmi,
                     editor: comboINSTRDMI
                 },
                 {
-                    header: 'informe_otros', dataIndex: 'informe_otros', sortable: true, width: 70, align: 'center',
+                    header: 'Informe Otros', dataIndex: 'informe_otros', sortable: true, width: 100 , align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
                     , xtype: 'booleancolumn'
                 },
-                {header: 'entidad', dataIndex: 'entidad', sortable: true, width: 100, editor: textField},
-                {header: 'informe', dataIndex: 'informe', sortable: true, width: 100, editor: textField},
+                {header: 'Entidad', dataIndex: 'entidad', sortable: true, width: 100, editor: textField},
+                {header: 'Informe', dataIndex: 'informe', sortable: true, width: 100, editor: textField},
                 {
-                    header: 'medida_cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 100,
+                    header: 'Medida Cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 100,
                     renderer: instruccionMedidaCautelar,
                     editor: comboINSTRMED
                 },
                 {
-                    header: 'ultima_actividad',
+                    header: 'Última Actividad',
                     dataIndex: 'ultima_actividad',
                     sortable: true,
                     width: 100,
@@ -1008,11 +1004,11 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: instruccionTiposExpedientes,
                     editor: comboINSTIEXP
                 },
-                 {
+                {
                     header: 'Estado',
                     dataIndex: 'estado',
                     sortable: true,
-                    width: 30,
+                    width: 60,
                     align: 'center',
                     editor: {xtype: 'checkbox'},
                     falseText: 'No',
@@ -1020,7 +1016,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     menuDisabled: true,
                     xtype: 'booleancolumn'
                 },
-
                 {
                     header: 'Sanción',
                     dataIndex: 'sancion',
@@ -1034,7 +1029,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     xtype: 'booleancolumn'
                 },
                 {
-                    header: 'Fecha',
+                    header: 'Fecha inicio ',
                     dataIndex: 'fecha',
                     sortable: true,
                     width: 40,
@@ -1614,10 +1609,10 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 '-',
                                 {
                                     xtype: 'checkbox',
-                                    boxLabel: 'Instruccion no finalizados',
+                                    boxLabel: 'Instrucción no finalizados',
                                     id: 'checkNoRecibidos',
                                     name: 'noenviados',
-                                    checked: true,
+                                    checked: false,
                                     inputValue: '1',
                                     tooltip: 'Recargar datos',
                                     //disabled: !acceso,
@@ -1941,7 +1936,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             id_expediente: selectInstruccion,
             //           'id_persona': '',
             //'amc_expedientes_tipos'
-            'estado' : false,
+            'estado': false,
             'sancion': false,
             'fecha': (new Date()),
             'num_resolucion': '',
