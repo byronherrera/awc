@@ -408,8 +408,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             fields: [
                 {name: 'codigo_expediente', allowBlank: true},
                 {name: 'id_persona', allowBlank: true},
-                {name: 'fecha_ingreso', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'id_persona_encargada', allowBlank: true},
+                {name: 'fecha_ingreso', type: 'date', dateFormat: 'c', allowBlank: false},
+                {name: 'id_persona_encargada', allowBlank: false},
                 {name: 'id_persona_reasignado', allowBlank: true},
                 {name: 'fecha_asignacion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_reasignacion', type: 'date', dateFormat: 'c', allowBlank: true},
@@ -621,7 +621,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     width: 100,
                     editor: textField
                 },
-                {header: 'CIIU', dataIndex: 'ciiu', sortable: true, width: 30, editor: textField},
+                {header: 'CIIU', dataIndex: 'ciiu', sortable: true, width: 50, editor: textField},
                 {
                     header: 'TIENE LUAE', dataIndex: 'luae', sortable: true, width: 70, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
@@ -644,19 +644,19 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboCATINTR
                 },
                 {
-                    header: 'Trabajos Varios', dataIndex: 'trabajos_varios', sortable: true, width: 70, align: 'center',
+                    header: 'Trabajos Varios', dataIndex: 'trabajos_varios', sortable: true, width: 100, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
                     , xtype: 'booleancolumn'
                 },
 
                 {
-                    header: 'Construcciones', dataIndex: 'construcciones', sortable: true, width: 70, align: 'center',
+                    header: 'Construcciones', dataIndex: 'construcciones', sortable: true, width: 90, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
                     , xtype: 'booleancolumn'
                 },
 
                 {
-                    header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 100,
+                    header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 140,
                     renderer: ordenanzasInstruccion,
                     editor: comboORDINSTR
                 },
@@ -668,19 +668,19 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboINSTRAUTO
                 },
                 {
-                    header: 'Dmi', dataIndex: 'dmi', sortable: true, width: 100,
+                    header: 'Dmi', dataIndex: 'dmi', sortable: true, width: 130,
                     renderer: instruccionDmi,
                     editor: comboINSTRDMI
                 },
                 {
-                    header: 'Informe Otros', dataIndex: 'informe_otros', sortable: true, width: 100 , align: 'center',
+                    header: 'Informe Otros', dataIndex: 'informe_otros', sortable: true, width: 90 , align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
                     , xtype: 'booleancolumn'
                 },
                 {header: 'Entidad', dataIndex: 'entidad', sortable: true, width: 100, editor: textField},
-                {header: 'Informe', dataIndex: 'informe', sortable: true, width: 100, editor: textField},
+                    {header: 'Informe', dataIndex: 'informe', sortable: true, width: 120, editor: textField},
                 {
-                    header: 'Medida Cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 100,
+                    header: 'Medida Cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 180,
                     renderer: instruccionMedidaCautelar,
                     editor: comboINSTRMED
                 },
@@ -688,7 +688,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Última Actividad',
                     dataIndex: 'ultima_actividad',
                     sortable: true,
-                    width: 100,
+                    width: 140,
                     editor: textField
                 },
             ],
@@ -1005,10 +1005,10 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboINSTIEXP
                 },
                 {
-                    header: 'Estado',
+                    header: 'Etapa activa',
                     dataIndex: 'estado',
                     sortable: true,
-                    width: 60,
+                    width: 40,
                     align: 'center',
                     editor: {xtype: 'checkbox'},
                     falseText: 'No',
@@ -1020,7 +1020,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Sanción',
                     dataIndex: 'sancion',
                     sortable: true,
-                    width: 30,
+                    width: 40,
                     align: 'center',
                     editor: {xtype: 'checkbox'},
                     falseText: 'No',
@@ -1041,14 +1041,14 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Número documento',
                     dataIndex: 'num_resolucion',
                     sortable: true,
-                    width: 80,
+                    width: 120,
                     editor: textField
                 },
                 {
                     header: 'Observaciones',
                     dataIndex: 'observaciones',
                     sortable: true,
-                    width: 80,
+                    width: 120,
                     editor: textField
                 }
             ],

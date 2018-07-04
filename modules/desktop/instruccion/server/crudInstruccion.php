@@ -312,7 +312,7 @@ function insertInstruccion()
 // todo generar estado por defecto
 
     //  $data->finalizado = 'false';
-    $data->codigo_expediente = generaNuevoCodigoIntruccion();
+    $data->codigo_expediente = generaNuevoCodigoInstruccion();
     $data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
 
@@ -320,10 +320,29 @@ function insertInstruccion()
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
         if ($clave != 'id') {
-            $cadenaCampos = $cadenaCampos . $clave . ',';
-            $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+            $valBoolean = false;
+            if ($valor === true) {
+                $valor = 'true';
+                $valBoolean = true;
+            }
+            if ($valor === false) {
+                $valor = 'false';
+                $valBoolean = true;
+            }
+            if (isset($valor)) {
+                if (!$valBoolean) {
+                    $cadenaCampos = $cadenaCampos . $clave . ',';
+                    $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+
+                } else {
+                    $cadenaCampos = $cadenaCampos . $clave . ',';
+                    $cadenaDatos = $cadenaDatos . $valor . ",";
+                }
+            }
+
         }
     }
+
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
@@ -340,24 +359,6 @@ function insertInstruccion()
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
         "data" => array($data)
     ));
-}
-
-function generaCodigoProcesoDenuncia()
-{
-    global $os;
-
-    $usuario = $os->get_member_id();
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_expediente";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    if (isset($row['maximo'])) {
-        $nuevoCodogo = $row['maximo'] + 1;
-        return $nuevoCodogo;
-    } else {
-        // valor inicial proceso
-        return 1;
-    }
 }
 
 function updateInstruccion()
@@ -454,7 +455,7 @@ function updateInstruccion()
             $valor = 'false';
             $valBoolean = true;
         }
-        if (isset($valor)) {
+        if (isset($valor) and ($valor != '')) {
             if ($valBoolean)
                 $cadenaDatos = $cadenaDatos . $clave . " = " . $valor . " ,";
             else
