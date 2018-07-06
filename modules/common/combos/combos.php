@@ -90,6 +90,23 @@ function comboZonas()
     );
 }
 
+function comboSecretariaTramites()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+  //  $sql = "SELECT id, codigo_tramite as nombre FROM amc_denuncias  ORDER BY id DESC ";
+    $sql = "SELECT id, CONCAT (codigo_tramite,' - ', YEAR (recepcion_documento)) as nombre FROM amc_denuncias ORDER BY id DESC";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
 function comboTiposExpedientes()
 {
     global $os;
@@ -591,6 +608,9 @@ switch ($_GET['tipo']) {
         break;
     case 'tiposexpedientes' :
         comboTiposExpedientes();
+        break;
+    case 'secretariatramites' :
+        comboSecretariaTramites();
         break;
     case 'parroquias' :
         comboParroquias();

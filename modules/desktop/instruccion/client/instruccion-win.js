@@ -172,6 +172,32 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         }
 
         //inicio combo ordenanzas  INSTIEXP
+        //inicio combo persona asignada SECTRAM
+        storeSECTRAM = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=secretariatramites'
+        });
+
+        var comboSECTRAM = new Ext.form.ComboBox({
+            id: 'comboSECTRAM',
+            store: storeSECTRAM,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function instruccionSecretariaTramite(id) {
+            var index = storeSECTRAM.findExact('id', id);
+            if (index > -1) {
+                var record = storeSECTRAM.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo caracter del tramite SECTRAM
 
         //inicio combo Estado Recepcion Expediente Instruccion ESTEXP
         storeESTEXP = new Ext.data.JsonStore({
@@ -413,6 +439,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_persona_reasignado', allowBlank: true},
                 {name: 'fecha_asignacion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_reasignacion', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'expediente', allowBlank: false},
                 {name: 'id_tramite', allowBlank: true},
                 {name: 'id_acta', allowBlank: true},
                 {name: 'id_estado', allowBlank: true},
@@ -521,13 +548,21 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: formatDate,
                     editor: editorDate, hidden: true
                 },
-                {header: 'Trámite', dataIndex: 'id_tramite', sortable: true, width: 70, editor: textField},
+                {header: 'Expediente', dataIndex: 'expediente', sortable: true, width: 130, editor: textField},
+                {
+                    header: 'Trámite Secretaría',
+                    dataIndex: 'id_tramite',
+                    sortable: true,
+                    width: 100,
+                    renderer: instruccionSecretariaTramite,
+                    editor: comboSECTRAM
+                },
                 {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 80, editor: textField},
                 {
                     header: 'Estado',
                     dataIndex: 'id_estado',
                     sortable: true,
-                    width: 120,
+                    width: 140,
                     renderer: estadoRecepcionExpediente,
                     editor: comboESTEXP
                 },
@@ -543,7 +578,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Predio Número',
                     dataIndex: 'predio',
                     sortable: true,
-                    width: 60,
+                    width: 80,
                     editor: textField,
                     xtype: 'numbercolumn',
                     format: '00000000'
