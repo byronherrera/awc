@@ -18,7 +18,6 @@ error_reporting(E_ALL);
 require_once '../../../common/Classes/PHPExcel.php';
 require_once '../../../common/Classes/funciones.php';
 require_once '../../../../server/os.php';
-require '../../../common/Classes/PHPMailer/PHPMailerAutoload.php';
 
 $os = new os();
 if (!$os->session_exists()) {
@@ -68,7 +67,7 @@ if (!$reimpresion) {
     }
 } else {
     $siguienteFila = 1;
-    imprimeActa($siguienteFila, 0, $reimpresion, $acta);
+    imprimeActa($siguienteFila,   0, $reimpresion, $acta);
 }
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -183,7 +182,7 @@ function fecha_actual()
 
 }
 
-function actualizar_estado_tramite($id, $numeroGuia, $id_inspeccion)
+function actualizar_estado_tramite($id,  $numeroGuia, $id_inspeccion)
 {
     global $os;
     // actualizo denuncia con el numero de acta de despacho y se cambia la bandera a tramite realizadoo
@@ -200,15 +199,14 @@ function actualizar_estado_tramite($id, $numeroGuia, $id_inspeccion)
     $os->db->conn->query($sql);
 }
 
-function verificaMasInspeccionesAsignadas($id)
-{
-    global $os;
+function verificaMasInspeccionesAsignadas($id){
+    global  $os;
     $nombre = $os->db->conn->query("select COUNT(*) AS total   FROM amc_inspeccion where id_denuncia= $id AND (guia = '' OR ISNULL(guia))");
     $rowguia = $nombre->fetch(PDO::FETCH_ASSOC);
     if ($rowguia['total'] == "1")
-        return true;
+    return true;
     else
-        return false;
+    return false;
 }
 
 function actualizar_guia_inspeccion($numeroGuia)
@@ -241,7 +239,7 @@ function envioEmail($funcionario)
             WHERE
                 amc_inspeccion.estado_asignacion = 3 AND amc_inspeccion.funcionario_reasignacion = $funcionario ";
 
-    $result = $os->db->conn->query($sql);
+            $result = $os->db->conn->query($sql);
 //    $number_of_rows = $result->rowCount();
     $fila = 0;
     $detalle = '<table border="1">
@@ -309,7 +307,7 @@ function getmensaje($nombre = '', $inspecciones = '', $fecha = '')
     return $texto;
 }
 
-function enviarEmail1($email, $nombre, $mensaje)
+function enviarEmail($email, $nombre, $mensaje)
 {
 
     $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
@@ -325,63 +323,8 @@ function enviarEmail1($email, $nombre, $mensaje)
     if ($config->AMBIENTE == "PRODUCCION")
         mail($email, $nombre, $mensaje, $headers);
     else
-        mail('byron.herrera@quito.gob.ec', $nombre, $mensaje, $headers);
+        mail('byron.herrera@quito.gob.ec', $nombre, $mensaje, $headers); 
 }
-
-
-function enviarEmail($email, $nombre, $mensaje, $funcionarios = [])
-{
-    $config = new config();
-
-
-
-    //Create a new PHPMailer instance
-    $mail = new PHPMailer;
-    $mail->CharSet = "UTF-8";
-    $mail->isSMTP();
-    $mail->SMTPDebug = 0;
-    $mail->Debugoutput = 'html';
-    $mail->Host = 'relay.quito.gob.ec';
-    $mail->Port = 25;
-    $mail->Username = "agencia.m.control@quito.gob.ec";
-    $mail->Password = "12345678";
-    $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
-
-    $mail->AddBCC("byron.herrera@quito.gob.ec");
-    $mail->AddBCC("pamela.parreno@quito.gob.ec");
-    $mail->AddBCC("andrea.caicedo@quito.gob.ec");
-
-    $mail->Subject = $nombre;
-    $mail->msgHTML($mensaje);
-    $mail->AltBody = 'Mensaje enviado';
-    if ($config->AMBIENTE == "PRODUCCION") {
-        $mail->addAddress($email);
-        foreach ($funcionarios as $emailfuncionario) {
-            $mail->AddCC($emailfuncionario);
-        }
-    } else {
-        $mail->addAddress("byron.herrera@quito.gob.ec");
-    }
-
-    $resultado = $mail->send();
-
-    // guardar un archivo de lg
-    $fichero = 'InspeccionEmailEnviados.log';
-    $actual = file_get_contents($fichero);
-    if ($resultado) {
-        $actual .= "Enviado -" . date(" Y-m-d ") . "\n----\n";
-    } else
-        $actual .= "Error-" . date(" Y-m-d ") . "\n----\n";
-
-    $actual .= $email . "\n----\n";
-    $actual .= $nombre . "\n----\n";
-    $actual .= $mensaje . "\n----\n";
-    file_put_contents($fichero, $actual);
-
-    return $resultado;
-
-}
-
 
 function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0)
 {
@@ -411,7 +354,8 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
     $number_of_rows = 0;
 
     // si no existe unidad es para reimpresion se envia como parametro guia, obtenemos id unidad
-    if (!$reimpresion) {
+    if (!$reimpresion)
+    {
         $os->db->conn->query("SET NAMES 'utf8'");
 
         // se determina un filtro  para determinar las denuncias / tramites pendientes
@@ -591,19 +535,19 @@ function imprimeActa($filaTitulo1, $funcionario, $reimpresion = false, $acta = 0
         $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['num_documento']);
         $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['remitente']);
 
-        if (!is_null($rowdetalle['funcionario_reasignacion'])) {
+        if  (!is_null($rowdetalle['funcionario_reasignacion']) ) {
             $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, regresaNombre($rowdetalle['funcionario_reasignacion']));
-        } else {
+         } else {
             $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, regresaNombre($rowdetalle['funcionario']));
         }
-        $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, ' ');
+          $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, ' ');
         $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, '  ');
 
         $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':G' . $filaInicio)->applyFromArray($styleArray);
         $filaInicio++;
         if (!$reimpresion) {
             // ACTUALIZAR ESTADO DEL REGISTRO
-            actualizar_estado_tramite($rowdetalle['id_denuncia'], $numeroGuia, $rowdetalle['id']);
+            actualizar_estado_tramite($rowdetalle['id_denuncia'],  $numeroGuia, $rowdetalle['id']);
         }
     }
 

@@ -327,7 +327,7 @@ function insertOperativos()
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "INSERT INTO amc_operativos($cadenaCampos)
-    values($cadenaDatos);";
+	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $resultado = $sql->execute();
 
@@ -414,7 +414,7 @@ function updateOperativos()
                 $email = regresaEmail($funcionario);
                 //   $email = "byron.herrera@quito.gob.ec";
                 $asunto = "Nuevo operativo asignado, " . " - " . regresaEmail($funcionario);
-                $resultado = enviarEmail($email, $asunto, $mensaje, $funcionarios);
+                $resultado = enviarEmail($email, $asunto, $mensaje, $funcionarios );
                 if ($resultado) {
                     $sqlUpdate = "UPDATE `amc_operativos` SET `mail_enviado` = 1 WHERE `id` = " . $data->id;
                     $sql = $os->db->conn->prepare($sqlUpdate);
@@ -573,8 +573,8 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
                  <br>
                  <br>
                  Favor ingresar en Matis AMC, para verificar el operativo asignado <a href="http://172.20.136.60/procesos-amc">aquí</a> .
-                <br>    
-                <br>    
+                <br>	
+                <br>	
                 <p>De conformidad con el Memorando No. AMC-SM-JA-2018-003, del 4 de enero de 2018, mediente el cual la 
                 Máxima Autoridad dispone</p>
                 <p>"Todo el personal de la Agencia Metropolitana de Control, deberá utilizar de manera obligatoria el módulo de operativos que se encuentra dentro de la INTRANET de la Institución, a fin de generar los informes de los operativos realizados. En el sistema se deberá llenar los datos solicitados dentro de las 24 horas siguientes de haber realizado el operativo, con el objetivo de que se genere el informe respectivo."</p>
@@ -603,61 +603,47 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
     return $texto;
 }
 
-function enviarEmail($email, $nombre, $mensaje, $funcionarios)
+function enviarEmail($email, $nombre, $mensaje, $funcionarios )
 {
-    $config = new config();
+    $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
 
-    require '../../../common/Classes/PHPMailer/PHPMailerAutoload.php';
-    //Create a new PHPMailer instance
-    $mail = new PHPMailer;
-    $mail->CharSet = "UTF-8";
-    $mail->isSMTP();
-    $mail->SMTPDebug = 0;
-    $mail->Debugoutput = 'html';
-    $mail->Host = 'relay.quito.gob.ec';
-    $mail->Port = 25;
-    $mail->Username = "agencia.m.control@quito.gob.ec";
-    $mail->Password = "12345678";
-    $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
 
-    $mail->AddBCC("byron.herrera@quito.gob.ec");
-    $mail->AddBCC("pamela.parreno@quito.gob.ec");
-    $mail->AddBCC("galo.salazar@quito.gob.ec");
-    $mail->AddBCC("eduardo.chicaiza@quito.gob.ec");
-    $mail->AddBCC("andrea.caicedo@quito.gob.ec");
-
-    $mail->Subject = $nombre;
-    $mail->msgHTML($mensaje);
-    $mail->AltBody = 'Mensaje enviado';
-
-    // se envia de acuerdo a si es produccion o pruebas
-    if ($config->AMBIENTE == "PRODUCCION") {
-        $mail->addAddress($email);
-        foreach ($funcionarios as $emailfuncionario) {
-            $mail->AddCC($emailfuncionario);
-        }
-    } else {
-        $mail->addAddress("byron.herrera@quito.gob.ec");
+    if (count($funcionarios) > 0) {
+        $conCopia = implode(",", $funcionarios);
+        $headers .= "CC: $conCopia \r\n";
     }
 
-    $resultado = $mail->send();
+//    $headers .= "CCO: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec, galo.salazar@quito.gob.ec, eduardo.chicaiza@quito.gob.ec, andrea.caicedo@quito.gob.ec \r\n";
+//    $headers .= "Bcc: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec, galo.salazar@quito.gob.ec, eduardo.chicaiza@quito.gob.ec, andrea.caicedo@quito.gob.ec \r\n";
 
-    $fichero = 'OperativosEmailEnviados.log';
-    $actual = file_get_contents($fichero);
-    if ($resultado) {
-        $actual .= "Enviado -" . date(" Y-m-d ") . "\n----\n";
-    } else
-        $actual .= "Error-" . date(" Y-m-d ") . "\n----\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-    $actual .= $email . "\n----\n";
-    $actual .= $nombre . "\n----\n";
-    $actual .= $mensaje . "\n----\n";
-    file_put_contents($fichero, $actual);
+    // VALIDAMOS QUE SOLO SE ENVIE EL CORREO EN PRODUCCION
+    //require('../../../../server/os-config.php');
+    $config = new config();
+    if ($config->AMBIENTE == "PRODUCCION") {
+        $resultado = mail($email, $nombre, $mensaje, $headers);
+        $resultado2 = mail('byronherrera@hotmail.com', "byron", "test", "nada   ");
 
-    return $resultado;
 
+            $fichero = 'OperativosEmailEnviados.log';
+        $actual = file_get_contents($fichero);
+        if ($resultado) {
+            $actual .= "Enviado -".date(" Y-m-d ")."\n----\n";
+        }
+        else
+            $actual .= "?" .$resultado . "Error-".date(" Y-m-d ")."\n----\n";
+
+        $actual .= $email . "\n----\n";
+        $actual .= $nombre . "\n----\n";
+        $actual .= $mensaje . "\n----\n";
+        $actual .= $headers . "\n----\n" . "\n" . "\n";
+        file_put_contents($fichero, $actual);
+
+        return $resultado;
+    }
 }
-
 
 function verificaEnvioEmail($id)
 {
@@ -701,4 +687,3 @@ function nombreEstado($data)
     return $rownombre['nombre'];
 
 }
-

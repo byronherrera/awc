@@ -606,56 +606,54 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
 function enviarEmail($email, $nombre, $mensaje, $funcionarios)
 {
     $config = new config();
-
-    require '../../../common/Classes/PHPMailer/PHPMailerAutoload.php';
-    //Create a new PHPMailer instance
-    $mail = new PHPMailer;
-    $mail->CharSet = "UTF-8";
-    $mail->isSMTP();
-    $mail->SMTPDebug = 0;
-    $mail->Debugoutput = 'html';
-    $mail->Host = 'relay.quito.gob.ec';
-    $mail->Port = 25;
-    $mail->Username = "agencia.m.control@quito.gob.ec";
-    $mail->Password = "12345678";
-    $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
-
-    $mail->AddBCC("byron.herrera@quito.gob.ec");
-    $mail->AddBCC("pamela.parreno@quito.gob.ec");
-    $mail->AddBCC("galo.salazar@quito.gob.ec");
-    $mail->AddBCC("eduardo.chicaiza@quito.gob.ec");
-    $mail->AddBCC("andrea.caicedo@quito.gob.ec");
-
-    $mail->Subject = $nombre;
-    $mail->msgHTML($mensaje);
-    $mail->AltBody = 'Mensaje enviado';
-
-    // se envia de acuerdo a si es produccion o pruebas
     if ($config->AMBIENTE == "PRODUCCION") {
+
+        require 'PHPMailer/PHPMailerAutoload.php';
+
+        //Create a new PHPMailer instance
+        $mail = new PHPMailer;
+        $mail->CharSet = "UTF-8";
+        $mail->isSMTP();
+        $mail->SMTPDebug = 0;
+        $mail->Debugoutput = 'html';
+        $mail->Host = 'relay.quito.gob.ec';
+        $mail->Port = 25;
+        $mail->Username = "agencia.m.control@quito.gob.ec";
+        $mail->Password = "12345678";
+        $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
         $mail->addAddress($email);
+
         foreach ($funcionarios as $emailfuncionario) {
             $mail->AddCC($emailfuncionario);
         }
-    } else {
-        $mail->addAddress("byron.herrera@quito.gob.ec");
+
+        $mail->AddBCC("byron.herrera@quito.gob.ec");
+        $mail->AddBCC("pamela.parreno@quito.gob.ec");
+        $mail->AddBCC("galo.salazar@quito.gob.ec");
+        $mail->AddBCC("eduardo.chicaiza@quito.gob.ec");
+        $mail->AddBCC("andrea.caicedo@quito.gob.ec");
+
+        $mail->Subject = $nombre;
+        $mail->msgHTML($mensaje);
+        $mail->AltBody = 'Mensaje enviado';
+
+
+        $resultado = $mail->send();
+
+        $fichero = 'OperativosEmailEnviados.log';
+        $actual = file_get_contents($fichero);
+        if ($resultado) {
+            $actual .= "Enviado -" . date(" Y-m-d ") . "\n----\n";
+        } else
+            $actual .= "Error-" . date(" Y-m-d ") . "\n----\n";
+
+        $actual .= $email . "\n----\n";
+        $actual .= $nombre . "\n----\n";
+        $actual .= $mensaje . "\n----\n";
+        file_put_contents($fichero, $actual);
+
+        return $resultado;
     }
-
-    $resultado = $mail->send();
-
-    $fichero = 'OperativosEmailEnviados.log';
-    $actual = file_get_contents($fichero);
-    if ($resultado) {
-        $actual .= "Enviado -" . date(" Y-m-d ") . "\n----\n";
-    } else
-        $actual .= "Error-" . date(" Y-m-d ") . "\n----\n";
-
-    $actual .= $email . "\n----\n";
-    $actual .= $nombre . "\n----\n";
-    $actual .= $mensaje . "\n----\n";
-    file_put_contents($fichero, $actual);
-
-    return $resultado;
-
 }
 
 
