@@ -228,7 +228,7 @@ function comboPersonalSecretaria()
             FROM
             qo_members a,qo_groups_has_members b
             WHERE
-                a.id = b.qo_members_id AND (b.qo_groups_id = 1 OR b.qo_groups_id = 2 OR b.qo_groups_id = 3 OR b.qo_groups_id = 4)  AND a.active = 1 
+                a.id = b.qo_members_id AND a.active = 1 
             ORDER BY
                 a.last_name ASC,a.first_name ASC";
     $result = $os->db->conn->query($sql);

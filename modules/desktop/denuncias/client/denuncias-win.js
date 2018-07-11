@@ -1291,12 +1291,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 xtype: 'tabpanel',
 
                                 activeTab: 0,
-                                width: winWidth,
+                                width: winWidth - 14 ,
                                 cls: 'no-border',
                                 items: [
                                     {
                                         title: 'Secretaría',
                                         layout: 'column',
+                                        height: winHeight - 281,
+                                        width: winWidth - 14 ,
+
                                         tbar: [
                                             {
                                                 text: 'Grabar Recepción Detalle',
@@ -1314,13 +1317,16 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                 id: 'textRecepcionAnteriores'
                                             }
                                         ],
+
+
                                         items: [
                                             {
-                                                heigth:400,
+
                                                 columnWidth: 1 / 3,
                                                 layout: 'form',
                                                 monitorValid: true,
                                                 defaultType: 'textfield',
+
                                                 items: [
                                                     {
                                                         xtype: 'hidden',
