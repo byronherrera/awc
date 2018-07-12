@@ -85,7 +85,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:A3')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->getStyle('A1:A3')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "MUNICIPIO DEL DISTRITO METROPOLITANO DE QUITO");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'AGENCIA METROPOLITANA DE CONTROL');
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "INFORME DE OPERATIVO DE CONTROL No. AMC-". date("Y") . "-".$operativoId);
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "INFORME DE OPERATIVO DE CONTROL No. AMC-" . date("Y") . "-" . $operativoId);
 
 textoSiguieteFila("1. DATOS GENERALES DEL OPERATIVO", 'A', 'F', 'left', true, "B");
 textoSiguieteFila(regresaZonal($operativo['id_zonal']) . " - " . regresaUnidad($operativo['id_unidad']), 'A', 'F', 'center', true, "B");
@@ -212,8 +212,8 @@ $nombres = $os->db->conn->query($sql);
 $nombresUsuarios = array();
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     // declarar tamaños de letra
-   textoSiguieteFila($nombreDetalle['nombre'], 'A', 'A', 'center');
-    textoSiguieteFila( $nombreDetalle['direccion'] , 'B', 'B', 'center', false);
+    textoSiguieteFila($nombreDetalle['nombre'], 'A', 'A', 'center');
+    textoSiguieteFila($nombreDetalle['direccion'], 'B', 'B', 'center', false);
     textoSiguieteFila($nombreDetalle['tipo'], 'C', 'C', 'center', false);
     textoSiguieteFila($nombreDetalle['codigo_bodega'], 'D', 'D', 'center', false);
     textoSiguieteFila($nombreDetalle['detalle'], 'E', 'F', 'center', false);
@@ -240,14 +240,13 @@ if ($number_of_rows > 0) {
     $nombresUsuarios = array();
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
         // declarar tamaños de letra
-        textoSiguieteFila(regresaTipoAccion($nombreDetalle['id_accion']) , 'A', 'B', 'center');
-        textoSiguieteFila( $nombreDetalle['cantidad'] , 'C', 'D', 'center', false);
+        textoSiguieteFila(regresaTipoAccion($nombreDetalle['id_accion']), 'A', 'B', 'center');
+        textoSiguieteFila($nombreDetalle['cantidad'], 'C', 'D', 'center', false);
         textoSiguieteFila($nombreDetalle['observaciones'], 'E', 'F', 'center', false);
 
         $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
     }
 }
-
 
 
 textoSiguieteFila("6. RESULTADOS", 'A', 'F', 'left', true, "B");
@@ -305,8 +304,18 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
 if (!$lado) $objPHPExcel->getActiveSheet()->mergeCells("D" . $filacabecera . ":F" . $filacabecera);
 borde("A" . $primeraFilaImage . ':' . 'F' . $filacabecera);
 // Elaborador por:
-$textoElaboradoPor = "
-Generado por: " . regresaNombre($os->get_member_id());
+if ($operativo['id_persona_encargada'] === $os->get_member_id())
+    $textoElaboradoPor = "
+Elaborador por: " . regresaNombre($operativo['id_persona_encargada']);
+else     $textoElaboradoPor = "
+Elaborador por: " . regresaNombre($operativo['id_persona_encargada']) . "
+
+
+
+
+
+Descargado por: " . regresaNombre($os->get_member_id());
+
 $calcularAlto = calculaAltoTexto($operativo['detalle']);
 $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight(110);
 

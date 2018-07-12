@@ -928,7 +928,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 }
             ],
             viewConfig: {
-                forceFit: true,
+                forceFit: false,
                 getRowClass: function (record, index) {
                     if (record.get('despacho_secretaria') == false) {
                         return 'gold';
@@ -956,7 +956,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     }
                 }),
             border: false,
-            stripeRows: true,
+            stripeRows: false,
             // paging bar on the bottom
             bbar: new Ext.PagingToolbar({
                 pageSize: limitedenuncias,
@@ -1129,6 +1129,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             height: desktop.getWinHeight() - 238,
             autoScroll: true,
             store: this.storeDocumentosReporte,
+
             columns: [
                 new Ext.grid.RowNumberer(),
                 {

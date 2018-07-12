@@ -2880,7 +2880,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     width: 180,
                 },
                 {
-                    header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 120,
+                    header: 'Zonal', dataIndex: 'id_zona', sortable: true, width: 120,
                     renderer: zonaAdm
                 },
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 150},
@@ -3008,7 +3008,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: textFieldDetalle
                 },
                 {
-                    header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 120, editor: comboZONA,
+                    header: 'Zonal', dataIndex: 'id_zona', sortable: true, width: 120, editor: comboZONA,
                     renderer: zonaAdm
                 },
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 150, editor: textFieldDetalle},
@@ -3179,7 +3179,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: textFieldDetalle
                 },
                 {
-                    header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 120, editor: comboZONA,
+                    header: 'Zonal', dataIndex: 'id_zona', sortable: true, width: 120, editor: comboZONA,
                     renderer: zonaAdm
                 },
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 150, editor: textFieldDetalle},
@@ -3337,7 +3337,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 // {header: 'Ordenanza', dataIndex: 'id_ordenanza', sortable: true, width: 150, editor: comboORD, renderer: listaOrdenanzas},
                 {
-                    header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 100, editor: comboZONA,
+                    header: 'Zonal', dataIndex: 'id_zona', sortable: true, width: 100, editor: comboZONA,
                     renderer: zonaAdm
                 },
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 80, editor: textFieldDetalle},
@@ -3494,7 +3494,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                     editor: textFieldDetalle
                 },
                 {
-                    header: 'Zona', dataIndex: 'id_zona', sortable: true, width: 200, editor: comboZONA,
+                    header: 'Zonal', dataIndex: 'id_zona', sortable: true, width: 200, editor: comboZONA,
                     renderer: zonaAdm
                 },
                 {header: 'Predio', dataIndex: 'predio', sortable: true, width: 100, editor: textFieldDetalle},
