@@ -2672,11 +2672,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             items: [
                                 {
                                     id: 'formcabeceraoperativos',
+                                    items: this.gridOperativos,
                                     titleCollapse: true,
+                                    split: true,
                                     flex: 1,
                                     autoScroll: true,
-                                    layout: 'column',
-                                    items: this.gridOperativos,
+                                    layout: 'column'
                                 },
                                 {
                                     flex: 2,

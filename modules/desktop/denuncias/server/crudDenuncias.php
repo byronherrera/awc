@@ -42,7 +42,6 @@ function selectDenuncias()
 
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
-
     }
 
     if (isset($_POST['filterText'])) {
