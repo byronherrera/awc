@@ -419,7 +419,7 @@ function updateOperativos()
                     $sqlUpdate = "UPDATE `amc_operativos` SET `mail_enviado` = 1 WHERE `id` = " . $data->id;
                     $sql = $os->db->conn->prepare($sqlUpdate);
                     $grabaresultado = $sql->execute();
-                    $data->mail_enviado = 1;
+                    $data->mail_enviado = '1';
                 }
             }
         }

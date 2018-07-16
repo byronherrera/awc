@@ -748,6 +748,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'codigo_tramite', allowBlank: false},
+                {name: 'id_zonal_origen', allowBlank: false},
                 {name: 'id_persona', allowBlank: false},
                 {name: 'recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: false},
                 {name: 'id_tipo_documento', allowBlank: false},
@@ -763,8 +764,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'reasignacion', allowBlank: false},
                 {name: 'id_caracter_tramite', allowBlank: false},
                 {name: 'cantidad_fojas', allowBlank: false},
-                {name: 'despacho_secretaria', type: 'boolean', allowBlank: false},
-                {name: 'id_zonal_origen', allowBlank: false}
+                {name: 'despacho_secretaria', type: 'boolean', allowBlank: false}
             ]
         });
         var writerDenuncias = new Ext.data.JsonWriter({
@@ -806,7 +806,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 28,
                     renderer: personaReceptaDenuncia
-                }, {
+                },
+                {
                     header: 'Recepción documento',
                     dataIndex: 'recepcion_documento',
                     sortable: true,
@@ -2410,6 +2411,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         var denuncias = new this.storeDenuncias.recordType({
             codigo_tramite: ' ',
             id_persona: ' ',
+            id_zonal_origen: ' ',
             id_tipo: '',
             recepcion_documento: (new Date()),
             id_tipo_documento: '2',

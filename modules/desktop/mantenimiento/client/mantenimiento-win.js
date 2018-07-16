@@ -139,6 +139,9 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                 {name: 'nombre', allowBlank: false},
                 {name: 'nombre_completo', allowBlank: false},
                 {name: 'activo', allowBlank: false},
+                {name: 'orden', allowBlank: true},
+                {name: 'id_zonal', allowBlank: false},
+                {name: 'prefijo', allowBlank: true},
                 {name: 'orden', allowBlank: true}
             ]
         });
@@ -181,9 +184,24 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'nombre_completo',
                     sortable: true,
                     width: 200,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    editor: textField
                 },
-                {header: 'Activo', dataIndex: 'activo', sortable: true, width: 100, editor: textField},
+                {
+                    header: 'Activo'
+                    , dataIndex: 'activo'
+                    , editor: {
+                        xtype: 'checkbox'
+                    }
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Si'
+                    , sortable: true
+                    , width: 50
+                    , xtype: 'booleancolumn'
+                },
+                {header: 'Zonal', dataIndex: 'id_zonal', sortable: true, width: 100, editor: textField},
+                {header: 'Prefijo', dataIndex: 'prefijo', sortable: true, width: 100, editor: textField},
+
                 {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField}
             ],
             viewConfig: {
@@ -432,7 +450,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
         this.storeTiposOperativos.load();
 
         //Inicio formato grid pestaña Tipos de operativos
-        this.gridTiposOperativos= new Ext.grid.EditorGridPanel({
+        this.gridTiposOperativos = new Ext.grid.EditorGridPanel({
             height: '100%',
             store: this.storeTiposOperativos,
             columns: [
@@ -469,7 +487,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
 
         //Inicio pestaña mantenimiento Entidades
         //Definición de url CRUD
-        var proxyEntidades= new Ext.data.HttpProxy({
+        var proxyEntidades = new Ext.data.HttpProxy({
             api: {
                 create: urlMantenimiento + "crudEntidades.php?operation=insert",
                 read: urlMantenimiento + "crudEntidades.php?operation=select",
@@ -521,7 +539,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
         this.storeEntidades.load();
 
         //Inicio formato grid pestaña Entidades
-        this.gridEntidades= new Ext.grid.EditorGridPanel({
+        this.gridEntidades = new Ext.grid.EditorGridPanel({
             height: '100%',
             store: this.storeEntidades,
             //Definición de campos bdd Entidades
@@ -666,7 +684,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                             title: 'Ordenanzas',
                             closable: true,
                             layout: 'fit',
-                            height: winHeight-70,
+                            height: winHeight - 70,
                             //Barra de botones
                             tbar: [
                                 //Definición de botón nuevo
@@ -685,7 +703,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'delete-icon'
                                 },
                                 '-',
-                                    //Definición de botón regargar datos
+                                //Definición de botón regargar datos
                                 {
                                     iconCls: 'demo-grid-add',
                                     handler: this.requestGridDataOrdenanzas,
@@ -694,7 +712,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ]
                             //Llamado a función que arma la tabla de datos
-                            ,items: this.gridOrdenanzas
+                            , items: this.gridOrdenanzas
                         }
                         //Pestaña unidades
                         , {
@@ -702,7 +720,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                             title: 'Unidades',
                             closable: true,
                             layout: 'fit',
-                            height: winHeight-70,
+                            height: winHeight - 70,
                             //disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
                             //Barra de botones
                             tbar: [
@@ -739,7 +757,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                             title: 'Zonas',
                             closable: true,
                             layout: 'fit',
-                            height: winHeight-70,
+                            height: winHeight - 70,
                             //disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
                             //Barra de botones
                             tbar: [
@@ -777,7 +795,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                             closable: true,
                             //disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
                             layout: 'fit',
-                            height: winHeight-70,
+                            height: winHeight - 70,
                             //Barra de botones
                             tbar: [
                                 //Definición de botón nuevo
@@ -813,7 +831,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                             title: 'Tipos de operativos',
                             closable: true,
                             layout: 'fit',
-                            height: winHeight-70,
+                            height: winHeight - 70,
                             //Barra de botones
                             tbar: [
                                 //Definición de botón nuevo
@@ -849,7 +867,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                             title: 'Entidades',
                             closable: true,
                             layout: 'fit',
-                            height: winHeight-70,
+                            height: winHeight - 70,
                             //Barra de botones
                             tbar: [
                                 //Definición de botón nuevo
@@ -1121,7 +1139,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
 
     //Función para inserción de registros de Entidades
     addEntidades: function () {
-        var denunciasEntidades= new this.storeEntidades.recordType({
+        var denunciasEntidades = new this.storeEntidades.recordType({
             id: ' ',
             nombre: '',
             nombre_completo: '',

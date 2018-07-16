@@ -188,7 +188,12 @@ function insertDenuncias()
     $data->despacho_secretaria = 'false';
     $data->codigo_tramite = generaCodigoProcesoDenuncia();
     $data->id_persona = $os->get_member_id();
-    //genero el listado de nombre de campos
+
+    //$grupo_funcionario =  $os->get_group_id();
+    $zonal_funcionario =  $os->get_zonal_id();
+
+    $data->id_zonal_origen = $zonal_funcionario;
+    //genero el listado de nombre de campos id_zonal_origen
 
     $cadenaDatos = '';
     $cadenaCampos = '';

@@ -443,7 +443,7 @@ function textoSiguieteFila($texto = '', $inicio, $fin, $alineacion = 'center', $
     if ($inicio != $fin) unirycuadro($inicio . $filacabecera . ':' . $fin . $filacabecera);
     borde($inicio . $filacabecera . ':' . $fin . $filacabecera);
     orientacion($inicio . $filacabecera . ':' . $fin . $filacabecera, $alineacion);
-    $objPHPExcel->getActiveSheet()->setCellValue($inicio . $filacabecera, $texto);
+    $objPHPExcel->getActiveSheet()->setCellValue($inicio . $filacabecera, utf8_encode($texto));
     $objPHPExcel->getActiveSheet()->getStyle($inicio . $filacabecera)->getAlignment()->setWrapText(true);
     if ($negrilla == 'B') $objPHPExcel->getActiveSheet()->getStyle($inicio . $filacabecera . ':' . $fin . $filacabecera)->getFont()->setBold(true);
 }
