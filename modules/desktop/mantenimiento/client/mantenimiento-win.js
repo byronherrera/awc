@@ -31,6 +31,33 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
         }
 
         //Inicio ventana mantenimiento ordenanzas
+
+        //inicio combo ZONA
+        storeZONAL = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=zonas'
+        });
+
+        var comboZONAL = new Ext.form.ComboBox({
+            id: 'comboZONAL',
+            store: storeZONAL,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function zonaAdm(id) {
+            var index = storeZONAL.findExact('id', id);
+            if (index > -1) {
+                var record = storeZONAL.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //fin combo ZONA
+
         //Definición de url CRUD
         var proxyOrdenanzas = new Ext.data.HttpProxy({
             api: {
@@ -95,7 +122,20 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                     width: 200,
                     editor: textField
                 },
-                {header: 'Activo', dataIndex: 'activo', sortable: true, width: 100, editor: textField},
+                {
+                    header: 'Activo'
+                    , dataIndex: 'activo'
+                    , editor: {
+                        xtype: 'checkbox'
+                    }
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Si'
+                    , sortable: true
+                    , width: 50
+                    , xtype: 'booleancolumn'
+                },
+
                 {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField},
                 {header: 'Base Legal', dataIndex: 'base_legal', sortable: true, width: 200, editor: textField}
             ],
@@ -171,6 +211,8 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
 
         this.storeUnidades.load();
 
+
+
         //Inicio formato grid pestaña Unidades
         this.gridUnidades = new Ext.grid.EditorGridPanel({
             height: '100%',
@@ -199,9 +241,8 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                     , width: 50
                     , xtype: 'booleancolumn'
                 },
-                {header: 'Zonal', dataIndex: 'id_zonal', sortable: true, width: 100, editor: textField},
-                {header: 'Prefijo', dataIndex: 'prefijo', sortable: true, width: 100, editor: textField},
-
+                {header: 'Zonal', dataIndex: 'id_zonal', sortable: true, width: 100, editor: comboZONAL, renderer: zonaAdm },
+                {header: 'Prefijo', dataIndex: 'prefijo', sortable: true, width: 100, editor: textField, hidden: true },
                 {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField}
             ],
             viewConfig: {

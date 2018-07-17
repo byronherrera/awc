@@ -52,7 +52,8 @@ class QoAdminGroup {
          id,
          name,
          description,
-         active
+         active,
+         id_unidad
          FROM
          qo_groups';
 
@@ -137,6 +138,7 @@ class QoAdminGroup {
                   $sql->bindParam(1, $data[$i]->name);
                   $sql->bindParam(2, $data[$i]->description);
                   $sql->bindParam(3, $data[$i]->active);
+                  $sql->bindParam(4, $data[$i]->id_unidad);
                   $sql->execute();
 
                   $code = $sql->errorCode();

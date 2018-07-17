@@ -327,7 +327,7 @@ function comboUnidades()
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    $sql = "SELECT * FROM amc_unidades WHERE activo = 1 ORDER BY id";
+    $sql = "SELECT id,  nombre, nombre_completo FROM amc_unidades WHERE activo = 1 ORDER BY id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
