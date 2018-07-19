@@ -92,9 +92,17 @@ if (isset($data->busqueda_punto_encuentro) and ($data->busqueda_punto_encuentro 
 if (isset($data->busqueda_observaciones) and ($data->busqueda_observaciones != '')) {
     $tipo = $data->busqueda_observaciones;
     if ($where == '') {
-        $where = "WHERE observaciones like '%$tipo%' ";
+        $where = "WHERE ( upper( punto_encuentro_planificado ) like '%$tipo%'or
+                        upper( zona ) like '%$tipo%'or
+                        upper( observaciones ) like '%$tipo%'or
+                        upper( parroquias ) like '%$tipo%'or
+                        upper( barrios) like '%$tipo%') ";
     } else {
-        $where = $where . " AND observaciones like '%$tipo%' ";
+        $where = $where . " AND ( upper( punto_encuentro_planificado ) like '%$tipo%'or
+                        upper( zona ) like '%$tipo%'or
+                        upper( observaciones ) like '%$tipo%'or
+                        upper( parroquias ) like '%$tipo%'or
+                        upper( barrios) like '%$tipo%') ";
     }
 }
 if (isset($data->busqueda_personal_asignado) and ($data->busqueda_personal_asignado != '')) {
@@ -116,11 +124,10 @@ if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')
         $where = $where . " AND fecha_inicio_planificacion between '$fechainicio' and '$fechafin' ";
     }
 } else {
-  // en caso que no existan las fechas de inicio y fin calculamos en base al select
+    // en caso que no existan las fechas de inicio y fin calculamos en base al select
     $fechainicio = fechaInicioSQL($where);
     $fechafin = fechaFinSQL($where);
 }
-
 
 
 // recuepro el listado de operativos en base al filtro
@@ -160,7 +167,7 @@ $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo3 . ':G' . $filaTitu
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO OPERATIVOS");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Unidad de Operativos');
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, fechaLarga ($fechainicio, $dias, $meses). ' - ' . fechaLarga ($fechafin, $dias, $meses));
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, fechaLarga($fechainicio, $dias, $meses) . ' - ' . fechaLarga($fechafin, $dias, $meses));
 
 $filascabecera = $number_of_rows + $filaInicio + 2;
 
@@ -223,7 +230,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, $dias[6]);
 
 $noExistenFilas = true;
 
-$diasUsados = array (0,0,0,0,0,0,0);
+$diasUsados = array(0, 0, 0, 0, 0, 0, 0);
 while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 // actualizar detalle idGuia
     $noExistenFilas = false;
@@ -268,9 +275,9 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $diaNumeral = $date->format('w');
 
     //$filaInicio++;
-    if ($diasUsados[$diaNumeral] == 1){
+    if ($diasUsados[$diaNumeral] == 1) {
         $filaInicio++;
-        $diasUsados = array (0,0,0,0,0,0,0);
+        $diasUsados = array(0, 0, 0, 0, 0, 0, 0);
     }
 
     $diasUsados[$diaNumeral] = 1;
@@ -284,7 +291,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 
     // envio de impresion de valores
     //$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['fecha_inicio_planificacion']);
-    $objPHPExcel->getActiveSheet()->setCellValue($columnas[$diaNumeral] . $filaInicio, $fechacorta . "\n" . $inicio . ' - ' . $fin . "\n Id:" . $rowdetalle['id']. "\n " . $rowdetalle['observaciones']);
+    $objPHPExcel->getActiveSheet()->setCellValue($columnas[$diaNumeral] . $filaInicio, $fechacorta . "\n" . $inicio . ' - ' . $fin . "\n Id:" . $rowdetalle['id'] . "\n " . $rowdetalle['observaciones']);
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':G' . $filaInicio)->applyFromArray($styleArray);
 
 }
@@ -418,9 +425,10 @@ function fechaFinSQL($where)
     return $rownombre['fecha_fin_planificacion'];
 }
 
-function fechaLarga ($fecha, $dias, $meses) {
+function fechaLarga($fecha, $dias, $meses)
+{
     $date = new DateTime($fecha);
-    return  $dias[$date->format('w')] . " " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
+    return $dias[$date->format('w')] . " " . $date->format('d') . " de " . $meses[$date->format('m') - 1] . " del " . $date->format('Y');
 
 }
 

@@ -401,14 +401,14 @@ function comboUnidadesTotal()
         }
     }*/
 
-
+    $zonal_funcionario = $os->get_zonal_id();
     //$sql = "SELECT amc_unidades.id, CONCAT(amc_unidades.nombre, 'SSSS') AS nombre FROM amc_unidades WHERE activo = 1 ORDER BY id";
     $sql = "SELECT 
                 b.id, IF((SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' ) = 0,b.nombre,
                 (CONCAT(b.nombre, ' ( ',(SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' ), ' ) '))) AS nombre
                 FROM amc_unidades b
-                WHERE b.activo = 1
-                ORDER BY b.id ";
+                WHERE b.activo = 1 AND id_zonal = " . $zonal_funcionario ."
+                 ORDER BY b.id ";
 
     $result = $os->db->conn->query($sql);
     $data = array();

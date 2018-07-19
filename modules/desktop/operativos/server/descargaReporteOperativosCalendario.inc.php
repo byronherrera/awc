@@ -92,9 +92,17 @@ if (isset($data->busqueda_punto_encuentro) and ($data->busqueda_punto_encuentro 
 if (isset($data->busqueda_observaciones) and ($data->busqueda_observaciones != '')) {
     $tipo = $data->busqueda_observaciones;
     if ($where == '') {
-        $where = "WHERE observaciones like '%$tipo%' ";
+        $where = "WHERE  ( upper( punto_encuentro_planificado ) like '%$tipo%'or
+                        upper( zona ) like '%$tipo%'or
+                        upper( observaciones ) like '%$tipo%'or
+                        upper( parroquias ) like '%$tipo%'or
+                        upper( barrios) like '%$tipo%') ";
     } else {
-        $where = $where . " AND observaciones like '%$tipo%' ";
+        $where = $where . "AND ( upper( punto_encuentro_planificado ) like '%$tipo%'or
+                        upper( zona ) like '%$tipo%'or
+                        upper( observaciones ) like '%$tipo%'or
+                        upper( parroquias ) like '%$tipo%'or
+                        upper( barrios) like '%$tipo%') ";
     }
 }
 if (isset($data->busqueda_personal_asignado) and ($data->busqueda_personal_asignado != '')) {

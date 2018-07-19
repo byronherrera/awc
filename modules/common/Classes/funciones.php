@@ -14,7 +14,7 @@ function generaNuevoCodigoTramiteUnico()
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
     //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE recepcion_documento > '" .date("Y"). "-01-01 01:01:01';";
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE recepcion_documento > '" . date("Y") . "-01-01 01:01:01';";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -33,7 +33,7 @@ function generaNuevoCodigoInspeccion()
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
     //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
-    $sql = "SELECT MAX(id_inspeccion) AS maximo FROM amc_inspeccion WHERE fecha_recepcion_documento > '" .date("Y"). "-01-01 01:01:01';";
+    $sql = "SELECT MAX(id_inspeccion) AS maximo FROM amc_inspeccion WHERE fecha_recepcion_documento > '" . date("Y") . "-01-01 01:01:01';";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -50,7 +50,7 @@ function generaNuevoCodigoInstruccion()
     global $os;
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_expediente) AS maximo FROM amc_expediente WHERE fecha_ingreso > '" .date("Y"). "-01-01 01:01:01';";
+    $sql = "SELECT MAX(codigo_expediente) AS maximo FROM amc_expediente WHERE fecha_ingreso > '" . date("Y") . "-01-01 01:01:01';";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -70,15 +70,15 @@ function generaNuevoCodigoConstrucciones()
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
     //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
-    $sql = "SELECT COUNT(num_nio) AS cant_nio FROM amc_inspeccion_nio WHERE fecha_ingreso > '" .date("Y"). "-01-01 01:01:01';";
+    $sql = "SELECT COUNT(num_nio) AS cant_nio FROM amc_inspeccion_nio WHERE fecha_ingreso > '" . date("Y") . "-01-01 01:01:01';";
     $result = $os->db->conn->query($sql);
     $row1 = $result->fetch(PDO::FETCH_ASSOC);
 
-    $sql = "SELECT COUNT(id_ccf) AS cant_ccf FROM amc_inspeccion_ccf WHERE fecha_recepcion_documento > '" .date("Y"). "-01-01 01:01:01';";
+    $sql = "SELECT COUNT(id_ccf) AS cant_ccf FROM amc_inspeccion_ccf WHERE fecha_recepcion_documento > '" . date("Y") . "-01-01 01:01:01';";
     $result = $os->db->conn->query($sql);
     $row2 = $result->fetch(PDO::FETCH_ASSOC);
 
-    if (isset($row1['cant_nio'])||($row2['cant_ccf'])) {
+    if (isset($row1['cant_nio']) || ($row2['cant_ccf'])) {
         /*
         if(($row1['maximo_nio'])>($row2['maximo_ccf'])){
             $nuevoCodigo = $row1['maximo_nio'] + 1;
@@ -87,7 +87,7 @@ function generaNuevoCodigoConstrucciones()
         }
         */
         $nuevoCodigo = $row1['cant_nio'] + $row2['cant_ccf'] + 1;
-         return $nuevoCodigo;
+        return $nuevoCodigo;
     } else {
         // valor inicial proceso
         return 134;
@@ -101,7 +101,7 @@ function generaNuevoCodigoControlProgramado()
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
     //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
-    $sql = "SELECT COUNT(id) AS cant_cp FROM amc_inspeccion_control_programado WHERE fecha_recepcion_documento > '" .date("Y"). "-01-01 01:01:01';";
+    $sql = "SELECT COUNT(id) AS cant_cp FROM amc_inspeccion_control_programado WHERE fecha_recepcion_documento > '" . date("Y") . "-01-01 01:01:01';";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['cant_cp'])) {
@@ -137,10 +137,6 @@ function regresaEmail($id_dato)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-
-
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
     if ($id_dato != '') {
         $sql = "SELECT email_address
             FROM qo_members WHERE id = " . $id_dato;
@@ -150,4 +146,18 @@ function regresaEmail($id_dato)
     } else
         return '* No asignado';
 
+}
+
+function regresaPrefijoUnidad($idUnidad)
+{
+    global $os;
+    $sql = "SELECT prefijo
+            FROM amc_unidades WHERE id = " . $idUnidad;
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+
+    if ($rownombre['prefijo'] != NULL)
+        return $rownombre['prefijo'];
+    else
+        return '';
 }

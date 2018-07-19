@@ -21,7 +21,7 @@ QoDesk.QoAdmin.Groups = Ext.extend(Ext.grid.EditorGridPanel, {
         });
 
         var comboZONAL = new Ext.form.ComboBox({
-            id: 'comboZONAL',
+                id: 'comboZONAL',
             store: storeZONAL,
             valueField: 'id',
             displayField: 'nombre',
@@ -29,9 +29,9 @@ QoDesk.QoAdmin.Groups = Ext.extend(Ext.grid.EditorGridPanel, {
             mode: 'local'
         });
 
-        function zonaAdm(id) {
-            id = id.toString();
-            var index = storeZONAL.findExact('id', id);
+        function zonaAdm(sid) {
+            did = sid.toString();
+            var index = storeZONAL.findExact('id', did);
             if (index > -1) {
                 var record = storeZONAL.getAt(index);
                 return record.get('nombre');
@@ -48,7 +48,7 @@ QoDesk.QoAdmin.Groups = Ext.extend(Ext.grid.EditorGridPanel, {
             , {name: 'name', type: 'string'}
             , {name: 'description', type: 'string'}
             , {name: 'active', type: 'bool'}
-            , {name: 'id_unidad', type: 'integer'}
+            , {name: 'id_unidad', type: 'integer', allowBlank: false}
         ]);
 
         var cm = new Ext.grid.ColumnModel([
@@ -256,8 +256,10 @@ QoDesk.QoAdmin.Groups = Ext.extend(Ext.grid.EditorGridPanel, {
         this.on({
             'render': {
                 fn: function () {
-                   test = this.getStore();
-                    setTimeout(function () { test.load()}, 500);
+                    test = this.getStore();
+                    setTimeout(function () {
+                        test.load()
+                    }, 500);
                 }
                 , scope: this
                 , single: true
@@ -310,6 +312,7 @@ QoDesk.QoAdmin.Groups = Ext.extend(Ext.grid.EditorGridPanel, {
             name: ''
             , description: ''
             , active: false
+            , id_unidad : 1
         });
         this.stopEditing();
         this.store.insert(0, u);

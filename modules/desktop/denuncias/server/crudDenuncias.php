@@ -40,6 +40,9 @@ function selectDenuncias()
     $columnaBusqueda = 'codigo_tramite';
     $where = '';
 
+    $zonal_funcionario = $os->get_zonal_id();
+
+
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
     }
@@ -80,6 +83,13 @@ function selectDenuncias()
                 $where = $where . " AND despacho_secretaria <> 'true' ";
             }
         }
+    }
+
+    if ($where == '') {
+        //$zonal_funcionario
+        $where = " WHERE id_zonal_origen = " . $zonal_funcionario;
+    } else {
+        $where = $where . " AND id_zonal_origen = " . $zonal_funcionario;
     }
 
     if (isset ($_POST['start']))
@@ -190,7 +200,7 @@ function insertDenuncias()
     $data->id_persona = $os->get_member_id();
 
     //$grupo_funcionario =  $os->get_group_id();
-    $zonal_funcionario =  $os->get_zonal_id();
+    $zonal_funcionario = $os->get_zonal_id();
 
     $data->id_zonal_origen = $zonal_funcionario;
     //genero el listado de nombre de campos id_zonal_origen

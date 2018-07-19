@@ -32,27 +32,27 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
 
         //Inicio ventana mantenimiento ordenanzas
 
-        //inicio combo ZONA
-        storeZONAL = new Ext.data.JsonStore({
+        //inicio combo ZONAL
+        storeZONALM = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=zonas'
         });
 
-        var comboZONAL = new Ext.form.ComboBox({
-            id: 'comboZONAL',
-            store: storeZONAL,
+        var comboZONALM = new Ext.form.ComboBox({
+            id: 'comboZONALM',
+            store: storeZONALM,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
             mode: 'local'
         });
 
-        function zonaAdm(id) {
-            var index = storeZONAL.findExact('id', id);
+        function zonaAdmMantenimi(id) {
+            var index = storeZONALM.findExact('id', id);
             if (index > -1) {
-                var record = storeZONAL.getAt(index);
+                var record = storeZONALM.getAt(index);
                 return record.get('nombre');
             }
         }
@@ -241,7 +241,7 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                     , width: 50
                     , xtype: 'booleancolumn'
                 },
-                {header: 'Zonal', dataIndex: 'id_zonal', sortable: true, width: 100, editor: comboZONAL, renderer: zonaAdm },
+                {header: 'Zonal', dataIndex: 'id_zonal', sortable: true, width: 100, editor: comboZONALM, renderer: zonaAdmMantenimi },
                 {header: 'Prefijo', dataIndex: 'prefijo', sortable: true, width: 100, editor: textField, hidden: true },
                 {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField}
             ],

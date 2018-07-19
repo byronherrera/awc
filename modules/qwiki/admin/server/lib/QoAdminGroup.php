@@ -131,7 +131,7 @@ class QoAdminGroup {
                $id = null;
 
                if(isset($data[$i]->name, $data[$i]->description, $data[$i]->active)){
-                  $sql = "INSERT INTO qo_groups (name, description, active) VALUES (?, ?, ?)";
+                  $sql = "INSERT INTO qo_groups (name, description, active, id_unidad) VALUES (?, ?, ?, ?)";
                    if ($data[$i]->active == '') $data[$i]->active = 0;
                   // prepare the statement, prevents SQL injection by calling the PDO::quote() method internally
                   $sql = $this->os->db->conn->prepare($sql);
@@ -193,7 +193,7 @@ class QoAdminGroup {
                // loop thru the objects key/values to build sql
 
                 if (!isset($data[$i]->active))  {
-                   $data[$i]->active = 0;
+                   //$data[$i]->active = 0;
                 } else {
                     if ($data[$i]->active == false)  $data[$i]->active = 0;
                     if ($data[$i]->active == true)  $data[$i]->active = 1;

@@ -2450,7 +2450,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                              },*/
                             {
                                 xtype: 'textfield',
-                                fieldLabel: 'Observaciones',
+                                fieldLabel: 'Palabra clave',
                                 id: 'busqueda_observaciones',
                                 name: 'busqueda_observaciones',
                                 anchor: '95%'
