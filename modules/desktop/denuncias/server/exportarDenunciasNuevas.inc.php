@@ -75,7 +75,8 @@ if ($resultguia) {
 }
 
 //get prefijo unidad
-$prefijoUnidad  = regresaPrefijoUnidad($unidad);
+$undadSecretaria = regresaUnidadSecretariaZonal($os->get_zonal_id());
+$prefijoUnidad  = regresaPrefijoUnidad($undadSecretaria);
 $lengthprefijo = strlen($prefijoUnidad);
 
 
@@ -104,7 +105,8 @@ $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitu
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
 
 //get prefijo unidad
-$prefijoUnidad  = regresaPrefijoUnidad($unidad);
+$undadSecretaria = regresaUnidadSecretariaZonal($os->get_zonal_id());
+$prefijoUnidad  = regresaPrefijoUnidad($undadSecretaria);
 $lengthprefijo = strlen($prefijoUnidad);
 
 

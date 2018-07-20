@@ -68,10 +68,13 @@ function updateDenunciasReasignacion()
     if (is_null($data))
         $data = json_decode(stripslashes($_POST["data"]));
 
+    if ($data->secretaria) $data->secretaria = 1; else $data->secretaria = 0;
+
     $sql = "UPDATE amc_unidades SET
             nombre='$data->nombre',
             nombre_completo='$data->nombre_completo',
-            orden='$data->orden',
+            orden=$data->orden,
+            secretaria=$data->secretaria,
             activo='$data->activo'
 	  WHERE amc_unidades.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);

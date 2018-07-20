@@ -178,11 +178,12 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
             fields: [
                 {name: 'nombre', allowBlank: false},
                 {name: 'nombre_completo', allowBlank: false},
-                {name: 'activo', allowBlank: false},
                 {name: 'orden', allowBlank: true},
                 {name: 'id_zonal', allowBlank: false},
+                {name: 'activo', type: 'boolean', allowBlank: true},
+                {name: 'secretaria', type: 'boolean', allowBlank: true},
                 {name: 'prefijo', allowBlank: true},
-                {name: 'orden', allowBlank: true}
+                {name: 'orden', allowBlank: true,type: 'integer'}
             ]
         });
 
@@ -228,21 +229,38 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
                     width: 200,
                     editor: textField
                 },
+
                 {
-                    header: 'Activo'
-                    , dataIndex: 'activo'
-                    , editor: {
+                    header: 'Activo',
+                    dataIndex: 'activo',
+                    sortable: true,
+                    width: 45,
+                    align: 'center',
+                    editor: {
                         xtype: 'checkbox'
                     }
                     , falseText: 'No'
                     , menuDisabled: true
                     , trueText: 'Si'
-                    , sortable: true
-                    , width: 50
                     , xtype: 'booleancolumn'
                 },
+                {
+                    header: 'Es secretaría',
+                    dataIndex: 'secretaria',
+                    sortable: true,
+                    width: 45,
+                    align: 'center',
+                    editor: {
+                        xtype: 'checkbox'
+                    }
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Si'
+                    , xtype: 'booleancolumn'
+                } ,
+
                 {header: 'Zonal', dataIndex: 'id_zonal', sortable: true, width: 100, editor: comboZONALM, renderer: zonaAdmMantenimi },
-                {header: 'Prefijo', dataIndex: 'prefijo', sortable: true, width: 100, editor: textField, hidden: true },
+                {header: 'Prefijo', dataIndex: 'prefijo', sortable: true, width: 100, editor: textField },
                 {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField}
             ],
             viewConfig: {
@@ -1031,7 +1049,8 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
         var ordenanzasUnidades = new this.storeUnidades.recordType({
             id: ' ',
             nombre: '',
-            activo: '1'
+            activo: '1',
+            secretaria: '0'
         });
         this.gridUnidades.stopEditing();
         this.storeUnidades.insert(0, ordenanzasUnidades);

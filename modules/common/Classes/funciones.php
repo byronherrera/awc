@@ -161,3 +161,16 @@ function regresaPrefijoUnidad($idUnidad)
     else
         return '';
 }
+function regresaUnidadSecretariaZonal($idZonal)
+{
+    global $os;
+    $sql = "SELECT id
+            FROM amc_unidades WHERE id_zonal = " . $idZonal . " AND secretaria = 1 ";
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+
+    if ($rownombre['id'] != NULL)
+        return $rownombre['id'];
+    else
+        return '';
+}
