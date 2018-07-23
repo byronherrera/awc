@@ -51,6 +51,8 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'numero_tramite', allowBlank: true},
+                {name: 'numero_licencia', allowBlank: true},
+                {name: 'num_especie', allowBlank: true},
                 {name: 'ruc_licencia', allowBlank: true},
                 {name: 'razon_social', allowBlank: true},
                 {name: 'codigo', allowBlank: true},
@@ -96,13 +98,15 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 new Ext.grid.RowNumberer(),
                 {header: 'Número trámite', dataIndex: 'numero_tramite', sortable: true,width: 125},
+                {header: 'Número  licencia', dataIndex: 'numero_licencia', sortable: true,width: 125},
                 {header: 'RUC/Licencia', dataIndex: 'ruc_licencia', sortable: true,width: 100},
+                {header: 'Número especie', dataIndex: 'num_especie', sortable: true,width: 100},
                 {header: 'Razón social', dataIndex: 'razon_social', sortable: true,width: 240},
                 {header: 'Código', dataIndex: 'codigo', sortable: true,width: 80},
-                {header: 'Descripción actividad económica', flex:1, dataIndex: 'descripcion_actividad_economica', sortable: true,width: 300},
+                {header: 'Descripción actividad económica', flex:1, dataIndex: 'descripcion_actividad_economica', sortable: true,width: 320},
                 {header: 'Patente', dataIndex: 'patente', sortable: true,width: 70},
                 {header: 'Predio', dataIndex: 'predio', sortable: true,width: 70},
-                {header: 'Parroquia', dataIndex: 'parroquia', sortable: true,width: 200},
+                {header: 'Parroquia', dataIndex: 'parroquia', sortable: true,width: 240},
                 {header: 'Calle', dataIndex: 'calle', sortable: true,width: 120},
                 {header: 'Calle2', dataIndex: 'calle2', sortable: true,width: 120},
                 {header: 'Número', dataIndex: 'numero', sortable: true,width: 80},
@@ -111,8 +115,8 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Mail', dataIndex: 'mail', sortable: true,width: 100},
                 {header: 'Estado', dataIndex: 'estado', sortable: true,width: 90},
                 {header: 'Categoria', dataIndex: 'categoria', sortable: true,width: 80},
-                {header: 'Secretaria Otorgante', dataIndex: 'secretaria_otorgante', sortable: true,width: 60},
-                {header: 'Zonal', dataIndex: 'zonal', sortable: true,width: 100}
+                {header: 'Secretaria Otorgante', dataIndex: 'secretaria_otorgante', sortable: true,width: 160},
+                {header: 'Zonal', dataIndex: 'zonal', sortable: true,width: 180}
 
             ],
             viewConfig: {
