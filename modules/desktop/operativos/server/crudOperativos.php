@@ -252,7 +252,7 @@ function selectOperativos()
     }
 
 
-    if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
+        if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
         $tipo = $_POST['busqueda_observaciones'];
         if ($where == '') {
             $where = "WHERE ( upper( punto_encuentro_planificado ) like '%$tipo%'or

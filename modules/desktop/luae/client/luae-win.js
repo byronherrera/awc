@@ -70,6 +70,9 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
                 {name: 'mail', allowBlank: true},
                 {name: 'estado', allowBlank: true},
                 {name: 'zonal', allowBlank: true},
+                {name: 'fecha_creacion', allowBlank: true},
+                {name: 'fecha_impresion', allowBlank: true}
+
             ]
         });
         var writerLuae = new Ext.data.JsonWriter({
@@ -116,7 +119,9 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Estado', dataIndex: 'estado', sortable: true,width: 90},
                 {header: 'Categoria', dataIndex: 'categoria', sortable: true,width: 80},
                 {header: 'Secretaria Otorgante', dataIndex: 'secretaria_otorgante', sortable: true,width: 160},
-                {header: 'Zonal', dataIndex: 'zonal', sortable: true,width: 180}
+                {header: 'Zonal', dataIndex: 'zonal', sortable: true,width: 180},
+                {header: 'Fecha creación', dataIndex: 'fecha_creacion', sortable: true,width: 180},
+                {header: 'Fecha impresión', dataIndex: 'fecha_impresion', sortable: true,width: 180}
 
             ],
             viewConfig: {

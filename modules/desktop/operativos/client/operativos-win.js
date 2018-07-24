@@ -1172,17 +1172,18 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 }
 
 
-                                //para el caso  de los botones
-                                if ((rec.get("id_estado") == 2) || (rec.get("id_estado") == 3) || (rec.get("id_estado") == 5)) {
-                                    Ext.getCmp('tb_repoteOperativos').setDisabled(false);
-                                } else {
-                                    Ext.getCmp('tb_repoteOperativos').setDisabled(true);
-                                }
                                 //para el caso que se es administrador
                                 if (accesosAdministradorOpe) {
                                     Ext.getCmp('savedetalleoperativo').setDisabled(false);
                                 }
                             }
+                            //para el caso  de los botones
+                            if ((rec.get("id_estado") == 2) || (rec.get("id_estado") == 3) || (rec.get("id_estado") == 5)) {
+                                Ext.getCmp('tb_repoteOperativos').setDisabled(false);
+                            } else {
+                                Ext.getCmp('tb_repoteOperativos').setDisabled(true);
+                            }
+
                         }
                     }
                 }
