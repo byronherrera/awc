@@ -100,7 +100,7 @@ function insertInspeccion()
     $data->id_persona = $os->get_member_id();
     $data->reasignacion = 3;
     $data->despacho_secretaria = 'true';
-
+    $data->id_zonal_origen = $os->get_zonal_id () ;
 
     //genero el listado de nombre de campos
     $cadenaDatos = '';

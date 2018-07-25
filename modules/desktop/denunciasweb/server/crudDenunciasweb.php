@@ -47,6 +47,8 @@ function aprobarDenuncia()
     $data->id_caracter_tramite = 1;
     $data->cedula = $_POST["cedula"];
     $data->email = $_POST["email"];
+    //indicamos que la denuncia fue reciida en la matriz EUGENIO ESPEJO
+    $data->id_zonal_origen = 10;
     $data->direccion_denuncia = $_POST["direcciondenunciado"];
     $data->georeferencia = $_POST["geoposicionamiento2"];
 

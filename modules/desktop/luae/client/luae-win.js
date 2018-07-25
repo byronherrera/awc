@@ -65,13 +65,15 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
                 {name: 'calle', allowBlank: true},
                 {name: 'calle2', allowBlank: true},
                 {name: 'numero', allowBlank: true},
+                {name: 'referencia', allowBlank: true},
                 {name: 'telefono1', allowBlank: true},
                 {name: 'telefono2', allowBlank: true},
                 {name: 'mail', allowBlank: true},
                 {name: 'estado', allowBlank: true},
                 {name: 'zonal', allowBlank: true},
                 {name: 'fecha_creacion', allowBlank: true},
-                {name: 'fecha_impresion', allowBlank: true}
+                {name: 'fecha_impresion', allowBlank: true},
+                {name: 'observaciones', allowBlank: true}
 
             ]
         });
@@ -113,6 +115,7 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Calle', dataIndex: 'calle', sortable: true,width: 120},
                 {header: 'Calle2', dataIndex: 'calle2', sortable: true,width: 120},
                 {header: 'Número', dataIndex: 'numero', sortable: true,width: 80},
+                {header: 'Referencia', dataIndex: 'referencia', sortable: true,width: 80},
                 {header: 'Teléfono 1', dataIndex: 'telefono1', sortable: true,width:90},
                 {header: 'Teléfono 2', dataIndex: 'telefono2', sortable: true,width:90},
                 {header: 'Mail', dataIndex: 'mail', sortable: true,width: 100},
@@ -121,7 +124,8 @@ QoDesk.LuaeWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Secretaria Otorgante', dataIndex: 'secretaria_otorgante', sortable: true,width: 160},
                 {header: 'Zonal', dataIndex: 'zonal', sortable: true,width: 180},
                 {header: 'Fecha creación', dataIndex: 'fecha_creacion', sortable: true,width: 180},
-                {header: 'Fecha impresión', dataIndex: 'fecha_impresion', sortable: true,width: 180}
+                {header: 'Fecha impresión', dataIndex: 'fecha_impresion', sortable: true,width: 180},
+                {header: 'Observaciones', dataIndex: 'observaciones', sortable: true,width: 280}
 
             ],
             viewConfig: {
