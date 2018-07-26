@@ -115,6 +115,16 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo caracter del tramite INSPRFULA
 
+
+        function reincidencia(val) {
+            if (val == 0) {
+                return '<span style="color:green;">No</span>';
+            } else if (val == 1) {
+                return '<span style="color:red; font-weight: bolder">Si</span>';
+            }
+            return val;
+        }
+
         //inicio combo ordenanzas  ORDINSTR
         storeORDINSTR = new Ext.data.JsonStore({
             root: 'data',
@@ -448,7 +458,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'clausura', type: 'boolean', allowBlank: true},
                 {name: 'skelta', allowBlank: true},
                 {name: 'predio', allowBlank: true},
-                {name: 'reincidencia_predio', type: 'boolean', allowBlank: true},
+                {name: 'reincidencia_predio', allowBlank: true},
                 {name: 'nombre_administrado', allowBlank: true},
                 {name: 'reincidencia_administrado', type: 'boolean', allowBlank: true},
                 {name: 'nombre_establecimiento', allowBlank: true},
@@ -589,11 +599,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 120,
                     align: 'center',
-                    editor: {xtype: 'checkbox'},
-                    falseText: 'No',
                     menuDisabled: true,
-                    trueText: 'Si',
-                    xtype: 'booleancolumn'
+                    renderer: reincidencia
                 },
                 {
                     header: 'Nombre Administrado',
@@ -609,12 +616,9 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 130,
                     align: 'center',
-                    editor: {xtype: 'checkbox'},
-                    falseText: 'No',
                     menuDisabled: true,
-                    trueText: 'Si'
-                    ,
-                    xtype: 'booleancolumn'
+                    renderer: reincidencia
+
                 },
                 {
                     header: 'Nombre Establecimiento',
@@ -637,7 +641,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Cédula',
                     dataIndex: 'cedula',
                     sortable: true,
-                    width: 80   ,
+                    width: 80,
                     editor: textField,
                     xtype: 'numbercolumn',
                     format: '00000000'
@@ -679,9 +683,17 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboCATINTR
                 },
                 {
-                    header: 'Trabajos Varios', dataIndex: 'trabajos_varios', sortable: true, width: 100, align: 'center',
-                    editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
-                    , xtype: 'booleancolumn'
+                    header: 'Trabajos Varios',
+                    dataIndex: 'trabajos_varios',
+                    sortable: true,
+                    width: 100,
+                    align: 'center',
+                    editor: {xtype: 'checkbox'},
+                    falseText: 'No',
+                    menuDisabled: true,
+                    trueText: 'Si'
+                    ,
+                    xtype: 'booleancolumn'
                 },
 
                 {
@@ -708,12 +720,12 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboINSTRDMI
                 },
                 {
-                    header: 'Informe Otros', dataIndex: 'informe_otros', sortable: true, width: 90 , align: 'center',
+                    header: 'Informe Otros', dataIndex: 'informe_otros', sortable: true, width: 90, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
                     , xtype: 'booleancolumn'
                 },
                 {header: 'Entidad', dataIndex: 'entidad', sortable: true, width: 100, editor: textField},
-                    {header: 'Informe', dataIndex: 'informe', sortable: true, width: 120, editor: textField},
+                {header: 'Informe', dataIndex: 'informe', sortable: true, width: 120, editor: textField},
                 {
                     header: 'Medida Cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 180,
                     renderer: instruccionMedidaCautelar,
