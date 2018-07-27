@@ -116,11 +116,13 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         //fin combo caracter del tramite INSPRFULA
 
 
-        function reincidencia(val) {
+        function reincidencia(val,  meta) {
             if (val == 0) {
+               // meta.style = "background-color:#e4765c;";
                 return '<span style="color:green;">No</span>';
             } else if (val == 1) {
-                return '<span style="color:red; font-weight: bolder">Si</span>';
+                meta.style = "background-color:#fdb09f; text-align: center;";
+                return '<span style="color:white; font-weight: bolder;">Si</span>';
             }
             return val;
         }
@@ -460,7 +462,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'predio', allowBlank: true},
                 {name: 'reincidencia_predio', allowBlank: true},
                 {name: 'nombre_administrado', allowBlank: true},
-                {name: 'reincidencia_administrado', type: 'boolean', allowBlank: true},
+                {name: 'reincidencia_administrado', allowBlank: true},
                 {name: 'nombre_establecimiento', allowBlank: true},
                 {name: 'direccion', allowBlank: true},
                 {name: 'ruc', allowBlank: true},
@@ -1943,8 +1945,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             , fecha_ingreso: (new Date())
             , fecha_asignacion: (new Date())
             , clausura: false
-            , reincidencia_predio: false
-            , reincidencia_administrado: false
+            , reincidencia_predio: 0
+            , reincidencia_administrado: 0
             , luae: false
             , trabajos_varios: false
             , construcciones: false

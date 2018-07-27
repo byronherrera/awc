@@ -441,8 +441,45 @@ function updateInstruccion()
             };
         */
 
-
     // genero el listado de valores a insertar
+
+    function verificaReincidenciaPredio($predio)
+    {
+        if (!is_null($predio)) {
+            global $os;
+
+            $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE predio = $predio";
+
+            $result = $os->db->conn->query($sql);
+            $data = array();
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            if ($row['total'] > 0) return 1; else return 0;
+        } else {
+            return 0;
+        }
+    }
+    function verificaReincidenciaAdministrado($ruc, $cedula)
+    {
+
+        global $os;
+// analizar para los casos que solo exista ruc o exista cedula
+
+
+
+
+        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE ruc = $ruc OR cedula = $cedula;";
+
+        $result = $os->db->conn->query($sql);
+        $data = array();
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        if ($row['total'] > 0) return 1; else return 0;
+
+    }
+
+
+    $data->reincidencia_predio = verificaReincidenciaPredio($data->predio);
+    $data->reincidencia_administrado = verificaReincidenciaAdministrado($data->ruc, $data->cedula);
+
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
         $valBoolean = false;
