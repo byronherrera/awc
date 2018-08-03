@@ -107,11 +107,26 @@ function comboSecretariaTramites()
     );
 }
 
+function comboTiposExpedientesInstruccion()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT id, nombre FROM amc_expedientes_tipos_procesos_administrativos WHERE activo = 1 AND etapa = 'INSTRUCCION' ORDER BY id";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 function comboTiposExpedientes()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT id, nombre FROM amc_expedientes_tipos_procesos_administrativos WHERE activo = 1 ORDER BY id";
+    $sql = "SELECT id, nombre, etapa FROM amc_expedientes_tipos_procesos_administrativos WHERE activo = 1 ORDER BY id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -605,6 +620,9 @@ switch ($_GET['tipo']) {
         break;
     case 'zonas' :
         comboZonas();
+        break;
+    case 'tiposexpedientesinstruccion' :
+        comboTiposExpedientesInstruccion();
         break;
     case 'tiposexpedientes' :
         comboTiposExpedientes();

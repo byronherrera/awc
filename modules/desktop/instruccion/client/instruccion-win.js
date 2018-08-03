@@ -116,9 +116,9 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         //fin combo caracter del tramite INSPRFULA
 
 
-        function reincidencia(val,  meta) {
+        function reincidencia(val, meta) {
             if (val == 0) {
-               // meta.style = "background-color:#e4765c;";
+                // meta.style = "background-color:#e4765c;";
                 return '<span style="color:green;">No</span>';
             } else if (val == 1) {
                 meta.style = "background-color:#fdb09f; text-align: center;";
@@ -162,12 +162,18 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=tiposexpedientesinstruccion'
+        });
+
+        storeINSTIEXPFULL = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre', 'etapa'],
+            autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=tiposexpedientes'
         });
 
         var comboINSTIEXP = new Ext.form.ComboBox({
             id: 'comboINSTIEXP',
-            //store: storeINSPRFULA,
             store: storeINSTIEXP,
             valueField: 'id',
             displayField: 'nombre',
@@ -176,10 +182,22 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         function instruccionTiposExpedientes(id) {
-            var index = storeINSTIEXP.findExact('id', id);
+            var index = storeINSTIEXPFULL.findExact('id', id);
             if (index > -1) {
-                var record = storeINSTIEXP.getAt(index);
+                var record = storeINSTIEXPFULL.getAt(index);
                 return record.get('nombre');
+            }
+        }
+
+        function instruccionVerificaExpedientesEtapa(id, etapa) {
+            var index = storeINSTIEXPFULL.findExact('id', id);
+            if (index > -1) {
+                var record = storeINSTIEXPFULL.getAt(index);
+                if (record.get('etapa') == etapa) {
+                    return true
+                } else {
+                    return false
+                }
             }
         }
 
@@ -447,7 +465,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'codigo_expediente', allowBlank: true},
                 {name: 'id_persona', allowBlank: true},
                 {name: 'fecha_ingreso', type: 'date', dateFormat: 'c', allowBlank: false},
-                {name: 'id_persona_encargada', allowBlank: false},
+                {name: 'id_persona_encargada', allowBlank: true},
                 {name: 'id_persona_reasignado', allowBlank: true},
                 {name: 'fecha_asignacion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_reasignacion', type: 'date', dateFormat: 'c', allowBlank: true},
@@ -538,12 +556,12 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     width: 140
                 },
                 {
-                    header: 'Fecha asignación',
-                    dataIndex: 'fecha_asignacion',
-                    sortable: true,
-                    width: 100,
-                    renderer: formatDate,
-                    editor: editorDate
+                    header: 'Fecha asignación'
+                    , dataIndex: 'fecha_asignacion'
+                    , sortable: true
+                    , width: 100
+                    , renderer: formatDate
+                    //, editor: editorDate
                 },
                 {
                     header: 'Persona reasignado',
@@ -562,22 +580,22 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {header: 'Expediente', dataIndex: 'expediente', sortable: true, width: 130, editor: textField},
                 {
-                    header: 'Trámite Secretaría',
+                    header: 'Trámite General',
                     dataIndex: 'id_tramite',
                     sortable: true,
                     width: 100,
                     renderer: instruccionSecretariaTramite,
                     editor: comboSECTRAM
                 },
-                {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 80, editor: textField},
                 {
                     header: 'Estado',
                     dataIndex: 'id_estado',
                     sortable: true,
-                    width: 140,
+                    width: 210,
                     renderer: estadoRecepcionExpediente,
                     editor: comboESTEXP
                 },
+                {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 120, editor: textField},
                 {header: 'Detalle', dataIndex: 'detalle', sortable: true, width: 170, editor: textField},
                 {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 170, editor: textField},
                 {
@@ -611,17 +629,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     width: 120,
                     editor: textField
                 },
-
-                {
-                    header: 'Reincidencia_administrado',
-                    dataIndex: 'reincidencia_administrado',
-                    sortable: true,
-                    width: 130,
-                    align: 'center',
-                    menuDisabled: true,
-                    renderer: reincidencia
-
-                },
                 {
                     header: 'Nombre Establecimiento',
                     dataIndex: 'nombre_establecimiento',
@@ -647,6 +654,16 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: textField,
                     xtype: 'numbercolumn',
                     format: '00000000'
+                },
+                {
+                    header: 'Reincidencia administrado',
+                    dataIndex: 'reincidencia_administrado',
+                    sortable: true,
+                    width: 130,
+                    align: 'center',
+                    menuDisabled: true,
+                    renderer: reincidencia
+
                 },
                 {
                     header: 'Casillero Judicial',
@@ -785,7 +802,15 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
 
                             // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
-
+                            if (acceso) {
+                                gridBlockInstruccion = false;
+                                if (rec.get("id_estado") != 1) {
+                                    gridBlockInstruccion = false;
+                                }
+                                else {
+                                    gridBlockInstruccion = false;
+                                }
+                            }
                             /*                            if (acceso) {
                                                             if (rec.get("id_estado") != 1) {
                                                                 Ext.getCmp('informesAccionesTab').setDisabled(acceso ? false : true);
@@ -1115,14 +1140,15 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
-                        if (gridBlockInstruccion) {
-                            //verifico que si no es administrador se bloque la edicion
-                            if (!accesosAdministradorOpe)
-                                return false;
+                        //verifico que si no es administrador se bloque la edicion
+                        if (accesosAdministradorOpe) {
+                            return instruccionVerificaExpedientesEtapa(e.record.data.amc_expedientes_tipos, 'INSTRUCCION');
+                        } else {
+                            return false;
                         }
-                        return true;
-                    } else {
-                        return false;
+                    }
+                    else {
+                        return false
                     }
                 }
             }
@@ -1943,7 +1969,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         var instruccion = new this.storeInstruccion.recordType({
             id_persona: ''
             , fecha_ingreso: (new Date())
-            , fecha_asignacion: (new Date())
+            //, fecha_asignacion: (new Date())
             , clausura: false
             , reincidencia_predio: 0
             , reincidencia_administrado: 0
