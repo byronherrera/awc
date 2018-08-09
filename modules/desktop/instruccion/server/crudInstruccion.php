@@ -360,13 +360,14 @@ function insertInstruccion()
         "data" => array($data)
     ));
 }
+
 function verificaReincidenciaPredio($predio)
 {
     if (!is_null($predio)) {
         global $os;
 
-        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE predio = $predio";
-        $result = $os->db->conn->query($sql);
+        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE predio = '$predio' AND predio <> ' '";
+            $result = $os->db->conn->query($sql);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         if ($row['total'] >= 2) {
 
@@ -376,7 +377,7 @@ function verificaReincidenciaPredio($predio)
             $sql->execute();
 
             return 1;
-        } else  {
+        } else {
             return 0;
         }
     } else {
@@ -403,7 +404,7 @@ function verificaReincidenciaAdministrado($ruc, $cedula)
             $sql->execute();
 
             return 1;
-        } else  {
+        } else {
             return 0;
         }
     }
@@ -420,7 +421,7 @@ function verificaReincidenciaAdministrado($ruc, $cedula)
             $sql->execute();
 
             return 1;
-        } else  {
+        } else {
             return 0;
         }
     }
@@ -429,6 +430,7 @@ function verificaReincidenciaAdministrado($ruc, $cedula)
     return 0;
 
 }
+
 function updateInstruccion()
 {
     global $os;
@@ -510,9 +512,11 @@ function updateInstruccion()
         */
 
     // genero el listado de valores a insertar
-    $cambioValorPrevio = verficaCambioValorPrevio( "id_persona_encargada", $data->id, $data->id_persona_encargada);
-    if (!$cambioValorPrevio) {
-        $data->fecha_asignacion = date('Y-m-d\Th:i:s', time());
+    if (isset($data->id_persona_encargada)) {
+        $cambioValorPrevio = verficaCambioValorPrevio("id_persona_encargada", $data->id, $data->id_persona_encargada);
+        if (!$cambioValorPrevio) {
+            $data->fecha_asignacion = date('Y-m-d\Th:i:s', time());
+        }
     }
 
     $cadenaDatos = '';
@@ -527,10 +531,12 @@ function updateInstruccion()
             $valor = 'false';
             $valBoolean = true;
         }
+
         if (isset($valor) and ($valor != '')) {
             if ($valBoolean)
                 $cadenaDatos = $cadenaDatos . $clave . " = " . $valor . " ,";
             else
+
                 $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
         }
     }
@@ -551,7 +557,9 @@ function updateInstruccion()
         "data" => array($data)
     ));
 }
-function verficaCambioValorPrevio ($columna, $id,  $nuevoValor) {
+
+function verficaCambioValorPrevio($columna, $id, $nuevoValor)
+{
     global $os;
 
     $sql = "SELECT $columna FROM amc_expediente WHERE id = $id";
@@ -564,7 +572,9 @@ function verficaCambioValorPrevio ($columna, $id,  $nuevoValor) {
     } else {
         return false;
     }
-};
+}
+
+;
 function selectInstruccionForm()
 {
     global $os;

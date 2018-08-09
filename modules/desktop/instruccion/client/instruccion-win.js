@@ -531,6 +531,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeInstruccion,
             columns: [
                 new Ext.grid.RowNumberer(),
+
+                {header: 'Código', dataIndex: 'codigo_expediente', sortable: true, width: 60, align: 'left'},
                 {
                     header: 'Fecha Ingreso',
                     dataIndex: 'fecha_ingreso',
@@ -538,15 +540,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     width: 100,
                     renderer: formatDate
                 },
-                {
-                    header: 'Elaborado',
-                    dataIndex: 'id_persona',
-                    sortable: true,
-                    width: 100,
-                    renderer: personaAsignadaInstr,
-                    hidden: true
-                },
-                {header: 'Código', dataIndex: 'codigo_expediente', sortable: true, width: 60, align: 'left'},
                 {
                     header: 'Asignación',
                     dataIndex: 'id_persona_encargada',
@@ -578,6 +571,23 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: formatDate,
                     editor: editorDate, hidden: true
                 },
+                {
+                    header: 'Estado',
+                    dataIndex: 'id_estado',
+                    sortable: true,
+                    width: 210,
+                    renderer: estadoRecepcionExpediente,
+                    editor: comboESTEXP
+                },
+
+                {
+                    header: 'Elaborado',
+                    dataIndex: 'id_persona',
+                    sortable: true,
+                    width: 100,
+                    renderer: personaAsignadaInstr,
+                    hidden: true
+                },
                 {header: 'Expediente', dataIndex: 'expediente', sortable: true, width: 130, editor: textField},
                 {
                     header: 'Trámite General',
@@ -587,15 +597,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: instruccionSecretariaTramite,
                     editor: comboSECTRAM
                 },
-                {
-                    header: 'Estado',
-                    dataIndex: 'id_estado',
-                    sortable: true,
-                    width: 210,
-                    renderer: estadoRecepcionExpediente,
-                    editor: comboESTEXP
-                },
-                {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 120, editor: textField},
+
+                {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 120, editor: textField, hidden: true},
                 {header: 'Detalle', dataIndex: 'detalle', sortable: true, width: 170, editor: textField},
                 {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 170, editor: textField},
                 {
@@ -1683,15 +1686,16 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                 },
                                 '-',
                                 {
+
                                     xtype: 'checkbox',
-                                    boxLabel: 'Instrucción no finalizados',
+                                    boxLabel: 'Ver Todos',
                                     id: 'checkNoRecibidos',
                                     name: 'noenviados',
                                     checked: false,
-                                    inputValue: '1',
-                                    tooltip: 'Recargar datos',
+                                    inputValue: '0',
+                                    tooltip: 'Recargar datosadsfadsfa',
                                     //disabled: !acceso,
-                                    cls: 'barramenu',
+                                   // cls: 'barramenu',
                                     handler: function (checkbox, isChecked) {
                                         storeInstruccion.baseParams.finalizados = isChecked;
                                         storeInstruccion.load();
