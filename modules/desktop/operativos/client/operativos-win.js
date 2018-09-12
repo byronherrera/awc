@@ -3384,10 +3384,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
         var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
         var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
-
         this.storeDocumentosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
+
         this.storeDocumentosReporte.baseParams.accesosOperativos = accesosOperativos;
         this.storeDocumentosReporte.baseParams.accesosAdministradorIns = accesosAdministradorIns;
+        // para indicar en la busqueda que es desde el formulario
+        var formularioBusqueda  = 1;
+        this.storeDocumentosReporte.baseParams.formularioBusqueda = formularioBusqueda;
 
 
         this.storeDocumentosReporte.load();

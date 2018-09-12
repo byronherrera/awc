@@ -62,10 +62,12 @@ function selectOperativos()
 
     $where = '';
     $usuarioLog = $os->get_member_id();
-    if (isset($_POST['accesosOperativos'])) {
-        $accesosOperativos = $_POST['accesosOperativos'];
-        if ($accesosOperativos == 'true')
-            $where = " WHERE $usuarioLog = id_persona_encargada ";
+    if (!isset($_POST['formularioBusqueda'])) {
+        if (isset($_POST['accesosOperativos'])) {
+            $accesosOperativos = $_POST['accesosOperativos'];
+            if ($accesosOperativos == 'true')
+                $where = " WHERE $usuarioLog = id_persona_encargada ";
+        }
     }
 
 
@@ -252,7 +254,7 @@ function selectOperativos()
     }
 
 
-        if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
+    if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
         $tipo = $_POST['busqueda_observaciones'];
         if ($where == '') {
             $where = "WHERE ( upper( punto_encuentro_planificado ) like '%$tipo%'or

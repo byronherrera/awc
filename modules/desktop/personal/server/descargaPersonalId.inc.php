@@ -83,6 +83,7 @@ textoSiguieteFila("UNIDAD", 'L', 'L', 'center', false, "B");
 textoSiguieteFila("TELEFONO", 'M', 'M', 'center', false, "B");
 textoSiguieteFila("EXTENSION", 'N', 'N', 'center', false, "B");
 textoSiguieteFila("EMAIL", 'O', 'O', 'center', false, "B");
+
 textoSiguieteFila("PISO", 'P', 'P', 'center', false, "B");
 // recuperamos los nombres de los usuarios
 

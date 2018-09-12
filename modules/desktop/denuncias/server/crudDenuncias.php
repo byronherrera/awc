@@ -40,11 +40,9 @@ function selectDenuncias()
     $columnaBusqueda = 'codigo_tramite';
     $where = '';
 
-    $zonal_funcionario = $os->get_zonal_id();
-
-
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
+
     }
 
     if (isset($_POST['filterText'])) {
@@ -83,13 +81,6 @@ function selectDenuncias()
                 $where = $where . " AND despacho_secretaria <> 'true' ";
             }
         }
-    }
-
-    if ($where == '') {
-        //$zonal_funcionario
-        $where = " WHERE id_zonal_origen = " . $zonal_funcionario;
-    } else {
-        $where = $where . " AND id_zonal_origen = " . $zonal_funcionario;
     }
 
     if (isset ($_POST['start']))
@@ -198,12 +189,7 @@ function insertDenuncias()
     $data->despacho_secretaria = 'false';
     $data->codigo_tramite = generaCodigoProcesoDenuncia();
     $data->id_persona = $os->get_member_id();
-
-    //$grupo_funcionario =  $os->get_group_id();
-    $zonal_funcionario = $os->get_zonal_id();
-
-    $data->id_zonal_origen = $zonal_funcionario;
-    //genero el listado de nombre de campos id_zonal_origen
+    //genero el listado de nombre de campos
 
     $cadenaDatos = '';
     $cadenaCampos = '';
@@ -299,6 +285,7 @@ function updateDenuncias()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
+        if ($valor != '')
         $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);

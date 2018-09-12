@@ -11,8 +11,6 @@
  * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
  * @version    1.0.0, 2017-06-15
  */
-require_once '../../../common/Classes/funciones.php';
-
 $os->db->conn->query("SET NAMES 'utf8'");
 if ($reimpresion)
     $sql = "SELECT id, codigo_tramite, 
@@ -74,15 +72,10 @@ if ($resultguia) {
     }
 }
 
-//get prefijo unidad
-$undadSecretaria = regresaUnidadSecretariaZonal($os->get_zonal_id());
-$prefijoUnidad  = regresaPrefijoUnidad($undadSecretaria);
-$lengthprefijo = strlen($prefijoUnidad);
-
+//get numero de guia
 
 $os->db->conn->query("SET NAMES 'utf8'");
-
-$sql = "SELECT SUBSTRING(numero,". ($lengthprefijo + 2).",4) as a, SUBSTRING(numero,". ($lengthprefijo + 7).") as num FROM amc_guias WHERE SUBSTRING(numero,". ($lengthprefijo + 2).",4) = YEAR(CURDATE()) AND id not BETWEEN 1635 AND  1655  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
+$sql = "SELECT SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias WHERE SUBSTRING(numero,5,4) = YEAR(CURDATE()) AND id not BETWEEN 1635 AND  1655  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
 $resultguia = $os->db->conn->query($sql);
 if ($resultguia) {
     $row = $resultguia->fetch(PDO::FETCH_ASSOC);
@@ -104,12 +97,6 @@ $year = date("Y");
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
 
-//get prefijo unidad
-$undadSecretaria = regresaUnidadSecretariaZonal($os->get_zonal_id());
-$prefijoUnidad  = regresaPrefijoUnidad($undadSecretaria);
-$lengthprefijo = strlen($prefijoUnidad);
-
-
 if ($number_of_rows > 0) {
     $newIdGuia = 'Vacio';
     //insert  numero de guia
@@ -117,12 +104,12 @@ if ($number_of_rows > 0) {
 
     $idUsuario = $os->get_member_id();
     if (!$reimpresion) {
-        $sql = "INSERT INTO amc_guias (numero, unidad, id_member, id_unidad) VALUES ('".$prefijoUnidad."-$year-$numeroGuia', '$nombreUnidad', '$idUsuario', '$unidad')";
+        $sql = "INSERT INTO amc_guias (numero, unidad, id_member, id_unidad) VALUES ('SGE-$year-$numeroGuia', '$nombreUnidad', '$idUsuario', '$unidad')";
         $resultguia = $os->db->conn->query($sql);
         $newIdGuia = $os->db->conn->lastInsertId();
     }
 
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "GUIA DE DESPACHO N. ".$prefijoUnidad."-$year-$numeroGuia");
+    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "GUIA DE DESPACHO N. SGE-$year-$numeroGuia");
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, $nombreUnidad);
 
 //insert  numero de guia

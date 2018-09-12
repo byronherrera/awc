@@ -24,3 +24,12 @@
     min-width: 220px !important;
 }
 
+
+.x-column-header.blue {
+    background-color: blue;
+}
+
+.x-grid3-col.blue
+{
+    background-color: #ffc;
+}

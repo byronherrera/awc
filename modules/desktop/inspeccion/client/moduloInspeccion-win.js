@@ -3,6 +3,8 @@ var inspeccionSeleccionada = '';
 var todosInspectores = '';
 var todasInspecciones = true;
 //var fecha = date('Y-m-d H:i:s');
+
+
 QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
     id: 'moduloInspeccion',
     type: 'desktop/moduloInspeccion',
@@ -1148,7 +1150,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         });
 
         //inicio combo estado de obra
-            storeESTADOOBRA = new Ext.data.JsonStore({
+        storeESTADOOBRA = new Ext.data.JsonStore({
             root: 'datos',
             fields: ['id', 'nombre'],
             autoLoad: true,
@@ -3131,7 +3133,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 beforeedit: function (e) {
                     // verficamos que ya no exista el dato
                     if (e.field == "funcionario_entrega") {
-                        if (e.record.get('guia') > 0 ) {
+                        if (e.record.get('guia') > 0) {
                             Ext.Msg.show({
                                 title: 'Error '
                                 , msg: 'No se puede modificar una vez generada el acta  '
@@ -3155,7 +3157,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
             height: winHeight * 0.37,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth -16,
+            width: winWidth - 16,
             readOnly: accesosSupervision,
             store: this.storeDetalleTodasInspecciones,
             columns: [
@@ -3621,7 +3623,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
             height: winHeight * 0.37,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth -16,
+            width: winWidth - 16,
             readOnly: accesosSupervision,
             store: this.storeControlProgramadoInspeccion,
             columns: [
@@ -3829,7 +3831,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             //Calculo de tamaño vertical frame inferior de pestaña Trámites pendientes
             height: winHeight * 0.37,
             //Calculo de tamaño horizontal frame inferior de pestaña Trámites pendientes
-            width: winWidth -16,
+            width: winWidth - 16,
             readOnly: accesosSupervision,
             store: this.storeControlProgramadoAsignacion,
             columns: [
@@ -4897,7 +4899,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     {
                                         xtype: 'tabpanel',
                                         activeTab: 0,
-                                        width: winWidth-15,
+                                        width: winWidth - 15,
                                         cls: 'no-border',
                                         items: [
                                             {
@@ -5359,8 +5361,19 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                                     handler: this.requestGridDataListadoInspeccion,
                                     scope: this,
                                     text: 'Recargar'
+                                }, '-',
+                                {
+                                    xtype: 'label',
+                                    html: "<object id='clipboard' codebase='http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0' width='16' height='16' align='middle'><param name='allowScriptAccess' value='always' /><param name='allowFullScreen' value='false' /><param name='movie' value='modules/common/libraries/grid-copy-clipboard/clipboard.swf' /><param name='quality' value='high' /><param name='bgcolor' value='#ffffff' /><param name='wmode' value='transparent' /><param name='flashvars' value='callback=f1' /><embed src='modules/common/libraries/grid-copy-clipboard/clipboard.swf' flashvars='callback=f1' quality='high' swliveconnect='true' bgcolor='#ffffff' width='16' height='16' wmode='transparent' name='clipboard' align='middle' allowscriptaccess='always' allowfullscreen='false' type='application/x-shockwave-flash' pluginspage='http://www.adobe.com/go/getflashplayer' /></object>"
                                 },
+
                                 '-',
+                               /* {
+                                    iconCls: 'reload-icon',
+                                    handler: this.f1,
+                                    scope: this,
+                                    text: 'Recargar'
+                                }, '-',*/
                                 '->'
                                 , {
                                     text: 'Buscar por:'
@@ -5530,7 +5543,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             codigo_tramite: '',
             recepción_documento: '',
             //id_ordenanza: '0',
-             id_tipo_documento: '40',
+            id_tipo_documento: '40',
             num_documento: 's/n',
             remitente: ' ',
             //cedula: '',
@@ -5558,6 +5571,17 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         } else {
             this.storeListadoTodosInspectores.load();
         }
+    },
+
+    f1: function () {
+        var format;
+        format = SerializationMode.TabDelimited;
+        //var s = Ext.getCmp('gridListadoTodosInspectores').store.serializeData(format);
+        var s = Ext.getCmp('gridListadoTodosInspectores').store.serializeData(format);
+        if (window.clipboardData)
+            window.clipboardData.setData('text', s);
+        else
+            return (s);
     },
     //Función para actualizar los datos mostrados en pantalla de la pestaña de ModuloInspeccion
     requestGridDataDenunciasActa: function () {
@@ -5880,7 +5904,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
-                if ( btn === 'yes' ) {
+                if (btn === 'yes') {
                     window.location.href = 'modules/desktop/inspeccion/server/generarHojaRuta.php';
                     /*setTimeout(function () {
                         AppMsg.setAlert("Alerta ", Ext.getCmp('checkPendientesAprobar').getValue());

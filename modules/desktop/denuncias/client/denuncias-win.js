@@ -28,8 +28,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
         var textField = new Ext.form.TextField({allowBlank: false});
 
-        var limitedenuncias = 100;
-        var valueNoEnviadosDefault = false;
 
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i:s') : '';
@@ -748,7 +746,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'codigo_tramite', allowBlank: false},
-                {name: 'id_zonal_origen', allowBlank: false},
                 {name: 'id_persona', allowBlank: false},
                 {name: 'recepcion_documento', type: 'date', dateFormat: 'c', allowBlank: false},
                 {name: 'id_tipo_documento', allowBlank: false},
@@ -778,16 +775,14 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             writer: writerDenuncias,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
-            baseParams: {
-                start: 0,
-                limit: limitedenuncias,
-                noenviados: valueNoEnviadosDefault
-
-            }
+            baseParams: {}
         });
         storeDenuncias = this.storeDenuncias;
+        limitedenuncias = 100;
 
-        //storeDenuncias.load();
+        storeDenuncias.baseParams = {
+            limit: limitedenuncias
+        };
 
         this.gridDenuncias = new Ext.grid.EditorGridPanel({
             height: 200,
@@ -806,8 +801,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 28,
                     renderer: personaReceptaDenuncia
-                },
-                {
+                }, {
                     header: 'Recepción documento',
                     dataIndex: 'recepcion_documento',
                     sortable: true,
@@ -931,13 +925,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     , width: 18
                     , xtype: 'booleancolumn'
                     , hidden: true
-                },
-                {
-                    header: 'Zonal',
-                    dataIndex: 'id_zonal_origen',
-                    sortable: true,
-                    width: 30,
-                    renderer: zonaAdm
                 }
             ],
             viewConfig: {
@@ -2388,7 +2375,18 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
         };
 
-        setTimeout(function () { this.storeDenuncias.load()}, 500);
+
+        setTimeout(function () {
+            this.storeDenuncias.load({
+                params: {
+                    start: 0,
+                    limit: limitedenuncias,
+                    noenviados: Ext.getCmp('checkNoEnviados').getValue()
+                }
+            });
+        }, 500);
+
+
     },
     deletedenuncias: function () {
         Ext.Msg.show({
@@ -2411,7 +2409,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         var denuncias = new this.storeDenuncias.recordType({
             codigo_tramite: ' ',
             id_persona: ' ',
-            id_zonal_origen: ' ',
             id_tipo: '',
             recepcion_documento: (new Date()),
             id_tipo_documento: '2',

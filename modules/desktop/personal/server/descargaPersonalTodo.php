@@ -41,8 +41,8 @@ $objPHPExcel = new PHPExcel();
 $objPHPExcel->setActiveSheetIndex(0);
 orientacion('A1:Q600', 'center');
 //tamaños de texto pòr defecto
-$objPHPExcel->getActiveSheet()->getStyle('A1:AD3')->getFont()->setSize(12);
-$objPHPExcel->getActiveSheet()->getStyle('A4:AD500')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A1:AE3')->getFont()->setSize(12);
+$objPHPExcel->getActiveSheet()->getStyle('A4:AE500')->getFont()->setSize(10);
 
 
 //definicion de estilos
@@ -94,7 +94,8 @@ textoSiguieteFila("DIRECCION NUMERO", 'Z', 'Z', 'center', false, "B");
 textoSiguieteFila("PARROQUIA", 'AA', 'AA', 'center', false, "B");
 textoSiguieteFila("BARRIO", 'AB', 'AB', 'center', false, "B");
 textoSiguieteFila("RECORRIDO", 'AC', 'AC', 'center', false, "B");
-textoSiguieteFila("GEOPOSICIONAMIENTO", 'AD', 'AD', 'center', false, "B");
+textoSiguieteFila("FECHA NACIMIENTO", 'AD', 'AD', 'center', false, "B");
+textoSiguieteFila("GEOPOSICIONAMIENTO", 'AE', 'AE', 'center', false, "B");
 
 // recuperamos los nombres de los usuarios
 
@@ -133,7 +134,8 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($nombreDetalle['parroquia'], 'AA', 'AA', 'left', false);
     textoSiguieteFila($nombreDetalle['barrio'], 'AB', 'AB', 'left', false);
     textoSiguieteFila($nombreDetalle['recorrido'], 'AC', 'AC', 'left', false);
-    textoSiguieteFila($nombreDetalle['geoposicionamiento'], 'AD', 'AD', 'left', false);
+    textoSiguieteFila($nombreDetalle['fecha_nacimiento'], 'AD', 'AD', 'left', false);
+    textoSiguieteFila($nombreDetalle['geoposicionamiento'], 'AE', 'AE', 'left', false);
 }
 
 
@@ -232,6 +234,8 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AC')->setAutoSize(fa
 $objPHPExcel->getActiveSheet()->getColumnDimension('AC')->setWidth(25);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AD')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('AD')->setWidth(25);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AE')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('AE')->setWidth(25);
 
 
 

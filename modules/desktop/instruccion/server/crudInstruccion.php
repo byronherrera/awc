@@ -367,7 +367,7 @@ function verificaReincidenciaPredio($predio)
         global $os;
 
         $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE predio = '$predio' AND predio <> ' '";
-            $result = $os->db->conn->query($sql);
+        $result = $os->db->conn->query($sql);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         if ($row['total'] >= 2) {
 
@@ -387,25 +387,24 @@ function verificaReincidenciaPredio($predio)
 
 function verificaReincidenciaAdministrado($ruc, $cedula)
 {
-
     global $os;
     // analizar para los casos que solo exista ruc o exista cedula
+    // se genera una
+    if ((!is_null($ruc)) or (!is_null($cedula))) {
+        $sql = "UPDATE  amc_expediente SET reincidencia_administrado = 0;
+                UPDATE  amc_expediente SET reincidencia_administrado = 1 WHERE ruc in (SELECT ruc FROM ( SELECT COUNT(*) as total , ruc from amc_expediente  GROUP BY ruc ) b WHERE total > 1);
+                UPDATE  amc_expediente SET reincidencia_administrado = 1 WHERE cedula in (SELECT cedula FROM ( SELECT COUNT(*) as total , cedula from amc_expediente  GROUP BY cedula ) b WHERE total > 1);";
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
+     //   return 1;
+    }
+
     if (!is_null($ruc)) {
         $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE ruc = $ruc";
-
         $result = $os->db->conn->query($sql);
-        $data = array();
         $row = $result->fetch(PDO::FETCH_ASSOC);
         if ($row['total'] >= 2) {
-
-            $sql = "UPDATE  amc_expediente SET reincidencia_administrado = 0;
-                        UPDATE  amc_expediente SET reincidencia_administrado = 1 WHERE ruc in (SELECT predio FROM ( SELECT COUNT(*) as total , ruc from amc_expediente  GROUP BY ruc ) b WHERE total > 1);";
-            $sql = $os->db->conn->prepare($sql);
-            $sql->execute();
-
             return 1;
-        } else {
-            return 0;
         }
     }
     if (!is_null($cedula)) {
@@ -414,12 +413,6 @@ function verificaReincidenciaAdministrado($ruc, $cedula)
         $data = array();
         $row = $result->fetch(PDO::FETCH_ASSOC);
         if ($row['total'] >= 2) {
-
-            $sql = "UPDATE  amc_expediente SET reincidencia_administrado = 0;
-                        UPDATE  amc_expediente SET reincidencia_administrado = 1 WHERE cedula in (SELECT cedula FROM ( SELECT COUNT(*) as total , cedula from amc_expediente  GROUP BY cedula ) b WHERE total > 1);";
-            $sql = $os->db->conn->prepare($sql);
-            $sql->execute();
-
             return 1;
         } else {
             return 0;

@@ -127,6 +127,11 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             return val;
         }
 
+        function columnaColor(value, meta) {
+            meta.css = 'blue';
+            return value;
+        }
+
         //inicio combo ordenanzas  ORDINSTR
         storeORDINSTR = new Ext.data.JsonStore({
             root: 'data',
@@ -290,12 +295,13 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function aniosluaeInstruccion(id) {
+        function aniosluaeInstruccion(id, meta) {
             var index = storeANILUAIN.find('id', id);
             if (index > -1) {
                 var record = storeANILUAIN.getAt(index);
                 return record.get('nombre');
             }
+            meta.css = 'blue';
         }
 
         //fin combo años luae ANILUAIN
@@ -325,12 +331,13 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function categoriaInstruccion(id) {
+        function categoriaInstruccion(id, meta) {
             var index = storeCATINTR.find('id', id);
             if (index > -1) {
                 var record = storeCATINTR.getAt(index);
                 return record.get('nombre');
             }
+            meta.css = 'blue';
         }
 
         //fin combo categoria instruccion CATINTR
@@ -639,7 +646,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     width: 120,
                     editor: textField
                 },
-                {header: 'Dirección', dataIndex: 'direccion', sortable: true, width: 100, editor: textField},
                 {
                     header: 'RUC',
                     dataIndex: 'ruc',
@@ -666,27 +672,33 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     align: 'center',
                     menuDisabled: true,
                     renderer: reincidencia
-
                 },
+                {header: 'Dirección', dataIndex: 'direccion', sortable: true, width: 160, editor: textField},
+
                 {
                     header: 'Casillero Judicial',
                     dataIndex: 'casillero_judicial',
                     sortable: true,
                     width: 100,
-                    editor: textField
+                    editor: textField,
                 },
                 {
                     header: 'Actividad Verificada',
                     dataIndex: 'actividad_verificada',
+                    cls: 'blue',
                     sortable: true,
                     width: 100,
-                    editor: textField
+                    editor: textField,
+                    renderer: columnaColor
+
                 },
-                {header: 'CIIU', dataIndex: 'ciiu', sortable: true, width: 50, editor: textField},
+                {header: 'CIIU', dataIndex: 'ciiu', sortable: true, width: 50, editor: textField,
+                    renderer: columnaColor},
                 {
                     header: 'TIENE LUAE', dataIndex: 'luae', sortable: true, width: 70, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
-                    , xtype: 'booleancolumn'
+                    , xtype: 'booleancolumn',
+                    renderer: columnaColor
                 },
                 {
                     header: 'Año LUAE',
