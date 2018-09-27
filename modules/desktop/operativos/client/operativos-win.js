@@ -2983,9 +2983,42 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                 },
                                 {
                                     xtype: 'checkbox',
+                                    boxLabel: 'Detalle acciones',
+                                    id: 'checkDetalleAcciones',
+                                    name: 'detalleacciones',
+                                    checked: false,
+                                    inputValue: '1',
+                                    tooltip: 'Detalle de las acciones efectuados en el reporte',
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                    }
+                                },                                {
+                                    xtype: 'checkbox',
+                                    boxLabel: 'Detalle actas',
+                                    id: 'checkDetalleActas',
+                                    name: 'detalleactas',
+                                    checked: false,
+                                    inputValue: '1',
+                                    tooltip: 'Detalle de las actas efectuados en el reporte',
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                    }
+                                }, {
+                                    xtype: 'checkbox',
                                     boxLabel: 'Detalle retiros',
                                     id: 'checkDetalleRecibidos',
                                     name: 'detalleretiros',
+                                    checked: false,
+                                    inputValue: '1',
+                                    tooltip: 'Detalle de los retiros efectuados en el reporte',
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                    }
+                                }, {
+                                    xtype: 'checkbox',
+                                    boxLabel: 'Totales personal',
+                                    id: 'checkTotalesPersonal',
+                                    name: 'totalespersonal',
                                     checked: false,
                                     inputValue: '1',
                                     tooltip: 'Detalle de los retiros efectuados en el reporte',
@@ -3089,6 +3122,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
     addoperativos: function () {
         var operativos = new this.storeOperativos.recordType({
             id_persona: '-',
+            id_estado: '1',
             id: ' ',
             visible: '',
             fecha_planificacion: (new Date()),
@@ -3101,7 +3135,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             id_zonal: ' ',
             tipo_operativo: '2',
             id_persona_encargada: ' ',
-            id_estado: 1
+            mail_enviado: 0
         });
         this.gridOperativos.stopEditing();
         this.storeOperativos.insert(0, operativos);
@@ -3420,9 +3454,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
-                    generaRetiros = checkDetalleRecibidos
+
+                    generaAcciones = (Ext.getCmp('checkDetalleAcciones').getValue());
+                    generaActas = (Ext.getCmp('checkDetalleActas').getValue());
                     generaRetiros = (Ext.getCmp('checkDetalleRecibidos').getValue());
-                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&retiros=' + generaRetiros;
+                    generaTotalesPersonal = (Ext.getCmp('checkTotalesPersonal').getValue());
+
+                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&acciones=' + generaAcciones + '&totalespersonal=' + generaTotalesPersonal+ '&actas=' + generaActas+ '&retiros=' + generaRetiros;
                 }
             }
         });

@@ -30,8 +30,59 @@ if (isset($_GET['param'])) {
 if (isset($_GET['param'])) {
     $data = json_decode(stripslashes($_GET["param"]));
 }
+
+$ordenDetalle = 0;
+
+$columnaOrdenDetalle = array('M', 'N', "O", "P");
+
+$generaAcciones = false;
+$generaActas = false;
+$generaRetiros = false;
+
+$generaTotalesPersonal = false;
+
+
+if (isset($_GET['acciones'])) {
+    $generaAcciones = $_GET['acciones'];
+    if ($generaAcciones == "true"){
+        $generaAcciones = true;
+        $ordenAcciones = $columnaOrdenDetalle[$ordenDetalle];
+        $ordenDetalle ++;
+    }
+    else
+        $generaAcciones = false;
+}
+
+if (isset($_GET['actas'])) {
+    $generaActas = $_GET['actas'];
+    if ($generaActas == "true") {
+        $generaActas = true;
+        $ordenActas = $columnaOrdenDetalle[$ordenDetalle];
+        $ordenDetalle ++;
+    }
+    else
+        $generaActas = false;
+}
+
 if (isset($_GET['retiros'])) {
-    $generaRetiros  = $_GET['retiros'];
+    $generaRetiros = $_GET['retiros'];
+    if ($generaRetiros == "true") {
+        $generaRetiros = true;
+        $ordenRetiros = $columnaOrdenDetalle[$ordenDetalle];
+        $ordenDetalle ++;
+    }
+    else
+        $generaRetiros = false;
+}
+if (isset($_GET['totalespersonal'])) {
+    $generaTotalesPersonal = $_GET['totalespersonal'];
+    if ($generaTotalesPersonal == "true") {
+        $generaTotalesPersonal = true;
+        $ordenTotalesPersonal = $columnaOrdenDetalle[$ordenDetalle];
+        $ordenDetalle ++;
+    }
+    else
+        $generaTotalesPersonal = false;
 }
 
 $today = date("Y-n-j-H-i-s");
@@ -249,7 +300,7 @@ $objDrawing = new PHPExcel_Worksheet_Drawing();
 $objDrawing->setName('test_img');
 $objDrawing->setDescription('test_img');
 $objDrawing->setPath('image2.png');
-$objDrawing->setCoordinates('A'. ($filasPiePagina + 5) );
+$objDrawing->setCoordinates('A' . ($filasPiePagina + 5));
 //setOffsetX works properly
 $objDrawing->setOffsetX(5);
 $objDrawing->setOffsetY(5);
@@ -315,15 +366,45 @@ $objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Lugar Interve
 $objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Zonal');
 $objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Estado');
 
+
+if ($generaAcciones) {
+    $objPHPExcel->getActiveSheet()->setCellValue($ordenAcciones . $filacabecera, 'Detalle Acciones');
+    $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($ordenAcciones)->setAutoSize(false);
+    $objPHPExcel->getActiveSheet()->getColumnDimension($ordenAcciones)->setWidth(40);
+
+}
+if ($generaActas) {
+    $objPHPExcel->getActiveSheet()->setCellValue($ordenActas . $filacabecera, 'Detalle Actas');
+    $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($ordenActas)->setAutoSize(false);
+    $objPHPExcel->getActiveSheet()->getColumnDimension($ordenActas)->setWidth(40);
+
+}
+
+
+if ($generaRetiros) {
+    $objPHPExcel->getActiveSheet()->setCellValue($ordenRetiros . $filacabecera, 'Detalle retiros');
+    $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($ordenRetiros)->setAutoSize(false);
+    $objPHPExcel->getActiveSheet()->getColumnDimension($ordenRetiros)->setWidth(40);
+
+}
+if ($generaTotalesPersonal) {
+    $objPHPExcel->getActiveSheet()->setCellValue($ordenTotalesPersonal . $filacabecera, 'Total Personal');
+    $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($ordenTotalesPersonal)->setAutoSize(false);
+    $objPHPExcel->getActiveSheet()->getColumnDimension($ordenTotalesPersonal)->setWidth(20);
+}
+
+
+
+
 $noExistenFilas = true;
 
 while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 // actualizar detalle idGuia
     $noExistenFilas = false;
     //cambio para impresiono el nivel de complejidad
-    $niveles_complejidad = array("Alto", "Medio", "Bajo","");
+    $niveles_complejidad = array("Alto", "Medio", "Bajo", "");
 
-    if (isset($rowdetalle['id_nivel_complejidad']) and ($rowdetalle['id_nivel_complejidad']!= ' ')) {
+    if (isset($rowdetalle['id_nivel_complejidad']) and ($rowdetalle['id_nivel_complejidad'] != ' ')) {
         $rowdetalle['id_nivel_complejidad'] = $niveles_complejidad[$rowdetalle['id_nivel_complejidad'] - 1];
     } else {
         $rowdetalle['id_nivel_complejidad'] = '';
@@ -347,7 +428,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
         $nombresUsuarios[] = $nombreDetalle['nombre'];
     }
     $cadena_personal = implode(", ", $nombresUsuarios);
-    $rowdetalle['personal'] = regresaNombre($rowdetalle['id_persona_encargada']). ' *, ' . $cadena_personal;
+    $rowdetalle['personal'] = regresaNombre($rowdetalle['id_persona_encargada']) . ' *, ' . $cadena_personal;
 
     // recuperamos el nombre de zona
     $sql = "SELECT  nombre  FROM amc_zonas WHERE id = '" . $rowdetalle['id_zonal'] . "'";
@@ -358,7 +439,6 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     }
     $cadena_personal = implode(", ", $nombresUsuarios);
     $rowdetalle['id_zonal'] = $cadena_personal;
-
 
     // formatos de impresion de fechas y horas
     $date = new DateTime($rowdetalle['fecha_inicio_planificacion']);
@@ -385,10 +465,41 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['id_zonal']);
     $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, $rowdetalle['estado']);
 
+    if ($generaAcciones) {
+        $objPHPExcel->getActiveSheet()->setCellValue($ordenAcciones . $filaInicio, detalleAccionesId($rowdetalle['id']));
+        $objPHPExcel->getActiveSheet()->getStyle($ordenAcciones . $filaInicio . ':' . $ordenAcciones . $filaInicio)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle($ordenAcciones . $filacabecera . ':' . $ordenAcciones . $filacabecera)->applyFromArray($styleArray);
+
+    }
+
+    if ($generaActas) {
+        $objPHPExcel->getActiveSheet()->setCellValue($ordenActas . $filaInicio, detalleActasId($rowdetalle['id']));
+        $objPHPExcel->getActiveSheet()->getStyle($ordenActas . $filaInicio . ':' . $ordenActas . $filaInicio)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle($ordenActas . $filacabecera . ':' . $ordenActas . $filacabecera)->applyFromArray($styleArray);
+
+    }
+
+
+    if ($generaRetiros) {
+        $objPHPExcel->getActiveSheet()->setCellValue($ordenRetiros . $filaInicio, detalleRetirosId($rowdetalle['id']));
+        $objPHPExcel->getActiveSheet()->getStyle($ordenRetiros . $filaInicio . ':' . $ordenRetiros . $filaInicio)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle($ordenRetiros . $filacabecera . ':' . $ordenRetiros . $filacabecera)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle($ordenRetiros . $filacabecera . ':' . $ordenRetiros . $filacabecera)->applyFromArray($styleArray);
+    }
+
+    if ($generaTotalesPersonal) {
+        $objPHPExcel->getActiveSheet()->setCellValue($ordenTotalesPersonal . $filaInicio, detalleTotalesPersonalId($rowdetalle['id']));
+        $objPHPExcel->getActiveSheet()->getStyle($ordenTotalesPersonal . $filaInicio . ':' . $ordenTotalesPersonal . $filaInicio)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle($ordenTotalesPersonal . $filacabecera . ':' . $ordenTotalesPersonal . $filacabecera)->applyFromArray($styleArray);
+        $objPHPExcel->getActiveSheet()->getStyle($ordenTotalesPersonal . $filacabecera . ':' . $ordenTotalesPersonal . $filacabecera)->applyFromArray($styleArray);
+    }
+
+
+
+
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':L' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
-
 
 // Set document properties
 //echo date('H:i:s') , " Set document properties" , PHP_EOL;
@@ -427,7 +538,8 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:L200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:L3000')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A3:Z3000')->getAlignment()->setWrapText(true);
+
 
 
 $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':L' . $filacabecera)->applyFromArray($styleArray);
@@ -502,22 +614,67 @@ function nombreZonal($tipo)
 
 }
 
+function nombreOrdenanza($tipo)
+{
+    global $os;
+    $sql = "SELECT  nombre FROM amc_ordenanzas WHERE id = '" . $tipo . "'";
+    $nombres = $os->db->conn->query($sql);
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $nombresUsuarios[] = $nombreDetalle['nombre'];
+    }
+    $cadena_personal = implode(", ", $nombresUsuarios);
+    return $cadena_personal;
+
+}
+
+
+
+function nombreOperativosAccionesTipos($tipo)
+{
+    global $os;
+    $sql = "SELECT  nombre FROM amc_operativos_acciones_tipos WHERE id = '" . $tipo . "'";
+    $nombres = $os->db->conn->query($sql);
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $nombresUsuarios[] = $nombreDetalle['nombre'];
+    }
+    $cadena_personal = implode(", ", $nombresUsuarios);
+    return $cadena_personal;
+
+}
+
+function nombreOperativosInformesTiposMedidas($tipo)
+{
+    global $os;
+    $sql = "SELECT  nombre FROM amc_operativos_informes_tipos_medidas WHERE id = '" . $tipo . "'";
+    $nombres = $os->db->conn->query($sql);
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $nombresUsuarios[] = $nombreDetalle['nombre'];
+    }
+    $cadena_personal = implode(", ", $nombresUsuarios);
+    return $cadena_personal;
+
+}
+
 function regresaNombre($id_dato)
 {
     global $os;
 
-    if (trim ($id_dato) != '') {
+    if (trim($id_dato) != '') {
         $os->db->conn->query("SET NAMES 'utf8'");
         $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
             FROM qo_members WHERE id = " . $id_dato;
         $nombre = $os->db->conn->query($sql);
-
-        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre'];
+        if ($nombre) {
+            $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+            return $rownombre['nombre'];
+        } else
+            return '';
 
     } else
         return '';
-
 
 
 }
@@ -558,3 +715,62 @@ function recuperarTotales($id, $where)
 
     return $rownombre['total'];
 }
+
+function detalleAccionesId($id)
+{
+    global $os;
+    $sql = "SELECT id_accion, cantidad, observaciones FROM amc_operativos_acciones WHERE id_operativo ='" . $id . "'";
+    $nombres = $os->db->conn->query($sql);
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $nombreDetalle['id_accion'] = nombreOperativosAccionesTipos ($nombreDetalle['id_accion']);
+        $nombresUsuarios[] = "(". implode(" - ", $nombreDetalle) .')';
+    }
+    $cadena_personal = implode(", ", $nombresUsuarios);
+    return $cadena_personal;
+}
+
+function detalleActasId($id)
+{
+    global $os;
+    $sql = "SELECT id_ordenanza, medida, observaciones FROM amc_operativos_informes WHERE id_operativo ='" . $id . "'";
+    $nombres = $os->db->conn->query($sql);
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $nombreDetalle['id_ordenanza'] = nombreOrdenanza  ($nombreDetalle['id_ordenanza']);
+        $nombreDetalle['medida'] = nombreOperativosInformesTiposMedidas ($nombreDetalle['medida']);
+        $nombresUsuarios[] = "(". implode(" - ", $nombreDetalle) .')';
+    }
+    $cadena_personal = implode(", ", $nombresUsuarios);
+    return $cadena_personal;
+}
+
+
+function detalleRetirosId($id)
+{
+    global $os;
+//    SELECT tipo, detalle FROM `procesos-amc`.`amc_operativos_retiros` WHERE id_operativo = 67;
+    $sql = "SELECT CONCAT('(',tipo, ' - ', detalle,')') AS nombre  FROM `procesos-amc`.`amc_operativos_retiros` WHERE id_operativo ='" . $id . "'";
+    $nombres = $os->db->conn->query($sql);
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $nombresUsuarios[] = $nombreDetalle['nombre'];
+    }
+    $cadena_personal = implode(", ", $nombresUsuarios);
+    return $cadena_personal;
+}
+function detalleTotalesPersonalId($id)
+{
+    global $os;
+
+    $sql = "SELECT COUNT(*) AS nombre   FROM amc_operativos_personal WHERE id_operativo = '" . $id . "'";
+
+    $nombres = $os->db->conn->query($sql);
+    $nombresUsuarios = array();
+    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+        $nombresUsuarios[] = $nombreDetalle['nombre'] + 1;
+    }
+    $cadena_personal = implode(", ", $nombresUsuarios);
+    return $cadena_personal;
+}
+

@@ -328,6 +328,25 @@ function insertOperativos()
 
     $cadenaDatos = '';
     $cadenaCampos = '';
+
+
+    $datafecha_planificacion =  date('Y-m-d\TH:i:s');
+
+    // validar fechas de inicio .. si estan en null se le pone la fecha
+    if (($data->fecha_planificacion == '') or !isset ($data->fecha_planificacion)) {
+        // sin no esta deinida la fecha se pone fecha con la del dia
+        $data->fecha_planificacion =   date('Y-m-d\TH:i:s');
+    }
+
+    if (($data->fecha_inicio_planificacion == '') or !isset ($data->fecha_inicio_planificacion)) {
+        // sin no esta deinida la fecha se pone fecha con la del dia
+        $data->fecha_inicio_planificacion =  date('Y-m-d\TH:i:s');
+    }
+    if (($data->fecha_fin_planificacion == '') or !isset ($data->fecha_fin_planificacion)) {
+        // sin no esta deinida la fecha se pone fecha con la del dia
+        $data->fecha_fin_planificacion =  date('Y-m-d\TH:i:s');
+    }
+
     foreach ($data as $clave => $valor) {
         if ($clave != 'id') {
             $cadenaCampos = $cadenaCampos . $clave . ',';
@@ -337,20 +356,24 @@ function insertOperativos()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_operativos($cadenaCampos)
-    values($cadenaDatos);";
+    $sql = "INSERT INTO amc_operativos($cadenaCampos) values($cadenaDatos);";
+    $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $resultado = $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
 
-
     echo json_encode(array(
         "success" => $resultado,
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
         "data" => array($data)
     ));
+
+    $fichero = 'crudOperativos.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $log . "\n";
+    file_put_contents($fichero, $actual);
 }
 
 function generaCodigoProcesoDenuncia()
