@@ -23,12 +23,14 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id); //Todos los accesos, visualiza trámites pendientes
         var accesosInspectores = this.app.isAllowedTo('accesosInspeccion', this.id); //Sin acceso a pestaña trámites pendientes, acceso a inspecciones asignadas
         var accesosSupervision = this.app.isAllowedTo('accesosSupervision', this.id); //Solo modo lectura
+        var accesosControlProgramado = this.app.isAllowedTo('accesosControlProgramado', this.id); //Controles programados
 
         //Control en caso de tener asignado el perfil de administrador
         if (accesosCoordinadorInspeccion && accesosSecretaria && accesosInspectores && accesosSupervision == true) {
             accesosSecretaria = false;
             accesosInspectores = false;
             accesosSupervision = false;
+            accesosControlProgramado = false;
         }
         //Acceso para creación y edición en pestaña Datos inspección
         if (accesosCoordinadorInspeccion || accesosInspectores == true) {
