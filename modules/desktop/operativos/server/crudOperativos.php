@@ -547,12 +547,20 @@ function deleteOperativos()
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
     $sql = "DELETE FROM amc_operativos WHERE id = $id";
+    $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos, eliminado exitosamente" : $sql->errorCode()
     ));
+
+    $log =  $os->get_member_id() . "-" . $log ;
+
+    $fichero = 'crudOperativos.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $log . "\n";
+    file_put_contents($fichero, $actual);
 }
 
 switch ($_GET['operation']) {
