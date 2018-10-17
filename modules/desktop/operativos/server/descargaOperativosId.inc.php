@@ -159,14 +159,14 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
 }
 
 
-textoSiguieteFila('4. ACCIONES EJECUTADAS (AUTOS DE INICIO, ACTAS DE INFRACCION) ', 'A', 'F', 'left', true, "B");
+textoSiguieteFila('4. ACCIONES EJECUTADAS (ACTOS DE INICIO, ACTAS DE INFRACCION) ', 'A', 'F', 'left', true, "B");
 
 textoSiguieteFila("Nombre Administrado", 'A', 'A', 'center', true, "B");
 textoSiguieteFila("Ordenanza Metropolitana", 'B', 'B', 'center', false, "B");
 textoSiguieteFila("Dirección Establecimiento", 'C', 'C', 'center', false, "B");
 textoSiguieteFila("Hecho Constatado", 'D', 'D', 'center', false, "B");
 textoSiguieteFila("Medida Adoptada", 'E', 'E', 'center', false, "B");
-textoSiguieteFila("Auto Inicio ", 'F', 'F', 'center', false, "B");
+textoSiguieteFila("Actos Inicio ", 'F', 'F', 'center', false, "B");
 $objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':F' . $filacabecera)->getFont()->setSize(9);
 
 

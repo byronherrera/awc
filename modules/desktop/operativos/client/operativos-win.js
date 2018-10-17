@@ -2803,7 +2803,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                 },
 
                                                 {
-                                                    title: 'Auto Inicio  / Actas',
+                                                    title: 'Actos Inicio  / Actas',
                                                     layout: 'column',
                                                     id: 'informesOperativosTab',
                                                     disabled: true,

@@ -557,7 +557,7 @@ function deleteOperativos()
 
     $log =  $os->get_member_id() . "-" . $log ;
 
-    $fichero = 'crudOperativos.log';
+    $fichero = 'crudOperativos.log';    
     $actual = file_get_contents($fichero);
     $actual .= $log . "\n";
     file_put_contents($fichero, $actual);
