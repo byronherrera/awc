@@ -421,8 +421,8 @@ function updateOperativos()
                             </tr>';
                 $detalle .= "<tr>" .
                     '<td valign="top">' . $data->id . '</td>' .
-                    '<td valign="top">' . date("Y-m-d <br> H:m", strtotime($data->fecha_inicio_planificacion)) . "</td>" .
-                    '<td valign="top">' . date("Y-m-d <br> H:m", strtotime($data->fecha_fin_planificacion)) . "</td>" .
+                    '<td valign="top">' . date("Y-m-d <br> H:i", strtotime($data->fecha_inicio_planificacion)) . "</td>" .
+                    '<td valign="top">' . date("Y-m-d <br> H:i", strtotime($data->fecha_fin_planificacion)) . "</td>" .
                     '<td valign="top">' . $data->zona . "</td>" .
                     '<td valign="top">' . $data->punto_encuentro_planificado . "</td>" .
                     '<td valign="top">' . $data->observaciones . "</td>" .
@@ -615,6 +615,12 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
                  ' . $operativos . '
                  <br>
                  <br>
+                 "Se le recuerda al responsable del operativo que es obligatorio llenar todo el detalle en 
+                 ACCIONES OPERATIVO, ACTOS INICIO y RETIROS, dicho reporte debe estar en concordancia con lo reportado en el chat. 
+                 En caso que no este correcto, se lo cambiará a estado INFORME y no se lo aceptará como finalizado.
+                <br>
+
+                <br>
                  Favor ingresar en Matis AMC, para verificar el operativo asignado <a href="http://172.20.136.60/procesos-amc">aquí</a> .
                 <br>    
                 <br>    
@@ -623,7 +629,6 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
                 <p>"Todo el personal de la Agencia Metropolitana de Control, deberá utilizar de manera obligatoria el módulo de operativos que se encuentra dentro de la INTRANET de la Institución, a fin de generar los informes de los operativos realizados. En el sistema se deberá llenar los datos solicitados dentro de las 24 horas siguientes de haber realizado el operativo, con el objetivo de que se genere el informe respectivo."</p>
 
                 <br>
-                <p>"Se les recuerda a los funcionarios incluir toda la información recopilada del operativo en los campos respectivos, se dará seguimiento al mismo."</p>
 
                 <br>
 
@@ -635,7 +640,7 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
                 <p></p>
                 <p>INFORMACIÓN IMPORTANTE</p>
                 <p>************************************************</p>
-                <p>- No responder este correo ya que es un Mensaje Automático.</p>
+                <p>- No responder este correo es un Mensaje Automático.</p>
                 
                 <p>- Para sugerencias, escribe a tu coordinador.</p>
 
