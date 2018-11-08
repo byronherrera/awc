@@ -57,10 +57,11 @@ function selectInspeccion()
     //$sql = "select *, (select codigo_tramite from amc_denuncias b WHERE b.id = id_denuncia) as codigo_tramite  from amc_inspeccion WHERE funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
     //$sql = "SELECT * FROM amc_inspeccion WHERE amc_inspeccion.funcionario_entrega = $funcionario_entrega $and $orderby LIMIT $start, $limit";
     $sql = "(SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
-                WHERE funcionario_entrega = $funcionario_entrega AND funcionario_reasignacion IS NULL $and)
+                WHERE funcionario_entrega = $funcionario_entrega AND funcionario_reasignacion IS NULL $and LIMIT $start, $limit)
 	    union
 	        (SELECT *, (SELECT codigo_tramite FROM amc_denuncias b WHERE b.id = id_denuncia ) AS codigo_tramite FROM amc_inspeccion 
-                WHERE funcionario_reasignacion = $funcionario_entrega $and)";
+                WHERE funcionario_reasignacion = $funcionario_entrega $and LIMIT $start, $limit)";
+
     $result = $os->db->conn->query($sql);
 
 
