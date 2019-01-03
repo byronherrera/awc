@@ -85,16 +85,15 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:A3')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->getStyle('A1:A3')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "MUNICIPIO DEL DISTRITO METROPOLITANO DE QUITO");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'AGENCIA METROPOLITANA DE CONTROL');
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "INFORME DE OPERATIVO DE CONTROL No. AMC-" . date("Y") . "-" . $operativoId);
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "INFORME DE OPERATIVO DE CONTROL No. AMC-" . $year = date('Y', strtotime($operativo['fecha_inicio_planificacion'])) . "-" . $operativoId);
+
+
 
 textoSiguieteFila("1. DATOS GENERALES DEL OPERATIVO", 'A', 'F', 'left', true, "B");
 textoSiguieteFila(regresaZonal($operativo['id_zonal']) . " - " . regresaUnidad($operativo['id_unidad']), 'A', 'F', 'center', true, "B");
 
 $objPHPExcel->getActiveSheet()->getRowDimension($filacabecera + 1)->setRowHeight(27);
 textoSiguieteFila("UBICACION: " . $operativo['zona'], 'A', 'B', 'center');
-textoSiguieteFila("FECHA OPERATIVO:  " . fechaLarga($operativo['fecha_inicio_planificacion']), 'C', 'D', 'center', false);
-
-textoSiguieteFila("FECHA INFORME: " . fechaLarga($operativo['fecha_impresion_informe']), 'E', 'F', 'center', false);
 
 $dateInicio = new DateTime($operativo['fecha_inicio_planificacion']);
 $fechaInicio = $dateInicio->format('H\hi');
@@ -103,7 +102,20 @@ $dateFin = new DateTime($operativo['fecha_fin_planificacion']);
 $fechaFin = $dateFin->format('H\hi');
 
 $interval = $dateInicio->diff($dateFin);
-$horasIntervalo = $interval->format('%H horas %I minutos');
+
+
+if (fechaLarga($operativo['fecha_inicio_planificacion']) === fechaLarga($operativo['fecha_fin_planificacion'])) {
+    textoSiguieteFila("FECHA OPERATIVO:  " . fechaLarga($operativo['fecha_inicio_planificacion']), 'C', 'D', 'center', false);
+    $horasIntervalo = $interval->format('%H horas %I minutos');
+}
+else {
+    textoSiguieteFila("FECHA INICIO:  " . fechaLarga($operativo['fecha_inicio_planificacion']) . ". FECHA FIN: " . fechaLarga($operativo['fecha_fin_planificacion']), 'C', 'D', 'center', false);
+    $objPHPExcel->getActiveSheet()->getRowDimension(6)->setRowHeight(50);
+    $horasIntervalo = $interval->format('%d dias %H horas %I minutos');
+}
+
+textoSiguieteFila("FECHA INFORME: " . fechaLarga($operativo['fecha_impresion_informe']), 'E', 'F', 'center', false);
+
 
 textoSiguieteFila("Hora Inicio: " . $fechaInicio, 'A', 'B', 'center');
 textoSiguieteFila("Hora Fin: " . $fechaFin, 'C', 'D', 'center', false);

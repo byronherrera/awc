@@ -322,7 +322,7 @@ function insertOperativos()
 
 
     $data->finalizado = 'false';
-    // $data->codigo_operativo = generaCodigoProcesoDenuncia();
+    $data->codigo_operativo = generaCodigoProcesoOperativo();
     $data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
 
@@ -382,7 +382,10 @@ function generaCodigoProcesoDenuncia()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_operativos";
+    $año = date ('Y');
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE  recepcion_documento > '". $año ."-01-03 00:00:01'";
+
+//    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_operativos";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
