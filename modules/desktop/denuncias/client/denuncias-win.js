@@ -303,6 +303,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         }
+        //inicio combo caracter del tramite CDT
 
         function change(val) {
             if (val > 0) {
@@ -761,6 +762,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'reasignacion', allowBlank: false},
                 {name: 'id_caracter_tramite', allowBlank: false},
                 {name: 'cantidad_fojas', allowBlank: false},
+                {name: 'id_zonal_origen', allowBlank: false},
                 {name: 'despacho_secretaria', type: 'boolean', allowBlank: false}
             ]
         });
@@ -816,21 +818,21 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Tipo documento',
                     dataIndex: 'id_tipo_documento',
                     sortable: true,
-                    width: 30,
+                    width: 25,
                     editor: comboTID, renderer: personaTipoDocumento
                 },
                 {
                     header: 'Cédula',
                     dataIndex: 'cedula',
                     sortable: true,
-                    width: 24,
+                    width: 22,
                     editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
                     header: 'Email',
                     dataIndex: 'email',
                     sortable: true,
-                    width: 40, editor: {
+                    width: 35, editor: {
                         xtype: 'textfield',
                         vtype: 'email',
                         allowBlank: true
@@ -840,7 +842,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     header: 'Motivo',
                     dataIndex: 'id_tipo',
                     sortable: true,
-                    width: 24,
+                    width: 22,
                     editor: comboCROLPROGRAMADO,
                     renderer: crolProgramado
                 },
@@ -925,6 +927,14 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     , width: 18
                     , xtype: 'booleancolumn'
                     , hidden: true
+                },
+                {
+                    header: 'Zonal',
+                    dataIndex: 'id_zonal_origen',
+                    align: 'center',
+                    width: 12,
+                    renderer: caracterTramite,
+                    renderer: zonal
                 }
             ],
             viewConfig: {

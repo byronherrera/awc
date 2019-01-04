@@ -154,7 +154,8 @@ function generaCodigoProcesoOrdenanza()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(id) AS maximo FROM amc_denuncias";
+    $año = date ('Y');
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE  recepcion_documento > '". $año ."-01-03 00:00:01'";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -162,8 +163,7 @@ function generaCodigoProcesoOrdenanza()
         return $nuevoCodigo;
     } else {
         // valor inicial proceso
-
-        return 10759;
+        return 1;
 
     }
 }
