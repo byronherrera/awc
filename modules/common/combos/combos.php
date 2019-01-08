@@ -716,9 +716,11 @@ switch ($_GET['tipo']) {
     case 'personal_distributivo' :
         comboPersonalDistributivo();
         break;
+
+    case 'zonas' :
+        comboZonas();
+        break;
 }
 ?>
-
-
 
 

@@ -305,6 +305,35 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         }
         //inicio combo caracter del tramite CDT
 
+        //inicio combo zonal
+        storeZonal = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=zonas'
+        });
+
+        var comboZonas = new Ext.form.ComboBox({
+            id: 'comboZonas',
+            store: storeZonal,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            forceSelection: true,
+            allowBlank: false
+        });
+
+        function zonales(id) {
+            var index = storeZonal.findExact('id', id);
+            if (index > -1) {
+                var record = storeZonal.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin  combo zoanl
+
         function change(val) {
             if (val > 0) {
                 return '<span style="color:green;">' + val + '</span>';
@@ -762,7 +791,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'reasignacion', allowBlank: false},
                 {name: 'id_caracter_tramite', allowBlank: false},
                 {name: 'cantidad_fojas', allowBlank: false},
-                {name: 'id_zonal_origen', allowBlank: false},
+                {name: 'id_zonal_origen', allowBlank: true},
                 {name: 'despacho_secretaria', type: 'boolean', allowBlank: false}
             ]
         });
@@ -899,7 +928,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         fieldLabel: 'Age',
                         name: 'age',
                         minValue: 0,
-                        maxValue: 100
+                        maxValue: 1000
                     })
                 },
                 {
@@ -917,6 +946,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     editor: comboCDT, renderer: caracterTramite
                 },
                 {
+                    header: 'Zonal',
+                    dataIndex: 'id_zonal_origen',
+                    align: 'center',
+                    width: 30,
+                    renderer: zonales
+                },
+                {
                     header: 'Despachado'
                     , dataIndex: 'despacho_secretaria'
                     , align: 'center'
@@ -927,14 +963,6 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     , width: 18
                     , xtype: 'booleancolumn'
                     , hidden: true
-                },
-                {
-                    header: 'Zonal',
-                    dataIndex: 'id_zonal_origen',
-                    align: 'center',
-                    width: 12,
-                    renderer: caracterTramite,
-                    renderer: zonal
                 }
             ],
             viewConfig: {
@@ -2430,7 +2458,8 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             asunto: '',
             id_caracter_tramite: '1',
             cantidad_fojas: '0',
-            despacho_secretaria: false
+            despacho_secretaria: false,
+            id_zonal_origen:' '
 
         });
         this.gridDenuncias.stopEditing();

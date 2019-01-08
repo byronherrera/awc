@@ -73,25 +73,10 @@ if ($resultguia) {
 }
 
 //get numero de guia
-
-$os->db->conn->query("SET NAMES 'utf8'");
-$sql = "SELECT SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias WHERE SUBSTRING(numero,5,4) = YEAR(CURDATE()) AND id not BETWEEN 1635 AND  1655  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
-$resultguia = $os->db->conn->query($sql);
-if ($resultguia) {
-    $row = $resultguia->fetch(PDO::FETCH_ASSOC);
-    if ($row) {
-        if (!$reimpresion)
-            $numeroGuia = $row['num'] + 1;
+$numeroGuia = get_numero_guia($reimpresion, $os->get_zonal_id());
 
 
-    } else {
-        $numeroGuia = 1;
-    }
-} else {
-    $numeroGuia = 1;
-}
 $year = date("Y");
-
 
 //$nombreUnidad
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
@@ -103,8 +88,10 @@ if ($number_of_rows > 0) {
     $os->db->conn->query("SET NAMES 'utf8'");
 
     $idUsuario = $os->get_member_id();
+    $idzonalorigen = $os->get_zonal_id();
+
     if (!$reimpresion) {
-        $sql = "INSERT INTO amc_guias (numero, unidad, id_member, id_unidad) VALUES ('SGE-$year-$numeroGuia', '$nombreUnidad', '$idUsuario', '$unidad')";
+        $sql = "INSERT INTO amc_guias (numero, unidad, id_member, id_unidad, id_zonal) VALUES ('SGE-$year-$numeroGuia', '$nombreUnidad', '$idUsuario', '$unidad', '$idzonalorigen')";
         $resultguia = $os->db->conn->query($sql);
         $newIdGuia = $os->db->conn->lastInsertId();
     }
@@ -291,3 +278,24 @@ $objPHPExcel->getActiveSheet()->setShowGridLines(false);
 //echo date('H:i:s') , " Set orientation to landscape" , PHP_EOL;
 $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
 // luego de enviar la impresion se actualiza como enviado a inspeccion
+
+
+function get_numero_guia($reimpresion, $id_zonal ) {
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias WHERE SUBSTRING(numero,5,4) = YEAR(CURDATE()) AND id_zonal = $id_zonal  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
+    $resultguia = $os->db->conn->query($sql);
+    if ($resultguia) {
+        $row = $resultguia->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            if (!$reimpresion)
+                $numeroGuia = $row['num'] + 1;
+
+        } else {
+            $numeroGuia = 1;
+        }
+    } else {
+        $numeroGuia = 1;
+    }
+    return $numeroGuia;
+}

@@ -1,5 +1,6 @@
 <?php
 require_once '../../../../server/os.php';
+require_once '../../../common/Classes/funciones.php';
 
 $os = new os();
 if (!$os->session_exists()) {
@@ -189,6 +190,7 @@ function insertDenuncias()
     $data->despacho_secretaria = 'false';
     $data->codigo_tramite = generaCodigoProcesoDenuncia();
     $data->id_persona = $os->get_member_id();
+    $data->id_zonal_origen = $os->get_zonal_id();
     //genero el listado de nombre de campos
 
     $cadenaDatos = '';
@@ -236,27 +238,7 @@ function insertDenuncias()
 
 }
 
-function generaCodigoProcesoDenuncia()
-{
-    global $os;
 
-    $usuario = $os->get_member_id();
-    $os->db->conn->query("SET NAMES 'utf8'");
-    //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
-    $año = date ('Y');
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE  recepcion_documento > '". $año ."-01-03 00:00:01'";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    if (isset($row['maximo'])) {
-        $nuevoCodogo = $row['maximo'] + 1;
-        return $nuevoCodogo;
-    } else {
-        // valor inicial proceso
-
-        return 1;
-
-    }
-}
 
 function updateDenuncias()
 {

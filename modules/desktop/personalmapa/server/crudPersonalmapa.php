@@ -200,7 +200,7 @@ function insertDenuncias()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
     $data->despacho_secretaria = 'false';
-    $data->codigo_tramite = generaCodigoProcesoDenuncia();
+   // $data->codigo_tramite = generaCodigoProcesoDenuncia();
     $data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
 
@@ -229,25 +229,6 @@ function insertDenuncias()
     ));
 }
 
-function generaCodigoProcesoDenuncia()
-{
-    global $os;
-
-    $usuario = $os->get_member_id();
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_luae";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    if (isset($row['maximo'])) {
-        $nuevoCodogo = $row['maximo'] + 1;
-        return $nuevoCodogo;
-    } else {
-        // valor inicial proceso
-
-        return 10759;
-
-    }
-}
 
 function updateDenuncias()
 {

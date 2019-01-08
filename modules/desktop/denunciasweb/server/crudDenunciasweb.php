@@ -1,27 +1,14 @@
 <?php
 
 //http://medoo.in/api/select
-
 //http://localhost:10088/msv-dev/generareporte/modules/desktop/samsung/server/help.html#Error
 
 require_once '../../../../server/os.php';
+require_once '../../../common/Classes/funciones.php';
 
 $os = new os();
 if (!$os->session_exists()) {
     die('No existe sesión!');
-}
-
-function generaCodigoProcesoDenuncia()
-{
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE recepcion_documento > DATE('2018-02-01 01:01:01')";
-
-    //$sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    $nuevoCodogo = $row['maximo'] + 1;
-    return $nuevoCodogo;
 }
 
 function aprobarDenuncia()

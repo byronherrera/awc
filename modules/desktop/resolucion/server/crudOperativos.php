@@ -342,23 +342,6 @@ function insertOperativos()
     ));
 }
 
-function generaCodigoProcesoDenuncia()
-{
-    global $os;
-
-    $usuario = $os->get_member_id();
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_operativos";
-    $result = $os->db->conn->query($sql);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    if (isset($row['maximo'])) {
-        $nuevoCodogo = $row['maximo'] + 1;
-        return $nuevoCodogo;
-    } else {
-        // valor inicial proceso
-        return 1;
-    }
-}
 
 function updateOperativos()
 {
