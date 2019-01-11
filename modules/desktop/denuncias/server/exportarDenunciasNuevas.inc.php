@@ -89,9 +89,10 @@ if ($number_of_rows > 0) {
 
     $idUsuario = $os->get_member_id();
     $idzonalorigen = $os->get_zonal_id();
-
+    $siglasUnidad = "SGE";
+    $siglasUnidad = $os->get_unidad_id();
     if (!$reimpresion) {
-        $sql = "INSERT INTO amc_guias (numero, unidad, id_member, id_unidad, id_zonal) VALUES ('SGE-$year-$numeroGuia', '$nombreUnidad', '$idUsuario', '$unidad', '$idzonalorigen')";
+        $sql = "INSERT INTO amc_guias (numero, unidad, id_member, id_unidad, id_zonal) VALUES ('$siglasUnidad-$year-$numeroGuia', '$nombreUnidad', '$idUsuario', '$unidad', '$idzonalorigen')";
         $resultguia = $os->db->conn->query($sql);
         $newIdGuia = $os->db->conn->lastInsertId();
     }

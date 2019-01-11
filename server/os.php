@@ -134,6 +134,17 @@ class os extends kernal {
       $this->load('amc');
       return $this->amc->get_zonal_id();
    } // end get_group_id()
+   /**
+    * get_unidad_id() Returns the current zonal id for the session.
+    *
+    * @access public
+    * @return {integer}
+    */
+
+   public function get_unidad_id(){
+      $this->load('amc');
+      return $this->amc->get_unidad_id();
+   } // end get_group_id()
 
    /**
     * get_member_id() Returns the current member id for the session.
