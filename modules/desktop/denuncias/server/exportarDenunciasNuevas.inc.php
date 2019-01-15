@@ -73,7 +73,7 @@ if ($resultguia) {
 }
 
 //get numero de guia
-$numeroGuia = get_numero_guia($reimpresion, $os->get_zonal_id());
+$numeroGuia = get_numero_guia($reimpresion, $os->get_unidad_id());
 
 
 $year = date("Y");
@@ -89,15 +89,16 @@ if ($number_of_rows > 0) {
 
     $idUsuario = $os->get_member_id();
     $idzonalorigen = $os->get_zonal_id();
-    $siglasUnidad = "SGE";
-    $siglasUnidad = $os->get_unidad_id();
+    $idUnidadOrigen = $os->get_unidad_id();
+    $siglasUnidad = $os->get_unidad_siglas();
+    //$siglasUnidad = "SGE";
     if (!$reimpresion) {
-        $sql = "INSERT INTO amc_guias (numero, unidad, id_member, id_unidad, id_zonal) VALUES ('$siglasUnidad-$year-$numeroGuia', '$nombreUnidad', '$idUsuario', '$unidad', '$idzonalorigen')";
+        $sql = "INSERT INTO amc_guias (numero, unidad, id_member, id_unidad, id_zonal, id_unidad_origen) VALUES ('$siglasUnidad-$year-$numeroGuia', '$nombreUnidad', '$idUsuario', '$unidad', '$idzonalorigen', '$idUnidadOrigen')";
         $resultguia = $os->db->conn->query($sql);
         $newIdGuia = $os->db->conn->lastInsertId();
     }
 
-    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "GUIA DE DESPACHO N. SGE-$year-$numeroGuia");
+    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "GUIA DE DESPACHO N. $siglasUnidad-$year-$numeroGuia");
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, $nombreUnidad);
 
 //insert  numero de guia
@@ -117,7 +118,7 @@ $objPHPExcel->getActiveSheet()->mergeCells('C' . ($filascabecera + 2) . ':D' . (
 
 $objPHPExcel->getActiveSheet()->setCellValue('C' . $filascabecera, '__________________');
 $objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 1), $nombreUsuario);
-$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 2), "SECRETARIA GENERAL");
+$objPHPExcel->getActiveSheet()->setCellValue('C' . ($filascabecera + 2), "SECRETARIA");
 
 $objPHPExcel->getActiveSheet()->mergeCells('F' . ($filascabecera + 1) . ':I' . ($filascabecera + 2));
 $objPHPExcel->getActiveSheet()->setCellValue('F' . ($filascabecera + 1), $nombreUnidad);
@@ -281,10 +282,10 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Workshee
 // luego de enviar la impresion se actualiza como enviado a inspeccion
 
 
-function get_numero_guia($reimpresion, $id_zonal ) {
+function get_numero_guia($reimpresion, $id_unidad_origen ) {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias WHERE SUBSTRING(numero,5,4) = YEAR(CURDATE()) AND id_zonal = $id_zonal  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
+    $sql = "SELECT SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias WHERE SUBSTRING(numero,5,4) = YEAR(CURDATE()) AND id_unidad_origen = $id_unidad_origen  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
     $resultguia = $os->db->conn->query($sql);
     if ($resultguia) {
         $row = $resultguia->fetch(PDO::FETCH_ASSOC);
