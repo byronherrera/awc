@@ -376,6 +376,26 @@ function insertOperativos()
     file_put_contents($fichero, $actual);
 }
 
+function generaCodigoProcesoOperativo()
+{
+    global $os;
+
+    $usuario = $os->get_member_id();
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $año = date ('Y');
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE  recepcion_documento > '". $año ."-01-03 00:00:01'";
+
+//    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_operativos";
+    $result = $os->db->conn->query($sql);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    if (isset($row['maximo'])) {
+        $nuevoCodogo = $row['maximo'] + 1;
+        return $nuevoCodogo;
+    } else {
+        // valor inicial proceso
+        return 1;
+    }
+}
 
 function updateOperativos()
 {
