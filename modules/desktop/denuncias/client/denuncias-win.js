@@ -12,6 +12,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
     },
 
     createWindow: function () {
+        // idzonalActiva indica la zonal a la que pertenece el funcionario con la secion activa
+        var idzonalActiva = QoDesk.App.memberInfo.zonal;
+
         var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
         var accesosZonales = this.app.isAllowedTo('accesosZonales', this.id);
@@ -984,12 +987,19 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                             cargaDetalle(rec.id, this.formDenunciasDetalle, rec.get("despacho_secretaria"));
                             if (acceso) {
+                                // deshabilita el boton grabar recepcion detalle
                                 if (rec.get("despacho_secretaria"))
                                     Ext.getCmp('tb_grabardenuncias').setDisabled(true);
                                 else
                                     Ext.getCmp('tb_grabardenuncias').setDisabled(false);
+
+                                // deshabilita el boton grabar recepcion detalle
+                                if (rec.get("id_zonal_origen") != idzonalActiva)
+                                    Ext.getCmp('tb_grabardenuncias').setDisabled(true);
+                                else
+                                    Ext.getCmp('tb_grabardenuncias').setDisabled(false);
+
                             }
-                            ;
                             storeINST.load();
                         }
                     }
@@ -1010,9 +1020,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             listeners: {
                 beforeedit: function (e) {
                     if (acceso) {
+                        //habilita el acceso en caso de que ya sea despachado
                         if (e.record.get("despacho_secretaria")) {
                             return false;
                         }
+                        //habilita el acceso en caso de que ya sea de otra zonal
+                        if (e.record.get("id_zonal_origen") != idzonalActiva) {
+                            return false;
+                        }
+
                         return true;
                     } else {
                         return false;
@@ -2474,6 +2490,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         });
     },
     adddenuncias: function () {
+        var zonalOrigen = QoDesk.App.memberInfo.zonal;
         var denuncias = new this.storeDenuncias.recordType({
             codigo_tramite: ' ',
             id_persona: ' ',
@@ -2489,7 +2506,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             id_caracter_tramite: '1',
             cantidad_fojas: '0',
             despacho_secretaria: false,
-            id_zonal_origen: ' '
+            id_zonal_origen: zonalOrigen
 
         });
         this.gridDenuncias.stopEditing();

@@ -187,7 +187,8 @@ QoDesk.App = new Ext.app.App({
     */
    memberInfo: {
       name: '<?php print $qo_desk->member_info->name ?>',
-      group: '<?php print $qo_desk->member_info->group ?>'
+      group: '<?php print $qo_desk->member_info->group ?>',
+      zonal: '<?php print $os->get_zonal_id() ?>'
    },
 
    /**
