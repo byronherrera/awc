@@ -108,6 +108,14 @@ function selectDenuncias()
             $where = $where . " AND id_tipo_documento = $tipo ";
         }
     }
+    if (isset($_POST['busqueda_id_zonal']) and ($_POST['busqueda_id_zonal'] != '')) {
+        $tipo = $_POST['busqueda_id_zonal'];
+        if ($where == '') {
+            $where = "WHERE id_zonal_origen = $tipo ";
+        } else {
+            $where = $where . " AND id_zonal_origen = $tipo ";
+        }
+    }
     if (isset($_POST['busqueda_institucion']) and ($_POST['busqueda_institucion'] != '')) {
         $tipo = $_POST['busqueda_institucion'];
         if ($where == '') {

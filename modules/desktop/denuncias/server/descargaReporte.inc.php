@@ -74,6 +74,14 @@ if (isset($data->busqueda_reasignacion) and ($data->busqueda_reasignacion != '')
         $where = $where . " AND reasignacion in ($tipo) ";
     }
 }
+if (isset($data->busqueda_id_zonal) and ($data->busqueda_id_zonal != '')) {
+    $tipo = $data->busqueda_id_zonal;
+    if ($where == '') {
+        $where = "WHERE id_zonal_origen = $tipo ";
+    } else {
+        $where = $where . " AND id_zonal_origen = $tipo ";
+    }
+}
 
 if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')) {
     $fechainicio = $data->busqueda_fecha_inicio;
@@ -117,8 +125,8 @@ $styleArray = array(
 
 
 
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':M' . $filaTitulo1);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':M' . $filaTitulo2);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':N' . $filaTitulo1);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':N' . $filaTitulo2);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO DOCUMENTOS RECIBIDOS");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Secretaría General');
@@ -173,7 +181,10 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('K')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(16.30);
 
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('M')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(12);
+
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('N')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
 
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Codigo');
@@ -189,6 +200,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Unidad');
 $objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Observaciones');
 $objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Ordenanza');
 $objPHPExcel->getActiveSheet()->setCellValue('M' . $filacabecera, 'Tipo');
+$objPHPExcel->getActiveSheet()->setCellValue('N' . $filacabecera, 'Zonal');
 
 $noExistenFilas = true;
 
@@ -227,10 +239,11 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['nombre_unidad']);
     $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['observacion_secretaria']);
     $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, regresaOrdenanza($rowdetalle['id_ordenanza']));
-  //  $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, regresaOrdenanza($rowdetalle['id_ordenanza']));
     $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, regresaTipoControl($rowdetalle['id_tipo']));
+    $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, regresaZonal($rowdetalle['id_zonal_origen']));
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':M' . $filaInicio)->applyFromArray($styleArray);
+    // crea los cuadros de la fila
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':N' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -272,12 +285,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:L200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:M30')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:N30')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':M' . $filacabecera)->applyFromArray($styleArray);
-
-//$objPHPExcel->getActiveSheet()->getStyle('A7:D7')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':N' . $filacabecera)->applyFromArray($styleArray);
 
 
 // Set page orientation and size
@@ -343,12 +354,24 @@ function regresaOrdenanza($id_dato)
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['nombre'];
 }
+
 function regresaTipoControl($id_dato)
 {
     global $os;
     if (!isset($id_dato) ) return '';
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT nombre FROM amc_tipo_control WHERE id = " . $id_dato;
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['nombre'];
+}
+
+function regresaZonal($id_dato)
+{
+    global $os;
+    if (!isset($id_dato) ) return '';
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT nombre FROM amc_zonas WHERE id = " . $id_dato;
     $nombre = $os->db->conn->query($sql);
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['nombre'];

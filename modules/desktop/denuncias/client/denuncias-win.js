@@ -303,6 +303,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         }
+
         //inicio combo caracter del tramite CDT
 
         //inicio combo zonal
@@ -1115,6 +1116,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     renderer: departamentoReasignacion
                 }
                 , {
+                    header: 'Zonal',
+                    dataIndex: 'id_zonal_origen',
+                    sortable: true,
+                    width: 30,
+                    renderer: zonales
+                }
+                , {
                     header: 'Despachado'
                     , dataIndex: 'despacho_secretaria'
                     , align: 'center'
@@ -1262,6 +1270,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     renderer: departamentoReasignacion
                 }
                 , {
+                    header: 'Zonal',
+                    dataIndex: 'id_zonal_origen',
+                    sortable: true,
+                    width: 30,
+                    renderer: zonales
+                }
+                , {
                     header: 'Despachado'
                     , dataIndex: 'despacho_secretaria'
                     , align: 'center'
@@ -1327,14 +1342,14 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 xtype: 'tabpanel',
 
                                 activeTab: 0,
-                                width: winWidth - 14 ,
+                                width: winWidth - 14,
                                 cls: 'no-border',
                                 items: [
                                     {
                                         title: 'Secretaría',
                                         layout: 'column',
                                         height: winHeight - 321,
-                                        width: winWidth - 14 ,
+                                        width: winWidth - 14,
                                         autoScroll: true,
                                         tbar: [
                                             {
@@ -1847,6 +1862,21 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
 
                                 anchor: '95%',
                                 store: storeTID,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Zonal Origen',
+                                id: 'busqueda_id_zonal',
+                                name: 'busqueda_id_zonal',
+                                hiddenName: 'busqueda_id_zonal',
+
+                                anchor: '95%',
+                                store: storeZonal,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2459,7 +2489,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             id_caracter_tramite: '1',
             cantidad_fojas: '0',
             despacho_secretaria: false,
-            id_zonal_origen:' '
+            id_zonal_origen: ' '
 
         });
         this.gridDenuncias.stopEditing();

@@ -361,14 +361,14 @@ function get_numero_guia($reimpresion, $id_unidad_origen)
     // valor por defecto
     $numeroGuia = "$siglasUnidad-$year-1";
     if (!$reimpresion) {
-        $sql = "SELECT numero AS numeroguia, SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias WHERE SUBSTRING(numero,5,4) = YEAR(CURDATE()) AND id_unidad_origen = $id_unidad_origen  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
+        $sql = "SELECT numero AS numeroguia, SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias WHERE  YEAR(creado) = YEAR(CURDATE()) AND id_unidad_origen = $id_unidad_origen  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
         $resultguia = $os->db->conn->query($sql);
         $row = $resultguia->fetch(PDO::FETCH_ASSOC);
 
         $numeroGuia = $row['numeroguia'];
         $numeroGuia = str_replace("$siglasUnidad-$year-", "", $numeroGuia);
         $numeroGuia = $numeroGuia + 1;
-        //$numeroGuia = "$siglasUnidad-$year-" . ($row['num'] + 1);
+        $numeroGuia = "$siglasUnidad-$year-" . $numeroGuia ;
     } else {
         if (isset($_GET['guia'])) {
             $codigoGuia = $_GET['guia'];
