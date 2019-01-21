@@ -409,21 +409,24 @@ function comboUnidadesTotal()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    /*$sqlZonal = '';
-    if (isset($_POST['zonales'])) {
-        if ($_POST['zonales'] == 'true') {
-            $sqlZonal = " AND id = 2";
-        }
-    }*/
+
 
     $zonal_funcionario = $os->get_zonal_id();
     //$sql = "SELECT amc_unidades.id, CONCAT(amc_unidades.nombre, 'SSSS') AS nombre FROM amc_unidades WHERE activo = 1 ORDER BY id";
-    $sql = "SELECT 
+    $sql = "(SELECT 
                 b.id, IF((SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' ) = 0,b.nombre,
                 (CONCAT(b.nombre, ' ( ',(SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' ), ' ) '))) AS nombre
                 FROM amc_unidades b
                 WHERE b.activo = 1 AND id_zonal = " . $zonal_funcionario ."
-                 ORDER BY b.id ";
+                 ORDER BY b.id )
+                  UNION 
+                 (SELECT 
+                b.id, IF((SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true'  AND id_zonal_origen = " . $zonal_funcionario ." ) = 0,b.nombre,
+                (CONCAT(b.nombre, ' ( ',(SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' AND id_zonal_origen = " . $zonal_funcionario ." ), ' ) '))) AS nombre
+                FROM amc_unidades b
+                WHERE b.activo = 1 AND  secretaria = 1
+                 ORDER BY b.id ) ";
+
 
     $result = $os->db->conn->query($sql);
     $data = array();

@@ -41,10 +41,11 @@ else
     $reimpresion = false;
 
 //get nombre corto unidad
-$nombreUnidad = '';
 $os->db->conn->query("SET NAMES 'utf8'");
 $sql = "SELECT nombre_completo FROM amc_unidades WHERE id = $unidad";
 $resultguia = $os->db->conn->query($sql);
+
+$nombreUnidad = '';
 if ($resultguia) {
     $row = $resultguia->fetch(PDO::FETCH_ASSOC);
     if ($row) {
@@ -83,7 +84,7 @@ else
         cantidad_fojas,
         observacion_secretaria 
         FROM amc_denuncias 
-        WHERE $unidad like reasignacion AND  despacho_secretaria <> 'true' 
+        WHERE $unidad like reasignacion AND  despacho_secretaria <> 'true'  AND id_zonal_origen = " . $os->get_zonal_id () ."
         ORDER BY codigo_tramite";
 
 $result = $os->db->conn->query($sql);
