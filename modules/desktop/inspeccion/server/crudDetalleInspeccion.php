@@ -27,7 +27,7 @@ function selectDetalleInspecciones()
     $orderby = 'ORDER BY id DESC';
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_inspeccion WHERE $where  $orderby ";
+    $sql = "SELECT *, (select codigo_tramite FROM amc_denuncias a WHERE a.id= id_inspeccion) codigo_tramite  FROM amc_inspeccion WHERE $where  $orderby ";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
