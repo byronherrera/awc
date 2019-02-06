@@ -62,12 +62,11 @@ if ($number_of_rows == 0) {
     $year = '';
 }
 
-header('Content-Type: application/xlsx');
-header('Content-Disposition: attachment;filename="denuncias-' . strtolower(quitar_espacio(quitar_tildes($nombreUnidad))) . '-SGE-' . $year . '-' . $numeroGuia . '-' . $today . '.xlsx"');
-header('Cache-Control: max-age=0');
 
-//$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+header('Content-Type: application/vnd.ms-excel');
+header('Content-Disposition: attachment;filename="denuncias-' . strtolower(quitar_espacio(quitar_tildes($nombreUnidad))) . '-SGE-' . $year . '-' . $numeroGuia . '-' . $today . '.xls"');
+header('Cache-Control: max-age=0');
 $objWriter->save('php://output');
 
 exit;

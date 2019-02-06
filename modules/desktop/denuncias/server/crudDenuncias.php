@@ -169,11 +169,10 @@ function selectDenuncias()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_denuncias $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT * FROM amc_denuncias $where  $orderby  LIMIT  $start , $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
         $data[] = $row;
     };
 
@@ -196,13 +195,14 @@ function insertDenuncias()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
     $data->despacho_secretaria = 'false';
-    $data->codigo_tramite = generaCodigoProcesoDenuncia();
     $data->id_persona = $os->get_member_id();
     $data->id_zonal_origen = $os->get_zonal_id();
     //genero el listado de nombre de campos
 
     $cadenaDatos = '';
     $cadenaCampos = '';
+
+    $data->codigo_tramite = generaCodigoProcesoDenuncia();
     foreach ($data as $clave => $valor) {
         if ($valor != '') {
             $cadenaCampos = $cadenaCampos . $clave . ',';
@@ -216,6 +216,8 @@ function insertDenuncias()
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
+
+    // validar si el ingreso no da como resultado un numero duplicado
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso

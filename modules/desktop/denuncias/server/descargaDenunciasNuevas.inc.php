@@ -323,13 +323,12 @@ if ($number_of_rows == 0) {
     $year = '';
 }
 
-header('Content-Type: application/xlsx');
-header('Content-Disposition: attachment;filename="guia-' . $numeroGuia . '-' . $today . '.xlsx"');
+$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+header('Content-Type: application/vnd.ms-excel');
+header('Content-Disposition: attachment;filename="guia-' . $numeroGuia . '-' . $today . '.xls"');
 header('Cache-Control: max-age=0');
-
-//$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 $objWriter->save('php://output');
+
 
 exit;
 

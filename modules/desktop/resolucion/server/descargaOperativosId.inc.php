@@ -406,11 +406,10 @@ $objPHPExcel->getActiveSheet()->setShowGridLines(false);
 ////////////////////////////////////////////////
 // se crea la cabecera de archivo y se lo graba al archivo
 
-// se crea la cabecera de archivo y se lo graba al archivo
-header('Content-Type: application/xlsx');
-header('Content-Disposition: attachment;filename="Operativo-AMC-' . $operativoId . '-' . $today . '.xlsx"');
+$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+header('Content-Type: application/vnd.ms-excel');
+header('Content-Disposition: attachment;filename="Operativo-AMC-' . $operativoId . '-' . $today . '.xls"');
 header('Cache-Control: max-age=0');
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 $objWriter->save('php://output');
 exit;
 

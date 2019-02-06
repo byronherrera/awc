@@ -44,7 +44,8 @@ function insertInforme()
     global $os;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $data = json_decode(stripslashes($_POST["data"]));
+    $newData = my_json_decode ($_POST["data"]);
+    $data = json_decode(stripslashes($newData));
 
     $cadenaDatos = '';
     $cadenaCampos = '';
@@ -57,6 +58,7 @@ function insertInforme()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
+    $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "INSERT INTO amc_operativos_informes ($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
@@ -123,4 +125,15 @@ switch ($_GET['operation']) {
     case 'delete' :
         deleteInforme();
         break;
+}
+
+
+function my_json_decode($s) {
+    $s = str_replace(
+        array('"',  "'", "¨"),
+        array('\"', '"', '\"'),
+        $s
+    );
+    $s = preg_replace('/(\w+):/i', '"\1":', $s);
+    return $s;
 }

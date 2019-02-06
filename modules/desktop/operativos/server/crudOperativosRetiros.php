@@ -31,7 +31,9 @@ function insertParticipantes()
     global $os;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $data = json_decode(stripslashes($_POST["data"]));
+    $newData = my_json_decode ($_POST["data"]);
+
+    $data = json_decode(stripslashes($newData));
 
     $cadenaDatos = '';
     $cadenaCampos = '';
@@ -115,4 +117,15 @@ switch ($_GET['operation']) {
     case 'delete' :
         deleteParticipantes();
         break;
+}
+
+
+function my_json_decode($s) {
+    $s = str_replace(
+        array('"',  "'", "¨"),
+        array('\"', '"', '\"'),
+        $s
+    );
+    $s = preg_replace('/(\w+):/i', '"\1":', $s);
+    return $s;
 }

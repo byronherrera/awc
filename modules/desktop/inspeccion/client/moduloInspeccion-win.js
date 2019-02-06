@@ -176,6 +176,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'id_denuncia', readOnly: false, allowBlank: true},
+                {name: 'id_tramite', readOnly: false, allowBlank: true},
                 {name: 'id_inspeccion', readOnly: false, allowBlank: true},
                 //{name: 'codificacion', readOnly: false, allowBlank: true},
                 {name: 'nombre_denunciado', readOnly: false, allowBlank: true},
@@ -1801,7 +1802,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             }
         }
 
-        function aprobacion(id) {
+        function    aprobacion(id) {
             var index = storeAPROBADO.find('id', id);
             if (index > -1) {
                 var record = storeAPROBADO.getAt(index);
@@ -2867,6 +2868,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeInspeccionActaSimple,
             columns: [
                 new Ext.grid.RowNumberer(),
+                {header: 'Trámite', dataIndex: 'id_tramite'},
                 {header: 'Código trámite', dataIndex: 'id_denuncia', hidden: true},
                 {header: 'Cod. inspección', dataIndex: 'id_inspeccion', sortable: true, width: 90},
                 //{header: 'Codificacion', dataIndex: 'codificacion', sortable: true, width: 200, editor: textFieldDetalle, autoSave:true},

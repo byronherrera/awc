@@ -669,6 +669,14 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $mail->Port = 25;
     $mail->Username = "agencia.m.control@quito.gob.ec";
     $mail->Password = "12345678";
+
+/*    $mail->Host = 'smtp.gmail.com';
+    $mail->Port = 587;
+    $mail->SMTPSecure = 'tls';
+    $mail->SMTPAuth = true;
+    $mail->Username = "amcdenuncias@gmail.com";
+    $mail->Password = "amccontrol2016";
+*/
     $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
 
     $mail->AddBCC("byron.herrera@quito.gob.ec");

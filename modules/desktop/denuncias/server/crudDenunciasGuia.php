@@ -1,6 +1,5 @@
 <?php
 require_once '../../../../server/os.php';
-
 $os = new os();
 if (!$os->session_exists()) {
     die('No existe sesión!');
