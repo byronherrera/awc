@@ -792,6 +792,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                 {name: 'asunto', allowBlank: false},
                 {name: 'institucion', allowBlank: true},
                 {name: 'descripcion_anexos', allowBlank: false},
+                {name: 'gdoc', allowBlank: true},
                 {name: 'reasignacion', allowBlank: false},
                 {name: 'id_caracter_tramite', allowBlank: false},
                 {name: 'cantidad_fojas', allowBlank: false},
@@ -917,8 +918,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.form.TextField({allowBlank: false}), renderer: smalltext
                 },
                 {
-                    header: 'GDoc / Desc. anexos',
+                    header: 'Desc. anexos',
                     dataIndex: 'descripcion_anexos',
+                    sortable: true,
+                    width: 38,
+                    editor: new Ext.form.TextField({allowBlank: false}), renderer: smalltext
+                },
+                {
+                    header: 'GDoc',
+                    dataIndex: 'gdoc',
                     sortable: true,
                     width: 38,
                     editor: new Ext.form.TextField({allowBlank: false}), renderer: smalltext
@@ -1107,12 +1115,18 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     width: 55
                 },
                 {
-                    header: 'GDoc / Desc. anexos',
+                    header: 'Desc. anexos',
                     dataIndex: 'descripcion_anexos',
                     sortable: true,
                     width: 55
-                }
-                , {
+                },
+                {
+                    header: 'GDoc',
+                    dataIndex: 'gdoc',
+                    sortable: true,
+                    width: 55
+                },
+                {
                     header: 'Caracter trámite',
                     dataIndex: 'id_caracter_tramite',
                     sortable: true,
@@ -1261,12 +1275,18 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                     width: 55
                 },
                 {
-                    header: 'GDoc / Desc. anexos',
+                    header: 'Desc. anexos',
                     dataIndex: 'descripcion_anexos',
                     sortable: true,
                     width: 55
-                }
-                , {
+                },
+                {
+                    header: 'GDoc',
+                    dataIndex: 'gdoc',
+                    sortable: true,
+                    width: 55
+                },
+                {
                     header: 'Caracter trámite',
                     dataIndex: 'id_caracter_tramite',
                     sortable: true,
@@ -1520,6 +1540,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         fieldLabel: 'Descripción anexo',
                                                         id: 'descripcion_anexos',
                                                         name: 'descripcion_anexos',
+                                                        anchor: '95%'
+                                                    },
+                                                    {
+                                                        xtype: 'textfield',
+                                                        fieldLabel: 'Gdoc',
+                                                        id: 'gdoc',
+                                                        name: 'gdoc',
                                                         anchor: '95%'
                                                     },
                                                     {
@@ -2014,17 +2041,23 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             key: 'remitente',
                             scope: this,
                             text: 'Remitente/ Denunciante'
-                        }
-                        , {
+                        },
+                        {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
                             key: 'descripcion_anexos',
                             scope: this,
                             text: 'Descripcion Anexos'
-                        }
-
-                        ,
+                        },
+                        {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'gdoc',
+                            scope: this,
+                            text: 'Gdoc'
+                        },
                         {
                             checked: false,
                             checkHandler: checkHandler,
@@ -2437,6 +2470,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             Ext.getCmp('cedula').setReadOnly(activar);
             Ext.getCmp('email').setReadOnly(activar);
             Ext.getCmp('descripcion_anexos').setReadOnly(activar);
+            Ext.getCmp('gdoc').setReadOnly(activar);
             Ext.getCmp('cantidad_fojas').setReadOnly(activar);
             Ext.getCmp('asunto').setReadOnly(activar);
             Ext.getCmp('institucion').setReadOnly(activar);
@@ -2499,6 +2533,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             id_tipo_documento: '2',
             num_documento: 'S/N',
             descripcion_anexos: '-',
+            gdoc: '-',
             institucion: '',
             remitente: '',
             reasignacion: '',
