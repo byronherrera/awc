@@ -826,7 +826,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
-                    header: 'Código',
+                    header: 'Trámite',
                     dataIndex: 'codigo_tramite',
                     sortable: true,
                     width: 18
@@ -1070,7 +1070,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
-                    header: 'Código',
+                    header: 'Trámite',
                     dataIndex: 'codigo_tramite',
                     sortable: true,
                     width: 15
@@ -1209,7 +1209,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
-                    header: 'Código',
+                    header: 'Trámite',
                     dataIndex: 'codigo_tramite',
                     sortable: true,
                     width: 15
@@ -1417,7 +1417,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                                         name: 'id'
                                                     },
                                                     {
-                                                        fieldLabel: 'Código trámite',
+                                                        fieldLabel: 'Trámite',
                                                         name: 'codigo_tramite',
                                                         anchor: '95%',
                                                         readOnly: true,
@@ -2024,7 +2024,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             group: 'filterField',
                             key: 'codigo_tramite',
                             scope: this,
-                            text: 'Código trámite'
+                            text: 'Trámite'
                         },
                         {
                             checked: false,
@@ -2097,7 +2097,7 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                         }
                     ]
                 })
-                , text: 'Código trámite'
+                , text: 'Trámite'
             });
             var targetFieldBtn = new Ext.Button({
                 menu: new Ext.menu.Menu({
@@ -2546,7 +2546,9 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
         });
         this.gridDenuncias.stopEditing();
         this.storeDenuncias.insert(0, denuncias);
-        this.gridDenuncias.startEditing(0, 0);
+        this.gridDenuncias.startEditing(0, 4);
+
+
 
     },
     requestGridData: function () {

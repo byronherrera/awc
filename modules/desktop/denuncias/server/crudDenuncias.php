@@ -197,6 +197,9 @@ function insertDenuncias()
     $data->despacho_secretaria = 'false';
     $data->id_persona = $os->get_member_id();
     $data->id_zonal_origen = $os->get_zonal_id();
+
+    $data->id_unidad_origen = $os->get_unidad_id();
+
     //genero el listado de nombre de campos
 
     $cadenaDatos = '';
@@ -214,6 +217,8 @@ function insertDenuncias()
 
     $sql = "INSERT INTO amc_denuncias($cadenaCampos)
 	values($cadenaDatos);";
+
+    $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
@@ -245,6 +250,12 @@ function insertDenuncias()
         "message" => $message
     ));
 
+
+    //grabamos
+    $fichero = 'crudTramites.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $log . "\n";
+    file_put_contents($fichero, $actual);
 
 }
 
@@ -452,12 +463,21 @@ function updateDenunciasForm()
             respuesta_devolucion = '$respuesta_devolucion',
             fecha_respuesta_devolucion = $fecha_respuesta_devolucion   
           WHERE id = '$id' ";
+
+    $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Contenido actualizado exitosamente" : $sql->errorCode()
     ));
+
+    //grabamos
+    $fichero = 'crudTramites.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $log . "\n";
+    file_put_contents($fichero, $actual);
+
 }
 
 function deleteDenuncias()
@@ -465,12 +485,20 @@ function deleteDenuncias()
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
     $sql = "DELETE FROM amc_denuncias WHERE id = $id";
+    $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_denuncias, eliminado exitosamente" : $sql->errorCode()
     ));
+
+    //grabamos
+    $fichero = 'crudTramites.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $log . "\n";
+    file_put_contents($fichero, $actual);
+
 }
 
 switch ($_GET['operation']) {
