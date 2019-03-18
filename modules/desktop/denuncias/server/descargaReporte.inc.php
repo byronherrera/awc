@@ -207,6 +207,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('N' . $filacabecera, 'Zonal');
 $objPHPExcel->getActiveSheet()->setCellValue('O' . $filacabecera, 'Gdoc');
 
 
+
 $noExistenFilas = true;
 
 while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
