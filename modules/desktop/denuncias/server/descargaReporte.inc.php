@@ -186,6 +186,9 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(12);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('N')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
 
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('O')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(20);
+
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Codigo');
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Fecha y hora de recepcion');
@@ -201,6 +204,8 @@ $objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Observaciones
 $objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Ordenanza');
 $objPHPExcel->getActiveSheet()->setCellValue('M' . $filacabecera, 'Tipo');
 $objPHPExcel->getActiveSheet()->setCellValue('N' . $filacabecera, 'Zonal');
+$objPHPExcel->getActiveSheet()->setCellValue('O' . $filacabecera, 'Gdoc');
+
 
 $noExistenFilas = true;
 
@@ -241,9 +246,10 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, regresaOrdenanza($rowdetalle['id_ordenanza']));
     $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, regresaTipoControl($rowdetalle['id_tipo']));
     $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, regresaZonal($rowdetalle['id_zonal_origen']));
+    $objPHPExcel->getActiveSheet()->setCellValue('O' . $filaInicio, $rowdetalle['gdoc']);
 
     // crea los cuadros de la fila
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':N' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':O' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -269,7 +275,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:L600')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:O600')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -277,7 +283,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:L600')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:L200')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:O200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -285,10 +291,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:L200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:N30')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:O30')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':N' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':O' . $filacabecera)->applyFromArray($styleArray);
 
 
 // Set page orientation and size
@@ -298,8 +304,8 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:M3')->getFont()->setSize(14);
-$objPHPExcel->getActiveSheet()->getStyle('A4:M40')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A1:O3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A4:O40')->getFont()->setSize(10);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -374,6 +380,6 @@ function regresaZonal($id_dato)
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT nombre FROM amc_zonas WHERE id = " . $id_dato;
     $nombre = $os->db->conn->query($sql);
-    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    $rownombre =  $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['nombre'];
 }
