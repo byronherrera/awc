@@ -424,7 +424,7 @@ function comboUnidadesTotal()
                 b.id, IF((SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true'  AND id_zonal_origen = " . $zonal_funcionario ." ) = 0,b.nombre,
                 (CONCAT(b.nombre, ' ( ',(SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' AND id_zonal_origen = " . $zonal_funcionario ." ), ' ) '))) AS nombre
                 FROM amc_unidades b
-                WHERE b.activo = 1 AND  secretaria = 1
+                WHERE b.activo = 1 AND  comunes = 1
                  ORDER BY b.id ) ";
 
 

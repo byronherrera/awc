@@ -267,13 +267,8 @@ function insertOperativos()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
 
-
-    //$data->finalizado = 'false';
-    // $data->codigo_operativo = generaCodigoProcesoDenuncia();
-    //$data->id_persona = $os->get_member_id();
+    $data->id_persona_encargada = $os->get_member_id();
     //genero el listado de nombre de campos
-
-
 
     $cadenaDatos = '';
     $cadenaCampos = '';
@@ -295,6 +290,9 @@ function insertOperativos()
 
     $sql = "INSERT INTO amc_personal_distributivo($cadenaCampos)
 	values($cadenaDatos);";
+
+    $log = $sql;
+
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
@@ -307,6 +305,12 @@ function insertOperativos()
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
         "data" => array($data)
     ));
+
+    //grabamos
+    $fichero = 'crudTalento.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $os->get_member_id() . "**" .$log . "\n";
+    file_put_contents($fichero, $actual);
 }
 
 function generaCodigoProcesoDenuncia()
@@ -374,6 +378,13 @@ function updateOperativos()
         "message" => $message,
         "sqlOriginal" => $sqlOrginal
     ));
+
+
+    //grabamos
+    $fichero = 'crudTalento.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $os->get_member_id() . "**" .$sqlOrginal . "\n";
+    file_put_contents($fichero, $actual);
 }
 
 function selectOperativosForm()
@@ -418,12 +429,19 @@ function deleteOperativos()
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
     $sql = "DELETE FROM amc_personal_distributivo WHERE id = $id";
+    $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_personal_distributivo, eliminado exitosamente" : $sql->errorCode()
     ));
+
+    //grabamos
+    $fichero = 'crudTalento.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $os->get_member_id() . "**" .$log . "\n";
+    file_put_contents($fichero, $actual);
 }
 
 switch ($_GET['operation']) {

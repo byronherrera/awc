@@ -718,11 +718,10 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {name: 'barrio', allowBlank: true},
                 {name: 'recorrido', allowBlank: true},
                 {name: 'geoposicionamiento', allowBlank: true},
-
                 {name: 'fecha_nacimiento', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'cargas_familiares', allowBlank: true},
                 {name: 'discapacidades', allowBlank: true},
-                {name: 'enfermedades', allowBlank: true},
+                {name: 'enfermedades', allowBlank: true}
             ],
             successProperty: 'success',
             messageProperty: 'message',
@@ -824,7 +823,8 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 280,
                     editor: textField
-                },{
+                },
+                {
                     header: 'Fecha salida',
                     dataIndex: 'fecha_salida',
                     sortable: true,
@@ -834,7 +834,8 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                         dateFormat: 'Y-m-d',
                         timeFormat: ''
                     })
-                },{
+                },
+                {
                     header: 'Fecha entrada',
                     dataIndex: 'fecha_entrada',
                     sortable: true,

@@ -254,7 +254,7 @@ function insertDenuncias()
     //grabamos
     $fichero = 'crudTramites.log';
     $actual = file_get_contents($fichero);
-    $actual .= $log . "\n";
+    $actual .= $data->id_persona . "**" . $log . "\n";
     file_put_contents($fichero, $actual);
 
 }
@@ -475,7 +475,7 @@ function updateDenunciasForm()
     //grabamos
     $fichero = 'crudTramites.log';
     $actual = file_get_contents($fichero);
-    $actual .= $log . "\n";
+    $actual .= $os->get_member_id() . "**" .$log . "\n";
     file_put_contents($fichero, $actual);
 
 }
@@ -496,7 +496,7 @@ function deleteDenuncias()
     //grabamos
     $fichero = 'crudTramites.log';
     $actual = file_get_contents($fichero);
-    $actual .= $log . "\n";
+    $actual .= $os->get_member_id() . "**" .$log . "\n";
     file_put_contents($fichero, $actual);
 
 }
