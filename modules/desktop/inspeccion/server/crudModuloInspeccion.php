@@ -21,7 +21,8 @@ function selectInspeccion()
     //forzamos que solo sea los asignados a inspeccion
     $where = "WHERE reasignacion = 3 and despacho_secretaria='true' ";
 
-    //
+    // todo recuperar en base si se asigna a inspeccion de la zonal creada
+
     if (isset($_POST['pendientesAprobar'])) {
         if ($_POST['pendientesAprobar'] == 'true') {
             $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0 and despacho_secretaria='true' ";
