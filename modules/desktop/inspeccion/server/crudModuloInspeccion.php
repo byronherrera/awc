@@ -18,14 +18,21 @@ function selectInspeccion()
 
     }
 
-    //forzamos que solo sea los asignados a inspeccion
-    $where = "WHERE reasignacion = 3 and despacho_secretaria='true' ";
+    //    $idUnidadOrigen = $os->get_unidad_id();
 
-    // todo recuperar en base si se asigna a inspeccion de la zonal creada
+    //recuperamos la unidad que corresponde a inspeccion
+    $idzonalorigen = $os->get_zonal_id();
+    $idUnidadInspeccion = getUnidadInspeccion($idzonalorigen);
+
+    //forzamos que solo sea los asignados a inspeccion
+    $where = "WHERE reasignacion = $idUnidadInspeccion and despacho_secretaria='true' ";
+
+
+
 
     if (isset($_POST['pendientesAprobar'])) {
         if ($_POST['pendientesAprobar'] == 'true') {
-            $where = " WHERE reasignacion = 3 and procesado_inspeccion = 0 and despacho_secretaria='true' ";
+            $where = " WHERE reasignacion = $idUnidadInspeccion and procesado_inspeccion = 0 and despacho_secretaria='true' ";
         }
     }
 
@@ -341,4 +348,23 @@ switch ($_GET['operation']) {
     case 'delete' :
         deleteInspeccion();
         break;
+}
+
+
+function getUnidadInspeccion($id_zonal)
+{
+    global $os;
+    //get unidad que es inspeccion en una zonal
+
+    $id_unidad = '';
+
+    $sql = "SELECT id FROM amc_unidades WHERE id_zonal = $id_zonal AND activo = 1 AND inspeccion = 1";
+    $resultzonal = $os->db->conn->query($sql);
+    if ($resultzonal) {
+        $row = $resultzonal->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            $id_unidad = $row['id'];
+        }
+    }
+    return $id_unidad;
 }
