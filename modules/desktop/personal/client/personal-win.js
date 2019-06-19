@@ -703,6 +703,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {name: 'piso', allowBlank: true},
                 {name: 'id_estado', allowBlank: true},
                 {name: 'observaciones', allowBlank: true},
+                {name: 'procesos', allowBlank: true},
 
                 {name: 'email', allowBlank: true},
 
@@ -817,6 +818,13 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
 
                 {header: 'Email', dataIndex: 'email', sortable: true, width: 140, editor: textField},
                 {header: 'Piso', dataIndex: 'piso', sortable: true, width: 140, editor: textField},
+                {
+                    header: 'Procesos',
+                    dataIndex: 'procesos',
+                    sortable: true,
+                    width: 140,
+                    editor: textField
+                },
                 {
                     header: 'Observaciones',
                     dataIndex: 'observaciones',
@@ -1023,6 +1031,12 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Observaciones',
                     dataIndex: 'observaciones',
+                    sortable: true,
+                    width: 60
+                },
+                {
+                    header: 'Procesos',
+                    dataIndex: 'procesos',
                     sortable: true,
                     width: 60
                 },
@@ -1625,6 +1639,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             id_tipo_control: '',
             id_nivel_complejidad: ' ',
             observaciones: ' ',
+            procesos: ' ',
             punto_encuentro_planificado: ' ',
             id_zonal: 0,
             rmu: 0,

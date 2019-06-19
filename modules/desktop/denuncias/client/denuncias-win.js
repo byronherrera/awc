@@ -2191,13 +2191,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'reload-icon',
                                     handler: this.requestGridData,
                                     scope: this,
-                                    text: 'Recargar Datos',
+                                    text: 'Recargar',
                                     tooltip: 'Recargar datos'
                                 },
                                 '-',
                                 {
                                     xtype: 'checkbox',
-                                    boxLabel: 'No despachados -- ',
+                                    boxLabel: 'No despachados ',
                                     id: 'checkNoEnviados',
                                     name: 'noenviados',
                                     checked: false,
@@ -2253,15 +2253,15 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'excel-icon',
                                     handler: this.botonExportarReporte,
                                     scope: this,
-                                    text: 'Generar Reporte',
+                                    text: 'Guía',
                                     tooltip: 'Se genera el reporte de los items',
                                     id: 'tb_repoteDenuncias',
                                     disabled: true
                                 },
-                                '-',
+        
                                 '->'
                                 , {
-                                    text: 'Buscar por:'
+                                    text: 'Buscar :'
                                     , xtype: 'tbtext'
                                 }
 

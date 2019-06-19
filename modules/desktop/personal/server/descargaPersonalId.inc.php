@@ -81,10 +81,11 @@ textoSiguieteFila("MODALIDAD BAJO LA QUE LABORA", 'J', 'J', 'center', false, "B"
 textoSiguieteFila("RMU", 'K', 'K', 'center', false, "B");
 textoSiguieteFila("UNIDAD", 'L', 'L', 'center', false, "B");
 textoSiguieteFila("TELEFONO", 'M', 'M', 'center', false, "B");
-textoSiguieteFila("EXTENSION", 'N', 'N', 'center', false, "B");
-textoSiguieteFila("EMAIL", 'O', 'O', 'center', false, "B");
+textoSiguieteFila("PROCESO", 'N', 'N', 'center', false, "B");
+textoSiguieteFila("EXTENSION", 'O', 'O', 'center', false, "B");
+textoSiguieteFila("EMAIL", 'P', 'P', 'center', false, "B");
 
-textoSiguieteFila("PISO", 'P', 'P', 'center', false, "B");
+textoSiguieteFila("PISO", 'Q', 'Q', 'center', false, "B");
 // recuperamos los nombres de los usuarios
 
 $sql = "SELECT * FROM amc_unidades_personal WHERE activo = 1 ORDER BY orden";
@@ -110,9 +111,10 @@ while ($nombreUnidad = $unidades->fetch(PDO::FETCH_ASSOC)) {
         textoSiguieteFila($nombreDetalle['rmu'], 'K', 'K', 'center', false);
         textoSiguieteFila(regresaUnidad($nombreDetalle['unidad']), 'L', 'L', 'center', false);
         textoSiguieteFila($nombreDetalle['telefono_institucional'], 'M', 'M', 'center', false);
-        textoSiguieteFila($nombreDetalle['extencion'], 'N', 'N', 'center', false);
-        textoSiguieteFila($nombreDetalle['email'], 'O', 'O', 'left', false);
-        textoSiguieteFila($nombreDetalle['piso'], 'P', 'P', 'left', false);
+        textoSiguieteFila($nombreDetalle['procesos'], 'N', 'N', 'center', false);
+        textoSiguieteFila($nombreDetalle['extencion'], 'O', 'O', 'center', false);
+        textoSiguieteFila($nombreDetalle['email'], 'P', 'P', 'left', false);
+        textoSiguieteFila($nombreDetalle['piso'], 'Q', 'Q', 'left', false);
     }
 
 }
@@ -178,11 +180,13 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(30);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('M')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('N')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(12);
+$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('O')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(32);
+$objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(12);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('P')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(50);
+$objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(32);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('Q')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('Q')->setWidth(50);
 
 
 // Set document properties
