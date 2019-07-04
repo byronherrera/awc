@@ -168,6 +168,35 @@ function selectDenuncias()
     }
 
 
+     if (isset($_POST['busqueda_palabra']) and ($_POST['busqueda_palabra'] != '')) {
+        $tipo = $_POST['busqueda_palabra'];
+        if ($where == '') {
+            $where = "WHERE ( upper( num_documento ) like '%$tipo%'or
+                        upper( remitente ) like '%$tipo%'or
+                        upper( institucion ) like '%$tipo%'or
+                        upper( cedula ) like '%$tipo%'or
+                        upper( email ) like '%$tipo%'or
+                        upper( asunto ) like '%$tipo%'or
+                        upper( descripcion_anexos ) like '%$tipo%'or
+                        upper( observacion_secretaria ) like '%$tipo%'or
+                        upper( respuesta_devolucion ) like '%$tipo%'or
+                        upper( gdoc ) like '%$tipo%')    ";
+        } else {
+            $where = $where . "AND ( upper( num_documento ) like '%$tipo%'or
+                        upper( remitente ) like '%$tipo%'or
+                        upper( institucion ) like '%$tipo%'or
+                        upper( cedula ) like '%$tipo%'or
+                        upper( email ) like '%$tipo%'or
+                        upper( asunto ) like '%$tipo%'or
+                        upper( descripcion_anexos ) like '%$tipo%'or
+                        upper( observacion_secretaria ) like '%$tipo%'or
+                        upper( respuesta_devolucion ) like '%$tipo%'or
+                        upper( gdoc ) like '%$tipo%') ";
+        }
+    }
+
+
+
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_denuncias $where  $orderby  LIMIT  $start , $limit";
     $result = $os->db->conn->query($sql);

@@ -1974,6 +1974,13 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
+                            },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Palabra clave',
+                                id: 'busqueda_palabra',
+                                name: 'busqueda_palabra',
+                                anchor: '95%'
                             }
                         ]
                     },
@@ -2058,220 +2065,220 @@ QoDesk.DenunciasWindow = Ext.extend(Ext.app.Module, {
                             scope: this,
                             text: 'Gdoc'
                         },
-                        {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'recepcion_documento',
-                            scope: this,
-                            text: 'Fecha'
-                        }, {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'cedula',
-                            scope: this,
-                            text: 'Cédula'
-                        },
-                        {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'guia',
-                            scope: this,
-                            text: 'Guía'
-                        }, {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'institucion',
-                            scope: this,
-                            text: 'Institución'
-                        }, {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'asunto',
-                            scope: this,
-                            text: 'Asunto'
-                        }
-                    ]
-                })
-                , text: 'Trámite'
-            });
-            var targetFieldBtn = new Ext.Button({
-                menu: new Ext.menu.Menu({
-                    id: 'tb_seleccionarUnidad1',
-                    disabled: true,
-                    items: [
-                        {
-                            checked: false,
-                            checkHandler: targetHandler,
-                            group: 'targetField',
-                            key: '2',
-                            scope: this,
-                            text: 'Secretaría'
-                        }
-                        , {
-                            checked: true,
-                            checkHandler: targetHandler,
-                            group: 'targetField',
-                            key: '3',
-                            scope: this,
-                            text: 'Inspeccion'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: targetHandler,
-                            group: 'targetField',
-                            key: '4',
-                            scope: this,
-                            text: 'Instrucción'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: targetHandler,
-                            group: 'targetField',
-                            key: '5',
-                            scope: this,
-                            text: 'Resolución y Ejecución'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: '6',
-                            scope: this,
-                            text: 'Administrativa y financiera'
-                        }
-                    ]
-                })
-                , text: 'Inspeccion'
-            });
-            this.targetFieldBtn = targetFieldBtn;
-            win = desktop.createWindow({
-                id: 'grid-win-denuncias',
-                title: 'Recepción Documentos',
-                width: winWidth,
-                height: winHeight,
-                iconCls: 'denuncias-icon',
-                shim: false,
-                animCollapse: false,
-                constrainHeader: true,
-                layout: 'fit',
+                            {
+                                checked: false,
+                                checkHandler: checkHandler,
+                                group: 'filterField',
+                                key: 'recepcion_documento',
+                                scope: this,
+                                text: 'Fecha'
+                            }, {
+                                checked: false,
+                                checkHandler: checkHandler,
+                                group: 'filterField',
+                                key: 'cedula',
+                                scope: this,
+                                text: 'Cédula'
+                            },
+                            {
+                                checked: false,
+                                checkHandler: checkHandler,
+                                group: 'filterField',
+                                key: 'guia',
+                                scope: this,
+                                text: 'Guía'
+                            }, {
+                                checked: false,
+                                checkHandler: checkHandler,
+                                group: 'filterField',
+                                key: 'institucion',
+                                scope: this,
+                                text: 'Institución'
+                            }, {
+                                checked: false,
+                                checkHandler: checkHandler,
+                                group: 'filterField',
+                                key: 'asunto',
+                                scope: this,
+                                text: 'Asunto'
+                            }
+                        ]
+                    })
+                    , text: 'Trámite'
+                });
+                var targetFieldBtn = new Ext.Button({
+                    menu: new Ext.menu.Menu({
+                        id: 'tb_seleccionarUnidad1',
+                        disabled: true,
+                        items: [
+                            {
+                                checked: false,
+                                checkHandler: targetHandler,
+                                group: 'targetField',
+                                key: '2',
+                                scope: this,
+                                text: 'Secretaría'
+                            }
+                            , {
+                                checked: true,
+                                checkHandler: targetHandler,
+                                group: 'targetField',
+                                key: '3',
+                                scope: this,
+                                text: 'Inspeccion'
+                            }
+                            , {
+                                checked: false,
+                                checkHandler: targetHandler,
+                                group: 'targetField',
+                                key: '4',
+                                scope: this,
+                                text: 'Instrucción'
+                            }
+                            , {
+                                checked: false,
+                                checkHandler: targetHandler,
+                                group: 'targetField',
+                                key: '5',
+                                scope: this,
+                                text: 'Resolución y Ejecución'
+                            }
+                            , {
+                                checked: false,
+                                checkHandler: checkHandler,
+                                group: 'filterField',
+                                key: '6',
+                                scope: this,
+                                text: 'Administrativa y financiera'
+                            }
+                        ]
+                    })
+                    , text: 'Inspeccion'
+                });
+                this.targetFieldBtn = targetFieldBtn;
+                win = desktop.createWindow({
+                    id: 'grid-win-denuncias',
+                    title: 'Recepción Documentos',
+                    width: winWidth,
+                    height: winHeight,
+                    iconCls: 'denuncias-icon',
+                    shim: false,
+                    animCollapse: false,
+                    constrainHeader: true,
+                    layout: 'fit',
 
-                items: new Ext.TabPanel({
-                    activeTab: 0,
-                    border: false,
-                    id: 'panelPrincipal',
-                    items: [
-                        {
-                            autoScroll: true,
-                            title: 'General',
-                            closable: true,
-                            tbar: [
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.adddenuncias,
-                                    iconCls: 'save-icon',
-                                    disabled: !acceso
-                                },
-                                '-',
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deletedenuncias,
-                                    iconCls: 'delete-icon',
-                                    //disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true
-                                    disabled: true
-                                },
-                                '-',
-                                {
-                                    iconCls: 'reload-icon',
-                                    handler: this.requestGridData,
-                                    scope: this,
-                                    text: 'Recargar',
-                                    tooltip: 'Recargar datos'
-                                },
-                                '-',
-                                {
-                                    xtype: 'checkbox',
-                                    boxLabel: 'No despachados ',
-                                    id: 'checkNoEnviados',
-                                    name: 'noenviados',
-                                    checked: false,
-                                    inputValue: '1',
-                                    tooltip: 'Recargar datos',
-                                    disabled: !acceso,
-                                    cls: 'barramenu',
-                                    handler: function (checkbox, isChecked) {
-                                        Ext.getCmp('tb_repoteDenuncias').setDisabled(!this.checked);
-                                        //Ext.getCmp('tb_seleccionarUnidad').setDisabled(!this.checked);
-                                        //Ext.getCmp('tb_seleccionarUnidad').getValue();
-                                        //storeDenuncias.load({params: {noenviados: isChecked}});
-                                        storeDenuncias.baseParams = {
-                                            noenviados: isChecked
-                                        };
-                                        storeDenuncias.load();
-                                        // if (!this.checked) {
-                                        Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
-                                        //}
-                                    }
-                                }, /*this.targetFieldBtn,*/
-                                {
-                                    xtype: 'combo',
-
-                                    fieldLabel: 'Reasignado a',
-                                    name: 'tb_reasignacion',
-                                    anchor: '95%',
-                                    id: 'tb_seleccionarUnidad',
-                                    /* disabled: true,*/
-                                    hiddenName: 'tb_reasignacion',
-                                    store: storeREATOT,
-                                    valueField: 'id',
-                                    displayField: 'nombre',
-                                    typeAhead: true,
-                                    triggerAction: 'all',
-                                    mode: 'local',
-                                    width: 250,
-                                    value: 'Seleccionar Unidad',
-                                    listeners: {
-                                        'select': function (t) {
-                                            isChecked = (Ext.getCmp('checkNoEnviados').getValue());
+                    items: new Ext.TabPanel({
+                        activeTab: 0,
+                        border: false,
+                        id: 'panelPrincipal',
+                        items: [
+                            {
+                                autoScroll: true,
+                                title: 'General',
+                                closable: true,
+                                tbar: [
+                                    {
+                                        text: 'Nuevo',
+                                        scope: this,
+                                        handler: this.adddenuncias,
+                                        iconCls: 'save-icon',
+                                        disabled: !acceso
+                                    },
+                                    '-',
+                                    {
+                                        text: "Eliminar",
+                                        scope: this,
+                                        handler: this.deletedenuncias,
+                                        iconCls: 'delete-icon',
+                                        //disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true
+                                        disabled: true
+                                    },
+                                    '-',
+                                    {
+                                        iconCls: 'reload-icon',
+                                        handler: this.requestGridData,
+                                        scope: this,
+                                        text: 'Recargar',
+                                        tooltip: 'Recargar datos'
+                                    },
+                                    '-',
+                                    {
+                                        xtype: 'checkbox',
+                                        boxLabel: 'No despachados ',
+                                        id: 'checkNoEnviados',
+                                        name: 'noenviados',
+                                        checked: false,
+                                        inputValue: '1',
+                                        tooltip: 'Recargar datos',
+                                        disabled: !acceso,
+                                        cls: 'barramenu',
+                                        handler: function (checkbox, isChecked) {
+                                            Ext.getCmp('tb_repoteDenuncias').setDisabled(!this.checked);
+                                            //Ext.getCmp('tb_seleccionarUnidad').setDisabled(!this.checked);
+                                            //Ext.getCmp('tb_seleccionarUnidad').getValue();
+                                            //storeDenuncias.load({params: {noenviados: isChecked}});
                                             storeDenuncias.baseParams = {
-                                                noenviados: isChecked,
-                                                unidadfiltro: t.value
+                                                noenviados: isChecked
                                             };
                                             storeDenuncias.load();
+                                            // if (!this.checked) {
+                                            Ext.getCmp('tb_seleccionarUnidad').setValue('Seleccionar Unidad');
+                                            //}
+                                        }
+                                    }, /*this.targetFieldBtn,*/
+                                    {
+                                        xtype: 'combo',
+
+                                        fieldLabel: 'Reasignado a',
+                                        name: 'tb_reasignacion',
+                                        anchor: '95%',
+                                        id: 'tb_seleccionarUnidad',
+                                        /* disabled: true,*/
+                                        hiddenName: 'tb_reasignacion',
+                                        store: storeREATOT,
+                                        valueField: 'id',
+                                        displayField: 'nombre',
+                                        typeAhead: true,
+                                        triggerAction: 'all',
+                                        mode: 'local',
+                                        width: 250,
+                                        value: 'Seleccionar Unidad',
+                                        listeners: {
+                                            'select': function (t) {
+                                                isChecked = (Ext.getCmp('checkNoEnviados').getValue());
+                                                storeDenuncias.baseParams = {
+                                                    noenviados: isChecked,
+                                                    unidadfiltro: t.value
+                                                };
+                                                storeDenuncias.load();
+                                            }
+
                                         }
 
+                                    },
+                                    {
+                                        iconCls: 'excel-icon',
+                                        handler: this.botonExportarReporte,
+                                        scope: this,
+                                        text: 'Guía',
+                                        tooltip: 'Se genera el reporte de los items',
+                                        id: 'tb_repoteDenuncias',
+                                        disabled: true
+                                    },
+
+                                    '->'
+                                    , {
+                                        text: 'Buscar :'
+                                        , xtype: 'tbtext'
                                     }
 
-                                },
-                                {
-                                    iconCls: 'excel-icon',
-                                    handler: this.botonExportarReporte,
-                                    scope: this,
-                                    text: 'Guía',
-                                    tooltip: 'Se genera el reporte de los items',
-                                    id: 'tb_repoteDenuncias',
-                                    disabled: true
-                                },
-        
-                                '->'
-                                , {
-                                    text: 'Buscar :'
-                                    , xtype: 'tbtext'
-                                }
-
-                                , searchFieldBtn
-                                , ' ', ' '
-                                , new QoDesk.QoAdmin.SearchField({
-                                    paramName: 'filterText'
-                                    , store: this.storeDenuncias
-                                })
-                            ],
+                                    , searchFieldBtn
+                                    , ' ', ' '
+                                    , new QoDesk.QoAdmin.SearchField({
+                                        paramName: 'filterText'
+                                        , store: this.storeDenuncias
+                                    })
+                                ],
                             items: this.formDenunciasDetalle
                         }
                         , {
