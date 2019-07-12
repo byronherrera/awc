@@ -75,6 +75,7 @@ function updateDenunciasReasignacion()
             nombre_completo='$data->nombre_completo',
             orden=$data->orden,
             secretaria=$data->secretaria,
+            id_zonal=$data->id_zonal,
             activo='$data->activo'
 	  WHERE amc_unidades.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);

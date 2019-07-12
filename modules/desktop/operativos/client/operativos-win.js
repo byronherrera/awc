@@ -1063,11 +1063,12 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                     // registros que estan en planificacion
                     if (record.get('id_estado') == 1) {
-                        // Ext.getCmp('id_persona_encargada').setReadOnly(true);
+                            // Ext.getCmp('id_persona_encargada').setReadOnly(true);
                         return 'gold';
                     }
                     // registros que ya estan realizados
                     if (record.get('id_estado') == 4) {
+                        // Ext.getCmp('id_persona_encargada').setReadOnly(true);
                         return 'bluestate';
                     }
                 }
@@ -1183,6 +1184,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             } else {
                                 Ext.getCmp('tb_repoteOperativos').setDisabled(true);
                             }
+                            console.log (accesosAdministradorOpe);
+                            console.log (rec.get("id_estado"));
+
 
                         }
                     }
