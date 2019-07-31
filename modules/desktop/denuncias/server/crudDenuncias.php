@@ -231,7 +231,7 @@ function insertDenuncias()
 
     //genero el listado de nombre de campos
 
-    $cadenaDatos = '';
+        $cadenaDatos = '';
     $cadenaCampos = '';
 
     $data->codigo_tramite = generaCodigoProcesoDenuncia();

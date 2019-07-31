@@ -66,7 +66,7 @@ if ($reimpresion)
         remitente,
         asunto,
         descripcion_anexos,
-        gdoc,
+        gdoc, expediente ,
         id_caracter_tramite,
         cantidad_fojas,
         observacion_secretaria 
@@ -81,7 +81,7 @@ else
         remitente,
         asunto,
         descripcion_anexos,
-        gdoc,
+        gdoc, expediente,
         id_caracter_tramite,
         cantidad_fojas,
         observacion_secretaria 
@@ -196,7 +196,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Fecha y hora 
 $objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'N. de documento');
 $objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Remitente');
 $objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Asunto');
-$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Descripción anexo/ GDOC ');
+$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Descripción anexo/ GDOC / Expediente ');
 $objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Carácter de trámite');
 $objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Cantidad fojas');
 $objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Observaciones');
@@ -240,7 +240,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['num_documento']);
     $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['remitente']);
     $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, substr($rowdetalle['asunto'], 0, 200));
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, strip_tags($rowdetalle['descripcion_anexos']). ' - ' . strip_tags($rowdetalle['gdoc']));
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, strip_tags($rowdetalle['descripcion_anexos']). ' - ' . strip_tags($rowdetalle['gdoc']). ' - ' . strip_tags($rowdetalle['expediente']));
     $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['id_caracter_tramite']);
     $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['cantidad_fojas']);
     $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['observacion_secretaria']);
@@ -372,7 +372,13 @@ function get_numero_guia($reimpresion, $id_unidad_origen)
     // valor por defecto
     $numeroGuia = "$siglasUnidad-$year-1";
     if (!$reimpresion) {
-        $sql = "SELECT numero AS numeroguia, SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias WHERE  YEAR(creado) = YEAR(CURDATE()) AND id_unidad_origen = $id_unidad_origen  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
+        if ($id_unidad_origen == 2) {
+            $sql = "SELECT numero AS numeroguia, SUBSTRING(numero,5,4) as a, SUBSTRING(numero,10) as num FROM amc_guias WHERE  YEAR(creado) = YEAR(CURDATE()) AND id_unidad_origen = $id_unidad_origen  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
+        } else
+        {
+            $sql = "SELECT numero AS numeroguia, SUBSTRING(numero,5,4) as a, SUBSTRING(numero,27) as num FROM amc_guias WHERE  YEAR(creado) = YEAR(CURDATE()) AND id_unidad_origen = $id_unidad_origen  ORDER BY a DESC, cast(num as unsigned) DESC  LIMIT 1";
+        }
+
         $resultguia = $os->db->conn->query($sql);
         $row = $resultguia->fetch(PDO::FETCH_ASSOC);
 
