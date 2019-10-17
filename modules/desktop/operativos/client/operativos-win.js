@@ -3042,7 +3042,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'excel-icon',
                                     handler: this.botonExportarDocumentoReporteCalendarioPersonal,
                                     scope: this,
-                                    text: 'Exportar calendario  personas',
+                                    text: 'Calendario  personas',
                                     tooltip: 'Se genera archivo Excel con la información solicitada'
                                 }
                                 ,
@@ -3050,8 +3050,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'excel-icon',
                                     handler: this.botonExportarDocumentoReporteCalendarioOperativos,
                                     scope: this,
-                                    text: 'Exportar calendario  operativos',
+                                    text: 'Calendario  operativos',
                                     tooltip: 'Se genera archivo Excel con la información solicitada'
+                                }
+                                ,
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporteTotalOperativos,
+                                    scope: this,
+                                    text: 'Operativos tiempo',
+                                    tooltip: 'Se genera archivo Excel con total tiempo por operativo'
                                 }
                             ],
                             items: [
@@ -3517,6 +3525,32 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
                     window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativoscalendario2.inc.php?param=' + valueParams;
+                }
+            }
+        });
+    },
+    botonExportarDocumentoReporteTotalOperativos: function () {
+        var rows = this.storeDocumentosReporte.getCount()
+        if (rows === 0) {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Busqueda sin resultados',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+        // mensaje continuar y llamada a descarga archivo
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    window.location.href = 'modules/desktop/operativos/server/descargaReporteTotalOperativos.inc.php?param=' + valueParams;
                 }
             }
         });
