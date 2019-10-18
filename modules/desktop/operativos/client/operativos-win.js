@@ -1099,7 +1099,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('imagenesOperativosTab').setDisabled(acceso ? false : true);
                                     Ext.getCmp('detalleOperativosTab').setDisabled(acceso ? false : true);
                                     Ext.getCmp('retirosOperativosTab').setDisabled(acceso ? false : true);
-                                    cargaDetalle(rec.id);
                                 }
                                 else {
                                     Ext.getCmp('informesAccionesTab').setDisabled(true);
@@ -1107,8 +1106,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     Ext.getCmp('imagenesOperativosTab').setDisabled(true);
                                     Ext.getCmp('detalleOperativosTab').setDisabled(true);
                                     Ext.getCmp('retirosOperativosTab').setDisabled(true);
-                                    cargaDetalle(rec.id);
                                 }
+                                cargaDetalle(rec.id);
 
                                 if ((rec.get("id_estado") == 1) || (rec.get("id_estado") == 4)) {
                                     gridBlockOperativos = false;
@@ -1131,8 +1130,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     } else {
                                         Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
                                         Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
-                                        // Ext.getCmp('borraroperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
-                                        // Ext.getCmp('addoperativoparticipantes').setDisabled(accesosAdministradorOpe ? false : true);
                                     }
 
                                     Ext.getCmp('borraroperativodetalleacciones').setDisabled(false);
@@ -1148,6 +1145,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     // solamente para el caso
                                 }
                                 else {
+
+                                    // caso que el operativo sea tipo 2, 3, 5 ( cumplido, fallido, cancelado
                                     gridBlockOperativos = true;
                                     Ext.getCmp('savedetalleoperativo').setDisabled(true);
 
@@ -1184,10 +1183,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             } else {
                                 Ext.getCmp('tb_repoteOperativos').setDisabled(true);
                             }
-                            console.log (accesosAdministradorOpe);
-                            console.log (rec.get("id_estado"));
-
-
+                            //console.log (accesosAdministradorOpe);
+                            //console.log (rec.get("id_estado"));
                         }
                     }
                 }
@@ -1207,6 +1204,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 beforeedit: function (e) {
                     // si el operativo esta identificado como estado o planificado (1) o informe (4) se peude editar
                     if (acceso) {
+                        // si el que edita es administrador de operativos puede cambiar
+                        console.log (accesosAdministradorOpe)
+                        if (accesosAdministradorOpe) {
+                            return true;
+                        }
+
+                        // si es usuario normal solo puede editar cuado este en estado editable
                         if ((e.record.get("id_estado") == 1) || (e.record.get("id_estado") == 4)) {
                             return true;
                         }
@@ -3042,7 +3046,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'excel-icon',
                                     handler: this.botonExportarDocumentoReporteCalendarioPersonal,
                                     scope: this,
-                                    text: 'Exportar calendario  personas',
+                                    text: 'Calendario  personas',
                                     tooltip: 'Se genera archivo Excel con la información solicitada'
                                 }
                                 ,
@@ -3050,8 +3054,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'excel-icon',
                                     handler: this.botonExportarDocumentoReporteCalendarioOperativos,
                                     scope: this,
-                                    text: 'Exportar calendario  operativos',
+                                    text: 'Calendario  operativos',
                                     tooltip: 'Se genera archivo Excel con la información solicitada'
+                                }
+                                ,
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporteTotalOperativos,
+                                    scope: this,
+                                    text: 'Operativos tiempo',
+                                    tooltip: 'Se genera archivo Excel con total tiempo por operativo'
                                 }
                             ],
                             items: [
@@ -3517,6 +3529,32 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
                     window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativoscalendario2.inc.php?param=' + valueParams;
+                }
+            }
+        });
+    },
+    botonExportarDocumentoReporteTotalOperativos: function () {
+        var rows = this.storeDocumentosReporte.getCount()
+        if (rows === 0) {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Busqueda sin resultados',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+        // mensaje continuar y llamada a descarga archivo
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    window.location.href = 'modules/desktop/operativos/server/descargaReporteTotalOperativos.inc.php?param=' + valueParams;
                 }
             }
         });
