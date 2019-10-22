@@ -608,6 +608,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                 fieldLabel: 'Croquis',
                                                 name: 'croquis'
                                             }
+
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Persona',
