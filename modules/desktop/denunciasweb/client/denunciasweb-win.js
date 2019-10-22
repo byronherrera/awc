@@ -158,7 +158,7 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'Id', dataIndex: 'id', sortable: true, width: 10, scope: this}
                 , {header: 'Cod trámite', dataIndex: 'codigo_tramite', sortable: true, width: 15, scope: this}
                 , {header: 'Asignado a', dataIndex: 'asignado', sortable: true, width: 15, scope: this}
-                , {header: 'Aprobado/negado', dataIndex: 'confirmed', sortable: true, width: 15, scope: this}
+                , {header: 'Aprobado/negado', dataIndex: 'confirmed', sortable: true, width: 25, scope: this}
                 , {header: 'Procesado', dataIndex: 'prosesado', sortable: true, width: 15, scope: this}
                 , {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 15, scope: this}
                 , {header: 'Nombre', dataIndex: 'nombre', sortable: true, width: 30, scope: this}

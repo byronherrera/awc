@@ -8,7 +8,7 @@
  * http://www.qwikioffice.com/license
  */
 
-class QoDenunciasWeb
+class QoTurnosWeb
 {
 
     private $os;

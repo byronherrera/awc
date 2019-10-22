@@ -32,9 +32,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 users: [
-                    {"id": 1, "nombre": "Si"},
-                    {"id": 0, "nombre": "No"}
-
+                    {"id": "true", "nombre": "Si"},
+                    {"id": "false", "nombre": "No"}
                 ]
             }
         });
@@ -48,6 +47,14 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
+        function sinoOpcionProcesado(id) {
+            var index = storeSASINO.findExact('id', id);
+            if (index > -1) {
+                var record = storeSASINO.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
         //inicio combo Inspector
         storePERDISTUR = new Ext.data.JsonStore({
             root: 'data',
@@ -55,7 +62,6 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=personal_distributivo'
         });
-
 
         var comboPERDISTUR = new Ext.form.ComboBox({
             id: 'comboPERDISTUR',
@@ -79,7 +85,6 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             }
         }
         //fin combo Inspector
-
 
         function turnoswebActivo(id) {
             var index = storeSASINO.findExact('id', id);
@@ -106,32 +111,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             return '<input type="button" value="Genera Imagen' + value + ' " id="' + value + '"/>';
         }
 
-        function llenaVideo(canvasId, videoSubidoId, nombreArchivoSubido) {
-            var canvas = document.getElementById(canvasId);
-            var video = document.getElementById(videoSubidoId);
-            canvas.width = 200;
-            canvas.height = 157;
-            canvas.getContext('2d').drawImage(video, 0, 0, 300, 150);
 
-            var Pic = document.getElementById(canvasId).toDataURL("image/png");
-            Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "")
-
-            Ext.Ajax.request({
-                url: urlTurnosweb + 'uploadimagen.php',
-                method: 'POST',
-                params: {
-                    imageData: Pic,
-                    nombreArchivoSubido: nombreArchivoSubido
-                },
-                success: function (response, opts) {
-                    var obj = Ext.decode(response.responseText);
-
-                },
-                failure: function (response, opts) {
-                    console.log('server-side failure with status code ' + response.status);
-                }
-            });
-        }
 
         //Turnosweb tab
         var proxyTurnosweb = new Ext.data.HttpProxy({
@@ -162,7 +142,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                 {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'expediente', allowBlank: false},
                 {name: 'id_inspector', allowBlank: false},
-                {name: 'fechaasignada', allowBlank: false}
+                {name: 'fechaasignada', type: 'date', dateFormat: 'c', allowBlank: true}
             ]
         });
 
@@ -188,6 +168,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             store: storeTurnosweb, columns: [
                 new Ext.grid.RowNumberer({width: 40})
                 , {header: 'Id', dataIndex: 'id', sortable: true, width: 10, scope: this}
+                , {header: 'Aprobado/negado', dataIndex: 'confirmed', sortable: true, width: 15, scope: this}
+                , {header: 'Procesado', dataIndex: 'prosesado', sortable: true, width: 15, scope: this, renderer: sinoOpcionProcesado}
                 , {header: 'Nombre', dataIndex: 'nombre', sortable: true, width: 35, scope: this}
                 , {header: 'Apellido', dataIndex: 'apellido', sortable: true, width: 35, scope: this}
                 , {header: 'Celular', dataIndex: 'telefono1', sortable: true, width: 35, scope: this}
@@ -195,9 +177,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'Email', dataIndex: 'email', sortable: true, width: 35, scope: this}
                 , {header: 'Fecha solicitud', dataIndex: 'fecha', sortable: true, width: 30, renderer: formatDate}
                 , {header: 'Expediente/Informe', dataIndex: 'expediente', sortable: true, width: 30, scope: this}
-                , {header: 'Asignado a (inspector)', dataIndex: 'id_inspector', sortable: true, width: 50, scope: this, editor: comboPERDISTUR,
-                    renderer: tipoUnidadesPersonalTUR}
-                , {header: 'Fecha cita', dataIndex: 'fecha_asignada', sortable: true, width: 30, renderer: formatDate}
+                , {header: 'Asignado a (inspector)', dataIndex: 'id_inspector', sortable: true, width: 50, scope: this, renderer: tipoUnidadesPersonalTUR}
+                , {header: 'Fecha cita', dataIndex: 'fechaasignada', sortable: true, width: 30, renderer: formatDate }
             ],
             viewConfig: {
                 forceFit: true,
@@ -213,21 +194,22 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                         this.idTurnosRecuperada = rec.id;
                         /*cargar el formulario*/
                         cargaDetalle(rec.id, this.formTurnoswebDetalle, rec);
-
+                        console.log (grabarTurnos);
+                        console.log (this.record.get("prosesado"));
                         if (grabarTurnos) {
                             if (this.record.get("prosesado") == 'true') {
-                                Ext.getCmp('tb_negardenuncias').setDisabled(true);
-                                Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                                Ext.getCmp('tb_negarturnos').setDisabled(true);
+                                Ext.getCmp('tb_aprobarturnos').setDisabled(true);
                                 Ext.getCmp('motivoNegarTurnos').setDisabled(true);
                             }
                             else {
-                                Ext.getCmp('tb_negardenuncias').setDisabled(false);
-                                Ext.getCmp('tb_aprobardenuncias').setDisabled(false);
+                                Ext.getCmp('tb_negarturnos').setDisabled(false);
+                                Ext.getCmp('tb_aprobarturnos').setDisabled(false);
                                 Ext.getCmp('motivoNegarTurnos').setDisabled(false);
                             }
                         } else {
-                            Ext.getCmp('tb_negardenuncias').setDisabled(true);
-                            Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                            Ext.getCmp('tb_negarturnos').setDisabled(true);
+                            Ext.getCmp('tb_aprobarturnos').setDisabled(true);
                             Ext.getCmp('motivoNegarTurnos').setDisabled(true);
                         }
                     }
@@ -240,8 +222,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                 pageSize: limiteturnosweb,
                 store: storeTurnosweb,
                 displayInfo: true,
-                displayMsg: 'Mostrando denuncias {0} - {1} of {2}',
-                emptyMsg: "No existen denuncias que mostrar"
+                displayMsg: 'Mostrando solicitudes {0} - {1} of {2}',
+                emptyMsg: "No existen solicitures que mostrar"
             }),
         });
         //fin Turnosweb tab
@@ -316,7 +298,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                         height: 200,
 
                         autoScroll: false,
-                        id: 'formcabeceradenuncias',
+                        id: 'formcabeceraturnos',
                         items: this.gridTurnosweb
                     },
                     {
@@ -331,18 +313,18 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                             {
                                 text: 'Aprobar turno',
                                 scope: this,
-                                handler: this.aprobardenuncias,
+                                handler: this.aprobarturnos,
                                 iconCls: 'save-icon',
                                 disabled: true,
-                                id: 'tb_aprobardenuncias'
+                                id: 'tb_aprobarturnos'
                                 , formBind: true
                             }, {
                                 text: 'Negar Turno',
                                 scope: this,
-                                handler: this.negardenuncias,
+                                handler: this.negarturnos,
                                 iconCls: 'save-icon',
                                 disabled: true,
-                                id: 'tb_negardenuncias',
+                                id: 'tb_negarturnos',
                                 formBind: true
                             },
                             {
@@ -376,7 +358,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                         layout: 'form',
                                         monitorValid: true,
                                         items: [
-                                            {xtype: 'hidden', name: 'id'},
+                                            {xtype: 'displayfield', name: 'id'},
                                             {xtype: 'hidden', name: 'fecha'},
                                             {xtype: 'hidden', name: 'urldenuncia'},
                                             {xtype: 'hidden', name: 'nombre'},
@@ -504,12 +486,9 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                         ]
                                     },
                                     {
-
-
                                         cls: 'fondogris',
                                         columnWidth: 1 / 4,
                                         layout: 'form',
-
                                         items: [
 
                                             {
@@ -667,8 +646,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             }
                                             , {
                                                 xtype: 'displayfield',
-                                                fieldLabel: 'total denuncias',
-                                                name: 'totaldenuncias',
+                                                fieldLabel: 'total turnos',
+                                                name: 'totalturnos',
                                                 anchor: '95%'
                                             }
                                         ]
@@ -700,22 +679,6 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                         text: 'Recargar Datos',
                         tooltip: 'Recargar datos en la grilla'
                     },
-                    /*'-',
-                     {
-                     iconCls: 'demo-grid-add',
-                     handler: this.requestTurnoswebDataExport,
-                     scope: this,
-                     text: 'Boton 1',
-                     tooltip: 'Exportar datos en la grilla'
-                     },
-                     '-',
-                     {
-                     iconCls: 'demo-grid-add',
-                     handler: this.requestTurnoswebEstadisticasDataExport,
-                     scope: this,
-                     text: 'Boton 2',
-                     tooltip: 'Exportar Estadisticas'
-                     },*/
                     '->'
                     , {
                         text: 'Buscar por:'
@@ -732,17 +695,17 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             });
         }
         win.show();
-        function cargaDetalle(denuncias, forma, bloqueo) {
+        function cargaDetalle(turnos, forma, bloqueo) {
             forma = Ext.getCmp('formTurnoswebDetalle');
             forma.getForm().load({
                 waitMsg: 'Recuperando información',
                 url: urlTurnosweb + 'crudTurnosweb.php?operation=selectForm',
                 params: {
-                    id: denuncias
+                    id: turnos
                 },
                 success: function (response, opts) {
                     mensaje = Ext.getCmp('textTurnosAnteriores');
-                    mensaje.setText('Turnos anteriores: ' + (response.findField('totaldenuncias').getValue() - 1))
+                    mensaje.setText('Turnos anteriores: ' + (response.findField('totalturnos').getValue() - 1))
                 }
 
             });
@@ -767,7 +730,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
 
 
     },
-    aprobardenuncias: function () {
+    aprobarturnos: function () {
         store = this.storeTurnosweb;
         var urlTurnosweb = this.urlTurnosweb;
         var urlTurnosLocal = this.urlTurnosLocal;
@@ -795,8 +758,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                     codigo_tramite: dataReceived.data
                                 },
                                 success: function (form, action) {
-                                    Ext.getCmp('tb_negardenuncias').setDisabled(true);
-                                    Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                                    Ext.getCmp('tb_negarturnos').setDisabled(true);
+                                    Ext.getCmp('tb_aprobarturnos').setDisabled(true);
                                     store.load();
                                 },
                                 failure: function (form, action) {
@@ -828,7 +791,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
         });
 
     },
-    negardenuncias: function () {
+    negarturnos: function () {
         store = this.storeTurnosweb;
         var urlTurnosweb = this.urlTurnosweb;
         Ext.Msg.show({
@@ -848,8 +811,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
 
                         success: function (form, action) {
 
-                            Ext.getCmp('tb_negardenuncias').setDisabled(true);
-                            Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                            Ext.getCmp('tb_negarturnos').setDisabled(true);
+                            Ext.getCmp('tb_aprobarturnos').setDisabled(true);
                             store.load();
                         },
                         failure: function (form, action) {
@@ -869,70 +832,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
 
         });
     },
-    requestTurnoswebParticipantesData: function () {
-        this.storeTurnoswebParticipantes.load();
-    },
-    requestTurnoswebParticipantesDataExport: function () {
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Descargue el archivo xls  .<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    window.location.href = 'modules/desktop/turnosweb/server/TurnoswebParticipantes.php';
-                }
-            }
-        });
-    },
-    requestTurnoswebIntentosData: function () {
-        this.storeTurnoswebIntentos.load();
-    },
-    requestTurnoswebIntentosDataExport: function () {
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Descargue el archivo xls  .<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    window.location.href = 'modules/desktop/turnosweb/server/TurnoswebIntentos.php';
-                }
-            }
-        });
-    },
     requestTurnoswebData: function () {
         this.storeTurnosweb.load();
-    },
-    requestTurnoswebDataExport: function () {
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Descargue el archivo xls  .<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    window.location.href = 'modules/desktop/turnosweb/server/Turnosweb.php';
-                }
-            }
-        });
-    },
-    requestTurnoswebEstadisticasDataExport: function () {
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Descargue el archivo xls  .<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    window.location.href = 'modules/desktop/turnosweb/server/TurnoswebEstadisticas.php';
-                }
-            }
-        });
     }
 });
 
