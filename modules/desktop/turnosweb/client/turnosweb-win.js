@@ -157,7 +157,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             writer: writerTurnosweb,
             autoSave: true
         });
-        storeTurnosweb.load();
+
         limiteturnosweb = 50
 
         this.storeTurnosweb = storeTurnosweb;
@@ -194,8 +194,6 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                         this.idTurnosRecuperada = rec.id;
                         /*cargar el formulario*/
                         cargaDetalle(rec.id, this.formTurnoswebDetalle, rec);
-                        console.log (grabarTurnos);
-                        console.log (this.record.get("prosesado"));
                         if (grabarTurnos) {
                             if (this.record.get("prosesado") == 'true') {
                                 Ext.getCmp('tb_negarturnos').setDisabled(true);
@@ -228,6 +226,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
         });
         //fin Turnosweb tab
 
+        storeTurnosweb.load();
         //var desktop = this.app.getDesktop();
         var win = desktop.getWindow('layout-win');
 
@@ -353,12 +352,13 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                 layout: 'column',
                                 items: [
                                     {
-                                        columnWidth: 1 / 4,
+                                        columnWidth: 2 / 4,
                                         cls: 'margen10',
                                         layout: 'form',
                                         monitorValid: true,
                                         items: [
-                                            {xtype: 'displayfield', name: 'id'},
+
+                                            {xtype: 'hidden', name: 'id'},
                                             {xtype: 'hidden', name: 'fecha'},
                                             {xtype: 'hidden', name: 'urldenuncia'},
                                             {xtype: 'hidden', name: 'nombre'},
@@ -370,13 +370,14 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             {xtype: 'hidden', name: 'geoposicionamiento2'},
                                             {
                                                 xtype: 'displayfield',
-                                                fieldLabel: 'Fecha',
+                                                fieldLabel: 'Fecha solicitud',
                                                 name: 'fecha2'
-                                            }, {
+                                            },
+                                            /*{
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Turnos',
                                                 name: 'urldenuncia2'
-                                            },
+                                            },*/
                                             {
                                                 xtype: 'displayfield',
                                                 hideLabel: true,
@@ -410,7 +411,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             , {xtype: 'displayfield', fieldLabel: 'Cédula', name: 'cedula2'}
                                             , {
                                                 xtype: 'compositefield',
-                                                fieldLabel: 'Teléfonos',
+                                                fieldLabel: 'Teléfono',
                                                 msgTarget: 'under',
                                                 items: [
                                                     {
@@ -420,225 +421,20 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                         disabled: true,
                                                         cls: 'disabled'
                                                     },
-                                                    {
-                                                        xtype: 'textfield',
-                                                        name: 'telefono2',
-                                                        width: '45%',
-                                                        margins: '0 5 0 0',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
                                                 ]
                                             },
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Dirección',
-                                                name: 'direccion',
-                                                anchor: '96%'
-                                            }
-                                            , {
-                                                xtype: 'compositefield',
-                                                fieldLabel: '<span ext:qtip="Zona, Parroquia<br>Sector, Barrio">Ubicación</span>',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        name: 'zonal',
-                                                        width: '45%',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
-                                                    , {
-                                                        xtype: 'textfield',
-                                                        name: 'parroquia',
-                                                        width: '45%',
-                                                        margins: '0 5 0 0',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
-
-                                                ]
-                                            }
-                                            , {
-                                                xtype: 'compositefield',
-                                                msgTarget: 'under',
-                                                fieldLabel: '<span ext:qtip="Sector, Barrio">Sector, Barrio</span>',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        name: 'sector',
-                                                        width: '45%',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
-                                                    , {
-                                                        xtype: 'textfield',
-                                                        name: 'barrio',
-                                                        width: '45%',
-                                                        disabled: true,
-                                                        cls: 'disabled',
-                                                        margins: '0 5 0 0',
-                                                    }
-
-                                                ]
-                                            }
-                                            , {xtype: 'displayfield', fieldLabel: 'Num predio', name: 'numpredio'}
-
-                                        ]
-                                    },
-                                    {
-                                        cls: 'fondogris',
-                                        columnWidth: 1 / 4,
-                                        layout: 'form',
-                                        items: [
-
-                                            {
-                                                xtype: 'displayfield',
-                                                hideLabel: true,
-                                                value: '2. DATOS DE LA REUNION',
-                                                cls: 'negrilla',
-                                                anchor: '95%'
-                                            }
-                                            , {xtype: 'displayfield', fieldLabel: 'Nombre', name: 'nombredenunciado'}
-                                            , {xtype: 'displayfield', fieldLabel: 'Email', name: 'emaildenunciado'}
-                                            , {
-                                                xtype: 'compositefield',
-                                                fieldLabel: 'Teléfonos',
-                                                msgTarget: 'under',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        name: 'telefono1denunciado',
-                                                        width: '45%',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    },
-                                                    {
-                                                        xtype: 'textfield',
-                                                        name: 'telefono2denunciado',
-                                                        width: '45%',
-                                                        margins: '0 5 0 0',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
-                                                ]
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Dirección',
-                                                name: 'direcciondenunciado',
-                                                anchor: '96%'
-                                            }
-                                            , {
-                                                xtype: 'compositefield',
-                                                fieldLabel: '<span ext:qtip="Zona, Parroquia<br>Sector, Barrio">Ubicación</span>',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        name: 'zonaldenunciado',
-                                                        width: '45%',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
-                                                    , {
-                                                        xtype: 'textfield',
-                                                        name: 'parroquiadenunciado',
-                                                        width: '45%',
-                                                        margins: '0 5 0 0',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
-
-                                                ]
-                                            }
-                                            , {
-                                                xtype: 'compositefield',
-                                                msgTarget: 'under',
-                                                fieldLabel: '<span ext:qtip="Sector, barrio del denunciado">Sector, barrio</span>',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        name: 'sectordenunciado',
-                                                        width: '45%',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
-                                                    , {
-                                                        xtype: 'textfield',
-                                                        name: 'barriodenunciado',
-                                                        width: '45%',
-                                                        disabled: true,
-                                                        cls: 'disabled',
-                                                        margins: '0 5 0 0',
-                                                    }
-                                                ]
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Num Predio',
-                                                name: 'numprediodenunciado'
-                                            }
-
-                                        ]
-                                    },
-                                    {
-                                        columnWidth: 2 / 4,
-                                        layout: 'form',
-                                        cls: 'margen10',
-                                        items: [
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Infracción',
-                                                name: 'infraccion',
-                                                anchor: '96%'
-                                            },
-                                            {
-                                                xtype: 'displayfield',
-                                                name: 'ampliaciondenuncia2',
-                                                fieldLabel: 'Ampliacion denuncia',
-                                                anchor: '96%'
-                                            }
-                                            ,
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Coordenadas',
-                                                name: 'geoposicionamiento'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Croquis',
-                                                name: 'croquis'
-                                            }
-
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Persona',
-                                                name: 'persona'
-                                            }
-                                            , {
-                                                xtype: 'compositefield',
-                                                msgTarget: 'under',
-                                                fieldLabel: 'Imágenes ',
-                                                items: [
-                                                    {xtype: 'displayfield', name: 'imagencedula', width: '25%',}
-                                                    , {xtype: 'displayfield', name: 'imagenvideo', width: '25%',}
-                                                    , {xtype: 'displayfield', name: 'imagennombramiento', width: '25%',}
-                                                    , {
-                                                        xtype: 'textfield',
-                                                        name: 'imagenvideo',
-                                                        width: '1%',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
-
-                                                ]
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Fecha imágenes',
-                                                name: 'fechaimagenes',
-                                                anchor: '95%'
-                                            }
-                                            , {xtype: 'displayfield', fieldLabel: 'tipo', name: 'tipo', anchor: '95%'}
+                                             {
+                                                  xtype: 'displayfield',
+                                                  fieldLabel: 'Expediente',
+                                                  name: 'expediente',
+                                                  anchor: '96%'
+                                              },
+                                             {
+                                                  xtype: 'displayfield',
+                                                  fieldLabel: 'Comentarios',
+                                                  name: 'comentarios',
+                                                  anchor: '96%'
+                                              }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Motivo negar',
@@ -647,10 +443,31 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             }
                                             , {
                                                 xtype: 'displayfield',
-                                                fieldLabel: 'total turnos',
+                                                fieldLabel: 'Total solicitudes',
                                                 name: 'totalturnos',
                                                 anchor: '95%'
                                             }
+
+
+                                        ]
+                                    },
+                                    {
+                                        cls: 'fondogris',
+                                        columnWidth: 2 / 4,
+                                        layout: 'form',
+                                        items: [
+
+                                            {
+                                                xtype: 'displayfield',
+                                                hideLabel: true,
+                                                value: '2. DATOS DE LA CITA',
+                                                cls: 'negrilla',
+                                                anchor: '95%'
+                                            }
+                                            , {xtype: 'displayfield', fieldLabel: 'Inspector', name: 'id_inspector'}
+                                            , {xtype: 'displayfield', fieldLabel: 'Email', name: 'emaildenunciado'}
+
+
                                         ]
                                     }
                                 ]

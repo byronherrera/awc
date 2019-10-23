@@ -59,7 +59,7 @@ function aprobarTurnos()
     $sql = "INSERT INTO amc_denuncias($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
+//    $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
