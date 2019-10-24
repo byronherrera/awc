@@ -365,9 +365,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             {xtype: 'hidden', name: 'apellido'},
                                             {xtype: 'hidden', name: 'cedula'},
                                             {xtype: 'hidden', name: 'email'},
-                                            {xtype: 'hidden', name: 'ampliaciondenuncia'},
-                                            {xtype: 'hidden', name: 'direcciondenunciado'},
-                                            {xtype: 'hidden', name: 'geoposicionamiento2'},
+                                            {xtype: 'hidden', name: 'id_inspector'},
+                                            {xtype: 'hidden', name: 'fechaasignada'},
                                             {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Fecha solicitud',
@@ -464,8 +463,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                 cls: 'negrilla',
                                                 anchor: '95%'
                                             }
-                                            , {xtype: 'displayfield', fieldLabel: 'Inspector', name: 'id_inspector'}
-                                            , {xtype: 'displayfield', fieldLabel: 'Email', name: 'emaildenunciado'}
+                                            , {xtype: 'displayfield', fieldLabel: 'Inspector', name: 'id_inspector2'}
+                                            , {xtype: 'displayfield', fieldLabel: 'Fecha Turno', name: 'fechaasignada2'}
 
 
                                         ]
