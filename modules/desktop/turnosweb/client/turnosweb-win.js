@@ -84,6 +84,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo Inspector
 
         function turnoswebActivo(id) {
@@ -110,7 +111,6 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
         function renderGeneraImagen(value, id, r) {
             return '<input type="button" value="Genera Imagen' + value + ' " id="' + value + '"/>';
         }
-
 
 
         //Turnosweb tab
@@ -169,7 +169,14 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                 new Ext.grid.RowNumberer({width: 40})
                 , {header: 'Id', dataIndex: 'id', sortable: true, width: 10, scope: this}
                 , {header: 'Aprobado/negado', dataIndex: 'confirmed', sortable: true, width: 15, scope: this}
-                , {header: 'Procesado', dataIndex: 'prosesado', sortable: true, width: 15, scope: this, renderer: sinoOpcionProcesado}
+                , {
+                    header: 'Procesado',
+                    dataIndex: 'prosesado',
+                    sortable: true,
+                    width: 15,
+                    scope: this,
+                    renderer: sinoOpcionProcesado
+                }
                 , {header: 'Nombre', dataIndex: 'nombre', sortable: true, width: 35, scope: this}
                 , {header: 'Apellido', dataIndex: 'apellido', sortable: true, width: 35, scope: this}
                 , {header: 'Celular', dataIndex: 'telefono1', sortable: true, width: 35, scope: this}
@@ -177,8 +184,15 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'Email', dataIndex: 'email', sortable: true, width: 35, scope: this}
                 , {header: 'Fecha solicitud', dataIndex: 'fecha', sortable: true, width: 30, renderer: formatDate}
                 , {header: 'Expediente/Informe', dataIndex: 'expediente', sortable: true, width: 30, scope: this}
-                , {header: 'Asignado a (inspector)', dataIndex: 'id_inspector', sortable: true, width: 50, scope: this, renderer: tipoUnidadesPersonalTUR}
-                , {header: 'Fecha cita', dataIndex: 'fechaasignada', sortable: true, width: 30, renderer: formatDate }
+                , {
+                    header: 'Asignado a (inspector)',
+                    dataIndex: 'id_inspector',
+                    sortable: true,
+                    width: 50,
+                    scope: this,
+                    renderer: tipoUnidadesPersonalTUR
+                }
+                , {header: 'Fecha cita', dataIndex: 'fechaasignada', sortable: true, width: 30, renderer: formatDate}
             ],
             viewConfig: {
                 forceFit: true,
@@ -310,7 +324,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                         margins: '0 0 0 0',
                         tbar: [
                             {
-                                text: 'Aprobar turno',
+                                text: 'Generar Turno',
                                 scope: this,
                                 handler: this.aprobarturnos,
                                 iconCls: 'save-icon',
@@ -422,18 +436,18 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                     },
                                                 ]
                                             },
-                                             {
-                                                  xtype: 'displayfield',
-                                                  fieldLabel: 'Expediente',
-                                                  name: 'expediente',
-                                                  anchor: '96%'
-                                              },
-                                             {
-                                                  xtype: 'displayfield',
-                                                  fieldLabel: 'Comentarios',
-                                                  name: 'comentarios',
-                                                  anchor: '96%'
-                                              }
+                                            {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Expediente',
+                                                name: 'expediente',
+                                                anchor: '96%'
+                                            },
+                                            {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Comentarios',
+                                                name: 'comentarios',
+                                                anchor: '96%'
+                                            }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Motivo negar',
@@ -455,18 +469,57 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                         columnWidth: 2 / 4,
                                         layout: 'form',
                                         items: [
-
                                             {
                                                 xtype: 'displayfield',
                                                 hideLabel: true,
                                                 value: '2. DATOS DE LA CITA',
                                                 cls: 'negrilla',
-                                                anchor: '95%'
+                                                anchor: '90%'
                                             }
-                                            , {xtype: 'displayfield', fieldLabel: 'Inspector', name: 'id_inspector2'}
-                                            , {xtype: 'displayfield', fieldLabel: 'Fecha Turno', name: 'fechaasignada2'}
+                                            ,
+                                            {
+                                                xtype: 'combo',
+                                                fieldLabel: 'Inspector',
+                                                id: 'id_inspector2',
+                                                name: 'id_inspector2',
+                                                anchor: '90%',
 
-
+                                                hiddenName: 'id_inspector2',
+                                                store: storePERDISTUR,
+                                                valueField: 'id',
+                                                displayField: 'nombre',
+                                                typeAhead: true,
+                                                triggerAction: 'all',
+                                                mode: 'local'
+                                            },
+                                            {
+                                                xtype: 'compositefield',
+                                                fieldLabel: 'Fecha y Hora',
+                                                msgTarget: 'under',
+                                                items: [
+                                                    {
+                                                        xtype: 'datefield'
+                                                        , id: 'fechaasignada2',
+                                                        name: 'fechaasignada2'
+                                                        , width: '45%'
+                                                        , readOnly: false
+                                                        , format: 'Y-m-d'
+                                                        , anchor: '100%'
+                                                        , name: 'from_date'
+                                                        , minValue: new Date()
+                                                        //, value: new Date()
+                                                    },
+                                                    {
+                                                        xtype: 'timefield',
+                                                        name: 'horaasignada2',
+                                                        id: 'horaasignada2',
+                                                        minValue: '8:00 AM',
+                                                        maxValue: '16:00 PM',
+                                                        increment: 15,
+                                                        width: '45%',
+                                                    }
+                                                ]
+                                            }
                                         ]
                                     }
                                 ]
@@ -512,6 +565,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             });
         }
         win.show();
+
         function cargaDetalle(turnos, forma, bloqueo) {
             forma = Ext.getCmp('formTurnoswebDetalle');
             forma.getForm().load({
@@ -553,7 +607,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
         var urlTurnosLocal = this.urlTurnosLocal;
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Desea aprobar la denuncia.<br>¿Desea continuar?',
+            msg: 'Esta acción generará un nuevo turno.<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
@@ -606,8 +660,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
-
     },
+
     negarturnos: function () {
         store = this.storeTurnosweb;
         var urlTurnosweb = this.urlTurnosweb;
@@ -620,21 +674,17 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     var myForm = Ext.getCmp('formTurnoswebDetalle').getForm();
-
                     myForm.submit({
                         url: urlTurnosweb + 'crudTurnosweb.php?operation=negarTurnos',
                         method: 'POST',
                         waitMsg: 'Saving data',
-
                         success: function (form, action) {
-
                             Ext.getCmp('tb_negarturnos').setDisabled(true);
                             Ext.getCmp('tb_aprobarturnos').setDisabled(true);
                             store.load();
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);
-
                             Ext.Msg.show({
                                 title: 'Error campos obligatorios'
                                 , msg: errorJson.msg
