@@ -1,8 +1,5 @@
 <?php
 
-//http://medoo.in/api/select
-//http://localhost:10088/msv-dev/generareporte/modules/desktop/samsung/server/help.html#Error
-
 require_once '../../../../server/os.php';
 require_once '../../../common/Classes/funciones.php';
 
@@ -18,31 +15,28 @@ function aprobarTurnos()
     $os->db->conn->query("SET NAMES 'utf8'");
 
     $data = json_decode('{}');
-    $data->codigo_tramite = generaCodigoProcesoTurnos();
+    //$data->codigo_tramite = generaCodigoProcesoTurnos();
     $data->id_persona = $os->get_member_id();
-    $data->recepcion_documento = $_POST["fecha"];
-    $data->id_tipo_documento = 1;
-    $data->num_documento = "Turnos web - ". $_POST["id"];
-    $data->remitente = $_POST["nombre"] . ' '.$_POST["apellido"];
+    $data->fechaasignada = $_POST["fechaasignada"];
 
-    $data->asunto = $_POST["ampliacionturno"];
+    $data->comentarios = $_POST["comentarios"];
 
-    // se deja quemado que se envia a inspeccion
-    $data->reasignacion = 3;
-
-    $data->descripcion_anexos = 'Turnos Web, ' . addslashes($_POST["urlturno"]);
-    $data->id_caracter_tramite = 1;
     $data->cedula = $_POST["cedula"];
     $data->email = $_POST["email"];
-    //indicamos que la turno fue reciida en la matriz EUGENIO ESPEJO por la unidad de secretaria
 
-    $data->id_zonal_origen = 10;
-    $data->id_unidad_origen = 2;
 
-    $data->direccion_turno = $_POST["direcciondenunciado"];
-    $data->georeferencia = $_POST["geoposicionamiento2"];
-
-    //genero el listado de nombre de campos
+    $data->id_persona= $os->get_member_id();
+    $data->estado = 1;
+    $data->nombre =$_POST["nombre"];
+    $data->apellido =$_POST["apellido"];
+    $data->email =$_POST["email"];
+    $data->cedula =$_POST["cedula"];
+    $data->telefono1 =$_POST["telefono1"];
+    $data->expediente =$_POST["expediente"];
+    $data->comentarios =$_POST["comentarios"];
+    $data->fechaasignada =$_POST["fechaasignada2"] . " ". $_POST["horaasignada2"]. ":00" ;
+    $data->id_inspector =$_POST["id_inspector2"];
+    $data->fecha =$_POST["fecha"];
 
     $cadenaDatos = '';
     $cadenaCampos = '';
@@ -56,10 +50,10 @@ function aprobarTurnos()
 
     // todo falta a  donde graba
 
-    $sql = "INSERT INTO amc_denuncias($cadenaCampos)
+    $sql = "INSERT INTO amc_agendar_cita ($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
-//    $sql->execute();
+   $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
@@ -72,10 +66,8 @@ function aprobarTurnos()
     ));
 }
 
-
 switch ($_GET['operation']) {
     case 'aprobarTurnos' :
         aprobarTurnos();
         break;
-
 }

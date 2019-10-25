@@ -131,7 +131,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'id', allowBlank: false},
-                {name: 'asignado', allowBlank: false},
+
                 {name: 'confirmed', allowBlank: false},
                 {name: 'prosesado', allowBlank: false},
                 {name: 'nombre', allowBlank: false},
@@ -381,6 +381,9 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             {xtype: 'hidden', name: 'email'},
                                             {xtype: 'hidden', name: 'id_inspector'},
                                             {xtype: 'hidden', name: 'fechaasignada'},
+                                            {xtype: 'hidden', name: 'comentarios'},
+                                            {xtype: 'hidden', name: 'telefono1'},
+                                            {xtype: 'hidden', name: 'expediente'},
                                             {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Fecha solicitud',
@@ -429,7 +432,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                 items: [
                                                     {
                                                         xtype: 'textfield',
-                                                        name: 'telefono1',
+                                                        name: 'telefono2',
                                                         width: '45%',
                                                         disabled: true,
                                                         cls: 'disabled'
@@ -439,7 +442,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Expediente',
-                                                name: 'expediente',
+                                                name: 'expediente2',
                                                 anchor: '96%'
                                             },
                                             {
@@ -499,13 +502,12 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                 items: [
                                                     {
                                                         xtype: 'datefield'
-                                                        , id: 'fechaasignada2',
-                                                        name: 'fechaasignada2'
+                                                        , id: 'fechaasignada2'
+                                                        , name: 'fechaasignada2'
                                                         , width: '45%'
                                                         , readOnly: false
                                                         , format: 'Y-m-d'
                                                         , anchor: '100%'
-                                                        , name: 'from_date'
                                                         , minValue: new Date()
                                                         //, value: new Date()
                                                     },
@@ -513,10 +515,11 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                         xtype: 'timefield',
                                                         name: 'horaasignada2',
                                                         id: 'horaasignada2',
-                                                        minValue: '8:00 AM',
-                                                        maxValue: '16:00 PM',
+                                                        minValue: '8:00',
+                                                        maxValue: '16:00',
                                                         increment: 15,
                                                         width: '45%',
+                                                        format : 'H:i'
                                                     }
                                                 ]
                                             }

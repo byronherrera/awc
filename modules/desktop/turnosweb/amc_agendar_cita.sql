@@ -1,72 +1,62 @@
--- phpMyAdmin SQL Dump
--- version 4.0.10.20
--- https://www.phpmyadmin.net
---
--- Host: localhost
--- Generation Time: Oct 24, 2019 at 04:50 PM
--- Server version: 5.5.37-MariaDB-wsrep
--- PHP Version: 5.6.28
+/*
+ Navicat Premium Data Transfer
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
+ Source Server         : localhost
+ Source Server Type    : MySQL
+ Source Server Version : 50727
+ Source Host           : localhost:3306
+ Source Schema         : procesos-amc
 
+ Target Server Type    : MySQL
+ Target Server Version : 50727
+ File Encoding         : 65001
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+ Date: 25/10/2019 02:18:43
+*/
 
---
--- Database: `portal`
---
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `amc_agendar_cita`
---
-
-CREATE TABLE IF NOT EXISTS `amc_agendar_cita` (
+-- ----------------------------
+-- Table structure for amc_agendar_cita
+-- ----------------------------
+DROP TABLE IF EXISTS `amc_agendar_cita`;
+CREATE TABLE `amc_agendar_cita`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `codigo_tramite` varchar(30) DEFAULT NULL,
-  `DateSubmitted` datetime DEFAULT NULL,
-  `UserIp` varchar(14) DEFAULT NULL,
-  `Username` varchar(10) DEFAULT NULL,
-  `UserId` int(1) DEFAULT NULL,
-  `Lang` varchar(5) DEFAULT NULL,
-  `asignado` varchar(30) DEFAULT NULL,
-  `confirmed` varchar(5) DEFAULT NULL,
-  `prosesado` varchar(5) DEFAULT 'false',
-  `nombre` varchar(20) DEFAULT NULL,
-  `apellido` varchar(20) DEFAULT NULL,
-  `email` varchar(29) DEFAULT NULL,
-  `cedula` varchar(10) DEFAULT NULL,
-  `telefono1` varchar(10) DEFAULT NULL,
-  `expediente` varchar(255) DEFAULT NULL,
-  `inspector` varchar(255) DEFAULT NULL,
-  `comentarios` varchar(500) NOT NULL,
-  `fechaasignada` datetime DEFAULT NULL COMMENT 'Fecha turno asignado',
-  `fechaatendido` datetime DEFAULT NULL COMMENT 'Fecha que se atendio para dar el turno',
-  `motivonegar` varchar(255) DEFAULT NULL,
-  `id_atendido` int(5) DEFAULT NULL COMMENT 'Persona que atendio',
-  `id_inspector` int(5) DEFAULT NULL COMMENT 'id_inspector que se le asigno',
-  `atendido_inspector` int(1) DEFAULT NULL COMMENT 'si el inspector atendio. 1 verdadero 0 falso',
-  `resultados` varchar(255) DEFAULT NULL COMMENT 'que se hizo ',
-  `fecha` datetime DEFAULT NULL COMMENT 'Fecha que se recibe el pedido de turno',
+  `id_persona` int(11) NULL DEFAULT NULL,
+  `estado` int(11) NULL DEFAULT NULL,
+  `nombre` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `apellido` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `email` varchar(29) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `cedula` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `telefono1` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `expediente` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `inspector` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `comentarios` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `fechaasignada` datetime(0) NULL DEFAULT NULL COMMENT 'Fecha turno asignado',
+  `fechaatendido` datetime(0) NULL DEFAULT NULL COMMENT 'Fecha que se atendio para dar el turno',
+  `motivonegar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `id_atendido` int(5) NULL DEFAULT NULL COMMENT 'Persona que atendio',
+  `id_inspector` int(5) NULL DEFAULT NULL COMMENT 'id_inspector que se le asigno',
+  `atendido_inspector` int(1) NULL DEFAULT NULL COMMENT 'si el inspector atendio. 1 verdadero 0 falso',
+  `resultados` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'que se hizo ',
+  `fecha` datetime(0) NULL DEFAULT NULL COMMENT 'Fecha que se recibe el pedido de turno',
+  `creado` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT 'Fecha que se crea la cita',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT AUTO_INCREMENT=1333 ;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
---
--- Dumping data for table `amc_agendar_cita`
---
+-- ----------------------------
+-- Records of amc_agendar_cita
+-- ----------------------------
+INSERT INTO `amc_agendar_cita` VALUES (1, 1, 1, 'David', 'Mera', 'byron.herrera@quito.gob.ec', '171108093', '0983332323', 'amc-insp-2019-001', NULL, '', '2019-10-25 08:45:00', NULL, NULL, NULL, 130, NULL, NULL, '2019-10-21 15:02:00', '2019-10-25 01:25:06');
+INSERT INTO `amc_agendar_cita` VALUES (2, 1, 1, 'David', 'Mera', 'byron.herrera@quito.gob.ec', '171108093', '0983332323', 'amc-insp-2019-001', NULL, '', '2019-10-25 09:00:00', NULL, NULL, NULL, 130, NULL, NULL, '2019-10-21 15:02:00', '2019-10-25 01:25:24');
+INSERT INTO `amc_agendar_cita` VALUES (3, 1, 1, 'David', 'Mera', 'byron.herrera@quito.gob.ec', '171108093', '0983332323', 'amc-insp-2019-001', NULL, '', '2019-10-25 09:30:00', NULL, NULL, NULL, 130, NULL, NULL, '2019-10-21 15:02:00', '2019-10-25 01:34:39');
+INSERT INTO `amc_agendar_cita` VALUES (4, 1, 1, 'David', 'Mera', 'byron.herrera@quito.gob.ec', '171108093', '0983332323', 'amc-insp-2019-001', NULL, '', '2019-10-25 09:30:00', NULL, NULL, NULL, 6, NULL, NULL, '2019-10-21 15:02:00', '2019-10-25 01:48:16');
+INSERT INTO `amc_agendar_cita` VALUES (5, 1, 1, 'Byron G.', 'Herrera A.', 'byron.herrera@quito.gob.ec', '1711080893', '0999999999', 'exp 001', NULL, 'expediene 001', '2019-10-25 08:45:00', NULL, NULL, NULL, 3, NULL, NULL, '2019-10-23 22:19:00', '2019-10-25 01:56:23');
+INSERT INTO `amc_agendar_cita` VALUES (6, 1, 1, 'Byron G.', 'Herrera A.', 'byron.herrera@quito.gob.ec', '1711080893', '0999999999', 'exp 001', NULL, 'expediene 001', '2019-10-25 08:45:00', NULL, NULL, NULL, 3, NULL, NULL, '2019-10-23 22:19:00', '2019-10-25 01:57:28');
+INSERT INTO `amc_agendar_cita` VALUES (7, 1, 1, 'Byron G.', 'Herrera A.', 'byron.herrera@quito.gob.ec', '1711080893', '0999999999', 'exp 001', NULL, 'expediene 001', '2019-10-25 08:45:00', NULL, NULL, NULL, 3, NULL, NULL, '2019-10-23 22:19:00', '2019-10-25 01:59:04');
+INSERT INTO `amc_agendar_cita` VALUES (8, 1, 1, 'Byron G.', 'Herrera A.', 'byron.herrera@quito.gob.ec', '1711080893', '0999999999', 'exp 001', NULL, 'expediene 001', '2019-10-25 08:45:00', NULL, NULL, NULL, 3, NULL, NULL, '2019-10-23 22:19:00', '2019-10-25 02:02:08');
+INSERT INTO `amc_agendar_cita` VALUES (9, 1, 1, 'Byron G.', 'Herrera A.', 'byron.herrera@quito.gob.ec', '1711080893', '0999999999', 'exp 001', NULL, 'expediene 001', '2019-10-25 09:30:00', NULL, NULL, NULL, 297, NULL, NULL, '2019-10-23 22:19:00', '2019-10-25 02:09:54');
+INSERT INTO `amc_agendar_cita` VALUES (10, 1, 1, 'Byron G.', 'Herrera A.', 'byron.herrera@quito.gob.ec', '1711080893', '0999999999', 'exp 001', NULL, 'expediene 001', '2019-10-25 09:15:00', NULL, NULL, NULL, 354, NULL, NULL, '2019-10-23 22:19:00', '2019-10-25 02:16:47');
 
-INSERT INTO `amc_agendar_cita` (`id`, `codigo_tramite`, `DateSubmitted`, `UserIp`, `Username`, `UserId`, `Lang`, `asignado`, `confirmed`, `prosesado`, `nombre`, `apellido`, `email`, `cedula`, `telefono1`, `expediente`, `inspector`, `comentarios`, `fechaasignada`, `fechaatendido`, `motivonegar`, `id_atendido`, `id_inspector`, `atendido_inspector`, `resultados`, `fecha`) VALUES
-(1321, NULL, '2019-06-20 18:55:52', '190.152.144.12', '', 0, NULL, NULL, 'false', 'true', 'Byron Gustavo', 'Herrera Avalos', 'byron.herrera@quito.gob.ec', '1716783301', '023442482', 'amc 33220', 'juan pinto', '', '2019-10-16 05:00:00', NULL, 'test111', NULL, 1, NULL, NULL, '2019-06-20 13:47:00'),
-(1322, NULL, '2019-06-20 21:12:08', '190.152.144.12', '', 0, NULL, NULL, 'false', 'false', 'Juan Perez', 'Perez', 'byron.herrera@quito.gob.ec', '1716783301', '0235546666', 'amc 33220', 'juan perez', '', NULL, NULL, '', NULL, 1, NULL, NULL, '2019-06-20 16:11:00'),
-(1323, NULL, '2019-10-18 20:25:50', '190.152.144.12', '', 0, NULL, NULL, 'false', 'false', 'David', 'Mera', 'byron.herrera@quito.gob.ec', '2123123131', '0983332323', 'amc-insp-2019-001', '{nombreinspector:value}', '', NULL, NULL, '', NULL, 1, NULL, NULL, '2019-10-18 13:51:00'),
-(1324, NULL, '2019-10-22 14:13:22', '190.152.144.12', '', 0, NULL, NULL, 'false', 'false', 'David', 'Mera', 'byron.herrera@quito.gob.ec', '171108093', '0983332323', 'amc-insp-2019-001', '{nombreinspector:value}', '', NULL, NULL, '', NULL, NULL, NULL, NULL, '2019-10-21 15:02:00'),
-(1332, NULL, '2019-10-24 03:22:23', '186.46.204.161', '', 0, NULL, NULL, NULL, 'false', 'Byron G.', 'Herrera A.', 'byron.herrera@quito.gob.ec', '1711080893', '0999999999', 'exp 001', NULL, 'expediene 001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-10-23 22:19:00');
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+SET FOREIGN_KEY_CHECKS = 1;
