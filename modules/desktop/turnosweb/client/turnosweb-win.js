@@ -371,7 +371,6 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                         layout: 'form',
                                         monitorValid: true,
                                         items: [
-
                                             {xtype: 'hidden', name: 'id'},
                                             {xtype: 'hidden', name: 'fecha'},
                                             {xtype: 'hidden', name: 'urldenuncia'},
@@ -384,6 +383,10 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             {xtype: 'hidden', name: 'comentarios'},
                                             {xtype: 'hidden', name: 'telefono1'},
                                             {xtype: 'hidden', name: 'expediente'},
+                                            {xtype: 'hidden', name: 'nombreInspector2', id: 'nombreInspector2'},
+                                            {xtype: 'hidden', name: 'mail_inspector', id: 'mail_inspector'},
+
+
                                             {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Fecha solicitud',
@@ -493,7 +496,15 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                 displayField: 'nombre',
                                                 typeAhead: true,
                                                 triggerAction: 'all',
-                                                mode: 'local'
+                                                mode: 'local',
+                                                listeners: {
+                                                    // cuando se cambia el inspector se envia a nombre In
+                                                    change: function (combo, value) {
+                                                        if (value) {
+                                                            Ext.getCmp('nombreInspector2').setValue(combo.lastSelectionText);
+                                                        }
+                                                    }
+                                                }
                                             },
                                             {
                                                 xtype: 'compositefield',
@@ -519,7 +530,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                         maxValue: '16:00',
                                                         increment: 15,
                                                         width: '45%',
-                                                        format : 'H:i'
+                                                        format: 'H:i'
                                                     }
                                                 ]
                                             }
@@ -625,18 +636,16 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                             //se actualiza tabla en la web
                             var dataReceived = JSON.parse(action.response.responseText);
                             myForm.submit({
-                                url: urlTurnosweb + 'crudTurnosweb.php?operation=aprobarTurnos',
+                                url: urlTurnosweb + 'crudTurnosweb.php?operation=aprobarTurnos&mail_inspector=' + dataReceived.data.mail_inspector,
                                 method: 'POST',
                                 waitMsg: 'Saving data',
-                                params: {
-                                    codigo_tramite: dataReceived.data
-                                },
                                 success: function (form, action) {
                                     Ext.getCmp('tb_negarturnos').setDisabled(true);
                                     Ext.getCmp('tb_aprobarturnos').setDisabled(true);
                                     store.load();
                                 },
                                 failure: function (form, action) {
+                                    console.log (action)
                                     var errorJson = JSON.parse(action.response.responseText);
                                     Ext.Msg.show({
                                         title: 'Error campos obligatorios'

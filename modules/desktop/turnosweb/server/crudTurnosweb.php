@@ -26,6 +26,8 @@ function aprobarTurnos()
 
 
     $data->id_persona= $os->get_member_id();
+
+
     $data->estado = 1;
     $data->nombre =$_POST["nombre"];
     $data->apellido =$_POST["apellido"];
@@ -57,12 +59,12 @@ function aprobarTurnos()
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
-
+    $data->mail_inspector= get_email($data->id_persona);
 
     echo json_encode(array(
         "success" => true,
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
-        "data" => $data->codigo_tramite
+        "data" => $data
     ));
 }
 
@@ -71,3 +73,18 @@ switch ($_GET['operation']) {
         aprobarTurnos();
         break;
 }
+
+function get_email ($id)
+{
+    //retorna el valor de email de la tabla qo members
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+    $sql = "SELECT email_address FROM qo_members WHERE id = " . $id;
+    $nombre = $os->db->conn->query($sql);
+
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['email_address'];
+
+}
+
