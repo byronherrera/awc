@@ -58,9 +58,9 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
         //inicio combo Inspector
         storePERDISTUR = new Ext.data.JsonStore({
             root: 'data',
-            fields: ['id', 'nombre'],
+            fields: ['id', 'nombre', 'email_address'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=personal_distributivo'
+            url: 'modules/common/combos/combos.php?tipo=personal_distributivo_email'
         });
 
         var comboPERDISTUR = new Ext.form.ComboBox({
@@ -82,6 +82,13 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             if (index > -1) {
                 var record = storePERDISTUR.getAt(index);
                 return record.get('nombre');
+            }
+        }
+        function tipoUnidadesEmailTUR(id) {
+            var index = storePERDISTUR.findExact('id', id);
+            if (index > -1) {
+                var record = storePERDISTUR.getAt(index);
+                return record.get('email_address');
             }
         }
 
@@ -208,6 +215,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                         this.idTurnosRecuperada = rec.id;
                         /*cargar el formulario*/
                         cargaDetalle(rec.id, this.formTurnoswebDetalle, rec);
+
+
                         if (grabarTurnos) {
                             if (this.record.get("prosesado") == 'true') {
                                 Ext.getCmp('tb_negarturnos').setDisabled(true);
@@ -331,7 +340,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                 disabled: true,
                                 id: 'tb_aprobarturnos'
                                 , formBind: true
-                            }, {
+                            },
+                            {
                                 text: 'Negar Turno',
                                 scope: this,
                                 handler: this.negarturnos,
@@ -378,7 +388,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             {xtype: 'hidden', name: 'apellido'},
                                             {xtype: 'hidden', name: 'cedula'},
                                             {xtype: 'hidden', name: 'email'},
-                                            {xtype: 'hidden', name: 'id_inspector'},
+                                            {xtype: 'hidden', name: 'id_inspector', id: 'id_inspector'},
                                             {xtype: 'hidden', name: 'fechaasignada'},
                                             {xtype: 'hidden', name: 'comentarios'},
                                             {xtype: 'hidden', name: 'telefono1'},
@@ -502,6 +512,9 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                     change: function (combo, value) {
                                                         if (value) {
                                                             Ext.getCmp('nombreInspector2').setValue(combo.lastSelectionText);
+                                                            Ext.getCmp('id_inspector').setValue(value);
+                                                            Ext.getCmp('mail_inspector').setValue(tipoUnidadesEmailTUR (value));
+
                                                         }
                                                     }
                                                 }
@@ -595,6 +608,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
 
             });
 
+            Ext.getCmp('nombreInspector2').setValue(tipoUnidadesPersonalTUR(bloqueo.data.id_inspector));
+
         };
 
         function bloquearLectura(forma, activar) {
@@ -640,12 +655,13 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                 method: 'POST',
                                 waitMsg: 'Saving data',
                                 success: function (form, action) {
+
                                     Ext.getCmp('tb_negarturnos').setDisabled(true);
                                     Ext.getCmp('tb_aprobarturnos').setDisabled(true);
                                     store.load();
                                 },
                                 failure: function (form, action) {
-                                    console.log (action)
+
                                     var errorJson = JSON.parse(action.response.responseText);
                                     Ext.Msg.show({
                                         title: 'Error campos obligatorios'
@@ -677,15 +693,19 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
     negarturnos: function () {
         store = this.storeTurnosweb;
         var urlTurnosweb = this.urlTurnosweb;
+        var urlTurnosLocal = this.urlTurnosLocal;
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Desea negar la denuncia, .<br>¿Desea continuar?',
+            msg: 'Desea negar el turno, .<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var myForm = Ext.getCmp('formTurnoswebDetalle').getForm();
+                    //myForm = Ext.getCmp('formTurnoswebDetalle').getForm();
+                    myForm = Ext.getCmp('formTurnoswebDetalle');
+                    console.log (myForm);
+
                     myForm.submit({
                         url: urlTurnosweb + 'crudTurnosweb.php?operation=negarTurnos',
                         method: 'POST',
@@ -706,9 +726,9 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                             });
                         }
                     });
+
                 }
             }
-
         });
     },
     requestTurnoswebData: function () {

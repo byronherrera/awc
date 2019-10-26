@@ -59,7 +59,7 @@ function aprobarTurnos()
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
-    $data->mail_inspector= get_email($data->id_persona);
+    $data->mail_inspector= get_email($data->id_inspector);
 
     echo json_encode(array(
         "success" => true,

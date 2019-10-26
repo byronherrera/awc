@@ -613,6 +613,22 @@ function comboPersonalDistributivo()
             "data" => $data)
     );
 }
+function comboPersonalDistributivoEmail()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT CONCAT(last_name,' ',first_name) as nombre,id, email_address FROM qo_members WHERE active=1 ORDER BY last_name";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 
 switch ($_GET['tipo']) {
     case 'usuario' :
@@ -718,6 +734,9 @@ switch ($_GET['tipo']) {
 
     case 'personal_distributivo' :
         comboPersonalDistributivo();
+        break;
+    case 'personal_distributivo_email' :
+        comboPersonalDistributivoEmail();
         break;
 
     case 'zonas' :
