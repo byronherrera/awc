@@ -15,7 +15,7 @@ function aprobarTurnos()
     $os->db->conn->query("SET NAMES 'utf8'");
 
     $data = json_decode('{}');
-    //$data->codigo_tramite = generaCodigoProcesoTurnos();
+
     $data->id_persona = $os->get_member_id();
     $data->fechaasignada = $_POST["fechaasignada"];
 

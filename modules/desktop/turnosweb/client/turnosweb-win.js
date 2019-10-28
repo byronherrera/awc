@@ -219,18 +219,18 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
 
                         if (grabarTurnos) {
                             if (this.record.get("prosesado") == 'true') {
-                                Ext.getCmp('tb_negarturnos').setDisabled(true);
-                                Ext.getCmp('tb_aprobarturnos').setDisabled(true);
+                                Ext.getCmp('tbuton_negarturnos').setDisabled(true);
+                                Ext.getCmp('tbuton_aprobarturnos').setDisabled(true);
                                 Ext.getCmp('motivoNegarTurnos').setDisabled(true);
                             }
                             else {
-                                Ext.getCmp('tb_negarturnos').setDisabled(false);
-                                Ext.getCmp('tb_aprobarturnos').setDisabled(false);
+                                Ext.getCmp('tbuton_negarturnos').setDisabled(false);
+                                Ext.getCmp('tbuton_aprobarturnos').setDisabled(false);
                                 Ext.getCmp('motivoNegarTurnos').setDisabled(false);
                             }
                         } else {
-                            Ext.getCmp('tb_negarturnos').setDisabled(true);
-                            Ext.getCmp('tb_aprobarturnos').setDisabled(true);
+                            Ext.getCmp('tbuton_negarturnos').setDisabled(true);
+                            Ext.getCmp('tbuton_aprobarturnos').setDisabled(true);
                             Ext.getCmp('motivoNegarTurnos').setDisabled(true);
                         }
                     }
@@ -333,23 +333,24 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                         margins: '0 0 0 0',
                         tbar: [
                             {
-                                text: 'Generar Turno',
-                                scope: this,
-                                handler: this.aprobarturnos,
-                                iconCls: 'save-icon',
-                                disabled: true,
-                                id: 'tb_aprobarturnos'
-                                , formBind: true
-                            },
-                            {
                                 text: 'Negar Turno',
                                 scope: this,
                                 handler: this.negarturnos,
                                 iconCls: 'save-icon',
                                 disabled: true,
-                                id: 'tb_negarturnos',
+                                id: 'tbuton_negarturnos',
                                 formBind: true
                             },
+                            {
+                                text: 'Generar Turno',
+                                scope: this,
+                                handler: this.aprobarturnos,
+                                iconCls: 'save-icon',
+                                disabled: true,
+                                id: 'tbuton_aprobarturnos'
+                                , formBind: true
+                            },
+
                             {
                                 text: '| Motivo negar:'
                                 , xtype: 'tbtext',
@@ -630,6 +631,48 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
 
 
     },
+
+    negarturnos: function () {
+        store = this.storeTurnosweb;
+        formulario = this.formTurnoswebDetalle;
+        var urlTurnosweb = this.urlTurnosweb;
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'La solicitud no cumple con los requisitos ?  .<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    //myForm = Ext.getCmp('formTurnoswebDetalle').getForm();
+                    //var myForm = formulario.getForm();
+
+                    formulario.getForm().submit({
+                        url: urlTurnosweb + 'crudTurnosweb.php?operation=negarTurnos',
+                        method: 'POST',
+                        waitMsg: 'Saving data',
+                        success: function (form, action) {
+                            Ext.getCmp('tbuton_negarturnos').setDisabled(true);
+                            Ext.getCmp('tbuton_aprobarturnos').setDisabled(true);
+                            store.load();
+                        },
+                        failure: function (form, action) {
+                            var errorJson = JSON.parse(action.response.responseText);
+                            Ext.Msg.show({
+                                title: 'Error campos obligatorios'
+                                , msg: errorJson.msg
+                                , modal: true
+                                , icon: Ext.Msg.ERROR
+                                , buttons: Ext.Msg.OK
+                            });
+                        }
+                    });
+
+                }
+            }
+        });
+    },
+
     aprobarturnos: function () {
         store = this.storeTurnosweb;
         var urlTurnosweb = this.urlTurnosweb;
@@ -656,8 +699,8 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                 waitMsg: 'Saving data',
                                 success: function (form, action) {
 
-                                    Ext.getCmp('tb_negarturnos').setDisabled(true);
-                                    Ext.getCmp('tb_aprobarturnos').setDisabled(true);
+                                    Ext.getCmp('tbuton_negarturnos').setDisabled(true);
+                                    Ext.getCmp('tbuton_aprobarturnos').setDisabled(true);
                                     store.load();
                                 },
                                 failure: function (form, action) {
@@ -690,47 +733,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
         });
     },
 
-    negarturnos: function () {
-        store = this.storeTurnosweb;
-        var urlTurnosweb = this.urlTurnosweb;
-        var urlTurnosLocal = this.urlTurnosLocal;
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Desea negar el turno, .<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    //myForm = Ext.getCmp('formTurnoswebDetalle').getForm();
-                    myForm = Ext.getCmp('formTurnoswebDetalle');
-                    console.log (myForm);
 
-                    myForm.submit({
-                        url: urlTurnosweb + 'crudTurnosweb.php?operation=negarTurnos',
-                        method: 'POST',
-                        waitMsg: 'Saving data',
-                        success: function (form, action) {
-                            Ext.getCmp('tb_negarturnos').setDisabled(true);
-                            Ext.getCmp('tb_aprobarturnos').setDisabled(true);
-                            store.load();
-                        },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
-                            Ext.Msg.show({
-                                title: 'Error campos obligatorios'
-                                , msg: errorJson.msg
-                                , modal: true
-                                , icon: Ext.Msg.ERROR
-                                , buttons: Ext.Msg.OK
-                            });
-                        }
-                    });
-
-                }
-            }
-        });
-    },
     requestTurnoswebData: function () {
         this.storeTurnosweb.load();
     }
