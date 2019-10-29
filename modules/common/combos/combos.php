@@ -718,6 +718,9 @@ switch ($_GET['tipo']) {
     case 'personaloperativos' :
         comboPersonalOperativos();
         break;
+        case 'personalturnos' :
+        comboPersonalOperativos();
+        break;
     case 'personalinstruccion' :
         comboPersonalInstruccion();
         break;

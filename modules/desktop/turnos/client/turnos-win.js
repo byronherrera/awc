@@ -477,6 +477,14 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
             allowBlank: true
         });
 
+        function personaTurno(id) {
+            var index = storePRD.findExact('id', id);
+            if (index > -1) {
+                var record = storePRD.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
         var comboPRD2 = new Ext.form.ComboBox({
             id: 'comboPRD2',
             store: storePRD,
@@ -488,13 +496,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
             allowBlank: true
         });
 
-        function personaTurno(id) {
-            var index = storePRD.findExact('id', id);
-            if (index > -1) {
-                var record = storePRD.getAt(index);
-                return record.get('nombre');
-            }
-        }
+
 
         storePRD2 = new Ext.data.JsonStore({
             root: 'data',
@@ -633,62 +635,6 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo Estado Recepcion Información Turnos ESOPREA
 
-        //inicio combo estado retiros operativo ESREOP
-        storeESREOP = new Ext.data.JsonStore({
-            root: 'datos',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                datos: [
-                    {"id": "Perecible", "nombre": "Perecible"},
-                    {"id": "No perecible", "nombre": "No perecible"},
-                    {"id": "Vehículos", "nombre": "Vehículos"},
-                    {"id": "Otros", "nombre": "Otros"}
-                ]
-            }
-        });
-
-        var comboESREOP = new Ext.form.ComboBox({
-            id: 'comboESREOP',
-            store: storeESREOP,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function estadoRetirosAdm(id) {
-            return id;
-        }
-
-        //fin combo Estado Recepcion Información Turnos ESREOP
-
-        //inicio combo procedimientos PRSA
-        storePRSA = new Ext.data.JsonStore({
-            root: 'data',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=procedimiento'
-        });
-
-        var comboPRSA = new Ext.form.ComboBox({
-            id: 'comboPRSA',
-            store: storePRSA,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
-
-        function procedimientosAdm(id) {
-            var index = storePRSA.findExact('id', id);
-            if (index > -1) {
-                var record = storePRSA.getAt(index);
-                return record.get('nombre');
-            }
-        }
-
-        //fin combo procedimientos PRSA
 
         //inicio combo persona asignada PRASA
         storePRASA = new Ext.data.JsonStore({
@@ -750,8 +696,8 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id', allowBlank: false},
-                {name: 'id_persona', allowBlank: false},
+                {name: 'id', allowBlank: true},
+                {name: 'id_persona', allowBlank: true},
                 {name: 'email', allowBlank: true},
                 {name: 'cedula', allowBlank: true},
                 {name: 'nombre', allowBlank: true},
@@ -767,12 +713,12 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_inspector', allowBlank: true},
                 {name: 'resultados', allowBlank: true},
 
-                {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: false},
-                {name: 'fechaatendido', type: 'date', dateFormat: 'c', allowBlank: false},
-                {name: 'fechaasignada', type: 'date', dateFormat: 'c', allowBlank: false},
+                {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fechaatendido', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fechaasignada', type: 'date', dateFormat: 'c', allowBlank: true},
 
                 {name: 'estado', allowBlank: false},
-                {name: 'visible', type: 'boolean', allowBlank: true},
+
                 {name: 'mail_enviado', allowBlank: true}
             ]
         });
@@ -822,120 +768,104 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                     editor: comboOPESTA,
                     renderer: turnosEstados
                 },
-            /*    {
-                    header: 'Fecha inicio',
-                    dataIndex: 'fecha_inicio_planificacion',
-                    sortable: true,
-                    width: 100,
-                    renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i',
-                        listeners: {
-                            change: function (field, val, valOld) {
-                                //fecha inicial debe ser mayor que la final
-                                if (val > fechaasignada)
-                                //AppMsg.setAlert("Alerta ", 'Fecha inicial no  debe ser mayor que fecha final');
-                                    fecha_inicio_planificacion = val
-                                //fecha inicial no debe ser mayor de 12 horas
-                                var diff = Math.abs(fechaasignada - fecha_inicio_planificacion) / 3600000;
-                                if (diff > 12)
-                                    AppMsg.setAlert("Alerta ", 'Fecha final supera las 12 horas de operativo, están ' + parseFloat(diff).toFixed(1) + " horas");
-                                else
-                                    AppMsg.setAlert("Observación ", 'Están ' + parseFloat(diff).toFixed(1) + " horas de operativo");
-                                // alerta fecha menor a la actual
-                                fecha_actual = new Date();
-                                if (val < fecha_actual) {
-                                    //AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
-                                }
-                            }
-                        }
-                    })
-                },*/
+
                 {
                     header: 'Fecha Turno',
                     dataIndex: 'fechaasignada',
                     sortable: true,
                     width: 100,
                     renderer: formatDate,
-                   /* editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i',
-                        listeners: {
-                            change: function (field, val, valOld) {
-                                // //fecha inicial debe ser mayor que la final
-                                // if (val < fecha_inicio_planificacion)
-                                //     AppMsg.setAlert("Alerta ", 'Fecha final debe ser mayor que fecha inicial');
-                                // fechaasignada = val
-                                // //fecha inicial no debe ser mayor de 12 horas
-                                // var diff = Math.abs(fechaasignada - fecha_inicio_planificacion) / 3600000;
-                                // if (diff > 12)
-                                //     AppMsg.setAlert("Alerta ", 'Fecha final supera las 12 horas de operativo, están ' + parseFloat(diff).toFixed(1) + " horas");
-                                // else
-                                //     AppMsg.setAlert("Observación ", 'Están ' + parseFloat(diff).toFixed(1) + " horas de operativo");
-                                // // alerta fecha menor a la actual
-                                // fecha_actual = new Date();
-                                // if (val < fecha_actual) {
-                                //     AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
-                                // }
-                            }
-                        }
-                    })*/
+
                 },
-                {
-                    header: 'Zonal',
-                    dataIndex: 'id_zonal',
-                    sortable: true,
-                    width: 100,
-                    editor: comboZONA, renderer: zonaAdm
-                },
+
                 {
                     header: 'Responsable',
                     dataIndex: 'id_inspector',
                     sortable: true,
                     width: 190,
-                    editor: comboPRD,
-                    renderer: personaTurno,
+                    editor: comboPRD2,
+                    renderer: personaTurno2,
 
-                    id: 'id_persona_encargada'
+
                 },
                 {
-                    header: 'Lugar intervención',
-                    dataIndex: 'zona',
+                    header: 'Comentarios',
+                    dataIndex: 'comentarios',
                     sortable: true,
                     width: 160,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    //editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
-                    header: 'Elaborado',
-                    dataIndex: 'id_persona',
+                    header: 'Expediente',
+                    dataIndex: 'expediente',
+                    sortable: true,
+                    width: 160,
+                    //editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'Nombre',
+                    dataIndex: 'nombre',
+                    sortable: true,
+                    width: 160,
+                    //editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'Apellido',
+                    dataIndex: 'apellido',
+                    sortable: true,
+                    width: 100,
+
+                    //editor: comboPRD,
+                    //renderer: personaTurno2
+                },
+                {
+                    header: 'Telefono',
+                    dataIndex: 'telefono1',
+                    sortable: true,
+                    width: 100,
+
+                    //editor: comboPRD,
+                    //renderer: personaTurno2
+                },
+                {
+                    header: 'Cédula',
+                    dataIndex: 'cedula',
+                    sortable: true,
+                    width: 100,
+
+                    //editor: comboPRD,
+                    //renderer: personaTurno2
+                },
+                {
+                    header: 'Email',
+                    dataIndex: 'email',
                     sortable: true,
                     width: 100,
                     hidden: true,
                     //editor: comboPRD,
-                    renderer: personaTurno2
+                    //renderer: personaTurno2
                 },
                 {
-                    header: 'Fecha elaboracion',
-                    dataIndex: 'fecha_planificacion',
+                    header: 'Fecha atendido',
+                    dataIndex: 'fechaatendido',
                     sortable: true,
                     width: 100, hidden: true,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
+                    /*editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
                         timeFormat: 'H:i'
-                    })
+                    })*/
                 },
                 {
-                    header: 'Fecha Real Fin',
-                    dataIndex: 'fecha_real_fin',
+                    header: 'Fecha ingreso solicitud',
+                    dataIndex: 'fecha',
                     sortable: true,
                     width: 100, hidden: true,
                     renderer: formatDate,
-                    editor: new Ext.ux.form.DateTimeField({
+                   /* editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
                         timeFormat: 'H:i'
-                    })
+                    })*/
                 }
             ],
             viewConfig: {
@@ -1108,39 +1038,16 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
             bodyStyle: 'padding:0',
             width: '100%',
             items: [{
-                layout: 'column',
-                items: [{
-                    xtype: 'hidden',
-                    fieldLabel: 'Id',
-                    name: 'id'
-                }, {
-                    columnWidth: .5,
-                    layout: 'form',
-                    items: [{
-                        xtype: 'textfield',
-                        fieldLabel: 'Parroquias Intervenidas',
-                        name: 'parroquias',
-                        id: 'parroquias',
-                        anchor: '95%'
-                    }]
-                }, {
-                    columnWidth: .5,
-                    layout: 'form',
-                    items: [{
-                        xtype: 'textfield',
-                        fieldLabel: 'Barrios Intervenidos',
-                        name: 'barrios',
-                        id: 'barrios',
-                        anchor: '95%'
-                    }]
-                }]
-            }, {
+                xtype: 'hidden',
+                fieldLabel: 'Id',
+                name: 'id'
+            } , {
                 xtype: 'textarea',
                 id: 'detalle',
-                fieldLabel: 'Resumen Operativo',
+                fieldLabel: 'Resultados',
                 height: 145,
                 anchor: '98%',
-                name: 'detalle'
+                name: 'resultados'
             }],
             defaults: {
                 listeners: {
@@ -1423,21 +1330,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                         columnWidth: 1 / 3,
                         layout: 'form',
                         items: [
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Zonal',
-                                id: 'busqueda_zonal',
-                                name: 'busqueda_zonal',
-                                hiddenName: 'busqueda_zonal',
 
-                                anchor: '95%',
-                                store: storeZONA,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Unidad',
@@ -1797,7 +1690,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                                                             //disabled: !acceso
                                                         },
                                                         {
-                                                            text: 'Ingresar el detalle de las acciones realizadas, retiros y actas en la pestaña respectiva.'
+                                                            text: 'Describa las acciones realizadas / acuerdos, al cerrar la cita se enviará un email con el texto al adminsitrado.'
                                                             , xtype: 'tbtext'
                                                         }
                                                     ]
@@ -1958,7 +1851,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                 id_persona: '-',
                 estado: '1',
                 id: ' ',
-                visible: '',
+
                 fecha_planificacion: (new Date()),
                 fechaasignada: (new Date()),
                 id_tipo_control: '',

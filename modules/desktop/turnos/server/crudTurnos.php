@@ -469,12 +469,6 @@ function updateOperativos()
 
     $message = '';
 
-    if (isset($data->id_tipo_documento)) {
-        if ($data->id_tipo_documento == '1')
-            if (validarCedulaCorreo($data->id)) {
-                $message = 'Ingresar número de cédula y correo electrónico';
-            }
-    }
 
     if (isset($data->estado)) {
 
@@ -498,13 +492,14 @@ function updateOperativos()
     verificarAnteriorOperativo($data->id);
 
 
-    $sql = "UPDATE amc_agendar_cita SET  $cadenaDatos  WHERE amc_agendar_cita . id = '$data->id' ";
+    $sql = "UPDATE amc_agendar_cita SET  $cadenaDatos  WHERE amc_agendar_cita.id = '$data->id' ";
+    $sqlTest = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "mail" => "aa",
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_agendar_cita actualizado exitosamente" : $sql->errorCode(),
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_agendar_cita actualizado exitosamente" : $sql->errorCode().$sqlTest,
         "data" => array($data)
     ));
 }
@@ -532,11 +527,10 @@ function updateOperativosForm()
     $os->db->conn->query("SET NAMES 'utf8'");
 
     $id = $_POST["id"];
-    $parroquias = $_POST["parroquias"];
-    $barrios = $_POST["barrios"];
-    $detalle = $_POST["detalle"];
 
-    $sql = "UPDATE `amc_agendar_cita` SET `detalle`='$detalle', `parroquias`='$parroquias', `barrios`='$barrios' WHERE (`id`='$id')";
+    $detalle = $_POST["resultados"];
+
+    $sql = "UPDATE `amc_agendar_cita` SET `resultados`='$detalle'   WHERE (`id`='$id')";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
