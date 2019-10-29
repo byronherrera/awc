@@ -719,7 +719,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);
                             Ext.Msg.show({
-                                title: 'Error campos obligatorios'
+                                title: 'Error'
                                 , msg: errorJson.msg
                                 , modal: true
                                 , icon: Ext.Msg.ERROR

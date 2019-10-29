@@ -16,7 +16,6 @@ function aprobarTurnos()
 
     $data = json_decode('{}');
 
-    $data->id_persona = $os->get_member_id();
     $data->fechaasignada = $_POST["fechaasignada"];
 
     $data->comentarios = $_POST["comentarios"];
@@ -24,48 +23,54 @@ function aprobarTurnos()
     $data->cedula = $_POST["cedula"];
     $data->email = $_POST["email"];
 
+    $data->id_persona = $os->get_member_id();
 
-    $data->id_persona= $os->get_member_id();
-
-
+    //estado inicial de la solicitudo
     $data->estado = 1;
-    $data->nombre =$_POST["nombre"];
-    $data->apellido =$_POST["apellido"];
-    $data->email =$_POST["email"];
-    $data->cedula =$_POST["cedula"];
-    $data->telefono1 =$_POST["telefono1"];
-    $data->expediente =$_POST["expediente"];
-    $data->comentarios =$_POST["comentarios"];
-    $data->fechaasignada =$_POST["fechaasignada2"] . " ". $_POST["horaasignada2"]. ":00" ;
-    $data->id_inspector =$_POST["id_inspector2"];
-    $data->fecha =$_POST["fecha"];
+    $data->nombre = $_POST["nombre"];
+    $data->apellido = $_POST["apellido"];
+    $data->email = $_POST["email"];
+    $data->cedula = $_POST["cedula"];
+    $data->telefono1 = $_POST["telefono1"];
+    $data->expediente = $_POST["expediente"];
+    $data->comentarios = $_POST["comentarios"];
+    $data->fechaasignada = $_POST["fechaasignada2"] . " " . $_POST["horaasignada2"] . ":00";
+    $data->id_inspector = $_POST["id_inspector2"];
+    $data->fecha = $_POST["fecha"];
 
-    $cadenaDatos = '';
-    $cadenaCampos = '';
-    foreach ($data as $clave => $valor) {
-        $cadenaCampos = $cadenaCampos . $clave . ',';
-        $valor = str_replace("'", "", $valor);
-        $cadenaDatos = $cadenaDatos . "'" .  $valor . "',";
+    if (validaLainsercion($data->id_inspector, $data->fechaasignada)) {
+        $cadenaDatos = '';
+        $cadenaCampos = '';
+        foreach ($data as $clave => $valor) {
+            $cadenaCampos = $cadenaCampos . $clave . ',';
+            $valor = str_replace("'", "", $valor);
+            $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        }
+        $cadenaCampos = substr($cadenaCampos, 0, -1);
+        $cadenaDatos = substr($cadenaDatos, 0, -1);
+
+        // todo falta a  donde graba
+
+        $sql = "INSERT INTO amc_agendar_cita ($cadenaCampos) values($cadenaDatos);";
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
+
+        $data->id = $os->db->conn->lastInsertId();
+        // genero el nuevo codigo de proceso
+        $data->mail_inspector = get_email($data->id_inspector);
+
+        echo json_encode(array(
+            "success" => true,
+            "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
+            "data" => $data
+        ));
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "msg" => "Fecha y hora ya ocupado",
+            "message" => "Fecha y hora ya ocupado"
+        ));
     }
-    $cadenaCampos = substr($cadenaCampos, 0, -1);
-    $cadenaDatos = substr($cadenaDatos, 0, -1);
-
-    // todo falta a  donde graba
-
-    $sql = "INSERT INTO amc_agendar_cita ($cadenaCampos)
-	values($cadenaDatos);";
-    $sql = $os->db->conn->prepare($sql);
-   $sql->execute();
-
-    $data->id = $os->db->conn->lastInsertId();
-    // genero el nuevo codigo de proceso
-    $data->mail_inspector= get_email($data->id_inspector);
-
-    echo json_encode(array(
-        "success" => true,
-        "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
-        "data" => $data
-    ));
 }
 
 switch ($_GET['operation']) {
@@ -74,7 +79,7 @@ switch ($_GET['operation']) {
         break;
 }
 
-function get_email ($id)
+function get_email($id)
 {
     //retorna el valor de email de la tabla qo members
     global $os;
@@ -85,6 +90,23 @@ function get_email ($id)
 
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['email_address'];
+
+}
+
+function validaLainsercion($id_inspector, $fechaasignada)
+{
+    //retorna el valor de email de la tabla qo members
+    global $os;
+
+    $sql = "SELECT COUNT(*) as total  FROM amc_agendar_cita WHERE id_inspector = " . $id_inspector . " AND fechaasignada = '" . $fechaasignada . "'";
+    $nombre = $os->db->conn->query($sql);
+
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    if ($rownombre['total'] >= 1) {
+        return false;
+    }
+    else
+        return true;
 
 }
 

@@ -9,24 +9,6 @@ if (!$os->session_exists()) {
 }
 
 
-function verificarAnteriorOperativo($id_operativo)
-{
-    global $os;
-
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_agendar_cita WHERE id = $id_operativo ";
-    $result = $os->db->conn->query($sql);
-    $data = array();
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    if ($row) {
-        return $row;
-    } else {
-        return $row;
-    }
-
-
-}
-
 function selectProcedimientosCadena($procLista)
 {
     global $os;
@@ -71,11 +53,11 @@ function selectOperativos()
     }
 
 
-/*    if (isset($_POST['accesosAdministradorIns'])) {
-        $accesosOperativos = $_POST['accesosAdministradorIns'];
-        if ($accesosOperativos == 'true')
-            $where = " WHERE ($usuarioLog = id_persona or id_unidad = 3 ) ";
-    }*/
+    /*    if (isset($_POST['accesosAdministradorIns'])) {
+            $accesosOperativos = $_POST['accesosAdministradorIns'];
+            if ($accesosOperativos == 'true')
+                $where = " WHERE ($usuarioLog = id_persona or id_unidad = 3 ) ";
+        }*/
 
 
     if (isset($_POST['accesosAdministradorOpe'])) {
@@ -330,21 +312,21 @@ function insertOperativos()
     $cadenaCampos = '';
 
 
-    $datafecha_planificacion =  date('Y-m-d\TH:i:s');
+    $datafecha_planificacion = date('Y-m-d\TH:i:s');
 
     // validar fechas de inicio .. si estan en null se le pone la fecha
     if (($data->fecha_planificacion == '') or !isset ($data->fecha_planificacion)) {
         // sin no esta deinida la fecha se pone fecha con la del dia
-        $data->fecha_planificacion =   date('Y-m-d\TH:i:s');
+        $data->fecha_planificacion = date('Y-m-d\TH:i:s');
     }
 
     if (($data->fecha_inicio_planificacion == '') or !isset ($data->fecha_inicio_planificacion)) {
         // sin no esta deinida la fecha se pone fecha con la del dia
-        $data->fecha_inicio_planificacion =  date('Y-m-d\TH:i:s');
+        $data->fecha_inicio_planificacion = date('Y-m-d\TH:i:s');
     }
     if (($data->fecha_fin_planificacion == '') or !isset ($data->fecha_fin_planificacion)) {
         // sin no esta deinida la fecha se pone fecha con la del dia
-        $data->fecha_fin_planificacion =  date('Y-m-d\TH:i:s');
+        $data->fecha_fin_planificacion = date('Y-m-d\TH:i:s');
     }
 
     foreach ($data as $clave => $valor) {
@@ -382,8 +364,8 @@ function generaCodigoProcesoOperativo()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $año = date ('Y');
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE  recepcion_documento > '". $año ."-01-03 00:00:01'";
+    $año = date('Y');
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE  recepcion_documento > '" . $año . "-01-03 00:00:01'";
 
 //    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_agendar_cita";
     $result = $os->db->conn->query($sql);
@@ -403,22 +385,46 @@ function updateOperativos()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
 
-    if (isset($data->visible)) {
-        if ($data->visible) {
 
+    // genero el listado de valores a insertar
+    $cadenaDatos = '';
+    foreach ($data as $clave => $valor) {
+        if (isset($valor))
+            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        else
+            $cadenaDatos = $cadenaDatos . $clave . " = NULL, ";
+    }
+    $cadenaDatos = substr($cadenaDatos, 0, -1);
+
+    $sql = "UPDATE amc_agendar_cita SET  $cadenaDatos  WHERE amc_agendar_cita.id = '$data->id' ";
+    $sqlTest = $sql;
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
+    echo json_encode(array(
+        "success" => $sql->errorCode() == 0,
+        "msg" => $sql->errorCode() == 0 ? "Actualización en amc_agendar_cita actualizado exitosamente" : $sql->errorCode() . $sqlTest,
+        "data" => array($data)
+    ));
+
+    // luego de grabar la información se envia el mail
+    if (isset($data->estado)) {
+        if (($data->estado === "2") || ($data->estado === "3") || ($data->estado === "5")) {
+            // en caso que se enviado el email, previamente
             if (verificaEnvioEmail($data->id)) {
                 $fechaActual = date('d-m-Y H:i:s');
-                $fechaActual2 = date('d-m-Y');
 
                 $funcionario = $data->id_persona;
 
                 $detalle = '<table border="1">
                             <tr>
-                                <td>Código</td>
                                 <td valign="top">Fecha Inicio</td>
                                 <td valign="top">Fecha Fin</td>
+                             </tr>   
+                             <tr>   
                                 <td valign="top">Lugar Intervencion</td>
                                 <td valign="top">Punto Encuentro</td>
+                             </tr>   
+                             <tr>
                                 <td valign="top">Observaciones</td>
                                 <td valign="top">Estado</td>
                             </tr>';
@@ -433,7 +439,9 @@ function updateOperativos()
                     "</tr></table><br>";
 
                 // pedimos listado de funcionarios que van al mismo operativo
-                $listado = getListdoFuncionariosOperativo($data->id);
+                // cargar en un array el listado
+                //$listado = getListdoFuncionariosOperativo($data->id);
+                $listado = array ();
 
 
                 if (count($listado) > 0)
@@ -449,59 +457,21 @@ function updateOperativos()
                 $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
 
                 $email = regresaEmail($funcionario);
-                //   $email = "byron.herrera@quito.gob.ec";
-                $asunto = "Nuevo operativo asignado, " . " - " . regresaEmail($funcionario);
+                $asunto = "Turno atendido, " . " - " . regresaEmail($funcionario);
                 $resultado = enviarEmail($email, $asunto, $mensaje, $funcionarios);
                 if ($resultado) {
-                    $sqlUpdate = "UPDATE `amc_agendar_cita` SET `mail_enviado` = 1 WHERE `id` = " . $data->id;
+                    $sqlUpdate = "UPDATE `amc_agendar_cita` SET `mail_enviado` = 1, WHERE `id` = " . $data->id;
                     $sql = $os->db->conn->prepare($sqlUpdate);
-                    $grabaresultado = $sql->execute();
+                    $sql->execute();
                     $data->mail_enviado = '1';
                 }
             }
-        }
-    }
-
-    if (isset($data->fecha_informe)) {
-        $data->fecha_informe = NULL;
-    }
 
 
-    $message = '';
-
-
-    if (isset($data->estado)) {
-
-        if ($data->estado === "2") {
-            $datetime = new DateTime();
-            $data->fecha_informe = $datetime->format('Y-m-d H:i:s');
         }
     };
 
 
-    // genero el listado de valores a insertar
-    $cadenaDatos = '';
-    foreach ($data as $clave => $valor) {
-        if (isset($valor))
-            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
-        else
-            $cadenaDatos = $cadenaDatos . $clave . " = NULL, ";
-    }
-    $cadenaDatos = substr($cadenaDatos, 0, -1);
-
-    verificarAnteriorOperativo($data->id);
-
-
-    $sql = "UPDATE amc_agendar_cita SET  $cadenaDatos  WHERE amc_agendar_cita.id = '$data->id' ";
-    $sqlTest = $sql;
-    $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
-    echo json_encode(array(
-        "success" => $sql->errorCode() == 0,
-        "mail" => "aa",
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_agendar_cita actualizado exitosamente" : $sql->errorCode().$sqlTest,
-        "data" => array($data)
-    ));
 }
 
 function selectOperativosForm()
@@ -529,8 +499,9 @@ function updateOperativosForm()
     $id = $_POST["id"];
 
     $detalle = $_POST["resultados"];
+    $id_ordenanza = $_POST["id_ordenanza"];
 
-    $sql = "UPDATE `amc_agendar_cita` SET `resultados`='$detalle'   WHERE (`id`='$id')";
+    $sql = "UPDATE `amc_agendar_cita` SET `resultados`='$detalle'  , id_ordenanza = '$id_ordenanza'  WHERE (`id`='$id')";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
@@ -552,9 +523,9 @@ function deleteOperativos()
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_agendar_cita, eliminado exitosamente" : $sql->errorCode()
     ));
 
-    $log =  $os->get_member_id() . "-" . $log ;
+    $log = $os->get_member_id() . "-" . $log;
 
-    $fichero = 'crudOperativos.log';    
+    $fichero = 'crudOperativos.log';
     $actual = file_get_contents($fichero);
     $actual .= $log . "\n";
     file_put_contents($fichero, $actual);
@@ -664,13 +635,13 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $mail->Username = "agencia.m.control@quito.gob.ec";
     $mail->Password = "12345678";
 
-/*    $mail->Host = 'smtp.gmail.com';
-    $mail->Port = 587;
-    $mail->SMTPSecure = 'tls';
-    $mail->SMTPAuth = true;
-    $mail->Username = "amcdenuncias@gmail.com";
-    $mail->Password = "amccontrol2016";
-*/
+    /*    $mail->Host = 'smtp.gmail.com';
+        $mail->Port = 587;
+        $mail->SMTPSecure = 'tls';
+        $mail->SMTPAuth = true;
+        $mail->Username = "amcdenuncias@gmail.com";
+        $mail->Password = "amccontrol2016";
+    */
     $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
 
     $mail->AddBCC("byron.herrera@quito.gob.ec");
@@ -716,30 +687,14 @@ function verificaEnvioEmail($id)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT id_persona, visible FROM amc_agendar_cita WHERE id= $id";
+    $sql = "SELECT mail_enviado FROM amc_agendar_cita WHERE id= $id";
     $result = $os->db->conn->query($sql);
-
     $row = $result->fetch(PDO::FETCH_ASSOC);
-    if ($row['visible'] == "") {
-        if ($row['id_persona'] == " ") {
-            return false;
-        } else {
-            return true;
-        }
 
+    if ($row['mail_enviado'] == "0") {
+        return true;
     } else
         return false;
-}
-
-function getListdoFuncionariosOperativo($id)
-{
-    global $os;
-    $result = $os->db->conn->query("SELECT id_member FROM amc_agendar_cita_personal WHERE id_operativo = $id;");
-    $funcionarios = array();
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $funcionarios[] = $row ['id_member'];
-    }
-    return $funcionarios;
 }
 
 function nombreEstado($data)

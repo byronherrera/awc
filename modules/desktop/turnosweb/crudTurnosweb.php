@@ -150,7 +150,10 @@ function aprobar()
 {
     global $databaseAMC;
     $id = (int)$_POST ['id'];
- 
+
+    // previo a la actualización de datos se debe validar que no existe cita a la misma hora
+
+
     $query = "UPDATE amc_agendar_cita SET confirmed='true' WHERE (`id`='$id')";
 
 //    $databaseAMC->Query("UPDATE amc_agendar_cita SET prosesado='true' WHERE (`id`='$id')");

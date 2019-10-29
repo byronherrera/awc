@@ -16,7 +16,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
         var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
         var accesosTurnos = this.app.isAllowedTo('accesosTurnos', this.id);
 
-       // var fecha_inicio_planificacion;
+        // var fecha_inicio_planificacion;
         var fechaasignada;
 
         finalizados = true;
@@ -45,18 +45,18 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
 
 // inicio combos secretaria
 
-        //inicio combo tipo documento  OPTID
-        storeOPTID = new Ext.data.JsonStore({
+        //inicio combo tipo documento  TRTID
+        storeTRTID = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=ordenanzas'
         });
 
-        var comboOPTID = new Ext.ux.form.CheckboxCombo({
+        var comboTRTID = new Ext.ux.form.CheckboxCombo({
             width: 250,
             mode: 'local',
-            store: storeOPTID,
+            store: storeTRTID,
             valueField: 'id',
             displayField: 'nombre',
             allowBlank: false,
@@ -66,9 +66,9 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-        var comboOPTIDSimple = new Ext.form.ComboBox({
+        var comboTRTIDSimple = new Ext.form.ComboBox({
             id: 'comboOPNICO',
-            store: storeOPTID,
+            store: storeTRTID,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
@@ -76,17 +76,17 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function turnosTipoTurnosSimple(id) {
-            var index = storeOPTID.findExact('id', id);
+            var index = storeTRTID.findExact('id', id);
             if (index > -1) {
-                var record = storeOPTID.getAt(index);
+                var record = storeTRTID.getAt(index);
                 return record.get('nombre');
             }
         }
 
 
-        var comboOPTIDSimple2 = new Ext.form.ComboBox({
+        var comboTRTIDSimple2 = new Ext.form.ComboBox({
             id: 'comboOPNICO',
-            store: storeOPTID,
+            store: storeTRTID,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
@@ -94,9 +94,9 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function turnosTipoTurnosSimple2(id) {
-            var index = storeOPTID.findExact('id', id);
+            var index = storeTRTID.findExact('id', id);
             if (index > -1) {
-                var record = storeOPTID.getAt(index);
+                var record = storeTRTID.getAt(index);
                 return record.get('nombre');
             }
         }
@@ -107,8 +107,8 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
             var nombres = id.split(",");
             retorno = '';
             for (var i = 0; i < nombres.length; i++) {
-                index = storeOPTID.findExact('id', nombres[i]);
-                var record = storeOPTID.getAt(index);
+                index = storeTRTID.findExact('id', nombres[i]);
+                var record = storeTRTID.getAt(index);
                 if (typeof record !== 'undefined') {
                     retorno = record.data.nombre + ',' + retorno
                 }
@@ -116,7 +116,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
             return retorno
         }
 
-        //fin combo tipo documento  OPTID
+        //fin combo tipo documento  TRTID
         //inicio combo tipo MEDIDA operativo
         storeOPINFOMEDIDA = new Ext.data.JsonStore({
             root: 'data',
@@ -497,7 +497,6 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
         });
 
 
-
         storePRD2 = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
@@ -785,15 +784,6 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                     width: 190,
                     editor: comboPRD2,
                     renderer: personaTurno2,
-
-
-                },
-                {
-                    header: 'Comentarios',
-                    dataIndex: 'comentarios',
-                    sortable: true,
-                    width: 160,
-                    //editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
                     header: 'Expediente',
@@ -840,8 +830,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Email',
                     dataIndex: 'email',
                     sortable: true,
-                    width: 100,
-                    hidden: true,
+                    width: 100
                     //editor: comboPRD,
                     //renderer: personaTurno2
                 },
@@ -849,7 +838,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Fecha atendido',
                     dataIndex: 'fechaatendido',
                     sortable: true,
-                    width: 100, hidden: true,
+                    width: 100,
                     renderer: formatDate,
                     /*editor: new Ext.ux.form.DateTimeField({
                         dateFormat: 'Y-m-d',
@@ -862,11 +851,18 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 100, hidden: true,
                     renderer: formatDate,
-                   /* editor: new Ext.ux.form.DateTimeField({
-                        dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i'
-                    })*/
-                }
+                    /* editor: new Ext.ux.form.DateTimeField({
+                         dateFormat: 'Y-m-d',
+                         timeFormat: 'H:i'
+                     })*/
+                }, {
+                    header: 'Comentarios',
+                    dataIndex: 'comentarios',
+                    sortable: true,
+                    width: 260,
+                    //editor: new Ext.form.TextField({allowBlank: false})
+                },
+
             ],
             viewConfig: {
                 forceFit: false,
@@ -932,7 +928,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
 
 
                                     if (rec.get("tipo_operativo") == 2) {
-                                      //  Ext.getCmp('borraroperativodetalle').setDisabled(false);
+                                        //  Ext.getCmp('borraroperativodetalle').setDisabled(false);
                                         //  Ext.getCmp('addoperativodetalle').setDisabled(false);
                                         //Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
                                         // Ext.getCmp('addoperativoparticipantes').setDisabled(false);
@@ -1032,16 +1028,38 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
         // fin ventana turnos
 
 
-        var detalleOperativo = new Ext.FormPanel({
-            id: 'formaDetalleOperativo',
+        var detalleTurno = new Ext.FormPanel({
+            id: 'formaDetalleTurno',
             frame: true,
             bodyStyle: 'padding:0',
             width: '100%',
             items: [{
-                xtype: 'hidden',
-                fieldLabel: 'Id',
-                name: 'id'
-            } , {
+                layout: 'column',
+                items: [{
+                    xtype: 'hidden',
+                    fieldLabel: 'Id',
+                    name: 'id'
+                }, {
+                    columnWidth: .5,
+                    layout: 'form',
+                    items: [{
+                        xtype: 'combo',
+                        fieldLabel: 'Ordenanza',
+                        id: 'id_ordenanza',
+                        name: 'id_ordenanza',
+                        anchor: '95%',
+
+                        hiddenName: 'id_ordenanza',
+                        store: storeTRTID,
+                        valueField: 'id',
+                        displayField: 'nombre',
+                        typeAhead: true,
+                        triggerAction: 'all',
+                        mode: 'local'
+
+                    }]
+                }]
+            }, {
                 xtype: 'textarea',
                 id: 'detalle',
                 fieldLabel: 'Resultados',
@@ -1052,7 +1070,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
             defaults: {
                 listeners: {
                     change: function (field, newVal, oldVal) {
-                        var myForm = Ext.getCmp('formaDetalleOperativo').getForm();
+                        var myForm = Ext.getCmp('formaDetalleTurno').getForm();
                         myForm.submit({
                             url: 'modules/desktop/turnos/server/crudTurnos.php?operation=updateForm',
                             method: 'POST',
@@ -1287,7 +1305,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_tipo_control',
 
                                 anchor: '95%',
-                                store: storeOPTID,
+                                store: storeTRTID,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -1676,7 +1694,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                                                     layout: 'column',
                                                     id: 'detalleTurnosTab',
                                                     height: 250,
-                                                    items: detalleOperativo,
+                                                    items: detalleTurno,
                                                     disabled: true,
                                                     autoScroll: true,
                                                     tbar: [
@@ -1808,8 +1826,8 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
         win.show();
 
         function cargaDetalle(turnos) {
-            //forma = Ext.getCmp('formaDetalleOperativo');
-            detalleOperativo.getForm().load({
+            //forma = Ext.getCmp('formaDetalleTurno');
+            detalleTurno.getForm().load({
                 url: urlTurnos + 'crudTurnos.php?operation=selectForm',
                 params: {
                     id: turnos
@@ -1880,7 +1898,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var myForm = Ext.getCmp('formaDetalleOperativo').getForm();
+                    var myForm = Ext.getCmp('formaDetalleTurno').getForm();
                     myForm.submit({
                         url: 'modules/desktop/turnos/server/crudTurnos.php?operation=updateForm',
                         method: 'POST',
