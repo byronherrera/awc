@@ -412,66 +412,31 @@ function updateOperativos()
             // en caso que se enviado el email, previamente
             if (verificaEnvioEmail($data->id)) {
                 $fechaActual = date('d-m-Y H:i:s');
-
                 $funcionario = $data->id_persona;
 
-                $detalle = '<table border="1">
-                            <tr>
-                                <td valign="top">Fecha Inicio</td>
-                                <td valign="top">Fecha Fin</td>
-                             </tr>   
-                             <tr>   
-                                <td valign="top">Lugar Intervencion</td>
-                                <td valign="top">Punto Encuentro</td>
-                             </tr>   
-                             <tr>
-                                <td valign="top">Observaciones</td>
-                                <td valign="top">Estado</td>
-                            </tr>';
-                $detalle .= "<tr>" .
-                    '<td valign="top">' . $data->id . '</td>' .
-                    '<td valign="top">' . date("Y-m-d <br> H:i", strtotime($data->fecha_inicio_planificacion)) . "</td>" .
-                    '<td valign="top">' . date("Y-m-d <br> H:i", strtotime($data->fecha_fin_planificacion)) . "</td>" .
-                    '<td valign="top">' . $data->zona . "</td>" .
-                    '<td valign="top">' . $data->punto_encuentro_planificado . "</td>" .
-                    '<td valign="top">' . $data->observaciones . "</td>" .
-                    '<td valign="top"><strong>' . nombreEstado($data->estado) . "</strong></td>" .
-                    "</tr></table><br>";
 
                 // pedimos listado de funcionarios que van al mismo operativo
                 // cargar en un array el listado
                 //$listado = getListdoFuncionariosOperativo($data->id);
-                $listado = array ();
+                $listado = array();
 
+                $personasEnvioEmail[] = regresaEmail($funcionario);
+                $personasEnvioEmail[] = regresaEmail($funcionario);
 
-                if (count($listado) > 0)
-                    $detalle .= "<p>Personal asignado</p>";
-                $detalle .= "<table>";
-                $funcionarios = array();
-                foreach ($listado as &$funcionario2) {
-                    $detalle .= "<tr><td>" . regresaNombre($funcionario2) . "</td></tr>";
-                    $funcionarios[] = regresaEmail($funcionario2);
-                }
-                $detalle .= "</table>";
-
-                $mensaje = getmensaje(regresaNombre($funcionario), $detalle, $fechaActual);
+                $mensaje = getmensaje(regresaNombre($funcionario), $data->resltados, $data->fechaasignada, regresaNombre($funcionario), $fechaActual);
 
                 $email = regresaEmail($funcionario);
                 $asunto = "Turno atendido, " . " - " . regresaEmail($funcionario);
-                $resultado = enviarEmail($email, $asunto, $mensaje, $funcionarios);
+                $resultado = enviarEmail($email, $asunto, $mensaje, $personasEnvioEmail);
                 if ($resultado) {
                     $sqlUpdate = "UPDATE `amc_agendar_cita` SET `mail_enviado` = 1, WHERE `id` = " . $data->id;
                     $sql = $os->db->conn->prepare($sqlUpdate);
-                    $sql->execute();
-                    $data->mail_enviado = '1';
+//                    $sql->execute();
+//                    $data->mail_enviado = '1';
                 }
             }
-
-
         }
     };
-
-
 }
 
 function selectOperativosForm()
@@ -571,46 +536,34 @@ function validarCedulaCorreo($id)
 }
 
 
-function getmensaje($nombre = '', $operativos = '', $fecha = '')
+function getmensaje($nombre = '', $acuerdos = '', $fecha = '', $nombreInspector = '', $fechaInforme = '')
 {
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
                 <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
                 <div style="clear: both; margin: 50px 10%; float: left;">
                 <p><br><br>
-                 Estimado, ' . $nombre . ' ha sido asignado al  siguiente operativo como responsable:<br>
+                 Estimado, ' . $nombre . ' <br>
+                 <br>
+                 En la reunión realizada el día ' . $fecha . ' , se llegó a los siguientes acuerdos:
+                 <br>
+                 ' . $acuerdos . '
                  <br>
                  <br>
-                 ' . $operativos . '
-                 <br>
-                 <br>
-                 "Se le recuerda al responsable del operativo que es obligatorio llenar todo el detalle en 
-                 ACCIONES OPERATIVO, ACTOS INICIO y RETIROS, dicho reporte debe estar en concordancia con lo reportado en el chat. 
-                 En caso que no este correcto, se lo cambiará a estado INFORME y no se lo aceptará como finalizado.
+                 Favor revisarlos y en caso que tenga alguna duda favor volver a comunicarse con el sr/sra Inspector
                 <br>
 
-                <br>
-                 Favor ingresar en Matis AMC, para verificar el operativo asignado <a href="http://172.20.136.60/procesos-amc">aquí</a> .
-                <br>    
-                <br>    
-                <p>De conformidad con el Memorando No. AMC-SM-JA-2018-003, del 4 de enero de 2018, mediante el cual la 
-                Máxima Autoridad dispone</p>
-                <p>"Todo el personal de la Agencia Metropolitana de Control, deberá utilizar de manera obligatoria el módulo de operativos que se encuentra dentro de la INTRANET de la Institución, a fin de generar los informes de los operativos realizados. En el sistema se deberá llenar los datos solicitados dentro de las 24 horas siguientes de haber realizado el operativo, con el objetivo de que se genere el informe respectivo."</p>
 
                 <br>
 
                 <br>
 
-                <p>Fecha : ' . $fecha . '</p>
+                <p>Fecha : ' . $fechaInforme . '</p>
                 <p>Atentamente </p>
                 
-                <p>SUPERVISION METROPOLITANA</p>
+                <p></p>
                 <p>GAD MDMQ AGENCIA METROPOLITANA DE CONTROL</p>
                 <p></p>
-                <p>INFORMACIÓN IMPORTANTE</p>
-                <p>************************************************</p>
-                <p>- No responder este correo es un Mensaje Automático.</p>
                 
-                <p>- Para sugerencias, escribe a tu coordinador.</p>
 
                 </div>
                 <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
@@ -619,7 +572,7 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
     return $texto;
 }
 
-function enviarEmail($email, $nombre, $mensaje, $funcionarios)
+function enviarEmail($email, $nombre, $mensaje, $personasEnvioEmail)
 {
     $config = new config();
 
@@ -648,7 +601,7 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $mail->AddBCC("pamela.parreno@quito.gob.ec");
     $mail->AddBCC("galo.salazar@quito.gob.ec");
     $mail->AddBCC("eduardo.chicaiza@quito.gob.ec");
-    $mail->AddBCC("david.mera@quito.gob.ec");
+
 
     $mail->Subject = $nombre;
     $mail->msgHTML($mensaje);
@@ -657,7 +610,7 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     // se envia de acuerdo a si es produccion o pruebas
     if ($config->AMBIENTE == "PRODUCCION") {
         $mail->addAddress($email);
-        foreach ($funcionarios as $emailfuncionario) {
+        foreach ($personasEnvioEmail as $emailfuncionario) {
             $mail->AddCC($emailfuncionario);
         }
     } else {
