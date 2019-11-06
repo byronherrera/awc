@@ -178,7 +178,7 @@ function aprobar()
     }
 }
 
-function getmensaje ($opcion , $nombre= '' ,  $id='', $motivo = '' , $nombreInspector = '' , $fechaasignada2 = '' ){
+function getmensaje ($opcion ,   $nombre= '' ,  $id='', $motivo = '' , $nombreInspector = '' , $fechaasignada2 = '' ){
     switch ($opcion) {
         case 'aprobar' :
             $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">

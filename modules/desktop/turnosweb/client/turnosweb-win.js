@@ -63,6 +63,22 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             url: 'modules/common/combos/combos.php?tipo=personal_distributivo_email'
         });
 
+        storeZONDISTUR = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre', 'direccion'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=zonas'
+        });
+
+        function direccion(id) {
+            var index = storeZONDISTUR.findExact('id', id);
+            if (index > -1) {
+                var record = storeZONDISTUR.getAt(index);
+                return record.get('direccion');
+            }
+        }
+
+
         var comboPERDISTUR = new Ext.form.ComboBox({
             id: 'comboPERDISTUR',
             store: storePERDISTUR,
@@ -84,6 +100,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         function tipoUnidadesEmailTUR(id) {
             var index = storePERDISTUR.findExact('id', id);
             if (index > -1) {
@@ -390,14 +407,13 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             {xtype: 'hidden', name: 'cedula'},
                                             {xtype: 'hidden', name: 'email'},
                                             {xtype: 'hidden', name: 'id_inspector', id: 'id_inspector'},
+                                            {xtype: 'hidden', name: 'id_zonal', id: 'id_zonal'},
                                             {xtype: 'hidden', name: 'fechaasignada'},
                                             {xtype: 'hidden', name: 'comentarios'},
                                             {xtype: 'hidden', name: 'telefono1'},
                                             {xtype: 'hidden', name: 'expediente'},
                                             {xtype: 'hidden', name: 'nombreInspector2', id: 'nombreInspector2'},
                                             {xtype: 'hidden', name: 'mail_inspector', id: 'mail_inspector'},
-
-
                                             {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Fecha solicitud',
@@ -455,14 +471,14 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             },
                                             {
                                                 xtype: 'displayfield',
-                                                fieldLabel: 'Expediente',
+                                                fieldLabel: 'Informe/Oficio',
                                                 name: 'expediente2',
                                                 anchor: '96%'
                                             },
                                             {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Comentarios',
-                                                name: 'comentarios',
+                                                name: 'comentarios2',
                                                 anchor: '96%'
                                             }
                                             , {
@@ -492,8 +508,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                 value: '2. DATOS DE LA CITA',
                                                 cls: 'negrilla',
                                                 anchor: '90%'
-                                            }
-                                            ,
+                                            },
                                             {
                                                 xtype: 'combo',
                                                 fieldLabel: 'Inspector',
@@ -514,7 +529,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                         if (value) {
                                                             Ext.getCmp('nombreInspector2').setValue(combo.lastSelectionText);
                                                             Ext.getCmp('id_inspector').setValue(value);
-                                                            Ext.getCmp('mail_inspector').setValue(tipoUnidadesEmailTUR (value));
+                                                            Ext.getCmp('mail_inspector').setValue(tipoUnidadesEmailTUR(value));
 
                                                         }
                                                     }
@@ -547,6 +562,30 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                         format: 'H:i'
                                                     }
                                                 ]
+                                            },
+                                            {
+                                                xtype: 'combo',
+                                                fieldLabel: 'Zonal',
+                                                id: 'id_zonal2',
+                                                name: 'id_zonal2',
+                                                anchor: '90%',
+
+                                                hiddenName: 'id_zonal2',
+                                                store: storeZONDISTUR,
+                                                valueField: 'id',
+                                                displayField: 'nombre',
+                                                typeAhead: true,
+                                                triggerAction: 'all',
+                                                mode: 'local',
+                                                listeners: {
+                                                    // cuando se cambia el inspector se envia a nombre In
+                                                    change: function (combo, value) {
+                                                        if (value) {
+                                                            Ext.getCmp('id_zonal').setValue(value);
+                                                            Ext.getCmp('direccion').setValue(direccion(value));
+                                                        }
+                                                    }
+                                                }
                                             }
                                         ]
                                     }

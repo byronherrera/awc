@@ -78,7 +78,7 @@ function comboZonas()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT id, nombre FROM amc_zonas WHERE activo = 1 ORDER BY id";
+    $sql = "SELECT id, nombre, direccion FROM amc_zonas WHERE activo = 1 ORDER BY id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
