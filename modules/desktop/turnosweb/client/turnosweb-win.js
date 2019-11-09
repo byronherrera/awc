@@ -70,16 +70,6 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             url: 'modules/common/combos/combos.php?tipo=zonas'
         });
 
-        function direccion(id) {
-            var index = storeZONDISTUR.findExact('id', id);
-            if (index > -1) {
-                var record = storeZONDISTUR.getAt(index);
-                return record.get('direccion');
-            }
-        }
-
-
-
         var comboPERDISTUR = new Ext.form.ComboBox({
             id: 'comboPERDISTUR',
             store: storePERDISTUR,
@@ -110,7 +100,14 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
             }
         }
 
-        //fin combo Inspector
+        function direccionLlamada(id) {
+            var index = storeZONDISTUR.findExact('id', id);
+            if (index > -1) {
+                var record = storeZONDISTUR.getAt(index);
+                return record.get('direccion');
+            }
+        }
+
 
         function turnoswebActivo(id) {
             var index = storeSASINO.findExact('id', id);
@@ -415,6 +412,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                             {xtype: 'hidden', name: 'expediente'},
                                             {xtype: 'hidden', name: 'nombreInspector2', id: 'nombreInspector2'},
                                             {xtype: 'hidden', name: 'mail_inspector', id: 'mail_inspector'},
+                                            {xtype: 'hidden', name: 'direccion', id: 'direccion'},
                                             {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Fecha solicitud',
@@ -583,7 +581,9 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                     change: function (combo, value) {
                                                         if (value) {
                                                             Ext.getCmp('id_zonal').setValue(value);
-                                                            Ext.getCmp('direccion').setValue(direccion(value));
+                                                            Ext.getCmp('direccion').setValue(direccionLlamada(value));
+                                                            console.log (Ext.getCmp('direccion').value)
+                                                            console.log (direccionLlamada(value))
                                                         }
                                                     }
                                                 }
@@ -734,7 +734,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                             //se actualiza tabla en la web
                             var dataReceived = JSON.parse(action.response.responseText);
                             myForm.submit({
-                                url: urlTurnosweb + 'crudTurnosweb.php?operation=aprobarTurnos&mail_inspector=' + dataReceived.data.mail_inspector,
+                                url: urlTurnosweb + 'crudTurnosweb.php?operation=aprobarTurnos&mail_inspector=' + dataReceived.data.mail_inspector + "&direccion=" +  dataReceived.data.direccion,
                                 method: 'POST',
                                 waitMsg: 'Saving data',
                                 success: function (form, action) {
