@@ -530,6 +530,10 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                             Ext.getCmp('id_inspector').setValue(value);
                                                             Ext.getCmp('mail_inspector').setValue(tipoUnidadesEmailTUR(value));
 
+
+                                                            ;
+                                                            Ext.getCmp('direccion').setValue(direccionLlamada(Ext.getCmp('id_zonal2').value));
+
                                                         }
                                                     }
                                                 }
@@ -547,7 +551,17 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                         , readOnly: false
                                                         , format: 'Y-m-d'
                                                         , anchor: '100%'
-                                                        , minValue: new Date()
+                                                        , minValue: new Date(),
+                                                        listeners: {
+                                                            // cuando se cambia el inspector se envia a nombre In
+                                                            change: function (combo, value) {
+                                                                if (value) {
+
+                                                                    Ext.getCmp('direccion').setValue(direccionLlamada(Ext.getCmp('id_zonal2').value));
+
+                                                                }
+                                                            }
+                                                        }
                                                         //, value: new Date()
                                                     },
                                                     {
@@ -558,7 +572,17 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                         maxValue: '16:00',
                                                         increment: 15,
                                                         width: '45%',
-                                                        format: 'H:i'
+                                                        format: 'H:i',
+                                                        listeners: {
+                                                            // cuando se cambia el inspector se envia a nombre In
+                                                            change: function (combo, value) {
+                                                                if (value) {
+
+                                                                    Ext.getCmp('direccion').setValue(direccionLlamada(Ext.getCmp('id_zonal2').value));
+
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -582,8 +606,7 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                         if (value) {
                                                             Ext.getCmp('id_zonal').setValue(value);
                                                             Ext.getCmp('direccion').setValue(direccionLlamada(value));
-                                                            console.log (Ext.getCmp('direccion').value)
-                                                            console.log (direccionLlamada(value))
+
                                                         }
                                                     }
                                                 }
@@ -733,8 +756,9 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                         success: function (form, action) {
                             //se actualiza tabla en la web
                             var dataReceived = JSON.parse(action.response.responseText);
+
                             myForm.submit({
-                                url: urlTurnosweb + 'crudTurnosweb.php?operation=aprobarTurnos&mail_inspector=' + dataReceived.data.mail_inspector + "&direccion=" +  dataReceived.data.direccion,
+                                url: urlTurnosweb + 'crudTurnosweb.php?operation=aprobarTurnos&mail_inspector=' + dataReceived.data.mail_inspector + "&direccion=" + dataReceived.data.direccion,
                                 method: 'POST',
                                 waitMsg: 'Saving data',
                                 success: function (form, action) {

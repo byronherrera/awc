@@ -45,29 +45,22 @@ function selectOperativos()
     $where = '';
     $usuarioLog = $os->get_member_id();
     if (!isset($_POST['formularioBusqueda'])) {
-        if (isset($_POST['accesosOperativos'])) {
-            $accesosOperativos = $_POST['accesosOperativos'];
-            if ($accesosOperativos == 'true')
-                $where = " WHERE $usuarioLog = id_persona ";
+        if (isset($_POST['accesosTurnos'])) {
+            $accesosTurnos = $_POST['accesosTurnos'];
+            if ($accesosTurnos == 'true')
+                $where = " WHERE $usuarioLog = id_inspector ";
         }
     }
 
 
     /*    if (isset($_POST['accesosAdministradorIns'])) {
-            $accesosOperativos = $_POST['accesosAdministradorIns'];
-            if ($accesosOperativos == 'true')
+            $accesosTurnos = $_POST['accesosAdministradorIns'];
+            if ($accesosTurnos == 'true')
                 $where = " WHERE ($usuarioLog = id_persona or id_unidad = 3 ) ";
         }*/
 
 
-    if (isset($_POST['accesosAdministradorOpe'])) {
-        $accesosOperativos = $_POST['accesosAdministradorOpe'];
-        if ($accesosOperativos == 'false')
-            if ($where == '')
-                $where = " WHERE visible  = 1 ";
-            else
-                $where = $where . " AND visible  = 1";
-    }
+
     // se muestran todos los operativos
     if (isset($_POST['acceso'])) {
         $acceso = $_POST['acceso'];
