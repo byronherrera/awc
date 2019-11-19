@@ -615,7 +615,6 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                     }
                                 ]
                             }
-
                         ]
                     }
                 ]
