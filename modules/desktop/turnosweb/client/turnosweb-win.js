@@ -610,7 +610,20 @@ QoDesk.TurnoswebWindow = Ext.extend(Ext.app.Module, {
                                                         }
                                                     }
                                                 }
-                                            }
+                                            },
+                                            {
+                                                xtype: 'box',
+                                                autoEl:{
+                                                    tag: 'div',
+                                                    style:'line-height:1px; font-size: 1px;margin-bottom:4px',
+                                                    children: [{
+                                                        tag: 'img',
+                                                        src: '1pxLine.gif',
+                                                        height: '2px',
+                                                        width: '100%'
+                                                    }]
+                                                }
+                                            },
                                         ]
                                     }
                                 ]
