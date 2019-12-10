@@ -152,6 +152,21 @@ function comboOrdenanzas()
             "data" => $data)
     );
 }
+function comboOrdenanzasTemas()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT id, CONCAT (nombre, ' - ', nombre_completo) AS nombre FROM amc_ordenanzas_temas WHERE activo = 1 ORDER BY orden";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 
 function comboTiposOperativos()
 {
@@ -672,6 +687,9 @@ switch ($_GET['tipo']) {
         break;
     case 'ordenanzas' :
         comboOrdenanzas();
+        break;
+    case 'ordenanzastemas' :
+        comboOrdenanzasTemas();
         break;
     case 'tiposoperativos' :
         comboTiposOperativos();

@@ -37,6 +37,7 @@ function aprobarTurnos()
     $data->fechaasignada = $_POST["fechaasignada2"] . " " . $_POST["horaasignada2"] . ":00";
     $data->id_inspector = $_POST["id_inspector2"];
     $data->fecha = $_POST["fecha"];
+    $mensaje = '';
 
     if (validaLainsercion($data->id_inspector, $data->fechaasignada)) {
         $cadenaDatos = '';
@@ -68,7 +69,7 @@ function aprobarTurnos()
         echo json_encode(array(
             "success" => false,
             "msg" => "Fecha y hora ya ocupado",
-            "message" => "Fecha y hora ya ocupado"
+            "message" => $mensaje
         ));
     }
 }
@@ -97,16 +98,34 @@ function validaLainsercion($id_inspector, $fechaasignada)
 {
     //retorna el valor de email de la tabla qo members
     global $os;
+    global $config;
+    global $mensaje;
 
     $sql = "SELECT COUNT(*) as total  FROM amc_agendar_cita WHERE id_inspector = " . $id_inspector . " AND fechaasignada = '" . $fechaasignada . "'";
     $nombre = $os->db->conn->query($sql);
 
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     if ($rownombre['total'] >= 1) {
+        //existe más de una
+        $mensaje = "Fecha y hora ya ocupado";
         return false;
+    } else {
+        //
+
+        $maximoTurnosDia = $config->AMBIENTE;
+        // contar los turnos asignados el dia para que no superen del maximo
+        $sql = "SELECT COUNT(*) as total  FROM amc_agendar_cita WHERE CAST(fechaasignada AS DATE) =  CAST('" . fechaasignada . "' AS DATE)";
+        $nombre = $os->db->conn->query($sql);
+
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        if ($rownombre['total'] >= $maximoTurnosDia) {
+            //existe más de una
+            $mensaje = "No hay turnos disponibles para esta fecha - máximo de turnos al dia ya entregados";
+            return false;
+        } else {
+            return true;
+        }
     }
-    else
-        return true;
 
 }
 

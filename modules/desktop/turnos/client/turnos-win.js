@@ -44,13 +44,27 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
 
 
 // inicio combos secretaria
+        storeRetorno = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": "Atendido", "nombre": "Atendido"},
+                    {"id": "No se presento", "nombre": "No se presento"},
+                    {"id": "Se presento, pero no se resolvió por falta de documentación", "nombre": "Se presento, pero no se resolvió por falta de documentación"},
+                    {"id": "Se presento, pero requiere una nueva reunión", "nombre": "Se presento, pero requiere una nueva reunión"}
+                ]
+            }
+        });
+
 
         //inicio combo tipo documento  TRTID
         storeTRTID = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=ordenanzas'
+            url: 'modules/common/combos/combos.php?tipo=ordenanzastemas'
         });
 
         var comboTRTID = new Ext.ux.form.CheckboxCombo({
@@ -1040,7 +1054,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                     fieldLabel: 'Id',
                     name: 'id'
                 }, {
-                    columnWidth: .5,
+                    columnWidth: .4,
                     layout: 'form',
                     items: [{
                         xtype: 'combo',
@@ -1058,11 +1072,11 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                         mode: 'local'
 
                     }]
-                }]
+                }   ]
             }, {
                 xtype: 'textarea',
                 id: 'detalle',
-                fieldLabel: 'Resultados',
+                fieldLabel: 'Conclusiones',
                 height: 145,
                 anchor: '98%',
                 name: 'resultados'
@@ -1708,7 +1722,7 @@ QoDesk.TurnosWindow = Ext.extend(Ext.app.Module, {
                                                             //disabled: !acceso
                                                         },
                                                         {
-                                                            text: 'Describa las acciones realizadas / acuerdos, al cerrar la cita se enviará un email con el texto al adminsitrado.'
+                                                            text: 'Describa las acciones realizadas. Se enviará un email con el texto al finalizar.'
                                                             , xtype: 'tbtext'
                                                         }
                                                     ]
