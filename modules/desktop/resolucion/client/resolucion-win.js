@@ -59,88 +59,99 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         //fin combo ZONA
 
         //Definición de url CRUD
-        var proxyOrdenanzas = new Ext.data.HttpProxy({
+        var proxyResoluciones = new Ext.data.HttpProxy({
             api: {
-                create: urlResolucion + "crudOrdenanzas.php?operation=insert",
-                read: urlResolucion + "crudOrdenanzas.php?operation=select",
-                update: urlResolucion + "crudOrdenanzas.php?operation=update",
-                destroy: urlResolucion + "crudOrdenanzas.php?operation=delete"
+                create: urlResolucion + "crudResoluciones.php?operation=insert",
+                read: urlResolucion + "crudResoluciones.php?operation=select",
+                update: urlResolucion + "crudResoluciones.php?operation=update",
+                destroy: urlResolucion + "crudResoluciones.php?operation=delete"
             }
         });
 
-        //Definición de lectura de campos bdd Ordenanzas
-        var readerOrdenanzas = new Ext.data.JsonReader({
+        //Definición de lectura de campos bdd Resoluciones
+        var readerResoluciones = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'nombre', allowBlank: true},
-                {name: 'nombre_completo', allowBlank: true},
-                {name: 'activo', allowBlank: true},
-                {name: 'orden', allowBlank: true},
-                {name: 'base_legal', allowBlank: true}
+                {name: 'ordenanza', allowBlank: false},
+                {name: 'articulo_numeral', allowBlank: false},
+                {name: 'unidad', allowBlank: false},
+                {name: 'comisaria', allowBlank: false},
+                {name: 'numero_expediente', allowBlank: false},
+                {name: 'numero_predio', allowBlank: false},
+                {name: 'nombre_administrado', allowBlank: false},
+                {name: 'nombre_establecimiento', allowBlank: false},
+                {name: 'cedula_ruc', allowBlank: false},
+                {name: 'funcionario', allowBlank: false},
+                {name: 'numero_resolucion', allowBlank: false},
+                {name: 'fecha_resolucion', allowBlank: false},
+                {name: 'nulidad', allowBlank: false},
+                {name: 'caducidad', allowBlank: false},
+                {name: 'archivo', allowBlank: false},
+                {name: 'es_obligatorio', allowBlank: false},
+                {name: 'multa_impuesta', allowBlank: false},
+                {name: 'observaciones', allowBlank: false},
+                {name: 'direccion_infraccion', allowBlank: false},
+                {name: 'direccion_notificacion', allowBlank: false},
             ]
         });
 
-        //Definición de escritura en campos bdd Ordenanzas
-        var writerOrdenanzas = new Ext.data.JsonWriter({
+        //Definición de escritura en campos bdd Resoluciones
+        var writerResoluciones = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
 
-        //Definición de store para módulo Ordenanzas
-        this.storeOrdenanzas = new Ext.data.Store({
+        //Definición de store para módulo Resoluciones
+        this.storeResoluciones = new Ext.data.Store({
             id: "id",
-            proxy: proxyOrdenanzas,
-            reader: readerOrdenanzas,
-            writer: writerOrdenanzas,
+            proxy: proxyResoluciones,
+            reader: readerResoluciones,
+            writer: writerResoluciones,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
             autoSave: true,
             baseParams: {}
         });
-        storeOrdenanzas = this.storeOrdenanzas;
+        storeResoluciones = this.storeResoluciones;
         limiteresolucion = 100;
-        storeOrdenanzas.baseParams = {
+        storeResoluciones.baseParams = {
             limit: limiteresolucion
         };
 
-        //Inicio formato grid Ordenanzas
-        this.gridOrdenanzas = new Ext.grid.EditorGridPanel({
+        //Inicio formato grid Resoluciones
+        this.gridResoluciones = new Ext.grid.EditorGridPanel({
             height: '100%',
-            store: this.storeOrdenanzas,
+            store: this.storeResoluciones,
             columns: [
-                //Definición de campos bdd Ordenanzas
+                //Definición de campos bdd Resoluciones
                 new Ext.grid.RowNumberer(),
-                {header: 'Nombre', dataIndex: 'nombre', sortable: true, width: 200, editor: textField},
-                {
-                    header: 'Nombre Completo',
-                    dataIndex: 'nombre_completo',
-                    sortable: true,
-                    width: 200,
-                    editor: textField
-                },
-                {
-                    header: 'Activo'
-                    , dataIndex: 'activo'
-                    , editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , sortable: true
-                    , width: 50
-                    , xtype: 'booleancolumn'
-                },
-
-                {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField},
-                {header: 'Base Legal', dataIndex: 'base_legal', sortable: true, width: 200, editor: textField}
+                {header: 'Ordenanza', dataIndex: 'ordenanza', sortable: true, width: 80, editor: textField},
+                {header: 'Artículo y numeral', dataIndex: 'articulo_numeral', sortable: true, width: 100, editor: textField},
+                {header: 'Unidad', dataIndex: 'unidad', sortable: true, width: 150, editor: textField},
+                {header: 'Comisaría', dataIndex: 'comisaria', sortable: true, width: 150, editor: textField},
+                {header: 'Número de expediente', dataIndex: 'numero_expediente', sortable: true, width: 150, editor: textField},
+                {header: 'Número de predio', dataIndex: 'numero_predio', sortable: true, width: 100, editor: textField},
+                {header: 'Nombre de Administrado', dataIndex: 'nombre_administrado', sortable: true, width: 250, editor: textField},
+                {header: 'Nombre del Establecimiento', dataIndex: 'nombre_estbleacimiento', sortable: true, width: 180, editor: textField},
+                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', sortable: true, width: 100, editor: textField},
+                {header: 'Funcionario', dataIndex: 'funcionario', sortable: true, width: 200, editor: textField},
+                {header: 'Número de Resolución', dataIndex: 'numero_resolucion', sortable: true, width: 140, editor: textField},
+                {header: 'Fecha de Resolución', dataIndex: 'fecha_resolucion', sortable: true, width: 140, editor: textField},
+                {header: 'Nulidad', dataIndex: 'nulidad', sortable: true, width: 140, editor: textField},
+                {header: 'Caducidad', dataIndex: 'caducidad', sortable: true, width: 140, editor: textField},
+                {header: 'Archivo', dataIndex: 'archivo', sortable: true, width: 140, editor: textField},
+                {header: 'Obligación de hacer', dataIndex: 'es_obligatorio', sortable: true, width: 140, editor: textField},
+                {header: 'Multa impuesta', dataIndex: 'multa_impuesta', sortable: true, width: 140, editor: textField},
+                {header: 'Observaciones-Motivo de sanción/cumplimiento', dataIndex: 'observaciones', sortable: true, width: 140, editor: textField},
+                {header: 'Dirección infracción', dataIndex: 'direccion_infraccion', sortable: true, width: 140, editor: textField},
+                {header: 'Dirección notificación', dataIndex: 'direccion_notificacion', sortable: true, width: 140, editor: textField},
             ],
             viewConfig: {
-                forceFit: true
+                forceFit: false
             },
             sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
             border: false,
@@ -148,123 +159,114 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             //Definición de barra de paginado
             bbar: new Ext.PagingToolbar({
                 pageSize: limiteresolucion,
-                store: storeOrdenanzas,
+                store: storeResoluciones,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
                 emptyMsg: "No existen trámites que mostrar"
             })
         });
-        //Fin formato grid Ordenanzas
+        //Fin formato grid Resoluciones
         //Fin ventana resolucion ordenanzas
 
-        //Inicio ventana resolucion Unidades
+        //Inicio ventana resolucion Providencias
         //Definición de url CRUD
-        var proxyUnidades = new Ext.data.HttpProxy({
+        var proxyProvidencias = new Ext.data.HttpProxy({
             api: {
-                create: urlResolucion + "crudUnidades.php?operation=insert",
-                read: urlResolucion + "crudUnidades.php?operation=select",
-                update: urlResolucion + "crudUnidades.php?operation=update",
-                destroy: urlResolucion + "crudUnidades.php?operation=delete"
+                create: urlResolucion + "crudProvidencias.php?operation=insert",
+                read: urlResolucion + "crudProvidencias.php?operation=select",
+                update: urlResolucion + "crudProvidencias.php?operation=update",
+                destroy: urlResolucion + "crudProvidencias.php?operation=delete"
             }
         });
 
-        //Definición de lectura de campos bdd Unidades
-        var readerUnidades = new Ext.data.JsonReader({
+        //Definición de lectura de campos bdd Providencias
+        var readerProvidencias = new Ext.data.JsonReader({
             //totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'nombre', allowBlank: false},
-                {name: 'nombre_completo', allowBlank: false},
-                {name: 'orden', allowBlank: true},
-                {name: 'id_zonal', allowBlank: false},
-                {name: 'activo', type: 'boolean', allowBlank: true},
-                {name: 'secretaria', type: 'boolean', allowBlank: true},
-                {name: 'prefijo', allowBlank: true},
-                {name: 'orden', allowBlank: true,type: 'integer'}
+                {name: 'ordenanza', allowBlank: false},
+                {name: 'articulo_numeral', allowBlank: false},
+                {name: 'unidad', allowBlank: false},
+                {name: 'comisaria', allowBlank: false},
+                {name: 'numero_expediente', allowBlank: false},
+                {name: 'numero_predio', allowBlank: false},
+                {name: 'nombre_administrado', allowBlank: false},
+                {name: 'nombre_establecimiento', allowBlank: false},
+                {name: 'cedula_ruc', allowBlank: false},
+                {name: 'funcionario', allowBlank: false},
+                {name: 'numero_providencia', allowBlank: false},
+                {name: 'fecha_providencia', allowBlank: false},
+                {name: 'providencia', allowBlank: false},
+                {name: 'valor_coactiva', allowBlank: false},
+                {name: 'valor_cancelado', allowBlank: false},
+                {name: 'clausura', allowBlank: false},
+                {name: 'observaciones', allowBlank: false},
+
+
             ]
         });
 
-        //Definición de escritura de campos bdd Unidades
-        var writerUnidades = new Ext.data.JsonWriter({
+        //Definición de escritura de campos bdd Providencias
+        var writerProvidencias = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
 
-        //Definición de store para pestaña Unidades
-        this.storeUnidades = new Ext.data.Store({
+        //Definición de store para pestaña Providencias
+        this.storeProvidencias = new Ext.data.Store({
             id: "id",
-            proxy: proxyUnidades,
-            reader: readerUnidades,
-            writer: writerUnidades,
+            proxy: proxyProvidencias,
+            reader: readerProvidencias,
+            writer: writerProvidencias,
             //autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             //remoteSort: true,
             autoSave: true
             //baseParams: {}
         });
-        storeUnidades = this.storeUnidades;
+        storeProvidencias = this.storeProvidencias;
         limiteresolucion = 20;
-        storeUnidades.baseParams = {
+        storeProvidencias.baseParams = {
             limit: limiteresolucion
         };
 
-        this.storeUnidades.load();
+        this.storeProvidencias.load();
 
 
 
-        //Inicio formato grid pestaña Unidades
-        this.gridUnidades = new Ext.grid.EditorGridPanel({
+        //Inicio formato grid pestaña Providencias
+        this.gridProvidencias = new Ext.grid.EditorGridPanel({
             height: '100%',
-            store: this.storeUnidades,
+            store: this.storeProvidencias,
             columns: [
-                //Definición de campos bdd Unidades
+                //Definición de campos bdd Providencias
                 new Ext.grid.RowNumberer(),
-                {header: 'Nombre', dataIndex: 'nombre', sortable: true, width: 200, editor: textField},
-                {
-                    header: 'Nombre Completo',
-                    dataIndex: 'nombre_completo',
-                    sortable: true,
-                    width: 200,
-                    editor: textField
-                },
+                {header: 'Ordenanza', dataIndex: 'ordenanza', sortable: true, width: 80, editor: textField},
+                {header: 'Artículo y numeral', dataIndex: 'articulo_numeral', sortable: true, width: 100, editor: textField},
+                {header: 'Unidad', dataIndex: 'unidad', sortable: true, width: 150, editor: textField},
+                {header: 'Comisaría', dataIndex: 'comisaria', sortable: true, width: 150, editor: textField},
+                {header: 'Número de expediente', dataIndex: 'numero_expediente', sortable: true, width: 150, editor: textField},
+                {header: 'Número de predio', dataIndex: 'numero_predio', sortable: true, width: 100, editor: textField},
+                {header: 'Nombre de Administrado', dataIndex: 'nombre_administrado', sortable: true, width: 250, editor: textField},
+                {header: 'Nombre del Establecimiento', dataIndex: 'nombre_establecimiento', sortable: true, width: 180, editor: textField},
+                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', sortable: true, width: 100, editor: textField},
+                {header: 'Funcionario', dataIndex: 'funcionario', sortable: true, width: 200, editor: textField},
+                {header: 'Número de Providencia', dataIndex: 'numero_providencia', sortable: true, width: 140, editor: textField},
+                {header: 'Fecha de Resolución', dataIndex: 'fecha_resolucion', sortable: true, width: 140, editor: textField},
+                {header: 'Número de Providencia', dataIndex: 'numero_providencia', sortable: true, width: 140, editor: textField},
+                {header: 'Fecha de Providencia', dataIndex: 'fecha_providencia', sortable: true, width: 140, editor: textField},
+                {header: 'Providencia', dataIndex: 'providencia', sortable: true, width: 140, editor: textField},
+                {header: 'Valor Coactiva', dataIndex: 'valor_coactiva', sortable: true, width: 140, editor: textField},
+                {header: 'Valor Cancelado', dataIndex: 'valor_cancelado', sortable: true, width: 140, editor: textField},
+                {header: 'Clausura', dataIndex: 'clausura', sortable: true, width: 140, editor: textField},
+                {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 140, editor: textField},
 
-                {
-                    header: 'Activo',
-                    dataIndex: 'activo',
-                    sortable: true,
-                    width: 45,
-                    align: 'center',
-                    editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , xtype: 'booleancolumn'
-                },
-                {
-                    header: 'Es secretaría',
-                    dataIndex: 'secretaria',
-                    sortable: true,
-                    width: 45,
-                    align: 'center',
-                    editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , xtype: 'booleancolumn'
-                } ,
 
-                {header: 'Zonal', dataIndex: 'id_zonal', sortable: true, width: 100, editor: comboZONALM, renderer: zonaAdmMantenimi },
-                {header: 'Prefijo', dataIndex: 'prefijo', sortable: true, width: 100, editor: textField },
-                {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField}
             ],
             viewConfig: {
-                forceFit: true
+                forceFit: false
             },
             sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
             border: false,
@@ -272,104 +274,14 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             //Definición de barra de paginado
             bbar: new Ext.PagingToolbar({
                 pageSize: limiteresolucion,
-                store: storeUnidades,
+                store: storeProvidencias,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
                 emptyMsg: "No existen trámites que mostrar"
             })
         });
-        //Fin formato grid pestaña Unidades
-        //Fin ventana resolucion Unidades
-
-        //Inicio resolucion Zonas
-        //Definición de url CRUD
-        var proxyZonas = new Ext.data.HttpProxy({
-            api: {
-                create: urlResolucion + "crudZonas.php?operation=insert",
-                read: urlResolucion + "crudZonas.php?operation=select",
-                update: urlResolucion + "crudZonas.php?operation=update",
-                destroy: urlResolucion + "crudZonas.php?operation=delete"
-            }
-        });
-
-        //Definición de lectura de campos bdd Zonas
-        var readerZonas = new Ext.data.JsonReader({
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id', allowBlank: false},
-                {name: 'nombre', allowBlank: false},
-                {name: 'activo', allowBlank: false}
-            ]
-        });
-
-        //Definición de escritura en campos bdd Zonas
-        var writerZonas = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        //Definición de store para pestaña Zonas
-        this.storeZonas = new Ext.data.Store({
-            id: "id",
-            proxy: proxyZonas,
-            reader: readerZonas,
-            writer: writerZonas,
-            autoSave: true
-        });
-        //Carga de datos al levantarse la pantalla
-        this.storeZonas.load();
-
-        //Inicio formato grid pestaña Zonas
-        this.gridZonas = new Ext.grid.EditorGridPanel({
-            height: '100%',
-            store: this.storeZonas, columns: [
-                //Definición de campos bdd Zonas
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'ID',
-                    dataIndex: 'id',
-                    sortable: true,
-                    width: 10
-                },
-                {
-                    header: 'Nombre',
-                    dataIndex: 'nombre',
-                    sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Activo'
-                    , dataIndex: 'activo'
-                    , editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , sortable: true
-                    , width: 50
-                    , xtype: 'booleancolumn'
-                }
-            ],
-            viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
-            border: false,
-            stripeRows: true,
-            //Definición de barra de paginado
-            bbar: new Ext.PagingToolbar({
-                pageSize: limiteresolucion,
-                store: storeUnidades,
-                displayInfo: true,
-                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
-                emptyMsg: "No existen trámites que mostrar"
-            })
-        });
-        //Fin formato grid pestaña Zonas
-        //Fin ventana resolucion Zonas
+        //Fin formato grid pestaña Providencias
+        //Fin ventana resolucion Providencias
 
         //Inicio ventana resolucion Procedimientos
         //Definición de url CRUD
@@ -446,7 +358,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             //Definición de barra de paginado
             bbar: new Ext.PagingToolbar({
                 pageSize: limiteresolucion,
-                store: storeUnidades,
+                store: storeProvidencias,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
                 emptyMsg: "No existen trámites que mostrar"
@@ -643,7 +555,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             //this.seleccionDepar = 3;
             var checkHandler = function (item, checked) {
                 if (checked) {
-                    var store = this.storeOrdenanzas;
+                    var store = this.storeResoluciones;
                     store.baseParams.filterField = item.key;
                     searchFieldBtn.setText(item.text);
                 }
@@ -651,7 +563,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
             var targetHandler = function (item, checked) {
                 if (checked) {
-                    //var store = this.storeOrdenanzas;
+                    //var store = this.storeResoluciones;
                     this.seleccionDepar = item.key;
                     this.targetFieldBtn.setText(item.text);
                 }
@@ -737,10 +649,10 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     activeTab: 0,
                     border: false,
                     items: [
-                        //Pestaña Ordenanzas
+                        //Pestaña Resoluciones
                         {
                             autoScroll: true,
-                            title: 'Ordenanzas',
+                            title: 'Resoluciones',
                             closable: true,
                             layout: 'fit',
                             height: winHeight - 70,
@@ -750,7 +662,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 {
                                     text: 'Nuevo',
                                     scope: this,
-                                    handler: this.addOrdenanzas,
+                                    handler: this.addResoluciones,
                                     iconCls: 'save-icon'
                                 },
                                 '-',
@@ -758,25 +670,25 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     //Definición de botón eliminar
                                     text: "Eliminar",
                                     scope: this,
-                                    handler: this.deleteOrdenanzas,
+                                    handler: this.deleteResoluciones,
                                     iconCls: 'delete-icon'
                                 },
                                 '-',
                                 //Definición de botón regargar datos
                                 {
                                     iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataOrdenanzas,
+                                    handler: this.requestGridDataResoluciones,
                                     scope: this,
                                     text: 'Recargar Datos'
                                 }
                             ]
                             //Llamado a función que arma la tabla de datos
-                            , items: this.gridOrdenanzas
+                            , items: this.gridResoluciones
                         }
                         //Pestaña unidades
                         , {
                             autoScroll: true,
-                            title: 'Unidades',
+                            title: 'Providencias',
                             closable: true,
                             layout: 'fit',
                             height: winHeight - 70,
@@ -787,7 +699,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 {
                                     text: 'Nuevo',
                                     scope: this,
-                                    handler: this.addUnidades,
+                                    handler: this.addProvidencias,
                                     iconCls: 'save-icon'
                                 },
                                 '-',
@@ -795,167 +707,22 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 {
                                     text: "Eliminar",
                                     scope: this,
-                                    handler: this.deleteUnidades,
+                                    handler: this.deleteProvidencias,
                                     iconCls: 'delete-icon'
                                 },
                                 '-',
                                 //Definición de botón regargar datos
                                 {
                                     iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataUnidades,
+                                    handler: this.requestGridDataProvidencias,
                                     scope: this,
                                     text: 'Recargar Datos'
                                 }
                             ],
                             //Llamado a función que arma la tabla de datos
-                            items: this.gridUnidades
+                            items: this.gridProvidencias
                         }
-                        //Pestaña Zonas
-                        , {
-                            autoScroll: true,
-                            title: 'Zonas',
-                            closable: true,
-                            layout: 'fit',
-                            height: winHeight - 70,
-                            //disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
-                            //Barra de botones
-                            tbar: [
-                                //Definición de botón nuevo
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addZonas,
-                                    iconCls: 'save-icon'
-                                },
-                                '-',
-                                //Definición de botón eliminar
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteZonas,
-                                    iconCls: 'delete-icon'
-                                },
-                                '-',
-                                //Definición de botón regargar datos
-                                {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataZonas,
-                                    scope: this,
-                                    text: 'Recargar Datos'
-                                }
-                            ],
-                            //Llamado a función que arma la tabla de datos
-                            items: this.gridZonas
-                        }
-                        //Pestaña Ordenanzas
-                        , {
-                            autoScroll: true,
-                            title: 'Procedimientos',
-                            closable: true,
-                            //disabled: this.app.isAllowedTo('accesosAdministrador', this.id) ? false : true,
-                            layout: 'fit',
-                            height: winHeight - 70,
-                            //Barra de botones
-                            tbar: [
-                                //Definición de botón nuevo
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addProcedimientos,
-                                    iconCls: 'save-icon'
-                                },
-                                '-',
-                                //Definición de botón eliminar
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteProcedimientos,
-                                    iconCls: 'delete-icon'
-                                },
-                                '-',
-                                //Definición de botón regargar datos
-                                {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataProcedimientos,
-                                    scope: this,
-                                    text: 'Recargar Datos'
-                                }
-                            ],
-                            //Llamado a función que arma la tabla de datos
-                            items: this.gridProcedimientos
-                        },
-                        //Pestaña Tipos de operativos
-                        {
-                            autoScroll: true,
-                            title: 'Tipos de operativos',
-                            closable: true,
-                            layout: 'fit',
-                            height: winHeight - 70,
-                            //Barra de botones
-                            tbar: [
-                                //Definición de botón nuevo
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addTiposOperativos,
-                                    iconCls: 'save-icon'
-                                },
-                                '-',
-                                //Definición de botón eliminar
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteTiposOperativos,
-                                    iconCls: 'delete-icon'
-                                },
-                                '-',
-                                //Definición de botón regargar datos
-                                {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataTiposOperativos,
-                                    scope: this,
-                                    text: 'Recargar Datos'
-                                }
-                            ],
-                            //Llamado a función que arma la tabla de datos
-                            items: this.gridTiposOperativos
-                        },
-                        //Pestaña Entidades
-                        {
-                            autoScroll: true,
-                            title: 'Entidades',
-                            closable: true,
-                            layout: 'fit',
-                            height: winHeight - 70,
-                            //Barra de botones
-                            tbar: [
-                                //Definición de botón nuevo
-                                {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addEntidades,
-                                    iconCls: 'save-icon'
-                                },
-                                '-',
-                                //Definición de botón eliminar
-                                {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteEntidades,
-                                    iconCls: 'delete-icon'
-                                },
-                                '-',
-                                //Definición de botón regargar datos
-                                {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataEntidades,
-                                    scope: this,
-                                    text: 'Recargar Datos'
-                                }
-                            ],
-                            //Llamado a función que arma la tabla de datos
-                            items: this.gridEntidades
-                        }
+
                     ]
                 }),
             });
@@ -963,7 +730,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         //Llamado a función que muestra la ventana en pantalla
         win.show();
         setTimeout(function () {
-            this.storeOrdenanzas.load({
+            this.storeResoluciones.load({
                 params: {
                     start: 0,
                     limit: limiteresolucion
@@ -972,8 +739,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         }, 10);
     },
 
-    //Función para eliminación de registros de Ordenanzas
-    deleteOrdenanzas: function () {
+    //Función para eliminación de registros de Resoluciones
+    deleteResoluciones: function () {
         //Popup de confirmación
         Ext.Msg.show({
             title: 'Confirmación',
@@ -983,38 +750,38 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridOrdenanzas.getSelectionModel().getSelections();
+                    var rows = this.gridResoluciones.getSelectionModel().getSelections();
                     if (rows.length === 0) {
                         return false;
                     }
-                    this.storeOrdenanzas.remove(rows);
+                    this.storeResoluciones.remove(rows);
                 }
             }
         });
     },
 
-    //Función para inserción de registros de Ordenanzas
-    addOrdenanzas: function () {
-        var operativos = new this.storeOrdenanzas.recordType({
+    //Función para inserción de registros de Resoluciones
+    addResoluciones: function () {
+        var operativos = new this.storeResoluciones.recordType({
             id: '',
             nombre: '',
             nombre_completo: '',
             activo: '',
             orden: '',
         });
-        this.gridOrdenanzas.stopEditing();
-        this.storeOrdenanzas.insert(0, operativos);
-        this.gridOrdenanzas.startEditing(0, 0);
+        this.gridResoluciones.stopEditing();
+        this.storeResoluciones.insert(0, operativos);
+        this.gridResoluciones.startEditing(0, 0);
     },
 
-    //Función para actualizar los datos mostrados en pantalla de la pestaña de Ordenanzas
-    requestGridDataOrdenanzas: function () {
-        this.storeOrdenanzas.load();
+    //Función para actualizar los datos mostrados en pantalla de la pestaña de Resoluciones
+    requestGridDataResoluciones: function () {
+        this.storeResoluciones.load();
     },
 
     //Función para carga de datos
     requestGridData: function () {
-        this.storeOrdenanzas.load({
+        this.storeResoluciones.load({
             params:
                 {
                     start: 0,
@@ -1024,7 +791,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
     },
 
     //Función para eliminación de datos
-    deleteUnidades: function () {
+    deleteProvidencias: function () {
         //Popup de confirmación
         Ext.Msg.show({
             title: 'Confirmación',
@@ -1034,32 +801,32 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridUnidades.getSelectionModel().getSelections();
+                    var rows = this.gridProvidencias.getSelectionModel().getSelections();
                     if (rows.length === 0) {
                         return false;
                     }
-                    this.storeUnidades.remove(rows);
+                    this.storeProvidencias.remove(rows);
                 }
             }
         });
     },
 
-    //Función para inserción de registros de Unidades
-    addUnidades: function () {
-        var ordenanzasUnidades = new this.storeUnidades.recordType({
+    //Función para inserción de registros de Providencias
+    addProvidencias: function () {
+        var ordenanzasProvidencias = new this.storeProvidencias.recordType({
             id: ' ',
             nombre: '',
             activo: '1',
             secretaria: '0'
         });
-        this.gridUnidades.stopEditing();
-        this.storeUnidades.insert(0, ordenanzasUnidades);
-        this.gridUnidades.startEditing(0, 0);
+        this.gridProvidencias.stopEditing();
+        this.storeProvidencias.insert(0, ordenanzasProvidencias);
+        this.gridProvidencias.startEditing(0, 0);
     },
 
-    //Función para actualizar los datos mostrados en pantalla de la pestaña de Unidades
-    requestGridDataUnidades: function () {
-        this.storeUnidades.load();
+    //Función para actualizar los datos mostrados en pantalla de la pestaña de Providencias
+    requestGridDataProvidencias: function () {
+        this.storeProvidencias.load();
     },
 
     //Función para eliminación de registros de Zonas
