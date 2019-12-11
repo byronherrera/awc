@@ -528,6 +528,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
     //Función para inserción de registros de Resoluciones
     addResoluciones: function () {
+
         var operativos = new this.storeResoluciones.recordType({
             id: '',
             ordenanza: ' ',
