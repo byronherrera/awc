@@ -698,6 +698,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {name: 'rmu', allowBlank: true},
                 {name: 'unidad', allowBlank: true},
                 {name: 'id_zonal', allowBlank: true},
+                {name: 'direccion', allowBlank: true},
                 {name: 'telefono_institucional', allowBlank: true},
                 {name: 'extencion', allowBlank: true},
                 {name: 'piso', allowBlank: true},
@@ -805,6 +806,14 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                     editor: comboZONA,
                     renderer: zonaAdm,
                     align: 'left'
+                },
+                {
+                    header: 'Direccion',
+                    dataIndex: 'direccion',
+                    sortable: true,
+                    width: 80,
+                    editor: textField,
+                    align: 'right'
                 },
                 {
                     header: 'Teléfono institucional',
@@ -1022,6 +1031,12 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                  sortable: true,
                  width: 55
                  },*/
+                {
+                    header: 'Direccion',
+                    dataIndex: 'direccion',
+                    sortable: true,
+                    width: 55
+                },
                 {
                     header: 'Punto Encuentro',
                     dataIndex: 'punto_encuentro_planificado',
@@ -1642,6 +1657,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
             procesos: ' ',
             punto_encuentro_planificado: ' ',
             id_zonal: 0,
+            direccion: ' ',
             rmu: 0,
             unidad: 0,
             tipo_personal: '1',

@@ -530,10 +530,26 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
     addResoluciones: function () {
         var operativos = new this.storeResoluciones.recordType({
             id: '',
-            nombre: '',
-            nombre_completo: '',
-            activo: '',
-            orden: '',
+            ordenanza: ' ',
+            articulo_numeral: ' ',
+            unidad: ' ',
+            comisaria: ' ',
+            numero_expediente: ' ',
+            numero_predio: ' ',
+            nombre_administrado: ' ',
+            nombre_establecimiento: ' ',
+            cedula_ruc: ' ',
+            funcionario: ' ',
+            numero_resolucion: ' ',
+            fecha_resolucion: ' ',
+            nulidad: ' ',
+            caducidad: ' ',
+            archivo: ' ',
+            es_obligatorio: ' ',
+            multa_impuesta: ' ',
+            observaciones: ' ',
+            direccion_infraccion: ' ',
+            direccion_notificacion: ' ',
         });
         this.gridResoluciones.stopEditing();
         this.storeResoluciones.insert(0, operativos);

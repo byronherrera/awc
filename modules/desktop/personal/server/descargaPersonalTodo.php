@@ -84,19 +84,20 @@ textoSiguieteFila("PISO", 'Q', 'Q', 'center', false, "B");
 
 textoSiguieteFila("ESTADO", 'R', 'R', 'center', false, "B");
 textoSiguieteFila("ZONAL", 'S', 'S', 'center', false, "B");
-textoSiguieteFila("OBSERVACIONES", 'T', 'T', 'center', false, "B");
-textoSiguieteFila("FECHA ENTRADA", 'U', 'U', 'center', false, "B");
-textoSiguieteFila("FECHA SALIDA", 'V', 'V', 'center', false, "B");
-textoSiguieteFila("TELEFONO 1", 'W', 'W', 'center', false, "B");
-textoSiguieteFila("TELEFONO 2", 'X', 'X', 'center', false, "B");
-textoSiguieteFila("DIRECCION PRINCIPAL", 'Y', 'Y', 'center', false, "B");
-textoSiguieteFila("DIRECCION SECUNDARIA", 'Z', 'Z', 'center', false, "B");
-textoSiguieteFila("DIRECCION NUMERO", 'AA', 'AA', 'center', false, "B");
-textoSiguieteFila("PARROQUIA", 'AB', 'AB', 'center', false, "B");
-textoSiguieteFila("BARRIO", 'AC', 'AC', 'center', false, "B");
-textoSiguieteFila("RECORRIDO", 'AD', 'AD', 'center', false, "B");
-textoSiguieteFila("FECHA NACIMIENTO", 'AE', 'AE', 'center', false, "B");
-textoSiguieteFila("GEOPOSICIONAMIENTO", 'AF', 'AF', 'center', false, "B");
+textoSiguieteFila("DIRECCION", 'T', 'T', 'center', false, "B");
+textoSiguieteFila("OBSERVACIONES", 'U', 'U', 'center', false, "B");
+textoSiguieteFila("FECHA ENTRADA", 'V', 'V', 'center', false, "B");
+textoSiguieteFila("FECHA SALIDA", 'W', 'W', 'center', false, "B");
+textoSiguieteFila("TELEFONO 1", 'X', 'X', 'center', false, "B");
+textoSiguieteFila("TELEFONO 2", 'Y', 'Y', 'center', false, "B");
+textoSiguieteFila("DIRECCION PRINCIPAL", 'Z', 'Z', 'center', false, "B");
+textoSiguieteFila("DIRECCION SECUNDARIA", 'AA', 'AA', 'center', false, "B");
+textoSiguieteFila("DIRECCION NUMERO", 'AB', 'AB', 'center', false, "B");
+textoSiguieteFila("PARROQUIA", 'AC', 'AC', 'center', false, "B");
+textoSiguieteFila("BARRIO", 'AD', 'AD', 'center', false, "B");
+textoSiguieteFila("RECORRIDO", 'AE', 'AE', 'center', false, "B");
+textoSiguieteFila("FECHA NACIMIENTO", 'AF', 'AF', 'center', false, "B");
+textoSiguieteFila("GEOPOSICIONAMIENTO", 'AG', 'AG', 'center', false, "B");
 
 // recuperamos los nombres de los usuarios
 
@@ -125,19 +126,20 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
 
     textoSiguieteFila($nombreDetalle['id_estado'], 'R', 'R', 'left', false);
     textoSiguieteFila(regresaZonal($nombreDetalle['id_zonal']) , 'S', 'S', 'left', false);
-    textoSiguieteFila($nombreDetalle['observaciones'], 'T', 'T', 'left', false);
-    textoSiguieteFila($nombreDetalle['fecha_entrada'], 'U', 'U', 'left', false);
-    textoSiguieteFila($nombreDetalle['fecha_salida'], 'V', 'V', 'left', false);
-    textoSiguieteFila($nombreDetalle['telefono1'], 'W', 'W', 'left', false);
-    textoSiguieteFila($nombreDetalle['telefono2'], 'X', 'X', 'left', false);
-    textoSiguieteFila($nombreDetalle['direccionprincipal'], 'Y', 'Y', 'left', false);
-    textoSiguieteFila($nombreDetalle['direccionsecundaria'], 'Z', 'Z', 'left', false);
-    textoSiguieteFila($nombreDetalle['direccionnumero'], 'AA', 'AA', 'left', false);
-    textoSiguieteFila($nombreDetalle['parroquia'], 'AB', 'AB', 'left', false);
-    textoSiguieteFila($nombreDetalle['barrio'], 'AC', 'AC', 'left', false);
-    textoSiguieteFila($nombreDetalle['recorrido'], 'AD', 'AD', 'left', false);
-    textoSiguieteFila($nombreDetalle['fecha_nacimiento'], 'AE', 'AE', 'left', false);
-    textoSiguieteFila($nombreDetalle['geoposicionamiento'], 'AF', 'AF', 'left', false);
+    textoSiguieteFila($nombreDetalle['direccion'], 'T', 'T', 'left', false);
+    textoSiguieteFila($nombreDetalle['observaciones'], 'U', 'U', 'left', false);
+    textoSiguieteFila($nombreDetalle['fecha_entrada'], 'V', 'V', 'left', false);
+    textoSiguieteFila($nombreDetalle['fecha_salida'], 'W', 'W', 'left', false);
+    textoSiguieteFila($nombreDetalle['telefono1'], 'X', 'X', 'left', false);
+    textoSiguieteFila($nombreDetalle['telefono2'], 'Y', 'Y', 'left', false);
+    textoSiguieteFila($nombreDetalle['direccionprincipal'], 'Z', 'Z', 'left', false);
+    textoSiguieteFila($nombreDetalle['direccionsecundaria'], 'AA', 'AA', 'left', false);
+    textoSiguieteFila($nombreDetalle['direccionnumero'], 'AB', 'AB', 'left', false);
+    textoSiguieteFila($nombreDetalle['parroquia'], 'AC', 'AC', 'left', false);
+    textoSiguieteFila($nombreDetalle['barrio'], 'AD', 'AD', 'left', false);
+    textoSiguieteFila($nombreDetalle['recorrido'], 'AE', 'AE', 'left', false);
+    textoSiguieteFila($nombreDetalle['fecha_nacimiento'], 'AF', 'AF', 'left', false);
+    textoSiguieteFila($nombreDetalle['geoposicionamiento'], 'AG', 'AG', 'left', false);
 }
 
 
@@ -240,6 +242,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AE')->setAutoSize(fa
 $objPHPExcel->getActiveSheet()->getColumnDimension('AE')->setWidth(25);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AF')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('AF')->setWidth(25);
+$objPHPExcel->getActiveSheet()->getColumnDimension('AG')->setWidth(25);
 
 
 
