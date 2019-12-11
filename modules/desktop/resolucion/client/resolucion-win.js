@@ -31,6 +31,31 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         }
 
         //Inicio ventana resolucion ordenanzas
+        //inicio combo ORDENANZA
+        storeOrdenanza = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=ordenanzas'
+        });
+
+        var comboOrdenanza = new Ext.form.ComboBox({
+            id: 'comboOrdenanza',
+            store: storeOrdenanza,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function rendererOrdenanza(id) {
+            var index = storeOrdenanza.findExact('id', id);
+            if (index > -1) {
+                var record = storeOrdenanza.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //fin combo ORDENANZA
 
         //inicio combo ZONAL
         storeZONALM = new Ext.data.JsonStore({
@@ -129,26 +154,27 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 //Definición de campos bdd Resoluciones
                 new Ext.grid.RowNumberer(),
-                {header: 'Ordenanza', dataIndex: 'ordenanza', sortable: true, width: 80, editor: textField},
-                {header: 'Artículo y numeral', dataIndex: 'articulo_numeral', sortable: true, width: 100, editor: textField},
-                {header: 'Unidad', dataIndex: 'unidad', sortable: true, width: 150, editor: textField},
-                {header: 'Comisaría', dataIndex: 'comisaria', sortable: true, width: 150, editor: textField},
-                {header: 'Número de expediente', dataIndex: 'numero_expediente', sortable: true, width: 150, editor: textField},
-                {header: 'Número de predio', dataIndex: 'numero_predio', sortable: true, width: 100, editor: textField},
-                {header: 'Nombre de Administrado', dataIndex: 'nombre_administrado', sortable: true, width: 250, editor: textField},
-                {header: 'Nombre del Establecimiento', dataIndex: 'nombre_estbleacimiento', sortable: true, width: 180, editor: textField},
-                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', sortable: true, width: 100, editor: textField},
-                {header: 'Funcionario', dataIndex: 'funcionario', sortable: true, width: 200, editor: textField},
-                {header: 'Número de Resolución', dataIndex: 'numero_resolucion', sortable: true, width: 140, editor: textField},
-                {header: 'Fecha de Resolución', dataIndex: 'fecha_resolucion', sortable: true, width: 140, editor: textField},
-                {header: 'Nulidad', dataIndex: 'nulidad', sortable: true, width: 140, editor: textField},
-                {header: 'Caducidad', dataIndex: 'caducidad', sortable: true, width: 140, editor: textField},
-                {header: 'Archivo', dataIndex: 'archivo', sortable: true, width: 140, editor: textField},
-                {header: 'Obligación de hacer', dataIndex: 'es_obligatorio', sortable: true, width: 140, editor: textField},
-                {header: 'Multa impuesta', dataIndex: 'multa_impuesta', sortable: true, width: 140, editor: textField},
-                {header: 'Observaciones-Motivo de sanción/cumplimiento', dataIndex: 'observaciones', sortable: true, width: 140, editor: textField},
-                {header: 'Dirección infracción', dataIndex: 'direccion_infraccion', sortable: true, width: 140, editor: textField},
-                {header: 'Dirección notificación', dataIndex: 'direccion_notificacion', sortable: true, width: 140, editor: textField},
+                {header: 'id', dataIndex: 'id',width: 100, editor: textField},
+                {header: 'Ordenanza', dataIndex: 'ordenanza', allowBlank:true, width: 80, editor: comboOrdenanza, renderer: rendererOrdenanza},
+                {header: 'Artículo y numeral', dataIndex: 'articulo_numeral', allowBlank:true, width: 100, editor: textField},
+                {header: 'Unidad', dataIndex: 'unidad', allowBlank:true, width: 150, editor: textField},
+                {header: 'Comisaría', dataIndex: 'comisaria', allowBlank:true, width: 150, editor: textField},
+                {header: 'Número de expediente', dataIndex: 'numero_expediente', allowBlank:true, width: 150, editor: textField},
+                {header: 'Número de predio', dataIndex: 'numero_predio', allowBlank:true, width: 100, editor: textField},
+                {header: 'Nombre de Administrado', dataIndex: 'nombre_administrado', allowBlank:true, width: 250, editor: textField},
+                {header: 'Nombre del Establecimiento', dataIndex: 'nombre_estbleacimiento', allowBlank:true, width: 180, editor: textField},
+                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank:true, width: 100, editor: textField},
+                {header: 'Funcionario', dataIndex: 'funcionario', allowBlank:true, width: 200, editor: textField},
+                {header: 'Número de Resolución', dataIndex: 'numero_resolucion', allowBlank:true, width: 140, editor: textField},
+                {header: 'Fecha de Resolución', dataIndex: 'fecha_resolucion', allowBlank:true, width: 140, editor: textField},
+                {header: 'Nulidad', dataIndex: 'nulidad', allowBlank:true, width: 140, editor: textField},
+                {header: 'Caducidad', dataIndex: 'caducidad', allowBlank:true, width: 140, editor: textField},
+                {header: 'Archivo', dataIndex: 'archivo', allowBlank:true, width: 140, editor: textField},
+                {header: 'Obligación de hacer', dataIndex: 'es_obligatorio', allowBlank:true, width: 140, editor: textField},
+                {header: 'Multa impuesta', dataIndex: 'multa_impuesta', allowBlank:true, width: 140, editor: textField},
+                {header: 'Observaciones-Motivo de sanción/cumplimiento', allowBlank:true, dataIndex: 'observaciones', width: 140, editor: textField},
+                {header: 'Dirección infracción', dataIndex: 'direccion_infraccion', allowBlank:true, width: 140, editor: textField},
+                {header: 'Dirección notificación', dataIndex: 'direccion_notificacion', allowBlank:true, width: 140, editor: textField},
             ],
             viewConfig: {
                 forceFit: false
@@ -283,267 +309,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         //Fin formato grid pestaña Providencias
         //Fin ventana resolucion Providencias
 
-        //Inicio ventana resolucion Procedimientos
-        //Definición de url CRUD
-        var proxyProcedimientos = new Ext.data.HttpProxy({
-            api: {
-                create: urlResolucion + "crudProcedimientos.php?operation=insert",
-                read: urlResolucion + "crudProcedimientos.php?operation=select",
-                update: urlResolucion + "crudProcedimientos.php?operation=update",
-                destroy: urlResolucion + "crudProcedimientos.php?operation=delete"
-            }
-        });
 
-        //Definición de lectura de campos bdd Procedimientos
-        var readerProcedimientos = new Ext.data.JsonReader({
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'id', allowBlank: false},
-                {name: 'nombre', allowBlank: false},
-                {name: 'observacion', allowBlank: false}
-            ]
-        });
-
-        //Definición de escritura en campos bdd Procedimientos
-        var writerProcedimientos = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        //Definición de store para pestaña Procedimientos
-        this.storeProcedimientos = new Ext.data.Store({
-            id: "id",
-            proxy: proxyProcedimientos,
-            reader: readerProcedimientos,
-            writer: writerProcedimientos,
-            autoSave: true
-        });
-        //Carga de datos al levantarse la pantalla
-        this.storeProcedimientos.load();
-
-        //Inicio formato grid pestaña Procedimientos
-        this.gridProcedimientos = new Ext.grid.EditorGridPanel({
-            height: '100%',
-            //Definición de campos bdd Procedimientos
-            store: this.storeProcedimientos, columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'ID',
-                    dataIndex: 'id',
-                    sortable: true,
-                    width: 10
-                },
-                {
-                    header: 'Nombre',
-                    dataIndex: 'nombre',
-                    sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Observación',
-                    dataIndex: 'observacion',
-                    sortable: true,
-                    width: 40,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                }
-            ],
-            viewConfig: {forceFit: true},
-            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
-            border: false,
-            stripeRows: true,
-            //Definición de barra de paginado
-            bbar: new Ext.PagingToolbar({
-                pageSize: limiteresolucion,
-                store: storeProvidencias,
-                displayInfo: true,
-                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
-                emptyMsg: "No existen trámites que mostrar"
-            })
-        });
-        //Fin formato grid pestaña Procedimientos
-        //Fin ventana resolucion procedimientos
-
-        //Inicio ventana resolucion Tipos de operativos
-        //Definición de url CRUD
-        var proxyTiposOperativos = new Ext.data.HttpProxy({
-            api: {
-                create: urlResolucion + "crudTipoOperativos.php?operation=insert",
-                read: urlResolucion + "crudTipoOperativos.php?operation=select",
-                update: urlResolucion + "crudTipoOperativos.php?operation=update",
-                destroy: urlResolucion + "crudTipoOperativos.php?operation=delete"
-            }
-        });
-
-        //Definición de lectura de campos bdd Tipos de operativos
-        var readerTiposOperativos = new Ext.data.JsonReader({
-            totalProperty: 'total',
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'nombre', allowBlank: true},
-                {name: 'nombre_completo', allowBlank: true},
-                {name: 'activo', allowBlank: true},
-                {name: 'orden', allowBlank: true}
-
-            ]
-        });
-
-        //Definición de escritura en campos bdd Tipos de operativos
-        var writerTiposOperativos = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        //Definición de store para pestaña Tipos de operativos
-        this.storeTiposOperativos = new Ext.data.Store({
-            id: "id",
-            proxy: proxyTiposOperativos,
-            reader: readerTiposOperativos,
-            writer: writerTiposOperativos,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true,
-            autoSave: true,
-            baseParams: {}
-        });
-        storeTiposOperativos = this.storeTiposOperativos;
-        limiteresolucion = 100;
-        storeTiposOperativos.baseParams = {
-            limit: limiteresolucion
-        };
-
-        //Carga de datos al levantarse la pantalla
-        this.storeTiposOperativos.load();
-
-        //Inicio formato grid pestaña Tipos de operativos
-        this.gridTiposOperativos = new Ext.grid.EditorGridPanel({
-            height: '100%',
-            store: this.storeTiposOperativos,
-            columns: [
-                //Definición de campos bdd Tipos de operativos
-                new Ext.grid.RowNumberer(),
-                {header: 'Nombre', dataIndex: 'nombre', sortable: true, width: 200, editor: textField},
-                {
-                    header: 'Nombre Completo',
-                    dataIndex: 'nombre_completo',
-                    sortable: true,
-                    width: 200,
-                    editor: textField
-                },
-                {header: 'Activo', dataIndex: 'activo', sortable: true, width: 100, editor: textField},
-                {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField}
-            ],
-            viewConfig: {
-                forceFit: true
-            },
-            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
-            border: false,
-            stripeRows: true,
-            //Definición de barra de paginado
-            bbar: new Ext.PagingToolbar({
-                pageSize: limiteresolucion,
-                store: storeTiposOperativos,
-                displayInfo: true,
-                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
-                emptyMsg: "No existen trámites que mostrar"
-            })
-        });
-        //Fin formato grid pestaña Tipos de operativos
-        //Fin ventana resolucion Tipos de operativos
-
-        //Inicio pestaña resolucion Entidades
-        //Definición de url CRUD
-        var proxyEntidades = new Ext.data.HttpProxy({
-            api: {
-                create: urlResolucion + "crudEntidades.php?operation=insert",
-                read: urlResolucion + "crudEntidades.php?operation=select",
-                update: urlResolucion + "crudEntidades.php?operation=update",
-                destroy: urlResolucion + "crudEntidades.php?operation=delete"
-            }
-        });
-
-        //Definición de lectura de campos bdd Entidades
-        var readerEntidades = new Ext.data.JsonReader({
-            totalProperty: 'total',
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
-                {name: 'nombre', allowBlank: true},
-                {name: 'nombre_completo', allowBlank: true},
-                {name: 'activo', allowBlank: true},
-                {name: 'orden', allowBlank: true}
-
-            ]
-        });
-
-        //Definición de escritura en campos bdd Entidades
-        var writerEntidades = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        //Definición de store para pestaña Entidades
-        this.storeEntidades = new Ext.data.Store({
-            id: "id",
-            proxy: proxyEntidades,
-            reader: readerEntidades,
-            writer: writerEntidades,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true,
-            autoSave: true,
-            baseParams: {}
-        });
-        storeEntidades = this.storeEntidades;
-        limiteresolucion = 100;
-        storeEntidades.baseParams = {
-            limit: limiteresolucion
-        };
-
-        //Carga de datos al levantarse la pantalla
-        this.storeEntidades.load();
-
-        //Inicio formato grid pestaña Entidades
-        this.gridEntidades = new Ext.grid.EditorGridPanel({
-            height: '100%',
-            store: this.storeEntidades,
-            //Definición de campos bdd Entidades
-            columns: [
-                new Ext.grid.RowNumberer(),
-                {header: 'Nombre', dataIndex: 'nombre', sortable: true, width: 200, editor: textField},
-                {
-                    header: 'Nombre Completo',
-                    dataIndex: 'nombre_completo',
-                    sortable: true,
-                    width: 200,
-                    editor: textField
-                },
-                {header: 'Activo', dataIndex: 'activo', sortable: true, width: 100, editor: textField},
-                {header: 'Orden', dataIndex: 'orden', sortable: true, width: 100, editor: textField}
-            ],
-            viewConfig: {
-                forceFit: true
-            },
-            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
-            border: false,
-            stripeRows: true,
-            //Definición de barra de paginado
-            bbar: new Ext.PagingToolbar({
-                pageSize: limiteresolucion,
-                store: storeEntidades,
-                displayInfo: true,
-                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
-                emptyMsg: "No existen trámites que mostrar"
-            })
-        });
-        //Fin formato grid pestaña Entidades
-        //Fin ventana resolucion Entidades
 
         //Creación variable ventana
         var win = desktop.getWindow('layout-win');
@@ -867,119 +633,5 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         this.storeZonas.load();
     },
 
-    //Función para eliminación de registros de Procedimientos
-    deleteProcedimientos: function () {
-        //Popup de confirmación
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridProcedimientos.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeProcedimientos.remove(rows);
-                }
-            }
-        });
-    },
-    //Función para inserción de registros de Procedimientos
-    addProcedimientos: function () {
-        var denunciasProcedimientos = new this.storeProcedimientos.recordType({
-            id: ' ',
-            nombre: '',
-            observacion: ''
-        });
-        this.gridProcedimientos.stopEditing();
-        this.storeProcedimientos.insert(0, denunciasProcedimientos);
-        this.gridProcedimientos.startEditing(0, 0);
-    },
-
-    //Función para actualizar los datos mostrados en pantalla de la pestaña de Procedimientos
-    requestGridDataProcedimientos: function () {
-        this.storeProcedimientos.load();
-    },
-
-    //Función para eliminación de registros de Tipos de operativos
-    deleteTiposOperativos: function () {
-        //Popup de confirmación
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridTiposOperativos.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeTiposOperativos.remove(rows);
-                }
-            }
-        });
-    },
-
-    //Función para inserción de registros de Tipos de operativos
-    addTiposOperativos: function () {
-        var denunciasTiposOperativos = new this.storeTiposOperativos.recordType({
-            id: ' ',
-            nombre: '',
-            nombre_completo: '',
-            activo: ''
-        });
-        this.gridTiposOperativos.stopEditing();
-        this.storeTiposOperativos.insert(0, denunciasTiposOperativos);
-        this.gridTiposOperativos.startEditing(0, 0);
-    },
-
-    //Función para actualizar los datos mostrados en pantalla de la pestaña de Tipos de operativos
-    requestGridDataTiposOperativos: function () {
-        this.storeTiposOperativos.load();
-    },
-
-    //Función para eliminación de Entidades
-    deleteEntidades: function () {
-        //Popup de confirmación
-        Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
-            scope: this,
-            buttons: Ext.Msg.YESNO,
-            //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var rows = this.gridEntidades.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeEntidades.remove(rows);
-                }
-            }
-        });
-    },
-
-    //Función para inserción de registros de Entidades
-    addEntidades: function () {
-        var denunciasEntidades = new this.storeEntidades.recordType({
-            id: ' ',
-            nombre: '',
-            nombre_completo: '',
-            activo: ''
-        });
-        this.gridEntidades.stopEditing();
-        this.storeEntidades.insert(0, denunciasEntidades);
-        this.gridEntidades.startEditing(0, 0);
-    },
-
-    //Función para actualizar los datos mostrados en pantalla de la pestaña de Entidades
-    requestGridDataEntidades: function () {
-        this.storeEntidades.load();
-    }
 });
 

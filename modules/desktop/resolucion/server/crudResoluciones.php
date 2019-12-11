@@ -130,6 +130,7 @@ function updateOrdenanzas()
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_resoluciones SET  $cadenaDatos  WHERE amc_resoluciones.id = '$data->id' ";
+    //echo ($sql);
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
