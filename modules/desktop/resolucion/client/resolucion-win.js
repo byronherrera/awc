@@ -45,7 +45,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             return value ? value.dateFormat('Y-m-d H:i') : '';
         }
 
-// inicio combos resolucion
+        // inicio combos resolucion
 
         //inicio combo ORDENANZA
         storeOrdenanza = new Ext.data.JsonStore({
@@ -270,7 +270,17 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank:true, width: 100, editor: textField},
                 {header: 'Funcionario', dataIndex: 'funcionario', allowBlank:true, width: 200, editor: comboPersonal, renderer: rendererPersonal},
                 {header: 'Número de Resolución', dataIndex: 'numero_resolucion', allowBlank:true, width: 140, editor: textField},
-                {header: 'Fecha de Resolución', dataIndex: 'fecha_resolucion', width: 140,  type: 'date', dateFormat: 'c', allowBlank: false},
+
+                {
+                    header: 'Fecha de Resolución',
+                    dataIndex: 'fecha_resolucion',
+                    sortable: true,
+                    width: 140,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
                 {header: 'Nulidad', dataIndex: 'nulidad', allowBlank:true, width: 80, editor: textField},
                 {header: 'Caducidad', dataIndex: 'caducidad', allowBlank:true, width: 80, editor: textField},
                 {header: 'Archivo', dataIndex: 'archivo', allowBlank:true, width: 80, editor: textField},
@@ -726,9 +736,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'apellidos',
+                            key: 'cedula_ruc',
                             scope: this,
-                            text: 'Apellidos'
+                            text: 'Cedula / RUC'
                         },
                         {
                             checked: true,
@@ -757,7 +767,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                         }
                     ]
                 })
-                , text: 'Apellidos'
+                , text: 'Cédula/RUC'
             });
 
             win = desktop.createWindow({

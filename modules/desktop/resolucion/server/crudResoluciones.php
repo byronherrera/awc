@@ -10,7 +10,10 @@ function selectOrdenanzas()
 {
     global $os;
 
-    $columnaBusqueda = 'busqueda_todos';
+    $columnaBusqueda = 'cedula_ruc';
+
+    $usuarioLog = $os->get_member_id();
+
     $where = '';
 
     if (isset ($_POST['start']))
@@ -23,6 +26,21 @@ function selectOrdenanzas()
     else
         $limit = 100;
     $orderby = 'ORDER BY id ASC';
+
+
+    if (isset($_POST['filterField'])) {
+        $columnaBusqueda = $_POST['filterField'];
+    }
+
+    if (isset($_POST['filterText'])) {
+        $campo = $_POST['filterText'];
+        $campo = str_replace(" ", "%", $campo);
+
+        if ($where == '')
+            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+        else
+            $where = $where . " AND $columnaBusqueda LIKE '%$campo%'";
+    }
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_resoluciones $where $orderby LIMIT $start, $limit";
@@ -67,7 +85,7 @@ function insertOrdenanzas()
 
     $sql = "INSERT INTO amc_resoluciones($cadenaCampos)
 	values($cadenaDatos);";
-     $sql = $os->db->conn->prepare($sql);
+    $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
