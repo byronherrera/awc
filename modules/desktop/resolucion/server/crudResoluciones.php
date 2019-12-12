@@ -24,7 +24,26 @@ function selectOrdenanzas()
         } else {
             $listadoCampos = array(
                 'cedula_ruc',
-                'nombre_administrado'
+                'ordenanza',
+                'articulo_numeral',
+                'unidad',
+                'comisaria',
+                'numero_expediente',
+                'numero_predio',
+                'nombre_administrado',
+                'nombre_establecimiento',
+                'funcionario',
+                'numero_resolucion',
+                'fecha_resolucion',
+                'nulidad',
+                'caducidad',
+                'archivo',
+                'es_obligatorio',
+                'multa_impuesta',
+                'observaciones',
+                'direccion_infraccion',
+                'direccion_notificacion',
+                'comisaria',
             );
             $cadena = '';
             foreach ($listadoCampos as &$valor) {

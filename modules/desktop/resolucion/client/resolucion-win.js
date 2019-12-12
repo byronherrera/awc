@@ -817,7 +817,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Generar Distributivo resolucion',
                                     tooltip: 'Se genera el distributivo de resolucion',
-                                    disabled: false
+                                    disabled: true
                                 },
                                 '-',
                                 {
@@ -827,7 +827,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Generar Reporte',
                                     tooltip: 'Se genera el reporte con todos los campos',
-                                    disabled: false
+                                    disabled: true
                                 },
                                 '->'
                                 , {
