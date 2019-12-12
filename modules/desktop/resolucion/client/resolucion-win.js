@@ -736,38 +736,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'cedula_ruc',
+                            key: 'busqueda_todos',
                             scope: this,
-                            text: 'Cedula / RUC'
-                        },
-                        {
-                            checked: true,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'cedula',
-                            scope: this,
-                            text: 'Cédula'
-                        },
-
-                        {
-                            checked: true,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'unidad',
-                            scope: this,
-                            text: 'Unidad'
-                        },
-                        {
-                            checked: true,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'modalidad',
-                            scope: this,
-                            text: 'Modalidad'
+                            text: 'Todos'
                         }
                     ]
                 })
-                , text: 'Cédula/RUC'
+                , text: 'Todos'
             });
 
             win = desktop.createWindow({

@@ -10,11 +10,35 @@ function selectOrdenanzas()
 {
     global $os;
 
-    $columnaBusqueda = 'cedula_ruc';
+    $columnaBusqueda = 'busqueda_todos';
+    $where = '';
+    if (isset($_POST['filterField'])) {
+        $columnaBusqueda = $_POST['filterField'];
+    }
+
+    if (isset($_POST['filterText'])) {
+        $campo = $_POST['filterText'];
+        $campo = str_replace(" ", "%", $campo);
+        if ($columnaBusqueda != 'busqueda_todos') {
+            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+        } else {
+            $listadoCampos = array(
+                'cedula_ruc',
+                'nombre_administrado'
+            );
+            $cadena = '';
+            foreach ($listadoCampos as &$valor) {
+                $cadena  = $cadena  .   " $valor LIKE '%$campo%' OR ";
+            }
+
+            $cadena = substr($cadena,0,-3);
+            $where = " WHERE $cadena ";
+        }
+    }
 
     $usuarioLog = $os->get_member_id();
 
-    $where = '';
+
 
     if (isset ($_POST['start']))
         $start = $_POST['start'];
@@ -28,19 +52,7 @@ function selectOrdenanzas()
     $orderby = 'ORDER BY id ASC';
 
 
-    if (isset($_POST['filterField'])) {
-        $columnaBusqueda = $_POST['filterField'];
-    }
 
-    if (isset($_POST['filterText'])) {
-        $campo = $_POST['filterText'];
-        $campo = str_replace(" ", "%", $campo);
-
-        if ($where == '')
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-        else
-            $where = $where . " AND $columnaBusqueda LIKE '%$campo%'";
-    }
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_resoluciones $where $orderby LIMIT $start, $limit";
@@ -85,7 +97,7 @@ function insertOrdenanzas()
 
     $sql = "INSERT INTO amc_resoluciones($cadenaCampos)
 	values($cadenaDatos);";
-    $sql = $os->db->conn->prepare($sql);
+     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
