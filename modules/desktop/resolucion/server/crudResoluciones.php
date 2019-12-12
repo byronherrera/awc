@@ -52,7 +52,7 @@ function insertOrdenanzas()
     $data = json_decode(stripslashes($_POST["data"]));
     //$data->despacho_secretaria = 'false';
     $data->id = generaCodigoProcesoOrdenanza();
-    $data->orden = generaCodigoProcesoOrdenanza();
+    //$data->orden = generaCodigoProcesoOrdenanza();
     //$data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
 
@@ -188,7 +188,7 @@ function updateOrdenanzasForm()
     $nombre = $_POST["nombre"];
     $nombre_completo = $_POST["nombre_completo"];
     $activo = $_POST["activo"];
-    $orden = $_POST["orden"];
+    //$orden = $_POST["orden"];
 
     if (isset($_POST["reasignacion"])) {
         $reasignacion = $_POST["reasignacion"];
@@ -208,7 +208,7 @@ function updateOrdenanzasForm()
     $nombre = $_POST["nombre"];
     $nombre_completo = $_POST["nombre_completo"];
     $activo = $_POST["activo"];
-    $orden = $_POST["orden"];
+    //$orden = $_POST["orden"];
 
 
     //para el caso de denuncias se valida que exista cedula y correo
@@ -237,10 +237,10 @@ function updateOrdenanzasForm()
     /*codigo_tramite='$codigo_tramite',*/
     $sql = "UPDATE amc_resoluciones SET 
             id = '$id',
-            nombre = $nombre,
-            nombre_completo = $nombre_completo,
-            activo = $activo,
-            orden = $orden
+            //nombre = $nombre,
+            //nombre_completo = $nombre_completo,
+            //activo = $activo,
+            //orden = $orden
             
          
           WHERE id = '$id' ";

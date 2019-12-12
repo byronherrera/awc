@@ -1,36 +1,52 @@
 QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
     id: 'resolucion',
+
     type: 'desktop/resolucion',
 
     init: function () {
         this.launcher = {
-            text: 'Recepción documentos',
+            text: 'Resolucion',
             iconCls: 'resolucion-icon',
             handler: this.createWindow,
             scope: this
         }
     },
+
     createWindow: function () {
-        //Variables de acceso
-        var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
-        var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
-        var accesosZonales = this.app.isAllowedTo('accesosZonales', this.id);
-        var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
+        var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
+        var accesosResolucion = this.app.isAllowedTo('accesosResolucion', this.id);
+        finalizados = true;
+        limiteresolucion = 100;
+        this.selectResolucion = 0;
+        selectResolucion = 0;
+
+        var acceso = (accesosAdministradorOpe || accesosResolucion ) ? true : false
+
+
         var desktop = this.app.getDesktop();
         var AppMsg = new Ext.AppMsg({});
-        var win = desktop.getWindow('grid-win-resolucion');
 
-        //Ubicación de la carpeta de resolucion
+        var winWidth = desktop.getWinWidth();
+        var winHeight = desktop.getWinHeight();
+
+        var win = desktop.getWindow('grid-win-resolucion');
         var urlResolucion = "modules/desktop/resolucion/server/";
 
         var textField = new Ext.form.TextField({allowBlank: false});
 
-        //Definición del formato de fecha
         function formatDate(value) {
-            return value ? value.dateFormat('Y-m-d H:i:s') : '';
+            return value ? value.dateFormat('Y-m-d H:i') : '';
+        }
+        function formatDateMin(value) {
+            return value ? value.dateFormat('Y-m-d') : '';
         }
 
-        //Inicio ventana resolucion ordenanzas
+        function formatDateFull(value) {
+            return value ? value.dateFormat('Y-m-d H:i') : '';
+        }
+
+// inicio combos resolucion
+
         //inicio combo ORDENANZA
         storeOrdenanza = new Ext.data.JsonStore({
             root: 'data',
@@ -57,31 +73,119 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         }
         //fin combo ORDENANZA
 
-        //inicio combo ZONAL
-        storeZONALM = new Ext.data.JsonStore({
+        //inicio combo ORDENANZATEMAS(ARTICULO Y NUMERAL)
+        storeOrdenanzaTema = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
             autoLoad: true,
-            url: 'modules/common/combos/combos.php?tipo=zonas'
+            url: 'modules/common/combos/combos.php?tipo=ordenanzastemas'
         });
 
-        var comboZONALM = new Ext.form.ComboBox({
-            id: 'comboZONALM',
-            store: storeZONALM,
+        var comboOrdenanzaTema = new Ext.form.ComboBox({
+            id: 'comboOrdenanzaTema',
+            store: storeOrdenanzaTema,
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
             mode: 'local'
         });
 
-        function zonaAdmMantenimi(id) {
-            var index = storeZONALM.findExact('id', id);
+        function rendererOrdenanzaTema(id) {
+            var index = storeOrdenanzaTema.findExact('id', id);
             if (index > -1) {
-                var record = storeZONALM.getAt(index);
+                var record = storeOrdenanzaTema.getAt(index);
                 return record.get('nombre');
             }
         }
-        //fin combo ZONA
+        //fin combo ORDENANZATEMAS
+
+        //inicio combo UNIDAD
+        storeUnidad = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=zonas'
+        });
+
+        var comboUnidad = new Ext.form.ComboBox({
+            id: 'comboUnidad',
+            store: storeUnidad,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function rendererUnidad(id) {
+            var index = storeUnidad.findExact('id', id);
+            if (index > -1) {
+                var record = storeUnidad.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //fin combo UNIDAD
+
+        // inicio combo PERSONAL
+        storePersonal = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=personal_distributivo'
+        });
+
+        var comboPersonal = new Ext.form.ComboBox({
+            id: 'comboPersonal',
+            store: storePersonal,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function rendererPersonal(id) {
+            var index = storePersonal.findExact('id', id);
+            if (index > -1) {
+                var record = storePersonal.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //fin combo UNIDAD
+
+        //inicio combo PROVIDENCIA
+        storeProvidencia = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=zonas'
+        });
+
+        var comboProvidencia = new Ext.form.ComboBox({
+            id: 'comboProvidencia',
+            store: storeProvidencia,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function rendererProvidencia(id) {
+            var index = storeProvidencia.findExact('id', id);
+            if (index > -1) {
+                var record = storeProvidencia.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //fin combo PROVIDENCIA
+
+// fin combos resolucion
+
+// inicio pestañas de mantenimiento
+
+
+// fin pestañas de mantenimiento
+
+        // inicio ventana resolucion
+
 
         //Definición de url CRUD
         var proxyResoluciones = new Ext.data.HttpProxy({
@@ -154,23 +258,23 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 //Definición de campos bdd Resoluciones
                 new Ext.grid.RowNumberer(),
-                {header: 'id', dataIndex: 'id',width: 100, editor: textField},
-                {header: 'Ordenanza', dataIndex: 'ordenanza', allowBlank:true, width: 80, editor: comboOrdenanza, renderer: rendererOrdenanza},
-                {header: 'Artículo y numeral', dataIndex: 'articulo_numeral', allowBlank:true, width: 100, editor: textField},
-                {header: 'Unidad', dataIndex: 'unidad', allowBlank:true, width: 150, editor: textField},
+                {header: 'id', dataIndex: 'id',width: 100, hidden:true, editor: textField},
+                {header: 'Ordenanza', dataIndex: 'ordenanza', allowBlank:true, width: 180, editor: comboOrdenanza, renderer: rendererOrdenanza},
+                {header: 'Artículo y numeral', dataIndex: 'articulo_numeral', allowBlank:true, width: 300, editor: comboOrdenanzaTema, renderer: rendererOrdenanzaTema},
+                {header: 'Unidad', dataIndex: 'unidad', allowBlank:true, width: 150, editor: comboUnidad, renderer: rendererUnidad},
                 {header: 'Comisaría', dataIndex: 'comisaria', allowBlank:true, width: 150, editor: textField},
                 {header: 'Número de expediente', dataIndex: 'numero_expediente', allowBlank:true, width: 150, editor: textField},
                 {header: 'Número de predio', dataIndex: 'numero_predio', allowBlank:true, width: 100, editor: textField},
                 {header: 'Nombre de Administrado', dataIndex: 'nombre_administrado', allowBlank:true, width: 250, editor: textField},
                 {header: 'Nombre del Establecimiento', dataIndex: 'nombre_estbleacimiento', allowBlank:true, width: 180, editor: textField},
                 {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank:true, width: 100, editor: textField},
-                {header: 'Funcionario', dataIndex: 'funcionario', allowBlank:true, width: 200, editor: textField},
+                {header: 'Funcionario', dataIndex: 'funcionario', allowBlank:true, width: 200, editor: comboPersonal, renderer: rendererPersonal},
                 {header: 'Número de Resolución', dataIndex: 'numero_resolucion', allowBlank:true, width: 140, editor: textField},
-                {header: 'Fecha de Resolución', dataIndex: 'fecha_resolucion', allowBlank:true, width: 140, editor: textField},
-                {header: 'Nulidad', dataIndex: 'nulidad', allowBlank:true, width: 140, editor: textField},
-                {header: 'Caducidad', dataIndex: 'caducidad', allowBlank:true, width: 140, editor: textField},
-                {header: 'Archivo', dataIndex: 'archivo', allowBlank:true, width: 140, editor: textField},
-                {header: 'Obligación de hacer', dataIndex: 'es_obligatorio', allowBlank:true, width: 140, editor: textField},
+                {header: 'Fecha de Resolución', dataIndex: 'fecha_resolucion', width: 140,  type: 'date', dateFormat: 'c', allowBlank: false},
+                {header: 'Nulidad', dataIndex: 'nulidad', allowBlank:true, width: 80, editor: textField},
+                {header: 'Caducidad', dataIndex: 'caducidad', allowBlank:true, width: 80, editor: textField},
+                {header: 'Archivo', dataIndex: 'archivo', allowBlank:true, width: 80, editor: textField},
+                {header: 'Obligatorio', dataIndex: 'es_obligatorio', allowBlank:true, width: 100, editor: textField},
                 {header: 'Multa impuesta', dataIndex: 'multa_impuesta', allowBlank:true, width: 140, editor: textField},
                 {header: 'Observaciones-Motivo de sanción/cumplimiento', allowBlank:true, dataIndex: 'observaciones', width: 140, editor: textField},
                 {header: 'Dirección infracción', dataIndex: 'direccion_infraccion', allowBlank:true, width: 140, editor: textField},
@@ -269,19 +373,18 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 //Definición de campos bdd Providencias
                 new Ext.grid.RowNumberer(),
-                {header: 'Ordenanza', dataIndex: 'ordenanza', sortable: true, width: 80, editor: textField},
-                {header: 'Artículo y numeral', dataIndex: 'articulo_numeral', sortable: true, width: 100, editor: textField},
-                {header: 'Unidad', dataIndex: 'unidad', sortable: true, width: 150, editor: textField},
-                {header: 'Comisaría', dataIndex: 'comisaria', sortable: true, width: 150, editor: textField},
-                {header: 'Número de expediente', dataIndex: 'numero_expediente', sortable: true, width: 150, editor: textField},
+                {header: 'id', dataIndex: 'id',width: 100, hidden:true},
+                {header: 'Ordenanza', dataIndex: 'ordenanza', allowBlank:true, width: 180, editor: comboOrdenanza, renderer: rendererOrdenanza},
+                {header: 'Artículo y numeral', dataIndex: 'articulo_numeral', allowBlank:true, width: 300, editor: comboOrdenanzaTema, renderer: rendererOrdenanzaTema},
+                {header: 'Unidad', dataIndex: 'unidad', allowBlank:true, width: 150, editor: comboUnidad, renderer: rendererUnidad},
+                {header: 'Comisaría', dataIndex: 'comisaria', allowBlank: true, width: 150, editor: textField},
+                {header: 'Número de expediente', dataIndex: 'numero_expediente', allowBlank: true, width: 150, editor: textField},
                 {header: 'Número de predio', dataIndex: 'numero_predio', sortable: true, width: 100, editor: textField},
                 {header: 'Nombre de Administrado', dataIndex: 'nombre_administrado', sortable: true, width: 250, editor: textField},
                 {header: 'Nombre del Establecimiento', dataIndex: 'nombre_establecimiento', sortable: true, width: 180, editor: textField},
                 {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', sortable: true, width: 100, editor: textField},
-                {header: 'Funcionario', dataIndex: 'funcionario', sortable: true, width: 200, editor: textField},
-                {header: 'Número de Providencia', dataIndex: 'numero_providencia', sortable: true, width: 140, editor: textField},
-                {header: 'Fecha de Resolución', dataIndex: 'fecha_resolucion', sortable: true, width: 140, editor: textField},
-                {header: 'Número de Providencia', dataIndex: 'numero_providencia', sortable: true, width: 140, editor: textField},
+                {header: 'Funcionario', dataIndex: 'funcionario', allowBlank:true, width: 200, editor: comboPersonal, renderer: rendererPersonal},
+                //{header: 'Número de Providencia', dataIndex: 'numero_providencia', sortable: true, width: 140, editor: textField},
                 {header: 'Fecha de Providencia', dataIndex: 'fecha_providencia', sortable: true, width: 140, editor: textField},
                 {header: 'Providencia', dataIndex: 'providencia', sortable: true, width: 140, editor: textField},
                 {header: 'Valor Coactiva', dataIndex: 'valor_coactiva', sortable: true, width: 140, editor: textField},
@@ -309,16 +412,298 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         //Fin formato grid pestaña Providencias
         //Fin ventana resolucion Providencias
 
+        // fin ventana resolucion
+
+        // datastore and datagrid in Guia
+        this.storeDocumentosReporte = new Ext.data.Store({
+            id: "id",
+            proxy: proxyResoluciones,
+            reader: readerResoluciones,
+            writer: writerResoluciones,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true
+        });
+
+        storeDocumentosReporte = this.storeDocumentosReporte
+        this.gridDocumentosReporte = new Ext.grid.EditorGridPanel({
+            height: desktop.getWinHeight() - 268,
+            autoScroll: true,
+            store: this.storeDocumentosReporte,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {
+                    header: 'Código',
+                    dataIndex: 'id',
+                    sortable: true,
+                    width: 17
+                }
+            ],
+            viewConfig: {
+                forceFit: true
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }
+            ),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            bbar: new Ext.PagingToolbar({
+                pageSize: 100,
+                store: this.storeDocumentosReporte,
+                displayInfo: true,
+                displayMsg: 'Mostrando resolucion {0} - {1} de {2}  >>',
+                emptyMsg: "No existen resolucion que mostrar"
+            }),
+        });
+        // fin datastore and datagrid in Guia
 
 
-        //Creación variable ventana
         var win = desktop.getWindow('layout-win');
 
         if (!win) {
-            //Creación variables de tamaño vertical y horizontal en función del espacio utilizado por el browser en la pantalla
+
             var winWidth = desktop.getWinWidth();
             var winHeight = desktop.getWinHeight();
-            //this.seleccionDepar = 3;
+            this.seleccionDepar = 3;
+
+            this.formConsultaDocumentos = new Ext.FormPanel({
+                layout: 'column',
+                // title: 'Ingrese los parámetros',
+                frame: true,
+                bodyStyle: 'padding:5px 5px 0',
+                items: [
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'datetimefield',
+                                fieldLabel: 'Fecha Inicio',
+                                id: 'busqueda_fecha_inicio',
+                                anchor: '95%',
+                                dateFormat: 'Y-m-d',
+                                timeFormat: 'H:i:s'
+                            },
+                            {
+                                xtype: 'datetimefield',
+                                fieldLabel: 'Fecha Fin',
+                                id: 'busqueda_fecha_fin',
+                                anchor: '95%',
+                                dateFormat: 'Y-m-d',
+                                timeFormat: 'H:i:s'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Tipo control',
+                                id: 'busqueda_tipo_control',
+                                name: 'busqueda_tipo_control',
+                                hiddenName: 'busqueda_tipo_control',
+
+                                anchor: '95%',
+                                ////store:  storeOPTID,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Nivel Complejidad',
+                                id: 'busqueda_nivel_complejidad',
+                                name: 'busqueda_nivel_complejidad',
+                                hiddenName: 'busqueda_nivel_complejidad',
+
+                                anchor: '95%',
+                                //store:  storeOPNICO,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Responsable',
+                                id: 'busqueda_persona_encargada',
+                                name: 'busqueda_persona_encargada',
+                                hiddenName: 'busqueda_persona_encargada',
+
+                                anchor: '95%',
+                                //store:  storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Zonal',
+                                id: 'busqueda_zonal',
+                                name: 'busqueda_zonal',
+                                hiddenName: 'busqueda_zonal',
+
+                                anchor: '95%',
+                                //store:  storeZONA,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Unidad',
+                                id: 'busqueda_unidad_asignado',
+                                name: 'busqueda_unidad_asignado',
+                                hiddenName: 'busqueda_unidad_asignado',
+
+                                anchor: '95%',
+                                //store:  storeOPREA,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Oper. Tipo',
+                                id: 'busqueda_tipo_resolucion',
+                                name: 'busqueda_tipo_resolucion',
+                                hiddenName: 'busqueda_tipo_resolucion',
+
+                                anchor: '95%',
+                                //store:  storeOPTIPO,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Estado',
+
+                                id: 'busqueda_estado',
+                                name: 'busqueda_estado',
+                                hiddenName: 'busqueda_estado',
+
+
+                                anchor: '95%',
+                                //store:  storeOPESTA,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Func.operante',
+                                id: 'busqueda_resolucion_asignado',
+                                name: 'busqueda_resolucion_asignado',
+                                hiddenName: 'busqueda_resolucion_asignado',
+
+                                anchor: '95%',
+                                //store:  storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }
+
+
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Informe',
+                                id: 'busqueda_informe',
+                                name: 'busqueda_informe',
+                                anchor: '95%'
+                            },
+                            /*{   xtype: 'textfield',
+                             fieldLabel: 'Punto Encuentro',
+                             id: 'busqueda_punto_encuentro',
+                             name: 'busqueda_punto_encuentro',
+                             anchor: '95%'
+                             },*/
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Observaciones',
+                                id: 'busqueda_observaciones',
+                                name: 'busqueda_observaciones',
+                                anchor: '95%'
+                            },
+
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Elaborado por',
+                                id: 'busqueda_elaborado_por',
+                                name: 'busqueda_elaborado_por',
+                                hiddenName: 'busqueda_elaborado_por',
+
+                                anchor: '95%',
+                                //store:  storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Revisado por',
+                                id: 'busqueda_revisado_por',
+                                name: 'busqueda_revisado_por',
+                                hiddenName: 'busqueda_revisado_por',
+
+                                anchor: '95%',
+                                //store:  storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Aprobado por',
+                                id: 'busqueda_aprobado_por',
+                                name: 'busqueda_aprobado_por',
+                                hiddenName: 'busqueda_aprobado_por',
+
+                                anchor: '95%',
+                                //store:  storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }]
+                    }
+                ]
+            });
+
+
             var checkHandler = function (item, checked) {
                 if (checked) {
                     var store = this.storeResoluciones;
@@ -334,7 +719,6 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     this.targetFieldBtn.setText(item.text);
                 }
             };
-
             var searchFieldBtn = new Ext.Button({
                 menu: new Ext.menu.Menu({
                     items: [
@@ -342,116 +726,140 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'busqueda_todos',
+                            key: 'apellidos',
                             scope: this,
-                            text: 'Todos'
+                            text: 'Apellidos'
                         },
                         {
-                            checked: false,
+                            checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'numero_tramite',
+                            key: 'cedula',
                             scope: this,
-                            text: 'Número trámite'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'ruc_licencia',
-                            scope: this,
-                            text: 'RUC/licencia'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'codigo',
-                            scope: this,
-                            text: 'Código'
-                        }
+                            text: 'Cédula'
+                        },
 
-                        , {
-                            checked: false,
+                        {
+                            checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'patente',
+                            key: 'unidad',
                             scope: this,
-                            text: 'Patente'
-                        }, {
-                            checked: false,
+                            text: 'Unidad'
+                        },
+                        {
+                            checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'predio',
+                            key: 'modalidad',
                             scope: this,
-                            text: 'Predio'
-                        }, {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'razon_social',
-                            scope: this,
-                            text: 'Razón social'
+                            text: 'Modalidad'
                         }
                     ]
                 })
-                , text: 'Todos'
+                , text: 'Apellidos'
             });
 
-            //Creación de la ventana win
             win = desktop.createWindow({
                 id: 'grid-win-resolucion',
-                //Definición del título de la ventana
                 title: 'Consulta Resolucion',
-                //Definición de tamaños de la ventana
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'resolucion-icon',
                 shim: false,
                 animCollapse: false,
                 constrainHeader: true,
-                //Creación de panel de pestañas
+                layout: 'fit',
+
                 items: new Ext.TabPanel({
                     activeTab: 0,
                     border: false,
                     items: [
-                        //Pestaña Resoluciones
                         {
+
                             autoScroll: true,
                             title: 'Resoluciones',
                             closable: true,
                             layout: 'fit',
                             height: winHeight - 70,
-                            //Barra de botones
                             tbar: [
-                                //Definición de botón nuevo
                                 {
                                     text: 'Nuevo',
                                     scope: this,
                                     handler: this.addResoluciones,
-                                    iconCls: 'save-icon'
+                                    iconCls: 'save-icon',
+                                    id: 'addresolucion',
+                                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                                 },
                                 '-',
                                 {
-                                    //Definición de botón eliminar
                                     text: "Eliminar",
                                     scope: this,
                                     handler: this.deleteResoluciones,
-                                    iconCls: 'delete-icon'
+                                    id: 'borrarresolucion',
+                                    iconCls: 'delete-icon',
+                                    disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                    //disabled: true
                                 },
                                 '-',
-                                //Definición de botón regargar datos
                                 {
-                                    iconCls: 'demo-grid-add',
-                                    handler: this.requestGridDataResoluciones,
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridData,
                                     scope: this,
-                                    text: 'Recargar Datos'
+                                    text: 'Recargar Datos',
+                                    tooltip: 'Recargar datos'
+                                },
+                                '-',
+                                {
+                                    xtype: 'checkbox',
+                                    boxLabel: 'Resolucion activo',
+                                    id: 'checkNoRecibidos',
+                                    name: 'noenviados',
+                                    checked: true,
+                                    inputValue: '1',
+                                    tooltip: 'Recargar datos',
+                                    disabled: !acceso,
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                        storeResoluciones.baseParams.finalizados = isChecked;
+                                        storeResoluciones.load();
+                                    }
+                                }, '-',
+                                {
+                                    id: 'tb_repoteResolucion',
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarReporteResolucion,
+                                    scope: this,
+                                    text: 'Generar Distributivo resolucion',
+                                    tooltip: 'Se genera el distributivo de resolucion',
+                                    disabled: false
+                                },
+                                '-',
+                                {
+                                    id: 'tb_repoteResolucionTodo',
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarReporteResolucionTodo,
+                                    scope: this,
+                                    text: 'Generar Reporte',
+                                    tooltip: 'Se genera el reporte con todos los campos',
+                                    disabled: false
+                                },
+                                '->'
+                                , {
+                                    text: 'Buscar por:'
+                                    , xtype: 'tbtext'
                                 }
-                            ]
-                            //Llamado a función que arma la tabla de datos
-                            , items: this.gridResoluciones
+
+                                , searchFieldBtn
+                                , ' '
+                                , new QoDesk.QoAdmin.SearchField({
+                                    paramName: 'filterText'
+                                    , store: this.storeResoluciones
+                                })
+                            ],
+                            items: this.gridResoluciones,
                         }
-                        //Pestaña unidades
+                        //Pestaña Providencias
                         , {
                             autoScroll: true,
                             title: 'Providencias',
@@ -488,32 +896,108 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             //Llamado a función que arma la tabla de datos
                             items: this.gridProvidencias
                         }
+                        ,
+                        {
+                            title: 'Reportes',
+                            closable: true,
+                            layout: 'border',
+                            //disabled:true,
+                            tbar: [
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridDataDocumentoReporte,
+                                    scope: this,
+                                    text: 'Buscar'
+
+                                },
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridDataDocumentoReporteReset,
+                                    scope: this,
+                                    text: 'Borrar formulario'
+
+                                },
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporte,
+                                    scope: this,
+                                    text: 'Exportar listado',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada',
+                                    disabled: !acceso,
+                                },
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporteCalendarioResolucion,
+                                    scope: this,
+                                    text: 'Exportar calendario  personas',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada',
+                                    disabled: !acceso,
+                                }
+                                ,
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporteCalendarioResolucion,
+                                    scope: this,
+                                    text: 'Exportar calendario  resolucion',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada',
+                                    disabled: !acceso,
+                                }
+                            ],
+                            items: [
+                                {
+                                    region: 'north',
+                                    height: 175,
+                                    minSize: 100,
+                                    maxSize: 170,
+                                    closable: true,
+                                    autoScroll: false,
+                                    items: this.formConsultaDocumentos
+                                },
+                                {
+                                    // lazily created panel (xtype:'panel' is default)
+                                    split: true,
+                                    height: 270,
+                                    minSize: 100,
+                                    maxSize: 150,
+                                    region: 'center',
+                                    autoEl: {
+                                        id: 'iframemap',
+                                        tag: 'iframe',
+                                        style: 'height: 360px; width: 100%; border: none',
+                                        src: 'http://localhost:8080/mapaRecorrido.html'
+                                        //src: 'http://agenciadecontrol.quito.gob.ec/mapaResolucion.html'
+                                    },
+                                    id: 'data_export_iframe'
+                                }
+                            ]
+
+                        }
 
                     ]
-                }),
+                })
             });
         }
-        //Llamado a función que muestra la ventana en pantalla
         win.show();
+
         setTimeout(function () {
             this.storeResoluciones.load({
                 params: {
                     start: 0,
-                    limit: limiteresolucion
+                    limit: limiteresolucion,
+                    finalizados: Ext.getCmp('checkNoRecibidos').getValue(),
+                    accesosAdministradorOpe: accesosAdministradorOpe,
+                    accesosResolucion: accesosResolucion
                 }
             });
-        }, 10);
+            this.storeProvidencias.load();
+        }, 600);
     },
-
-    //Función para eliminación de registros de Resoluciones
     deleteResoluciones: function () {
-        //Popup de confirmación
         Ext.Msg.show({
             title: 'Confirmación',
-            msg: 'Está seguro de borrar el registro seleccionado?',
+            msg: 'Está seguro de querer borrar?',
             scope: this,
             buttons: Ext.Msg.YESNO,
-            //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
             fn: function (btn) {
                 if (btn == 'yes') {
                     var rows = this.gridResoluciones.getSelectionModel().getSelections();
@@ -525,11 +1009,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             }
         });
     },
-
-    //Función para inserción de registros de Resoluciones
     addResoluciones: function () {
-
-        var operativos = new this.storeResoluciones.recordType({
+        var resoluciones = new this.storeResoluciones.recordType({
             id: '',
             ordenanza: ' ',
             articulo_numeral: ' ',
@@ -553,25 +1034,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             direccion_notificacion: ' ',
         });
         this.gridResoluciones.stopEditing();
-        this.storeResoluciones.insert(0, operativos);
+        this.storeResoluciones.insert(0, resoluciones);
         this.gridResoluciones.startEditing(0, 0);
     },
-
-    //Función para actualizar los datos mostrados en pantalla de la pestaña de Resoluciones
-    requestGridDataResoluciones: function () {
+    requestGridData: function () {
         this.storeResoluciones.load();
     },
 
-    //Función para carga de datos
-    requestGridData: function () {
-        this.storeResoluciones.load({
-            params:
-                {
-                    start: 0,
-                    limit: limiteresolucion
-                }
-        });
-    },
 
     //Función para eliminación de datos
     deleteProvidencias: function () {
@@ -596,14 +1065,27 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
     //Función para inserción de registros de Providencias
     addProvidencias: function () {
-        var ordenanzasProvidencias = new this.storeProvidencias.recordType({
-            id: ' ',
-            nombre: '',
-            activo: '1',
-            secretaria: '0'
+        var providencias = new this.storeResoluciones.recordType({
+            id: '',
+            ordenanza: ' ',
+            articulo_numeral: ' ',
+            unidad: ' ',
+            comisaria: ' ',
+            numero_expediente: ' ',
+            numero_predio: ' ',
+            nombre_administrado: ' ',
+            nombre_establecimiento: ' ',
+            cedula_ruc: ' ',
+            funcionario: ' ',
+            fecha_providencia: ' ',
+            providencia: ' ',
+            valor_coactiva: ' ',
+            valor_cancelado: ' ',
+            clausura: ' ',
+            observaciones: ' '
         });
         this.gridProvidencias.stopEditing();
-        this.storeProvidencias.insert(0, ordenanzasProvidencias);
+        this.storeProvidencias.insert(0, providencias);
         this.gridProvidencias.startEditing(0, 0);
     },
 
@@ -612,43 +1094,141 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         this.storeProvidencias.load();
     },
 
-    //Función para eliminación de registros de Zonas
-    deleteZonas: function () {
-        //Popup de confirmación
+
+
+    botonExportarReporteResolucion: function () {
         Ext.Msg.show({
-            title: 'Confirmación',
-            msg: 'Está seguro de querer borrar?',
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo con el informe<br>¿Desea continuar?',
             scope: this,
+            icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
-            //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridZonas.getSelectionModel().getSelections();
-                    if (rows.length === 0) {
-                        return false;
-                    }
-                    this.storeZonas.remove(rows);
+                    window.location.href = 'modules/desktop/resolucion/server/descargaResolucionId.inc.php?resolucion=' + selectResolucion;
+                }
+            }
+        });
+    },
+    botonExportarReporteResolucionTodo: function () {
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo con el informe<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/resolucion/server/descargaResolucionTodo.php?resolucion=' + selectResolucion;
                 }
             }
         });
     },
 
-    //Función para inserción de registros de Zonas
-    addZonas: function () {
-        var denunciasZonas = new this.storeZonas.recordType({
-            id: ' ',
-            nombre: '',
-            activo: '1'
+// funcion usada por boton
+    showError: function (msg, title) {
+        title = title || 'Error';
+        Ext.Msg.show({
+            title: title
+            , msg: msg
+            , modal: true
+            , icon: Ext.Msg.ERROR
+            , buttons: Ext.Msg.OK
         });
-        this.gridZonas.stopEditing();
-        this.storeZonas.insert(0, denunciasZonas);
-        this.gridZonas.startEditing(0, 0);
     },
 
-    //Función para actualizar los datos mostrados en pantalla de la pestaña de Zonas
-    requestGridDataZonas: function () {
-        this.storeZonas.load();
+    requestGridDataDocumentoReporte: function () {
+        this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
+        this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
+
+        var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
+        var accesosResolucion = this.app.isAllowedTo('accesosResolucion', this.id);
+
+        this.storeDocumentosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
+        this.storeDocumentosReporte.baseParams.accesosResolucion = accesosResolucion;
+
+        this.storeDocumentosReporte.load();
     },
 
+    requestGridDataDocumentoReporteReset: function () {
+        this.formConsultaDocumentos.getForm().reset();
+    },
+    botonExportarDocumentoReporte: function () {
+        var rows = this.storeDocumentosReporte.getCount()
+        if (rows === 0) {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Busqueda sin resultados',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+        // mensaje continuar y llamada a descarga archivo
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    window.location.href = 'modules/desktop/resolucion/server/descargaReporteResolucion.inc.php?param=' + valueParams;
+                }
+            }
+        });
+    },
+    botonExportarDocumentoReporteCalendarioResolucion: function () {
+        var rows = this.storeDocumentosReporte.getCount()
+        if (rows === 0) {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Busqueda sin resultados',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+        // mensaje continuar y llamada a descarga archivo
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    window.location.href = 'modules/desktop/resolucion/server/descargaReporteResolucioncalendario.inc.php?param=' + valueParams;
+                }
+            }
+        });
+    },
+    botonExportarDocumentoReporteCalendarioResolucion: function () {
+        var rows = this.storeDocumentosReporte.getCount()
+        if (rows === 0) {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Busqueda sin resultados',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+        // mensaje continuar y llamada a descarga archivo
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    window.location.href = 'modules/desktop/resolucion/server/descargaReporteResolucioncalendario2.inc.php?param=' + valueParams;
+                }
+            }
+        });
+    }
 });
-

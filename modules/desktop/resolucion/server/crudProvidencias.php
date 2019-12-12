@@ -65,24 +65,38 @@ function updateDenunciasReasignacion()
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
-    if (is_null($data))
-        $data = json_decode(stripslashes($_POST["data"]));
 
-    if ($data->secretaria) $data->secretaria = 1; else $data->secretaria = 0;
+    if (isset($data->despacho_secretaria)) {
+        if (!$data->despacho_secretaria)
+            $data->despacho_secretaria = 'false';
+        else
+            $data->despacho_secretaria = 'true';
+    }
 
-    $sql = "UPDATE amc_providencias SET
-            nombre='$data->nombre',
-            nombre_completo='$data->nombre_completo',
-            orden=$data->orden,
-            secretaria=$data->secretaria,
-            id_zonal=$data->id_zonal,
-            activo='$data->activo'
-	  WHERE amc_providencias.id = '$data->id' ";
+    $message = '';
+    if (isset($data->id_tipo_documento)) {
+        if ($data->id_tipo_documento == '1')
+            if (validarCedulaCorreo($data->id)) {
+                $message = 'Ingresar número de cédula y correo electrónico';
+            }
+    }
+
+    // genero el listado de valores a insertar
+    $cadenaDatos = '';
+    foreach ($data as $clave => $valor) {
+        $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+    }
+    $cadenaDatos = substr($cadenaDatos, 0, -1);
+
+    $sql = "UPDATE amc_providencias SET  $cadenaDatos  WHERE amc_providencias.id = '$data->id' ";
+    //echo ($sql);
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
+
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_resoluciones actualizado exitosamente" : $sql->errorCode(),
+        "message" => $message
     ));
 }
 
