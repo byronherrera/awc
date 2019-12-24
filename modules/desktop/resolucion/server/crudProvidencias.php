@@ -9,9 +9,15 @@ if (!$os->session_exists()) {
 
 function selectDenunciasReasignacion()
 {
+    if (isset($_POST['id'])) {
+        $id = (int)$_POST ['id'];
+        $chain = "id_libro_diario  = '$id'";
+        $where = " WHERE $chain ";
+    }
+
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_providencias ORDER BY id";
+    $sql = "SELECT * FROM amc_providencias $where ORDER BY id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

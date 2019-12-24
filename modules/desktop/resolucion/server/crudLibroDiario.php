@@ -23,27 +23,24 @@ function selectOrdenanzas()
             $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
         } else {
             $listadoCampos = array(
-                'cedula_ruc',
-                'ordenanza',
-                'articulo_numeral',
+                'memo_ingreso',
+                'fecha_ingreso',
                 'unidad',
-                'comisaria',
                 'numero_expediente',
-                'numero_predio',
                 'nombre_administrado',
                 'nombre_establecimiento',
+                'cedula_ruc',
+                'reincidencia',
+                'ordenanza',
+                'articulo_numeral',
+                'iniciado_por',
+                'entidad',
+                'numero_informe',
+                'medida_cautelar',
+                'estado',
                 'funcionario',
-                'numero_resolucion',
-                'fecha_resolucion',
-                'nulidad',
-                'caducidad',
-                'archivo',
-                'es_obligatorio',
-                'multa_impuesta',
-                'observaciones',
-                'direccion_infraccion',
-                'direccion_notificacion',
-                'comisaria',
+                'envio_expediente',
+                'fecha_envio',
             );
             $cadena = '';
             foreach ($listadoCampos as &$valor) {
@@ -57,11 +54,7 @@ function selectOrdenanzas()
 
     $usuarioLog = $os->get_member_id();
 
-    if (isset($_POST['id'])) {
-        $id = (int)$_POST ['id'];
-        $chain = "id_libro_diario  = '$id'";
-        $where = " WHERE $chain ";
-    }
+
 
     if (isset ($_POST['start']))
         $start = $_POST['start'];
@@ -78,15 +71,14 @@ function selectOrdenanzas()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_resoluciones $where $orderby LIMIT $start, $limit";
-    //echo($sql);
+    $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
     };
 
-    $sql = "SELECT count(*) AS total FROM amc_resoluciones $where";
+    $sql = "SELECT count(*) AS total FROM amc_libro_diario $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
@@ -119,7 +111,7 @@ function insertOrdenanzas()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_resoluciones($cadenaCampos)
+    $sql = "INSERT INTO amc_libro_diario($cadenaCampos)
 	values($cadenaDatos);";
      $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -141,7 +133,7 @@ function generaCodigoProcesoOrdenanza()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(id) AS maximo FROM amc_resoluciones";
+    $sql = "SELECT MAX(id) AS maximo FROM amc_libro_diario";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -183,14 +175,14 @@ function updateOrdenanzas()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_resoluciones SET  $cadenaDatos  WHERE amc_resoluciones.id = '$data->id' ";
+    $sql = "UPDATE amc_libro_diario SET  $cadenaDatos  WHERE amc_libro_diario.id = '$data->id' ";
     //echo ($sql);
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_resoluciones actualizado exitosamente" : $sql->errorCode(),
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_libro_diario actualizado exitosamente" : $sql->errorCode(),
         "message" => $message
     ));
 }
@@ -203,7 +195,7 @@ function validarCedulaCorreo($id)
 
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT cedula, email FROM amc_resoluciones WHERE id = $id";
+    $sql = "SELECT cedula, email FROM amc_libro_diario WHERE id = $id";
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -220,7 +212,7 @@ function selectOrdenanzasForm()
     global $os;
     $id = (int)$_POST ['id'];
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT *, (SELECT numero FROM amc_guias WHERE amc_guias.id = a.guia ) as guianumero, (SELECT COUNT(*) FROM amc_resoluciones  b WHERE a.cedula = b.cedula and b.cedula <> '') as totaldocumentos FROM amc_resoluciones as a  WHERE a.id = $id";
+    $sql = "SELECT *, (SELECT numero FROM amc_guias WHERE amc_guias.id = a.guia ) as guianumero, (SELECT COUNT(*) FROM amc_libro_diario  b WHERE a.cedula = b.cedula and b.cedula <> '') as totaldocumentos FROM amc_libro_diario as a  WHERE a.id = $id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -289,7 +281,7 @@ function updateOrdenanzasForm()
 
     }
     /*codigo_tramite='$codigo_tramite',*/
-    $sql = "UPDATE amc_resoluciones SET 
+    $sql = "UPDATE amc_libro_diario SET 
             id = '$id',
             //nombre = $nombre,
             //nombre_completo = $nombre_completo,
@@ -310,12 +302,12 @@ function deleteOrdenanzas()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_resoluciones WHERE id = $id";
+    $sql = "DELETE FROM amc_libro_diario WHERE id = $id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_resoluciones, eliminado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_libro_diario, eliminado exitosamente" : $sql->errorCode()
     ));
 }
 

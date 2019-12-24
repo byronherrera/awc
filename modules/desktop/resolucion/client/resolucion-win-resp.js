@@ -31,6 +31,41 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         }
 
         //Inicio ventana resolucion ordenanzas
+
+        //Inicio combo REINCIDENCIA
+        storeREINCIDENCIA = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "No"},
+                    {"id": 1, "nombre": "Si"}
+                ]
+            }
+        });
+
+        var comboREINCIDENCIA = new Ext.form.ComboBox({
+            id: 'comboREINCIDENCIA',
+            store: storeREINCIDENCIA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function functionREINCIDENCIA(id) {
+            var index = storeREINCIDENCIA.find('id', id);
+            if (index > -1) {
+                var record = storeREINCIDENCIA.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+
+
+        //Fin combo REINCIDENCIA
+
         //inicio combo ORDENANZA
         storeOrdenanza = new Ext.data.JsonStore({
             root: 'data',
