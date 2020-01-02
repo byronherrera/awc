@@ -9,20 +9,105 @@ if (!$os->session_exists()) {
 
 function selectDenunciasReasignacion()
 {
-    if (isset($_POST['id'])) {
+
+    global $os;
+
+    $columnaBusqueda = 'busqueda_todos';
+    $where = '';
+    if (isset($_POST['id'])  ) {
+//    if ((isset($_POST['id']) && ( strlen($_POST['filterText']) == 0))) {
         $id = (int)$_POST ['id'];
         $chain = "id_libro_diario  = '$id'";
         $where = " WHERE $chain ";
     }
 
-    global $os;
+
+    if (isset($_POST['filterField'])) {
+        $columnaBusqueda = $_POST['filterField'];
+    }
+
+    if (isset($_POST['filterText'])) {
+        if (strlen($_POST['filterText']>0)) {
+            $campo = $_POST['filterText'];
+            $campo = str_replace(" ", "%", $campo);
+            if ($columnaBusqueda != 'busqueda_todos') {
+
+                if($where == ''){
+                    $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+                }else{
+                    $where = $where . " AND $columnaBusqueda LIKE '%$campo%' ";
+                }
+
+            } else {
+                $listadoCampos = array(
+                    'numero_providencia',
+                    'fecha_providencia',
+                    //'resolucion_de',
+                    'tipo_providencia',
+                );
+                $cadena = '';
+                foreach ($listadoCampos as &$valor) {
+                    $cadena  = $cadena  .   " $valor LIKE '%$campo%' OR ";
+                }
+
+                $cadena = substr($cadena,0,-3);
+
+                if($where == ''){
+                    $where = " WHERE $cadena ";
+                }else{
+                    $where = $where . " AND $cadena ";
+                }
+
+            }
+        }
+    }
+
+    $usuarioLog = $os->get_member_id();
+
+
+    if (isset ($_POST['start']))
+        $start = $_POST['start'];
+    else
+        $start = 0;
+
+    if (isset ($_POST['limit']))
+        $limit = $_POST['limit'];
+    else
+        $limit = 100;
+    $orderby = 'ORDER BY id ASC';
+
+
+
+
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_providencias $where ORDER BY id";
+    $sql = "SELECT * FROM amc_providencias $where $orderby LIMIT $start, $limit";
+    // echo($sql);
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
-    }
+    };
+
+    $sql = "SELECT count(*) AS total FROM amc_providencias $where";
+    $result = $os->db->conn->query($sql);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total = $row['total'];
+
+
+//    if (isset($_POST['id'])) {
+//        $id = (int)$_POST ['id'];
+//        $chain = "id_libro_diario  = '$id'";
+//        $where = " WHERE $chain ";
+//    }
+//
+//    global $os;
+//    $os->db->conn->query("SET NAMES 'utf8'");
+//    $sql = "SELECT * FROM amc_providencias $where ORDER BY id";
+//    $result = $os->db->conn->query($sql);
+//    $data = array();
+//    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+//        $data[] = $row;
+//    }
     echo json_encode(array(
             "success" => true,
             "data" => $data)
@@ -37,7 +122,7 @@ function selectDenunciasReasignacion()
         $data = json_decode(stripslashes($_POST["data"]));
         //$data->despacho_secretaria = 'false';
         $data->id = generaCodigoProcesoUnidades();
-        $data->orden = generaCodigoProcesoUnidades();
+        //$data->orden = generaCodigoProcesoUnidades();
         //$data->id_persona = $os->get_member_id();
         //genero el listado de nombre de campos
 

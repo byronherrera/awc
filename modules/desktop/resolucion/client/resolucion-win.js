@@ -1,3 +1,5 @@
+var libroDiarioSeleccionado = '';
+
 QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
     id: 'resolucion',
 
@@ -15,6 +17,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
     createWindow: function () {
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
         var accesosResolucion = this.app.isAllowedTo('accesosResolucion', this.id);
+        var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
+        console.log (accesosResolutores);
+
         finalizados = true;
         limiteresolucion = 100;
         this.selectResolucion = 0;
@@ -33,6 +38,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         var urlResolucion = "modules/desktop/resolucion/server/";
 
         var textField = new Ext.form.TextField({allowBlank: false});
+        var textFieldLibroDiario = new Ext.form.TextField({allowBlank: false});
 
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i') : '';
@@ -213,10 +219,11 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 datos: [
-                    {"id": 0, "nombre": "Sanción"},
-                    {"id": 1, "nombre": "Archivo"},
-                    {"id": 2, "nombre": "Nulidad"},
-                    {"id": 3, "nombre": "Caducidad"}
+                    {"id": 0, "nombre": "Por favor seleccione"},
+                    {"id": 1, "nombre": "Sanción"},
+                    {"id": 2, "nombre": "Archivo"},
+                    {"id": 3, "nombre": "Nulidad"},
+                    {"id": 4, "nombre": "Caducidad"}
                 ]
             }
         });
@@ -247,13 +254,14 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 datos: [
-                    {"id": 0, "nombre": "Nulidad"},
-                    {"id": 1, "nombre": "Corrección"},
-                    {"id": 2, "nombre": "Atención a escrito"},
-                    {"id": 3, "nombre": "Subsanación"},
-                    {"id": 4, "nombre": "Previo a resolver"},
-                    {"id": 5, "nombre": "Copias"},
-                    {"id": 6, "nombre": "Insistencia a informe"}
+                    {"id": 0, "nombre": "Por favor seleccione"},
+                    {"id": 1, "nombre": "Nulidad"},
+                    {"id": 2, "nombre": "Corrección"},
+                    {"id": 3, "nombre": "Atención a escrito"},
+                    {"id": 4, "nombre": "Subsanación"},
+                    {"id": 5, "nombre": "Previo a resolver"},
+                    {"id": 6, "nombre": "Copias"},
+                    {"id": 7, "nombre": "Insistencia a informe"}
                 ]
             }
         });
@@ -574,8 +582,10 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
+                {name: 'id_libro_diario', allowBlank: false},
                 {name: 'numero_resolucion', allowBlank: false},
                 {name: 'fecha_resolucion', allowBlank: false},
+                {name: 'articulo_actual', allowBlank: false},
                 {name: 'resolucion_de', allowBlank: false},
                 {name: 'multa_impuesta', allowBlank: false},
                 {name: 'observaciones', allowBlank: false},
@@ -612,7 +622,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 //Definición de campos bdd Resoluciones
                 new Ext.grid.RowNumberer(),
-                {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textField},
+                {header: 'id', dataIndex: 'id', width: 100, hidden: true},
+                {header: 'id_libro_diario', dataIndex: 'id_libro_diario', width: 100, hidden: true},
                 {
                     header: 'Número de Resolución',
                     dataIndex: 'numero_resolucion',
@@ -629,6 +640,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.form.DateField({
                         format: 'Y-m-d'
                     })
+                },
+                {
+                    header: 'Artículo Actual',
+                    dataIndex: 'articulo_actual',
+                    allowBlank: true,
+                    width: 140,
+                    editor: textField
                 },
                 {
                     header: 'Resolucion de',
@@ -742,10 +760,12 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             autoSave: true,
             baseParams: {}
         });
+
         storeLibroDiario = this.storeLibroDiario;
         limiteresolucion = 100;
         storeLibroDiario.baseParams = {
-            limit: limiteresolucion
+            limit: limiteresolucion,
+            accesosResolutores : accesosResolutores
         };
 
         this.storeLibroDiario.load();
@@ -757,8 +777,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 //Definición de campos bdd Libro Diario
                 new Ext.grid.RowNumberer(),
-                {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textField},
-                {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, width: 150, editor: textField},
+                {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldLibroDiario},
+                {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, width: 150, editor: textFieldLibroDiario},
                 {
                     header: 'Fecha de Ingreso',
                     dataIndex: 'fecha_ingreso',
@@ -782,23 +802,23 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'numero_expediente',
                     allowBlank: true,
                     width: 150,
-                    editor: textField
+                    editor: textFieldLibroDiario
                 },
                 {
                     header: 'Nombre de Administrado',
                     dataIndex: 'nombre_administrado',
                     allowBlank: true,
                     width: 250,
-                    editor: textField
+                    editor: textFieldLibroDiario
                 },
                 {
                     header: 'Nombre del Establecimiento',
-                    dataIndex: 'nombre_estbleacimiento',
+                    dataIndex: 'nombre_establecimiento',
                     allowBlank: true,
                     width: 180,
-                    editor: textField
+                    editor: textFieldLibroDiario
                 },
-                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, width: 100, editor: textField},
+                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, width: 100, editor: textFieldLibroDiario},
                 {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, width: 80, editor: comboREINCIDENCIA,
                     renderer: functionREINCIDENCIA
                 },
@@ -822,13 +842,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, width: 120, editor: comboINICIADOPOR,
                     renderer: functionINICIADOPOR
                 },
-                {header: 'Entidad', dataIndex: 'entidad', allowBlank: true, width: 200, editor: textField},
+                {header: 'Entidad', dataIndex: 'entidad', allowBlank: true, width: 200, editor: textFieldLibroDiario},
                 {
                     header: 'Número de Informe',
                     dataIndex: 'numero_informe',
                     allowBlank: true,
                     width: 150,
-                    editor: textField
+                    editor: textFieldLibroDiario
                 },
                 {
                     header: 'Medida Cautelar',
@@ -877,9 +897,14 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     rowselect: function (sm, row, rec) {
                         // recuperamos la informacion de personal asignado a ese operativo
                         //select_codigo_tramite = rec.id;
-                        storeResoluciones.load({params: {id: rec.id}});
-                        storeProvidencias.load({params: {id: rec.id}});
-                        //tramiteSeleccionado = rec.id;
+                        storeProvidencias.baseParams.id =  rec.id;
+                        storeResoluciones.baseParams.id =  rec.id;
+                        storeResoluciones.load();
+                        storeProvidencias.load();
+                        // storeResoluciones.load({params: {id: rec.id}});
+                        // storeProvidencias.load({params: {id: rec.id}});
+                        libroDiarioSeleccionado = rec.id;
+                        // {params: id: libroDiarioSeleccionado
                         //inspeccionSeleccionada = rec.id_denuncia;
                     }
                 }
@@ -917,6 +942,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
+                {name: 'id_libro_diario', allowBlank: false},
                 {name: 'numero_providencia', allowBlank: false},
                 {name: 'fecha_providencia', allowBlank: false},
                 {name: 'tipo_providencia', allowBlank: false},
@@ -957,6 +983,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 //Definición de campos bdd Providencias
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true},
+                {header: 'id_libro_diario', dataIndex: 'id_libro_diario', width: 100, hidden: true},
                 {header: 'Número de Providencia', dataIndex: 'numero_providencia', sortable: true, width: 140, editor: textField},
                 {
                     header: 'Fecha de Providencia',
@@ -1312,6 +1339,68 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 , text: 'Todos'
             });
 
+            var checkHandlerResoluciones = function (item, checked) {
+                if (checked) {
+                    var store = this.storeResoluciones;
+                    store.baseParams.filterField = item.key;
+                    searchFieldBtnResoluciones.setText(item.text);
+                }
+            };
+
+            var targetHandlerResoluciones = function (item, checked) {
+                if (checked) {
+                    //var store = this.storeResoluciones;
+                    this.seleccionDepar = item.key;
+                    this.targetFieldBtn.setText(item.text);
+                }
+            };
+            var searchFieldBtnResoluciones = new Ext.Button({
+                menu: new Ext.menu.Menu({
+                    items: [
+                        {
+                            checked: true,
+                            checkHandler: checkHandlerResoluciones,
+                            group: 'filterField',
+                            key: 'busqueda_todos',
+                            scope: this,
+                            text: 'Todos'
+                        }
+                    ]
+                })
+                , text: 'Todos'
+            });
+
+            var checkHandlerProvidencias = function (item, checked) {
+                if (checked) {
+                    var store = this.storeProvidencias;
+                    store.baseParams.filterField = item.key;
+                    searchFieldBtnProvidencias.setText(item.text);
+                }
+            };
+
+            var targetHandlerProvidencias = function (item, checked) {
+                if (checked) {
+                    //var store = this.storeResoluciones;
+                    this.seleccionDepar = item.key;
+                    this.targetFieldBtn.setText(item.text);
+                }
+            };
+            var searchFieldBtnProvidencias = new Ext.Button({
+                menu: new Ext.menu.Menu({
+                    items: [
+                        {
+                            checked: true,
+                            checkHandler: checkHandlerProvidencias,
+                            group: 'filterField',
+                            key: 'busqueda_todos',
+                            scope: this,
+                            text: 'Todos'
+                        }
+                    ]
+                })
+                , text: 'Todos'
+            });
+
             var checkHandler2 = function (item, checked) {
                 if (checked) {
                     var store = this.storeProvidencias;
@@ -1384,7 +1473,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     text: "Eliminar",
                                     scope: this,
                                     handler: this.deleteLibroDiario,
-                                    disabled: true,
+                                    //disabled: true,
                                     //disabled: !creacionTramites,
                                     iconCls: 'delete-icon'
                                 },
@@ -1399,13 +1488,14 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 '-',
                                 {
                                     xtype: 'checkbox',
-                                    boxLabel: 'Pendientes por aprobar ',
+                                    boxLabel: 'Filtro pendientes',
                                     id: 'checkPendientesAprobar',
                                     name: 'pendientesAprobar',
                                     //checked: accesosSecretaria,
                                     inputValue: '1',
                                     tooltip: 'Recargar datos',
                                     //disabled: !acceso,
+                                    disabled: true,
                                     cls: 'barramenu',
                                     handler: function (checkbox, isChecked) {
                                         //Ext.getCmp('tb_repoteDenuncias').setDisabled(!this.checked);
@@ -1427,15 +1517,15 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     iconCls: 'excel-icon',
                                     handler: this.botonGenerarActa,
                                     scope: this,
-                                    text: 'Generar Nueva Acta',
+                                    text: 'Generar reporte',
                                     tooltip: 'Se genera acta con las ',
                                     id: 'tb_repoteDenuncias',
-                                    disabled: false
+                                    disabled: true
                                 },
                                 '-',
                                 '->'
                                 , {
-                                    text: 'Buscarr por:'
+                                    text: 'Buscar por:'
                                     , xtype: 'tbtext'
                                 }
 
@@ -1443,12 +1533,12 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 , ' ', ' '
                                 , new QoDesk.QoAdmin.SearchField({
                                     paramName: 'filterText'
-                                    , store: this.storeModuloInspeccion
+                                    , store: this.storeLibroDiario
                                 }),
                             ],
                             //Llamado a función que arma la tabla de datos
                             items: [{
-                                id: 'formModuloInspeccion',
+                                id: 'formLibroDiario',
                                 titleCollapse: true,
                                 flex: 1,
                                 autoScroll: true,
@@ -1474,29 +1564,29 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                                 tbar: [
                                                     //Definición de botón nuevo
                                                     {
-                                                        id: 'btnNuevoDetalleInspeccion',
+                                                        id: 'btnNuevoResoluciones',
                                                         text: 'Nuevo',
                                                         scope: this,
-                                                        handler: this.addDetalleInspeccion,
-                                                        disabled: true,
+                                                        handler: this.addResoluciones,
+                                                        //disabled: true,
                                                         iconCls: 'save-icon'
                                                     },
                                                     '-',
                                                     //Definición de botón eliminar
                                                     {
-                                                        id: 'btnEliminarDetalleInspeccion',
+                                                        id: 'btnEliminarResoluciones',
                                                         text: "Eliminar",
                                                         scope: this,
-                                                        handler: this.deleteDetalleInspeccion,
-                                                        disabled: true,
+                                                        handler: this.deleteResoluciones,
+                                                        //disabled: true,
                                                         iconCls: 'delete-icon'
                                                     },
                                                     '-',
                                                     //Definición de botón Recargar datos
                                                     {
-                                                        id: 'btnRecargarDatosDetalleInspeccion',
+                                                        id: 'btnRecargarDatosResoluciones',
                                                         iconCls: 'reload-icon',
-                                                        handler: this.requestGridDataDetalleInspeccion,
+                                                        handler: this.requestGridDataResoluciones,
                                                         disabled: false,
                                                         scope: this,
                                                         text: 'Recargar'
@@ -1504,13 +1594,14 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                                     '-',
                                                     {
                                                         xtype: 'checkbox',
-                                                        boxLabel: 'Mostrar todas las inspecciones',
+                                                        boxLabel: 'Filtro',
                                                         id: 'checkTodasInspecciones',
                                                         name: 'todasInspecciones',
                                                         checked: false,
                                                         inputValue: '1',
-                                                        tooltip: 'Muestra todas las inspecciones',
+                                                        tooltip: 'Mostrar todas las inspecciones',
                                                         //disabled: !creacionDatosInspeccion,
+                                                        disabled: true,
                                                         cls: 'barramenu',
                                                         handler: function (checkbox, isChecked) {
                                                             Ext.getCmp('btnNuevoDetalleInspeccion').setDisabled(this.checked);
@@ -1537,11 +1628,11 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                                         , xtype: 'tbtext'
                                                     }
 
-                                                    //, searchInspeccionesBtn
+                                                    , searchFieldBtnResoluciones
                                                     , ' ', ' '
                                                     , new QoDesk.QoAdmin.SearchField({
                                                         paramName: 'filterText',
-                                                        store: this.storeDetalleTodasInspecciones
+                                                        store: this.storeResoluciones
                                                     })
                                                     /*,
                                                     '-',
@@ -1570,31 +1661,31 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                                 tbar: [
                                                     //Definición de botón nuevo
                                                     {
-                                                        id: 'btnNuevoControlProgramado',
+                                                        id: 'btnNuevoProvidencias',
                                                         text: 'Nuevo',
                                                         scope: this,
-                                                        handler: this.addControlProgramado,
+                                                        handler: this.addProvidencias,
                                                         //disabled: !creacionDatosInspeccion,
-                                                        disabled: true,
+                                                        //disabled: true,
                                                         iconCls: 'save-icon'
                                                     },
                                                     '-',
                                                     //Definición de botón eliminar
                                                     {
-                                                        id: 'btnEliminarControlProgramado',
+                                                        id: 'btnEliminarProvidencias',
                                                         text: "Eliminar",
                                                         scope: this,
-                                                        handler: this.deleteControlProgramado,
+                                                        handler: this.deleteProvidencias,
                                                         //disabled: !creacionDatosInspeccion,
-                                                        disabled: true,
+                                                        //disabled: true,
                                                         iconCls: 'delete-icon'
                                                     },
                                                     '-',
                                                     //Definición de botón Recargar datos
                                                     {
-                                                        id: 'btnRecargarDatosControlProgramado',
+                                                        id: 'btnRecargarDatosProvidencias',
                                                         iconCls: 'reload-icon',
-                                                        handler: this.requestGridDataControlProgramado,
+                                                        handler: this.requestGridDataProvidencias,
                                                         disabled: false,
                                                         scope: this,
                                                         text: 'Recargar'
@@ -1609,7 +1700,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                                     , ' ', ' '
                                                     , new QoDesk.QoAdmin.SearchField({
                                                         paramName: 'filterText',
-                                                        store: this.storeControlProgramadoInspeccion
+                                                        store: this.storeProvidencias
                                                     })
                                                 ],
                                                 items: this.gridProvidencias
@@ -1745,20 +1836,20 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             memo_ingreso: '',
             fecha_ingreso: (new Date()),
             unidad: 0,
-            numero_expediente: '',
-            nombre_administrado: '',
-            nombre_establecimiento: '',
-            cedula_ruc: '',
-            reincidencia: '',
+            numero_expediente: ' ',
+            nombre_administrado: ' ',
+            nombre_establecimiento: ' ',
+            cedula_ruc: ' ',
+            reincidencia: ' ',
             ordenanza: 0,
             articulo_numeral: 0,
-            iniciado_por: '',
-            entidad: '',
-            numero_informe: '',
-            medida_cautelar: '',
-            estado: '',
-            funcionario: '',
-            envio_expediente: '',
+            iniciado_por: ' ',
+            entidad: ' ',
+            numero_informe: ' ',
+            medida_cautelar: ' ',
+            estado: ' ',
+            funcionario: ' ',
+            envio_expediente: ' ',
             fecha_envio: (new Date()),
         });
         this.gridLibroDiario.stopEditing();
@@ -1791,9 +1882,11 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
     },
     addResoluciones: function () {
         var resoluciones = new this.storeResoluciones.recordType({
-            id: '',
-            numero_resolucion: ' ',
-            fecha_resolucion: ' ',
+            //id: '',
+            id_libro_diario: libroDiarioSeleccionado,
+            numero_resolucion: '',
+            fecha_resolucion: (new Date()),
+            articulo_actual: ' ',
             resolucion_de: '0',
             multa_impuesta: ' ',
             observaciones: ' ',
@@ -1830,11 +1923,12 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
     //Función para inserción de registros de Providencias
     addProvidencias: function () {
-        var providencias = new this.storeResoluciones.recordType({
-            id: '',
-            numero_providencia: ' ',
-            fecha_providencia: ' ',
-            tipo_providencia: ' '
+        var providencias = new this.storeProvidencias.recordType({
+            //id: '',
+            id_libro_diario: libroDiarioSeleccionado,
+            numero_providencia: '',
+            fecha_providencia: (new Date()),
+            tipo_providencia: 0,
         });
         this.gridProvidencias.stopEditing();
         this.storeProvidencias.insert(0, providencias);

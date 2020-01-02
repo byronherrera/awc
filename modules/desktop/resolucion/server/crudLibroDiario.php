@@ -11,6 +11,7 @@ function selectOrdenanzas()
     global $os;
 
     $columnaBusqueda = 'busqueda_todos';
+    $usuarioLog = $os->get_member_id();
     $where = '';
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
@@ -50,9 +51,21 @@ function selectOrdenanzas()
             $cadena = substr($cadena,0,-3);
             $where = " WHERE $cadena ";
         }
+
     }
 
-    $usuarioLog = $os->get_member_id();
+    if(isset ($_POST['accesosResolutores'])){
+        $acceso = $_POST['accesosResolutores'];
+        if($acceso=='true'){
+            if($where == ''){
+                $where = " WHERE funcionario = $usuarioLog ";
+            }else{
+                $where = $where . " AND funcionario = $usuarioLog ";
+            }
+        }
+    }
+
+    //$usuarioLog = $os->get_member_id();
 
 
 
@@ -72,6 +85,7 @@ function selectOrdenanzas()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
+//    echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

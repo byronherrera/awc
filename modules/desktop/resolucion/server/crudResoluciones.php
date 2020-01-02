@@ -12,38 +12,38 @@ function selectOrdenanzas()
 
     $columnaBusqueda = 'busqueda_todos';
     $where = '';
+    if (isset($_POST['id'])  ) {
+//    if ((isset($_POST['id']) && ( strlen($_POST['filterText']) == 0))) {
+        $id = (int)$_POST ['id'];
+        $chain = "id_libro_diario  = '$id'";
+        $where = " WHERE $chain ";
+    }
+
+
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
     }
 
     if (isset($_POST['filterText'])) {
+    if (strlen($_POST['filterText']>0)) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
         if ($columnaBusqueda != 'busqueda_todos') {
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+
+            if($where == ''){
+                $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+            }else{
+                $where = $where . " AND $columnaBusqueda LIKE '%$campo%' ";
+            }
+
         } else {
             $listadoCampos = array(
-                'cedula_ruc',
-                'ordenanza',
-                'articulo_numeral',
-                'unidad',
-                'comisaria',
-                'numero_expediente',
-                'numero_predio',
-                'nombre_administrado',
-                'nombre_establecimiento',
-                'funcionario',
                 'numero_resolucion',
                 'fecha_resolucion',
-                'nulidad',
-                'caducidad',
-                'archivo',
-                'es_obligatorio',
+                //'resolucion_de',
                 'multa_impuesta',
                 'observaciones',
-                'direccion_infraccion',
-                'direccion_notificacion',
-                'comisaria',
+                'articulo_actual',
             );
             $cadena = '';
             foreach ($listadoCampos as &$valor) {
@@ -51,17 +51,19 @@ function selectOrdenanzas()
             }
 
             $cadena = substr($cadena,0,-3);
-            $where = " WHERE $cadena ";
+
+            if($where == ''){
+                $where = " WHERE $cadena ";
+            }else{
+                $where = $where . " AND $cadena ";
+            }
+
         }
+    }
     }
 
     $usuarioLog = $os->get_member_id();
 
-    if (isset($_POST['id'])) {
-        $id = (int)$_POST ['id'];
-        $chain = "id_libro_diario  = '$id'";
-        $where = " WHERE $chain ";
-    }
 
     if (isset ($_POST['start']))
         $start = $_POST['start'];
@@ -79,7 +81,7 @@ function selectOrdenanzas()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_resoluciones $where $orderby LIMIT $start, $limit";
-    //echo($sql);
+   // echo($sql);
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
