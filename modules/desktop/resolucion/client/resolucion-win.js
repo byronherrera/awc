@@ -16,8 +16,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
     createWindow: function () {
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
-        var accesosResolucion = this.app.isAllowedTo('accesosResolucion', this.id);
+        // var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
         var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
+        var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
         console.log (accesosResolutores);
 
         finalizados = true;
@@ -25,7 +26,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         this.selectResolucion = 0;
         selectResolucion = 0;
 
-        var acceso = (accesosAdministradorOpe || accesosResolucion) ? true : false
+        var acceso = (accesosAdministradorOpe || accesosResolutores) ? true : false
 
 
         var desktop = this.app.getDesktop();
@@ -42,6 +43,10 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i') : '';
+        }
+
+        function formatPositive(value) {
+            return value<0 ? value*(-1) : value;
         }
 
         function formatDateMin(value) {
@@ -122,9 +127,10 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 datos: [
-                    {"id": 0, "nombre": "Clausura"},
-                    {"id": 1, "nombre": "Suspención de actividad"},
-                    {"id": 2, "nombre": "Retiro de bienes"}
+                    {"id": 0, "nombre": "Sin medida"},
+                    {"id": 1, "nombre": "Clausura"},
+                    {"id": 2, "nombre": "Suspención de actividad"},
+                    {"id": 3, "nombre": "Retiro de bienes"}
                 ]
             }
         });
@@ -600,7 +606,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
         //Definición de store para módulo Resoluciones
         this.storeResoluciones = new Ext.data.Store({
-            id: "id",
+            id: "idStoreResoluciones",
             proxy: proxyResoluciones,
             reader: readerResoluciones,
             writer: writerResoluciones,
@@ -661,7 +667,16 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'multa_impuesta',
                     allowBlank: true,
                     width: 140,
-                    editor: textField
+//                    editor: new Ext.form.TextField({allowBlank: false, minValue: 0}),
+
+                    editor: new Ext.ux.form.SpinnerField({
+                        minValue: 0,
+//                        maxValue: 200,
+                        allowBlank: false
+                    }),
+                    renderer: 'usMoney',
+//                    allowNegative: false
+//                    renderer: formatPositive
                 },
                 {
                     header: 'Observaciones',
@@ -751,7 +766,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
         //Definición de store para módulo Libro Diario
         this.storeLibroDiario = new Ext.data.Store({
-            id: "id",
+            id: "idStoreLibroDiario",
             proxy: proxyLibroDiario,
             reader: readerLibroDiario,
             writer: writerLibroDiario,
@@ -957,7 +972,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
         //Definición de store para pestaña Providencias
         this.storeProvidencias = new Ext.data.Store({
-            id: "id",
+            id: "idStoreProvidencias",
             proxy: proxyProvidencias,
             reader: readerProvidencias,
             writer: writerProvidencias,
@@ -1454,7 +1469,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             closable: false,
                             //  layout: 'fit',
                             height: winHeight - 70,
-                            disabled: accesosResolucion,
+                            disabled: accesosResolutores,
                             hidden: true,
                             id: 'libro-diario',
                             //Barra de botones
@@ -1489,8 +1504,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 {
                                     xtype: 'checkbox',
                                     boxLabel: 'Filtro pendientes',
-                                    id: 'checkPendientesAprobar',
-                                    name: 'pendientesAprobar',
+                                    id: 'checkPendientesAprobarLibroDiario',
+                                    name: 'pendientesAprobarLibroDiario',
                                     //checked: accesosSecretaria,
                                     inputValue: '1',
                                     tooltip: 'Recargar datos',
@@ -1519,7 +1534,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Generar reporte',
                                     tooltip: 'Se genera acta con las ',
-                                    id: 'tb_repoteDenuncias',
+                                    id: 'tb_reporteDenuncias',
                                     disabled: true
                                 },
                                 '-',
@@ -1595,8 +1610,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                                     {
                                                         xtype: 'checkbox',
                                                         boxLabel: 'Filtro',
-                                                        id: 'checkTodasInspecciones',
-                                                        name: 'todasInspecciones',
+                                                        id: 'checkTodasResoluciones',
+                                                        name: 'todasResoluciones',
                                                         checked: false,
                                                         inputValue: '1',
                                                         tooltip: 'Mostrar todas las inspecciones',
@@ -1715,7 +1730,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             title: 'Reportes',
                             closable: true,
                             layout: 'border',
-                            //disabled:true,
+                            disabled:true,
                             tbar: [
                                 {
                                     iconCls: 'reload-icon',
@@ -1801,7 +1816,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     limit: limiteresolucion,
                     finalizados: Ext.getCmp('checkNoRecibidos').getValue(),
                     accesosAdministradorOpe: accesosAdministradorOpe,
-                    accesosResolucion: accesosResolucion
+                    accesosResolutores: accesosResolutores
                 }
             });
             this.storeProvidencias.load();
@@ -1987,10 +2002,10 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
 
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
-        var accesosResolucion = this.app.isAllowedTo('accesosResolucion', this.id);
+        var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
 
         this.storeDocumentosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
-        this.storeDocumentosReporte.baseParams.accesosResolucion = accesosResolucion;
+        this.storeDocumentosReporte.baseParams.accesosResolutores = accesosResolutores;
 
         this.storeDocumentosReporte.load();
     },
