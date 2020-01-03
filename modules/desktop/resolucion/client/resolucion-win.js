@@ -89,6 +89,37 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         }
         //Fin combo REINCIDENCIA
 
+        //Inicio combo TIPO DE UNIDAD
+        storeTIPOUNIDAD = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "UDC"},
+                    {"id": 1, "nombre": "ASEO"}
+                ]
+            }
+        });
+
+        var comboTIPOUNIDAD = new Ext.form.ComboBox({
+            id: 'comboTIPOUNIDAD',
+            store: storeTIPOUNIDAD,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function funcionTIPOUNIDAD(id) {
+            var index = storeTIPOUNIDAD.find('id', id);
+            if (index > -1) {
+                var record = storeTIPOUNIDAD.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //Fin combo TIPOUNIDAD
+
         //Inicio combo INICIADO POR
         storeINICIADOPOR = new Ext.data.JsonStore({
             root: 'datos',
@@ -740,9 +771,12 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'memo_ingreso', allowBlank: false},
                 {name: 'fecha_ingreso', allowBlank: false},
                 {name: 'unidad', allowBlank: false},
+                {name: 'tipo_unidad', allowBlank: false},
                 {name: 'numero_expediente', allowBlank: false},
                 {name: 'nombre_administrado', allowBlank: false},
                 {name: 'nombre_establecimiento', allowBlank: false},
+                {name: 'direccion_notificacion', allowBlank: false},
+                {name: 'direccion_domicilio', allowBlank: false},
                 {name: 'cedula_ruc', allowBlank: false},
                 {name: 'reincidencia', allowBlank: false},
                 {name: 'ordenanza', allowBlank: false},
@@ -811,6 +845,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     width: 150,
                     editor: comboUnidad,
                     renderer: rendererUnidad
+                },                {
+                    header: 'Tipo Unidad',
+                    dataIndex: 'tipo_unidad',
+                    allowBlank: true,
+                    width: 150,
+                    editor: comboTIPOUNIDAD,
+                    renderer: funcionTIPOUNIDAD
                 },
                 {
                     header: 'Número de Expediente',
@@ -837,6 +878,27 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, width: 80, editor: comboREINCIDENCIA,
                     renderer: functionREINCIDENCIA
                 },
+                {
+                    header: 'Dirección de Notificación',
+                    dataIndex: 'direccion_notificacion',
+                    allowBlank: true,
+                    width: 250,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Dirección de Domicilio',
+                    dataIndex: 'direccion_domicilio',
+                    allowBlank: true,
+                    width: 250,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Nombre de Administrado',
+                    dataIndex: 'nombre_administrado',
+                    allowBlank: true,
+                    width: 250,
+                    editor: textFieldLibroDiario
+                },
                 //{header: 'Número de Predio', dataIndex: 'numero_predio', allowBlank:true, width: 100, editor: textField},
                 {
                     header: 'Ordenanza',
@@ -846,14 +908,14 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboOrdenanza,
                     renderer: rendererOrdenanza
                 },
-                {
-                    header: 'Artículo y numeral',
-                    dataIndex: 'articulo_numeral',
-                    allowBlank: true,
-                    width: 300,
-                    editor: comboOrdenanzaTema,
-                    renderer: rendererOrdenanzaTema
-                },
+                // {
+                //     header: 'Artículo y numeral',
+                //     dataIndex: 'articulo_numeral',
+                //     allowBlank: true,
+                //     width: 300,
+                //     editor: comboOrdenanzaTema,
+                //     renderer: rendererOrdenanzaTema
+                // },
                 {header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, width: 120, editor: comboINICIADOPOR,
                     renderer: functionINICIADOPOR
                 },
@@ -1851,9 +1913,12 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             memo_ingreso: '',
             fecha_ingreso: (new Date()),
             unidad: 0,
+            tipo_unidad: ' ',
             numero_expediente: ' ',
             nombre_administrado: ' ',
             nombre_establecimiento: ' ',
+            direccion_notificacion: ' ',
+            direccion_domicilio: ' ',
             cedula_ruc: ' ',
             reincidencia: ' ',
             ordenanza: 0,
@@ -1863,8 +1928,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             numero_informe: ' ',
             medida_cautelar: ' ',
             estado: ' ',
-            funcionario: ' ',
-            envio_expediente: ' ',
+            funcionario: 0,
+            envio_expediente: 0,
             fecha_envio: (new Date()),
         });
         this.gridLibroDiario.stopEditing();
