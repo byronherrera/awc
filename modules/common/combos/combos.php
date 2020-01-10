@@ -274,7 +274,7 @@ function comboPersonalSecretaria()
             FROM
             qo_members a,qo_groups_has_members b
             WHERE
-                a.id = b.qo_members_id AND a.active = 1 
+                a.id = b.qo_members_id AND a.active = 1
             ORDER BY
                 a.last_name ASC,a.first_name ASC";
     $result = $os->db->conn->query($sql);
@@ -291,15 +291,10 @@ function comboPersonalResolucion()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT
-            a.id,
-            CONCAT(a.first_name,' ',a.last_name) AS nombre
-            FROM
-            qo_members a,qo_groups_has_members b
-            WHERE
-                a.id = b.qo_members_id AND a.active = 1 
-            ORDER BY
-                a.last_name ASC,a.first_name ASC";
+    $sql = "SELECT a.id, CONCAT(a.first_name,' ',a.last_name) AS nombre FROM qo_members a
+            WHERE id in (SELECT qo_members_id FROM qo_groups_has_members where qo_groups_id=11)
+            AND active = 1 ORDER BY a.first_name ASC,a.last_name ASC";
+//    echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -335,7 +330,7 @@ function comboPersonalOperativos()
             FROM
             qo_members a,qo_groups_has_members b
             WHERE
-                a.id = b.qo_members_id AND a.active = 1 $todos   
+                a.id = b.qo_members_id AND a.active = 1 $todos
             ORDER BY
                 a.last_name ASC,a.first_name ASC";
 
@@ -376,7 +371,7 @@ function comboPersonalInstruccion()
             FROM
             qo_members a,qo_groups_has_members b
             WHERE
-                a.id = b.qo_members_id AND a.active = 1 $todos   
+                a.id = b.qo_members_id AND a.active = 1 $todos
             ORDER BY
                 a.last_name ASC,a.first_name ASC";
 
@@ -482,14 +477,14 @@ function comboUnidadesTotal()
 
     $zonal_funcionario = $os->get_zonal_id();
     //$sql = "SELECT amc_unidades.id, CONCAT(amc_unidades.nombre, 'SSSS') AS nombre FROM amc_unidades WHERE activo = 1 ORDER BY id";
-    $sql = "(SELECT 
+    $sql = "(SELECT
                 b.id, IF((SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' ) = 0,b.nombre,
                 (CONCAT(b.nombre, ' ( ',(SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' ), ' ) '))) AS nombre
                 FROM amc_unidades b
                 WHERE b.activo = 1 AND id_zonal = " . $zonal_funcionario ."
                  ORDER BY b.id )
-                  UNION 
-                 (SELECT 
+                  UNION
+                 (SELECT
                 b.id, IF((SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true'  AND id_zonal_origen = " . $zonal_funcionario ." ) = 0,b.nombre,
                 (CONCAT(b.nombre, ' ( ',(SELECT COUNT(*) FROM amc_denuncias as  a WHERE a.reasignacion = b.id AND despacho_secretaria <> 'true' AND id_zonal_origen = " . $zonal_funcionario ." ), ' ) '))) AS nombre
                 FROM amc_unidades b
@@ -825,5 +820,3 @@ switch ($_GET['tipo']) {
         break;
 }
 ?>
-
-

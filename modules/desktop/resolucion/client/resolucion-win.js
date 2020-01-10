@@ -19,7 +19,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         // var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
         var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
-        console.log (accesosResolutores);
+        console.log ("accesosResolutores",accesosResolutores);
 
         finalizados = true;
         limiteresolucion = 100;
@@ -40,6 +40,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
         var textField = new Ext.form.TextField({allowBlank: false});
         var textFieldLibroDiario = new Ext.form.TextField({allowBlank: false});
+        var textFieldResoluciones = new Ext.form.TextField({allowBlank: false});
 
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i') : '';
@@ -780,7 +781,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'cedula_ruc', allowBlank: false},
                 {name: 'reincidencia', allowBlank: false},
                 {name: 'ordenanza', allowBlank: false},
-                {name: 'articulo_numeral', allowBlank: false},
+                // {name: 'articulo_numeral', allowBlank: false},
                 {name: 'iniciado_por', allowBlank: false},
                 {name: 'entidad', allowBlank: false},
                 {name: 'numero_informe', allowBlank: false},
@@ -827,7 +828,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 //Definición de campos bdd Libro Diario
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldLibroDiario},
-                {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, width: 150, editor: textFieldLibroDiario},
+                {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, sortable: true, width: 150, editor: textFieldLibroDiario},
                 {
                     header: 'Fecha de Ingreso',
                     dataIndex: 'fecha_ingreso',
@@ -842,6 +843,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Unidad',
                     dataIndex: 'unidad',
                     allowBlank: true,
+                    sortable: true,
                     width: 150,
                     editor: comboUnidad,
                     renderer: rendererUnidad
@@ -849,6 +851,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Tipo Unidad',
                     dataIndex: 'tipo_unidad',
                     allowBlank: true,
+                    sortable: true,
                     width: 150,
                     editor: comboTIPOUNIDAD,
                     renderer: funcionTIPOUNIDAD
@@ -857,6 +860,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Número de Expediente',
                     dataIndex: 'numero_expediente',
                     allowBlank: true,
+                    sortable: true,
                     width: 150,
                     editor: textFieldLibroDiario
                 },
@@ -864,6 +868,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Nombre de Administrado',
                     dataIndex: 'nombre_administrado',
                     allowBlank: true,
+                    sortable: true,
                     width: 250,
                     editor: textFieldLibroDiario
                 },
@@ -871,17 +876,19 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Nombre del Establecimiento',
                     dataIndex: 'nombre_establecimiento',
                     allowBlank: true,
+                    sortable: true,
                     width: 180,
                     editor: textFieldLibroDiario
                 },
-                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, width: 100, editor: textFieldLibroDiario},
-                {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, width: 80, editor: comboREINCIDENCIA,
+                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, sortable: true, width: 100, editor: textFieldLibroDiario},
+                {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, sortable: true, width: 80, editor: comboREINCIDENCIA,
                     renderer: functionREINCIDENCIA
                 },
                 {
                     header: 'Dirección de Notificación',
                     dataIndex: 'direccion_notificacion',
                     allowBlank: true,
+                    sortable: true,
                     width: 250,
                     editor: textFieldLibroDiario
                 },
@@ -889,6 +896,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Dirección de Domicilio',
                     dataIndex: 'direccion_domicilio',
                     allowBlank: true,
+                    sortable: true,
                     width: 250,
                     editor: textFieldLibroDiario
                 },
@@ -896,6 +904,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Nombre de Administrado',
                     dataIndex: 'nombre_administrado',
                     allowBlank: true,
+                    sortable: true,
                     width: 250,
                     editor: textFieldLibroDiario
                 },
@@ -904,6 +913,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Ordenanza',
                     dataIndex: 'ordenanza',
                     allowBlank: true,
+                    sortable: true,
                     width: 180,
                     editor: comboOrdenanza,
                     renderer: rendererOrdenanza
@@ -916,14 +926,15 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 //     editor: comboOrdenanzaTema,
                 //     renderer: rendererOrdenanzaTema
                 // },
-                {header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, width: 120, editor: comboINICIADOPOR,
+                {header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, sortable: true, width: 120, editor: comboINICIADOPOR,
                     renderer: functionINICIADOPOR
                 },
-                {header: 'Entidad', dataIndex: 'entidad', allowBlank: true, width: 200, editor: textFieldLibroDiario},
+                {header: 'Entidad', dataIndex: 'entidad', allowBlank: true, sortable: true, width: 200, editor: textFieldLibroDiario},
                 {
                     header: 'Número de Informe',
                     dataIndex: 'numero_informe',
                     allowBlank: true,
+                    sortable: true,
                     width: 150,
                     editor: textFieldLibroDiario
                 },
@@ -931,16 +942,18 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Medida Cautelar',
                     dataIndex: 'medida_cautelar',
                     allowBlank: true,
+                    sortable: true,
                     width: 150,
                     editor: comboMEDIDACAUTELAR,
                     renderer: functionMEDIDACAUTELAR
                 },
-                {header: 'Estado', dataIndex: 'estado', allowBlank: true, width: 80, editor: comboESTADO,
+                {header: 'Estado', dataIndex: 'estado', allowBlank: true, sortable: true, width: 80, editor: comboESTADO,
                     renderer: functionESTADO},
                 {
                     header: 'Funcionario',
                     dataIndex: 'funcionario',
                     allowBlank: true,
+                    sortable: true,
                     width: 300,
                     editor: comboPersonal,
                     renderer: rendererPersonal
@@ -949,6 +962,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Envio Expediente',
                     dataIndex: 'envio_expediente',
                     allowBlank: true,
+                    sortable: true,
                     width: 100,
                     editor: comboENVIOEXPEDIENTE,
                     renderer: functionENVIOEXPEDIENTE
@@ -995,10 +1009,414 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
                 emptyMsg: "No existen trámites que mostrar"
-            })
+            }),
+            listeners:{
+                beforeedit: function (e) {
+                    // si el operativo ya esta marcado como finalizado no se lo puede editar
+                    //console.log ("res "  + accesosResolutores )
+                    if (!accesosResolutores) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
         });
         //Fin formato grid Libro Diario
         //Fin ventana resolucion Libro Diario
+
+        
+        // inicio ventana Reporte Libro Diario
+        //Definición de url CRUD
+        var proxyReporteLibroDiario = new Ext.data.HttpProxy({
+            api: {
+                create: urlResolucion + "crudReporteLibroDiario.php?operation=insert",
+                read: urlResolucion + "crudReporteLibroDiario.php?operation=select",
+                update: urlResolucion + "crudReporteLibroDiario.php?operation=update",
+                destroy: urlResolucion + "crudReporteLibroDiario.php?operation=delete"
+            }
+        });
+
+        //Definición de lectura de campos bdd Libro Diario
+        var readerReporteLibroDiario = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'memo_ingreso', allowBlank: false},
+                {name: 'fecha_ingreso', allowBlank: false},
+                {name: 'unidad', allowBlank: false},
+                {name: 'tipo_unidad', allowBlank: false},
+                {name: 'numero_expediente', allowBlank: false},
+                {name: 'nombre_administrado', allowBlank: false},
+                {name: 'nombre_establecimiento', allowBlank: false},
+                {name: 'direccion_notificacion', allowBlank: false},
+                {name: 'direccion_domicilio', allowBlank: false},
+                {name: 'cedula_ruc', allowBlank: false},
+                {name: 'reincidencia', allowBlank: false},
+                {name: 'ordenanza', allowBlank: false},
+                // {name: 'articulo_numeral', allowBlank: false},
+                {name: 'iniciado_por', allowBlank: false},
+                {name: 'entidad', allowBlank: false},
+                {name: 'numero_informe', allowBlank: false},
+                {name: 'medida_cautelar', allowBlank: false},
+                {name: 'estado', allowBlank: false},
+                {name: 'funcionario', allowBlank: false},
+                {name: 'envio_expediente', allowBlank: false},
+                {name: 'fecha_envio', allowBlank: false}
+            ]
+        });
+
+        //Definición de escritura en campos bdd Libro Diario
+        var writerReporteLibroDiario = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        //Definición de store para módulo Libro Diario
+        this.storeReporteLibroDiario = new Ext.data.Store({
+            id: "idStoreLibroDiario",
+            proxy: proxyReporteLibroDiario,
+            reader: readerReporteLibroDiario,
+            writer: writerReporteLibroDiario,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true,
+            autoSave: true,
+            baseParams: {}
+        });
+
+        storeReporteLibroDiario = this.storeReporteLibroDiario;
+        limiteresolucion = 100;
+        storeReporteLibroDiario.baseParams = {
+            limit: limiteresolucion,
+            accesosResolutores : accesosResolutores
+        };
+
+        this.storeReporteLibroDiario.load();
+
+        //Inicio formato grid Reportes Libro Diario
+        this.gridReporteLibroDiario = new Ext.grid.EditorGridPanel({
+            height: winHeight / 2 + 105,
+            store: this.storeReporteLibroDiario,
+            columns: [
+                //Definición de campos bdd Libro Diario
+                new Ext.grid.RowNumberer(),
+                {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldLibroDiario},
+                {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, sortable: true, width: 150, editor: textFieldLibroDiario},
+                {
+                    header: 'Fecha de Ingreso',
+                    dataIndex: 'fecha_ingreso',
+                    sortable: true,
+                    width: 140,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
+                {
+                    header: 'Unidad',
+                    dataIndex: 'unidad',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 150,
+                    editor: comboUnidad,
+                    renderer: rendererUnidad
+                },                {
+                    header: 'Tipo Unidad',
+                    dataIndex: 'tipo_unidad',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 150,
+                    editor: comboTIPOUNIDAD,
+                    renderer: funcionTIPOUNIDAD
+                },
+                {
+                    header: 'Número de Expediente',
+                    dataIndex: 'numero_expediente',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 150,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Nombre de Administrado',
+                    dataIndex: 'nombre_administrado',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 250,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Nombre del Establecimiento',
+                    dataIndex: 'nombre_establecimiento',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 180,
+                    editor: textFieldLibroDiario
+                },
+                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, sortable: true, width: 100, editor: textFieldLibroDiario},
+                {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, sortable: true, width: 80, editor: comboREINCIDENCIA,
+                    renderer: functionREINCIDENCIA
+                },
+                {
+                    header: 'Dirección de Notificación',
+                    dataIndex: 'direccion_notificacion',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 250,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Dirección de Domicilio',
+                    dataIndex: 'direccion_domicilio',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 250,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Nombre de Administrado',
+                    dataIndex: 'nombre_administrado',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 250,
+                    editor: textFieldLibroDiario
+                },
+                //{header: 'Número de Predio', dataIndex: 'numero_predio', allowBlank:true, width: 100, editor: textField},
+                {
+                    header: 'Ordenanza',
+                    dataIndex: 'ordenanza',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 180,
+                    editor: comboOrdenanza,
+                    renderer: rendererOrdenanza
+                },
+                // {
+                //     header: 'Artículo y numeral',
+                //     dataIndex: 'articulo_numeral',
+                //     allowBlank: true,
+                //     width: 300,
+                //     editor: comboOrdenanzaTema,
+                //     renderer: rendererOrdenanzaTema
+                // },
+                {header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, sortable: true, width: 120, editor: comboINICIADOPOR,
+                    renderer: functionINICIADOPOR
+                },
+                {header: 'Entidad', dataIndex: 'entidad', allowBlank: true, sortable: true, width: 200, editor: textFieldLibroDiario},
+                {
+                    header: 'Número de Informe',
+                    dataIndex: 'numero_informe',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 150,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Medida Cautelar',
+                    dataIndex: 'medida_cautelar',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 150,
+                    editor: comboMEDIDACAUTELAR,
+                    renderer: functionMEDIDACAUTELAR
+                },
+                {header: 'Estado', dataIndex: 'estado', allowBlank: true, sortable: true, width: 80, editor: comboESTADO,
+                    renderer: functionESTADO},
+                {
+                    header: 'Funcionario',
+                    dataIndex: 'funcionario',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 300,
+                    editor: comboPersonal,
+                    renderer: rendererPersonal
+                },
+                {
+                    header: 'Envio Expediente',
+                    dataIndex: 'envio_expediente',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 100,
+                    editor: comboENVIOEXPEDIENTE,
+                    renderer: functionENVIOEXPEDIENTE
+                },
+                {
+                    header: 'Fecha de Envío',
+                    dataIndex: 'fecha_envio',
+                    sortable: true,
+                    width: 100,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
+
+            ],
+            viewConfig: {
+                forceFit: false
+            },
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true,
+                listeners: {
+                    rowselect: function (sm, row, rec) {
+                        // recuperamos la informacion de personal asignado a ese operativo
+                        //select_codigo_tramite = rec.id;
+                        storeProvidencias.baseParams.id =  rec.id;
+                        storeResoluciones.baseParams.id =  rec.id;
+                        storeResoluciones.load();
+                        storeProvidencias.load();
+                        // storeResoluciones.load({params: {id: rec.id}});
+                        // storeProvidencias.load({params: {id: rec.id}});
+                        libroDiarioSeleccionado = rec.id;
+                        // {params: id: libroDiarioSeleccionado
+                        //inspeccionSeleccionada = rec.id_denuncia;
+                    }
+                }
+            }),
+            border: false,
+            stripeRows: true,
+            //Definición de barra de paginado
+            bbar: new Ext.PagingToolbar({
+                pageSize: limiteresolucion,
+                store: storeLibroDiario,
+                displayInfo: true,
+                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
+                emptyMsg: "No existen trámites que mostrar"
+            }),
+            listeners:{
+                beforeedit: function (e) {
+                    // si el operativo ya esta marcado como finalizado no se lo puede editar
+                    //console.log ("res "  + accesosResolutores )
+                    if (!accesosResolutores) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        });
+        //Fin formato grid Libro Diario
+        //Fin ventana resolucion Libro Diario
+
+       // inicio ventana Reporte Resoluciones
+        //Definición de url CRUD
+        var proxyReporteResoluciones = new Ext.data.HttpProxy({
+            api: {
+                create: urlResolucion + "crudReporteResoluciones.php?operation=insert",
+                read: urlResolucion + "crudReporteResoluciones.php?operation=select",
+                update: urlResolucion + "crudReporteResoluciones.php?operation=update",
+                destroy: urlResolucion + "crudReporteResoluciones.php?operation=delete"
+            }
+        });
+
+        //Definición de lectura de campos bdd Resoluciones
+        var readerReporteResoluciones = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'nombre', allowBlank: false},
+                {name: 'veces', allowBlank: false},
+
+            ]
+        });
+
+        //Definición de escritura en campos bdd Resoluciones
+        var writerReporteResoluciones = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        //Definición de store para módulo Resoluciones
+        this.storeReporteResoluciones = new Ext.data.Store({
+            id: "idStoreResoluciones",
+            proxy: proxyReporteResoluciones,
+            reader: readerReporteResoluciones,
+            writer: writerReporteResoluciones,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true,
+            autoSave: true,
+            baseParams: {}
+        });
+
+        storeReporteResoluciones = this.storeReporteResoluciones;
+        limiteresolucion = 100;
+        storeReporteResoluciones.baseParams = {
+            limit: limiteresolucion,
+            accesosResolutores : accesosResolutores
+        };
+
+        this.storeReporteResoluciones.load();
+
+        //Inicio formato grid Reportes Resoluciones
+        this.gridReporteResoluciones = new Ext.grid.EditorGridPanel({
+            height: winHeight / 2 + 105,
+            store: this.storeReporteResoluciones,
+            columns: [
+                //Definición de campos bdd Resoluciones
+                new Ext.grid.RowNumberer(),
+                {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldResoluciones},
+                {header: 'Nombre', dataIndex: 'nombre', allowBlank: true, sortable: true, width: 150, editor: textFieldResoluciones},
+                {
+                    header: 'Total de resoluciones emitidas',
+                    dataIndex: 'veces',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 150,
+                    editor: textFieldResoluciones
+                }
+
+            ],
+            viewConfig: {
+                forceFit: false
+            },
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true,
+                listeners: {
+                    rowselect: function (sm, row, rec) {
+                        // recuperamos la informacion de personal asignado a ese operativo
+                        //select_codigo_tramite = rec.id;
+                        storeProvidencias.baseParams.id =  rec.id;
+                        storeResoluciones.baseParams.id =  rec.id;
+                        storeResoluciones.load();
+                        storeProvidencias.load();
+                        // storeResoluciones.load({params: {id: rec.id}});
+                        // storeProvidencias.load({params: {id: rec.id}});
+                        libroDiarioSeleccionado = rec.id;
+                        // {params: id: libroDiarioSeleccionado
+                        //inspeccionSeleccionada = rec.id_denuncia;
+                    }
+                }
+            }),
+            border: false,
+            stripeRows: true,
+            //Definición de barra de paginado
+            bbar: new Ext.PagingToolbar({
+                pageSize: limiteresolucion,
+                store: storeLibroDiario,
+                displayInfo: true,
+                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
+                emptyMsg: "No existen trámites que mostrar"
+            }),
+            listeners:{
+                beforeedit: function (e) {
+                    // si el operativo ya esta marcado como finalizado no se lo puede editar
+                    //console.log ("res "  + accesosResolutores )
+                    if (!accesosResolutores) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        });
+        //Fin formato grid Resoluciones
+        //Fin ventana resolucion Resoluciones
 
         //Inicio ventana resolucion Providencias
         //Definición de url CRUD
@@ -1149,7 +1567,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             var winHeight = desktop.getWinHeight();
             this.seleccionDepar = 3;
 
-            this.formConsultaDocumentos = new Ext.FormPanel({
+            this.formConsultaLibroDiario = new Ext.FormPanel({
                 layout: 'column',
                 // title: 'Ingrese los parámetros',
                 frame: true,
@@ -1160,30 +1578,28 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                         layout: 'form',
                         items: [
                             {
-                                xtype: 'datetimefield',
+                                xtype: 'datefield',
                                 fieldLabel: 'Fecha Inicio',
                                 id: 'busqueda_fecha_inicio',
                                 anchor: '95%',
-                                dateFormat: 'Y-m-d',
-                                timeFormat: 'H:i:s'
+                                format: 'Y-m-d',
                             },
                             {
-                                xtype: 'datetimefield',
+                                xtype: 'datefield',
                                 fieldLabel: 'Fecha Fin',
                                 id: 'busqueda_fecha_fin',
                                 anchor: '95%',
-                                dateFormat: 'Y-m-d',
-                                timeFormat: 'H:i:s'
+                                format: 'Y-m-d'
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Tipo control',
-                                id: 'busqueda_tipo_control',
-                                name: 'busqueda_tipo_control',
-                                hiddenName: 'busqueda_tipo_control',
+                                fieldLabel: 'Ordenanza',
+                                id: 'ordenanza',
+                                name: 'ordenanza',
+                                hiddenName: 'ordenanza',
 
                                 anchor: '95%',
-                                ////store:  storeOPTID,
+                                store:  storeOrdenanza,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -1192,13 +1608,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Nivel Complejidad',
-                                id: 'busqueda_nivel_complejidad',
-                                name: 'busqueda_nivel_complejidad',
-                                hiddenName: 'busqueda_nivel_complejidad',
+                                fieldLabel: 'Resolución de',
+                                id: 'resolucion_de',
+                                name: 'resolucion_de',
+                                hiddenName: 'resolucion_de',
 
                                 anchor: '95%',
-                                //store:  storeOPNICO,
+                                store:  storeRESOLUCIONDE,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -1207,13 +1623,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Responsable',
-                                id: 'busqueda_persona_encargada',
-                                name: 'busqueda_persona_encargada',
-                                hiddenName: 'busqueda_persona_encargada',
+                                fieldLabel: 'Funcionario',
+                                id: 'funcionario',
+                                name: 'funcionario',
+                                hiddenName: 'funcionario',
 
                                 anchor: '95%',
-                                //store:  storePRD,
+                                store:  storePersonal,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -1226,30 +1642,15 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                         columnWidth: 1 / 3,
                         layout: 'form',
                         items: [
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Zonal',
-                                id: 'busqueda_zonal',
-                                name: 'busqueda_zonal',
-                                hiddenName: 'busqueda_zonal',
-
-                                anchor: '95%',
-                                //store:  storeZONA,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Unidad',
-                                id: 'busqueda_unidad_asignado',
-                                name: 'busqueda_unidad_asignado',
-                                hiddenName: 'busqueda_unidad_asignado',
+                                id: 'unidad',
+                                name: 'unidad',
+                                hiddenName: 'unidad',
 
                                 anchor: '95%',
-                                //store:  storeOPREA,
+                                store:  storeUnidad2,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -1258,13 +1659,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Oper. Tipo',
-                                id: 'busqueda_tipo_resolucion',
-                                name: 'busqueda_tipo_resolucion',
-                                hiddenName: 'busqueda_tipo_resolucion',
+                                fieldLabel: 'Iniciado por',
+                                id: 'iniciado_por',
+                                name: 'iniciado_por',
+                                hiddenName: 'iniciado_por',
 
                                 anchor: '95%',
-                                //store:  storeOPTIPO,
+                                store:  storeINICIADOPOR,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -1273,113 +1674,256 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Estado',
-
-                                id: 'busqueda_estado',
-                                name: 'busqueda_estado',
-                                hiddenName: 'busqueda_estado',
-
+                                fieldLabel: 'Medida cautelar',
+                                id: 'medida_cautelar',
+                                name: 'medida_cautelar',
+                                hiddenName: 'medida_cautelar',
 
                                 anchor: '95%',
-                                //store:  storeOPESTA,
+                                store:  storeMEDIDACAUTELAR,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
                             },
-
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Func.operante',
-                                id: 'busqueda_resolucion_asignado',
-                                name: 'busqueda_resolucion_asignado',
-                                hiddenName: 'busqueda_resolucion_asignado',
+                                fieldLabel: 'Tipo',
+                                id: 'tipo',
+                                name: 'tipo',
+                                hiddenName: 'tipo',
 
                                 anchor: '95%',
-                                //store:  storePRD,
+                                store:  storeTIPOUNIDAD,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
-                            }
+                            },{
+                                xtype: 'combo',
+                                fieldLabel: 'Envío expediente',
+                                id: 'tipo_expediente',
+                                name: 'tipo_expediente',
+                                hiddenName: 'tipo_expediente',
 
-
+                                anchor: '95%',
+                                store:  storeENVIOEXPEDIENTE,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
                         ]
                     },
                     {
                         columnWidth: 1 / 3,
                         layout: 'form',
                         items: [
-
                             {
                                 xtype: 'textfield',
-                                fieldLabel: 'Informe',
-                                id: 'busqueda_informe',
-                                name: 'busqueda_informe',
+                                fieldLabel: 'Multa',
+                                id: 'multa',
+                                name: 'multa',
                                 anchor: '95%'
                             },
-                            /*{   xtype: 'textfield',
-                             fieldLabel: 'Punto Encuentro',
-                             id: 'busqueda_punto_encuentro',
-                             name: 'busqueda_punto_encuentro',
-                             anchor: '95%'
-                             },*/
+                            {
+                                xtype: 'datefield',
+                                fieldLabel: 'Fecha Inicio (Envío)',
+                                id: 'busqueda_fecha_inicio_envio',
+                                anchor: '95%',
+                                format: 'Y-m-d'
+                            },
+                            {
+                                xtype: 'datefield',
+                                fieldLabel: 'Fecha de Fin (Envío)',
+                                id: 'busqueda_fecha_fin_envio',
+                                anchor: '95%',
+                                format: 'Y-m-d'
+                            },
+]
+                    }
+                ]
+            });
+            this.formConsultaResoluciones = new Ext.FormPanel({
+                layout: 'column',
+                // title: 'Ingrese los parámetros',
+                frame: true,
+                bodyStyle: 'padding:5px 5px 0',
+                items: [
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'datefield',
+                                fieldLabel: 'Fecha Inicio',
+                                id: 'busqueda_fecha_inicio_resoluciones',
+                                anchor: '95%',
+                                format: 'Y-m-d',
+                            },
+                            {
+                                xtype: 'datefield',
+                                fieldLabel: 'Fecha Fin',
+                                id: 'busqueda_fecha_fin_resoluciones',
+                                anchor: '95%',
+                                format: 'Y-m-d'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Ordenanza',
+                                id: 'ordenanza_resoluciones',
+                                name: 'ordenanza',
+                                hiddenName: 'ordenanza',
+
+                                anchor: '95%',
+                                store:  storeOrdenanza,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Resolución de',
+                                id: 'resolucion_de_resoluciones',
+                                name: 'resolucion_de',
+                                hiddenName: 'resolucion_de',
+
+                                anchor: '95%',
+                                store:  storeRESOLUCIONDE,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Funcionario',
+                                id: 'funcionario_resoluciones',
+                                name: 'funcionario',
+                                hiddenName: 'funcionario',
+
+                                anchor: '95%',
+                                store:  storePersonal,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Unidad',
+                                id: 'unidad_resoluciones',
+                                name: 'unidad',
+                                hiddenName: 'unidad',
+
+                                anchor: '95%',
+                                store:  storeUnidad2,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Iniciado por',
+                                id: 'iniciado_por_resoluciones',
+                                name: 'iniciado_por',
+                                hiddenName: 'iniciado_por',
+
+                                anchor: '95%',
+                                store:  storeINICIADOPOR,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Medida cautelar',
+                                id: 'medida_cautelar_resoluciones',
+                                name: 'medida_cautelar',
+                                hiddenName: 'medida_cautelar',
+
+                                anchor: '95%',
+                                store:  storeMEDIDACAUTELAR,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Tipo',
+                                id: 'tipo_resoluciones',
+                                name: 'tipo',
+                                hiddenName: 'tipo',
+
+                                anchor: '95%',
+                                store:  storeTIPOUNIDAD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },{
+                                xtype: 'combo',
+                                fieldLabel: 'Envío expediente',
+                                id: 'tipo_expediente_resoluciones',
+                                name: 'tipo_expediente',
+                                hiddenName: 'tipo_expediente',
+
+                                anchor: '95%',
+                                store:  storeENVIOEXPEDIENTE,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
                             {
                                 xtype: 'textfield',
-                                fieldLabel: 'Observaciones',
-                                id: 'busqueda_observaciones',
-                                name: 'busqueda_observaciones',
+                                fieldLabel: 'Multa',
+                                id: 'multa_resoluciones',
+                                name: 'multa',
                                 anchor: '95%'
                             },
-
                             {
-                                xtype: 'combo',
-                                fieldLabel: 'Elaborado por',
-                                id: 'busqueda_elaborado_por',
-                                name: 'busqueda_elaborado_por',
-                                hiddenName: 'busqueda_elaborado_por',
-
+                                xtype: 'datefield',
+                                fieldLabel: 'Fecha Inicio (Envío)',
+                                id: 'busqueda_fecha_inicio_envio_resoluciones',
                                 anchor: '95%',
-                                //store:  storePRD,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
-
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Revisado por',
-                                id: 'busqueda_revisado_por',
-                                name: 'busqueda_revisado_por',
-                                hiddenName: 'busqueda_revisado_por',
-
-                                anchor: '95%',
-                                //store:  storePRD,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
+                                format: 'Y-m-d'
                             },
                             {
-                                xtype: 'combo',
-                                fieldLabel: 'Aprobado por',
-                                id: 'busqueda_aprobado_por',
-                                name: 'busqueda_aprobado_por',
-                                hiddenName: 'busqueda_aprobado_por',
-
+                                xtype: 'datefield',
+                                fieldLabel: 'Fecha de Fin (Envío)',
+                                id: 'busqueda_fecha_fin_envio_resoluciones',
                                 anchor: '95%',
-                                //store:  storePRD,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            }]
+                                format: 'Y-m-d'
+                            },
+]
                     }
                 ]
             });
@@ -1531,7 +2075,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             closable: false,
                             //  layout: 'fit',
                             height: winHeight - 70,
-                            disabled: accesosResolutores,
+                            //disabled: accesosResolutores,
                             hidden: true,
                             id: 'libro-diario',
                             //Barra de botones
@@ -1541,7 +2085,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     text: 'Nuevo',
                                     scope: this,
                                     handler: this.addLibroDiario,
-                                    //disabled: !creacionTramites,
+                                    disabled: accesosResolutores,
                                     iconCls: 'save-icon'
                                 },
                                 '-',
@@ -1550,7 +2094,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     text: "Eliminar",
                                     scope: this,
                                     handler: this.deleteLibroDiario,
-                                    //disabled: true,
+                                    disabled: accesosResolutores,
                                     //disabled: !creacionTramites,
                                     iconCls: 'delete-icon'
                                 },
@@ -1789,10 +2333,10 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                         }
                         ,
                         {
-                            title: 'Reportes',
+                            title: 'Reportes Libro Diario',
                             closable: true,
                             layout: 'border',
-                            disabled:true,
+                            disabled: accesosResolutores,
                             tbar: [
                                 {
                                     iconCls: 'reload-icon',
@@ -1842,24 +2386,117 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     maxSize: 170,
                                     closable: true,
                                     autoScroll: false,
-                                    items: this.formConsultaDocumentos
+                                    items: this.formConsultaLibroDiario
                                 },
                                 {
-                                    // lazily created panel (xtype:'panel' is default)
-                                    split: true,
+                                    region: 'center',
                                     height: 270,
                                     minSize: 100,
                                     maxSize: 150,
-                                    region: 'center',
-                                    autoEl: {
-                                        id: 'iframemap',
-                                        tag: 'iframe',
-                                        style: 'height: 360px; width: 100%; border: none',
-                                        src: 'http://localhost:8080/mapaRecorrido.html'
-                                        //src: 'http://agenciadecontrol.quito.gob.ec/mapaResolucion.html'
-                                    },
-                                    id: 'data_export_iframe'
+                                    closable: true,
+                                    autoScroll: false,
+                                    items: this.gridReporteLibroDiario
+                                },
+                                // {
+                                //     // lazily created panel (xtype:'panel' is default)
+                                //     split: true,
+                                //     height: 270,
+                                //     minSize: 100,
+                                //     maxSize: 150,
+                                //     region: 'center',
+                                //     autoEl: {
+                                //         id: 'iframemap',
+                                //         tag: 'iframe',
+                                //         style: 'height: 360px; width: 100%; border: none',
+                                //         src: 'http://localhost:8080/mapaRecorrido.html'
+                                //         //src: 'http://agenciadecontrol.quito.gob.ec/mapaResolucion.html'
+                                //     },
+                                //     id: 'data_export_iframe'
+                                // }
+                            ]
+
+                        },
+                        {
+                            title: 'Reportes Resoluciones',
+                            closable: true,
+                            layout: 'border',
+                            disabled: accesosResolutores,
+                            tbar: [
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridDataDocumentoReporte,
+                                    scope: this,
+                                    text: 'Buscar'
+
+                                },
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridDataDocumentoReporteReset,
+                                    scope: this,
+                                    text: 'Borrar formulario'
+
+                                },
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporte,
+                                    scope: this,
+                                    text: 'Exportar listado',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada',
+                                    disabled: !acceso,
+                                },
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporteCalendarioResolucion,
+                                    scope: this,
+                                    text: 'Exportar calendario  personas',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada',
+                                    disabled: !acceso,
                                 }
+                                ,
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporteCalendarioResolucion,
+                                    scope: this,
+                                    text: 'Exportar calendario  resolucion',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada',
+                                    disabled: !acceso,
+                                }
+                            ],
+                            items: [
+                                {
+                                    region: 'north',
+                                    height: 175,
+                                    minSize: 100,
+                                    maxSize: 170,
+                                    closable: true,
+                                    autoScroll: false,
+                                    items: this.formConsultaResoluciones
+                                },
+                                {
+                                    region: 'center',
+                                    height: 270,
+                                    minSize: 100,
+                                    maxSize: 150,
+                                    closable: true,
+                                    autoScroll: false,
+                                    items: this.gridReporteResoluciones
+                                },
+                                // {
+                                //     // lazily created panel (xtype:'panel' is default)
+                                //     split: true,
+                                //     height: 270,
+                                //     minSize: 100,
+                                //     maxSize: 150,
+                                //     region: 'center',
+                                //     autoEl: {
+                                //         id: 'iframemap',
+                                //         tag: 'iframe',
+                                //         style: 'height: 360px; width: 100%; border: none',
+                                //         src: 'http://localhost:8080/mapaRecorrido.html'
+                                //         //src: 'http://agenciadecontrol.quito.gob.ec/mapaResolucion.html'
+                                //     },
+                                //     id: 'data_export_iframe'
+                                // }
                             ]
 
                         }
@@ -1874,14 +2511,19 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             this.storeLibroDiario.load();
             this.storeResoluciones.load({
                 params: {
+                    id: 0,
                     start: 0,
                     limit: limiteresolucion,
-                    finalizados: Ext.getCmp('checkNoRecibidos').getValue(),
+                    //finalizados: Ext.getCmp('checkNoRecibidos').getValue(),
                     accesosAdministradorOpe: accesosAdministradorOpe,
                     accesosResolutores: accesosResolutores
                 }
             });
-            this.storeProvidencias.load();
+            this.storeProvidencias.load({
+                params: {
+                    id: 0,
+                }
+            });
         }, 600);
     },
 
@@ -2063,20 +2705,20 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
     },
 
     requestGridDataDocumentoReporte: function () {
-        this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
-        this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
+        // this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
+        this.storeReporteLibroDiario.baseParams = this.formConsultaLibroDiario.getForm().getValues();
 
-        var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
-        var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
+        // var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
+        // var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
+        //
+        // this.storeDocumentosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
+        // this.storeDocumentosReporte.baseParams.accesosResolutores = accesosResolutores;
 
-        this.storeDocumentosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
-        this.storeDocumentosReporte.baseParams.accesosResolutores = accesosResolutores;
-
-        this.storeDocumentosReporte.load();
+        this.storeReporteLibroDiario.load();
     },
 
     requestGridDataDocumentoReporteReset: function () {
-        this.formConsultaDocumentos.getForm().reset();
+        this.formConsultaLibroDiario.getForm().reset();
     },
     botonExportarDocumentoReporte: function () {
         var rows = this.storeDocumentosReporte.getCount()
@@ -2098,7 +2740,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    valueParams = JSON.stringify(this.formConsultaLibroDiario.getForm().getValues());
                     window.location.href = 'modules/desktop/resolucion/server/descargaReporteResolucion.inc.php?param=' + valueParams;
                 }
             }
@@ -2124,7 +2766,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    valueParams = JSON.stringify(this.formConsultaLibroDiario.getForm().getValues());
                     window.location.href = 'modules/desktop/resolucion/server/descargaReporteResolucioncalendario.inc.php?param=' + valueParams;
                 }
             }
@@ -2150,7 +2792,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
+                    valueParams = JSON.stringify(this.formConsultaResoluciones.getForm().getValues());
                     window.location.href = 'modules/desktop/resolucion/server/descargaReporteResolucioncalendario2.inc.php?param=' + valueParams;
                 }
             }
