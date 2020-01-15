@@ -112,11 +112,9 @@ function selectOrdenanzas()
         $limit = 100;
     $orderby = 'ORDER BY a.id ASC';
 
-
-
-
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT DISTINCT memo_ingreso,fecha_ingreso, unidad, numero_expediente,nombre_administrado, nombre_establecimiento,
+    $sql = "SELECT memo_ingreso,fecha_ingreso,numero_resolucion, fecha_resolucion, articulo_actual, resolucion_de, 
+                multa_impuesta, unidad, numero_interno, numero_expediente,nombre_administrado, nombre_establecimiento,
                 cedula_ruc, reincidencia, ordenanza, articulo_numeral, iniciado_por, entidad, numero_informe, medida_cautelar,
                 estado, funcionario, envio_expediente, fecha_envio
 FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
