@@ -33,7 +33,7 @@ function selectOrdenanzas()
                 'cedula_ruc',
                 'reincidencia',
                 'ordenanza',
-                'articulo_numeral',
+//                'articulo_numeral',
                 'iniciado_por',
                 'entidad',
                 'numero_informe',

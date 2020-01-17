@@ -63,13 +63,13 @@ function selectOrdenanzas()
         }
     }
 
-    if (isset($_POST['busqueda_fecha_inicio']) && isset($_POST['busqueda_fecha_fin']) && $_POST['busqueda_fecha_inicio']!="" && $_POST['busqueda_fecha_fin']!="") {
-        $busqueda_fecha_inicio = $_POST['busqueda_fecha_inicio'];
-        $busqueda_fecha_fin = $_POST['busqueda_fecha_fin'];
+    if (isset($_POST['busqueda_fecha_inicio_providencias']) && isset($_POST['busqueda_fecha_fin_providencias']) && $_POST['busqueda_fecha_inicio_providencias']!="" && $_POST['busqueda_fecha_fin_providencias']!="") {
+        $busqueda_fecha_inicio = $_POST['busqueda_fecha_inicio_providencias'];
+        $busqueda_fecha_fin = $_POST['busqueda_fecha_fin_providencias'];
         if($where == ''){
-            $where = " WHERE cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
+            $where = " WHERE cast(b.fecha_providencia as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_providencia as date) <= '$busqueda_fecha_fin' ";
         }else{
-            $where = $where . " AND cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
+            $where = $where . " AND cast(b.fecha_providencia as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_providencia as date) <= '$busqueda_fecha_fin' ";
         }
     }
     if (isset($_POST['ordenanza']) && $_POST['ordenanza']!="" ) {
@@ -113,11 +113,10 @@ function selectOrdenanzas()
     $orderby = 'ORDER BY a.id ASC';
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT memo_ingreso,fecha_ingreso,numero_resolucion, fecha_resolucion, articulo_actual, resolucion_de, 
-                multa_impuesta, unidad, numero_interno, numero_expediente,nombre_administrado, nombre_establecimiento,
+    $sql = "SELECT numero_providencia, fecha_providencia, tipo_providencia, memo_ingreso,fecha_ingreso, unidad, numero_interno, numero_expediente,nombre_administrado, nombre_establecimiento,
                 cedula_ruc, reincidencia, ordenanza, iniciado_por, entidad, numero_informe, medida_cautelar,
                 estado, funcionario, envio_expediente, fecha_envio
-FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
+FROM amc_libro_diario a INNER JOIN amc_providencias b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
 //    echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
@@ -126,7 +125,7 @@ FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diari
     };
     $sql = "";
 
-    $sql = "SELECT count(*) AS total FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where";
+    $sql = "SELECT count(*) AS total FROM amc_libro_diario a INNER JOIN amc_providencias b ON a.id = b.id_libro_diario $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];

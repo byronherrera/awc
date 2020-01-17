@@ -63,9 +63,9 @@ function selectOrdenanzas()
         }
     }
 
-    if (isset($_POST['busqueda_fecha_inicio']) && isset($_POST['busqueda_fecha_fin']) && $_POST['busqueda_fecha_inicio']!="" && $_POST['busqueda_fecha_fin']!="") {
-        $busqueda_fecha_inicio = $_POST['busqueda_fecha_inicio'];
-        $busqueda_fecha_fin = $_POST['busqueda_fecha_fin'];
+    if (isset($_POST['busqueda_fecha_inicio_resoluciones']) && isset($_POST['busqueda_fecha_fin_resoluciones']) && $_POST['busqueda_fecha_inicio_resoluciones']!="" && $_POST['busqueda_fecha_fin_resoluciones']!="") {
+        $busqueda_fecha_inicio = $_POST['busqueda_fecha_inicio_resoluciones'];
+        $busqueda_fecha_fin = $_POST['busqueda_fecha_fin_resoluciones'];
         if($where == ''){
             $where = " WHERE cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
         }else{
