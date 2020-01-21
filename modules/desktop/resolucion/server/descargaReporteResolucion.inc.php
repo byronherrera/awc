@@ -32,63 +32,63 @@ $today = date("Y-n-j-H-i-s");
 
 // para los reportes
 $where = '';
-if(isset ($_POST['accesosResolutores'])){
+if (isset ($_POST['accesosResolutores'])) {
     $acceso = $_POST['accesosResolutores'];
-    if($acceso=='true'){
-        if($where == ''){
+    if ($acceso == 'true') {
+        if ($where == '') {
             $where = " WHERE funcionario = $usuarioLog ";
-        }else{
+        } else {
             $where = $where . " AND funcionario = $usuarioLog ";
         }
     }
 }
 
-if (isset($data->busqueda_fecha_inicio) && isset($data->busqueda_fecha_fin) && $data->busqueda_fecha_inicio !="" && $data->busqueda_fecha_fin !="") {
+if (isset($data->busqueda_fecha_inicio) && isset($data->busqueda_fecha_fin) && $data->busqueda_fecha_inicio != "" && $data->busqueda_fecha_fin != "") {
     $busqueda_fecha_inicio = $data->busqueda_fecha_inicio;
     $busqueda_fecha_fin = $data->busqueda_fecha_fin;
-    if($where == ''){
+    if ($where == '') {
         $where = " WHERE cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
-    }else{
+    } else {
         $where = $where . " AND cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
     }
 }
-if (isset($data->ordenanza) && $data->ordenanza!="" ) {
+if (isset($data->ordenanza) && $data->ordenanza != "") {
     $filtroOrdenanza = $data->ordenanza;
-    if($where == ''){
+    if ($where == '') {
         $where = " WHERE ordenanza = '$filtroOrdenanza' ";
-    }else{
+    } else {
         $where = $where . " AND ordenanza = '$filtroOrdenanza' ";
     }
 }
-if (isset($data->resolucion_de) && $data->resolucion_de!="" ) {
+if (isset($data->resolucion_de) && $data->resolucion_de != "") {
     $filtroResolucion_de = $data->resolucion_de;
-    if($where == ''){
+    if ($where == '') {
         $where = " WHERE resolucion_de = '$filtroResolucion_de' ";
-    }else{
+    } else {
         $where = $where . " AND resolucion_de = '$filtroResolucion_de' ";
     }
 }
-if (isset($data->funcionario) && $data->funcionario!="" ) {
+if (isset($data->funcionario) && $data->funcionario != "") {
     $filtroFuncionario = $data->funcionario;
-    if($where == ''){
+    if ($where == '') {
         $where = " WHERE funcionario = '$filtroFuncionario' ";
-    }else{
+    } else {
         $where = $where . " AND funcionario = '$filtroFuncionario' ";
     }
 }
-if (isset($data->numero_resolucion) && $data->numero_resolucion!="" ) {
+if (isset($data->numero_resolucion) && $data->numero_resolucion != "") {
     $filtronumero_resolucion = $data->numero_resolucion;
-    if($where == ''){
+    if ($where == '') {
         $where = " WHERE numero_resolucion LIKE '%$filtronumero_resolucion%' ";
-    }else{
+    } else {
         $where = $where . " AND numero_resolucion LIKE '%$filtronumero_resolucion%' ";
     }
 }
-if (isset($data->articulo_actual) && $data->articulo_actual!="" ) {
+if (isset($data->articulo_actual) && $data->articulo_actual != "") {
     $filtro_articulo_actual = $data->articulo_actual;
-    if($where == ''){
+    if ($where == '') {
         $where = " WHERE articulo_actual LIKE '%$filtro_articulo_actual%' ";
-    }else{
+    } else {
         $where = $where . " AND articulo_actual LIKE '%$filtro_articulo_actual%' ";
     }
 }
@@ -104,7 +104,6 @@ if (isset($_POST['sort'])) {
 //$usuarioLog = $os->get_member_id();
 
 
-
 if (isset ($_POST['start']))
     $start = $_POST['start'];
 else
@@ -117,10 +116,7 @@ else
 //    $orderby = 'ORDER BY a.id ASC';
 
 $os->db->conn->query("SET NAMES 'utf8'");
-$sql = "SELECT memo_ingreso,fecha_ingreso,numero_resolucion, fecha_resolucion, articulo_actual, resolucion_de,
-                multa_impuesta, unidad, numero_interno, numero_expediente,nombre_administrado, nombre_establecimiento,
-                cedula_ruc, reincidencia, ordenanza, iniciado_por, entidad, numero_informe, medida_cautelar,
-                estado, funcionario, envio_expediente, fecha_envio
+$sql = "SELECT *
 FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
 
 $result = $os->db->conn->query($sql);
@@ -142,7 +138,6 @@ $styleArray = array(
         )
     )
 );
-
 
 
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':R' . $filaTitulo1);
@@ -249,21 +244,20 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['numero_resolucion']);
     $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['fecha_resolucion']);
     $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['articulo_actual']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, substr($rowdetalle['asunto'], 0, 200));
-//    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, strip_tags($rowdetalle['descripcion_anexos']));
-    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['resolucion_de']);
+
+    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, resolucionDe($rowdetalle['resolucion_de']));
     $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, $rowdetalle['multa_impuesta']);
     $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['fecha_ingreso']);
-    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['unidad']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['tipo_unidad']);
+    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio,  regresaUnidad ($rowdetalle['unidad']));
+    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, tipoUnidad ($rowdetalle['tipo_unidad']));
     $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['numero_expediente']);
     $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, $rowdetalle['nombre_administrado']);
     $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, $rowdetalle['nombre_establecimiento']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, $rowdetalle['direccion_notificacion']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('O' . $filaInicio, $rowdetalle['direccion_domicilio']);
+    $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, $rowdetalle['direccion_notificacion']);
+    $objPHPExcel->getActiveSheet()->setCellValue('O' . $filaInicio, $rowdetalle['direccion_domicilio']);
     $objPHPExcel->getActiveSheet()->setCellValue('P' . $filaInicio, $rowdetalle['cedula_ruc']);
-    $objPHPExcel->getActiveSheet()->setCellValue('Q' . $filaInicio, $rowdetalle['reincidencia']);
-    $objPHPExcel->getActiveSheet()->setCellValue('R' . $filaInicio, $rowdetalle['ordenanza']);
+    $objPHPExcel->getActiveSheet()->setCellValue('Q' . $filaInicio, ($rowdetalle['reincidencia']==1) ? "SI":" ");
+    $objPHPExcel->getActiveSheet()->setCellValue('R' . $filaInicio, getOrdenanza ($rowdetalle['ordenanza']));
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':R' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
@@ -366,4 +360,43 @@ function quitar_espacio($cadena)
     $permitidas = array("-");
     $texto = str_replace($no_permitidas, $permitidas, $cadena);
     return $texto;
+}
+
+function resolucionDe($id)
+{
+    $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
+    return $opciones [$id];
+}
+function regresaUnidad($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id_dato != '') {
+        $sql = "SELECT *
+            FROM amc_unidades WHERE id = " . $id_dato;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre_completo'];
+    } else
+        return '';
+
+}
+function getOrdenanza($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id_dato != '') {
+        $sql = "SELECT *
+            FROM amc_ordenanzas WHERE id = " . $id_dato;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre_completo'];
+    } else
+        return '';
+
+}
+function tipoUnidad($id)
+{
+    $opciones = array(0 => "UDC", 1 => "ASEO");
+    return $opciones [$id];
 }
