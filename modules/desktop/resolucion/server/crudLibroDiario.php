@@ -39,7 +39,7 @@ function selectOrdenanzas()
                 'numero_informe',
                 'medida_cautelar',
                 'estado',
-                'funcionario',
+//                'funcionario',
                 'envio_expediente',
                 'fecha_envio',
             );
@@ -49,7 +49,7 @@ function selectOrdenanzas()
             }
 
             $cadena = substr($cadena,0,-3);
-            $where = " WHERE $cadena ";
+            $where = " WHERE ($cadena ";
         }
 
     }
@@ -60,9 +60,20 @@ function selectOrdenanzas()
             if($where == ''){
                 $where = " WHERE funcionario = $usuarioLog ";
             }else{
-                $where = $where . " AND funcionario = $usuarioLog ";
+                $where = $where . " ) AND funcionario = $usuarioLog ";
+            }
+        }else{
+            if($where != ''){
+                $where = $where . " ) ";
             }
         }
+    }
+
+//    $orderby = 'ORDER BY a.id ASC';
+    if (isset($_POST['sort'])) {
+        $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
+    }else{
+        $orderby = 'ORDER BY id ASC';
     }
 
     //$usuarioLog = $os->get_member_id();
@@ -78,7 +89,7 @@ function selectOrdenanzas()
         $limit = $_POST['limit'];
     else
         $limit = 100;
-    $orderby = 'ORDER BY id ASC';
+//    $orderby = 'ORDER BY id ASC';
 
 
 

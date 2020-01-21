@@ -96,6 +96,30 @@ function selectOrdenanzas()
             $where = $where . " AND funcionario = '$filtroFuncionario' ";
         }
     }
+    if (isset($_POST['numero_resolucion']) && $_POST['numero_resolucion']!="" ) {
+        $filtronumero_resolucion = $_POST['numero_resolucion'];
+        if($where == ''){
+            $where = " WHERE numero_resolucion LIKE '%$filtronumero_resolucion%' ";
+        }else{
+            $where = $where . " AND numero_resolucion LIKE '%$filtronumero_resolucion%' ";
+        }
+    }
+    if (isset($_POST['articulo_actual']) && $_POST['articulo_actual']!="" ) {
+        $filtro_articulo_actual = $_POST['articulo_actual'];
+        if($where == ''){
+            $where = " WHERE articulo_actual LIKE '%$filtro_articulo_actual%' ";
+        }else{
+            $where = $where . " AND articulo_actual LIKE '%$filtro_articulo_actual%' ";
+        }
+    }
+    $orderby = 'ORDER BY a.id ASC';
+    if (isset($_POST['sort'])) {
+        if ($_POST['sort'] == 'id') {
+            $orderby = 'ORDER BY id ASC';
+        } else {
+            $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
+        }
+    }
 
     //$usuarioLog = $os->get_member_id();
 
@@ -110,15 +134,15 @@ function selectOrdenanzas()
         $limit = $_POST['limit'];
     else
         $limit = 100;
-    $orderby = 'ORDER BY a.id ASC';
+//    $orderby = 'ORDER BY a.id ASC';
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT memo_ingreso,fecha_ingreso,numero_resolucion, fecha_resolucion, articulo_actual, resolucion_de, 
+    $sql = "SELECT memo_ingreso,fecha_ingreso,numero_resolucion, fecha_resolucion, articulo_actual, resolucion_de,
                 multa_impuesta, unidad, numero_interno, numero_expediente,nombre_administrado, nombre_establecimiento,
                 cedula_ruc, reincidencia, ordenanza, iniciado_por, entidad, numero_informe, medida_cautelar,
                 estado, funcionario, envio_expediente, fecha_envio
 FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
-//    echo $sql;
+    //echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -161,7 +185,7 @@ function insertOrdenanzas()
 
     $sql = "INSERT INTO amc_libro_diario($cadenaCampos)
 	values($cadenaDatos);";
-     $sql = $os->db->conn->prepare($sql);
+    $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
@@ -329,14 +353,14 @@ function updateOrdenanzasForm()
 
     }
     /*codigo_tramite='$codigo_tramite',*/
-    $sql = "UPDATE amc_libro_diario SET 
+    $sql = "UPDATE amc_libro_diario SET
             id = '$id',
             //nombre = $nombre,
             //nombre_completo = $nombre_completo,
             //activo = $activo,
             //orden = $orden
-            
-         
+
+
           WHERE id = '$id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
