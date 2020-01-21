@@ -39,6 +39,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         var urlResolucion = "modules/desktop/resolucion/server/";
 
         var textField = new Ext.form.TextField({allowBlank: false});
+        var textFieldProvidencia = new Ext.form.TextField({allowBlank: false});
         var textFieldLibroDiario = new Ext.form.TextField({allowBlank: false});
         var textFieldResolucionesLibroDiario = new Ext.form.TextField({allowBlank: false});
         var textFieldProvidenciasLibroDiario = new Ext.form.TextField({allowBlank: false});
@@ -1986,7 +1987,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true},
                 {header: 'id_libro_diario', dataIndex: 'id_libro_diario', width: 100, hidden: true},
-                {header: 'Número de Providencia', dataIndex: 'numero_providencia', sortable: true, width: 140, editor: textField},
+                {header: 'Número de Providencia', dataIndex: 'numero_providencia', sortable: true, width: 140, editor: textFieldProvidencia},
                 {
                     header: 'Fecha de Providencia',
                     dataIndex: 'fecha_providencia',
