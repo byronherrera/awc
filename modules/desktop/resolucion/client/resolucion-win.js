@@ -2837,18 +2837,18 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                         //}
                                     }
                                 },
-                                '-',
+                                // '-',
                                 //bh boton generar
-                                {
-                                    iconCls: 'excel-icon',
-                                    handler: this.botonGenerarActa,
-                                    scope: this,
-                                    text: 'Generar reporte',
-                                    tooltip: 'Se genera acta con las ',
-                                    id: 'tb_reporteDenuncias',
-                                    disabled: true
-                                },
-                                '-',
+                                // {
+                                //     iconCls: 'excel-icon',
+                                //     handler: this.botonGenerarActa,
+                                //     scope: this,
+                                //     text: 'Generar reporte',
+                                //     tooltip: 'Se genera acta con las ',
+                                //     id: 'tb_reporteDenuncias',
+                                //     disabled: true
+                                // },
+                                // '-',
                                 '->'
                                 , {
                                     text: 'Buscar por:'
@@ -3060,29 +3060,12 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 },
                                 {
                                     iconCls: 'excel-icon',
-                                    handler: this.botonExportarDocumentoReporte,
+                                    handler: this.botonExportarReporteResolucion,
                                     scope: this,
-                                    text: 'Exportar listado',
+                                    text: 'Exportar reporte de Resoluciones',
                                     tooltip: 'Se genera archivo Excel con la información solicitada',
                                     disabled: accesosResolutores,
-                                },
-                                // {
-                                //     iconCls: 'excel-icon',
-                                //     handler: this.botonExportarDocumentoReporteCalendarioResolucion,
-                                //     scope: this,
-                                //     text: 'Exportar calendario  personas',
-                                //     tooltip: 'Se genera archivo Excel con la información solicitada',
-                                //     disabled: !acceso,
-                                // }
-                                // ,
-                                // {
-                                //     iconCls: 'excel-icon',
-                                //     handler: this.botonExportarDocumentoReporteCalendarioResolucion,
-                                //     scope: this,
-                                //     text: 'Exportar calendario  resolucion',
-                                //     tooltip: 'Se genera archivo Excel con la información solicitada',
-                                //     disabled: !acceso,
-                                // }
+                                }
                             ],
                             items: [
                                 {
@@ -3102,7 +3085,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     closable: true,
                                     autoScroll: false,
                                     items: this.gridReporteLibroDiario
-                                },
+                                }
                             ]
 
                         },
@@ -3118,40 +3101,22 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     handler: this.requestGridDataReporteProvidencias,
                                     scope: this,
                                     text: 'Buscar'
-
                                 },
                                 {
                                     iconCls: 'reload-icon',
                                     handler: this.requestGridDataReporteProvidenciasReset,
                                     scope: this,
                                     text: 'Borrar formulario'
-
                                 },
-                                // {
-                                //     iconCls: 'excel-icon',
-                                //     handler: this.botonExportarDocumentoReporte,
-                                //     scope: this,
-                                //     text: 'Exportar listado',
-                                //     tooltip: 'Se genera archivo Excel con la información solicitada',
-                                //     disabled: !acceso,
-                                // },
-                                // {
-                                //     iconCls: 'excel-icon',
-                                //     handler: this.botonExportarDocumentoReporteCalendarioResolucion,
-                                //     scope: this,
-                                //     text: 'Exportar calendario  personas',
-                                //     tooltip: 'Se genera archivo Excel con la información solicitada',
-                                //     disabled: !acceso,
-                                // }
-                                // ,
-                                // {
-                                //     iconCls: 'excel-icon',
-                                //     handler: this.botonExportarDocumentoReporteCalendarioResolucion,
-                                //     scope: this,
-                                //     text: 'Exportar calendario  resolucion',
-                                //     tooltip: 'Se genera archivo Excel con la información solicitada',
-                                //     disabled: !acceso,
-                                // }
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarReporteProvidencias,
+                                    scope: this,
+                                    text: 'Exportar reporte de Providencias',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada',
+                                    disabled: accesosResolutores,
+                                }
+
                             ],
                             items: [
                                 {
@@ -3195,31 +3160,14 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     text: 'Borrar formulario'
 
                                 },
-                                {
-                                    iconCls: 'excel-icon',
-                                    handler: this.botonExportarDocumentoReporte,
-                                    scope: this,
-                                    text: 'Exportar listado',
-                                    tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    disabled: !acceso,
-                                },
-                                {
-                                    iconCls: 'excel-icon',
-                                    handler: this.botonExportarDocumentoReporteCalendarioResolucion,
-                                    scope: this,
-                                    text: 'Exportar calendario  personas',
-                                    tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    disabled: !acceso,
-                                }
-                                ,
-                                {
-                                    iconCls: 'excel-icon',
-                                    handler: this.botonExportarDocumentoReporteCalendarioResolucion,
-                                    scope: this,
-                                    text: 'Exportar calendario  resolucion',
-                                    tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    disabled: !acceso,
-                                }
+                                // {
+                                //     iconCls: 'excel-icon',
+                                //     handler: this.botonExportarDocumentoReporte,
+                                //     scope: this,
+                                //     text: 'Exportar listado',
+                                //     tooltip: 'Se genera archivo Excel con la información solicitada',
+                                //     disabled: true,
+                                // },
                             ],
                             items: [
                                 {
@@ -3422,36 +3370,6 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         this.storeProvidencias.load();
     },
 
-
-    botonExportarReporteResolucion: function () {
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Se descarga el archivo con el informe<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    window.location.href = 'modules/desktop/resolucion/server/descargaResolucionId.inc.php?resolucion=' + selectResolucion;
-                }
-            }
-        });
-    },
-    botonExportarReporteResolucionTodo: function () {
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Se descarga el archivo con el informe<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    window.location.href = 'modules/desktop/resolucion/server/descargaResolucionTodo.php?resolucion=' + selectResolucion;
-                }
-            }
-        });
-    },
-
 // funcion usada por boton
     showError: function (msg, title) {
         title = title || 'Error';
@@ -3514,7 +3432,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
     requestGridDataReporteProvidenciasReset: function () {
         this.formConsultaProvidenciasLibroDiario.getForm().reset();
     },
-    botonExportarDocumentoReporte: function () {
+    botonExportarReporteResolucion: function () {
         var rows = this.storeReporteLibroDiario.getCount()
         if (rows === 0) {
             Ext.Msg.show({
@@ -3540,8 +3458,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             }
         });
     },
-    botonExportarDocumentoReporteCalendarioResolucion: function () {
-        var rows = this.storeDocumentosReporte.getCount()
+    botonExportarReporteProvidencias: function () {
+        var rows = this.storeReporteProvidenciasLibroDiario.getCount()
         if (rows === 0) {
             Ext.Msg.show({
                 title: 'Atencion',
@@ -3560,36 +3478,11 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    valueParams = JSON.stringify(this.formConsultaLibroDiario.getForm().getValues());
-                    window.location.href = 'modules/desktop/resolucion/server/descargaReporteResolucioncalendario.inc.php?param=' + valueParams;
+                    valueParams = JSON.stringify(this.formConsultaProvidenciasLibroDiario.getForm().getValues());
+                    window.location.href = 'modules/desktop/resolucion/server/descargaReporteProvidencias.inc.php?param=' + valueParams;
                 }
             }
         });
     },
-    botonExportarDocumentoReporteCalendarioResolucion: function () {
-        var rows = this.storeDocumentosReporte.getCount()
-        if (rows === 0) {
-            Ext.Msg.show({
-                title: 'Atencion',
-                msg: 'Busqueda sin resultados',
-                scope: this,
-                icon: Ext.Msg.WARNING
-            });
-            return false;
-        }
-        // mensaje continuar y llamada a descarga archivo
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    valueParams = JSON.stringify(this.formConsultaResoluciones.getForm().getValues());
-                    window.location.href = 'modules/desktop/resolucion/server/descargaReporteResolucioncalendario2.inc.php?param=' + valueParams;
-                }
-            }
-        });
-    }
+
 });
