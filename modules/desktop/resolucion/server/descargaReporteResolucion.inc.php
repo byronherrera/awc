@@ -364,14 +364,19 @@ function quitar_espacio($cadena)
 
 function resolucionDe($id)
 {
-    $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
-    return $opciones [$id];
+    if ((isset($id)) and ($id!=' ')){
+        $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
+        return $opciones [$id];
+    } else {
+        return '';
+    }
 }
+
 function regresaUnidad($id_dato)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    if ($id_dato != '') {
+    if (($id_dato != '') and (isset($id_dato))) {
         $sql = "SELECT *
             FROM amc_unidades WHERE id = " . $id_dato;
         $nombre = $os->db->conn->query($sql);
@@ -385,7 +390,7 @@ function getOrdenanza($id_dato)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    if ($id_dato != '') {
+    if (($id_dato != '') and (isset($id_dato))) {
         $sql = "SELECT *
             FROM amc_ordenanzas WHERE id = " . $id_dato;
         $nombre = $os->db->conn->query($sql);
@@ -397,6 +402,11 @@ function getOrdenanza($id_dato)
 }
 function tipoUnidad($id)
 {
-    $opciones = array(0 => "UDC", 1 => "ASEO");
-    return $opciones [$id];
+    if ((isset($id)) and ($id!=" ")){
+
+        $opciones = array(0 => "UDC", 1 => "ASEO");
+        return $opciones [$id];
+    } else {
+        return '';
+    }
 }
