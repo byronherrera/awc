@@ -868,8 +868,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'medida_cautelar', allowBlank: false},
                 {name: 'estado', allowBlank: false},
                 {name: 'funcionario', allowBlank: false},
-                {name: 'envio_expediente', allowBlank: false},
-                {name: 'fecha_envio', allowBlank: false}
+                {name: 'envio_expediente', allowBlank: true},
+                {name: 'fecha_envio', allowBlank: true}
             ]
         });
 
@@ -3279,8 +3279,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             medida_cautelar: ' ',
             estado: ' ',
             funcionario: 0,
-            envio_expediente: 0,
-            fecha_envio: (new Date()),
+            envio_expediente: ' ',
+            // fecha_envio: (new Date()),
         });
         this.gridLibroDiario.stopEditing();
         this.storeLibroDiario.insert(0, libroDiario);

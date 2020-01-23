@@ -234,7 +234,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $noExistenFilas = false;
 
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['memo_ingreso']);
-    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['numero_interno']);
+//    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['numero_interno']);
 //    $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['numero_providencia']);
 //    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['fecha_providencia']);
 //    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['tipo_providencia']);
