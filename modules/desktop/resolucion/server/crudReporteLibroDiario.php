@@ -112,6 +112,64 @@ function selectOrdenanzas()
             $where = $where . " AND articulo_actual LIKE '%$filtro_articulo_actual%' ";
         }
     }
+    if (isset($_POST['unidad']) && $_POST['unidad']!="" ) {
+        $filtro_unidad = $_POST['unidad'];
+        if($where == ''){
+            $where = " WHERE unidad LIKE '%$filtro_unidad%' ";
+        }else{
+            $where = $where . " AND unidad LIKE '%$filtro_unidad%' ";
+        }
+    }
+    if (isset($_POST['iniciado_por']) && $_POST['iniciado_por']!="" ) {
+        $filtro_iniciado_por = $_POST['iniciado_por'];
+        if($where == ''){
+            $where = " WHERE iniciado_por LIKE '%$filtro_iniciado_por%' ";
+        }else{
+            $where = $where . " AND iniciado_por LIKE '%$filtro_iniciado_por%' ";
+        }
+    }
+    if (isset($_POST['medida_cautelar']) && $_POST['medida_cautelar']!="" ) {
+        $filtro_medida_cautelar = $_POST['medida_cautelar'];
+        if($where == ''){
+            $where = " WHERE medida_cautelar LIKE '%$filtro_medida_cautelar%' ";
+        }else{
+            $where = $where . " AND medida_cautelar LIKE '%$filtro_medida_cautelar%' ";
+        }
+    }
+    if (isset($_POST['medida_cautelar']) && $_POST['medida_cautelar']!="" ) {
+        $filtro_medida_cautelar = $_POST['medida_cautelar'];
+        if($where == ''){
+            $where = " WHERE medida_cautelar = '$filtro_medida_cautelar' ";
+        }else{
+            $where = $where . " AND medida_cautelar = '$filtro_medida_cautelar' ";
+        }
+    }
+    if (isset($_POST['tipo_unidad']) && $_POST['tipo_unidad']!="" ) {
+        $filtro_tipo_unidad = $_POST['tipo_unidad'];
+        if($where == ''){
+            $where = " WHERE tipo_unidad = $filtro_tipo_unidad ";
+        }else{
+            $where = $where . " AND tipo_unidad = $filtro_tipo_unidad ";
+        }
+    }
+        if (isset($_POST['envio_expediente']) && $_POST['envio_expediente']!="" ) {
+        $filtro_envio_expediente = $_POST['envio_expediente'];
+        if($where == ''){
+            $where = " WHERE envio_expediente = '$filtro_envio_expediente' ";
+        }else{
+            $where = $where . " AND envio_expediente = '$filtro_envio_expediente' ";
+        }
+    }
+    if (isset($_POST['fecha_envio_inicio']) && isset($_POST['fecha_envio_fin']) && $_POST['fecha_envio_inicio']!="" && $_POST['fecha_envio_fin']!="") {
+        $busqueda_fecha_inicio = $_POST['fecha_envio_inicio'];
+        $busqueda_fecha_fin = $_POST['fecha_envio_fin'];
+        if($where == ''){
+            $where = " WHERE cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
+        }else{
+            $where = $where . " AND cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
+        }
+    }
+
     $orderby = 'ORDER BY a.id ASC';
     if (isset($_POST['sort'])) {
         if ($_POST['sort'] == 'id') {
@@ -138,11 +196,11 @@ function selectOrdenanzas()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT memo_ingreso,fecha_ingreso,numero_resolucion, fecha_resolucion, articulo_actual, resolucion_de,
-                multa_impuesta, unidad, numero_interno, numero_expediente,nombre_administrado, nombre_establecimiento,
+                multa_impuesta, unidad, tipo_unidad, numero_interno, numero_expediente,nombre_administrado, nombre_establecimiento,
                 cedula_ruc, reincidencia, ordenanza, iniciado_por, entidad, numero_informe, medida_cautelar,
                 estado, funcionario, envio_expediente, fecha_envio
 FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
-    //echo $sql;
+    echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

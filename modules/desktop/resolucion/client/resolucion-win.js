@@ -1196,7 +1196,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
         //Inicio formato grid Reportes Libro Diario
         this.gridReporteLibroDiario = new Ext.grid.EditorGridPanel({
-            height: winHeight / 2 + 80,
+            height: winHeight / 2 + 50,
             store: this.storeReporteLibroDiario,
             columns: [
                 //Definición de campos bdd Libro Diario
@@ -1527,7 +1527,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
         //Inicio formato grid Reportes Providencias Libro Diario
         this.gridReporteProvidenciasLibroDiario = new Ext.grid.EditorGridPanel({
-            height: winHeight / 2 + 80,
+            height: winHeight / 2 + 50,
             store: this.storeReporteProvidenciasLibroDiario,
             columns: [
                 //Definición de campos bdd Libro Diario
@@ -1863,19 +1863,19 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
         //Inicio formato grid Reportes Resoluciones
         this.gridReporteResoluciones = new Ext.grid.EditorGridPanel({
-            height: winHeight / 2 + 80,
+            height: winHeight / 2 + 50,
             store: this.storeReporteResoluciones,
             columns: [
                 //Definición de campos bdd Resoluciones
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldResoluciones},
-                {header: 'Nombre', dataIndex: 'nombre', allowBlank: true, sortable: true, width: 150, editor: textFieldResoluciones},
+                {header: 'Nombre', dataIndex: 'nombre', allowBlank: true, sortable: true, width: 250, editor: textFieldResoluciones},
                 {
                     header: 'Total de resoluciones emitidas',
                     dataIndex: 'veces',
                     allowBlank: true,
                     sortable: true,
-                    width: 150,
+                    width: 180,
                     editor: textFieldResoluciones
                 }
 
@@ -2218,9 +2218,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Tipo',
-                                id: 'tipo',
-                                name: 'tipo',
-                                hiddenName: 'tipo',
+                                id: 'tipo_unidad',
+                                name: 'tipo_unidad',
+                                hiddenName: 'tipo_unidad',
 
                                 anchor: '95%',
                                 store:  storeTIPOUNIDAD,
@@ -2233,9 +2233,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Envío expediente',
-                                id: 'tipo_expediente',
-                                name: 'tipo_expediente',
-                                hiddenName: 'tipo_expediente',
+                                id: 'envio_expediente',
+                                name: 'envio_expediente',
+                                hiddenName: 'envio_expediente',
 
                                 anchor: '95%',
                                 store:  storeENVIOEXPEDIENTE,
@@ -2245,24 +2245,24 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 triggerAction: 'all',
                                 mode: 'local'
                             },
-                            {
-                                xtype: 'textfield',
-                                fieldLabel: 'Multa',
-                                id: 'multa',
-                                name: 'multa',
-                                anchor: '95%'
-                            },
+                            // {
+                            //     xtype: 'textfield',
+                            //     fieldLabel: 'Multa',
+                            //     id: 'multa',
+                            //     name: 'multa',
+                            //     anchor: '95%'
+                            // },
                             {
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha Inicio (Envío)',
-                                id: 'busqueda_fecha_inicio_envio',
+                                id: 'fecha_envio_inicio',
                                 anchor: '95%',
                                 format: 'Y-m-d'
                             },
                             {
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha de Fin (Envío)',
-                                id: 'busqueda_fecha_fin_envio',
+                                id: 'fecha_envio_fin',
                                 anchor: '95%',
                                 format: 'Y-m-d'
                             },
@@ -2436,14 +2436,14 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             {
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha Inicio (Envío)',
-                                id: 'busqueda_fecha_inicio_envio_providencias',
+                                id: 'fecha_envio_inicio',
                                 anchor: '95%',
                                 format: 'Y-m-d'
                             },
                             {
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha de Fin (Envío)',
-                                id: 'busqueda_fecha_fin_envio_providencias',
+                                id: 'fecha_envio_fin',
                                 anchor: '95%',
                                 format: 'Y-m-d'
                             },
@@ -3079,9 +3079,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 },
                                 {
                                     region: 'center',
-                                    height: 150,
+                                    height: 100,
                                     minSize: 50,
-                                    maxSize: 150,
+                                    maxSize: 100,
                                     closable: true,
                                     autoScroll: false,
                                     items: this.gridReporteLibroDiario
@@ -3130,9 +3130,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 },
                                 {
                                     region: 'center',
-                                    height: 150,
+                                    height: 100,
                                     minSize: 50,
-                                    maxSize: 150,
+                                    maxSize: 100,
                                     closable: true,
                                     autoScroll: false,
                                     items: this.gridReporteProvidenciasLibroDiario
@@ -3181,9 +3181,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 },
                                 {
                                     region: 'center',
-                                    height: 150,
+                                    height: 100,
                                     minSize: 50,
-                                    maxSize: 150,
+                                    maxSize: 100,
                                     closable: true,
                                     autoScroll: false,
                                     items: this.gridReporteResoluciones
@@ -3384,7 +3384,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
     requestGridDataDocumentoReporte: function () {
         // this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
-        this.storeLibroDiario.baseParams = this.formConsultaLibroDiario.getForm().getValues();
+        this.storeReporteResoluciones.baseParams = this.formConsultaResoluciones.getForm().getValues();
 
         // var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
         // var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
@@ -3392,11 +3392,11 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         // this.storeDocumentosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
         // this.storeDocumentosReporte.baseParams.accesosResolutores = accesosResolutores;
 
-        this.storeLibroDiario.load();
+        this.storeReporteResoluciones.load();
     },
 
     requestGridDataDocumentoReporteReset: function () {
-        this.formConsultaLibroDiario.getForm().reset();
+        this.formConsultaResoluciones.getForm().reset();
     },
 
     requestGridDataReporteLibroDiario: function () {

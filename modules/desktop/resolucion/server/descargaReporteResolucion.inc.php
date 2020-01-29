@@ -403,7 +403,6 @@ function getOrdenanza($id_dato)
 function tipoUnidad($id)
 {
     if ((isset($id)) and ($id!=" ")){
-
         $opciones = array(0 => "UDC", 1 => "ASEO");
         return $opciones [$id];
     } else {

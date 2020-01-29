@@ -96,6 +96,71 @@ function selectOrdenanzas()
             $where = $where . " AND funcionario = '$filtroFuncionario' ";
         }
     }
+    if (isset($_POST['numero_resolucion']) && $_POST['numero_resolucion']!="" ) {
+        $filtronumero_resolucion = $_POST['numero_resolucion'];
+        if($where == ''){
+            $where = " WHERE numero_resolucion LIKE '%$filtronumero_resolucion%' ";
+        }else{
+            $where = $where . " AND numero_resolucion LIKE '%$filtronumero_resolucion%' ";
+        }
+    }
+    if (isset($_POST['articulo_actual']) && $_POST['articulo_actual']!="" ) {
+        $filtro_articulo_actual = $_POST['articulo_actual'];
+        if($where == ''){
+            $where = " WHERE articulo_actual LIKE '%$filtro_articulo_actual%' ";
+        }else{
+            $where = $where . " AND articulo_actual LIKE '%$filtro_articulo_actual%' ";
+        }
+    }
+    if (isset($_POST['unidad']) && $_POST['unidad']!="" ) {
+        $filtro_unidad = $_POST['unidad'];
+        if($where == ''){
+            $where = " WHERE unidad LIKE '%$filtro_unidad%' ";
+        }else{
+            $where = $where . " AND unidad LIKE '%$filtro_unidad%' ";
+        }
+    }
+    if (isset($_POST['iniciado_por']) && $_POST['iniciado_por']!="" ) {
+        $filtro_iniciado_por = $_POST['iniciado_por'];
+        if($where == ''){
+            $where = " WHERE iniciado_por LIKE '%$filtro_iniciado_por%' ";
+        }else{
+            $where = $where . " AND iniciado_por LIKE '%$filtro_iniciado_por%' ";
+        }
+    }
+    if (isset($_POST['medida_cautelar']) && $_POST['medida_cautelar']!="" ) {
+        $filtro_medida_cautelar = $_POST['medida_cautelar'];
+        if($where == ''){
+            $where = " WHERE medida_cautelar LIKE '%$filtro_medida_cautelar%' ";
+        }else{
+            $where = $where . " AND medida_cautelar LIKE '%$filtro_medida_cautelar%' ";
+        }
+    }
+    if (isset($_POST['tipo_unidad']) && $_POST['tipo_unidad']!="" ) {
+        $filtro_tipo_unidad = $_POST['tipo_unidad'];
+        if($where == ''){
+            $where = " WHERE tipo_unidad = $filtro_tipo_unidad ";
+        }else{
+            $where = $where . " AND tipo_unidad = $filtro_tipo_unidad ";
+        }
+    }
+    if (isset($_POST['envio_expediente']) && $_POST['envio_expediente']!="" ) {
+        $filtro_envio_expediente = $_POST['envio_expediente'];
+        if($where == ''){
+            $where = " WHERE envio_expediente = '$filtro_envio_expediente' ";
+        }else{
+            $where = $where . " AND envio_expediente = '$filtro_envio_expediente' ";
+        }
+    }
+    if (isset($_POST['fecha_envio_inicio']) && isset($_POST['fecha_envio_fin']) && $_POST['fecha_envio_inicio']!="" && $_POST['fecha_envio_fin']!="") {
+        $busqueda_fecha_inicio = $_POST['fecha_envio_inicio'];
+        $busqueda_fecha_fin = $_POST['fecha_envio_fin'];
+        if($where == ''){
+            $where = " WHERE cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
+        }else{
+            $where = $where . " AND cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
+        }
+    }
 
     //$usuarioLog = $os->get_member_id();
 
