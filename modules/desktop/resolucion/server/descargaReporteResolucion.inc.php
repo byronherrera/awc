@@ -365,7 +365,7 @@ function quitar_espacio($cadena)
 function resolucionDe($id)
 {
     if ((isset($id)) and ($id!=' ')){
-        $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
+        $opciones = array(0 => "Nodefinido", 1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
         return $opciones [$id];
     } else {
         return '';
