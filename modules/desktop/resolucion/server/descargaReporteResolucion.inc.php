@@ -116,8 +116,7 @@ else
 //    $orderby = 'ORDER BY a.id ASC';
 
 $os->db->conn->query("SET NAMES 'utf8'");
-$sql = "SELECT *
-FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
+$sql = "SELECT * FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby";
 
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
@@ -364,14 +363,19 @@ function quitar_espacio($cadena)
 
 function resolucionDe($id)
 {
-    if ((isset($id)) and ($id!=' ')){
-        $opciones = array(0 => "Nodefinido", 1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
-        return $opciones [$id];
-    } else {
-        return '';
-    }
-}
+    if (($id >= 1) and ($id <= 4)) {
+        if ((isset($id)) and ($id != ' ')) {
 
+            $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
+            return $opciones [$id];
+        } else {
+            return '';
+        }
+
+    } else
+        return '';
+
+}
 function regresaUnidad($id_dato)
 {
     global $os;
@@ -403,6 +407,7 @@ function getOrdenanza($id_dato)
 function tipoUnidad($id)
 {
     if ((isset($id)) and ($id!=" ")){
+
         $opciones = array(0 => "UDC", 1 => "ASEO");
         return $opciones [$id];
     } else {
