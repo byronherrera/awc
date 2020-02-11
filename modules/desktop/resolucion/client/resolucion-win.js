@@ -2508,14 +2508,14 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             {
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha Inicio (Envío)',
-                                id: 'fecha_envio_inicio',
+                                id: 'fecha_envio_inicio_providencia',
                                 anchor: '95%',
                                 format: 'Y-m-d'
                             },
                             {
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha de Fin (Envío)',
-                                id: 'fecha_envio_fin',
+                                id: 'fecha_envio_fin_providencia',
                                 anchor: '95%',
                                 format: 'Y-m-d'
                             },
