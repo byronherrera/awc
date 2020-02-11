@@ -118,7 +118,7 @@ else
 $os->db->conn->query("SET NAMES 'utf8'");
 $sql = "SELECT *
 FROM amc_libro_diario a INNER JOIN amc_providencias b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
-
+//echo $sql;
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
 
@@ -234,21 +234,21 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $noExistenFilas = false;
 
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['memo_ingreso']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['numero_interno']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['numero_providencia']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['fecha_providencia']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['tipo_providencia']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['fecha_ingreso']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio,  regresaUnidad ($rowdetalle['unidad']));
-//    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, tipoUnidad ($rowdetalle['tipo_unidad']));
-//    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['numero_expediente']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['nombre_administrado']);
-////    $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['nombre_establecimiento']);
-////    $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, $rowdetalle['direccion_notificacion']);
-////    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, $rowdetalle['direccion_domicilio']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, $rowdetalle['cedula_ruc']);
-//    $objPHPExcel->getActiveSheet()->setCellValue('O' . $filaInicio, ($rowdetalle['reincidencia']==1) ? "SI":" ");
-//    $objPHPExcel->getActiveSheet()->setCellValue('P' . $filaInicio, getOrdenanza ($rowdetalle['ordenanza']));
+    $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['numero_interno']);
+    $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['numero_providencia']);
+    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['fecha_providencia']);
+    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['tipo_providencia']);
+    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['fecha_ingreso']);
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio,  regresaUnidad ($rowdetalle['unidad']));
+    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, tipoUnidad ($rowdetalle['tipo_unidad']));
+    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['numero_expediente']);
+    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['nombre_administrado']);
+    $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['nombre_establecimiento']);
+    $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, $rowdetalle['direccion_notificacion']);
+    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, $rowdetalle['direccion_domicilio']);
+    $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, $rowdetalle['cedula_ruc']);
+    $objPHPExcel->getActiveSheet()->setCellValue('O' . $filaInicio, ($rowdetalle['reincidencia']==1) ? "SI":" ");
+    $objPHPExcel->getActiveSheet()->setCellValue('P' . $filaInicio, getOrdenanza ($rowdetalle['ordenanza']));
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':P' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;

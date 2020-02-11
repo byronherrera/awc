@@ -14,54 +14,16 @@ function selectOrdenanzas()
     $usuarioLog = $os->get_member_id();
     $where = '';
 
-
-//    if (isset($_POST['filterText'])) {
-//        $campo = $_POST['filterText'];
-//        $campo = str_replace(" ", "%", $campo);
-//        if ($columnaBusqueda != 'busqueda_todos') {
-//            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-//        } else {
-//            $listadoCampos = array(
-//                'busqueda_fecha_inicio',
-//                'busqueda_fecha_fin',
-//                'memo_ingreso',
-//                'fecha_ingreso',
-//                'unidad',
-//                'numero_expediente',
-//                'nombre_administrado',
-//                'nombre_establecimiento',
-//                'cedula_ruc',
-//                'reincidencia',
-//                'ordenanza',
-//                'articulo_numeral',
-//                'iniciado_por',
-//                'entidad',
-//                'numero_informe',
-//                'medida_cautelar',
-//                'estado',
-//                'funcionario',
-//                'envio_expediente',
-//                'fecha_envio',
-//            );
-//            $cadena = '';
-//            foreach ($listadoCampos as &$valor) {
-//                $cadena  = $cadena  .   " $valor LIKE '%$campo%' OR ";
+//    if(isset ($_POST['accesosResolutores'])){
+//        $acceso = $_POST['accesosResolutores'];
+//        if($acceso=='true'){
+//            if($where == ''){
+//                $where = " WHERE funcionario = $usuarioLog ";
+//            }else{
+//                $where = $where . " AND funcionario = $usuarioLog ";
 //            }
-//            $cadena = substr($cadena,0,-3);
-//            $where = " WHERE $cadena ";
 //        }
 //    }
-//print_r($_POST);
-    if(isset ($_POST['accesosResolutores'])){
-        $acceso = $_POST['accesosResolutores'];
-        if($acceso=='true'){
-            if($where == ''){
-                $where = " WHERE funcionario = $usuarioLog ";
-            }else{
-                $where = $where . " AND funcionario = $usuarioLog ";
-            }
-        }
-    }
 
     if (isset($_POST['busqueda_fecha_inicio_resoluciones']) && isset($_POST['busqueda_fecha_fin_resoluciones']) && $_POST['busqueda_fecha_inicio_resoluciones']!="" && $_POST['busqueda_fecha_fin_resoluciones']!="") {
         $busqueda_fecha_inicio = $_POST['busqueda_fecha_inicio_resoluciones'];

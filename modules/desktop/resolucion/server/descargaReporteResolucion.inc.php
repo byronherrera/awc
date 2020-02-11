@@ -215,19 +215,20 @@ $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Número Inter
 $objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Número Resolución');
 $objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'Fecha Resolución');
 $objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Artículo Actual');
-$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Resolución de');
-$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Multa impuesta');
-$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Fecha de Ingreso');
-$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Unidad');
-$objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Tipo de Unidad');
-$objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Número de expediente');
-$objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Nombre de administrado');
-$objPHPExcel->getActiveSheet()->setCellValue('M' . $filacabecera, 'Nombre de establecimiento');
-$objPHPExcel->getActiveSheet()->setCellValue('N' . $filacabecera, 'Dirección de notificación');
-$objPHPExcel->getActiveSheet()->setCellValue('O' . $filacabecera, 'Dirección de domicilio');
-$objPHPExcel->getActiveSheet()->setCellValue('P' . $filacabecera, 'Cédula RUC');
-$objPHPExcel->getActiveSheet()->setCellValue('Q' . $filacabecera, 'Reincidencia');
-$objPHPExcel->getActiveSheet()->setCellValue('R' . $filacabecera, 'Ordenanza');
+$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Ordenanza');
+$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Resolución de');
+$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Multa impuesta');
+$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Fecha de Ingreso');
+$objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Unidad');
+$objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Tipo de Unidad');
+$objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Número de expediente');
+$objPHPExcel->getActiveSheet()->setCellValue('M' . $filacabecera, 'Nombre de administrado');
+$objPHPExcel->getActiveSheet()->setCellValue('N' . $filacabecera, 'Nombre de establecimiento');
+$objPHPExcel->getActiveSheet()->setCellValue('O' . $filacabecera, 'Dirección de notificación');
+$objPHPExcel->getActiveSheet()->setCellValue('P' . $filacabecera, 'Dirección de domicilio');
+$objPHPExcel->getActiveSheet()->setCellValue('Q' . $filacabecera, 'Cédula RUC');
+$objPHPExcel->getActiveSheet()->setCellValue('R' . $filacabecera, 'Reincidencia');
+
 
 
 $noExistenFilas = true;
@@ -244,19 +245,20 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['fecha_resolucion']);
     $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['articulo_actual']);
 
-    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, resolucionDe($rowdetalle['resolucion_de']));
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, $rowdetalle['multa_impuesta']);
-    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['fecha_ingreso']);
-    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio,  regresaUnidad ($rowdetalle['unidad']));
-    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, tipoUnidad ($rowdetalle['tipo_unidad']));
-    $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['numero_expediente']);
-    $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, $rowdetalle['nombre_administrado']);
-    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, $rowdetalle['nombre_establecimiento']);
-    $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, $rowdetalle['direccion_notificacion']);
-    $objPHPExcel->getActiveSheet()->setCellValue('O' . $filaInicio, $rowdetalle['direccion_domicilio']);
-    $objPHPExcel->getActiveSheet()->setCellValue('P' . $filaInicio, $rowdetalle['cedula_ruc']);
-    $objPHPExcel->getActiveSheet()->setCellValue('Q' . $filaInicio, ($rowdetalle['reincidencia']==1) ? "SI":" ");
-    $objPHPExcel->getActiveSheet()->setCellValue('R' . $filaInicio, getOrdenanza ($rowdetalle['ordenanza']));
+    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, getOrdenanza ($rowdetalle['ordenanza']));
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, resolucionDe($rowdetalle['resolucion_de']));
+    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, $rowdetalle['multa_impuesta']);
+    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['fecha_ingreso']);
+    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio,  regresaUnidad ($rowdetalle['unidad']));
+    $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, tipoUnidad ($rowdetalle['tipo_unidad']));
+    $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, $rowdetalle['numero_expediente']);
+    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, $rowdetalle['nombre_administrado']);
+    $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, $rowdetalle['nombre_establecimiento']);
+    $objPHPExcel->getActiveSheet()->setCellValue('O' . $filaInicio, $rowdetalle['direccion_notificacion']);
+    $objPHPExcel->getActiveSheet()->setCellValue('P' . $filaInicio, $rowdetalle['direccion_domicilio']);
+    $objPHPExcel->getActiveSheet()->setCellValue('Q' . $filaInicio, $rowdetalle['cedula_ruc']);
+    $objPHPExcel->getActiveSheet()->setCellValue('R' . $filaInicio, ($rowdetalle['reincidencia']==1) ? "SI":" ");
+
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':R' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
@@ -366,7 +368,7 @@ function resolucionDe($id)
     if (($id >= 1) and ($id <= 4)) {
         if ((isset($id)) and ($id != ' ')) {
 
-            $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
+            $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad", 5 => "Anulada");
             return $opciones [$id];
         } else {
             return '';
@@ -399,7 +401,7 @@ function getOrdenanza($id_dato)
             FROM amc_ordenanzas WHERE id = " . $id_dato;
         $nombre = $os->db->conn->query($sql);
         $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre_completo'];
+        return $rownombre['nombre'];
     } else
         return '';
 

@@ -201,7 +201,7 @@ function updateOrdenanzas()
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_libro_diario SET  $cadenaDatos  WHERE amc_libro_diario.id = '$data->id' ";
-    //echo ($sql);
+//    echo ($sql);
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 

@@ -14,46 +14,9 @@ function selectOrdenanzas()
     $usuarioLog = $os->get_member_id();
     $where = '';
 
-
-//    if (isset($_POST['filterText'])) {
-//        $campo = $_POST['filterText'];
-//        $campo = str_replace(" ", "%", $campo);
-//        if ($columnaBusqueda != 'busqueda_todos') {
-//            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-//        } else {
-//            $listadoCampos = array(
-//                'busqueda_fecha_inicio',
-//                'busqueda_fecha_fin',
-//                'memo_ingreso',
-//                'fecha_ingreso',
-//                'unidad',
-//                'numero_expediente',
-//                'nombre_administrado',
-//                'nombre_establecimiento',
-//                'cedula_ruc',
-//                'reincidencia',
-//                'ordenanza',
-//                'articulo_numeral',
-//                'iniciado_por',
-//                'entidad',
-//                'numero_informe',
-//                'medida_cautelar',
-//                'estado',
-//                'funcionario',
-//                'envio_expediente',
-//                'fecha_envio',
-//            );
-//            $cadena = '';
-//            foreach ($listadoCampos as &$valor) {
-//                $cadena  = $cadena  .   " $valor LIKE '%$campo%' OR ";
-//            }
-//            $cadena = substr($cadena,0,-3);
-//            $where = " WHERE $cadena ";
-//        }
-//    }
-//print_r($_POST);
     if(isset ($_POST['accesosResolutores'])){
         $acceso = $_POST['accesosResolutores'];
+//        echo $acceso;
         if($acceso=='true'){
             if($where == ''){
                 $where = " WHERE funcionario = $usuarioLog ";
@@ -80,12 +43,12 @@ function selectOrdenanzas()
             $where = $where . " AND ordenanza = '$filtroOrdenanza' ";
         }
     }
-    if (isset($_POST['resolucion_de']) && $_POST['resolucion_de']!="" ) {
-        $filtroResolucion_de = $_POST['resolucion_de'];
+    if (isset($_POST['tipo_providencia']) && $_POST['tipo_providencia']!="" ) {
+        $filtroResolucion_de = $_POST['tipo_providencia'];
         if($where == ''){
-            $where = " WHERE resolucion_de = '$filtroResolucion_de' ";
+            $where = " WHERE tipo_providencia = '$filtroResolucion_de' ";
         }else{
-            $where = $where . " AND resolucion_de = '$filtroResolucion_de' ";
+            $where = $where . " AND tipo_providencia = '$filtroResolucion_de' ";
         }
     }
     if (isset($_POST['funcionario']) && $_POST['funcionario']!="" ) {
@@ -178,9 +141,7 @@ function selectOrdenanzas()
     $orderby = 'ORDER BY a.id ASC';
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT numero_providencia, fecha_providencia, tipo_providencia, memo_ingreso,fecha_ingreso, unidad, numero_interno, numero_expediente,nombre_administrado, nombre_establecimiento,
-                cedula_ruc, reincidencia, ordenanza, iniciado_por, entidad, numero_informe, medida_cautelar,
-                estado, funcionario, envio_expediente, fecha_envio
+    $sql = "SELECT *
 FROM amc_libro_diario a INNER JOIN amc_providencias b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
 //    echo $sql;
     $result = $os->db->conn->query($sql);
