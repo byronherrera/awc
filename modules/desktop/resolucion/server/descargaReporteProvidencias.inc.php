@@ -355,12 +355,18 @@ function quitar_espacio($cadena)
 
 function resolucionDe($id)
 {
-    if ((isset($id)) and ($id!=' ')){
-        $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
-        return $opciones [$id];
-    } else {
+    if (($id >= 1) and ($id <= 4)) {
+        if ((isset($id)) and ($id != ' ')) {
+
+            $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
+            return $opciones [$id];
+        } else {
+            return '';
+        }
+
+    } else
         return '';
-    }
+
 }
 
 function regresaUnidad($id_dato)
