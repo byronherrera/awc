@@ -115,9 +115,9 @@ function selectOrdenanzas()
             $where = $where . " AND envio_expediente = '$filtro_envio_expediente' ";
         }
     }
-    if (isset($_POST['fecha_envio_inicio']) && isset($_POST['fecha_envio_fin']) && $_POST['fecha_envio_inicio']!="" && $_POST['fecha_envio_fin']!="") {
-        $busqueda_fecha_inicio = $_POST['fecha_envio_inicio'];
-        $busqueda_fecha_fin = $_POST['fecha_envio_fin'];
+    if (isset($_POST['fecha_envio_inicio_providencia']) && isset($_POST['fecha_envio_fin_providencia']) && $_POST['fecha_envio_inicio_providencia']!="" && $_POST['fecha_envio_fin_providencia']!="") {
+        $busqueda_fecha_inicio = $_POST['fecha_envio_inicio_providencia'];
+        $busqueda_fecha_fin = $_POST['fecha_envio_fin_providencia'];
         if($where == ''){
             $where = " WHERE cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
         }else{

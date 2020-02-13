@@ -992,7 +992,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     editor: textFieldLibroDiario
                 },
                 {
-                    header: 'Nombre de Administrado',
+                    header: 'Nombre del Administrado',
                     dataIndex: 'nombre_administrado',
                     allowBlank: true,
                     sortable: true,
@@ -1284,7 +1284,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 120,
-                    editor: textFieldResolucionesLibroDiario
+                    // editor: textFieldResolucionesLibroDiario
                 },
                 // {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, sortable: true, width: 150, editor: textFieldLibroDiario},
                 {
@@ -1303,7 +1303,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 100,
-                    editor: comboUnidad,
+                    // editor: comboUnidad,
                     renderer: rendererUnidad
                 },                {
                     header: 'Tipo Unidad',
@@ -1311,17 +1311,17 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 100,
-                    editor: comboTIPOUNIDAD,
+                    // editor: comboTIPOUNIDAD,
                     renderer: funcionTIPOUNIDAD
                 },
 
                 {
-                    header: 'Nombre de Administrado',
+                    header: 'Nombre del Administrado',
                     dataIndex: 'nombre_administrado',
                     allowBlank: true,
                     sortable: true,
                     width: 250,
-                    editor: textFieldResolucionesLibroDiario
+                    // editor: textFieldResolucionesLibroDiario
                 },
                 {
                     header: 'Nombre del Establecimiento',
@@ -1329,10 +1329,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 180,
-                    editor: textFieldResolucionesLibroDiario
+                    // editor: textFieldResolucionesLibroDiario
                 },
-                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, sortable: true, width: 100, editor: textFieldResolucionesLibroDiario},
-                {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, sortable: true, width: 80, editor: comboREINCIDENCIA,
+                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, sortable: true, width: 100,
+                    // editor: textFieldResolucionesLibroDiario
+                },
+                {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, sortable: true, width: 80,
+                    // editor: comboREINCIDENCIA,
                     renderer: functionREINCIDENCIA
                 },
                 {
@@ -1341,7 +1344,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 250,
-                    editor: textFieldResolucionesLibroDiario
+                    // editor: textFieldResolucionesLibroDiario
                 },
                 {
                     header: 'Dirección de Domicilio',
@@ -1349,7 +1352,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 250,
-                    editor: textFieldResolucionesLibroDiario
+                    // editor: textFieldResolucionesLibroDiario
                 },
                 {
                     header: 'Nombre de Administrado',
@@ -1357,7 +1360,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 250,
-                    editor: textFieldResolucionesLibroDiario
+                    // editor: textFieldResolucionesLibroDiario
                 },
                 //{header: 'Número de Predio', dataIndex: 'numero_predio', allowBlank:true, width: 100, editor: textField},
                 {
@@ -1366,7 +1369,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 180,
-                    editor: comboOrdenanza,
+                    // editor: comboOrdenanza,
                     renderer: rendererOrdenanza
                 },
                 // {
@@ -1377,17 +1380,20 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 //     editor: comboOrdenanzaTema,
                 //     renderer: rendererOrdenanzaTema
                 // },
-                {header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, sortable: true, width: 120, editor: comboINICIADOPOR,
+                {header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, sortable: true, width: 120,
+                    // editor: comboINICIADOPOR,
                     renderer: functionINICIADOPOR
                 },
-                {header: 'Entidad', dataIndex: 'entidad', allowBlank: true, sortable: true, width: 200, editor: textFieldResolucionesLibroDiario},
+                {header: 'Entidad', dataIndex: 'entidad', allowBlank: true, sortable: true, width: 200,
+                    // editor: textFieldResolucionesLibroDiario
+                },
                 {
                     header: 'Número de Informe',
                     dataIndex: 'numero_informe',
                     allowBlank: true,
                     sortable: true,
                     width: 150,
-                    editor: textFieldResolucionesLibroDiario
+                    // editor: textFieldResolucionesLibroDiario
                 },
                 {
                     header: 'Medida Cautelar',
@@ -1395,10 +1401,11 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 150,
-                    editor: comboMEDIDACAUTELAR,
+                    // editor: comboMEDIDACAUTELAR,
                     renderer: functionMEDIDACAUTELAR
                 },
-                {header: 'Estado', dataIndex: 'estado', allowBlank: true, sortable: true, width: 80, editor: comboESTADO,
+                {header: 'Estado', dataIndex: 'estado', allowBlank: true, sortable: true, width: 80,
+                    // editor: comboESTADO,
                     renderer: functionESTADO},
                 {
                     header: 'Funcionario',
@@ -1406,7 +1413,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 300,
-                    editor: comboPersonal,
+                    // editor: comboPersonal,
                     renderer: rendererPersonal
                 },
                 {
@@ -1415,9 +1422,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 100,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
+                    // editor: new Ext.form.DateField({
+                    //     format: 'Y-m-d'
+                    // })
                 },
                 {
                     header: 'Envio Expediente',
@@ -1425,7 +1432,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 100,
-                    editor: comboENVIOEXPEDIENTE,
+                    // editor: comboENVIOEXPEDIENTE,
                     renderer: functionENVIOEXPEDIENTE
                 },
                 {
@@ -1434,7 +1441,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 250,
-                    editor: textFieldResolucionesLibroDiario
+                    // editor: textFieldResolucionesLibroDiario
                 },
                 {
                     header: 'Fecha de Envío',
@@ -1442,9 +1449,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 100,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
+                    // editor: new Ext.form.DateField({
+                    //     format: 'Y-m-d'
+                    // })
                 },
 
             ],
@@ -1580,47 +1587,6 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 //Definición de campos bdd Libro Diario
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldProvidenciasLibroDiario},
-                // {
-                //     header: 'Número de Resolución',
-                //     dataIndex: 'numero_resolucion',
-                //     allowBlank: true,
-                //     sortable: true,
-                //     width: 120,
-                //     // editor: textFieldLibroDiario
-                // },
-                // {
-                //     header: 'Fecha de Resolucion',
-                //     dataIndex: 'fecha_resolucion',
-                //     sortable: true,
-                //     width: 120,
-                //     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-                //     // editor: new Ext.form.DateField({
-                //     //     format: 'Y-m-d'
-                //     // })
-                // },
-                // {
-                //     header: 'Artículo Actual',
-                //     dataIndex: 'articulo_actual',
-                //     allowBlank: true,
-                //     sortable: true,
-                //     width: 100,
-                //     // editor: textFieldLibroDiario
-                // },
-                // {
-                //     header: 'Resolucion de',
-                //     dataIndex: 'resolucion_de',
-                //     allowBlank: true,
-                //     width: 140,
-                //     // editor: comboRESOLUCIONDE,
-                //     renderer: functionREPORTEPROVIDENCIASRESOLUCIONDE
-                // },
-                // {
-                //     header: 'Multa impuesta',
-                //     dataIndex: 'multa_impuesta',
-                //     allowBlank: true,
-                //     width: 100,
-                //     renderer: 'usMoney',
-                // },
                 {
                     header: 'Número de Providencia',
                     dataIndex: 'numero_providencia',
@@ -1663,7 +1629,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 120,
-                    editor: textFieldProvidenciasLibroDiario
+                    // editor: textFieldProvidenciasLibroDiario
                 },
                 // {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, sortable: true, width: 150, editor: textFieldLibroDiario},
                 {
@@ -1672,9 +1638,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 100,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
+                    // editor: new Ext.form.DateField({
+                    //     format: 'Y-m-d'
+                    // })
                 },
                 {
                     header: 'Unidad',
@@ -1682,7 +1648,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 100,
-                    editor: comboUnidad,
+                    // editor: comboUnidad,
                     renderer: rendererUnidad
                 },                {
                     header: 'Tipo Unidad',
@@ -1690,7 +1656,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 100,
-                    editor: comboTIPOUNIDAD,
+                    // editor: comboTIPOUNIDAD,
                     renderer: funcionTIPOUNIDAD
                 },
 
@@ -1700,7 +1666,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 250,
-                    editor: textFieldProvidenciasLibroDiario
+                    // editor: textFieldProvidenciasLibroDiario
                 },
                 {
                     header: 'Nombre del Establecimiento',
@@ -1708,10 +1674,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 180,
-                    editor: textFieldProvidenciasLibroDiario
+                    // editor: textFieldProvidenciasLibroDiario
                 },
-                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, sortable: true, width: 100, editor: textFieldLibroDiario},
-                {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, sortable: true, width: 80, editor: comboREINCIDENCIA,
+                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, sortable: true, width: 100,
+                    // editor: textFieldLibroDiario
+                },
+                {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, sortable: true, width: 80,
+                    // editor: comboREINCIDENCIA,
                     renderer: functionREINCIDENCIA
                 },
                 {
@@ -1720,7 +1689,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 250,
-                    editor: textFieldProvidenciasLibroDiario
+                    // editor: textFieldProvidenciasLibroDiario
                 },
                 {
                     header: 'Dirección de Domicilio',
@@ -1728,7 +1697,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 250,
-                    editor: textFieldProvidenciasLibroDiario
+                    // editor: textFieldProvidenciasLibroDiario
                 },
                 {
                     header: 'Nombre de Administrado',
@@ -1736,7 +1705,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 250,
-                    editor: textFieldProvidenciasLibroDiario
+                    // editor: textFieldProvidenciasLibroDiario
                 },
                 //{header: 'Número de Predio', dataIndex: 'numero_predio', allowBlank:true, width: 100, editor: textField},
                 {
@@ -1745,7 +1714,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 180,
-                    editor: comboOrdenanza,
+                    // editor: comboOrdenanza,
                     renderer: rendererOrdenanza
                 },
                 // {
@@ -1756,17 +1725,20 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 //     editor: comboOrdenanzaTema,
                 //     renderer: rendererOrdenanzaTema
                 // },
-                {header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, sortable: true, width: 120, editor: comboINICIADOPOR,
+                {header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, sortable: true, width: 120,
+                    // editor: comboINICIADOPOR,
                     renderer: functionINICIADOPOR
                 },
-                {header: 'Entidad', dataIndex: 'entidad', allowBlank: true, sortable: true, width: 200, editor: textFieldLibroDiario},
+                {header: 'Entidad', dataIndex: 'entidad', allowBlank: true, sortable: true, width: 200,
+                    // editor: textFieldLibroDiario
+                },
                 {
                     header: 'Número de Informe',
                     dataIndex: 'numero_informe',
                     allowBlank: true,
                     sortable: true,
                     width: 150,
-                    editor: textFieldProvidenciasLibroDiario
+                    // editor: textFieldProvidenciasLibroDiario
                 },
                 {
                     header: 'Medida Cautelar',
@@ -1774,10 +1746,11 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 150,
-                    editor: comboMEDIDACAUTELAR,
+                    // editor: comboMEDIDACAUTELAR,
                     renderer: functionMEDIDACAUTELAR
                 },
-                {header: 'Estado', dataIndex: 'estado', allowBlank: true, sortable: true, width: 80, editor: comboESTADO,
+                {header: 'Estado', dataIndex: 'estado', allowBlank: true, sortable: true, width: 80,
+                    // , editor: comboESTADO,
                     renderer: functionESTADO},
                 {
                     header: 'Funcionario',
@@ -1785,7 +1758,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 300,
-                    editor: comboPersonal,
+                    // editor: comboPersonal,
                     renderer: rendererPersonal
                 },
                 {
@@ -1794,9 +1767,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 100,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
+                    // editor: new Ext.form.DateField({
+                    //     format: 'Y-m-d'
+                    // })
                 },
                 {
                     header: 'Envio Expediente',
@@ -1804,7 +1777,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 100,
-                    editor: comboENVIOEXPEDIENTE,
+                    // editor: comboENVIOEXPEDIENTE,
                     renderer: functionENVIOEXPEDIENTE
                 },
                 {
@@ -1813,7 +1786,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     sortable: true,
                     width: 250,
-                    editor: textFieldProvidenciasLibroDiario
+                    // editor: textFieldProvidenciasLibroDiario
                 },
                 {
                     header: 'Fecha de Envío',
@@ -1821,9 +1794,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 100,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
+                    // editor: new Ext.form.DateField({
+                    //     format: 'Y-m-d'
+                    // })
                 },
 
             ],
@@ -1933,15 +1906,19 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 //Definición de campos bdd Resoluciones
                 new Ext.grid.RowNumberer(),
-                {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldResoluciones},
-                {header: 'Nombre', dataIndex: 'nombre', allowBlank: true, sortable: true, width: 250, editor: textFieldResoluciones},
+                {header: 'id', dataIndex: 'id', width: 100, hidden: true,
+                    // editor: textFieldResoluciones
+                },
+                {header: 'Nombre', dataIndex: 'nombre', allowBlank: true, sortable: true, width: 250,
+                    // editor: textFieldResoluciones
+                },
                 {
                     header: 'Total de resoluciones emitidas',
                     dataIndex: 'veces',
                     allowBlank: true,
                     sortable: true,
                     width: 180,
-                    editor: textFieldResoluciones
+                    // editor: textFieldResoluciones
                 }
 
             ],
@@ -2498,24 +2475,24 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                         columnWidth: 1 / 3,
                         layout: 'form',
                         items: [
-                            {
-                                xtype: 'textfield',
-                                fieldLabel: 'Multa',
-                                id: 'multa_providencias',
-                                name: 'multa',
-                                anchor: '95%'
-                            },
+                            // {
+                            //     xtype: 'textfield',
+                            //     fieldLabel: 'Multa',
+                            //     id: 'multa_providencias',
+                            //     name: 'multa',
+                            //     anchor: '95%'
+                            // },
                             {
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha Inicio (Envío)',
-                                id: 'fecha_envio_inicio',
+                                id: 'fecha_envio_inicio_providencia',
                                 anchor: '95%',
                                 format: 'Y-m-d'
                             },
                             {
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha de Fin (Envío)',
-                                id: 'fecha_envio_fin',
+                                id: 'fecha_envio_fin_providencia',
                                 anchor: '95%',
                                 format: 'Y-m-d'
                             },
@@ -2679,13 +2656,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                         columnWidth: 1 / 3,
                         layout: 'form',
                         items: [
-                            {
-                                xtype: 'textfield',
-                                fieldLabel: 'Multa',
-                                id: 'multa_resoluciones',
-                                name: 'multa',
-                                anchor: '95%'
-                            },
+                            // {
+                            //     xtype: 'textfield',
+                            //     fieldLabel: 'Multa',
+                            //     id: 'multa_resoluciones',
+                            //     name: 'multa',
+                            //     anchor: '95%'
+                            // },
                             {
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha Inicio (Envío)',
