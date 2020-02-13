@@ -3422,7 +3422,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         var formularioBusqueda  = 1;
         this.storeDocumentosReporte.baseParams.formularioBusqueda = formularioBusqueda;
 
-
         this.storeDocumentosReporte.load();
     },
 

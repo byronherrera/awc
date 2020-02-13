@@ -114,7 +114,7 @@ function validaLainsercion($id_inspector, $fechaasignada)
 
         $maximoTurnosDia = $config->AMBIENTE;
         // contar los turnos asignados el dia para que no superen del maximo
-        $sql = "SELECT COUNT(*) as total  FROM amc_agendar_cita WHERE CAST(fechaasignada AS DATE) =  CAST('" . fechaasignada . "' AS DATE)";
+        $sql = "SELECT COUNT(*) as total  FROM amc_agendar_cita WHERE CAST(fechaasignada AS DATE) =  CAST('" . $fechaasignada . "' AS DATE)";
         $nombre = $os->db->conn->query($sql);
 
         $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);

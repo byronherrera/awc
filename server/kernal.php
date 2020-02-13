@@ -134,7 +134,8 @@ class kernal
       }
 
       // is the param an array of items?
-      if(is_array($items) && count($items > 0)){
+//      if(is_array($items) && count($items > 0)){
+      if(is_array($items) ){
          foreach($items as $item){
             $this->print_item_css($item);
          }
@@ -275,7 +276,9 @@ class kernal
       }
 
       // is the param an array of items?
-      if(is_array($items) && count($items > 0)){
+      // TODO ERROR PHP 7
+      //if(is_array($items) && count($items > 0)){
+      if(is_array($items) ){
          foreach($items as $item){
             $this->print_item_javascript($item);
          }
@@ -456,7 +459,10 @@ class kernal
       }
 
       // is the param an array of items?
-      if(is_array($items) && count($items > 0)){
+       // TODO REVISAR ESTE ERROR
+//      if(is_array($items) && count($items > 0)){
+
+      if(is_array($items) ){
          // loop through the items
          foreach($items as $item){
             $success = $this->validate_item($item);
