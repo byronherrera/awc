@@ -70,9 +70,7 @@ if (isset($data->resolucion_de) && $data->resolucion_de != "") {
 }
 if (isset($data->funcionario) && $data->funcionario != "") {
     $filtroFuncionario = $data->funcionario;
-    if ($where == '') {
-        $where = " WHERE funcionario = '$filtroFuncionario' ";
-    } else {
+    if ($where != '') {
         $where = $where . " AND funcionario = '$filtroFuncionario' ";
     }
 }
@@ -117,7 +115,7 @@ else
 
 $os->db->conn->query("SET NAMES 'utf8'");
 $sql = "SELECT * FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby";
-
+echo $sql;
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
 
@@ -139,8 +137,8 @@ $styleArray = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':R' . $filaTitulo1);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':R' . $filaTitulo2);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':V' . $filaTitulo1);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':V' . $filaTitulo2);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "REPORTE DE LIBRO DIARIO");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Dirección de Resolución');
@@ -208,7 +206,14 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('Q')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('Q')->setWidth(16.30);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('R')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('R')->setWidth(16.30);
-
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('S')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('S')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('T')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('T')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('U')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('U')->setWidth(30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('V')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('V')->setWidth(16.30);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Memo Ingreso');
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Número Interno');
@@ -228,7 +233,10 @@ $objPHPExcel->getActiveSheet()->setCellValue('O' . $filacabecera, 'Dirección de
 $objPHPExcel->getActiveSheet()->setCellValue('P' . $filacabecera, 'Dirección de domicilio');
 $objPHPExcel->getActiveSheet()->setCellValue('Q' . $filacabecera, 'Cédula RUC');
 $objPHPExcel->getActiveSheet()->setCellValue('R' . $filacabecera, 'Reincidencia');
-
+$objPHPExcel->getActiveSheet()->setCellValue('S' . $filacabecera, 'Fecha de sorteo');
+$objPHPExcel->getActiveSheet()->setCellValue('T' . $filacabecera, 'Envío expediente');
+$objPHPExcel->getActiveSheet()->setCellValue('U' . $filacabecera, 'Número de memorando');
+$objPHPExcel->getActiveSheet()->setCellValue('V' . $filacabecera, 'Fecha de envío');
 
 
 $noExistenFilas = true;
@@ -258,9 +266,12 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('P' . $filaInicio, $rowdetalle['direccion_domicilio']);
     $objPHPExcel->getActiveSheet()->setCellValue('Q' . $filaInicio, $rowdetalle['cedula_ruc']);
     $objPHPExcel->getActiveSheet()->setCellValue('R' . $filaInicio, ($rowdetalle['reincidencia']==1) ? "SI":" ");
+    $objPHPExcel->getActiveSheet()->setCellValue('S' . $filaInicio, $rowdetalle['fecha_sorteo']);
+    $objPHPExcel->getActiveSheet()->setCellValue('T' . $filaInicio, envioExpediente($rowdetalle['envio_expediente']));
+    $objPHPExcel->getActiveSheet()->setCellValue('U' . $filaInicio, $rowdetalle['numero_memorando']);
+    $objPHPExcel->getActiveSheet()->setCellValue('V' . $filaInicio, $rowdetalle['fecha_envio']);
 
-
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':R' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':V' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -286,7 +297,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:R600')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:V600')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -294,7 +305,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:R600')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:R200')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:V200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -302,10 +313,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:R200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:R30')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:V1000')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':R' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':V' . $filacabecera)->applyFromArray($styleArray);
 
 //$objPHPExcel->getActiveSheet()->getStyle('A7:D7')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
@@ -317,8 +328,8 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:R3')->getFont()->setSize(14);
-$objPHPExcel->getActiveSheet()->getStyle('A4:R40')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A1:V3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A4:V1000')->getFont()->setSize(10);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -342,7 +353,7 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Workshee
 // se crea la cabecera de archivo y se lo graba al archivo
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 header('Content-Type: application/vnd.ms-excel');
-header('Content-Disposition: attachment;filename="export-documents-SGE-' . $today . '.xls"');
+header('Content-Disposition: attachment;filename="reporte-Resolucion-MATIS-' . $today . '.xls"');
 header('Cache-Control: max-age=0');
 $objWriter->save('php://output');
 
@@ -365,7 +376,7 @@ function quitar_espacio($cadena)
 
 function resolucionDe($id)
 {
-    if (($id >= 1) and ($id <= 4)) {
+    if (($id >= 1) and ($id <= 5)) {
         if ((isset($id)) and ($id != ' ')) {
 
             $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad", 5 => "Anulada");
@@ -415,4 +426,19 @@ function tipoUnidad($id)
     } else {
         return '';
     }
+}
+
+function envioExpediente($id)
+{
+    if (($id >= 1) and ($id <= 4)) {
+        if ((isset($id)) and ($id != ' ')) {
+            $opciones = array(1 => "Ejecución", 2 => "Instrucción", 3 => "Secretaría", 4 => "Apelación");
+            return $opciones [$id];
+        } else {
+            return '';
+        }
+
+    } else
+        return '';
+
 }

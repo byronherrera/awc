@@ -205,6 +205,14 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('O')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(16.30);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('P')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('Q')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('Q')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('R')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('R')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('S')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('S')->setWidth(30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('T')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('T')->setWidth(16.30);
 
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Memo Ingreso');
@@ -223,7 +231,10 @@ $objPHPExcel->getActiveSheet()->setCellValue('M' . $filacabecera, 'Dirección de
 $objPHPExcel->getActiveSheet()->setCellValue('N' . $filacabecera, 'Cédula RUC');
 $objPHPExcel->getActiveSheet()->setCellValue('O' . $filacabecera, 'Reincidencia');
 $objPHPExcel->getActiveSheet()->setCellValue('P' . $filacabecera, 'Ordenanza');
-
+$objPHPExcel->getActiveSheet()->setCellValue('Q' . $filacabecera, 'Fecha de sorteo');
+$objPHPExcel->getActiveSheet()->setCellValue('R' . $filacabecera, 'Envío expediente');
+$objPHPExcel->getActiveSheet()->setCellValue('S' . $filacabecera, 'Número de memorando');
+$objPHPExcel->getActiveSheet()->setCellValue('T' . $filacabecera, 'Fecha de envío');
 
 $noExistenFilas = true;
 
@@ -249,8 +260,12 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, $rowdetalle['cedula_ruc']);
     $objPHPExcel->getActiveSheet()->setCellValue('O' . $filaInicio, ($rowdetalle['reincidencia']==1) ? "SI":" ");
     $objPHPExcel->getActiveSheet()->setCellValue('P' . $filaInicio, getOrdenanza ($rowdetalle['ordenanza']));
+    $objPHPExcel->getActiveSheet()->setCellValue('Q' . $filaInicio, $rowdetalle['fecha_sorteo']);
+    $objPHPExcel->getActiveSheet()->setCellValue('R' . $filaInicio, envioExpediente($rowdetalle['envio_expediente']));
+    $objPHPExcel->getActiveSheet()->setCellValue('S' . $filaInicio, $rowdetalle['numero_memorando']);
+    $objPHPExcel->getActiveSheet()->setCellValue('T' . $filaInicio, $rowdetalle['fecha_envio']);
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':P' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':T' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -276,7 +291,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:P600')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:T1000')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -284,7 +299,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:P600')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:P200')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:T1000')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -292,10 +307,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:P200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:P30')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:T1000')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':P' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':T' . $filacabecera)->applyFromArray($styleArray);
 
 //$objPHPExcel->getActiveSheet()->getStyle('A7:D7')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
@@ -307,8 +322,8 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:P3')->getFont()->setSize(14);
-$objPHPExcel->getActiveSheet()->getStyle('A4:P40')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A1:T3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A4:T1000')->getFont()->setSize(10);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -332,7 +347,7 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Workshee
 // se crea la cabecera de archivo y se lo graba al archivo
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 header('Content-Type: application/vnd.ms-excel');
-header('Content-Disposition: attachment;filename="export-documents-SGE-' . $today . '.xls"');
+header('Content-Disposition: attachment;filename="reporte-providencias-MATIS-' . $today . '.xls"');
 header('Cache-Control: max-age=0');
 $objWriter->save('php://output');
 
@@ -355,10 +370,10 @@ function quitar_espacio($cadena)
 
 function resolucionDe($id)
 {
-    if (($id >= 1) and ($id <= 4)) {
+    if (($id >= 1) and ($id <= 5)) {
         if ((isset($id)) and ($id != ' ')) {
 
-            $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad");
+            $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad", 5 => "Anulada");
             return $opciones [$id];
         } else {
             return '';
@@ -406,4 +421,19 @@ function tipoUnidad($id)
     } else {
         return '';
     }
+}
+
+function envioExpediente($id)
+{
+    if (($id >= 1) and ($id <= 4)) {
+        if ((isset($id)) and ($id != ' ')) {
+            $opciones = array(1 => "Ejecución", 2 => "Instrucción", 3 => "Secretaría", 4 => "Apelación");
+            return $opciones [$id];
+        } else {
+            return '';
+        }
+
+    } else
+        return '';
+
 }

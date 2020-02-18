@@ -299,7 +299,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     {"id": 1, "nombre": "Sanción"},
                     {"id": 2, "nombre": "Archivo"},
                     {"id": 3, "nombre": "Nulidad"},
-                    {"id": 4, "nombre": "Caducidad"}
+                    {"id": 4, "nombre": "Caducidad"},
+                    {"id": 5, "nombre": "Anulado"}
                 ]
             }
         });
@@ -333,7 +334,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     {"id": 1, "nombre": "Sanción"},
                     {"id": 2, "nombre": "Archivo"},
                     {"id": 3, "nombre": "Nulidad"},
-                    {"id": 4, "nombre": "Caducidad"}
+                    {"id": 4, "nombre": "Caducidad"},
+                    {"id": 5, "nombre": "Anulado"}
                 ]
             }
         });
@@ -901,7 +903,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             accesosResolutores : accesosResolutores
         };
 
-        this.storeLibroDiario.load();
+        //this.storeLibroDiario.load();
 
         //Inicio formato grid Libro Diario
         this.gridLibroDiario = new Ext.grid.EditorGridPanel({
@@ -3335,7 +3337,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             funcionario: 0,
             envio_expediente: ' ',
             numero_memorando: ' ',
-            fecha_sorteo: (new Date()),
+            fecha_sorteo: ' ',
             // fecha_envio: (new Date()),
         });
         this.gridLibroDiario.stopEditing();
@@ -3468,6 +3470,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         this.formConsultaProvidenciasLibroDiario.getForm().reset();
     },
     botonExportarReporteResolucion: function () {
+        this.formConsultaLibroDiario.getForm().accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
         var rows = this.storeReporteLibroDiario.getCount()
         if (rows === 0) {
             Ext.Msg.show({
