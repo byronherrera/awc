@@ -840,8 +840,9 @@ function detalleTotalesPersonalId($id)
 function totalOperativos ( $id, $fechaInicio, $fechaFin) {
     global $os;
     if ((trim($id) != '') and (!is_null($id))){
-        $sql = "SELECT COUNT( id ) total_operativos FROM amc_operativos where id_persona_encargada =  $id AND 
+        $sql = "SELECT COUNT( id ) total_operativos FROM amc_operativos where id_persona_encargada =  '$id' AND 
                 fecha_inicio_planificacion between '$fechaInicio' and '$fechaFin'";
+
         $nombre = $os->db->conn->query($sql);
         $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
 

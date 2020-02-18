@@ -195,6 +195,7 @@ function getmensaje ($opcion ,   $nombre= '' ,  $id='', $motivo = '' , $nombreIn
 </p>
 <p>&nbsp;</p>
 <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
+
 </div>
 <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
 </div>
