@@ -199,14 +199,17 @@ if (isset($data->busqueda_observaciones) and ($data->busqueda_observaciones != '
                         upper( barrios) like '%$tipo%')  ";
     }
 }
+$innerJoin = "";
 if (isset($data->busqueda_personal_asignado) and ($data->busqueda_personal_asignado != '')) {
     $tipo = $data->busqueda_personal_asignado;
+    $innerJoin = " INNER JOIN amc_operativos_personal ON b.id = amc_operativos_personal.id_operativo ";
     if ($where == '') {
-        $where = "WHERE (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = b.id ) > 0 ";
+        $where = " WHERE amc_operativos_personal.id_member = '$tipo' ";
     } else {
-        $where = $where . " AND (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = b.id ) > 0  ";
+        $where = $where . " AND  amc_operativos_personal.id_member = '$tipo'   ";
     }
 }
+
 if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')) {
     $fechainicio = $data->busqueda_fecha_inicio;
     if (isset($data->busqueda_fecha_fin) and ($data->busqueda_fecha_fin != '')) {
@@ -225,7 +228,7 @@ if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')
 
 $os->db->conn->query("SET NAMES 'utf8'");
 
-$sql = "SELECT *, (SELECT nombre FROM amc_operativos_estados c WHERE  C.id = b.id_estado ) estado FROM amc_operativos as b  $where  ORDER BY b.fecha_inicio_planificacion";
+$sql = "SELECT *, (SELECT nombre FROM amc_operativos_estados c WHERE  C.id = b.id_estado ) estado FROM amc_operativos as b $innerJoin $where  ORDER BY b.fecha_inicio_planificacion";
 
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
@@ -260,7 +263,7 @@ $fechaActual = date('Y-m-d H:i:s');
 $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 +2), "Fecha inicio: " .$fechainicio .", Fecha fin: " . $fechafin . ", Fecha Corte: " . $fechaActual );
 
 
-$offsetTotalesTipo = totalesPorTipo($number_of_rows + $filaInicio, $where);
+$offsetTotalesTipo = totalesPorTipo($number_of_rows + $filaInicio, $where, $innerJoin);
 
 
 $filasPiePagina = $number_of_rows + $filaInicio + 4 + $offsetTotalesTipo;
@@ -738,7 +741,7 @@ function regresaTelefono($id_dato)
         return '';
 }
 
-function totalesPorTipo($filaTitulo1, $where)
+function totalesPorTipo($filaTitulo1, $where, $innerJoin)
 {
     global $objPHPExcel;
     global $os;
@@ -749,7 +752,7 @@ function totalesPorTipo($filaTitulo1, $where)
     $j = 0;
 
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
-        $totalOrdenanza = recuperarTotales($nombreDetalle['id'], $where);
+        $totalOrdenanza = recuperarTotales($nombreDetalle['id'], $where, $innerJoin);
         if ($totalOrdenanza != 0) {
             $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filaTitulo1 + $j), $nombreDetalle['nombre_completo']);
             $objPHPExcel->getActiveSheet()->setCellValue('H' . ($filaTitulo1 + $j), $totalOrdenanza);
@@ -760,14 +763,14 @@ function totalesPorTipo($filaTitulo1, $where)
     return $j;
 }
 
-function recuperarTotales($id, $where)
+function recuperarTotales($id, $where, $innerJoin)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     if ($where == '') {
-        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b WHERE id_tipo_control like '%$id%'";
+        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b $innerJoin WHERE id_tipo_control like '%$id%'";
     } else {
-        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b $where AND id_tipo_control like '%$id%'";
+        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b $innerJoin $where AND id_tipo_control like '%$id%'";
     }
     $nombre = $os->db->conn->query($sql);
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
