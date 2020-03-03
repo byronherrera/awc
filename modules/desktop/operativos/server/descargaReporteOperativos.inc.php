@@ -33,7 +33,7 @@ if (isset($_GET['param'])) {
 
 $ordenDetalle = 0;
 
-$columnaOrdenDetalle = array('M', 'N', "O", "P");
+$columnaOrdenDetalle = array( 'N', "O", "P", "Q");
 
 $generaAcciones = false;
 $generaActas = false;
@@ -347,6 +347,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('K')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('L')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('M')->setAutoSize(false);
 
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(16);
@@ -360,6 +361,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(16);
+$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(16);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Cod');
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Fecha');
@@ -373,6 +375,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Funcionario R
 $objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Teléfono funcionario responsable');
 $objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Horas Operativo');
 $objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Observaciones');
+$objPHPExcel->getActiveSheet()->setCellValue('M' . $filacabecera, 'Estado');
 
 
 if ($generaAcciones) {
@@ -486,6 +489,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle ['telefono']);
     $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle ['horasOperativo'] );
     $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, $rowdetalle['observaciones']);
+    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, $rowdetalle['estado']);
 
     if ($generaAcciones) {
         $objPHPExcel->getActiveSheet()->setCellValue($ordenAcciones . $filaInicio, detalleAccionesId($rowdetalle['id']));
@@ -517,7 +521,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     }
 
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':L' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':M' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -542,7 +546,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:L600')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:M600')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -552,7 +556,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:L600')->applyFromArray(
 
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:L200')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:M200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -563,17 +567,17 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:L200')->applyFromArray(
 $objPHPExcel->getActiveSheet()->getStyle('A3:Z3000')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':L' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':M' . $filacabecera)->applyFromArray($styleArray);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A5:L5')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A5:M5')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
         )
     )
 );
-$objPHPExcel->getActiveSheet()->getStyle('A5:l5')->getAlignment()->setWrapText(false);
+$objPHPExcel->getActiveSheet()->getStyle('A5:M5')->getAlignment()->setWrapText(false);
 
 
 $objPHPExcel->getActiveSheet()->getStyle('A'.$filasPiePagina.':B' . $filasPiePagina )->applyFromArray(
@@ -593,9 +597,9 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:L3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A1:M3')->getFont()->setSize(14);
 $objPHPExcel->getActiveSheet()->getStyle('A4:F40')->getFont()->setSize(10);
-$objPHPExcel->getActiveSheet()->getStyle('G4:L40')->getFont()->setSize(9);
+$objPHPExcel->getActiveSheet()->getStyle('G4:M40')->getFont()->setSize(9);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
