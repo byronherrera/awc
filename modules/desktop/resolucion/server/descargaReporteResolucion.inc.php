@@ -32,8 +32,11 @@ $today = date("Y-n-j-H-i-s");
 
 // para los reportes
 $where = '';
-if (isset ($_POST['accesosResolutores'])) {
-    $acceso = $_POST['accesosResolutores'];
+
+$usuarioLog = $os->get_member_id();
+
+if (isset($data->accesosResolutores) && $data->accesosResolutores != "") {
+    $acceso = $data->accesosResolutores;
     if ($acceso == 'true') {
         if ($where == '') {
             $where = " WHERE funcionario = $usuarioLog ";
@@ -70,7 +73,9 @@ if (isset($data->resolucion_de) && $data->resolucion_de != "") {
 }
 if (isset($data->funcionario) && $data->funcionario != "") {
     $filtroFuncionario = $data->funcionario;
-    if ($where != '') {
+    if ($where == '') {
+        $where = " WHERE funcionario = '$filtroFuncionario' ";
+    } else {
         $where = $where . " AND funcionario = '$filtroFuncionario' ";
     }
 }
@@ -115,7 +120,7 @@ else
 
 $os->db->conn->query("SET NAMES 'utf8'");
 $sql = "SELECT * FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby";
-echo $sql;
+
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
 

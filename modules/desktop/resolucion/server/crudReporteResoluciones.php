@@ -12,7 +12,9 @@ function selectOrdenanzas()
 
     $columnaBusqueda = 'busqueda_todos';
     $usuarioLog = $os->get_member_id();
-    $where = '';
+
+    // valor por defecto de funcionario, se filtran los tramites que no estan asigando
+    $where = "WHERE funcionario != '0' AND funcionario != '' ";
 
 //    if(isset ($_POST['accesosResolutores'])){
 //        $acceso = $_POST['accesosResolutores'];
@@ -151,24 +153,36 @@ function selectOrdenanzas()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT (SELECT CONCAT( first_name,' ', last_name) FROM qo_members WHERE qo_members.id =funcionario) AS nombre, 
-            count(*) as veces, funcionario, a.id FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario 
-            GROUP BY funcionario $where $orderby LIMIT $start, $limit";
-//    echo $sql;
+    $sql = "SELECT
+                ( SELECT CONCAT( first_name, ' ', last_name ) FROM qo_members WHERE qo_members.id = funcionario ) AS nombre,
+                COUNT( * ) AS total,
+                funcionario 
+            FROM
+                amc_libro_diario  a
+                $where 
+            GROUP BY
+                funcionario    $orderby LIMIT $start, $limit";
+
+ //   echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
+    $calculaTotalFila = 0;
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $row['veces'] = calculaVeces ($row['funcionario']);
         $data[] = $row;
+        $calculaTotalFila ++;
     };
-    $sql = "";
+/*    $sql = "";
 
-    $sql = "SELECT count(*) AS total FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where";
+
+
+    $sql = "SELECT count(*) AS total FROM amc_libro_diario  $where  GROUP BY funcionario  ";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
-    $total = $row['total'];
+    $total = $row['total'];*/
 
     echo json_encode(array(
-            "total" => $total,
+            "total" => $calculaTotalFila,
             "success" => true,
             "data" => $data)
     );
@@ -415,3 +429,13 @@ switch ($_GET['operation']) {
         deleteOrdenanzas();
         break;
 }
+
+
+function calculaVeces ($id) {
+    global $os;
+    $sql = "SELECT count( * ) total FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario WHERE a.funcionario =  $id";
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['total'];
+}
+

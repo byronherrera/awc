@@ -16,10 +16,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
     createWindow: function () {
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
-        // var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
         var accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
-        console.log ("accesosResolutores",accesosResolutores);
 
         finalizados = true;
         limiteresolucion = 100;
@@ -903,7 +901,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             accesosResolutores : accesosResolutores
         };
 
-        //this.storeLibroDiario.load();
+        this.storeLibroDiario.load();
 
         //Inicio formato grid Libro Diario
         this.gridLibroDiario = new Ext.grid.EditorGridPanel({
@@ -1128,7 +1126,6 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             listeners:{
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    //console.log ("res "  + accesosResolutores )
                     if (!accesosResolutores) {
                         return true;
                     } else {
@@ -1140,7 +1137,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         //Fin formato grid Libro Diario
         //Fin ventana resolucion Libro Diario
 
-        
+
         // inicio ventana Reporte Libro Diario
         //Definición de url CRUD
         var proxyReporteLibroDiario = new Ext.data.HttpProxy({
@@ -1217,7 +1214,6 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         limiteresolucion = 100;
         storeReporteLibroDiario.baseParams = {
             limit: limiteresolucion,
-            test:1,
             accesosResolutores : accesosResolutores
         };
 
@@ -1491,7 +1487,6 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             listeners:{
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    //console.log ("res "  + accesosResolutores )
                     if (!accesosResolutores) {
                         return true;
                     } else {
@@ -1836,7 +1831,6 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             listeners:{
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    //console.log ("res "  + accesosResolutores )
                     if (!accesosResolutores) {
                         return true;
                     } else {
@@ -1869,7 +1863,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'nombre', allowBlank: false},
-                {name: 'veces', allowBlank: false},
+                {name: 'total', allowBlank: false},
+                {name: 'veces', allowBlank: false}
 
             ]
         });
@@ -1915,11 +1910,18 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     // editor: textFieldResoluciones
                 },
                 {
+                    header: 'Total asignadas',
+                    dataIndex: 'total',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 180
+                },
+                {
                     header: 'Total de resoluciones emitidas',
                     dataIndex: 'veces',
                     allowBlank: true,
                     sortable: true,
-                    width: 180,
+                    width: 180
                     // editor: textFieldResoluciones
                 }
 
@@ -1928,37 +1930,21 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 forceFit: false
             },
             sm: new Ext.grid.RowSelectionModel({
-                singleSelect: true,
-                listeners: {
-                    rowselect: function (sm, row, rec) {
-                        // recuperamos la informacion de personal asignado a ese operativo
-                        //select_codigo_tramite = rec.id;
-                        storeProvidencias.baseParams.id =  rec.id;
-                        storeResoluciones.baseParams.id =  rec.id;
-                        storeResoluciones.load();
-                        storeProvidencias.load();
-                        // storeResoluciones.load({params: {id: rec.id}});
-                        // storeProvidencias.load({params: {id: rec.id}});
-                        libroDiarioSeleccionado = rec.id;
-                        // {params: id: libroDiarioSeleccionado
-                        //inspeccionSeleccionada = rec.id_denuncia;
-                    }
-                }
+                singleSelect: true
             }),
             border: false,
             stripeRows: true,
             //Definición de barra de paginado
             bbar: new Ext.PagingToolbar({
                 pageSize: limiteresolucion,
-                store: storeLibroDiario,
+                store: storeReporteResoluciones,
                 displayInfo: true,
-                displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
-                emptyMsg: "No existen trámites que mostrar"
+                displayMsg: 'Mostrando funcionarios: {0} - {1} de {2} - AMC',
+                emptyMsg: "No existen funcionarios que mostrar"
             }),
             listeners:{
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    //console.log ("res "  + accesosResolutores )
                     if (!accesosResolutores) {
                         return true;
                     } else {
@@ -2130,6 +2116,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                         layout: 'form',
                         items: [
                             {
+                                xtype: 'hidden',
+                                id: 'accesosResolutores',
+                            },{
                                 xtype: 'datefield',
                                 fieldLabel: 'Fecha Inicio',
                                 id: 'busqueda_fecha_inicio',
@@ -3337,7 +3326,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             funcionario: 0,
             envio_expediente: ' ',
             numero_memorando: ' ',
-            fecha_sorteo: ' ',
+            fecha_sorteo:  ' ',
             // fecha_envio: (new Date()),
         });
         this.gridLibroDiario.stopEditing();
@@ -3442,6 +3431,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
     requestGridDataDocumentoReporte: function () {
         this.storeReporteResoluciones.baseParams = this.formConsultaResoluciones.getForm().getValues();
+        this.storeReporteLibroDiario.baseParams.accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
         this.storeReporteResoluciones.load();
     },
 
@@ -3470,7 +3460,6 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         this.formConsultaProvidenciasLibroDiario.getForm().reset();
     },
     botonExportarReporteResolucion: function () {
-        this.formConsultaLibroDiario.getForm().accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
         var rows = this.storeReporteLibroDiario.getCount()
         if (rows === 0) {
             Ext.Msg.show({
@@ -3484,13 +3473,17 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         // mensaje continuar y llamada a descarga archivo
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
+            msg: 'Se descarga el archivo Excel<br>¿Desea continuarxx?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
+                    // agrego el valor de parametro accesoresolutores
+
+                    this.formConsultaLibroDiario.getForm().setValues( {accesosResolutores : this.app.isAllowedTo('accesosResolutores', this.id) })
                     valueParams = JSON.stringify(this.formConsultaLibroDiario.getForm().getValues());
+
                     window.location.href = 'modules/desktop/resolucion/server/descargaReporteResolucion.inc.php?param=' + valueParams;
                 }
             }
