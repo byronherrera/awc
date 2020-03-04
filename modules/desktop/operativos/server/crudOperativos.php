@@ -160,7 +160,7 @@ function selectOperativos()
     else
         $limit = 100;
 
-    $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) DESC';
+    $orderby = 'ORDER BY CONVERT( amc_operativos.id,UNSIGNED INTEGER) DESC';
     if (isset($_POST['sort'])) {
         if ($_POST['sort'] == 'id') {
             $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) DESC';
@@ -271,14 +271,8 @@ function selectOperativos()
         }
     }
 
-    if (isset($_POST['busqueda_personal_asignado']) and ($_POST['busqueda_personal_asignado'] != '')) {
-        $tipo = $_POST['busqueda_personal_asignado'];
-        if ($where == '') {
-            $where = "WHERE (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0 ";
-        } else {
-            $where = $where . " AND (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = amc_operativos.id ) > 0  ";
-        }
-    }
+
+
     if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
         $fechainicio = $_POST['busqueda_fecha_inicio'];
         if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin'] != '')) {
@@ -291,17 +285,32 @@ function selectOperativos()
             $where = "WHERE fecha_inicio_planificacion between '$fechainicio' and '$fechafin'  ";
         } else {
             $where = $where . " AND fecha_inicio_planificacion between '$fechainicio' and '$fechafin' ";
+
+            $filtroPersonalAsignado = " AND fecha_inicio_planificacion between '$fechainicio' and '$fechafin' ";
         }
     }
+    $innerJoin = "";
+    if (isset($_POST['busqueda_personal_asignado']) and ($_POST['busqueda_personal_asignado'] != '')) {
+        $tipo = $_POST['busqueda_personal_asignado'];
+
+        $innerJoin = " INNER JOIN amc_operativos_personal ON amc_operativos.id = amc_operativos_personal.id_operativo ";
+        if ($where == '') {
+            $where = " WHERE amc_operativos_personal.id_member = '$tipo' ";
+        } else {
+            $where = $where . " AND  amc_operativos_personal.id_member = '$tipo'   ";
+        }
+    }
+
+
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_operativos $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT * FROM amc_operativos $innerJoin  $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
     };
 
-    $sql = "SELECT count(*) AS total FROM amc_operativos $where";
+    $sql = "SELECT count(*) AS total FROM amc_operativos $innerJoin $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];

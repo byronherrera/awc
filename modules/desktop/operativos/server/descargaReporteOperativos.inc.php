@@ -33,7 +33,7 @@ if (isset($_GET['param'])) {
 
 $ordenDetalle = 0;
 
-$columnaOrdenDetalle = array('M', 'N', "O", "P");
+$columnaOrdenDetalle = array( 'N', "O", "P", "Q");
 
 $generaAcciones = false;
 $generaActas = false;
@@ -199,14 +199,17 @@ if (isset($data->busqueda_observaciones) and ($data->busqueda_observaciones != '
                         upper( barrios) like '%$tipo%')  ";
     }
 }
+$innerJoin = "";
 if (isset($data->busqueda_personal_asignado) and ($data->busqueda_personal_asignado != '')) {
     $tipo = $data->busqueda_personal_asignado;
+    $innerJoin = " INNER JOIN amc_operativos_personal ON b.id = amc_operativos_personal.id_operativo ";
     if ($where == '') {
-        $where = "WHERE (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = b.id ) > 0 ";
+        $where = " WHERE amc_operativos_personal.id_member = '$tipo' ";
     } else {
-        $where = $where . " AND (select count(*) from amc_operativos_personal a where a.id_member = '$tipo' and a.id_operativo = b.id ) > 0  ";
+        $where = $where . " AND  amc_operativos_personal.id_member = '$tipo'   ";
     }
 }
+
 if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')) {
     $fechainicio = $data->busqueda_fecha_inicio;
     if (isset($data->busqueda_fecha_fin) and ($data->busqueda_fecha_fin != '')) {
@@ -225,7 +228,7 @@ if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')
 
 $os->db->conn->query("SET NAMES 'utf8'");
 
-$sql = "SELECT *, (SELECT nombre FROM amc_operativos_estados c WHERE  C.id = b.id_estado ) estado FROM amc_operativos as b  $where  ORDER BY b.fecha_inicio_planificacion";
+$sql = "SELECT *, (SELECT nombre FROM amc_operativos_estados c WHERE  C.id = b.id_estado ) estado FROM amc_operativos as b $innerJoin $where  ORDER BY b.fecha_inicio_planificacion";
 
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
@@ -260,7 +263,7 @@ $fechaActual = date('Y-m-d H:i:s');
 $objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 +2), "Fecha inicio: " .$fechainicio .", Fecha fin: " . $fechafin . ", Fecha Corte: " . $fechaActual );
 
 
-$offsetTotalesTipo = totalesPorTipo($number_of_rows + $filaInicio, $where);
+$offsetTotalesTipo = totalesPorTipo($number_of_rows + $filaInicio, $where, $innerJoin);
 
 
 $filasPiePagina = $number_of_rows + $filaInicio + 4 + $offsetTotalesTipo;
@@ -344,6 +347,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('K')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('L')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('M')->setAutoSize(false);
 
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(16);
@@ -357,6 +361,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(16);
+$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(16);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Cod');
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Fecha');
@@ -370,6 +375,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Funcionario R
 $objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Teléfono funcionario responsable');
 $objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Horas Operativo');
 $objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Observaciones');
+$objPHPExcel->getActiveSheet()->setCellValue('M' . $filacabecera, 'Estado');
 
 
 if ($generaAcciones) {
@@ -483,6 +489,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle ['telefono']);
     $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle ['horasOperativo'] );
     $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, $rowdetalle['observaciones']);
+    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, $rowdetalle['estado']);
 
     if ($generaAcciones) {
         $objPHPExcel->getActiveSheet()->setCellValue($ordenAcciones . $filaInicio, detalleAccionesId($rowdetalle['id']));
@@ -514,7 +521,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     }
 
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':L' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':M' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -539,7 +546,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:L600')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:M600')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -549,7 +556,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:L600')->applyFromArray(
 
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:L200')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:M200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -560,17 +567,17 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:L200')->applyFromArray(
 $objPHPExcel->getActiveSheet()->getStyle('A3:Z3000')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':L' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':M' . $filacabecera)->applyFromArray($styleArray);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A5:L5')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A5:M5')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
         )
     )
 );
-$objPHPExcel->getActiveSheet()->getStyle('A5:l5')->getAlignment()->setWrapText(false);
+$objPHPExcel->getActiveSheet()->getStyle('A5:M5')->getAlignment()->setWrapText(false);
 
 
 $objPHPExcel->getActiveSheet()->getStyle('A'.$filasPiePagina.':B' . $filasPiePagina )->applyFromArray(
@@ -590,9 +597,9 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:L3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A1:M3')->getFont()->setSize(14);
 $objPHPExcel->getActiveSheet()->getStyle('A4:F40')->getFont()->setSize(10);
-$objPHPExcel->getActiveSheet()->getStyle('G4:L40')->getFont()->setSize(9);
+$objPHPExcel->getActiveSheet()->getStyle('G4:M40')->getFont()->setSize(9);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -738,7 +745,7 @@ function regresaTelefono($id_dato)
         return '';
 }
 
-function totalesPorTipo($filaTitulo1, $where)
+function totalesPorTipo($filaTitulo1, $where, $innerJoin)
 {
     global $objPHPExcel;
     global $os;
@@ -749,7 +756,7 @@ function totalesPorTipo($filaTitulo1, $where)
     $j = 0;
 
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
-        $totalOrdenanza = recuperarTotales($nombreDetalle['id'], $where);
+        $totalOrdenanza = recuperarTotales($nombreDetalle['id'], $where, $innerJoin);
         if ($totalOrdenanza != 0) {
             $objPHPExcel->getActiveSheet()->setCellValue('G' . ($filaTitulo1 + $j), $nombreDetalle['nombre_completo']);
             $objPHPExcel->getActiveSheet()->setCellValue('H' . ($filaTitulo1 + $j), $totalOrdenanza);
@@ -760,14 +767,14 @@ function totalesPorTipo($filaTitulo1, $where)
     return $j;
 }
 
-function recuperarTotales($id, $where)
+function recuperarTotales($id, $where, $innerJoin)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     if ($where == '') {
-        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b WHERE id_tipo_control like '%$id%'";
+        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b $innerJoin WHERE id_tipo_control like '%$id%'";
     } else {
-        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b $where AND id_tipo_control like '%$id%'";
+        $sql = "SELECT  COUNT(*) as total FROM amc_operativos as b $innerJoin $where AND id_tipo_control like '%$id%'";
     }
     $nombre = $os->db->conn->query($sql);
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
