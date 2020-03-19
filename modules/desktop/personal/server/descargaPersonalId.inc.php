@@ -87,13 +87,15 @@ textoSiguieteFila("EMAIL", 'P', 'P', 'center', false, "B");
 
 textoSiguieteFila("PISO", 'Q', 'Q', 'center', false, "B");
 // recuperamos los nombres de los usuarios
-
+$os->db->conn->query("SET NAMES 'utf8'");
 $sql = "SELECT * FROM amc_unidades_personal WHERE activo = 1 ORDER BY orden";
 $unidades = $os->db->conn->query($sql);
 $numero = 1;
 while ($nombreUnidad = $unidades->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($nombreUnidad['nombre'], 'A', 'P', 'left', 'B');
     $idUnidad = $nombreUnidad['id'];
+    $os->db->conn->query("SET NAMES 'utf8'");
+
     $sql = "SELECT * FROM amc_personal_distributivo WHERE id_estado = 1 and unidad = $idUnidad ORDER BY apellidos";
     $nombres = $os->db->conn->query($sql);
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
@@ -208,15 +210,15 @@ $styleThinBlackBorderOutline = array(
         ),
     ),
 );
-
-
+// todo revisar este teme
+/*
 $objPHPExcel->getActiveSheet()->getStyle('A4:QF200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
         )
     )
-);
+);*/
 
 $objPHPExcel->getActiveSheet()->getStyle('A4:Q300')->getAlignment()->setWrapText(true);
 

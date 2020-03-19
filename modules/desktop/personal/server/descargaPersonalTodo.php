@@ -65,7 +65,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'AGENCIA METROP
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "LISTADO PERSONAL");
 
 textoSiguieteFila("No.", 'A', 'A', 'center', true, "B");
-textoSiguieteFila("CÉDULA DE IDENTIDAD", 'B', 'B', 'center', false, "B");
+textoSiguieteFila("CEDULA DE IDENTIDAD", 'B', 'B', 'center', false, "B");
 textoSiguieteFila("APELLIDOS", 'C', 'C', 'center', false, "B");
 textoSiguieteFila("NOMBRES", 'D', 'D', 'center', false, "B");
 textoSiguieteFila("PARTIDA", 'E', 'E', 'center', false, "B");
@@ -202,9 +202,9 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('L')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(30);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('M')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(10);
+$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(30);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('N')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(12);
+$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('O')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(12);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('P')->setAutoSize(false);
@@ -266,14 +266,14 @@ $styleThinBlackBorderOutline = array(
     ),
 );
 
-
+/*
 $objPHPExcel->getActiveSheet()->getStyle('A4:QF200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
         )
     )
-);
+);*/
 
 $objPHPExcel->getActiveSheet()->getStyle('A4:Q300')->getAlignment()->setWrapText(true);
 
@@ -312,12 +312,17 @@ $objPHPExcel->getActiveSheet()->setShowGridLines(false);
 //exit;
 
 // se crea la cabecera de archivo y se lo graba al archivo
-header('Content-Type: application/vnd.ms-excel');
-header('Content-Disposition: attachment;filename="Reporte-Talento-Humano-AMC-' . '-' . $today . '.xls"');
-header('Cache-Control: max-age=0');
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-$objWriter->save('php://output');
-exit;
+//  todo arrek
+$t = 1 ;
+if ($t== 1 ) {
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment;filename="Reporte-Talento-Humano-AMC-' . '-' . $today . '.xls"');
+    header('Cache-Control: max-age=0');
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+    $objWriter->save('php://output');
+    exit;
+}
+
 
 
 function regresaTipoOperativo($id_dato)
