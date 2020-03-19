@@ -109,7 +109,7 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($numero, 'A', 'A', 'center');
     $numero++;
     textoSiguieteFila($nombreDetalle['cedula'], 'B', 'B', 'left', false);
-    textoSiguieteFila(regresaGenero ($nombreDetalle['genero']), 'C', 'C', 'left', false);
+    textoSiguieteFila(regresaGenero ($nombreDetalle['genero']), 'C', 'C', 'center', false);
     textoSiguieteFila($nombreDetalle['apellidos'], 'D', 'D', 'left', false);
     textoSiguieteFila($nombreDetalle['nombres'], 'E', 'E', 'left', false);
     textoSiguieteFila($nombreDetalle['partida'], 'F', 'F', 'center', false);
