@@ -160,6 +160,7 @@ function getFuncionarios()
             "success" => true,
             "data" => array($resultado)
         ));
+
     } else {
         echo json_encode(array(
             "success" => false,
