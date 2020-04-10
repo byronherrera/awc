@@ -251,7 +251,7 @@ function ingresaNuevoProceso()
 }
 
 
-require_once "admin/modules/common/Classes/PhpSpreadsheet/autoload.php";
+require_once "../modules/common/Classes/PhpSpreadsheet/autoload.php";
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
