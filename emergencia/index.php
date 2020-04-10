@@ -15,23 +15,19 @@
 <div class="container contact-form">
     <div class="contact-image">
         <img src="img/rocket_contact.png" alt="rocket_contact"/>
-    </div> 
-                     <h3>REGISTRO INFRACCIONES EMERGENCIA</h3>
-     <div class="iframedinar">
-        <iframe id="frame" src="" width="100%" height="80px"  frameBorder="0"></iframe>
     </div>
-    <form enctype="multipart/form-data" id="myForm" method="post">       
+    <h3>REGISTRO INFRACCIONES EMERGENCIA</h3>
+    <div class="iframedinar">
+        <iframe id="frame" src="" width="100%" height="80px" frameBorder="0"></iframe>
+    </div>
+    <form enctype="multipart/form-data" id="myForm" method="post">
         <div class="row">
-           
-             <div class="form-group">
-                 
-             </div>
 
             <div class="form-group">
                 <label for="cedula">CEDULA INFRACTOR*</label>
-                <input type="number"  class="form-control" id="cedula" name="cedula" placeholder=""
+                <input type="number" class="form-control" id="cedula" name="cedula" placeholder=""
                        required="required">
-                        <div class="mensajecedula"></div>
+                <div class="mensajecedula"></div>
             </div>
             <div class="form-group">
                 <label for="nombres">NOMBRES COMPLETOS*</label>
@@ -42,14 +38,18 @@
                 <label for="apellidos">APELLIDOS COMPLETOS*</label>
                 <input type="text" class="form-control " id="apellidos" name="apellidos" required="required"
                        placeholder="Apellidos">
-            </div> 
+            </div>
 
             <div class="form-group">
                 <label for="lugarinfraccion">LUGAR INFRACCION</label>
                 <input id="lugarinfraccion" type="text" name="lugarinfraccion" class="form-control"
-                       placeholder="Ingrese lugar infracción"   >
+                       placeholder="Ingrese lugar infracción">
             </div>
-
+            <div class="form-group">
+                <label for="observaciones">Observaciones.</label>
+                <textarea class="form-control" id="observaciones" name="observaciones" required="required"
+                          rows="3"></textarea>
+            </div>
             <div class="form-group">
                 <label for="funcionario">Funcionario*</label>
                 <select name="funcionario" class="form-control" id="funcionario" required="required"
@@ -64,16 +64,16 @@
                      data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
                     <input class="form-control" size="16" type="text" name="fecha" id="fecha"
                            required="required" readonly style="background-color: #fff;">
-
                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                 </div>
             </div>
-
             <div class="form-group">
-                <label for="pedido">Observaciones.</label>
-                <textarea class="form-control" id="pedido" name="pedido" required="required" rows="3"></textarea>
+                <label for="geoposicionamiento">Coordenadas</label>
+                <input id="geoposicionamiento" type="text" name="geoposicionamiento" class="form-control">
             </div>
+
+
             <div class="form-group">
 
                 <div class="form-group col-md-6">
@@ -85,7 +85,7 @@
 
             </div>
 
- 
+
     </form>
 </div>
 
@@ -110,11 +110,11 @@
             today.setDate(dia);
             today.setHours(21, 0, 0, 0);
             $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*, (reservas a partir del dia de mañana)');
-        } else  {
-            dia = today.getDate() ;
-            today.setDate(dia);  
+        } else {
+            dia = today.getDate();
+            today.setDate(dia);
             today.setHours(21, 0, 0, 0);
-          //  $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*');
+            //  $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*');
         }
 
 
@@ -125,7 +125,7 @@
             //  todayBtn: true,
             startDate: today
         });
- 
+
         var date = new Date();
         var dateStr =
             date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
@@ -137,15 +137,15 @@
 
         /*Guardando los datos en el LocalStorage*/
         $("#funcionario").change(function () {
-        	//var end = this.value;
-        	//var firstDropVal = $('#pick').val();
-			var idFuncionario = $('#funcionario option:selected').val();
-	        localStorage.setItem("idFuncionario", idFuncionario); 
-	        console.log ( localStorage.getItem("idFuncionario"))
-    	});
+            //var end = this.value;
+            //var firstDropVal = $('#pick').val();
+            var idFuncionario = $('#funcionario option:selected').val();
+            localStorage.setItem("idFuncionario", idFuncionario);
+            console.log(localStorage.getItem("idFuncionario"))
+        });
 
         $("input[name^='cedula']").change(function () {
-            console.log ($("input[name^='cedula']").val())
+            console.log($("input[name^='cedula']").val())
 
             // carga iframe con informacion de dinardat
             $("#frame").attr("src", "https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
@@ -153,7 +153,7 @@
             // se carga la información si ya existe información anterior 
             $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
                 if (data.success) {
-                     
+
                     $('#concesionario').val(data.data[0]['nombrerepresentante'])
                     $('#emailConcesionario').val(data.data[0]['email'])
                 } else {
@@ -167,11 +167,11 @@
 
         $.getJSON('formLoad.php?opcion=funcionario', function (data) {
             if (data.success) {
-                 $.each(data.data[0], function (i, el) {
+                $.each(data.data[0], function (i, el) {
                     $('#funcionario').append(new Option(el.text, el.valor));
                 });
                 $("#funcionario").val(localStorage.getItem("idFuncionario"));
- 
+
             } else {
 
             }
@@ -211,7 +211,7 @@
                 processData: false
             }).done(function (res) {
                 $('.mensaje').html('<b>Formulario enviado</b>');
-               $('#myForm')[0].reset();
+                $('#myForm')[0].reset();
                 // luego de resetear la hora volvemos a cargar la hora
                 var dateStr =
                     date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
@@ -225,17 +225,15 @@
         })
 
 
-         if ("geolocation" in navigator){ //check geolocation available 
-	//try to get user current location using getCurrentPosition() method
-	navigator.geolocation.getCurrentPosition(function(position){ 
-			console.log("Found your location \nLat : "+position.coords.latitude+" \nLang :"+ position.coords.longitude);
-		});
-	}else{
-		console.log("Browser doesn't support geolocation!");
-	}
-
+        if ("geolocation" in navigator) { //check geolocation available
+            //try to get user current location using getCurrentPosition() method
+            navigator.geolocation.getCurrentPosition(function (position) {
+                $("#geoposicionamiento").val(position.coords.latitude + "," + position.coords.longitude);
+            });
+        } else {
+            console.log("Browser doesn't support geolocation!");
+        }
     });
-
 </script>
 </body>
 </html>
