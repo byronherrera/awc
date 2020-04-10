@@ -167,7 +167,7 @@ $os = new os();
 $qo_desk = new QoDesk($os);
 ?>
 /*
- * PMA Desktop 1.0
+ * AMC Desktop 1.0
  * Copyright(c) 2007-2010, Murdock Technologies, Inc.
  * licensing@qwikioffice.com
  *
@@ -187,7 +187,8 @@ QoDesk.App = new Ext.app.App({
     */
    memberInfo: {
       name: '<?php print $qo_desk->member_info->name ?>',
-      group: '<?php print $qo_desk->member_info->group ?>'
+      group: '<?php print $qo_desk->member_info->group ?>',
+      zonal: '<?php print $os->get_zonal_id() ?>'
    },
 
    /**
@@ -216,7 +217,7 @@ QoDesk.App = new Ext.app.App({
          },
          startButtonConfig: {
             iconCls: 'icon-qwikioffice',
-            text: 'Start'
+            text: 'Inicio'
          },
          startMenuConfig: {
             iconCls: 'icon-user-48',
