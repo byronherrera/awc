@@ -17,8 +17,8 @@ switch ($opcion) {
         // graba en base de datos
         $data = ingresaNuevoProceso();
         //    generaPdf ($data);
-
-        $id = $data->id;
+        // codigo futuro funcionamiento
+        /*        $id = $data->id;
         $data = getDataId($id);
         $etapa = $data['etapa'];
         $area = $data['departamento'];
@@ -47,6 +47,7 @@ switch ($opcion) {
 
         $envioMail = enviarEmail($usuarioData['email'], $data['negocio'], $contenidoMailAutorizacion1, $usuarioDataSeguimiento['email'], $data, " Aprobación Etapa 1");
         //TODO validar en caso que email no se envie
+        */
         break;
     case "aprobar":
         // recuperamos variables
@@ -177,7 +178,7 @@ function ingresaNuevoProceso()
     if (!is_object($data)) {
         $data = new stdClass;
     }
-
+    /*
     // se sube el archivo anexo
     $temp_file_name = $_FILES['archivo']['tmp_name'];
 
@@ -198,29 +199,15 @@ function ingresaNuevoProceso()
 
     // fin archivo anexo
 
-    $data->negocio = $_POST["negocio"];
-    $data->fecha = $_POST["fecha"];
-    $data->fechaTrabajo = $_POST["fechaTrabajo"];
-    $data->duracion = $_POST["duracion"];
-    $data->departamento = $_POST["departamento"];
-    $data->concesionario = $_POST["concesionario"];
-    $data->emailConcesionario = $_POST["emailConcesionario"];
+*/
+    $data->cedula = $_POST["cedula"];
     $data->nombres = $_POST["nombres"];
-    $data->emailSolicitante = $_POST["emailSolicitante"];
-    $data->pedido = $_POST["pedido"];
-    $data->nombre1 = $_POST["nombre1"];
-    $data->cedula1 = $_POST["cedula1"];
-    $data->nombre2 = $_POST["nombre2"];
-    $data->cedula2 = $_POST["cedula2"];
-    $data->nombre3 = $_POST["nombre3"];
-    $data->cedula3 = $_POST["cedula3"];
-    $data->nombre4 = $_POST["nombre4"];
-    $data->cedula4 = $_POST["cedula4"];
-    $data->nombre5 = $_POST["nombre5"];
-    $data->cedula5 = $_POST["cedula5"];
-    $data->nombre6 = $_POST["nombre6"];
-    $data->cedula6 = $_POST["cedula6"];
-
+    $data->apellidos = $_POST["apellidos"];
+    $data->lugarinfraccion = $_POST["lugarinfraccion"];
+    $data->observaciones = $_POST["observaciones"];
+    $data->geoposicionamiento = $_POST["geoposicionamiento"];
+    $data->funcionario = $_POST["funcionario"];
+    $data->fecha = $_POST["fecha"];
 
     $cadenaDatos = '';
     $cadenaCampos = '';
@@ -232,7 +219,7 @@ function ingresaNuevoProceso()
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "INSERT INTO invede_tramites ($cadenaCampos) VALUES ($cadenaDatos);";
+    $sql = "INSERT INTO amc_sancion_emergencia ($cadenaCampos) VALUES ($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $result = $sql->execute();
 
