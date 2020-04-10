@@ -148,7 +148,7 @@
             console.log ($("input[name^='cedula']").val())
 
             // carga iframe con informacion de dinardat
-            $("#frame").attr("src", "http://t-sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
+            $("#frame").attr("src", "https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
 
             // se carga la información si ya existe información anterior 
             $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
