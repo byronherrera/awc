@@ -4,8 +4,7 @@ $os = new os();
 
 
 $opcion = isset($_GET['opcion']) ? $_GET['opcion'] : '';
-
-switch ($opcion) {
+ switch ($opcion) {
     case "usuario":
         $usuario = isset($_GET['usuario']) ? $_GET['usuario'] : '';
         getUsuarioExterno($usuario);
@@ -131,16 +130,14 @@ function getUsuarioExterno($id)
 {
     global $os;
 
-    $sql = "SELECT * FROM invede_usuarios  WHERE rif = '$id';";
+    $sql = "SELECT * FROM amc_sancion_emergencia  WHERE cedula = '$id' limit 1;";
 
     $result = $os->db->conn->query($sql);
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
     if (count($resultado) > 0) {
-        $data = $resultado[0];
-
         echo json_encode(array(
             "success" => true,
-            "data" => array($data)
+            "data" => array($resultado)
         ));
     } else {
         echo json_encode(array(

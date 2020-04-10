@@ -153,18 +153,22 @@
             // se carga la información si ya existe información anterior 
             $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
                 if (data.success) {
-
-                    $('#concesionario').val(data.data[0]['nombrerepresentante'])
-                    $('#emailConcesionario').val(data.data[0]['email'])
+                    $('#nombres').val(data.data[0]['nombres'])
+                    $('#apellidos').val(data.data[0]['apellidos'])
+                    $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción</h3>")
                 } else {
-                    $('#negocio').val('')
-                    $('#concesionario').val('')
-                    $('#emailConcesionario').val('')
+                    $('#nombres').val('')
+                    $('#apellidos').val('')
+                    $('.mensajecedula').html("")
                 }
             });
-        });
-        // llenar los datos del combobox
 
+
+
+        });
+
+
+        // llenar los datos del combobox
         $.getJSON('formLoad.php?opcion=funcionario', function (data) {
             if (data.success) {
                 $.each(data.data[0], function (i, el) {
