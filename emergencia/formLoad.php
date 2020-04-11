@@ -235,14 +235,14 @@ function ingresaNuevoProceso()
 
 }
 
-
+/* todo para proxima implementacion
 require_once "../modules/common/Classes/PhpSpreadsheet/autoload.php";
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
-
+*/
 //genera el archivo PDF
 function generaPdf($data)
 {
