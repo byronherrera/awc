@@ -137,7 +137,7 @@ function getUsuarioExterno($id)
     if (count($resultado) > 0) {
         echo json_encode(array(
             "success" => true,
-            "data" => array($resultado)
+            "data" => array($resultado[0])
         ));
     } else {
         echo json_encode(array(

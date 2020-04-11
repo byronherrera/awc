@@ -24,9 +24,9 @@
         <div class="row">
 
             <div class="form-group">
-                <label for="cedula">CEDULA INFRACTOR*</label>
+                <label for="cedula">CEDULA INFRACTOR</label>
                 <input type="number" class="form-control" id="cedula" name="cedula" placeholder=""
-                       required="required">
+                       >
                 <div class="mensajecedula"></div>
             </div>
             <div class="form-group">
@@ -141,11 +141,11 @@
             //var firstDropVal = $('#pick').val();
             var idFuncionario = $('#funcionario option:selected').val();
             localStorage.setItem("idFuncionario", idFuncionario);
-            console.log(localStorage.getItem("idFuncionario"))
+
         });
 
         $("input[name^='cedula']").change(function () {
-            console.log($("input[name^='cedula']").val())
+
 
             // carga iframe con informacion de dinardat
             $("#frame").attr("src", "https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
@@ -162,9 +162,6 @@
                     $('.mensajecedula').html("")
                 }
             });
-
-
-
         });
 
 
@@ -216,6 +213,9 @@
             }).done(function (res) {
                 $('.mensaje').html('<b>Formulario enviado</b>');
                 $('#myForm')[0].reset();
+                $('.mensajecedula').html("");
+                $("#frame").attr("src", "");
+
                 // luego de resetear la hora volvemos a cargar la hora
                 var dateStr =
                     date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
