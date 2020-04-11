@@ -12,6 +12,9 @@ $opcion = isset($_GET['opcion']) ? $_GET['opcion'] : '';
     case "funcionario":
         getFuncionarios();
         break;
+    case "idzonal":
+        getIdzonal();
+        break;
     case "ingreso":
         // graba en base de datos
         $data = ingresaNuevoProceso();
@@ -137,7 +140,7 @@ function getUsuarioExterno($id)
     if (count($resultado) > 0) {
         echo json_encode(array(
             "success" => true,
-            "data" => array($resultado)
+            "data" => array($resultado[0])
         ));
     } else {
         echo json_encode(array(
@@ -152,6 +155,28 @@ function getFuncionarios()
     global $os;
 
     $sql = "SELECT CONCAT(last_name,' ',first_name) AS text, id AS valor FROM `qo_members` WHERE active = 1 ORDER BY text;";
+
+    $result = $os->db->conn->query($sql);
+    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+    if (count($resultado) > 0) {
+        echo json_encode(array(
+            "success" => true,
+            "data" => array($resultado)
+        ));
+
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }
+}
+function getIdzonal()
+{
+    global $os;
+
+
+    $sql = "SELECT nombre AS text, id AS valor FROM `amc_zonas` WHERE activo = 1 and combos = 1 ORDER BY text;";
 
     $result = $os->db->conn->query($sql);
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -206,6 +231,9 @@ function ingresaNuevoProceso()
     $data->geoposicionamiento = $_POST["geoposicionamiento"];
     $data->funcionario = $_POST["funcionario"];
     $data->fecha = $_POST["fecha"];
+    $data->idzonal = $_POST["idzonal"];
+    $data->zonal = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
+
 
     $cadenaDatos = '';
     $cadenaCampos = '';
@@ -300,6 +328,18 @@ function getUsuario($id)
     return $resultado[0];
 }
 
+function getNombreZonal($id)
+{
+    global $os;
+
+    $sql = "SELECT nombre FROM amc_zonas  WHERE id = '$id';";
+
+    $result = $os->db->conn->query($sql);
+    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    return $resultado[0]['nombre'];
+}
+
 function getDataId($id)
 {
     global $os;
@@ -358,8 +398,8 @@ function setDataIdEtapa2($id, $aprobado, $motivo)
 
     $mailaproabdo = ($aprobado == 'aprobar') ? '1' : '0';
     $mailnegado = ($aprobado == 'aprobar') ? '0' : '1';
-    
-    // si el final del proceso es aprobado, el estado se cambia a 1 de aprobado, 2 como negado 
+
+    // si el final del proceso es aprobado, el estado se cambia a 1 de aprobado, 2 como negado
     $estado = ($aprobado == 'aprobar') ? '1' : '2';
 
     $sql = "UPDATE invede_tramites 
