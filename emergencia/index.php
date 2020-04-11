@@ -24,9 +24,9 @@
         <div class="row">
 
             <div class="form-group">
-                <label for="cedula">CEDULA INFRACTOR</label>
+                <label for="cedula">CEDULA INFRACTOR*</label>
                 <input type="number" class="form-control" id="cedula" name="cedula" placeholder=""
-                       >
+                       required="required">
                 <div class="mensajecedula"></div>
             </div>
             <div class="form-group">
@@ -53,6 +53,14 @@
             <div class="form-group">
                 <label for="funcionario">Funcionario*</label>
                 <select name="funcionario" class="form-control" id="funcionario" required="required"
+                        data-error="requerido.">
+                    <option value=""></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="idzonal">Zonal*</label>
+                <select name="idzonal" class="form-control" id="idzonal" required="required"
                         data-error="requerido.">
                     <option value=""></option>
                 </select>
@@ -105,7 +113,7 @@
 
         //  si el ingreso de la solicitud es mas de las 13 horas cambiamos el
         if (today > todayMaximoHoras) {
-            // si es mas tarde de la hora maxima la reserva se pasa para pasado mañana 
+            // si es mas tarde de la hora maxima la reserva se pasa para pasado mañana
             dia = today.getDate() + 1;
             today.setDate(dia);
             today.setHours(21, 0, 0, 0);
@@ -116,7 +124,6 @@
             today.setHours(21, 0, 0, 0);
             //  $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*');
         }
-
 
         $('.form_datetime').datetimepicker({
             language: 'es',
@@ -137,20 +144,20 @@
 
         /*Guardando los datos en el LocalStorage*/
         $("#funcionario").change(function () {
-            //var end = this.value;
-            //var firstDropVal = $('#pick').val();
             var idFuncionario = $('#funcionario option:selected').val();
             localStorage.setItem("idFuncionario", idFuncionario);
+        });
 
+        $("#idzonal").change(function () {
+            var idzonal = $('#idzonal option:selected').val();
+            localStorage.setItem("idzonal", idzonal);
         });
 
         $("input[name^='cedula']").change(function () {
-
-
             // carga iframe con informacion de dinardat
             $("#frame").attr("src", "https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
 
-            // se carga la información si ya existe información anterior 
+            // se carga la información si ya existe información anterior
             $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
                 if (data.success) {
                     $('#nombres').val(data.data[0]['nombres'])
@@ -163,7 +170,6 @@
                 }
             });
         });
-
 
         // llenar los datos del combobox
         $.getJSON('formLoad.php?opcion=funcionario', function (data) {
@@ -178,12 +184,18 @@
             }
         });
 
+        // llenar los datos zonal del combobox
+        $.getJSON('formLoad.php?opcion=idzonal', function (data) {
+            if (data.success) {
+                $.each(data.data[0], function (i, el) {
+                    $('#idzonal').append(new Option(el.text, el.valor));
+                });
+                $("#idzonal").val(localStorage.getItem("idzonal"));
 
-        //  https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php
-        //cedula=1711080893&tipo_identificacion=0
-        //  parametros : 
+            } else {
 
-//https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=1711080893&tipo_identificacion=0
+            }
+        });
 
         $("#myForm").on("submit", function (e) {
             $('.mensaje').html('<div class="blink_me"><b>Enviado formulario</b></div>');
@@ -235,9 +247,10 @@
                 $("#geoposicionamiento").val(position.coords.latitude + "," + position.coords.longitude);
             });
         } else {
-            console.log("Browser doesn't support geolocation!");
+            //console.log("Browser doesn't support geolocation!");
         }
     });
+
 </script>
 </body>
 </html>
