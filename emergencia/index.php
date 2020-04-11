@@ -78,7 +78,7 @@
             </div>
             <div class="form-group">
                 <label for="geoposicionamiento">Coordenadas</label>
-                <input id="geoposicionamiento" type="text" name="geoposicionamiento" class="form-control">
+                <input id="geoposicionamiento" type="text" name="geoposicionamiento" class="form-control" readonly>
             </div>
 
 
