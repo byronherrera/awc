@@ -228,9 +228,10 @@ if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')
 
 $os->db->conn->query("SET NAMES 'utf8'");
 
-$sql = "SELECT *, (SELECT nombre FROM amc_operativos_estados c WHERE  C.id = b.id_estado ) estado FROM amc_operativos as b $innerJoin $where  ORDER BY b.fecha_inicio_planificacion";
+$sql = "SELECT *, (SELECT nombre FROM amc_operativos_estados AS c WHERE  c.id = b.id_estado ) estado FROM amc_operativos as b $innerJoin $where  ORDER BY b.fecha_inicio_planificacion";
 
 $result = $os->db->conn->query($sql);
+ 
 $number_of_rows = $result->rowCount();
 
 $objPHPExcel = new PHPExcel();
