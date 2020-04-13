@@ -15,6 +15,10 @@ $opcion = isset($_GET['opcion']) ? $_GET['opcion'] : '';
     case "idzonal":
         getIdzonal();
         break;
+    case "totales":
+        getTotales();
+        break;
+
     case "ingreso":
         // graba en base de datos
         $data = ingresaNuevoProceso();
@@ -177,6 +181,29 @@ function getIdzonal()
 
 
     $sql = "SELECT nombre AS text, id AS valor FROM `amc_zonas` WHERE activo = 1 and combos = 1 ORDER BY text;";
+
+    $result = $os->db->conn->query($sql);
+    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+    if (count($resultado) > 0) {
+        echo json_encode(array(
+            "success" => true,
+            "data" => array($resultado)
+        ));
+
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }
+}
+
+function getTotales()
+{
+    global $os;
+
+
+    $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
 
     $result = $os->db->conn->query($sql);
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
