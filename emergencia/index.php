@@ -48,7 +48,7 @@
             <div class="form-group">
                 <label for="observaciones">Observaciones.</label>
                 <textarea class="form-control" id="observaciones" name="observaciones" required="required"
-                          rows="3"></textarea>
+                          rows="3">SANCION POR NO USAR MASCARILLA </textarea>
             </div>
             <div class="form-group">
                 <label for="funcionario">Funcionario*</label>
@@ -240,17 +240,21 @@
             });
         })
 
-
         if ("geolocation" in navigator) { //check geolocation available
             //try to get user current location using getCurrentPosition() method
             navigator.geolocation.getCurrentPosition(function (position) {
                 $("#geoposicionamiento").val(position.coords.latitude + "," + position.coords.longitude);
-            });
-        } else {
-            //console.log("Browser doesn't support geolocation!");
-        }
-    });
 
+                // llenar la direccion 
+                $.getJSON('https://open.mapquestapi.com/geocoding/v1/reverse?key=JAlrvA8ymVjfxpr46TKwrH9zM3VNMXEE&location=' + position.coords.latitude + "," + position.coords.longitude +  '&includeRoadMetadata=true&incl', function (data) {
+                    if (data) {
+                        var direccion = data.results[0].locations[0].street;
+                        $("#lugarinfraccion").val(direccion);
+                    } 
+                });
+            });
+        } 
+    });
 </script>
 </body>
 </html>
