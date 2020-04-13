@@ -17,19 +17,20 @@
         <img src="img/rocket_contact.png" alt="rocket_contact"/>
     </div>
     <h3>TOTALES INFRACCIONES EMERGENCIA</h3>
-        <div class="row">       
+  <div class="row">       
             <div class="col-sm-4"></div>       
-              <div class="col-sm-4 "></div>
-              <div class="col-sm-4 lead"> </div>
+            <div class="col-sm-4 "></div>
+            <div class="col-sm-4 lead"> </div>
         </div>
-
         <div class="row">       
             <div class="col-sm-4"></div>       
               <div class="col-sm-4 "><div class="mensajetotales"></div></div>
               <div class="col-sm-4 lead"> </div>
+               
+                
+        
         </div>
-
-        <div class="row">       
+          <div class="row">       
             <div class="col-sm-4"></div>       
             <div class="col-sm-4 "></div>
             <div class="col-sm-4 lead"> </div>
@@ -46,11 +47,11 @@
         // llenar los datos del combobox
         $.getJSON('formLoad.php?opcion=totales', function (data) {
             if (data.success) {
-                var cadena = '<div class="row"><div class="col-sm-6 lead">Fecha</div><div class="col-sm-6 lead">Sanciones</div>'
+                var cadena = '<table width="100%" ><tr><th><div class="lead">Fecha</div></th><th><div class="lead">Sanciones</div></th></tr>'
                 $.each(data.data[0], function (i, el) {
-                    cadena = cadena +  '<div class="col-sm-6">' +  el.texto + '</div><div class="col-sm-6">' +  el.valor + '</div>' ;
+                    cadena = cadena +  '<tr><td>' +  el.texto + '</th><td>' +  el.valor + '</td></tr>' ;
                 });
-                cadena = cadena + '</div>';
+                cadena = cadena + '</table>';
                 $('.mensajetotales').html(cadena)
             } else {
                 $('.mensajetotales').html("<h3>error</h3>")
