@@ -17,24 +17,30 @@
         <img src="img/rocket_contact.png" alt="rocket_contact"/>
     </div>
     <h3>TOTALES INFRACCIONES EMERGENCIA</h3>
-  <div class="row">       
-            <div class="col-sm-4"></div>       
-            <div class="col-sm-4 "></div>
-            <div class="col-sm-4 lead"> </div>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4 "></div>
+        <div class="col-sm-4 lead"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4 ">
+            <div class="mensajetotales"></div>
         </div>
-        <div class="row">       
-            <div class="col-sm-4"></div>       
-              <div class="col-sm-4 "><div class="mensajetotales"></div></div>
-              <div class="col-sm-4 lead"> </div>
-               
-                
-        
+        <div class="col-sm-4 lead"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4 "></div>
+        <div class="col-sm-4"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4 ">
+            <a href="descargaTodoEmergencia.php">Descargar todo (xls)</a>
         </div>
-          <div class="row">       
-            <div class="col-sm-4"></div>       
-            <div class="col-sm-4 "></div>
-            <div class="col-sm-4 lead"> </div>
-        </div>
+        <div class="col-sm-4"></div>
+    </div>
 </div>
 
 <script src="vendor/jquery/jquery-1.8.3.min.js"></script>
@@ -49,7 +55,7 @@
             if (data.success) {
                 var cadena = '<table width="100%" ><tr><th><div class="lead">Fecha</div></th><th><div class="lead">Sanciones</div></th></tr>'
                 $.each(data.data[0], function (i, el) {
-                    cadena = cadena +  '<tr><td>' +  el.texto + '</th><td>' +  el.valor + '</td></tr>' ;
+                    cadena = cadena + '<tr><td>' + el.texto + '</th><td>' + el.valor + '</td></tr>';
                 });
                 cadena = cadena + '</table>';
                 $('.mensajetotales').html(cadena)
@@ -57,7 +63,7 @@
                 $('.mensajetotales').html("<h3>error</h3>")
             }
         });
-     });
+    });
 </script>
 </body>
 </html>
