@@ -71,7 +71,7 @@
                 <div class="input-group date form_datetime  " data-date="1994-09-16T05:25:07Z"
                      data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
                     <input class="form-control" size="16" type="text" name="fecha" id="fecha"
-                           required="required" readonly style="background-color: #fff;">
+                           required="required"   style="background-color: #fff;">
                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                 </div>
