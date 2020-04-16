@@ -56,9 +56,9 @@ $styleArray = array(
 
 
 //declaracion de los titulos de la linea 1 2 3
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':P' . $filaTitulo1);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':P' . $filaTitulo2);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo3 . ':P' . $filaTitulo3);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo3 . ':J' . $filaTitulo3);
 
 $objPHPExcel->getActiveSheet()->getStyle('A1:A3')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "MUNICIPIO DEL DISTRITO METROPOLITANO DE QUITO");
@@ -76,7 +76,8 @@ textoSiguieteFila("OBSERVACIONES", 'E', 'E', 'center', false, "B");
 textoSiguieteFila("LUGAR INFRACCION", 'F', 'F', 'center', false, "B");
 textoSiguieteFila("FUNCIONARIO", 'G', 'G', 'center', false, "B");
 textoSiguieteFila("ZONAL", 'H', 'H', 'center', false, "B");
-textoSiguieteFila("FECHA", 'I', 'I', 'center', false, "B");
+textoSiguieteFila("FECHA INFRACCION", 'I', 'I', 'center', false, "B");
+textoSiguieteFila("FECHA REGISTRO", 'J', 'J', 'center', false, "B");
 
 
 // recuperamos los nombres de los usuarios
@@ -98,6 +99,7 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila(regresaNombre ($nombreDetalle['funcionario']), 'G', 'G', 'left', false);
     textoSiguieteFila($nombreDetalle['zonal'], 'H', 'H', 'left', false);
     textoSiguieteFila($nombreDetalle['fecha'], 'I', 'I', 'center', false);
+    textoSiguieteFila($nombreDetalle['fecha_creacion'], 'J', 'J', 'center', false);
 }
 
 
@@ -154,6 +156,8 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(26);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(26);
 
 
 // Set document properties

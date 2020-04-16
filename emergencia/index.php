@@ -205,13 +205,13 @@
             formData.append("dato", "valor");
 
             // actualizamos la hora, a la hora de envio del formulario
-            var dateStr =
+            /*var dateStr =
                 date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
                 ("00" + date.getDate()).slice(-2) + " " +
                 ("00" + date.getHours()).slice(-2) + ":" +
                 ("00" + date.getMinutes()).slice(-2);
 
-            document.getElementById('fecha').value = dateStr;
+            document.getElementById('fecha').value = dateStr;*/
             // fin actualizar hora
 
             $.ajax({
