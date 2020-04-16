@@ -108,13 +108,13 @@
         var today = new Date();
 
         var todayMaximoHoras = new Date();
-        todayMaximoHoras.setHours(15, 0, 0, 0);
+        //    todayMaximoHoras.setHours(15, 0, 0, 0);
         //    todayMaximoHoras.setHours(0, 30, 0, 0);
 
         //  si el ingreso de la solicitud es mas de las 13 horas cambiamos el
-        if (today > todayMaximoHoras) {
+        /*if (today > todayMaximoHoras) {
             // si es mas tarde de la hora maxima la reserva se pasa para pasado mañana
-            dia = today.getDate() + 1;
+           // dia = today.getDate() + 1;
             today.setDate(dia);
             today.setHours(21, 0, 0, 0);
             $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*, (reservas a partir del dia de mañana)');
@@ -123,14 +123,14 @@
             today.setDate(dia);
             today.setHours(21, 0, 0, 0);
             //  $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*');
-        }
+        }*/
 
         $('.form_datetime').datetimepicker({
             language: 'es',
             format: 'yyyy-mm-dd hh:ii',
             autoclose: true,
             //  todayBtn: true,
-            startDate: today
+           // startDate: today
         });
 
         var date = new Date();
