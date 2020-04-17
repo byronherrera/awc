@@ -81,7 +81,6 @@
             var f = $(this);
             var formData = new FormData(document.getElementById("myForm"));
             formData.append("dato", "valor");
-
             $.ajax({
                 url: 'formLoad.php?opcion=consulta',
                 type: "post",
