@@ -51,20 +51,23 @@
 
             <div class="form-group">
                 <label for="fecha">Fecha de emisión del documento</label>
-                <div class="input-group date form_datetime  " data-date="1994-09-16T05:25:07Z"
-                     data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
-                    <input class="form-control" size="16" type="text" readonly name="fecha" id="fecha"
-                           required="required"   style="background-color: #fff;">
-                </div>
+                <input class="form-control" size="16" type="text" readonly name="fecha" id="fecha"
+                           readonly >
+
+
             </div>
             <div class="form-group">
+
                 <div class="form-group col-md-6">
                     <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="Buscar">
                 </div>
                 <div class="form-group col-md-6">
                     <div class="mensaje"></div>
                 </div>
+
             </div>
+
+
     </form>
 </div>
 
@@ -79,39 +82,16 @@
         var today = new Date();
 
         var todayMaximoHoras = new Date();
-        //    todayMaximoHoras.setHours(15, 0, 0, 0);
-        //    todayMaximoHoras.setHours(0, 30, 0, 0);
 
-        //  si el ingreso de la solicitud es mas de las 13 horas cambiamos el
-        /*if (today > todayMaximoHoras) {
-            // si es mas tarde de la hora maxima la reserva se pasa para pasado mañana
-           // dia = today.getDate() + 1;
-            today.setDate(dia);
-            today.setHours(21, 0, 0, 0);
-            $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*, (reservas a partir del dia de mañana)');
-        } else {
-            dia = today.getDate();
-            today.setDate(dia);
-            today.setHours(21, 0, 0, 0);
-            //  $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*');
-        }*/
 
         $('.form_datetime').datetimepicker({
             language: 'es',
             format: 'yyyy-mm-dd hh:ii',
             autoclose: true,
-            //  todayBtn: true,
-           // startDate: today
+
         });
 
-        var date = new Date();
-        var dateStr =
-            date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
-            ("00" + date.getDate()).slice(-2) + "T" +
-            ("00" + date.getHours()).slice(-2) + ":" +
-            ("00" + date.getMinutes()).slice(-2) + ':00';
 
-        document.getElementById('fecha').value = dateStr;
 
         /*Guardando los datos en el LocalStorage*/
         $("#nombrefuncionario").change(function () {
@@ -164,15 +144,7 @@
             var formData = new FormData(document.getElementById("myForm"));
             formData.append("dato", "valor");
 
-            // actualizamos la hora, a la hora de envio del formulario
-            /*var dateStr =
-                date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
-                ("00" + date.getDate()).slice(-2) + " " +
-                ("00" + date.getHours()).slice(-2) + ":" +
-                ("00" + date.getMinutes()).slice(-2);
 
-            document.getElementById('fecha').value = dateStr;*/
-            // fin actualizar hora
 
             $.ajax({
                 url: 'formLoad.php?opcion=ingreso',
@@ -188,32 +160,9 @@
                 $('.mensajecedula').html("");
                 $("#frame").attr("src", "");
 
-                // luego de resetear la hora volvemos a cargar la hora
-                var dateStr =
-                    date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
-                    ("00" + date.getDate()).slice(-2) + " " +
-                    ("00" + date.getHours()).slice(-2) + ":" +
-                    ("00" + date.getMinutes()).slice(-2);
-
-                document.getElementById('fecha').value = dateStr;
-                // fin actualizar la hora
             });
         })
 
-        if ("geolocation" in navigator) { //check geolocation available
-            //try to get user current location using getCurrentPosition() method
-            navigator.geolocation.getCurrentPosition(function (position) {
-                $("#geoposicionamiento").val(position.coords.latitude + "," + position.coords.longitude);
-
-                // llenar la direccion 
-                $.getJSON('https://open.mapquestapi.com/geocoding/v1/reverse?key=JAlrvA8ymVjfxpr46TKwrH9zM3VNMXEE&location=' + position.coords.latitude + "," + position.coords.longitude +  '&includeRoadMetadata=true&incl', function (data) {
-                    if (data) {
-                        var direccion = data.results[0].locations[0].street;
-                        $("#lugarinfraccion").val(direccion);
-                    } 
-                });
-            });
-        } 
     });
 </script>
 </body>
