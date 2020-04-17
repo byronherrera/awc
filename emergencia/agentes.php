@@ -30,32 +30,7 @@
                        required="required">
                 <div class="mensajecedula"></div>
             </div>
-            <div class="form-group">
-                <label for="nombres">NOMBRES APELLIDOS COMPLETOS*</label>
-                <input type="text" class="form-control " id="nombres" name="nombres" readonly
-                       placeholder="Nombres">
-                <input type="text" class="form-control " id="apellidos" name="apellidos" readonly
-                       placeholder="Apellidos">
-            </div>
 
-            <div class="form-group">
-                <label for="lugarinfraccion">LUGAR INFRACCION</label>
-                <input id="lugarinfraccion" type="text" name="lugarinfraccion" class="form-control" readonly
-                       placeholder="Ingrese lugar infracción">
-            </div>
-            <div class="form-group">
-                <label for="observaciones">Observaciones.</label>
-                <textarea class="form-control" id="observaciones" name="observaciones" readonly
-                          rows="3">SANCION POR NO USAR MASCARILLA </textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="fecha">Fecha de emisión del documento</label>
-                <input class="form-control" size="16" type="text" readonly name="fecha" id="fecha"
-                           readonly >
-
-
-            </div>
             <div class="form-group">
 
                 <div class="form-group col-md-6">
@@ -78,32 +53,6 @@
         charset="UTF-8"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-
-        var today = new Date();
-
-        var todayMaximoHoras = new Date();
-
-
-        $('.form_datetime').datetimepicker({
-            language: 'es',
-            format: 'yyyy-mm-dd hh:ii',
-            autoclose: true,
-
-        });
-
-
-
-        /*Guardando los datos en el LocalStorage*/
-        $("#nombrefuncionario").change(function () {
-            var idnombrefuncionario = $('#nombrefuncionario').val();
-            localStorage.setItem("idnombrefuncionario", idnombrefuncionario);
-        });
-
-        $("#idzonal").change(function () {
-            var idzonal = $('#idzonal option:selected').val();
-            localStorage.setItem("idzonal", idzonal);
-        });
-
         $("input[name^='cedula']").change(function () {
             // carga iframe con informacion de dinardat
             $("#frame").attr("src", "https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
@@ -111,31 +60,20 @@
             // se carga la información si ya existe información anterior
             $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
                 if (data.success) {
-                    $('#nombres').val(data.data[0]['nombres'])
-                    $('#apellidos').val(data.data[0]['apellidos'])
-                    $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción</h3>")
+                    nombres = data.data[0]['nombres'];
+                    apellidos = data.data[0]['apellidos'];
+                    $('.mensajecedula').html("<h3>El ciudadano "
+                        + nombres + " "
+                        + apellidos + ","
+                        + " tiene ya una sanción</h3>")
                 } else {
                     $('#nombres').val('')
                     $('#apellidos').val('')
-                    $('.mensajecedula').html("")
+                    $('.mensajecedula').html("El cuidadano no tiene sancion anterior")
                 }
             });
         });
 
-        $("#nombrefuncionario").val(localStorage.getItem("idnombrefuncionario")); 
-
-        // llenar los datos zonal del combobox
-        $.getJSON('formLoad.php?opcion=idzonal', function (data) {
-            if (data.success) {
-                $.each(data.data[0], function (i, el) {
-                    $('#idzonal').append(new Option(el.text, el.valor));
-                });
-                $("#idzonal").val(localStorage.getItem("idzonal"));
-
-            } else {
-
-            }
-        });
 
         $("#myForm").on("submit", function (e) {
             $('.mensaje').html('<div class="blink_me"><b>Enviado formulario</b></div>');
@@ -144,10 +82,8 @@
             var formData = new FormData(document.getElementById("myForm"));
             formData.append("dato", "valor");
 
-
-
             $.ajax({
-                url: 'formLoad.php?opcion=ingreso',
+                url: 'formLoad.php?opcion=consulta',
                 type: "post",
                 dataType: "html",
                 data: formData,
@@ -156,13 +92,9 @@
                 processData: false
             }).done(function (res) {
                 $('.mensaje').html('<b>Formulario enviado</b>');
-                $('#myForm')[0].reset();
                 $('.mensajecedula').html("");
-                $("#frame").attr("src", "");
-
             });
         })
-
     });
 </script>
 </body>
