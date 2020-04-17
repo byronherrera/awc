@@ -31,12 +31,9 @@
                 <div class="mensajecedula"></div>
             </div>
             <div class="form-group">
-                <label for="nombres">NOMBRES COMPLETOS*</label>
+                <label for="nombres">NOMBRES APELLIDOS COMPLETOS*</label>
                 <input type="text" class="form-control " id="nombres" name="nombres" readonly
                        placeholder="Nombres">
-            </div>
-            <div class="form-group">
-                <label for="apellidos">APELLIDOS COMPLETOS*</label>
                 <input type="text" class="form-control " id="apellidos" name="apellidos" readonly
                        placeholder="Apellidos">
             </div>
@@ -56,24 +53,18 @@
                 <label for="fecha">Fecha de emisión del documento</label>
                 <div class="input-group date form_datetime  " data-date="1994-09-16T05:25:07Z"
                      data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
-                    <input class="form-control" size="16" type="text" name="fecha" id="fecha"
+                    <input class="form-control" size="16" type="text" readonly name="fecha" id="fecha"
                            required="required"   style="background-color: #fff;">
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                 </div>
             </div>
             <div class="form-group">
-
                 <div class="form-group col-md-6">
                     <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="Buscar">
                 </div>
                 <div class="form-group col-md-6">
                     <div class="mensaje"></div>
                 </div>
-
             </div>
-
-
     </form>
 </div>
 
