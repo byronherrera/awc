@@ -81,8 +81,9 @@
             var f = $(this);
             var formData = new FormData(document.getElementById("myForm"));
             formData.append("dato", "valor");
+            var cedula =  $("input[name^='cedula']").val()
             $.ajax({
-                url: 'formLoad.php?opcion=consulta',
+                url: 'formLoad.php?opcion=usuario&usuario=' + cedula,
                 type: "post",
                 dataType: "html",
                 data: formData,
@@ -91,7 +92,13 @@
                 processData: false
             }).done(function (res) {
                 $('.mensaje').html('<b>Formulario enviado</b>');
-                $('.mensajecedula').html("");
+                nombres = data.data[0]['nombres'];
+                apellidos = data.data[0]['apellidos'];
+                $('.mensajecedula').html("<h3>El ciudadano "
+                    + nombres + " "
+                    + apellidos + ","
+                    + " tiene ya una sanción</h3>")
+
             });
         })
     });
