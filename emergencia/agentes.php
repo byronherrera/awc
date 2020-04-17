@@ -32,46 +32,24 @@
             </div>
             <div class="form-group">
                 <label for="nombres">NOMBRES COMPLETOS*</label>
-                <input type="text" class="form-control " id="nombres" name="nombres" required="required"
+                <input type="text" class="form-control " id="nombres" name="nombres" readonly
                        placeholder="Nombres">
             </div>
             <div class="form-group">
                 <label for="apellidos">APELLIDOS COMPLETOS*</label>
-                <input type="text" class="form-control " id="apellidos" name="apellidos" required="required"
+                <input type="text" class="form-control " id="apellidos" name="apellidos" readonly
                        placeholder="Apellidos">
             </div>
 
             <div class="form-group">
                 <label for="lugarinfraccion">LUGAR INFRACCION</label>
-                <input id="lugarinfraccion" type="text" name="lugarinfraccion" class="form-control"
+                <input id="lugarinfraccion" type="text" name="lugarinfraccion" class="form-control" readonly
                        placeholder="Ingrese lugar infracción">
             </div>
             <div class="form-group">
                 <label for="observaciones">Observaciones.</label>
-                <textarea class="form-control" id="observaciones" name="observaciones" required="required"
+                <textarea class="form-control" id="observaciones" name="observaciones" readonly
                           rows="3">SANCION POR NO USAR MASCARILLA </textarea>
-            </div>
-            <div class="form-group">
-                <label for="funcionario">Funcionario*</label>
-                <select name="funcionario" class="form-control" id="funcionario"  readonly required="required"
-                        data-error="requerido.">
-                    <option value="999">Agente Metropolitano de Control</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="nombrefuncionario">Nombre funcionario*</label>
-                <input id="nombrefuncionario" type="text" name="nombrefuncionario" class="form-control" required="required"
-                       placeholder="Ingrese nombre">
-            </div>
-
-
-            <div class="form-group">
-                <label for="idzonal">Zonal*</label>
-                <select name="idzonal" class="form-control" id="idzonal" required="required"
-                        data-error="requerido.">
-                    <option value=""></option>
-                </select>
             </div>
 
             <div class="form-group">
@@ -85,15 +63,9 @@
                 </div>
             </div>
             <div class="form-group">
-                 
-                <input id="geoposicionamiento" type="hidden" name="geoposicionamiento" class="form-control" readonly>
-            </div>
-
-
-            <div class="form-group">
 
                 <div class="form-group col-md-6">
-                    <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="Grabar">
+                    <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="Buscar">
                 </div>
                 <div class="form-group col-md-6">
                     <div class="mensaje"></div>
