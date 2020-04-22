@@ -1,3 +1,14 @@
+<?php
+require_once('../server/os.php');
+
+if (!class_exists('os')) {
+    die('Server os class is missing!');
+} else {
+    $os = new os();
+    if (!$os->session_exists()) {
+        header("Location: login.php");
+    } else {
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -258,3 +269,6 @@
 </script>
 </body>
 </html>
+<?php } 
+}
+?>

@@ -81,7 +81,8 @@ if(isset($service) && $service != ''){
     */
    $method_name = isset($_GET['method']) ? $_GET['method'] : $_POST['method'];
    $module_id = isset($_GET['moduleId']) ? $_GET['moduleId'] : $_POST['moduleId'];
-
+echo method_name;
+echo module_id;
    if(isset($module_id, $method_name) && $module_id != '' && $method_name != ''){
       require('server/os.php');
       if(class_exists('os')){
