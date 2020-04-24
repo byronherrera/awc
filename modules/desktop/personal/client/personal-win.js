@@ -208,6 +208,38 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo nivel complejidad
 
+        // inicio combo genero
+        storeGenero = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": '1', "nombre": "M"},
+                    {"id": '2', "nombre": "F"}
+                ]
+            }
+        });
+
+        var comboGenero = new Ext.form.ComboBox({
+            id: 'comboGenero',
+            store: storeGenero,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function personalGenero(id) {
+            var index = storeGenero.findExact('id', id);
+            if (index > -1) {
+                var record = storeGenero.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo personal género
+
         //inicio combo tipo personal
         storeOPTIPO = new Ext.data.JsonStore({
             root: 'data',
@@ -689,6 +721,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                 {name: 'cedula', allowBlank: false},
                 {name: 'apellidos', allowBlank: false},
                 {name: 'nombres', allowBlank: false},
+                {name: 'genero', allowBlank: true},
                 {name: 'partida', allowBlank: true},
                 {name: 'rol', allowBlank: true},
                 {name: 'denominacion', allowBlank: true},
@@ -768,6 +801,7 @@ QoDesk.PersonalWindow = Ext.extend(Ext.app.Module, {
                     renderer: personalActivo
                 },
                 {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 90, editor: textField},
+                {header: 'Género', dataIndex: 'genero', sortable: true, width: 90, renderer: personalGenero, editor: comboGenero},
                 {header: 'Apellidos', dataIndex: 'apellidos', sortable: true, width: 140, editor: textField},
                 {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 140, editor: textField},
                 {
