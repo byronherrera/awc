@@ -1,48 +1,44 @@
 {
-  "id": "publicidad",
-  "type": "desktop/publicidad",
+  "id": "emergencia",
+  "type": "desktop/emergencia",
   "about": {
     "author": "",
-    "description": "AMC Publicidad.",
-    "name": "Publicidad",
+    "description": "Mantenimiento de Emergencia.",
+    "name": "Ventana Emergencia",
     "url": "",
     "version": "1.0"
   },
-
-  "dependencies": [
-    { "id": "checkbox", "type": "library" }
-  ],
   "server": {
     "methods": [
-      { "name": "accesosAdministradorOpe", "description": "Administrador publicidad" },
-      { "name": "accesosPublicidad", "description": "Usuario opeativos" },
-      { "name": "accesosRecepcionOpe", "description": "Recepcion publicidad" }
+      { "name": "accesosAdministrador", "description": "Full acceso" },
+      { "name": "accesosSecretaria", "description": "Full acceso" },
+      { "name": "accesosZonales", "description": "Personal de zonales" }
+
     ],
-    "class": "QoPublicidad",
-    "file": "desktop/publicidad/publicidad.php"
+    "class": "QoEmergencia",
+    "file": "desktop/emergencia/emergencia.php"
   },
   "client": {
-    "class": "QoDesk.PublicidadWindow",
+    "class": "QoDesk.EmergenciaWindow",
     "css": [
       {
-        "directory": "desktop/publicidad/client/resources/",
+        "directory": "desktop/emergencia/client/resources/",
         "files": [ "styles.css" ]
       },
       {
         "directory": "common/libraries/",
-        "files": [ "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css", "fileuploadfield/FileUploadField.css" ]
+        "files": [  "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css"   ]
       }
     ],
     "javascript": [
       {
         "directory": "common/libraries/",
-        "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js", "fileuploadfield/FileUploadField.js"  ]
+        "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
       },
       {
-        "directory": "desktop/publicidad/client/",
-        "files": [  "publicidad-win.js" ]
+        "directory": "desktop/emergencia/client/",
+        "files": [  "emergencia-win.js" ]
       },
-
       {
         "directory": "qwiki/admin/client/",
         "files": [ "QoAdmin.js" ]
@@ -54,10 +50,10 @@
     ],
     "launcher": {
       "config": {
-        "iconCls": "publicidad-icon",
-        "shortcutIconCls": "publicidad-shortcut",
-        "text": "Publicidad",
-        "tooltip": "<b>Publicidad - AMC</b>"
+        "iconCls": "emergencia-icon",
+        "shortcutIconCls": "emergencia-shortcut",
+        "text": "Emergencia",
+        "tooltip": "<b>Emergencia</b>"
       },
       "paths": {
         "startmenu": "/"

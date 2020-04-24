@@ -303,7 +303,35 @@ function selectOperativos()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_operativos $innerJoin  $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT amc_operativos.id,
+amc_operativos.id_persona,
+amc_operativos.codigo_operativo,
+amc_operativos.visible,
+amc_operativos.fecha_planificacion,
+amc_operativos.fecha_inicio_planificacion,
+amc_operativos.fecha_fin_planificacion,
+amc_operativos.fecha_impresion_informe,
+amc_operativos.id_tipo_control,
+amc_operativos.id_zonal,
+amc_operativos.id_nivel_complejidad,
+amc_operativos.id_unidad,
+amc_operativos.punto_encuentro_planificado,
+amc_operativos.zona,
+amc_operativos.id_persona_encargada,
+amc_operativos.tramite,
+amc_operativos.fecha_creacion,
+amc_operativos.finalizado,
+amc_operativos.fallido,
+amc_operativos.detalle,
+amc_operativos.observaciones,
+amc_operativos.parroquias,
+amc_operativos.barrios,
+amc_operativos.id_estado,
+amc_operativos.tipo_operativo,
+amc_operativos.fecha_informe,
+amc_operativos.fecha_real_inicio,
+amc_operativos.fecha_real_fin,
+amc_operativos.mail_enviado FROM amc_operativos $innerJoin  $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
