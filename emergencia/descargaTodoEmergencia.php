@@ -455,7 +455,7 @@ $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('B')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(40);
 
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(22);
@@ -608,7 +608,7 @@ $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('B')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(50);
 
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(22);
