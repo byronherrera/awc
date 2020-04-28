@@ -227,9 +227,6 @@ $styleArray = array(
 );
 
 
-
-
-
 //declaracion de los titulos de la linea 1 2 3
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
@@ -257,14 +254,17 @@ textoSiguieteFila("", 'D', 'D', 'center', false, "B");
 $numero = 1;
 $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
 $nombres = $os->db->conn->query($sql);
+$totales = 0;
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($numero, 'A', 'A', 'center');
     $numero++;
     textoSiguieteFila($nombreDetalle['texto'], 'B', 'B', 'left', false);
     textoSiguieteFila($nombreDetalle['valor'], 'C', 'C', 'center', false);
     textoSiguieteFila(' ', 'D', 'D', 'left', false);
+    $totales = $totales + $nombreDetalle['valor'];
   }
-
+textoSiguieteFila('TOTAL ', 'A', 'B', 'left');
+textoSiguieteFila($totales, 'C', 'D', 'center', false);
 
 //borde("A" . $primeraFilaImage . ':' . 'F' . $filacabecera);
 // Elaborador por:
@@ -379,10 +379,6 @@ $styleArray = array(
     )
 );
 
-
-
-
-
 //declaracion de los titulos de la linea 1 2 3
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
@@ -410,14 +406,17 @@ textoSiguieteFila("", 'D', 'D', 'center', false, "B");
 $numero = 1;
 $sql = "SELECT COUNT( id ) valor, zonal  texto FROM amc_sancion_emergencia GROUP BY zonal";
 $nombres = $os->db->conn->query($sql);
+$totales = 0;
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($numero, 'A', 'A', 'center');
     $numero++;
     textoSiguieteFila($nombreDetalle['texto'], 'B', 'B', 'left', false);
     textoSiguieteFila($nombreDetalle['valor'], 'C', 'C', 'center', false);
     textoSiguieteFila(' ', 'D', 'D', 'left', false);
+    $totales = $totales + $nombreDetalle['valor'];
 }
-
+textoSiguieteFila('TOTAL ', 'A', 'B', 'left');
+textoSiguieteFila($totales, 'C', 'D', 'center', false);
 
 //borde("A" . $primeraFilaImage . ':' . 'F' . $filacabecera);
 // Elaborador por:
@@ -563,13 +562,17 @@ $numero = 1;
 $sql = "SELECT (SELECT direccion FROM amc_personal_distributivo WHERE apellidos = (SELECT last_name  FROM qo_members WHERE qo_members.id = funcionario) limit 1)  texto,
 COUNT(*) AS valor FROM amc_sancion_emergencia GROUP BY texto";
 $nombres = $os->db->conn->query($sql);
+$totales = 0;
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($numero, 'A', 'A', 'center');
     $numero++;
     textoSiguieteFila($nombreDetalle['texto'], 'B', 'B', 'left', false);
     textoSiguieteFila($nombreDetalle['valor'], 'C', 'C', 'center', false);
     textoSiguieteFila(' ', 'D', 'D', 'left', false);
+    $totales = $totales + $nombreDetalle['valor'];
 }
+textoSiguieteFila('TOTAL ', 'A', 'B', 'left');
+textoSiguieteFila($totales, 'C', 'D', 'center', false);
 
 
 //borde("A" . $primeraFilaImage . ':' . 'F' . $filacabecera);
