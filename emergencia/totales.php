@@ -54,9 +54,12 @@
         $.getJSON('formLoad.php?opcion=totales', function (data) {
             if (data.success) {
                 var cadena = '<table width="100%" ><tr><th><div class="lead">Fecha</div></th><th><div class="lead">Sanciones</div></th></tr>'
+                total = 0;
                 $.each(data.data[0], function (i, el) {
                     cadena = cadena + '<tr><td>' + el.texto + '</th><td>' + el.valor + '</td></tr>';
+                    total = total + parseInt(el.valor);
                 });
+                cadena = cadena + '<tr><td>Total </th><td>' + total + '</td></tr>';
                 cadena = cadena + '</table>';
                 $('.mensajetotales').html(cadena)
             } else {

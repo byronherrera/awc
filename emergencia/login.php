@@ -35,6 +35,10 @@
                        placeholder="pass">
             </div>
 
+            <div class="form-group">
+                <label for="pass1">El usuario y contraseña son las mismas del sistema MATIS-AMC</label>
+            </div>
+
 
             <div class="form-group">
                 <div class="form-group col-md-6">
