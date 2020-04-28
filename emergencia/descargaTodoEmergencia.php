@@ -560,9 +560,8 @@ textoSiguieteFila("", 'D', 'D', 'center', false, "B");
 
 
 $numero = 1;
-$sql = "SELECT (SELECT direccion FROM amc_personal_distributivo WHERE apellidos = (SELECT last_name  FROM qo_members WHERE qo_members.id = funcionario) limit 1) AS texto ,
-COUNT(*) AS valor
-FROM amc_sancion_emergencia GROUP BY direccion";
+$sql = "SELECT (SELECT direccion FROM amc_personal_distributivo WHERE apellidos = (SELECT last_name  FROM qo_members WHERE qo_members.id = funcionario) limit 1)  texto,
+COUNT(*) AS valor FROM amc_sancion_emergencia GROUP BY texto";
 $nombres = $os->db->conn->query($sql);
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($numero, 'A', 'A', 'center');
