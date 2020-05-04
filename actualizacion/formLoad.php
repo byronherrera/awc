@@ -74,6 +74,8 @@ function actualizacionDatos()
     }
 
     $id = $_POST["id"];
+
+    setlog($id);
     $data->telefono1 = $_POST["telefono1"];
     $data->telefono2 = $_POST["telefono2"];
     $data->telefonoemergencia = $_POST["telefonoemergencia"];
@@ -95,6 +97,8 @@ function actualizacionDatos()
         $cadenaDatos = $cadenaDatos . " $clave = '$valor' ,";
     }
 
+
+
     $cadenaDatos = $cadenaDatos . " fecha_actualizacion = now() ,";
     $cadenaDatos = substr($cadenaDatos, 0, -1);
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -111,6 +115,22 @@ function actualizacionDatos()
 }
 
 
+
+function setlog($id)
+{
+    global $os;
+
+    $sql = "SELECT * FROM amc_personal_distributivo  WHERE `id` = $id;";
+
+    $result = $os->db->conn->query($sql);
+    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+    $log =  implode( ", ", $resultado[0] );
+    //grabamos
+    $fichero = 'crudTalento.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $os->get_member_id() . "**" .$log . "\n";
+    file_put_contents($fichero, $actual);
+}
 
 function getUsuario($id)
 {
