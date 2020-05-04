@@ -120,6 +120,7 @@ function setlog($id)
 {
     global $os;
 
+
     $sql = "SELECT * FROM amc_personal_distributivo  WHERE `id` = $id;";
 
     $result = $os->db->conn->query($sql);
