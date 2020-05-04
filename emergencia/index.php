@@ -88,6 +88,11 @@ if (!class_exists('os')) {
                 </div>
             </div>
             <div class="form-group">
+                <label for="actainfraccion">Número de acta</label>
+                <input id="actainfraccion" type="text" name="actainfraccion" class="form-control"
+                       placeholder="Ingrese el numero de acta de infración">
+            </div>
+            <div class="form-group">
                 <label for="geoposicionamiento">Coordenadas</label>
                 <input id="geoposicionamiento" type="text" name="geoposicionamiento" class="form-control" readonly>
             </div>

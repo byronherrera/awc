@@ -261,6 +261,8 @@ function ingresaNuevoProceso()
     $data->idzonal = $_POST["idzonal"];
     $data->zonal = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
 
+    $data->actainfraccion = $_POST["actainfraccion"];
+    $data->idingreso = $os->get_member_id();
 
     $cadenaDatos = '';
     $cadenaCampos = '';
