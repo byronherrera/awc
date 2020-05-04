@@ -264,7 +264,7 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     $totales = $totales + $nombreDetalle['valor'];
   }
 textoSiguieteFila('TOTAL ', 'A', 'B', 'left');
-textoSiguieteFila($totales, 'C', 'D', 'center', false);
+textoSiguieteFila($totales,'C', 'D', 'center', false);
 
 //borde("A" . $primeraFilaImage . ':' . 'F' . $filacabecera);
 // Elaborador por:
