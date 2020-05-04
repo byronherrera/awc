@@ -71,22 +71,20 @@ if (!class_exists('os')) {
                        placeholder="Ingrese direccion principal">
             </div>
             <div class="form-group">
-                <label for="direccionsecundaria">CALLE SECUNDARIA</label>
-                <input id="direccionsecundaria" type="text" name="direccionsecundaria" class="form-control" required="required"
-                       placeholder="Ingrese direccion secundaria">
-            </div>
-            <div class="form-group">
                 <label for="direccionnumero">NUMERO</label>
                 <input id="direccionnumero" type="text" name="direccionnumero" class="form-control" required="required"
                        placeholder="Ingrese direccio nnumero">
+            </div>
+            <div class="form-group">
+                <label for="direccionsecundaria">CALLE SECUNDARIA</label>
+                <input id="direccionsecundaria" type="text" name="direccionsecundaria" class="form-control" required="required"
+                       placeholder="Ingrese direccion secundaria">
             </div>
             <div class="form-group">
                 <label for="referenciadireccion">REFERECIA DOMICILIO</label>
                 <input id="referenciadireccion" type="text" name="referenciadireccion" class="form-control" required="required"
                        placeholder="Ingrese referencia dirección">
             </div>
-
-
             <div class="form-group">
                 <label for="parroquia">PARROQUIA</label>
                 <input id="parroquia" type="text" name="parroquia" class="form-control" required="required"
