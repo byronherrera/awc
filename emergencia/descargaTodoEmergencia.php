@@ -78,6 +78,8 @@ textoSiguieteFila("FUNCIONARIO", 'G', 'G', 'center', false, "B");
 textoSiguieteFila("ZONAL", 'H', 'H', 'center', false, "B");
 textoSiguieteFila("FECHA INFRACCION", 'I', 'I', 'center', false, "B");
 textoSiguieteFila("FECHA REGISTRO", 'J', 'J', 'center', false, "B");
+textoSiguieteFila("FUNCIONARIO REALIZA REGISTRO", 'K', 'K', 'center', false, "B");
+textoSiguieteFila("NUMERO DE ACTO", 'L', 'L', 'center', false, "B");
 
 
 // recuperamos los nombres de los usuarios
@@ -100,6 +102,8 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($nombreDetalle['zonal'], 'H', 'H', 'left', false);
     textoSiguieteFila($nombreDetalle['fecha'], 'I', 'I', 'center', false);
     textoSiguieteFila($nombreDetalle['fecha_creacion'], 'J', 'J', 'center', false);
+    textoSiguieteFila(regresaNombre ($nombreDetalle['idingreso']), 'K', 'K', 'center', false);
+    textoSiguieteFila($nombreDetalle['actainfracciion'], 'L', 'L', 'center', false);
 }
 
 
@@ -158,6 +162,10 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(26);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(26);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('K')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(36);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('L')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(16);
 
 
 $styleThinBlackBorderOutline = array(
