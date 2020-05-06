@@ -103,7 +103,7 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($nombreDetalle['fecha'], 'I', 'I', 'center', false);
     textoSiguieteFila($nombreDetalle['fecha_creacion'], 'J', 'J', 'center', false);
     textoSiguieteFila(regresaNombre ($nombreDetalle['idingreso']), 'K', 'K', 'center', false);
-    textoSiguieteFila($nombreDetalle['actainfracciion'], 'L', 'L', 'center', false);
+    textoSiguieteFila($nombreDetalle['actainfraccion'], 'L', 'L', 'center', false);
 }
 
 
