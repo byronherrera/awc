@@ -14,5 +14,11 @@ if(isset($service) && $service != ''){
       $os = new os();
       print $os->login($_POST['user'], $_POST['pass'], $_POST['group']);
    }
+   if($service == 'logout'){
+      require_once('server/os.php');
+      $os = new os();
+      $os->logout();
+      print '{"success":true,"msg":"22001"}';
+   }
 }
 ?>

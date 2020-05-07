@@ -81,7 +81,7 @@ if (!class_exists('os')) {
                        placeholder="Ingrese direccion secundaria">
             </div>
             <div class="form-group">
-                <label for="referenciadireccion">REFERECIA DOMICILIO</label>
+                <label for="referenciadireccion">REFERENCIA DOMICILIO</label>
                 <input id="referenciadireccion" type="text" name="referenciadireccion" class="form-control" required="required"
                        placeholder="Ingrese referencia dirección">
             </div>
@@ -126,10 +126,12 @@ if (!class_exists('os')) {
 
             <div class="form-group">
                 <div class="form-group col-md-6">
-                    <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="ACTUALIZAR">
+                    <input type="submit" class="btn btn-success btn-send btnContactSubmit" id="btn-success" value="ACTUALIZAR">
+                    <div class="mensaje"></div>
                 </div>
                 <div class="form-group col-md-6">
-                    <div class="mensaje"></div>
+
+                    <input type="button" class="btn btn-success btn-send btnContactSubmit" id="btn-salir" value="SALIR">
                 </div>
             </div>
     </form>
@@ -152,6 +154,16 @@ if (!class_exists('os')) {
             }
         });
 
+        $("#btn-salir").click(function(){
+            $.post("../servicesalone.php", {service: "logout"}, function(){
+                //alert( "success" );
+            }).done(function() {
+                window.location.replace("https://amcmatis.quito.gob.ec/");
+            });
+        });
+
+
+
         $("#myForm").on("submit", function (e) {
             $('.mensaje').html('<div class="blink_me"><b>Enviado formulario</b></div>');
             e.preventDefault();
@@ -169,6 +181,9 @@ if (!class_exists('os')) {
                 processData: false
             }).done(function (res) {
                 $('.mensaje').html('<b>DATOS ACTUALIZADOS</b>');
+                $('#btn-success').hide();
+
+
               //  $('#myForm')[0].reset();
 
 
@@ -181,11 +196,22 @@ if (!class_exists('os')) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 $("#geoposicionamiento").val(position.coords.latitude + "," + position.coords.longitude);
             });
-        } 
+        }
     });
 </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-101563972-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-101563972-2');
+</script>
+
 </body>
 </html>
-<?php } 
+<?php }
 }
 ?>

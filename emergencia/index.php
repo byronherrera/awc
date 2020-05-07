@@ -105,6 +105,7 @@ if (!class_exists('os')) {
                 </div>
                 <div class="form-group col-md-6">
                     <div class="mensaje"></div>
+
                 </div>
 
             </div>
