@@ -3,6 +3,7 @@ ADD COLUMN `actainfraccion` varchar(10) NULL AFTER `fecha_creacion`,
 ADD COLUMN `idingreso` int(11) NULL AFTER `actainfraccion`;
 
 
+
 DROP TABLE IF EXISTS `amc_sancion_emergencia_log`;
 CREATE TABLE `amc_sancion_emergencia_log`  (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
