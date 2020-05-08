@@ -97,6 +97,7 @@
 
                 var d = Ext.decode(o);
 
+
                 if (typeof d == 'object') {
                     if (d.success == true) {
                         if (d.sessionId !== '') {
