@@ -15,6 +15,7 @@ $sql = "INSERT INTO amc_sancion_emergencia_log (idusuario, usuario, text) VALUES
 $sql = $os->db->conn->prepare($sql);
 $sql->execute();
 
+
 ?><!DOCTYPE html>
 <html lang="es">
 <head>
