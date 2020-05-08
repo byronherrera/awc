@@ -8,6 +8,13 @@ $os = new os();
 if (!$os->session_exists()) {
     header("Location: login2.php");
 } else {
+// se guarda quien descarga
+$idmember = $os->get_member_id();
+$nombreMember = regresaNombre($idmember);
+$sql = "INSERT INTO amc_sancion_emergencia_log (idusuario, usuario, text) VALUES ('$idmember', '$nombreMember', 'totales');";
+$sql = $os->db->conn->prepare($sql);
+$sql->execute();
+
 ?><!DOCTYPE html>
 <html lang="es">
 <head>
