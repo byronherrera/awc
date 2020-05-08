@@ -21,6 +21,13 @@ require_once '../server/os.php';
 $os = new os();
 $today = date("Y-n-j-H-i-s");
 
+// se guarda quien descarga
+$idmember = $os->get_member_id();
+$nombreMember = regresaNombre($idmember);
+$sql = "INSERT INTO amc_sancion_emergencia_log (idusuario, usuario, text) VALUES ('$idmember', '$nombreMember', 'descarga');";
+$sql = $os->db->conn->prepare($sql);
+$sql->execute();
+
 
 $filaTitulo1 = 1;
 $filaTitulo2 = 2;
