@@ -15,6 +15,23 @@ $sql = "INSERT INTO amc_sancion_emergencia_log (idusuario, usuario, text) VALUES
 $sql = $os->db->conn->prepare($sql);
 $sql->execute();
 
+function regresaNombre($id_dato)
+{
+    global $os;
+
+    if ($id_dato == '')
+        return "";
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
+            FROM qo_members WHERE id = " . $id_dato;
+
+//    echo $sql;
+    $nombre = $os->db->conn->query($sql);
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['nombre'];
+
+}
+
 
 ?><!DOCTYPE html>
 <html lang="es">
