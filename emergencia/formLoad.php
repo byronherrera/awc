@@ -4,7 +4,7 @@ $os = new os();
 
 
 $opcion = isset($_GET['opcion']) ? $_GET['opcion'] : '';
- switch ($opcion) {
+switch ($opcion) {
     case "usuario":
         $usuario = isset($_GET['usuario']) ? $_GET['usuario'] : '';
         getUsuarioExterno($usuario);
@@ -85,17 +85,16 @@ $opcion = isset($_GET['opcion']) ? $_GET['opcion'] : '';
                 $retorno = setDataIdEtapa1($id, $accion, $motivo);
                 $data['etapa'] = 2;
                 $contenidoMailAutorizacion1 = getmensajeEtapa($usuarioData['nombre'] . " - encargado de aprobacion de etapa", $data);
-                $envioMail = enviarEmail($usuarioData['email'], $data['negocio'], $contenidoMailAutorizacion1, $usuarioDataSeguimiento2['email'], $data," Aprobación Etapa 2");
+                $envioMail = enviarEmail($usuarioData['email'], $data['negocio'], $contenidoMailAutorizacion1, $usuarioDataSeguimiento2['email'], $data, " Aprobación Etapa 2");
 
 
             } else {
                 // dependiendo si se aprueba o niega se envia el correo al nombres
-                if ($accion == 'aprobar'){
+                if ($accion == 'aprobar') {
                     $contenidoMailAutorizacion2 = getmensajeSolicitudAprobada($data['negocio'], $data);
                     $estado = " APROBADO ";
 
-                }
-                else {
+                } else {
                     $contenidoMailAutorizacion2 = getmensajeSolicitudNegada($data['negocio'], $data);
                     $estado = " NEGADO ";
 
@@ -113,8 +112,7 @@ $opcion = isset($_GET['opcion']) ? $_GET['opcion'] : '';
             if ($accion == 'aprobar') {
                 $contenidoMailAutorizacion2 = getmensajeSolicitudAprobada($data['negocio'], $data);
                 $estado = " APROBADO ";
-            }
-            else {
+            } else {
                 $contenidoMailAutorizacion2 = getmensajeSolicitudNegada($data['negocio'], $data);
                 $estado = " NEGADO ";
             }
@@ -175,6 +173,7 @@ function getFuncionarios()
         ));
     }
 }
+
 function getIdzonal()
 {
     global $os;
@@ -228,28 +227,57 @@ function ingresaNuevoProceso()
     if (!is_object($data)) {
         $data = new stdClass;
     }
-    /*
+
     // se sube el archivo anexo
-    $temp_file_name = $_FILES['archivo']['tmp_name'];
 
-    $original_file_name = $_FILES['archivo']['name'];
-    $uploaddir = __DIR__ . "/uploads/";
+    // validamos que exista el archivo para cargar caso contrario ignorar
+    $listado = array();
+    if ($_FILES['archivo1']['name'] != null) {
 
-    $nombreArchivo = $_FILES['archivo']['name'];
+        $temp_file_name = $_FILES['archivo1']['tmp_name'];
 
-    $vowels = array("[", "]");
-    $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
-    $today = date("Y-n-j-H-i");
+        $original_file_name = $_FILES['archivo1']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
 
-    $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
-    if (move_uploaded_file($temp_file_name, $uploadfile)) {
-        $data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
+        $nombreArchivo = $_FILES['archivo1']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
+            $listado[] = "uploads/" . basename($today . '-' . $nombreArchivo);
+        }
     }
 
+    if ($_FILES['archivo2']['name'] != null) {
 
-    // fin archivo anexo
+        $temp_file_name = $_FILES['archivo2']['tmp_name'];
 
-*/
+        $original_file_name = $_FILES['archivo2']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo2']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
+            $listado[] = "uploads/" . basename($today . '-' . $nombreArchivo);
+        }
+    }
+
+    if (count($listado) > 0)
+        $data->imagenacto = json_encode($listado);
+
+
     $data->cedula = $_POST["cedula"];
     $data->nombres = $_POST["nombres"];
     $data->apellidos = $_POST["apellidos"];
@@ -746,7 +774,7 @@ function getmensajeSolicitudNegada($nombre = '', $data)
 // fin tipos de mensajes
 
 // funcion envio email
-function enviarEmail($email, $nombre, $mensaje, $mailSeguimiento, $data, $textoAdicional="")
+function enviarEmail($email, $nombre, $mensaje, $mailSeguimiento, $data, $textoAdicional = "")
 {
     require_once 'admin/modules/common/Classes/PHPMailer/PHPMailerAutoload.php';
 
@@ -768,9 +796,9 @@ function enviarEmail($email, $nombre, $mensaje, $mailSeguimiento, $data, $textoA
     $mail->addAddress($email, $nombre);
 
     if ($mailSeguimiento != "")
-    $mail->addAddress($mailSeguimiento, $nombre);
+        $mail->addAddress($mailSeguimiento, $nombre);
 
-    $mail->Subject = 'Solicitud de trabajos # ' . $data['id'] . ". $textoAdicional" ;
+    $mail->Subject = 'Solicitud de trabajos # ' . $data['id'] . ". $textoAdicional";
     $mail->msgHTML($mensaje);
 
     $mail->AltBody = 'Mensaje enviado..';
