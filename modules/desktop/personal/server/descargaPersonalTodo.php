@@ -99,6 +99,7 @@ textoSiguieteFila("BARRIO", 'AE', 'AE', 'center', false, "B");
 textoSiguieteFila("RECORRIDO", 'AF', 'AF', 'center', false, "B");
 textoSiguieteFila("FECHA NACIMIENTO", 'AG', 'AG', 'center', false, "B");
 textoSiguieteFila("GEOPOSICIONAMIENTO", 'AH', 'AH', 'center', false, "B");
+textoSiguieteFila("FECHA ACTUALIZACION", 'AI', 'AI', 'center', false, "B");
 
 // recuperamos los nombres de los usuarios
 
@@ -142,6 +143,7 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($nombreDetalle['recorrido'], 'AF', 'AF', 'left', false);
     textoSiguieteFila($nombreDetalle['fecha_nacimiento'], 'AG', 'AG', 'left', false);
     textoSiguieteFila($nombreDetalle['geoposicionamiento'], 'AH', 'AH', 'left', false);
+    textoSiguieteFila($nombreDetalle['fecha_actualizacion'], 'AI', 'AI', 'left', false);
 }
 
 
@@ -247,6 +249,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AG')->setAutoSize(fa
 $objPHPExcel->getActiveSheet()->getColumnDimension('AG')->setWidth(25);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AH')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('AH')->setWidth(25);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AI')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('AI')->setWidth(25);
 
 
