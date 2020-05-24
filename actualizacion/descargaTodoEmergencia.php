@@ -15,13 +15,10 @@ error_reporting(E_ALL);
 
 /** Include PHPExcel */
 //echo dirname(__FILE__);
-require_once '../../../common/Classes/PHPExcel.php';
-require_once '../../../../server/os.php';
+require_once '../modules/common/Classes/PHPExcel.php';
+require_once '../server/os.php';
 
 $os = new os();
-if (!$os->session_exists()) {
-    die('No existe sesión!');
-}
 $today = date("Y-n-j-H-i-s");
 
 
@@ -54,96 +51,55 @@ $styleArray = array(
     )
 );
 
+
+
+
+
 //declaracion de los titulos de la linea 1 2 3
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':P' . $filaTitulo1);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':P' . $filaTitulo2);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo3 . ':P' . $filaTitulo3);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo3 . ':J' . $filaTitulo3);
 
 $objPHPExcel->getActiveSheet()->getStyle('A1:A3')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "MUNICIPIO DEL DISTRITO METROPOLITANO DE QUITO");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'AGENCIA METROPOLITANA DE CONTROL');
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "LISTADO PERSONAL");
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "LISTADO SANCIONES EMERGENCIA COVID 19");
+
+// id	cedula	nombres	apellidos	observaciones	lugarinfraccion	funcionario	zonal	fecha
+
 
 textoSiguieteFila("No.", 'A', 'A', 'center', true, "B");
 textoSiguieteFila("CEDULA DE IDENTIDAD", 'B', 'B', 'center', false, "B");
-textoSiguieteFila("GENERO", 'C', 'C', 'center', false, "B");
+textoSiguieteFila("NOMBRES", 'C', 'C', 'center', false, "B");
 textoSiguieteFila("APELLIDOS", 'D', 'D', 'center', false, "B");
-textoSiguieteFila("NOMBRES", 'E', 'E', 'center', false, "B");
-textoSiguieteFila("PARTIDA", 'F', 'F', 'center', false, "B");
-textoSiguieteFila("ROL DEL PUESTO", 'G', 'G', 'center', false, "B");
-textoSiguieteFila("DENOMINACION PUESTO", 'H', 'H', 'center', false, "B");
-textoSiguieteFila("GRADO", 'I', 'I', 'center', false, "B");
-textoSiguieteFila("REGIMEN", 'J', 'J', 'center', false, "B");
-textoSiguieteFila("MODALIDAD BAJO LA QUE LABORA", 'K', 'K', 'center', false, "B");
-textoSiguieteFila("RMU", 'L', 'L', 'center', false, "B");
-textoSiguieteFila("UNIDAD", 'M', 'M', 'center', false, "B");
-textoSiguieteFila("PROCESOS", 'N', 'N', 'center', false, "B");
-textoSiguieteFila("TELEFONO INSTITUCIONAL", 'O', 'O', 'center', false, "B");
-textoSiguieteFila("EXTENSION", 'P', 'P', 'center', false, "B");
-textoSiguieteFila("EMAIL", 'Q', 'Q', 'center', false, "B");
-textoSiguieteFila("PISO", 'R', 'R', 'center', false, "B");
+textoSiguieteFila("OBSERVACIONES", 'E', 'E', 'center', false, "B");
+textoSiguieteFila("LUGAR INFRACCION", 'F', 'F', 'center', false, "B");
+textoSiguieteFila("FUNCIONARIO", 'G', 'G', 'center', false, "B");
+textoSiguieteFila("ZONAL", 'H', 'H', 'center', false, "B");
+textoSiguieteFila("FECHA INFRACCION", 'I', 'I', 'center', false, "B");
+textoSiguieteFila("FECHA REGISTRO", 'J', 'J', 'center', false, "B");
 
-textoSiguieteFila("ESTADO", 'S', 'S', 'center', false, "B");
-textoSiguieteFila("ZONAL", 'T', 'T', 'center', false, "B");
-textoSiguieteFila("DIRECCION", 'U', 'U', 'center', false, "B");
-textoSiguieteFila("OBSERVACIONES", 'V', 'V', 'center', false, "B");
-textoSiguieteFila("FECHA ENTRADA", 'W', 'W', 'center', false, "B");
-textoSiguieteFila("FECHA SALIDA", 'X', 'X', 'center', false, "B");
-textoSiguieteFila("TELEFONO 1", 'Y', 'Y', 'center', false, "B");
-textoSiguieteFila("TELEFONO 2", 'Z', 'Z', 'center', false, "B");
-textoSiguieteFila("DIRECCION PRINCIPAL", 'AA', 'AA', 'center', false, "B");
-textoSiguieteFila("DIRECCION SECUNDARIA", 'AB', 'AB', 'center', false, "B");
-textoSiguieteFila("DIRECCION NUMERO", 'AC', 'AC', 'center', false, "B");
-textoSiguieteFila("PARROQUIA", 'AD', 'AD', 'center', false, "B");
-textoSiguieteFila("BARRIO", 'AE', 'AE', 'center', false, "B");
-textoSiguieteFila("RECORRIDO", 'AF', 'AF', 'center', false, "B");
-textoSiguieteFila("FECHA NACIMIENTO", 'AG', 'AG', 'center', false, "B");
-textoSiguieteFila("GEOPOSICIONAMIENTO", 'AH', 'AH', 'center', false, "B");
-textoSiguieteFila("FECHA ACTUALIZACION", 'AI', 'AI', 'center', false, "B");
 
 // recuperamos los nombres de los usuarios
 
+// id	cedula	nombres	apellidos	observaciones	lugarinfraccion	funcionario	zonal	fecha
+
+
 $numero = 1;
-$sql = "SELECT * FROM amc_personal_distributivo WHERE id_estado = 1   ORDER BY apellidos";
+$sql = "SELECT * FROM amc_sancion_emergencia ORDER BY id";
 $nombres = $os->db->conn->query($sql);
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($numero, 'A', 'A', 'center');
     $numero++;
     textoSiguieteFila($nombreDetalle['cedula'], 'B', 'B', 'left', false);
-    textoSiguieteFila(regresaGenero ($nombreDetalle['genero']), 'C', 'C', 'center', false);
+    textoSiguieteFila($nombreDetalle['nombres'], 'C', 'C', 'center', false);
     textoSiguieteFila($nombreDetalle['apellidos'], 'D', 'D', 'left', false);
-    textoSiguieteFila($nombreDetalle['nombres'], 'E', 'E', 'left', false);
-    textoSiguieteFila($nombreDetalle['partida'], 'F', 'F', 'center', false);
-    textoSiguieteFila($nombreDetalle['rol'], 'G', 'G', 'left', false);
-    textoSiguieteFila($nombreDetalle['denominacion'], 'H', 'H', 'left', false);
-    textoSiguieteFila($nombreDetalle['grado'], 'I', 'I', 'center', false);
-    textoSiguieteFila($nombreDetalle['regimen'], 'J', 'J', 'left', false);
-    textoSiguieteFila($nombreDetalle['modalidad'], 'K', 'K', 'left', false);
-    textoSiguieteFila($nombreDetalle['rmu'], 'L', 'L', 'center', false);
-    textoSiguieteFila(regresaUnidad($nombreDetalle['unidad']), 'M', 'M', 'center', false);
-    textoSiguieteFila($nombreDetalle['procesos'], 'N', 'N', 'center', false);
-    textoSiguieteFila($nombreDetalle['telefono_institucional'], 'O', 'O', 'center', false);
-    textoSiguieteFila($nombreDetalle['extencion'], 'P', 'P', 'center', false);
-    textoSiguieteFila($nombreDetalle['email'], 'Q', 'Q', 'left', false);
-    textoSiguieteFila($nombreDetalle['piso'], 'R', 'R', 'left', false);
-
-    textoSiguieteFila($nombreDetalle['id_estado'], 'S', 'S', 'left', false);
-    textoSiguieteFila(regresaZonal($nombreDetalle['id_zonal']) , 'T', 'T', 'left', false);
-    textoSiguieteFila($nombreDetalle['direccion'], 'U', 'U', 'left', false);
-    textoSiguieteFila($nombreDetalle['observaciones'], 'V', 'V', 'left', false);
-    textoSiguieteFila($nombreDetalle['fecha_entrada'], 'W', 'W', 'left', false);
-    textoSiguieteFila($nombreDetalle['fecha_salida'], 'X', 'X', 'left', false);
-    textoSiguieteFila($nombreDetalle['telefono1'], 'Y', 'Y', 'left', false);
-    textoSiguieteFila($nombreDetalle['telefono2'], 'Z', 'Z', 'left', false);
-    textoSiguieteFila($nombreDetalle['direccionprincipal'], 'AA', 'AA', 'left', false);
-    textoSiguieteFila($nombreDetalle['direccionsecundaria'], 'AB', 'AB', 'left', false);
-    textoSiguieteFila($nombreDetalle['direccionnumero'], 'AC', 'AC', 'left', false);
-    textoSiguieteFila($nombreDetalle['parroquia'], 'AD', 'AD', 'left', false);
-    textoSiguieteFila($nombreDetalle['barrio'], 'AE', 'AE', 'left', false);
-    textoSiguieteFila($nombreDetalle['recorrido'], 'AF', 'AF', 'left', false);
-    textoSiguieteFila($nombreDetalle['fecha_nacimiento'], 'AG', 'AG', 'left', false);
-    textoSiguieteFila($nombreDetalle['geoposicionamiento'], 'AH', 'AH', 'left', false);
-    textoSiguieteFila($nombreDetalle['fecha_actualizacion'], 'AI', 'AI', 'left', false);
+    textoSiguieteFila($nombreDetalle['observaciones'], 'E', 'E', 'left', false);
+    textoSiguieteFila($nombreDetalle['lugarinfraccion'], 'F', 'F', 'center', false);
+    textoSiguieteFila(regresaNombre ($nombreDetalle['funcionario']), 'G', 'G', 'left', false);
+    textoSiguieteFila($nombreDetalle['zonal'], 'H', 'H', 'left', false);
+    textoSiguieteFila($nombreDetalle['fecha'], 'I', 'I', 'center', false);
+    textoSiguieteFila($nombreDetalle['fecha_creacion'], 'J', 'J', 'center', false);
 }
 
 
@@ -160,7 +116,7 @@ textoSiguieteFila($textoElaboradoPor, 'A', 'F', 'left');
 $filacabecera++;
 //UBICACION DEL LOGO
 $objDrawing = new PHPExcel_Worksheet_Drawing();
-$objDrawing->setPath('../../../../imagenes/image2.png');
+$objDrawing->setPath('../imagenes/image2.png');
 $objDrawing->setCoordinates("A" . ($filacabecera));
 //setOffsetX works properly
 $objDrawing->setOffsetX(0);
@@ -170,7 +126,7 @@ $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 
 
 $objDrawing = new PHPExcel_Worksheet_Drawing();
-$objDrawing->setPath('../../../../imagenes/image1.png');
+$objDrawing->setPath('../imagenes/image1.png');
 $objDrawing->setCoordinates("P1");
 //setOffsetX works properly
 $objDrawing->setOffsetX(10);
@@ -183,75 +139,25 @@ $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('B')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(11);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
 
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(10);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(22);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(22);
 
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('E')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(18);
+$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(48);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('F')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(10);
+$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('G')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(38);
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(36);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(24);
+$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(16);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(8);
+$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(26);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(32);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('K')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(36);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('L')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(10);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('M')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(30);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('N')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(30);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('O')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(16);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('P')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(12);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('Q')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('Q')->setWidth(32);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('R')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('R')->setWidth(50);
-
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('S')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('S')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('T')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('T')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('U')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('U')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('V')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('V')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('W')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('W')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('X')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('X')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('Y')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('Y')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('Z')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('Z')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AA')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('AA')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AB')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('AB')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AC')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('AC')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AD')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('AD')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AF')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('AF')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AG')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('AG')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AH')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('AH')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AI')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('AI')->setWidth(25);
-
+$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(26);
 
 
 // Set document properties
@@ -324,7 +230,7 @@ $objPHPExcel->getActiveSheet()->setShowGridLines(false);
 $t = 1 ;
 if ($t== 1 ) {
     header('Content-Type: application/vnd.ms-excel');
-    header('Content-Disposition: attachment;filename="Reporte-Talento-Humano-AMC-' . '-' . $today . '.xls"');
+    header('Content-Disposition: attachment;filename="Reporte-Sancion-Emergencia-AMC-' . '-' . $today . '.xls"');
     header('Cache-Control: max-age=0');
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
     $objWriter->save('php://output');
@@ -368,9 +274,14 @@ function regresaOrdenanza($id_dato)
 function regresaNombre($id_dato)
 {
     global $os;
+
+    if ($id_dato == '')
+        return "";
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
             FROM qo_members WHERE id = " . $id_dato;
+
+//    echo $sql;
     $nombre = $os->db->conn->query($sql);
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['nombre'];

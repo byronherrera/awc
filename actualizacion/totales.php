@@ -1,37 +1,4 @@
-<?php
-require_once('../server/os.php');
-
-if (!class_exists('os')) {
-    die('Server os class is missing!');
-} else {
-$os = new os();
-if (!$os->session_exists()) {
-    header("Location: login2.php");
-} else {
-// se guarda quien descarga
-$idmember = $os->get_member_id();
-
-if ($idmember == '')
-    $nombreMember = '';
-else {
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
-            FROM qo_members WHERE id = " . $idmember;
-
-    $nombre = $os->db->conn->query($sql);
-    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-
-    $nombreMember = $rownombre['nombre'];;
-
-}
-
-$sql = "INSERT INTO amc_sancion_emergencia_log (idusuario, usuario, text) VALUES ('$idmember', '$nombreMember', 'totales');";
-$sql = $os->db->conn->prepare($sql);
-$sql->execute();
-
-
-
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8">
@@ -87,12 +54,9 @@ $sql->execute();
         $.getJSON('formLoad.php?opcion=totales', function (data) {
             if (data.success) {
                 var cadena = '<table width="100%" ><tr><th><div class="lead">Fecha</div></th><th><div class="lead">Sanciones</div></th></tr>'
-                total = 0;
                 $.each(data.data[0], function (i, el) {
                     cadena = cadena + '<tr><td>' + el.texto + '</th><td>' + el.valor + '</td></tr>';
-                    total = total + parseInt(el.valor);
                 });
-                cadena = cadena + '<tr><td>Total </th><td>' + total + '</td></tr>';
                 cadena = cadena + '</table>';
                 $('.mensajetotales').html(cadena)
             } else {
@@ -101,18 +65,5 @@ $sql->execute();
         });
     });
 </script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-101563972-2"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-101563972-2');
-</script>
-
 </body>
 </html>
-<?php }
-}
-?>

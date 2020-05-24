@@ -88,10 +88,28 @@ if (!class_exists('os')) {
                 </div>
             </div>
             <div class="form-group">
+                <label for="actainfraccion">Número de acta</label>
+                <input id="actainfraccion" type="text" name="actainfraccion" class="form-control"
+                       placeholder="Ingrese el numero de acta de infración">
+            </div>
+            <div class="form-group">
+                <div class="custom-file">
+                    <label class="custom-file-label" for="archivo">Imagen Frontal </label>
+                    <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1">
+                    <label class="custom-file-label" for="archivo">Imagen frontal.</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="custom-file">
+                    <label class="custom-file-label" for="archivo">Imagen Posterior</label>
+                    <input type="file" class="custom-file-input" id="archivo2" lang="es" name="archivo2">
+                    <label class="custom-file-label" for="archivo">Imagen posterior.</label>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="geoposicionamiento">Coordenadas</label>
                 <input id="geoposicionamiento" type="text" name="geoposicionamiento" class="form-control" readonly>
             </div>
-
 
             <div class="form-group">
 
@@ -101,10 +119,7 @@ if (!class_exists('os')) {
                 <div class="form-group col-md-6">
                     <div class="mensaje"></div>
                 </div>
-
             </div>
-
-
     </form>
 </div>
 

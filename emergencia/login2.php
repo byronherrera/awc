@@ -97,6 +97,7 @@
 
                 var d = Ext.decode(o);
 
+
                 if (typeof d == 'object') {
                     if (d.success == true) {
                         if (d.sessionId !== '') {
@@ -106,9 +107,9 @@
 
                             // set the cookie
                             set_cookie('sessionId', d.sessionId, '', path, '', '');
-
+                            console.log (path+"totales.php")
                             // redirect the window
-                            window.location = path;
+                            window.location = path+"totales.php";
                         }
                     }
                 }
