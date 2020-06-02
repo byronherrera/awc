@@ -1,7 +1,7 @@
-.resolucion-icon { background-image: url(images/resolucion.png) !important; }
-.x-btn-large .resolucion-icon { background-image: url(images/resolucion32.png) !important; }
-.resolucion-shortcut { background-image: url(images/resolucion48.png) !important; }
-#resolucion-nav-panel li { margin-bottom:5px; }
+.ejecucion-icon { background-image: url(images/ejecucion.png) !important; }
+.x-btn-large .ejecucion-icon { background-image: url(images/ejecucion32.png) !important; }
+.ejecucion-shortcut { background-image: url(images/ejecucion48.png) !important; }
+#ejecucion-nav-panel li { margin-bottom:5px; }
 .save-icon{background:transparent url(images/add.png) 0 0 no-repeat !important;}
 .delete-icon{background:transparent url(images/delete.png) 0 0 no-repeat !important;}
 .subir-icon{background:transparent url(images/save.png) 0 0 no-repeat !important;}

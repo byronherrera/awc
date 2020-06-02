@@ -1,6 +1,6 @@
 var libroDiarioSeleccionado = '';
 
-QoDesk. = Ext.extend(Ext.app.Module, {
+QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
     id: 'ejecucion',
 
     type: 'desktop/ejecucion',
