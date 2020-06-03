@@ -136,6 +136,7 @@ function getUsuarioExterno($id)
     global $os;
 
     $os->db->conn->query("SET NAMES 'utf8'");
+
     $sql = "SELECT * FROM amc_sancion_emergencia  WHERE cedula = '$id' limit 1;";
 
     $result = $os->db->conn->query($sql);
