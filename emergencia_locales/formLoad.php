@@ -136,12 +136,12 @@ function getUsuarioExterno($id)
     global $os;
 
 
-    $sql = "SELECT * FROM amc_sancion_emergencia  WHERE cedula = '$id' limit 1;";
+    $sql = "SELECT * FROM amc_sancion_emergencia_locales  WHERE cedula = '$id' limit 1;";
     $result = $os->db->conn->query($sql);
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
     if (count($resultado) > 0) {
-        $resultado[0]['observaciones'] = utf8_encode($resultado[0]['observaciones']);
-        $resultado[0]['lugarinfraccion'] = utf8_encode($resultado[0]['lugarinfraccion']);
+        $resultado[0]['actividad'] = utf8_encode($resultado[0]['actividad']);
+        $resultado[0]['direccion'] = utf8_encode($resultado[0]['direccion']);
         echo json_encode(array(
             "success" => true,
             "data" => array($resultado[0])
@@ -204,7 +204,7 @@ function getTotales()
     global $os;
 
 
-    $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
+    $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia_locales GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
 
     $result = $os->db->conn->query($sql);
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -305,7 +305,7 @@ function ingresaNuevoProceso()
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "INSERT INTO amc_sancion_emergencia ($cadenaCampos) VALUES ($cadenaDatos);";
+    $sql = "INSERT INTO amc_sancion_emergencia_locales ($cadenaCampos) VALUES ($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $result = $sql->execute();
 

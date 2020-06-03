@@ -14,7 +14,7 @@
 <body>
 <div class="container1 contact-form">
 
-    <h3>REGISTRO INFRACCIONES USO DE MASCARILLA DURANTE EMERGENCIA</h3>
+    <h3>REGISTRO INFRACCIONES DE LOCALES COMERCIALES DURANTE EMERGENCIA</h3>
     <form enctype="multipart/form-data" id="myForm" method="post">
         <div class="row">
 
@@ -62,12 +62,15 @@
                     $('.mensajecedula').html("<table class=\"table\">\n" +
                         "                    <tbody>\n" +
                         "                    <tr><th scope=\"row\">Cédula</th><td>" + validaTexto(data.data[0]['cedula']) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres) + " " + validaTexto(apellidos) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">Lugar Infracción</th><td>" + validaTexto(data.data[0]['lugarinfraccion']) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">Observaciones</th><td>" + validaTexto(data.data[0]['observaciones']) + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres)   + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Establecimiento</th><td>" + validaTexto(data.data[0]['establecimiento']) + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Dirección</th><td>" + validaTexto(data.data[0]['direccion']) + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Actividad</th><td>" + validaTexto(data.data[0]['actividad']) + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Infracción</th><td>" + validaTexto(data.data[0]['infraccion']) + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Categoría</th><td>" + validaTexto(data.data[0]['categoria']) + "</td></tr>\n" +
                         "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(data.data[0]['zonal']) + "</td></tr>\n" +
                         "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(data.data[0]['fecha']) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(data.data[0]['actainfraccion']) + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Expediente</th><td>" + validaTexto(data.data[0]['expediente']) + "</td></tr>\n" +
                         "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo1) + "</td></tr>\n" +
                         "                    <tr><th scope=\"row\">Imagen Infracción</th><td>" + validaImagen(imagenes.archivo2) + "</td></tr>\n" +
                         "                    </tbody>\n" +
