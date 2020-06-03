@@ -231,6 +231,7 @@ function ingresaNuevoProceso()
     // se sube el archivo anexo
 
     // validamos que exista el archivo para cargar caso contrario ignorar
+    // array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
     $listado = array();
     if ($_FILES['archivo1']['name'] != null) {
 
@@ -249,7 +250,7 @@ function ingresaNuevoProceso()
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado[] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado['archivo1'] = "uploads/" . basename($today . '-' . $nombreArchivo);
         }
     }
 
@@ -270,7 +271,7 @@ function ingresaNuevoProceso()
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado[] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado['archivo2'] = "uploads/" . basename($today . '-' . $nombreArchivo);
         }
     }
 

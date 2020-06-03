@@ -12,10 +12,8 @@
 </head>
 
 <body>
-<div class="container contact-form">
-    <div class="contact-image">
-        <img src="img/rocket_contact.png" alt="rocket_contact"/>
-    </div>
+<div class="container1 contact-form">
+
     <h3>REGISTRO INFRACCIONES USO DE MASCARILLA DURANTE EMERGENCIA</h3>
      <form enctype="multipart/form-data" id="myForm" method="post">
         <div class="row">
@@ -25,6 +23,7 @@
                 <input type="number" class="form-control" id="cedula" name="cedula" placeholder=""
                        required="required">
                 <div class="mensajecedula"></div>
+                
             </div>
 
             <div class="form-group">
@@ -34,6 +33,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <div class="mensaje"></div>
+
                 </div>
 
             </div>
@@ -55,14 +55,32 @@
                 if (data.success) {
                     nombres = data.data[0]['nombres'];
                     apellidos = data.data[0]['apellidos'];
-                    $('.mensajecedula').html("<h3>El ciudadano "
-                        + nombres + " "
-                        + apellidos + ","
-                        + " tiene ya una sanción</h3>")
+                  //  imagen = jsondecode (data.data[0]['imagenacto']);
+                    imagenes = JSON.parse(data.data[0]['imagenacto']);
+                    console.log(imagenes.archivo1 );
+
+                    $('.mensajecedula').html("<table class=\"table\">\n" +
+                        "                    <tbody>\n" +
+                        "                    <tr><th scope=\"row\">Cédula</th><td>" + data.data[0]['cedula'] + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + nombres + " " + apellidos + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Lugar Infracción</th><td>" + data.data[0]['lugarinfraccion'] + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Observaciones</th><td>" + data.data[0]['observaciones'] + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Zonal</th><td>" + data.data[0]['zonal'] + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + data.data[0]['fecha'] + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Número Acta</th><td>" + data.data[0]['actainfraccion'] + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Imagen Cédula</th><td><img src=\"" + imagenes.archivo1 + "\" height=\"300\"></td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Imagen Infracción</th><td><img src=\"" + imagenes.archivo2 + "\" height=\"300\"></td></tr>\n" +
+                        "                    </tbody>\n" +
+                        "                </table>")
                 } else {
-                    $('#nombres').val('')
-                    $('#apellidos').val('')
-                    $('.mensajecedula').html("El cuidadano no tiene sancion")
+
+                    $('.mensajecedula').html("<table class=\"table\">\n" +
+                        "                    <tbody>\n" +
+                        "                    <tr>\n" +
+                        "                        <th scope=\"row\">El ciudadano no tiene infracción</th>\n" +
+                        "                    </tr>\n" +
+                        "                    </tbody>\n" +
+                        "                </table>")
                 }
             });
         });
