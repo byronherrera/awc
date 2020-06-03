@@ -55,8 +55,10 @@
                 if (data.success) {
                     nombres = data.data[0]['nombres'];
                     apellidos = data.data[0]['apellidos'];
-                    imagenes = JSON.parse(data.data[0]['imagenacto']);
-
+                    if (JSON.parse(data.data[0]['imagenacto']) != null)
+                            imagenes = JSON.parse(data.data[0]['imagenacto']);
+                    else
+                        imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
                     $('.mensajecedula').html("<table class=\"table\">\n" +
                         "                    <tbody>\n" +
                         "                    <tr><th scope=\"row\">Cédula</th><td>" + validaTexto(data.data[0]['cedula']) + "</td></tr>\n" +
@@ -120,13 +122,8 @@
                 contentType: false,
                 processData: false
             }).done(function (res) {
-                $('.mensaje').html('<b>Formulario enviado</b>');
-                nombres = data.data[0]['nombres'];
-                apellidos = data.data[0]['apellidos'];
-                $('.mensajecedula').html("<h3>El ciudadano "
-                    + nombres + " "
-                    + apellidos + ","
-                    + " tiene ya una sanción</h3>")
+                $('.mensaje').html('<b>Consulta enviado</b>');
+
             });
         })
     });
