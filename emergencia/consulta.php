@@ -123,7 +123,6 @@
                 processData: false
             }).done(function (res) {
                 $('.mensaje').html('<b>Consulta enviado</b>');
-
             });
         })
     });
