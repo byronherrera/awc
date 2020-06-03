@@ -94,16 +94,16 @@ if (!class_exists('os')) {
             </div>
             <div class="form-group">
                 <div class="custom-file">
-                    <label class="custom-file-label" for="archivo">Imagen Frontal </label>
+                    <label class="custom-file-label" for="archivo">Imagen Cedula </label>
                     <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1">
-                    <label class="custom-file-label" for="archivo">Imagen frontal.</label>
+                    <label class="custom-file-label" for="archivo">Imagen Cedula.</label>
                 </div>
             </div>
             <div class="form-group">
                 <div class="custom-file">
-                    <label class="custom-file-label" for="archivo">Imagen Posterior</label>
+                    <label class="custom-file-label" for="archivo">Imagen Infracción</label>
                     <input type="file" class="custom-file-input" id="archivo2" lang="es" name="archivo2">
-                    <label class="custom-file-label" for="archivo">Imagen posterior.</label>
+                    <label class="custom-file-label" for="archivo">Imagen Infracción.</label>
                 </div>
             </div>
             <div class="form-group">

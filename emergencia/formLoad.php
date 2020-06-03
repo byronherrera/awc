@@ -135,13 +135,13 @@ function getUsuarioExterno($id)
 {
     global $os;
 
-    $os->db->conn->query("SET NAMES 'utf8'");
 
     $sql = "SELECT * FROM amc_sancion_emergencia  WHERE cedula = '$id' limit 1;";
-
     $result = $os->db->conn->query($sql);
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
     if (count($resultado) > 0) {
+        $resultado[0]['observaciones'] = utf8_encode($resultado[0]['observaciones']);
+        $resultado[0]['lugarinfraccion'] = utf8_encode($resultado[0]['lugarinfraccion']);
         echo json_encode(array(
             "success" => true,
             "data" => array($resultado[0])
