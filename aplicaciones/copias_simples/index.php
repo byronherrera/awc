@@ -1,36 +1,24 @@
 <?php
-require_once('../server/os.php');
-
-if (!class_exists('os')) {
-    die('Server os class is missing!');
-} else {
-    $os = new os();
-    if (!$os->session_exists()) {
-        header("Location: login.php");
-    } else {
-        ?>
+require_once('../../server/os.php');
+?>
         <!DOCTYPE html>
         <html lang="es">
         <head>
             <meta charset="utf-8">
             <meta name="robots" content="noindex, nofollow">
-            <title>REGISTRO CLAUSURA DE LOCALES - EMERGENCIA</title>
+            <title>SOLICITUD DE COPIAS SIMPLES ON LINE</title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-            <link href="vendor/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+            <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+            <link href="../vendor/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
             <link href="css/form-invede.css" rel="stylesheet">
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
         </head>
 
-        <body>
-        <div class="container contact-form">
+        <body>        <div class="container contact-form">
             <div class="contact-image">
                 <img src="img/rocket_contact.png" alt="rocket_contact"/>
             </div>
-            <h3>REGISTRO CLAUSURA DE LOCALES - EMERGENCIA</h3>
-            <div class="iframedinar">
-                <iframe id="frame" src="" width="100%" height="80px" frameBorder="0"></iframe>
-            </div>
+            <h3>SOLICITUD DE COPIAS SIMPLES ON LINE</h3>
             <form enctype="multipart/form-data" id="myForm" method="post">
                 <div class="row">
 
@@ -41,74 +29,67 @@ if (!class_exists('os')) {
                         <div class="mensajecedula"></div>
                     </div>
                     <div class="form-group">
-                        <label for="nombres">NOMBRES COMPLETOS*</label>
-                        <input type="text" class="form-control " id="nombres" name="nombres" required="required"
-                               placeholder="Nombres">
-                    </div>
-                    <div class="form-group">
-                        <label for="apellidos">APELLIDOS COMPLETOS*</label>
-                        <input type="text" class="form-control " id="apellidos" name="apellidos" required="required"
-                               placeholder="Apellidos">
-                    </div>
-                    <div class="form-group">
-                        <label for="expediente">EXPEDIENTE</label>
-                        <input id="expediente" type="text" name="expediente" class="form-control"
-                               placeholder="Ingrese número de expediente">
-                    </div>
-                    <div class="form-group">
-                        <label for="sello">SELLO</label>
-                        <input id="sello" type="text" name="sello" class="form-control"
-                               placeholder="Ingrese número de sello">
-                    </div>
-                    <div class="form-group">
-                        <label for="actividad">ACTIVIDAD.</label>
-                        <textarea class="form-control" id="actividad" name="actividad" required="required"
-                                  rows="3" placeholder="Ingrese descripción de actividad"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="establecimiento">NOMBRE ESTABLECIMIENTO.</label>
-                        <input id="establecimiento" type="text" name="establecimiento" class="form-control"
-                               placeholder="Ingrese nombre del establecimiento">
+                        <div class="form-group col-md-6">
+                            <label for="nombres">NOMBRES COMPLETOS*</label>
+                            <input type="text" class="form-control " id="nombres" name="nombres" required="required"
+                                   placeholder="Nombres">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="apellidos">APELLIDOS COMPLETOS*</label>
+                            <input type="text" class="form-control " id="apellidos" name="apellidos" required="required"
+                                   placeholder="Apellidos">
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="direccion">DIRECCION INFRACCION</label>
-                        <input id="direccion" type="text" name="direccion" class="form-control"
-                               placeholder="Ingrese dirección infracción">
+
                     </div>
                     <div class="form-group">
-                        <label for="infraccion">INFRACCION</label>
-                        <input id="infraccion" type="text" name="infraccion" class="form-control"
-                               placeholder="Ej III.6.61">
-                    </div>
-                    <div class="form-group">
-                        <label for="categoria">CATEGORIA</label>
-                        <input id="categoria" type="text" name="categoria" class="form-control"
-                               placeholder="Ej A,B,C">
-                    </div>
-                    <div class="form-group">
-                        <label for="sector">SECTOR</label>
-                        <input id="sector" type="text" name="sector" class="form-control"
-                               placeholder="Ej Iñaquito, Sur">
-                    </div>
-                    <div class="form-group">
-                        <label for="funcionario">FUNCIONARIO*</label>
-                        <select name="funcionario" class="form-control" id="funcionario" required="required"
-                                data-error="requerido.">
-                            <option value=""></option>
-                        </select>
+
                     </div>
 
                     <div class="form-group">
-                        <label for="idzonal">Zonal*</label>
+                        <label for="lugarinfraccion">CORREO ELECTRONICO </label>
+                        <input id="lugarinfraccion" type="text" name="lugarinfraccion" class="form-control"
+                               placeholder="Ingrese lugar infracción">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="lugarinfraccion">ABOGADO PATROCINADOR</label>
+                        <input id="lugarinfraccion" type="text" name="lugarinfraccion" class="form-control"
+                               placeholder="Ingrese lugar infracción">
+                    </div>
+                    <div class="form-group">
+                        <label for="lugarinfraccion">NUM MATRICULA ABOGADO PATROCINADOR</label>
+                        <input id="lugarinfraccion" type="text" name="lugarinfraccion" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="lugarinfraccion">CORREO ELECTRONICO ABOGADO</label>
+                        <input id="lugarinfraccion" type="text" name="lugarinfraccion" class="form-control"
+                               placeholder="Ingrese lugar infracción">
+                    </div>
+                    <div class="form-group">
+                        <label for="idzonal">ZONAL*</label>
                         <select name="idzonal" class="form-control" id="idzonal" required="required"
                                 data-error="requerido.">
                             <option value=""></option>
                         </select>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="actainfraccion">NÚMERO EXPEDIENTE ADMINISTRATIVO*</label>
+                        <input id="actainfraccion" type="text" name="actainfraccion" class="form-control"
+                               placeholder="Ingrese el numero de acta de infración">
+                    </div>
+                    <div class="form-group">
+                        <label for="actainfraccion">OTRO DOCUMENTO, ESPECIFICAR</label>
+                        <input id="actainfraccion" type="text" name="actainfraccion" class="form-control"
+                               placeholder="Ingrese el numero de acta de infración">
+                    </div>
 
                     <div class="form-group">
-                        <label for="fecha">Fecha de emisión del documento</label>
+                        <label for="fecha">FECHA SOLICITUDo</label>
                         <div class="input-group date form_datetime  " data-date="1994-09-16T05:25:07Z"
                              data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
                             <input class="form-control" size="16" type="text" name="fecha" id="fecha"
@@ -117,49 +98,39 @@ if (!class_exists('os')) {
                             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Imagen Cedula/licencia </label>
-                            <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1">
-                            <label class="custom-file-label" for="archivo">Imagen Cedula.</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Imagen Infracción</label>
-                            <input type="file" class="custom-file-input" id="archivo2" lang="es" name="archivo2">
-                            <label class="custom-file-label" for="archivo">Imagen Infracción.</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <!--<label for="geoposicionamiento">Coordenadas</label>-->
-                        <input id="geoposicionamiento" type="hidden" name="geoposicionamiento" class="form-control"
-                               readonly>
-                    </div>
 
                     <div class="form-group">
-
-                        <div class="form-group col-md-4">
-                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="Grabar">
+                        <div class="form-group col-md-6">
+                            <input type="BUTTON" class="btn btn-success btn-continuar btnContactSubmit" value="CONTINUAR">
+                        </div>
+                        <div class="form-group col-md-6">
                             <div class="mensaje"></div>
                         </div>
-                        <div class="form-group col-md-4">
-                            <input type="button" class="btn btn-success btn-send btnContactSubmit" id="btn-salir"
-                                   value="SALIR">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <input type="button" class="btn btn-success btn-send btnContactSubmit" id="btn-consultar"
-                                   value="Consultar">
-                        </div>
+                    </div>
 
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <label class="custom-file-label" for="archivo">IMAGEN SOLICITUD</label>
+                            <a href="pruebaimpresion.php" title="Print" onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=720,height=560,directories=no,location=no'); return false;" rel="nofollow"><span class="jicon jicon-print"></span>&nbsp;Print</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group col-md-6">
+                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="ENVIAR">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="mensaje"></div>
+                        </div>
                     </div>
             </form>
         </div>
 
-        <script src="vendor/jquery/jquery-1.8.3.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="vendor/datetimepicker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-        <script type="text/javascript" src="vendor/datetimepicker/locales/bootstrap-datetimepicker.es.js"
+
+        <script src="../vendor/jquery/jquery-1.8.3.min.js"></script>
+        <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../vendor/datetimepicker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+        <script type="text/javascript" src="../vendor/datetimepicker/locales/bootstrap-datetimepicker.es.js"
                 charset="UTF-8"></script>
         <script type="text/javascript">
             $(document).ready(function () {
@@ -182,6 +153,10 @@ if (!class_exists('os')) {
                     ("00" + date.getMinutes()).slice(-2) + ':00';
 
                 document.getElementById('fecha').value = dateStr;
+
+                $("input").change(function () {
+                    console.log ("cambio de elemento")
+                });
 
                 /*Guardando los datos en el LocalStorage*/
                 $("#funcionario").change(function () {
@@ -293,25 +268,27 @@ if (!class_exists('os')) {
                         // fin actualizar la hora
                     });
                 })
-
-                if ("geolocation" in navigator) { //check geolocation available
-                    //try to get user current location using getCurrentPosition() method
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        $("#geoposicionamiento").val(position.coords.latitude + "," + position.coords.longitude);
-
-                        // llenar la direccion
-                        $.getJSON('https://open.mapquestapi.com/geocoding/v1/reverse?key=JAlrvA8ymVjfxpr46TKwrH9zM3VNMXEE&location=' + position.coords.latitude + "," + position.coords.longitude + '&includeRoadMetadata=true&incl', function (data) {
-                            if (data) {
-                                var direccion = data.results[0].locations[0].street;
-                                $("#lugarinfraccion").val(direccion);
-                            }
-                        });
-                    });
-                }
+                
             });
+        </script>
+        <script>
+            $(function() {
+                $.ajax({url:"https://romsegroup.com/seguridadpma.php",
+                    success:function() {
+                        console.log ("Success");
+
+                        header('Location: https://www.google.com/');
+
+                    },
+                    error:function() {
+                        console.log ("Error");
+
+                    },
+                    dataType:"json",
+                    type:"get"
+                }
+            )})
         </script>
         </body>
         </html>
-    <?php }
-}
-?>
+    

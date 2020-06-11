@@ -24,7 +24,7 @@ $today = date("Y-n-j-H-i-s");
 // se guarda quien descarga
 $idmember = $os->get_member_id();
 $nombreMember = regresaNombre($idmember);
-$sql = "INSERT INTO amc_sancion_emergencia_log (idusuario, usuario, text) VALUES ('$idmember', '$nombreMember', 'descarga');";
+$sql = "INSERT INTO amc_sancion_emergencia_log_locales (idusuario, usuario, text) VALUES ('$idmember', '$nombreMember', 'descarga');";
 $sql = $os->db->conn->prepare($sql);
 $sql->execute();
 
@@ -59,9 +59,6 @@ $styleArray = array(
 );
 
 
-
-
-
 //declaracion de los titulos de la linea 1 2 3
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
@@ -76,26 +73,25 @@ $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "LISTADO SANCIO
 
 
 textoSiguieteFila("No.", 'A', 'A', 'center', true, "B");
-textoSiguieteFila("CEDULA DE IDENTIDAD", 'B', 'B', 'center', false, "B");
+textoSiguieteFila("CEDULA / RUC ", 'B', 'B', 'center', false, "B");
 textoSiguieteFila("NOMBRES", 'C', 'C', 'center', false, "B");
 textoSiguieteFila("APELLIDOS", 'D', 'D', 'center', false, "B");
-textoSiguieteFila("OBSERVACIONES", 'E', 'E', 'center', false, "B");
-textoSiguieteFila("LUGAR INFRACCION", 'F', 'F', 'center', false, "B");
-textoSiguieteFila("FUNCIONARIO", 'G', 'G', 'center', false, "B");
-textoSiguieteFila("ZONAL", 'H', 'H', 'center', false, "B");
-textoSiguieteFila("FECHA INFRACCION", 'I', 'I', 'center', false, "B");
-textoSiguieteFila("FECHA REGISTRO", 'J', 'J', 'center', false, "B");
-textoSiguieteFila("FUNCIONARIO REALIZA REGISTRO", 'K', 'K', 'center', false, "B");
-textoSiguieteFila("NUMERO DE ACTO", 'L', 'L', 'center', false, "B");
-
-
-// recuperamos los nombres de los usuarios
-
-// id	cedula	nombres	apellidos	observaciones	lugarinfraccion	funcionario	zonal	fecha
-
+textoSiguieteFila("EXPEDIENTE", 'E', 'E', 'center', false, "B");
+textoSiguieteFila("SELLO", 'F', 'F', 'center', false, "B");
+textoSiguieteFila("ACTIVIDAD", 'G', 'G', 'center', false, "B");
+textoSiguieteFila("ESTABLECIMIENTO", 'H', 'H', 'center', false, "B");
+textoSiguieteFila("DIRECCIONN", 'I', 'I', 'center', false, "B");
+textoSiguieteFila("INFRACCION", 'J', 'J', 'center', false, "B");
+textoSiguieteFila("CATEGORIA", 'K', 'K', 'center', false, "B");
+textoSiguieteFila("SECTOR", 'L', 'L', 'center', false, "B");
+textoSiguieteFila("FUNCIONARIO", 'M', 'M', 'center', false, "B");
+textoSiguieteFila("ZONAL", 'N', 'N', 'center', false, "B");
+textoSiguieteFila("FECHA", 'O', 'O', 'center', false, "B");
+textoSiguieteFila("FECHA_CREACION", 'P', 'P', 'center', false, "B");
+textoSiguieteFila("INGRESO RESGISTRO", 'Q', 'Q', 'center', false, "B");
 
 $numero = 1;
-$sql = "SELECT * FROM amc_sancion_emergencia ORDER BY id";
+$sql = "SELECT * FROM amc_sancion_emergencia_locales ORDER BY id";
 $nombres = $os->db->conn->query($sql);
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($numero, 'A', 'A', 'center');
@@ -103,14 +99,22 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($nombreDetalle['cedula'], 'B', 'B', 'left', false);
     textoSiguieteFila($nombreDetalle['nombres'], 'C', 'C', 'center', false);
     textoSiguieteFila($nombreDetalle['apellidos'], 'D', 'D', 'left', false);
-    textoSiguieteFila($nombreDetalle['observaciones'], 'E', 'E', 'left', false);
-    textoSiguieteFila($nombreDetalle['lugarinfraccion'], 'F', 'F', 'center', false);
-    textoSiguieteFila(regresaNombre ($nombreDetalle['funcionario']), 'G', 'G', 'left', false);
-    textoSiguieteFila($nombreDetalle['zonal'], 'H', 'H', 'left', false);
-    textoSiguieteFila($nombreDetalle['fecha'], 'I', 'I', 'center', false);
-    textoSiguieteFila($nombreDetalle['fecha_creacion'], 'J', 'J', 'center', false);
-    textoSiguieteFila(regresaNombre ($nombreDetalle['idingreso']), 'K', 'K', 'center', false);
-    textoSiguieteFila($nombreDetalle['actainfraccion'], 'L', 'L', 'center', false);
+    textoSiguieteFila($nombreDetalle['expediente'], 'E', 'E', 'left', false);
+    textoSiguieteFila($nombreDetalle['sello'], 'F', 'F', 'left', false);
+
+    textoSiguieteFila($nombreDetalle['actividad'], 'G', 'G', 'left', false);
+    textoSiguieteFila($nombreDetalle['establecimiento'], 'H', 'H', 'center', false);
+    textoSiguieteFila($nombreDetalle['direccion'], 'I', 'I', 'center', false);
+    textoSiguieteFila($nombreDetalle['infraccion'], 'J', 'J', 'center', false);
+    textoSiguieteFila($nombreDetalle['categoria'], 'K', 'K', 'center', false);
+    textoSiguieteFila($nombreDetalle['sector'], 'L', 'L', 'center', false);
+
+    textoSiguieteFila(regresaNombre($nombreDetalle['funcionario']), 'M', 'M', 'left', false);
+    textoSiguieteFila($nombreDetalle['zonal'], 'N', 'N', 'left', false);
+    textoSiguieteFila($nombreDetalle['fecha'], 'O', 'O', 'center', false);
+    textoSiguieteFila($nombreDetalle['fecha_creacion'], 'P', 'P', 'center', false);
+    textoSiguieteFila(regresaNombre($nombreDetalle['idingreso']), 'Q', 'Q', 'center', false);
+
 }
 
 
@@ -250,7 +254,7 @@ $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo3 . ':J' . $filaTitu
 $objPHPExcel->getActiveSheet()->getStyle('A1:A3')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "MUNICIPIO DEL DISTRITO METROPOLITANO DE QUITO");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'AGENCIA METROPOLITANA DE CONTROL');
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "LISTADO SANCIONES EMERGENCIA COVID 19 POR FECHA");
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "LISTADO LOCALES SANCIONES EMERGENCIA COVID 19 POR FECHA");
 
 // id	cedula	nombres	apellidos	observaciones	lugarinfraccion	funcionario	zonal	fecha
 
@@ -267,7 +271,7 @@ textoSiguieteFila("", 'D', 'D', 'center', false, "B");
 
 
 $numero = 1;
-$sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
+$sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia_locales GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
 $nombres = $os->db->conn->query($sql);
 $totales = 0;
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
@@ -277,9 +281,9 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($nombreDetalle['valor'], 'C', 'C', 'center', false);
     textoSiguieteFila(' ', 'D', 'D', 'left', false);
     $totales = $totales + $nombreDetalle['valor'];
-  }
+}
 textoSiguieteFila('TOTAL ', 'A', 'B', 'left');
-textoSiguieteFila($totales,'C', 'D', 'center', false);
+textoSiguieteFila($totales, 'C', 'D', 'center', false);
 
 //borde("A" . $primeraFilaImage . ':' . 'F' . $filacabecera);
 // Elaborador por:
@@ -325,7 +329,6 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(22);
 
 
-
 $styleThinBlackBorderOutline = array(
     'borders' => array(
         'outline' => array(
@@ -361,7 +364,6 @@ $pageMargins->setRight($margin);
 
 
 $objPHPExcel->getActiveSheet()->setShowGridLines(false);
-
 
 
 //// tercera
@@ -419,7 +421,7 @@ textoSiguieteFila("", 'D', 'D', 'center', false, "B");
 
 
 $numero = 1;
-$sql = "SELECT COUNT( id ) valor, zonal  texto FROM amc_sancion_emergencia GROUP BY zonal";
+$sql = "SELECT COUNT( id ) valor, zonal  texto FROM amc_sancion_emergencia_locales GROUP BY zonal";
 $nombres = $os->db->conn->query($sql);
 $totales = 0;
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
@@ -475,7 +477,6 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(22);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(22);
-
 
 
 $styleThinBlackBorderOutline = array(
@@ -546,9 +547,6 @@ $styleArray = array(
 );
 
 
-
-
-
 //declaracion de los titulos de la linea 1 2 3
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':J' . $filaTitulo1);
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':J' . $filaTitulo2);
@@ -575,7 +573,7 @@ textoSiguieteFila("", 'D', 'D', 'center', false, "B");
 
 $numero = 1;
 $sql = "SELECT (SELECT direccion FROM amc_personal_distributivo WHERE apellidos = (SELECT last_name  FROM qo_members WHERE qo_members.id = funcionario) limit 1)  texto,
-COUNT(*) AS valor FROM amc_sancion_emergencia GROUP BY texto";
+COUNT(*) AS valor FROM amc_sancion_emergencia_locales GROUP BY texto";
 $nombres = $os->db->conn->query($sql);
 $totales = 0;
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
@@ -634,7 +632,6 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(22);
 
 
-
 $styleThinBlackBorderOutline = array(
     'borders' => array(
         'outline' => array(
@@ -672,8 +669,6 @@ $pageMargins->setRight($margin);
 $objPHPExcel->getActiveSheet()->setShowGridLines(false);
 
 
-
-
 $objPHPExcel->getProperties()->setCreator("Byron Herrera")
     ->setLastModifiedBy("Byron Herrera")
     ->setTitle("AMC reporte")
@@ -695,8 +690,8 @@ $objPHPExcel->getProperties()->setCreator("Byron Herrera")
 
 // se crea la cabecera de archivo y se lo graba al archivo
 //  todo arrek
-$t = 1 ;
-if ($t== 1 ) {
+$t = 1;
+if ($t == 1) {
     header('Content-Type: application/vnd.ms-excel');
     header('Content-Disposition: attachment;filename="Reporte-Sancion-Emergencia-AMC-' . '-' . $today . '.xls"');
     header('Cache-Control: max-age=0');
@@ -704,7 +699,6 @@ if ($t== 1 ) {
     $objWriter->save('php://output');
     exit;
 }
-
 
 
 function regresaTipoOperativo($id_dato)
@@ -766,6 +760,7 @@ function regresaZonal($id_dato)
     return $rownombre['nombre'];
 
 }
+
 function regresaGenero($id_dato)
 {
     if ($id_dato == 1)

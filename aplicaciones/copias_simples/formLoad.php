@@ -1,5 +1,5 @@
 <?php
-require_once '../server/os.php';
+require_once '../../server/os.php';
 $os = new os();
 
 

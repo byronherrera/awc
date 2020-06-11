@@ -130,7 +130,6 @@ if (!class_exists('os')) {
                     <div class="mensaje"></div>
                 </div>
                 <div class="form-group col-md-6">
-
                     <input type="button" class="btn btn-success btn-send btnContactSubmit" id="btn-salir" value="SALIR">
                 </div>
             </div>
