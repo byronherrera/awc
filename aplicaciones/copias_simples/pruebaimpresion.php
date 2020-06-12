@@ -12,6 +12,7 @@
 
 <head>
 
+
     <base href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/2965"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="rights" content="Agencia Metropolitana de Control"/>
