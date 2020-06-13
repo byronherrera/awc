@@ -14,7 +14,7 @@ if (!class_exists('os')) {
         <head>
             <meta charset="utf-8">
             <meta name="robots" content="noindex, nofollow">
-            <title> DOCUMENTOS AMC</title>
+            <title>PROCESOS CONTRATACION AMC</title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
             <link href="vendor/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
@@ -27,12 +27,12 @@ if (!class_exists('os')) {
             <div class="contact-image">
                 <img src="img/rocket_contact.png" alt="rocket_contact"/>
             </div>
-            <h3>ARCHIVOS CONTRATOS</h3>
-            <div class="row">
+            <h3>PROCESOS CONTRATACION AMC</h3>
 
-                <div class="form-group">
+            <div class="container">
+                <div class="row">
                     <?php
-                    function obtenerListadoDeArchivos($directorio, $recursivo = false, $espacio = '', $url='')
+                    function obtenerListadoDeArchivos($directorio, $recursivo = false, $espacio = '', $url = '')
                     {
 
                         // Array en el que obtendremos los resultados
@@ -51,33 +51,36 @@ if (!class_exists('os')) {
                                     "Nombre" => $directorio . $archivo . "/",
                                     "Carpeta" => 1
                                 );
-                                echo "</br>" . $espacio . $archivo . "</br>"; //caso carpeta
+                                echo '<div class="col-sm-12">' .
+                                    '<p>' . $espacio . $archivo . '<span class="glyphicon glyphicon-folder-open"></span></p>' .
+                                    '</div>'; //caso carpeta
                                 if ($recursivo && is_readable($directorio . $archivo . "/")) {
                                     $directorioInterior = $directorio . $archivo . "/";
-                                    $res = array_merge($res, obtenerListadoDeArchivos($directorioInterior, true,  $espacio . ' --',  $url. '\\' .$archivo  ));
+                                    $res = array_merge($res, obtenerListadoDeArchivos($directorioInterior, true, $espacio . '- ', $url . '\\' . $archivo));
                                 }
                             } else if (is_readable($directorio . $archivo)) {
                                 $res[] = array(
                                     "Nombre" => $directorio . $archivo,
                                     "Carpeta" => 0
                                 );
-
-                                echo $espacio . ' <a href="'. $url.  '/' .$archivo . '" target="_blank">' . $archivo. '</a> ' . "</br>";
+                                echo '<div class="col-sm-12" style="background-color: #DAE1EA;">' .
+                                    '<p>' . $espacio . '<a href="' . $url . '/' . $archivo . '" target="_blank">' . $archivo . '</a> </p> ' .
+                                    '</div>';
 
                             }
                         }
                         $dir->close();
                         return $res;
                     }
-                    $resultado = obtenerListadoDeArchivos("/var/www/html/documentos/archivos", true,  '', "https://amcmatis.quito.gob.ec/documentos/archivos" );
-                  //  $resultado = obtenerListadoDeArchivos("c:\Program Files (x86)\Zend\Apache24\htdocs\procesos-amc\documentos\archivos", true,  '', "http://localhost/procesos-amc/documentos/archivos" );
 
-//                    print_r($resultado);
+                    //  $resultado = obtenerListadoDeArchivos("/var/www/html/documentos/archivos", true,  '', "https://amcmatis.quito.gob.ec/documentos/archivos" );
+                    $resultado = obtenerListadoDeArchivos("c:\Program Files (x86)\Zend\Apache24\htdocs\procesos-amc\documentos\archivos", true, '', "http://localhost/procesos-amc/documentos/archivos");
+
+                    //                    print_r($resultado);
                     ?>
-                    <div class="mensajecedula"></div>
                 </div>
-
             </div>
+
         </div>
 
         <script src="vendor/jquery/jquery-1.8.3.min.js"></script>
