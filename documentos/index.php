@@ -72,8 +72,8 @@ if (!class_exists('os')) {
                         return $res;
                     }
 
-                    //  $resultado = obtenerListadoDeArchivos("/var/www/html/documentos/archivos", true,  '', "https://amcmatis.quito.gob.ec/documentos/archivos" );
-                    $resultado = obtenerListadoDeArchivos("c:\Program Files (x86)\Zend\Apache24\htdocs\procesos-amc\documentos\archivos", true, '', "http://localhost/procesos-amc/documentos/archivos");
+                      $resultado = obtenerListadoDeArchivos("/var/www/html/documentos/archivos", true,  '', "https://amcmatis.quito.gob.ec/documentos/archivos" );
+                    //$resultado = obtenerListadoDeArchivos("c:\Program Files (x86)\Zend\Apache24\htdocs\procesos-amc\documentos\archivos", true, '', "http://localhost/procesos-amc/documentos/archivos");
 
                     //                    print_r($resultado);
                     ?>
