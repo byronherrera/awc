@@ -14,7 +14,7 @@ if (!class_exists('os')) {
         <head>
             <meta charset="utf-8">
             <meta name="robots" content="noindex, nofollow">
-            <title>ARCHIVOS CONTRATOS</title>
+            <title> DOCUMENTOS AMC</title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
             <link href="vendor/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
@@ -32,7 +32,7 @@ if (!class_exists('os')) {
 
                 <div class="form-group">
                     <?php
-                    function obtenerListadoDeArchivos($directorio, $recursivo = false)
+                    function obtenerListadoDeArchivos($directorio, $recursivo = false, $espacio = '', $url='')
                     {
 
                         // Array en el que obtendremos los resultados
@@ -51,26 +51,30 @@ if (!class_exists('os')) {
                                     "Nombre" => $directorio . $archivo . "/",
                                     "Carpeta" => 1
                                 );
+                                echo "</br>" . $espacio . $archivo . "</br>"; //caso carpeta
                                 if ($recursivo && is_readable($directorio . $archivo . "/")) {
                                     $directorioInterior = $directorio . $archivo . "/";
-                                    $res = array_merge($res, obtenerListadoDeArchivos($directorioInterior, true));
+                                    $res = array_merge($res, obtenerListadoDeArchivos($directorioInterior, true,  $espacio . ' --',  $url. '\\' .$archivo  ));
                                 }
                             } else if (is_readable($directorio . $archivo)) {
                                 $res[] = array(
                                     "Nombre" => $directorio . $archivo,
                                     "Carpeta" => 0
                                 );
+
+                                echo $espacio . ' <a href="'. $url.  '/' .$archivo . '" target="_blank">' . $archivo. '</a> ' . "</br>";
+
                             }
                         }
                         $dir->close();
                         return $res;
                     }
-                    $resultado = obtenerListadoDeArchivos("/var/www/html/documentos/archivos", true);
-                 //   $resultado = obtenerListadoDeArchivos("c:\Program Files (x86)\Zend\Apache24\htdocs\procesos-amc\documentos\archivos", true);
+                    $resultado = obtenerListadoDeArchivos("/var/www/html/documentos/archivos", true,  '', "https://amcmatis.quito.gob.ec/documentos/archivos" );
+                  //  $resultado = obtenerListadoDeArchivos("c:\Program Files (x86)\Zend\Apache24\htdocs\procesos-amc\documentos\archivos", true,  '', "http://localhost/procesos-amc/documentos/archivos" );
 
-                    print_r($resultado);
+//                    print_r($resultado);
                     ?>
-                    <div class="mensajecedula">ccc</div>
+                    <div class="mensajecedula"></div>
                 </div>
 
             </div>
