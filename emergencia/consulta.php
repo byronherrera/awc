@@ -67,9 +67,9 @@
                         "                    <tr><th scope=\"row\">Observaciones</th><td>" + validaTexto(data.data[0]['observaciones']) + "</td></tr>\n" +
                         "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(data.data[0]['zonal']) + "</td></tr>\n" +
                         "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(data.data[0]['fecha']) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(data.data[0]['actainfraccion']) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo2) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">Imagen Infracción</th><td>" + validaImagen(imagenes.archivo1) + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Número Acto</th><td>" + validaTexto(data.data[0]['actainfraccion']) + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo1) + "</td></tr>\n" +
+                        "                    <tr><th scope=\"row\">Imagen Infracción</th><td>" + validaImagen(imagenes.archivo2) + "</td></tr>\n" +
                         "                    </tbody>\n" +
                         "                </table>")
                 } else {
@@ -105,7 +105,6 @@
                 return "";
         }
 
-
         $("#myForm").on("submit", function (e) {
             $('.mensaje').html('<div class="blink_me"><b>Enviado formulario</b></div>');
             e.preventDefault();
@@ -131,7 +130,6 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101563972-2"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
-
     function gtag() {
         dataLayer.push(arguments);
     }
