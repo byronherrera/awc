@@ -34,7 +34,6 @@ if (!class_exists('os')) {
                     <?php
                     function obtenerListadoDeArchivos($directorio, $recursivo = false, $espacio = '', $url = '')
                     {
-
                         // Array en el que obtendremos los resultados
                         $res = array();
 
