@@ -51,7 +51,7 @@ if (!class_exists('os')) {
                                     "Carpeta" => 1
                                 );
                                 echo '<div class="col-sm-12">' .
-                                    '<p style="font-weight: bold;">' . $espacio . $archivo . '<span class="glyphicon glyphicon-folder-open"></span></p>' .
+                                    '<p style="font-weight: bold;">' . $espacio . $archivo . '  <span class="glyphicon glyphicon-folder-open"></span></p>' .
                                     '</div>'; //caso carpeta
                                 if ($recursivo && is_readable($directorio . $archivo . "/")) {
                                     $directorioInterior = $directorio . $archivo . "/";
