@@ -27,7 +27,7 @@ if (!class_exists('os')) {
             <div class="contact-image">
                 <img src="img/rocket_contact.png" alt="rocket_contact"/>
             </div>
-            <h3>PROCESOS CONTRATACION AMC</h3>
+            <h2>PROCESOS CONTRATACION AMC</h2>
 
             <div class="container">
                 <div class="row">
@@ -51,7 +51,7 @@ if (!class_exists('os')) {
                                     "Carpeta" => 1
                                 );
                                 echo '<div class="col-sm-12">' .
-                                    '<p>' . $espacio . $archivo . '<span class="glyphicon glyphicon-folder-open"></span></p>' .
+                                    '<p style="font-weight: bold;">' . $espacio . $archivo . '<span class="glyphicon glyphicon-folder-open"></span></p>' .
                                     '</div>'; //caso carpeta
                                 if ($recursivo && is_readable($directorio . $archivo . "/")) {
                                     $directorioInterior = $directorio . $archivo . "/";
@@ -63,7 +63,7 @@ if (!class_exists('os')) {
                                     "Carpeta" => 0
                                 );
                                 echo '<div class="col-sm-12" style="background-color: #DAE1EA;">' .
-                                    '<p>' . $espacio . '<a href="' . $url . '/' . $archivo . '" target="_blank">' . $archivo . '</a> </p> ' .
+                                    '<p style="font-weight: bold;">' . $espacio . '<a href="' . $url . '/' . $archivo . '" target="_blank">' . $archivo . '</a> </p> ' .
                                     '</div>';
 
                             }
