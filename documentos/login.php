@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
-    <title>LOGIN</title>
+    <title> LOGIN ACCESO A DOCUMENTOS AMC</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="vendor/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
@@ -16,7 +16,7 @@
     <div class="contact-image">
         <img src="img/rocket_contact.png" alt="rocket_contact"/>
     </div>
-    <h3>LOGIN INFRACCIONES EMERGENCIA</h3>
+    <h3> LOGIN ACCESO A DOCUMENTOS AMC</h3>
     <div class="iframedinar">
         <iframe id="frame" src="" width="100%" height="80px" frameBorder="0"></iframe>
     </div>
@@ -35,9 +35,7 @@
                        placeholder="pass">
             </div>
 
-            <div class="form-group">
-                <label for="pass1">El usuario y contraseña son las mismas del sistema MATIS-AMC</label>
-            </div>
+
 
 
             <div class="form-group">

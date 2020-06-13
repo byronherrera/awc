@@ -31,10 +31,7 @@ if (!class_exists('os')) {
             <div class="row">
 
                 <div class="form-group">
-                    <label for="cedula">CEDULA*111 11</label>
-                    <?php echo "!!";
-
-
+                    <?php
                     function obtenerListadoDeArchivos($directorio, $recursivo = false)
                     {
 
@@ -52,8 +49,7 @@ if (!class_exists('os')) {
                             if (is_dir($directorio . $archivo)) {
                                 $res[] = array(
                                     "Nombre" => $directorio . $archivo . "/",
-                                    "Tamaño" => 0,
-                                    "Modificado" => filemtime($directorio . $archivo)
+                                    "Carpeta" => 1
                                 );
                                 if ($recursivo && is_readable($directorio . $archivo . "/")) {
                                     $directorioInterior = $directorio . $archivo . "/";
@@ -62,15 +58,15 @@ if (!class_exists('os')) {
                             } else if (is_readable($directorio . $archivo)) {
                                 $res[] = array(
                                     "Nombre" => $directorio . $archivo,
-                                    "Tamaño" => filesize($directorio . $archivo),
-                                    "Modificado" => filemtime($directorio . $archivo)
+                                    "Carpeta" => 0
                                 );
                             }
                         }
                         $dir->close();
                         return $res;
                     }
-                    $resultado = obtenerListadoDeArchivos("/var/www/html/documentos/archivos", false);
+                    $resultado = obtenerListadoDeArchivos("/var/www/html/documentos/archivos", true);
+                 //   $resultado = obtenerListadoDeArchivos("c:\Program Files (x86)\Zend\Apache24\htdocs\procesos-amc\documentos\archivos", true);
 
                     print_r($resultado);
                     ?>
