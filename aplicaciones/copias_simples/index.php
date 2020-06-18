@@ -19,7 +19,7 @@ require_once('../../server/os.php');
     <div class="contact-image">
         <img src="img/rocket_contact.png" alt="rocket_contact"/>
     </div>
-    <h3>SOLICITUD DE COPIAS SIMPLES EN LINEA</h3>
+    <h2>SOLICITUD DE COPIAS SIMPLES EN LINEA</h2>
     <form enctype="multipart/form-data" id="myForm" method="post">
         <div class="row">
 
@@ -85,48 +85,49 @@ require_once('../../server/os.php');
 
             <div class="form-group">
                 <label for="fecha">FECHA SOLICITUD</label>
-                <div class="input-group date form_datetime  " data-date="1994-09-16T05:25:07Z"
-                     data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
                     <input class="form-control senddata" size="16" type="text" name="fecha" id="fecha"
-                           required="required" style="background-color: #fff;">
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-                </div>
+                           required="required" style="background-color: #fff;" readonly>
             </div>
-
+            <div style="height: 30px"></div>
             <div class="form-group">
                 <p><label for="fecha">Una vez completados todos los campos necesarios podra continuar</label></p>
                 <input type="BUTTON" class="btn btn-success" id="btn-continuar" value="CONTINUAR">
                 <div class="mensaje2"></div>
             </div>
-
-            <div id="">
+            <div style="height: 30px"></div>
+            <div id="solicitud">
                 <div class="form-group">
                     <div class="custom-file">
                         <p><label for="fecha">Imprima y firme la siguiente solicud. Escanéelo y lo anexa en el presente
                                 formulario</label></p>
 
                         <label class="custom-file-label" for="archivo">ABRIR SOLICITUD</label>
-                        <a href="pruebaimpresion.php" title="Print"
+                        <a href="impresion.php" title="Print" id="linksolicitud"
                            onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=720,height=560,directories=no,location=no'); return false;"
                            rel="nofollow">
                             &nbsp;Imprimirt <span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
                     </div>
                 </div>
             </div>
+            <div style="height: 30px"></div>
 
-            <div class="form-group">
-                <div class="custom-file">
-                    <label class="custom-file-label" for="archivo">Subir solicitud </label>
-                    <input type="file" class="custom-file-input" id="archivo" lang="es" name="archivo" required="required">
+            <div id="botonsolicitud">
+                <div class="form-group">
+                    <div class="custom-file">
+                        <label class="custom-file-label" for="archivo">Subir solicitud </label>
+                        <input type="file" class="custom-file-input" id="archivo" lang="es" name="archivo"
+                               required="required">
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <p><label for="fecha">Enviar formulario</label></p>
-                <input type="submit" class="btn btn-success" value="ENVIAR">
-                <div class="mensaje"><p></p></div>
-                <div style="height: 30px"></div>
+            <div style="height: 30px"></div>
+            <div id="botonenviar">
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success" value="ENVIAR FORMULARIO">
+                    <div class="mensaje"><p></p></div>
+                    <div style="height: 30px"></div>
+                </div>
             </div>
     </form>
 </div>
@@ -140,16 +141,12 @@ require_once('../../server/os.php');
 <script type="text/javascript">
     $(document).ready(function () {
 
+        $('#botonenviar').hide();
+        $('#botonsolicitud').hide();
+        $('#solicitud').hide();
+
         var today = new Date();
-
         var todayMaximoHoras = new Date();
-
-        $('.form_datetime').datetimepicker({
-            language: 'es',
-            format: 'yyyy-mm-dd hh:ii',
-            autoclose: true
-        });
-
         var date = new Date();
         var dateStr =
             date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
@@ -158,6 +155,40 @@ require_once('../../server/os.php');
             ("00" + date.getMinutes()).slice(-2) + ':00';
 
         document.getElementById('fecha').value = dateStr;
+
+
+        $("#btn-continuar").click(function () {
+       //     validarDatos ();
+            prepararNuevoLink ();
+            $('#solicitud').show();
+
+        });
+
+        function  prepararNuevoLink () {
+            var cedula = $('#cedula').val();
+            var nombres = $('#nombres').val();
+            var apellidos = $('#apellidos').val();
+            var correoelectronico = $('#correoelectronico').val();
+            var abogado = $('#abogado').val();
+            var abogadomatricula = $('#abogadomatricula').val();
+            var correoabogado = $('#correoabogado').val();
+            var idzonal = $('#idzonal').val();
+            var expediente = $('#expediente').val();
+            var otrodocumento = $('#otrodocumento').val();
+            var fecha = $('#fecha').val();
+
+            $("#linksolicitud").attr("href", "impresion.php?cedula=" + cedula
+                + "&nombres=" + nombres
+                + "&apellidos=" + apellidos
+                + "&correoelectronico=" + correoelectronico
+                + "&abogado=" + abogado
+                + "&abogadomatricula=" + abogadomatricula
+                + "&correoabogado=" + correoabogado
+                + "&idzonal=" + idzonal
+                + "&expediente=" + expediente
+                + "&otrodocumento=" + otrodocumento
+                + "&fecha=" + fecha )
+        };
 
         $("input").change(function () {
             console.log("cambio de elemento")
@@ -185,9 +216,7 @@ require_once('../../server/os.php');
         });
 
 
-        $("#btn-continuar").click(function () {
-            console.log("dd")
-        });
+
 
 
         $("#myForm").on("submit", function (e) {
