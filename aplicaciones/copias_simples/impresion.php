@@ -66,8 +66,13 @@
 
                                 <div class="big separador">
                                     <?php
-                                        echo $_GET ['fecha'];
+                                    $date = new DateTime($_GET ['fecha']);
+                                    date_default_timezone_set("America/Mexico_City");
+                                    $mes = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"][date("n") - 1];
+
+                                    echo 'DMQ ' . $date->format('d') . ' de ' . $mes . ' de ' . $date->format('Y')  ; // 31-07-2012
                                     ?>
+
                                 </div>
                                 <div class="big separador">
                                 </div>

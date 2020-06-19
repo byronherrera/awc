@@ -16,13 +16,43 @@ require_once('../../server/os.php');
 
 <body>
 <div class="container contact-form">
-    <div class="contact-image">
-        <img src="img/rocket_contact.png" alt="rocket_contact"/>
-    </div>
-    <h2>SOLICITUD DE COPIAS SIMPLES EN LINEA</h2>
+    <h1 style="text-align: center">SOLICITUD DE COPIAS SIMPLES EN LINEA</h1>
+    <div style="height: 30px"></div>
     <form enctype="multipart/form-data" id="myForm" method="post">
         <div class="row">
-
+            <label for="cedula">DIRECTOR y/o FUNCIONARIO de*</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="radio1" value="option1">
+                <label class="form-check-label" for="exampleRadios1">
+                    INSPECCIÓN
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="radio2" value="option1">
+                <label class="form-check-label" for="exampleRadios2">
+                    INSTRUCCIÓN
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="radio3" value="option2">
+                <label class="form-check-label" for="exampleRadios3">
+                    RESOLUCIÓN
+                </label>
+            </div>
+            <div class="form-check disabled">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="radio4" value="option3">
+                <label class="form-check-label" for="exampleRadios4">
+                    EJECUCIÓN
+                </label>
+            </div>
+            <div class="form-check disabled">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="radio5" value="option3"
+                       required="required">
+                <label class="form-check-label" for="exampleRadios5">
+                    SECRETARIA GENERAL
+                </label>
+            </div>
+            <div style="height: 30px"></div>
             <div class="form-group">
                 <label for="cedula">CEDULA*</label>
                 <input type="number" class="form-control senddata" id="cedula" name="cedula" placeholder=""
@@ -43,7 +73,7 @@ require_once('../../server/os.php');
             </div>
 
             <div class="form-group">
-                <label for="correoelectronico">CORREO ELECTRONICO* </label>
+                <label for="correoelectronico">SEÑALE CORREO ELECTRONICO* PARA FUTURAS NOTIFICACIONES</label>
                 <input id="correoelectronico" type="text" name="correoelectronico" class="form-control senddata"
                        placeholder="Ingrese su correo electrónico" required="required">
             </div>
@@ -58,11 +88,7 @@ require_once('../../server/os.php');
                 <input id="abogadomatricula" type="text" name="abogadomatricula" class="form-control senddata"
                        placeholder="Ingrese número de matrícula abogado patrocinador (opcional)">
             </div>
-            <div class="form-group">
-                <label for="correoabogado">CORREO ELECTRONICO ABOGADO</label>
-                <input id="correoabogado" type="text" name="correoabogado" class="form-control senddata"
-                       placeholder="Ingrese correo electrónico de abogado patrocinador (opcional)">
-            </div>
+
             <div class="form-group">
                 <label for="idzonal">ZONAL*</label>
                 <select name="idzonal" class="form-control senddata" id="idzonal" required="required"
@@ -85,8 +111,8 @@ require_once('../../server/os.php');
 
             <div class="form-group">
                 <label for="fecha">FECHA SOLICITUD</label>
-                    <input class="form-control senddata" size="16" type="text" name="fecha" id="fecha"
-                           required="required" style="background-color: #fff;" readonly>
+                <input class="form-control senddata" size="16" type="text" name="fecha" id="fecha"
+                       required="required" style="background-color: #fff;" readonly>
             </div>
             <div style="height: 30px"></div>
             <div class="form-group">
@@ -156,22 +182,45 @@ require_once('../../server/os.php');
 
         document.getElementById('fecha').value = dateStr;
 
-
         $("#btn-continuar").click(function () {
-       //     validarDatos ();
-            prepararNuevoLink ();
+            validarDatos();
+            prepararNuevoLink();
             $('#solicitud').show();
-
         });
 
-        function  prepararNuevoLink () {
+        $("#btn-continuar").click(function () {
+            if (validarDatos()) {
+                prepararNuevoLink();
+                $('#solicitud').show();
+            } else {
+                $('.mensaje2').html('<div class="blink_me"><b>Faltan campos obligatorios</b></div>');
+
+            };
+        });
+
+        $("#linksolicitud").click(function () {
+            $('#botonenviar').show();
+            $('#botonsolicitud').show();
+        });
+
+        function validarDatos() {
+            return $('#cedula')[0].checkValidity() &&
+                $('#nombres')[0].checkValidity() &&
+                $('#apellidos')[0].checkValidity() &&
+                $('#correoelectronico')[0].checkValidity() &&
+                $('#expediente')[0].checkValidity() &&
+                $('#fecha')[0].checkValidity() &&
+                $('#radio1')[0].checkValidity();
+        }
+
+        function prepararNuevoLink() {
             var cedula = $('#cedula').val();
             var nombres = $('#nombres').val();
             var apellidos = $('#apellidos').val();
             var correoelectronico = $('#correoelectronico').val();
             var abogado = $('#abogado').val();
             var abogadomatricula = $('#abogadomatricula').val();
-            var correoabogado = $('#correoabogado').val();
+
             var idzonal = $('#idzonal').val();
             var expediente = $('#expediente').val();
             var otrodocumento = $('#otrodocumento').val();
@@ -183,11 +232,10 @@ require_once('../../server/os.php');
                 + "&correoelectronico=" + correoelectronico
                 + "&abogado=" + abogado
                 + "&abogadomatricula=" + abogadomatricula
-                + "&correoabogado=" + correoabogado
                 + "&idzonal=" + idzonal
                 + "&expediente=" + expediente
                 + "&otrodocumento=" + otrodocumento
-                + "&fecha=" + fecha )
+                + "&fecha=" + fecha)
         };
 
         $("input").change(function () {
@@ -214,9 +262,6 @@ require_once('../../server/os.php');
 
             }
         });
-
-
-
 
 
         $("#myForm").on("submit", function (e) {
