@@ -306,6 +306,25 @@ function comboPersonalResolucion()
     );
 }
 
+function comboPersonalEjecucion()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT a.id, CONCAT(a.first_name,' ',a.last_name) AS nombre FROM qo_members a
+            WHERE id in (SELECT qo_members_id FROM qo_groups_has_members where qo_groups_id=73)
+            AND active = 1 ORDER BY a.first_name ASC,a.last_name ASC";
+//    echo $sql;
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
 function comboPersonalOperativos()
 {
     global $os;
@@ -769,6 +788,9 @@ switch ($_GET['tipo']) {
         break;
     case 'personalresolucion' :
         comboPersonalResolucion();
+        break;
+    case 'personalejecucion' :
+        comboPersonalEjecucion();
         break;
     case 'personaloperativos' :
         comboPersonalOperativos();

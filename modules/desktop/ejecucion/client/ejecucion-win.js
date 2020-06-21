@@ -1,6 +1,6 @@
 var libroDiarioSeleccionado = '';
 
-QoDesk. = Ext.extend(Ext.app.Module, {
+QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
     id: 'ejecucion',
 
     type: 'desktop/ejecucion',
@@ -41,8 +41,8 @@ QoDesk. = Ext.extend(Ext.app.Module, {
         var winWidth = desktop.getWinWidth();
         var winHeight = desktop.getWinHeight();
 
-        var win = desktop.getWindow('grid-win-resolucion');
-        var urlResolucion = "modules/desktop/resolucion/server/";
+        var win = desktop.getWindow('grid-win-ejecucion');
+        var urlResolucion = "modules/desktop/ejecucion/server/";
 
         var textField = new Ext.form.TextField({allowBlank: false});
         var textFieldProvidencia = new Ext.form.TextField({allowBlank: false});
@@ -100,7 +100,7 @@ QoDesk. = Ext.extend(Ext.app.Module, {
         }
         //Fin combo REINCIDENCIA
 
-        //Inicio combo TIPO DE UNIDAD
+        //Inicio combo TIPO DE UNIDAD RESOLUCION
         storeTIPOUNIDAD = new Ext.data.JsonStore({
             root: 'datos',
             fields: ['id', 'nombre'],
@@ -129,7 +129,40 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
-        //Fin combo TIPOUNIDAD
+        //Fin combo TIPOUNIDAD RESOLUCION
+
+        //Inicio combo TIPO ZONA EJECUCION
+        storeTIPOZONA = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "UDCMCL"},
+                    {"id": 1, "nombre": "UDTCL"},
+                    {"id": 2, "nombre": "UMASA"}
+                ]
+            }
+        });
+
+        var comboTIPOZONA = new Ext.form.ComboBox({
+            id: 'comboTIPOZONA',
+            store: storeTIPOZONA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function funcionTIPOZONA(id) {
+            var index = storeTIPOZONA.find('id', id);
+            if (index > -1) {
+                var record = storeTIPOZONA.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //Fin combo TIPOZONA EJECUCION
+
 
         //Inicio combo INICIADO POR
         storeINICIADOPOR = new Ext.data.JsonStore({
@@ -226,6 +259,42 @@ QoDesk. = Ext.extend(Ext.app.Module, {
             }
         }
         //Fin combo ESTADO
+
+        //Inicio combo ESTADO EJECUCIÓN
+        storeESTADOEjecucion = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": ""},
+                    {"id": 1, "nombre": "Archivado"},
+                    {"id": 2, "nombre": "Devuelto"},
+                    {"id": 3, "nombre": "Por ejecutar"},
+                    {"id": 4, "nombre": "Ejecutandose"},
+                    {"id": 5, "nombre": "Para sorteo"},
+                    {"id": 6, "nombre": "Recurso"},
+                ]
+            }
+        });
+
+        var comboESTADOEjecucion = new Ext.form.ComboBox({
+            id: 'comboESTADOEjecucion',
+            store: storeESTADOEjecucion,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function functionESTADOEjecucion(id) {
+            var index = storeESTADOEjecucion.find('id', id);
+            if (index > -1) {
+                var record = storeESTADOEjecucion.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //Fin combo ESTADO EJECUCIÓN
 
         //Inicio combo ENVIO EXPEDIENTE
         storeENVIOEXPEDIENTE = new Ext.data.JsonStore({
@@ -469,6 +538,33 @@ QoDesk. = Ext.extend(Ext.app.Module, {
 
         //fin combo ORDENANZA
 
+        //inicio combo ORDENANZA EJECUCIÓN
+        storeOrdenanzaEjecucion = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=ordenanzas'
+        });
+
+        var comboOrdenanzaEjecucion = new Ext.form.ComboBox({
+            id: 'comboOrdenanzaEjecucion',
+            store: storeOrdenanzaEjecucion,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function rendererOrdenanzaEjecucion(id) {
+            var index = storeOrdenanzaEjecucion.findExact('id', id);
+            if (index > -1) {
+                var record = storeOrdenanzaEjecucion.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo ORDENANZA EJECUCIÓN
+
         //inicio combo ORDENANZATEMAS(ARTICULO Y NUMERAL)
         storeOrdenanzaTema = new Ext.data.JsonStore({
             root: 'data',
@@ -523,6 +619,33 @@ QoDesk. = Ext.extend(Ext.app.Module, {
 
         //fin combo UNIDAD
 
+        //inicio combo UNIDAD EJECUCION
+        storeUnidadEjecucion = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=zonas'
+        });
+
+        var comboUnidadEjecucion = new Ext.form.ComboBox({
+            id: 'comboUnidadEjecucion',
+            store: storeUnidadEjecucion,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function rendererUnidadEjecucion(id) {
+            var index = storeUnidadEjecucion.findExact('id', id);
+            if (index > -1) {
+                var record = storeUnidadEjecucion.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo UNIDAD EJECUCION
+
         // inicio combo PERSONAL
         storePersonal = new Ext.data.JsonStore({
             root: 'data',
@@ -548,7 +671,35 @@ QoDesk. = Ext.extend(Ext.app.Module, {
             }
         }
 
-        //fin combo UNIDAD
+        //fin combo PERSONAL
+
+
+        // inicio combo PERSONAL EJECUCIÓN
+        storePersonalEjecucion = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=personalejecucion'
+        });
+
+        var comboPersonalEjecucion = new Ext.form.ComboBox({
+            id: 'comboPersonalEjecucion',
+            store: storePersonalEjecucion,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function rendererPersonalEjecucion(id) {
+            var index = storePersonalEjecucion.findExact('id', id);
+            if (index > -1) {
+                var record = storePersonalEjecucion.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo PERSONAL EJECUCIÓN
 
         //inicio combo PROVIDENCIA
         storeProvidencia = new Ext.data.JsonStore({
@@ -903,30 +1054,51 @@ QoDesk. = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'memo_ingreso', allowBlank: false},
-                {name: 'fecha_ingreso', allowBlank: false},
-                {name: 'unidad', allowBlank: false},
-                {name: 'tipo_unidad', allowBlank: false},
-                {name: 'numero_expediente', allowBlank: false},
-                {name: 'numero_interno', allowBlank: false},
-                {name: 'nombre_administrado', allowBlank: false},
-                {name: 'nombre_establecimiento', allowBlank: false},
-                {name: 'direccion_notificacion', allowBlank: false},
-                {name: 'direccion_domicilio', allowBlank: false},
-                {name: 'cedula_ruc', allowBlank: false},
-                {name: 'reincidencia', allowBlank: false},
-                {name: 'ordenanza', allowBlank: false},
-                // {name: 'articulo_numeral', allowBlank: false},
-                {name: 'iniciado_por', allowBlank: false},
-                {name: 'entidad', allowBlank: false},
-                {name: 'numero_informe', allowBlank: false},
-                {name: 'medida_cautelar', allowBlank: false},
-                {name: 'estado', allowBlank: false},
-                {name: 'funcionario', allowBlank: false},
+                {name: 'memo_ingreso', allowBlank: true},
+                {name: 'fecha_ingreso', allowBlank: true},
+                {name: 'unidad', allowBlank: true},
+                {name: 'unidad_ejecucion', allowBlank: true},
+                {name: 'tipo_unidad', allowBlank: true},
+                {name: 'numero_expediente', allowBlank: true},
+                {name: 'numero_interno', allowBlank: true},
+                {name: 'nombre_administrado', allowBlank: true},
+                {name: 'nombre_administrado_ejecucion', allowBlank: true},
+                {name: 'nombre_establecimiento', allowBlank: true},
+                {name: 'direccion_notificacion', allowBlank: true},
+                {name: 'direccion_domicilio', allowBlank: true},
+                {name: 'cedula_ruc', allowBlank: true},
+                {name: 'reincidencia', allowBlank: true},
+                {name: 'ordenanza', allowBlank: true},
+                // {name: 'articulo_numeral', allowBlank: true},
+                {name: 'iniciado_por', allowBlank: true},
+                {name: 'entidad', allowBlank: true},
+                {name: 'numero_informe', allowBlank: true},
+                {name: 'medida_cautelar', allowBlank: true},
+                {name: 'estado', allowBlank: true},
+                {name: 'funcionario', allowBlank: true},
                 {name: 'envio_expediente', allowBlank: true},
                 {name: 'fecha_envio', allowBlank: true},
                 {name: 'fecha_sorteo', allowBlank: true},
-                {name: 'numero_memorando', allowBlank: true}
+                {name: 'numero_memorando', allowBlank: true},
+                {name: 'memo_ingreso_ejecucion', allowBlank: true},
+                {name: 'fecha_ingreso_ejecucion', allowBlank: true},
+                {name: 'numero_expediente_ejecucion', allowBlank: true},
+                {name: 'anio_ejecucion', allowBlank: true},
+                {name: 'fojas_ejecucion', allowBlank: true},
+                {name: 'unidad_comisaria_ejecucion', allowBlank: true},
+                {name: 'nombre_administrado_ejecucion', allowBlank: true},
+                {name: 'nombre_establecimiento_ejecucion', allowBlank: true},
+                {name: 'ordenanza_ejecucion', allowBlank: true},
+                {name: 'articulo_ejecucion', allowBlank: true},
+                {name: 'estado', allowBlank: true},
+                {name: 'funcionario_ejecutor_ejecucion', allowBlank: true},
+                {name: 'fecha_sorteo_ejecucion', allowBlank: true},
+                {name: 'observaciones_ejecucion', allowBlank: true},
+                {name: 'nombre_denunciante', allowBlank: true},
+                {name: 'fecha_resolucion', allowBlank: true},
+                {name: 'numero_resolucion', allowBlank: true},
+                {name: 'unidad_ejecucion', allowBlank: true},
+                {name: 'tipo_zona_ejecucion', allowBlank: true},
             ]
         });
 
@@ -959,24 +1131,190 @@ QoDesk. = Ext.extend(Ext.app.Module, {
 
         //Inicio formato grid Libro Diario
         this.gridLibroDiario = new Ext.grid.EditorGridPanel({
-            height: winHeight / 2 - 50,
+            //height: winHeight / 2 - 50,  CC ESTRUCTURA DE 2
+            height: winHeight - 95, //CC ESTRUCTURA DE 1
             store: this.storeLibroDiario,
             columns: [
                 //Definición de campos bdd Libro Diario
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldLibroDiario},
-                {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, sortable: true, width: 100, editor: textFieldLibroDiario},
+                {header: 'Memo Ingreso', dataIndex: 'memo_ingreso_ejecucion', allowBlank: true, sortable: true, width: 120, editor: textFieldLibroDiario},
                 {
-                    header: 'Número Interno',
-                    dataIndex: 'numero_interno',
+                    header: 'Memo Ingreso Resolución',
+                    dataIndex: 'memo_ingreso',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 150
+                },
+                {
+                    header: 'Fecha de Ingreso',
+                    dataIndex: 'fecha_ingreso_ejecucion',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 110,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
+/*                {
+                    header: 'Fecha de Ingreso Resolución',
+                    dataIndex: 'fecha_ingreso',
+                    sortable: true,
+                    width: 110,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d')
+                },*/
+                {
+                    header: 'Número Expediente',
+                    dataIndex: 'numero_expediente_ejecucion',
                     allowBlank: true,
                     sortable: true,
                     width: 120,
                     editor: textFieldLibroDiario
                 },
                 {
-                    header: 'Fecha de Ingreso',
-                    dataIndex: 'fecha_ingreso',
+                    header: 'Número Expediente Resolución',
+                    dataIndex: 'numero_expediente',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 170
+                },
+                /*{
+                    header: 'Año',
+                    dataIndex: 'anio_ejecucion',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 120,
+                    editor: textFieldLibroDiario
+                },*/
+                {
+                    header: 'Fojas',
+                    dataIndex: 'fojas_ejecucion',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 120,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Zona',
+                    dataIndex: 'unidad_ejecucion',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 120,
+                    renderer: rendererUnidadEjecucion,
+                    editor: comboUnidadEjecucion
+                },
+                {
+                    header: 'Tipo Zona',
+                    dataIndex: 'tipo_zona_ejecucion',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 80,
+                    editor: comboTIPOZONA,
+                    renderer: funcionTIPOZONA
+                },
+                {
+                    header: 'Unidad Resolución',
+                    dataIndex: 'unidad',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 100,
+                    renderer: rendererUnidad
+                },
+                {
+                    header: 'Tipo Unidad',
+                    dataIndex: 'tipo_unidad',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 80,
+                    renderer: funcionTIPOUNIDAD
+                },
+                {
+                    header: 'Nombre Administrado Ejecución',
+                    dataIndex: 'nombre_administrado_ejecucion',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 250,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Nombre Administrado Resolución',
+                    dataIndex: 'nombre_administrado',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 250
+                },
+                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, sortable: true, width: 100},
+                {
+                    header: 'Nombre Denunciante',
+                    dataIndex: 'nombre_denunciante',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 250,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Nombre del Establecimiento',
+                    dataIndex: 'nombre_establecimiento_ejecucion',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 180,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Nombre Establecimiento Resolución',
+                    dataIndex: 'nombre_establecimiento',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 180
+                },
+                {
+                    header: 'Ordenanza',
+                    dataIndex: 'ordenanza_ejecucion',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 180,
+                    editor: comboOrdenanzaEjecucion,
+                    renderer: rendererOrdenanzaEjecucion
+                },
+                {
+                    header: 'Ordenanza Resolución',
+                    dataIndex: 'ordenanza',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 180,
+                    renderer: rendererOrdenanza
+                },
+                {
+                    header: 'Artículo',
+                    dataIndex: 'articulo_ejecucion',
+                    allowBlank: true,
+                    width: 180,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Estado', dataIndex: 'estado', allowBlank: true, sortable: true, width: 80, editor: comboESTADOEjecucion,
+                    renderer: functionESTADOEjecucion
+                },
+                {
+                    header: 'Funcionario Ejecutor',
+                    dataIndex: 'funcionario_ejecutor_ejecucion',
+                    allowBlank: true,
+                    width: 180,
+                    editor: comboPersonalEjecucion,
+                    renderer: rendererPersonalEjecucion
+                },
+                {
+                    header: 'Número Resolución',
+                    dataIndex: 'numero_resolucion',
+                    allowBlank: true,
+                    width: 180,
+                    editor: textFieldLibroDiario
+                },
+                {
+                    header: 'Fecha Resolución',
+                    dataIndex: 'fecha_resolucion',
+                    allowBlank: true,
                     sortable: true,
                     width: 110,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
@@ -985,84 +1323,43 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                     })
                 },
                 {
-                    header: 'Unidad',
-                    dataIndex: 'unidad',
+                    header: 'Fecha de sorteo ejecución',
+                    dataIndex: 'fecha_sorteo_ejecucion',
                     allowBlank: true,
                     sortable: true,
-                    width: 100,
-                    editor: comboUnidad,
-                    renderer: rendererUnidad
-                },                {
-                    header: 'Tipo Unidad',
-                    dataIndex: 'tipo_unidad',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 80,
-                    editor: comboTIPOUNIDAD,
-                    renderer: funcionTIPOUNIDAD
+                    width: 110,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
                 },
                 {
-                    header: 'Número de Expediente',
-                    dataIndex: 'numero_expediente',
+                    header: 'Observaciones',
+                    dataIndex: 'observaciones_ejecucion',
                     allowBlank: true,
-                    sortable: true,
-                    width: 120,
-                    editor: textFieldLibroDiario
-                },
-                {
-                    header: 'Nombre de Administrado',
-                    dataIndex: 'nombre_administrado',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 250,
-                    editor: textFieldLibroDiario
-                },
-                {
-                    header: 'Nombre del Establecimiento',
-                    dataIndex: 'nombre_establecimiento',
-                    allowBlank: true,
-                    sortable: true,
                     width: 180,
                     editor: textFieldLibroDiario
                 },
-                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, sortable: true, width: 100, editor: textFieldLibroDiario},
-                {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, sortable: true, width: 80, editor: comboREINCIDENCIA,
+
+
+               /* {header: 'Reincidencia', dataIndex: 'reincidencia', allowBlank: true, sortable: true, width: 80,
                     renderer: functionREINCIDENCIA
-                },
-                {
+                },*/
+                /*{
                     header: 'Dirección de Notificación',
                     dataIndex: 'direccion_notificacion',
                     allowBlank: true,
                     sortable: true,
-                    width: 250,
-                    editor: textFieldLibroDiario
-                },
-                {
+                    width: 250
+                },*/
+                /*{
                     header: 'Dirección de Domicilio',
                     dataIndex: 'direccion_domicilio',
                     allowBlank: true,
                     sortable: true,
-                    width: 250,
-                    editor: textFieldLibroDiario
-                },
-                {
-                    header: 'Nombre del Administrado',
-                    dataIndex: 'nombre_administrado',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 250,
-                    editor: textFieldLibroDiario
-                },
+                    width: 250
+                },*/
                 //{header: 'Número de Predio', dataIndex: 'numero_predio', allowBlank:true, width: 100, editor: textField},
-                {
-                    header: 'Ordenanza',
-                    dataIndex: 'ordenanza',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 180,
-                    editor: comboOrdenanza,
-                    renderer: rendererOrdenanza
-                },
                 // {
                 //     header: 'Artículo y numeral',
                 //     dataIndex: 'articulo_numeral',
@@ -1071,75 +1368,64 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                 //     editor: comboOrdenanzaTema,
                 //     renderer: rendererOrdenanzaTema
                 // },
-                {header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, sortable: true, width: 120, editor: comboINICIADOPOR,
+                /*{header: 'Iniciado por', dataIndex: 'iniciado_por', allowBlank: true, sortable: true, width: 120,
                     renderer: functionINICIADOPOR
-                },
-                {header: 'Entidad', dataIndex: 'entidad', allowBlank: true, sortable: true, width: 200, editor: textFieldLibroDiario},
-                {
+                },*/
+                /*{header: 'Entidad', dataIndex: 'entidad', allowBlank: true, sortable: true, width: 200},*/
+                /*{
                     header: 'Número de Informe',
                     dataIndex: 'numero_informe',
                     allowBlank: true,
                     sortable: true,
-                    width: 150,
-                    editor: textFieldLibroDiario
-                },
-                {
+                    width: 150
+                },*/
+                /*{
                     header: 'Medida Cautelar',
                     dataIndex: 'medida_cautelar',
                     allowBlank: true,
                     sortable: true,
                     width: 150,
-                    editor: comboMEDIDACAUTELAR,
                     renderer: functionMEDIDACAUTELAR
-                },
-                {header: 'Estado', dataIndex: 'estado', allowBlank: true, sortable: true, width: 80, editor: comboESTADO,
-                    renderer: functionESTADO},
-                {
-                    header: 'Funcionario',
+                },*/
+                /*{header: 'Estado Resolución', dataIndex: 'estado', allowBlank: true, sortable: true, width: 80,
+                    renderer: functionESTADO},*/
+/*                {
+                    header: 'Funcionario Resolución',
                     dataIndex: 'funcionario',
                     allowBlank: true,
                     sortable: true,
                     width: 300,
-                    editor: comboPersonal,
                     renderer: rendererPersonal
-                },
-                {
+                },*/
+                /*{
                     header: 'Fecha de Sorteo',
                     dataIndex: 'fecha_sorteo',
                     sortable: true,
                     width: 100,
-                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
-                },
-                {
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d')
+                },*/
+/*                {
                     header: 'Envio Expediente',
                     dataIndex: 'envio_expediente',
                     allowBlank: true,
                     sortable: true,
                     width: 100,
-                    editor: comboENVIOEXPEDIENTE,
                     renderer: functionENVIOEXPEDIENTE
-                },
-                {
+                },*/
+/*                {
                     header: 'Número de Memorando',
                     dataIndex: 'numero_memorando',
                     allowBlank: true,
                     sortable: true,
-                    width: 150,
-                    editor: textFieldLibroDiario
-                },
-                {
+                    width: 150
+                },*/
+/*                {
                     header: 'Fecha de Envío',
                     dataIndex: 'fecha_envio',
                     sortable: true,
                     width: 100,
-                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
-                },
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d')
+                },*/
 
             ],
             viewConfig: {
@@ -1211,6 +1497,20 @@ QoDesk. = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
+                {name: 'memo_ingreso_ejecucion', allowBlank: false},
+                {name: 'fecha_ingreso_ejecucion', allowBlank: false},
+                {name: 'numero_expediente_ejecucion', allowBlank: false},
+                {name: 'anio_ejecucion', allowBlank: false},
+                {name: 'fojas_ejecucion', allowBlank: false},
+                {name: 'unidad_comisaria_ejecucion', allowBlank: false},
+                {name: 'nombre_administrado_ejecucion', allowBlank: false},
+                {name: 'nombre_establecimiento_ejecucion', allowBlank: false},
+                {name: 'ordenanza_ejecucion', allowBlank: false},
+                {name: 'articulo_ejecucion', allowBlank: false},
+                {name: 'estado', allowBlank: false},
+                {name: 'funcionario_ejecutor_ejecucion', allowBlank: false},
+                {name: 'fecha_sorteo_ejecucion', allowBlank: false},
+                {name: 'observaciones_ejecucion', allowBlank: false},
                 {name: 'memo_ingreso', allowBlank: false},
                 {name: 'numero_interno', allowBlank: false},
                 {name: 'numero_resolucion', allowBlank: false},
@@ -1220,6 +1520,8 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                 {name: 'multa_impuesta', allowBlank: false},
                 {name: 'fecha_ingreso', allowBlank: false},
                 {name: 'unidad', allowBlank: false},
+                {name: 'unidad_ejecucion', allowBlank: false},
+                {name: 'tipo_zona_ejecucion', allowBlank: false},
                 {name: 'tipo_unidad', allowBlank: false},
                 {name: 'numero_expediente', allowBlank: false},
                 {name: 'nombre_administrado', allowBlank: false},
@@ -1669,7 +1971,8 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                     width: 100,
                     editor: comboUnidad,
                     renderer: rendererUnidad
-                },                {
+                },
+                {
                     header: 'Tipo Unidad',
                     dataIndex: 'tipo_unidad',
                     allowBlank: true,
@@ -2487,29 +2790,23 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                 bodyStyle: 'padding:5px 5px 0',
                 items: [
                     {
-                        columnWidth: 1 / 3,
+                        columnWidth: 1 / 2,
                         layout: 'form',
                         items: [
                             {
                                 xtype: 'hidden',
                                 id: 'accesosResolutores',
-                            },{
-                                xtype: 'datefield',
-                                fieldLabel: 'Fecha Inicio',
-                                id: 'busqueda_fecha_inicio',
-                                anchor: '95%',
-                                format: 'Y-m-d',
                             },
                             {
-                                xtype: 'datefield',
-                                fieldLabel: 'Fecha Fin',
-                                id: 'busqueda_fecha_fin',
-                                anchor: '95%',
-                                format: 'Y-m-d'
+                                xtype: 'textfield',
+                                fieldLabel: 'Número expediente',
+                                id: 'numero_expediente',
+                                name: 'numero_expediente',
+                                anchor: '95%'
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Ordenanza',
+                                fieldLabel: 'Zona',
                                 id: 'ordenanza',
                                 name: 'ordenanza',
                                 hiddenName: 'ordenanza',
@@ -2522,165 +2819,27 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                                 triggerAction: 'all',
                                 mode: 'local'
                             },
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Resolución de',
-                                id: 'resolucion_de',
-                                name: 'resolucion_de',
-                                hiddenName: 'resolucion_de',
 
-                                anchor: '95%',
-                                store:  storeRESOLUCIONDE,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Funcionario',
-                                id: 'funcionario',
-                                name: 'funcionario',
-                                hiddenName: 'funcionario',
-
-                                anchor: '95%',
-                                store:  storePersonal,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
-                            // {
-                            //     xtype: 'textfield',
-                            //     fieldLabel: 'Artículo actual',
-                            //     id: 'articulo_actual',
-                            //     name: 'articulo_actual',
-                            //     anchor: '95%'
-                            // },
                         ]
                     },
                     {
-                        columnWidth: 1 / 3,
+                        columnWidth: 2 / 2,
                         layout: 'form',
                         items: [
                             {
                                 xtype: 'textfield',
-                                fieldLabel: 'No. resolución',
-                                id: 'numero_resolucion',
-                                name: 'numero_resolucion',
+                                fieldLabel: 'Nombre administrado',
+                                id: 'nombre_administrado',
+                                name: 'nombre_administrado',
                                 anchor: '95%'
                             },
                             {
                                 xtype: 'textfield',
-                                fieldLabel: 'Artículo actual',
-                                id: 'articulo_actual',
-                                name: 'articulo_actual',
+                                fieldLabel: 'Cédula',
+                                id: 'cedula_ruc',
+                                name: 'cedula_ruc',
                                 anchor: '95%'
-                            },
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Unidad',
-                                id: 'unidad',
-                                name: 'unidad',
-                                hiddenName: 'unidad',
-
-                                anchor: '95%',
-                                store:  storeUnidad2,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Iniciado por',
-                                id: 'iniciado_por',
-                                name: 'iniciado_por',
-                                hiddenName: 'iniciado_por',
-
-                                anchor: '95%',
-                                store:  storeINICIADOPOR,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Medida cautelar',
-                                id: 'medida_cautelar',
-                                name: 'medida_cautelar',
-                                hiddenName: 'medida_cautelar',
-
-                                anchor: '95%',
-                                store:  storeMEDIDACAUTELAR,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
                             }
-                        ]
-                    },
-                    {
-                        columnWidth: 1 / 3,
-                        layout: 'form',
-                        items: [
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Tipo',
-                                id: 'tipo_unidad',
-                                name: 'tipo_unidad',
-                                hiddenName: 'tipo_unidad',
-
-                                anchor: '95%',
-                                store:  storeTIPOUNIDAD,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
-                            {
-                                xtype: 'combo',
-                                fieldLabel: 'Envío expediente',
-                                id: 'envio_expediente',
-                                name: 'envio_expediente',
-                                hiddenName: 'envio_expediente',
-
-                                anchor: '95%',
-                                store:  storeENVIOEXPEDIENTE,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
-                            },
-                            // {
-                            //     xtype: 'textfield',
-                            //     fieldLabel: 'Multa',
-                            //     id: 'multa',
-                            //     name: 'multa',
-                            //     anchor: '95%'
-                            // },
-                            {
-                                xtype: 'datefield',
-                                fieldLabel: 'Fecha Inicio (Envío)',
-                                id: 'fecha_envio_inicio',
-                                anchor: '95%',
-                                format: 'Y-m-d'
-                            },
-                            {
-                                xtype: 'datefield',
-                                fieldLabel: 'Fecha de Fin (Envío)',
-                                id: 'fecha_envio_fin',
-                                anchor: '95%',
-                                format: 'Y-m-d'
-                            },
                         ]
                     }
                 ]
@@ -3381,7 +3540,7 @@ QoDesk. = Ext.extend(Ext.app.Module, {
 
             win = desktop.createWindow({
                 id: 'grid-win-resolucion',
-                title: 'Consulta Resolucion',
+                title: 'Módulo Ejecución',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'resolucion-icon',
@@ -3397,7 +3556,7 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                         //Pestaña Libro diario
                         {
                             autoScroll: true,
-                            title: 'Libro Diario',
+                            title: 'Libro Diario Unificado',
                             closable: false,
                             //  layout: 'fit',
                             height: winHeight - 70,
@@ -3484,15 +3643,36 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                                 }),
                             ],
                             //Llamado a función que arma la tabla de datos
-                            items: [{
+                            items: [
+                                /*{
                                 id: 'formLibroDiario',
                                 titleCollapse: true,
-                                flex: 1,
+                                //flex: 1,
                                 autoScroll: true,
                                 //height: winHeight/2-120,
                                 layout: 'column',
                                 items: this.gridLibroDiario
-                            }, {
+                            }*/
+                {
+                    region: 'north',
+                    height: 150,
+                    minSize: 50,
+                    maxSize: 150,
+                    closable: true,
+                    autoScroll: false,
+                    items: this.formConsultaLibroDiario
+                },
+                {
+                    region: 'center',
+                    height: 100,
+                    minSize: 50,
+                    maxSize: 100,
+                    closable: true,
+                    autoScroll: false,
+                    items: this.gridLibroDiario
+                }
+
+                            /*, {
                                 flex: 2,
                                 bodyStyle: 'padding:0; background: #0f6dff',
                                 items: [
@@ -3581,7 +3761,7 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                                                         paramName: 'filterText',
                                                         store: this.storeResoluciones
                                                     })
-                                                    /*,
+                                                    /!*,
                                                     '-',
                                                     //Definición de botón guardar datos
                                                     {
@@ -3592,7 +3772,7 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                                                         disabled: !acceso,
                                                         id: 'tb_grabardenuncias'
                                                         , formBind: true
-                                                    }*/
+                                                    }*!/
                                                 ],
                                                 items: this.gridResoluciones
 
@@ -3655,9 +3835,10 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                                         ]
                                     }
                                 ]
-                            }],
+                            }*/
+                            ],
                         }
-                        ,
+                        /*,
                         {
                             title: 'Reportes Resoluciones - Libro Diario',
                             closable: true,
@@ -3886,7 +4067,7 @@ QoDesk. = Ext.extend(Ext.app.Module, {
                                 // }
                             ]
 
-                        }
+                        }*/
 
                     ]
                 })
@@ -3939,9 +4120,25 @@ QoDesk. = Ext.extend(Ext.app.Module, {
     //Función para inserción de registros de Libro Diario
     addLibroDiario: function () {
         var libroDiario = new this.storeLibroDiario.recordType({
+            memo_ingreso_ejecucion: '',
+            fecha_ingreso_ejecucion: '',
+            numero_expediente_ejecucion: '',
+            anio_ejecucion: '',
+            fojas_ejecucion: '',
+            unidad_comisaria_ejecucion: '',
+            nombre_administrado_ejecucion: '',
+            nombre_establecimiento_ejecucion: '',
+            ordenanza_ejecucion: '',
+            articulo_ejecucion: '',
+            estado: '',
+            funcionario_ejecutor_ejecucion: '',
+            fecha_sorteo_ejecucion: '',
+            observaciones_ejecucion: '',
             memo_ingreso: '',
             fecha_ingreso: (new Date()),
             unidad: 0,
+            unidad_ejecucion: 0,
+            tipo_zona_ejecucion: 0,
             tipo_unidad: ' ',
             numero_expediente: ' ',
             numero_interno: ' ',
