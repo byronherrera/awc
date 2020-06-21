@@ -135,11 +135,13 @@ function getUsuarioExterno($id)
 {
     global $os;
 
-    $sql = "SELECT * FROM amc_sancion_emergencia  WHERE cedula = '$id' limit 1;";
 
+    $sql = "SELECT * FROM amc_sancion_emergencia  WHERE cedula = '$id' limit 1;";
     $result = $os->db->conn->query($sql);
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
     if (count($resultado) > 0) {
+        $resultado[0]['observaciones'] = utf8_encode($resultado[0]['observaciones']);
+        $resultado[0]['lugarinfraccion'] = utf8_encode($resultado[0]['lugarinfraccion']);
         echo json_encode(array(
             "success" => true,
             "data" => array($resultado[0])
@@ -231,6 +233,7 @@ function ingresaNuevoProceso()
     // se sube el archivo anexo
 
     // validamos que exista el archivo para cargar caso contrario ignorar
+    // array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
     $listado = array();
     if ($_FILES['archivo1']['name'] != null) {
 
@@ -249,7 +252,7 @@ function ingresaNuevoProceso()
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado[] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado['archivo1'] = "uploads/" . basename($today . '-' . $nombreArchivo);
         }
     }
 
@@ -270,7 +273,7 @@ function ingresaNuevoProceso()
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado[] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado['archivo2'] = "uploads/" . basename($today . '-' . $nombreArchivo);
         }
     }
 

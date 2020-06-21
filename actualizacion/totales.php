@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
-    <title>TOTALES INFRACCIONES EMERGENCIA</title>
+    <title>TOTALES SANCIONES CLAUSURA LOCALES - EMERGENCIA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="vendor/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
@@ -16,7 +16,7 @@
     <div class="contact-image">
         <img src="img/rocket_contact.png" alt="rocket_contact"/>
     </div>
-    <h3>TOTALES INFRACCIONES EMERGENCIA</h3>
+    <h3>TOTALES SANCIONES CLAUSURA LOCALES - EMERGENCIA</h3>
     <div class="row">
         <div class="col-sm-4"></div>
         <div class="col-sm-4 "></div>
@@ -37,7 +37,7 @@
     <div class="row">
         <div class="col-sm-4"></div>
         <div class="col-sm-4 ">
-            <a href="descargaTodoEmergencia.php">Descargar todo (xls)</a>
+            <a href="descargaTodoEmergenciaLocales.php">Descargar todo (xls)</a>
         </div>
         <div class="col-sm-4"></div>
     </div>
