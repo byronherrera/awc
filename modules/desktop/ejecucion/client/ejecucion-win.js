@@ -1658,7 +1658,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 100,
                     // editor: comboUnidad,
-                    renderer: rendererUnidad
+                    renderer: rendererUnidad2
                 },                {
                     header: 'Tipo Unidad',
                     dataIndex: 'tipo_unidad',
@@ -2802,17 +2802,18 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                                 fieldLabel: 'Número expediente',
                                 id: 'numero_expediente',
                                 name: 'numero_expediente',
-                                anchor: '95%'
+                                anchor: '80%'
                             },
+
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Zona',
-                                id: 'ordenanza',
-                                name: 'ordenanza',
-                                hiddenName: 'ordenanza',
+                                id: 'zona',
+                                name: 'zona',
+                                hiddenName: 'zona',
 
-                                anchor: '95%',
-                                store:  storeOrdenanza,
+                                anchor: '80%',
+                                store:  storeUnidadEjecucion,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -2831,14 +2832,14 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                                 fieldLabel: 'Nombre administrado',
                                 id: 'nombre_administrado',
                                 name: 'nombre_administrado',
-                                anchor: '95%'
+                                anchor: '40%'
                             },
                             {
                                 xtype: 'textfield',
                                 fieldLabel: 'Cédula',
                                 id: 'cedula_ruc',
                                 name: 'cedula_ruc',
-                                anchor: '95%'
+                                anchor: '40%'
                             }
                         ]
                     }
@@ -3664,7 +3665,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     region: 'center',
-                    height: 100,
+                    height: winHeight - 250,
                     minSize: 50,
                     maxSize: 100,
                     closable: true,
