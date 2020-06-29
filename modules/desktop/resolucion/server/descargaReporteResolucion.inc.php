@@ -403,11 +403,10 @@ function regresaUnidad($id_dato)
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     if (($id_dato != '') and (isset($id_dato))) {
-        $sql = "SELECT *
-            FROM amc_unidades WHERE id = " . $id_dato;
+        $sql = "SELECT * FROM amc_zonas WHERE activo = 1 AND id = " . $id_dato;
         $nombre = $os->db->conn->query($sql);
         $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre_completo'];
+        return $rownombre['nombre'];
     } else
         return '';
 
