@@ -22,33 +22,35 @@ require_once('../../server/os.php');
         <div class="row">
             <label for="cedula">DIRECTOR y/o FUNCIONARIO de*</label>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="radio1" value="option1">
-                <label class="form-check-label" for="exampleRadios1">
+                <input class="form-check-input" type="radio" name="direccion" id="radio1" value="INSPECCIÓN">
+                <label class="form-check-label" for="direccion1">
                     INSPECCIÓN
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="radio2" value="option1">
-                <label class="form-check-label" for="exampleRadios2">
+                <input class="form-check-input" type="radio" name="direccion" id="radio2" value="INSTRUCCIÓN">
+                <label class="form-check-label" for="direccion2">
                     INSTRUCCIÓN
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="radio3" value="option2">
-                <label class="form-check-label" for="exampleRadios3">
+                <input class="form-check-input" type="radio" name="direccion" id="radio3" value="RESOLUCIÓN">
+                <label class="form-check-label" for="direccion3">
                     RESOLUCIÓN
                 </label>
             </div>
             <div class="form-check disabled">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="radio4" value="option3">
-                <label class="form-check-label" for="exampleRadios4">
+                <input class="form-check-input" type="radio" name="direccion" id="radio4" value="EJECUCIÓN">
+                <label class="form-check-label" for="direccion4">
                     EJECUCIÓN
                 </label>
+
+
             </div>
             <div class="form-check disabled">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="radio5" value="option3"
+                <input class="form-check-input" type="radio" name="direccion" id="radio5" value="SECRETARIA GENERAL"
                        required="required">
-                <label class="form-check-label" for="exampleRadios5">
+                <label class="form-check-label" for="direccion5">
                     SECRETARIA GENERAL
                 </label>
             </div>
@@ -141,7 +143,7 @@ require_once('../../server/os.php');
                 <div class="form-group">
                     <div class="custom-file">
                         <label class="custom-file-label" for="archivo">Subir solicitud </label>
-                        <input type="file" class="custom-file-input" id="archivo" lang="es" name="archivo"
+                        <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1"
                                required="required">
                     </div>
                 </div>
@@ -181,13 +183,13 @@ require_once('../../server/os.php');
             ("00" + date.getMinutes()).slice(-2) + ':00';
 
         document.getElementById('fecha').value = dateStr;
-
+/*
         $("#btn-continuar").click(function () {
             validarDatos();
             prepararNuevoLink();
             $('#solicitud').show();
         });
-
+*/
         $("#btn-continuar").click(function () {
             if (validarDatos()) {
                 prepararNuevoLink();
@@ -225,6 +227,7 @@ require_once('../../server/os.php');
             var expediente = $('#expediente').val();
             var otrodocumento = $('#otrodocumento').val();
             var fecha = $('#fecha').val();
+            var direccion = $('input:radio[name=direccion]:checked').val();
 
             $("#linksolicitud").attr("href", "impresion.php?cedula=" + cedula
                 + "&nombres=" + nombres
@@ -235,7 +238,8 @@ require_once('../../server/os.php');
                 + "&idzonal=" + idzonal
                 + "&expediente=" + expediente
                 + "&otrodocumento=" + otrodocumento
-                + "&fecha=" + fecha)
+                + "&fecha=" + fecha
+                + "&direccion=" + direccion)
         };
 
         $("input").change(function () {
@@ -290,7 +294,7 @@ require_once('../../server/os.php');
                 contentType: false,
                 processData: false
             }).done(function (res) {
-                $('.mensaje').html('<b>Registro enviado exitosamente</b>');
+                $('.mensaje').html('<p><b>Formulario enviado exitosamente</b></p>');
                 $('#myForm')[0].reset();
                 $('.mensajecedula').html("");
                 $("#frame").attr("src", "");

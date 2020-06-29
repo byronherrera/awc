@@ -70,7 +70,7 @@
                                     date_default_timezone_set("America/Mexico_City");
                                     $mes = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"][date("n") - 1];
 
-                                    echo 'DMQ ' . $date->format('d') . ' de ' . $mes . ' de ' . $date->format('Y')  ; // 31-07-2012
+                                    echo 'DMQ ' . $date->format('d') . ' de ' . $mes . ' de ' . $date->format('Y'); // 31-07-2012
                                     ?>
 
                                 </div>
@@ -80,7 +80,7 @@
                                 <div class="title">Señor (a):</div>
                                 <div class="title">DIRECTOR y/o FUNCIONARIO DE:<br/>
                                 </div>
-                                <div class="title">INSPECCION<br/>
+                                <div class="title"><?php echo $_GET ['direccion']; ?><br/>
                                 </div>
 
                                 <div>Yo, <span class="big"><?php
@@ -88,12 +88,21 @@
                                         ?></span> con cédula de ciudadanía No.
                                     <span class="big"><?php
                                         echo $_GET ['cedula'];
-                                        ?></span> y/o, Doctor / Abogado <span class="big"><?php
+                                        ?></span>
+                                    <?php
+                                    if ($_GET ['abogado'] != '') {
+                                    ?>
+                                    y/o, Doctor / Abogado <span class="big"><?php
                                         echo $_GET ['abogado'];
                                         ?></span>
                                     en calidad de abogado patrocinador de <span class="big"><?php
                                         echo $_GET ['nombres'] . " " . $_GET['apellidos'];
                                         ?></span>
+                                        <?php
+                                    };
+                                    ?>
+
+
                                     dentro del expediente administrativo No. <span class="big"><?php
                                         echo $_GET ['expediente'];
                                         ?></span> y, de
@@ -101,10 +110,18 @@
                                     75 y 76, numeral 1 y 7, literal a) y d), solicito copias simples del expediente No.
                                     <span class="big"><?php
                                         echo $_GET ['expediente'];
-                                        ?></span> y/o del documento <span class="big"><?php
-                                        echo $_GET ['otrodocumento'];
-                                        ?></span>.
+                                        ?></span>
+                                    <?php
+                                    if ($_GET ['otrodocumento'] != '') {
+                                        ?>
+                                        y/o del documento <span class="big"><?php
+                                            echo $_GET ['otrodocumento'];
+                                            ?></span>
+                                        <?php
+                                    }
+                                    ?>.
                                     <br/><br/></div>
+
 
                                 <div>Señalo el correo electrónico, para posteriores notificaciones <span class="big"><?php
                                         echo $_GET ['correoelectronico'];
@@ -119,18 +136,24 @@
                                         echo $_GET ['cedula'];
                                         ?></span>
                                 </div>
+                                <?php
+                                if ($_GET ['abogado'] != '') {
+                                    ?>
+                                    <div>y/o</br></br></br>____________________</br>
+                                        <span class="big"><?php
+                                            echo $_GET ['abogado'];
+                                            ?></span></br>
+                                        <span class="big">Matrícula No. <?php
+                                            echo $_GET ['abogadomatricula'];
+                                            ?></span>
+                                    </div>
+                                    <?php
+                                };
+                                ?>
 
-                                <div>y/o</br></br></br>____________________</br>
-                                    <span class="big"><?php
-                                        echo $_GET ['abogado'];
-                                        ?></span></br>
-                                    <span class="big">Matrícula No. <?php
-                                        echo $_GET ['abogadomatricula'];
-                                        ?></span>
-                                </div>
                             </td>
                         </tr>
-                         </tbody>
+                        </tbody>
                     </table>
                 </div>
 

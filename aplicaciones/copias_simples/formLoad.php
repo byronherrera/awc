@@ -284,24 +284,29 @@ function ingresaNuevoProceso()
     $data->nombres = $_POST["nombres"];
     $data->apellidos = $_POST["apellidos"];
 
+    $data->correoelectronico = $_POST["correoelectronico"];
+    $data->abogado = $_POST["abogado"];
+    $data->abogadomatricula = $_POST["abogadomatricula"];
     $data->expediente = $_POST["expediente"];
-    $data->sello = $_POST["sello"];
-    $data->actividad = $_POST["actividad"];
-    $data->establecimiento = $_POST["establecimiento"];
+    $data->otrodocumento = $_POST["otrodocumento"];
     $data->direccion = $_POST["direccion"];
-    $data->infraccion = $_POST["infraccion"];
-    $data->categoria = $_POST["categoria"];
-    $data->sector = $_POST["sector"];
 
-
-
-    $data->geoposicionamiento = $_POST["geoposicionamiento"];
-    $data->funcionario = $_POST["funcionario"];
     $data->fecha = $_POST["fecha"];
     $data->idzonal = $_POST["idzonal"];
     $data->zonal = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
+    $data->ip = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
 
-    $data->idingreso = $os->get_member_id();
+function recuperaIP () {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+
 
     $cadenaDatos = '';
     $cadenaCampos = '';
