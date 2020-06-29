@@ -112,7 +112,7 @@ require_once('../../server/os.php');
                 <div class="form-group">
                     <label for="tipoadministrador">TIPO ADMINISTRADOR</label>
                     <input id="tipoadministrador" type="text" name="tipoadministrador" class="form-control senddata"
-                           placeholder="En calidad de DUEÑO/ADMINISTRADOR/RESPONSABLE" required="required">
+                           placeholder="En c" required="required">
                 </div>
 
                 <div class="form-group">
@@ -135,14 +135,14 @@ require_once('../../server/os.php');
                 </div>
 
                 <div class="form-group">
-                    <label for="fechaacto">FECHA CLUASURA/SANCION</label>
-                    <input class="form-control senddata" size="16" type="text" name="fechaacto" id="fechaacto"
-                           required="required" style="background-color: #fff;" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="horaacto">HORA CLAUSURA/SANCION</label>
-                    <input class="form-control senddata" size="16" type="text" name="horaacto" id="horaacto"
-                           required="required" style="background-color: #fff;" readonly>
+                    <label for="fecha">FECHA HORA CLUASURA/SANCION</label>
+                    <div class="input-group date form_datetime  " data-date="1994-09-16T05:25:07Z"
+                         data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                        <input class="form-control" size="16" type="text" name="fechaacto" id="fechaacto"
+                               required="required" style="background-color: #fff;">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -151,13 +151,19 @@ require_once('../../server/os.php');
                            placeholder="Ingrese la descripción de la sanción / clausura">
                 </div>
                 <div class="form-group">
+                    <label for="observaciones">OBSERVACIONES</label>
+                    <input id="observaciones" type="text" name="observaciones" class="form-control senddata"
+                           placeholder="Ingrese sus observaciones adicionales.">
+                </div>
+
+                <div class="form-group">
                     <label for="domicilio">DOMICILIO</label>
                     <input id="domicilio" type="text" name="domicilio" class="form-control senddata"
                            placeholder="Ingrese su domicilio">
                 </div>
                 <div class="form-group">
-                    <label for="domicilio">CORREO ELECTRONICO NOTIFICACION</label>
-                    <input id="domicilio" type="text" name="domicilio" class="form-control senddata"
+                    <label for="correoelectronico">CORREO ELECTRONICO NOTIFICACION</label>
+                    <input id="correoelectronico" type="text" name="correoelectronico" class="form-control senddata"
                            placeholder="Ingrese su correo electrónico">
                 </div>
                 <div class="form-group">
@@ -170,11 +176,6 @@ require_once('../../server/os.php');
                     <label for="fecha">FECHA SOLICITUD</label>
                     <input class="form-control senddata" size="16" type="text" name="fecha" id="fecha"
                            required="required" style="background-color: #fff;" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="obervaciones">OBSERVACIONES</label>
-                    <input id="obervaciones" type="text" name="obervaciones" class="form-control senddata"
-                           placeholder="Ingrese sus observaciones">
                 </div>
                 <div style="height: 30px"></div>
 
@@ -263,7 +264,7 @@ require_once('../../server/os.php');
         var date = new Date();
         var dateStr =
             date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
-            ("00" + date.getDate()).slice(-2) + "T" +
+            ("00" + date.getDate()).slice(-2) + " " +
             ("00" + date.getHours()).slice(-2) + ":" +
             ("00" + date.getMinutes()).slice(-2) + ':00';
 
@@ -275,6 +276,15 @@ require_once('../../server/os.php');
                     $('#solicitud').show();
                 });
         */
+
+        $('.form_datetime').datetimepicker({
+            language: 'es',
+            format: 'yyyy-mm-dd hh:ii',
+            autoclose: true,
+            //  todayBtn: true,
+            // startDate: today
+        });
+
         $("#btn-continuar").click(function (e) {
             e.preventDefault();
             $('.mensaje2').html('');
