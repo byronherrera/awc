@@ -2799,28 +2799,18 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'textfield',
-                                fieldLabel: 'Número expediente',
+                                fieldLabel: 'No expediente',
                                 id: 'numero_expediente',
                                 name: 'numero_expediente',
                                 anchor: '80%'
                             },
-
                             {
-                                xtype: 'combo',
-                                fieldLabel: 'Zona',
-                                id: 'zona',
-                                name: 'zona',
-                                hiddenName: 'zona',
-
-                                anchor: '80%',
-                                store:  storeUnidadEjecucion,
-                                valueField: 'id',
-                                displayField: 'nombre',
-                                typeAhead: true,
-                                triggerAction: 'all',
-                                mode: 'local'
+                                xtype: 'textfield',
+                                fieldLabel: 'Administrado',
+                                id: 'nombre_administrado',
+                                name: 'nombre_administrado',
+                                anchor: '80%'
                             },
-
                         ]
                     },
                     {
@@ -2829,18 +2819,26 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                         items: [
                             {
                                 xtype: 'textfield',
-                                fieldLabel: 'Nombre administrado',
-                                id: 'nombre_administrado',
-                                name: 'nombre_administrado',
-                                anchor: '40%'
-                            },
-                            {
-                                xtype: 'textfield',
                                 fieldLabel: 'Cédula',
                                 id: 'cedula_ruc',
                                 name: 'cedula_ruc',
                                 anchor: '40%'
-                            }
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Zona',
+                                id: 'zona',
+                                name: 'zona',
+                                hiddenName: 'zona',
+
+                                anchor: '40%',
+                                store:  storeUnidadEjecucion,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
                         ]
                     }
                 ]
