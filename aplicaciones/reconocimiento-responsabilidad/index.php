@@ -21,196 +21,204 @@ require_once('../../server/os.php');
     <div style="height: 30px"></div>
     <form enctype="multipart/form-data" id="myForm" method="post">
         <div class="row">
-            <label for="cedula">Acorde a lo dispuesto en el Código Orgánico Aministrativo (COA), Artículo 253, el ciudadano reconoce su responsabilidad a la infracción con la aceptación voluntaria de la sanción.<strong>CONTINUAR</strong></label>
+            <label for="cedula">Acorde a lo dispuesto en el Código Orgánico Aministrativo (COA), Artículo 253, el
+                ciudadano reconoce su responsabilidad a la infracción con la aceptación voluntaria de la
+                sanción.</label>
+            <input type="BUTTON" class="btn btn-success" id="btn-continuar1" value="CONTINUAR">
             <div style="height: 30px"></div>
-
-            <label for="cedula">MOTIVO*</label>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="direccion" id="radio1" value="INSPECCIÓN">
-                <label class="form-check-label" for="direccion1">
-                    1. LUAE CON MEDIDAD CAUTELAR (CON CLAUSURA)
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="direccion" id="radio2" value="INSTRUCCIÓN">
-                <label class="form-check-label" for="direccion2">
-                    2. LUAE SIN MEDIDA CAUTELAR (SIN CLAUSURA)
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="direccion" id="radio3" value="RESOLUCIÓN">
-                <label class="form-check-label" for="direccion3">
-                    3. MASCARILLA CON PETICIÓN DE TRABAJO COMUNITARIO
-                </label>
-            </div>
-            <div class="form-check disabled">
-                <input class="form-check-input" type="radio" name="direccion" id="radio4" value="EJECUCIÓN">
-                <label class="form-check-label" for="direccion4">
-                    4. MASCARILLA CON PAGO DE MULTA
-                </label>
-            </div>
-            <div class="form-check disabled">
-                <input class="form-check-input" type="radio" name="direccion" id="radio5" value="SECRETARIA GENERAL"
-                       required="required">
-                <label class="form-check-label" for="direccion5">
-                    5. LIBADORES CON PETICIÓN DE TRABAJO COMUNITARIO
-                </label>
-            </div>
-            <div class="form-check disabled">
-                <input class="form-check-input" type="radio" name="direccion" id="radio5" value="SECRETARIA GENERAL"
-                       required="required">
-                <label class="form-check-label" for="direccion5">
-                    6. LIBADORES CON PAGO DE MULTA
-                </label>
-            </div>
-            <div class="form-check disabled">
-                <input class="form-check-input" type="radio" name="direccion" id="radio5" value="SECRETARIA GENERAL"
-                       required="required">
-                <label class="form-check-label" for="direccion5">
-                    7. PUBLICIDAD
-                </label>
-            </div>
-            <div class="form-check disabled">
-                <input class="form-check-input" type="radio" name="direccion" id="radio5" value="SECRETARIA GENERAL"
-                       required="required">
-                <label class="form-check-label" for="direccion5">
-                    8. ACTIVIDAD ECONOMICA EN ESPACIO PÚBLICO
-                </label>
-            </div>
-            <div style="height: 30px"></div>
-
-            <div style="height: 30px"></div>
-
-            <div class="form-group">
-                <label for="cedula">CEDULA*</label>
-                <input type="number" class="form-control senddata" id="cedula" name="cedula" placeholder=""
-                       required="required">
-                <div class="mensajecedula"></div>
-            </div>
-            <div class="form-group">
-                <div class="form-group col-md-6">
-                    <label for="nombres">NOMBRES COMPLETOS*</label>
-                    <input type="text" class="form-control senddata" id="nombres" name="nombres" required="required"
-                           placeholder="Nombres">
+            <div id="formulario">
+                <label for="cedula">MOTIVO*</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="materia" id="radio1" value="LUAE CON MEDIDAD CAUTELAR (CON CLAUSURA)">
+                    <label class="form-check-label" for="materia1">
+                        1. LUAE CON MEDIDAD CAUTELAR (CON CLAUSURA)
+                    </label>
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="apellidos">APELLIDOS COMPLETOS*</label>
-                    <input type="text" class="form-control senddata" id="apellidos" name="apellidos" required="required"
-                           placeholder="Apellidos">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="materia" id="radio2" value="LUAE SIN MEDIDA CAUTELAR (SIN CLAUSURA)">
+                    <label class="form-check-label" for="materia2">
+                        2. LUAE SIN MEDIDA CAUTELAR (SIN CLAUSURA)
+                    </label>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="idzonal">ZONAL*</label>
-                <select name="idzonal" class="form-control senddata" id="idzonal" required="required"
-                        data-error="requerido." placeholder="Ingrese zonal">
-                    <option value=""></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="tipoadministrador">TIPO ADMINISTRADOR</label>
-                <input id="tipoadministrador" type="text" name="tipoadministrador" class="form-control senddata"
-                       placeholder="Tipo administrador" required="required">
-            </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="materia" id="radio3" value="MASCARILLA CON PETICIÓN DE TRABAJO COMUNITARIO">
+                    <label class="form-check-label" for="materia3">
+                        3. MASCARILLA CON PETICIÓN DE TRABAJO COMUNITARIO
+                    </label>
+                </div>
+                <div class="form-check disabled">
+                    <input class="form-check-input" type="radio" name="materia" id="radio4" value="MASCARILLA CON PAGO DE MULTA">
+                    <label class="form-check-label" for="materia4">
+                        4. MASCARILLA CON PAGO DE MULTA
+                    </label>
+                </div>
+                <div class="form-check disabled">
+                    <input class="form-check-input" type="radio" name="materia" id="radio5" value="LIBADORES CON PETICIÓN DE TRABAJO COMUNITARIO"
+                           required="required">
+                    <label class="form-check-label" for="materia5">
+                        5. LIBADORES CON PETICIÓN DE TRABAJO COMUNITARIO
+                    </label>
+                </div>
+                <div class="form-check disabled">
+                    <input class="form-check-input" type="radio" name="materia" id="radio5" value="LIBADORES CON PAGO DE MULTA"
+                           required="required">
+                    <label class="form-check-label" for="materia5">
+                        6. LIBADORES CON PAGO DE MULTA
+                    </label>
+                </div>
+                <div class="form-check disabled">
+                    <input class="form-check-input" type="radio" name="materia" id="radio5" value="PUBLICIDAD"
+                           required="required">
+                    <label class="form-check-label" for="materia5">
+                        7. PUBLICIDAD
+                    </label>
+                </div>
+                <div class="form-check disabled">
+                    <input class="form-check-input" type="radio" name="materia" id="radio5" value="ACTIVIDAD ECONOMICA EN ESPACIO PÚBLICO"
+                           required="required">
+                    <label class="form-check-label" for="materia5">
+                        8. ACTIVIDAD ECONOMICA EN ESPACIO PÚBLICO
+                    </label>
+                </div>
 
-            <div class="form-group">
-                <label for="establecimiento">NOMBRE ESTABLECIMIENTO*</label>
-                <input id="establecimiento" type="text" name="establecimiento" class="form-control senddata" required="required"
-                       placeholder="Ingrese el nombre del estrablecimiento">
-            </div>
+                <div style="height: 30px"></div>
 
-            <div class="form-group">
-                <label for="ubicacion">UBICACION</label>
-                <input id="ubicacion" type="text" name="ubicacion" class="form-control senddata"
-                       placeholder="Ingrese la ubicación del establecimiento">
-            </div>
-
-            <div class="form-group">
-                <label for="actividad">ACTIVIDAD COMERCIAL</label>
-                <input id="actividad" type="text" name="actividad" class="form-control senddata"
-                       placeholder="Ingrese la actividad a la que se dedica">
-            </div>
-
-            <div class="form-group">
-                <label for="fechaacto">FECHA CLUASURA/SANCION</label>
-                <input class="form-control senddata" size="16" type="text" name="fechaacto" id="fechaacto"
-                       required="required" style="background-color: #fff;" readonly>
-            </div>
-            <div class="form-group">
-                <label for="horaacto">HORA CLAUSURA/SANCION</label>
-                <input class="form-control senddata" size="16" type="text" name="horaacto" id="horaacto"
-                       required="required" style="background-color: #fff;" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="descripcion">DESCRIPICON</label>
-                <input id="descripcion" type="text" name="descripcion" class="form-control senddata"
-                       placeholder="Ingrese la descripción de la sanción / clausura">
-            </div>
-            <div class="form-group">
-                <label for="domicilio">DOMICILIO</label>
-                <input id="domicilio" type="text" name="domicilio" class="form-control senddata"
-                       placeholder="Ingrese su domicilio">
-            </div>
-            <div class="form-group">
-                <label for="domicilio">CORREO ELECTRONICO NOTIFICACION</label>
-                <input id="domicilio" type="text" name="domicilio" class="form-control senddata"
-                       placeholder="Ingrese su correo electrónico">
-            </div>
-            <div class="form-group">
-                <label for="celular">CELULAR</label>
-                <input id="celular" type="text" name="celular" class="form-control senddata"
-                       placeholder="Ingrese su número celular">
-            </div>
-
-            <div class="form-group">
-                <label for="fecha">FECHA SOLICITUD</label>
-                <input class="form-control senddata" size="16" type="text" name="fecha" id="fecha"
-                       required="required" style="background-color: #fff;" readonly>
-            </div>
-            <div class="form-group">
-                <label for="obervaciones">OBSERVACIONES</label>
-                <input id="obervaciones" type="text" name="obervaciones" class="form-control senddata"
-                       placeholder="Ingrese sus observaciones">
-            </div>
-            <div style="height: 30px"></div>
-            <div class="form-group">
-                <p><label for="fecha">Una vez completados todos los campos necesarios podra continuar</label></p>
-                <input type="BUTTON" class="btn btn-success" id="btn-continuar" value="CONTINUAR">
-                <div class="mensaje2"></div>
-            </div>
-            <div style="height: 30px"></div>
-            <div id="solicitud">
                 <div class="form-group">
-                    <div class="custom-file">
-                        <p><label for="fecha">Imprima y firme la siguiente solicud. Escanéelo y lo anexa en el presente
-                                formulario</label></p>
-
-                        <label class="custom-file-label" for="archivo">ABRIR SOLICITUD</label>
-                        <a href="impresion.php" title="Print" id="linksolicitud"
-                           onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=720,height=560,directories=no,location=no'); return false;"
-                           rel="nofollow">
-                            &nbsp;Imprimirt <span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                    <label for="cedula">CEDULA*</label>
+                    <input type="number" class="form-control senddata" id="cedula" name="cedula" placeholder=""
+                           required="required">
+                    <div class="mensajecedula"></div>
+                </div>
+                <div class="form-group">
+                    <div class="form-group col-md-6">
+                        <label for="nombres">NOMBRES COMPLETOS*</label>
+                        <input type="text" class="form-control senddata" id="nombres" name="nombres" required="required"
+                               placeholder="Nombres">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="apellidos">APELLIDOS COMPLETOS*</label>
+                        <input type="text" class="form-control senddata" id="apellidos" name="apellidos"
+                               required="required"
+                               placeholder="Apellidos">
                     </div>
                 </div>
-            </div>
-            <div style="height: 30px"></div>
-
-            <div id="botonsolicitud">
                 <div class="form-group">
-                    <div class="custom-file">
-                        <label class="custom-file-label" for="archivo">Subir solicitud </label>
-                        <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1"
-                               required="required">
+                    <label for="idzonal">ZONAL*</label>
+                    <select name="idzonal" class="form-control senddata" id="idzonal" required="required"
+                            data-error="requerido." placeholder="Ingrese zonal">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tipoadministrador">TIPO ADMINISTRADOR</label>
+                    <input id="tipoadministrador" type="text" name="tipoadministrador" class="form-control senddata"
+                           placeholder="En calidad de DUEÑO/ADMINISTRADOR/RESPONSABLE" required="required">
+                </div>
+
+                <div class="form-group">
+                    <label for="establecimiento">NOMBRE ESTABLECIMIENTO*</label>
+                    <input id="establecimiento" type="text" name="establecimiento" class="form-control senddata"
+                           required="required"
+                           placeholder="Ingrese el nombre del estrablecimiento">
+                </div>
+
+                <div class="form-group">
+                    <label for="ubicacion">UBICACION</label>
+                    <input id="ubicacion" type="text" name="ubicacion" class="form-control senddata"
+                           placeholder="Ingrese la ubicación del establecimiento">
+                </div>
+
+                <div class="form-group">
+                    <label for="actividad">ACTIVIDAD COMERCIAL</label>
+                    <input id="actividad" type="text" name="actividad" class="form-control senddata"
+                           placeholder="Ingrese la actividad a la que se dedica">
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaacto">FECHA CLUASURA/SANCION</label>
+                    <input class="form-control senddata" size="16" type="text" name="fechaacto" id="fechaacto"
+                           required="required" style="background-color: #fff;" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="horaacto">HORA CLAUSURA/SANCION</label>
+                    <input class="form-control senddata" size="16" type="text" name="horaacto" id="horaacto"
+                           required="required" style="background-color: #fff;" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">DESCRIPICON</label>
+                    <input id="descripcion" type="text" name="descripcion" class="form-control senddata"
+                           placeholder="Ingrese la descripción de la sanción / clausura">
+                </div>
+                <div class="form-group">
+                    <label for="domicilio">DOMICILIO</label>
+                    <input id="domicilio" type="text" name="domicilio" class="form-control senddata"
+                           placeholder="Ingrese su domicilio">
+                </div>
+                <div class="form-group">
+                    <label for="domicilio">CORREO ELECTRONICO NOTIFICACION</label>
+                    <input id="domicilio" type="text" name="domicilio" class="form-control senddata"
+                           placeholder="Ingrese su correo electrónico">
+                </div>
+                <div class="form-group">
+                    <label for="celular">CELULAR</label>
+                    <input id="celular" type="text" name="celular" class="form-control senddata"
+                           placeholder="Ingrese su número celular">
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha">FECHA SOLICITUD</label>
+                    <input class="form-control senddata" size="16" type="text" name="fecha" id="fecha"
+                           required="required" style="background-color: #fff;" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="obervaciones">OBSERVACIONES</label>
+                    <input id="obervaciones" type="text" name="obervaciones" class="form-control senddata"
+                           placeholder="Ingrese sus observaciones">
+                </div>
+                <div style="height: 30px"></div>
+
+
+                <div class="form-group">
+                    <p><label for="fecha">Una vez completados todos los campos necesarios podra continuar</label></p>
+                    <input type="BUTTON" class="btn btn-success" id="btn-continuar" value="CONTINUAR">
+                    <div class="mensaje2"></div>
+                </div>
+                <div style="height: 30px"></div>
+                <div id="solicitud">
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <p><label for="fecha">Imprima y firme la siguiente solicud. Escanéelo y lo anexa en el
+                                    presente
+                                    formulario</label></p>
+
+                            <label class="custom-file-label" for="archivo">ABRIR SOLICITUD</label>
+                            <a href="impresion.php" title="Print" id="linksolicitud"
+                               onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=720,height=560,directories=no,location=no'); return false;"
+                               rel="nofollow">
+                                &nbsp;Imprimirt <span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div style="height: 30px"></div>
 
-            <div style="height: 30px"></div>
-            <div id="botonenviar">
-                <div class="form-group">
-                    <input type="submit" class="btn btn-success" value="ENVIAR FORMULARIO">
-                    <div class="mensaje"><p></p></div>
-                    <div style="height: 30px"></div>
+                <div id="botonsolicitud">
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <label class="custom-file-label" for="archivo">Subir solicitud </label>
+                            <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1"
+                                   required="required">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="height: 30px"></div>
+                <div id="botonenviar">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="ENVIAR FORMULARIO">
+                        <div class="mensaje"><p></p></div>
+                        <div style="height: 30px"></div>
+                    </div>
                 </div>
             </div>
     </form>
@@ -228,6 +236,27 @@ require_once('../../server/os.php');
         $('#botonenviar').hide();
         $('#botonsolicitud').hide();
         $('#solicitud').hide();
+        $('#formulario').hide();
+        $('#btn-continuar1').click( function () {
+            $('#formulario').fadeIn();
+        });
+
+        $("#btn-continuar").click(function(event) {
+            console.log ("ee");
+            // Fetch form to apply custom Bootstrap validation
+            var form = $("#myForm")
+
+            if (form[0].checkValidity() === false) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+//
+            form.addClass('was-validated');
+            // Perform ajax submit here...
+
+        });
+
+
 
         var today = new Date();
         var todayMaximoHoras = new Date();
@@ -246,12 +275,15 @@ require_once('../../server/os.php');
                     $('#solicitud').show();
                 });
         */
-        $("#btn-continuar").click(function () {
+        $("#btn-continuar").click(function (e) {
+            e.preventDefault();
+            $('.mensaje2').html('');
             if (validarDatos()) {
                 prepararNuevoLink();
                 $('#solicitud').show();
             } else {
                 $('.mensaje2').html('<div class="blink_me"><b>Faltan campos obligatorios</b></div>');
+                $('#solicitud').hide();
 
             }
             ;
@@ -265,11 +297,8 @@ require_once('../../server/os.php');
         function validarDatos() {
             return $('#cedula')[0].checkValidity() &&
                 $('#nombres')[0].checkValidity() &&
-                $('#apellidos')[0].checkValidity() &&
-                $('#correoelectronico')[0].checkValidity() &&
-                $('#expediente')[0].checkValidity() &&
-                $('#fecha')[0].checkValidity() &&
-                $('#radio1')[0].checkValidity();
+                $('#apellidos')[0].checkValidity()  ;
+
         }
 
         function prepararNuevoLink() {
@@ -284,7 +313,7 @@ require_once('../../server/os.php');
             var expediente = $('#expediente').val();
             var otrodocumento = $('#otrodocumento').val();
             var fecha = $('#fecha').val();
-            var direccion = $('input:radio[name=direccion]:checked').val();
+            var materia = $('input:radio[name=materia]:checked').val();
 
             $("#linksolicitud").attr("href", "impresion.php?cedula=" + cedula
                 + "&nombres=" + nombres
@@ -296,7 +325,7 @@ require_once('../../server/os.php');
                 + "&expediente=" + expediente
                 + "&otrodocumento=" + otrodocumento
                 + "&fecha=" + fecha
-                + "&direccion=" + direccion)
+                + "&materia=" + materia)
         };
 
         $("input").change(function () {
