@@ -18,7 +18,7 @@
     <meta name="rights" content="Agencia Metropolitana de Control"/>
     <meta name="description" content="Agencia Metropolitana de Control"/>
     <meta name="generator" content=""/>
-    <title>PETICION DE COPIAS SIMPLES</title>
+    <title>SOLICITUD DE RECONOCIMIENTO DE RESPONSABILIDAD Y PAGO VOLUNTARIO</title>
     <link href="/templates/bestcomputer/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon"/>
     <link href="/media/joodb/css/joodb.css" rel="stylesheet" type="text/css"/>
     <link href="/media/joodb/css/featherlight.min.css" rel="stylesheet" type="text/css"/>
@@ -62,7 +62,7 @@
                             <td>
                                 <div class="title center clear">AGENCIA METROPOLITANA DE CONTROL</div>
 
-                                <div class="title center">PETICION DE COPIAS SIMPLES</div>
+                                <div class="title center"></div>
 
                                 <div class="big separador">
                                     <?php
@@ -82,51 +82,31 @@
                                 </div>
                                 <div class="title"><?php echo $_GET ['direccion']; ?><br/>
                                 </div>
+                                Señores
+                                AGENCIA METROPOLITANA DE CONTROL
+                                ZONA ………………..
+                                Presente.-
 
-                                <div>Yo, <span class="big"><?php
-                                        echo $_GET ['nombres'] . " " . $_GET['apellidos'];
-                                        ?></span> con cédula de ciudadanía No.
-                                    <span class="big"><?php
-                                        echo $_GET ['cedula'];
-                                        ?></span>
-                                    <?php
-                                    if ($_GET ['abogado'] != '') {
-                                    ?>
-                                    y/o, Doctor / Abogado <span class="big"><?php
-                                        echo $_GET ['abogado'];
-                                        ?></span>
-                                    en calidad de abogado patrocinador de <span class="big"><?php
-                                        echo $_GET ['nombres'] . " " . $_GET['apellidos'];
-                                        ?></span>
-                                        <?php
-                                    };
-                                    ?>
+                                De mi consideración:
+
+                                Yo, ………………………………………….., en calidad de ………………………….., del establecimiento denominado………………………………., con número de cédula/RUC ………………………... , ubicado en las calles ………………………………………………., cuya actividad comercial es …………………………………………………, tengo a bien acudir a su autoridad con el fin de exponer y solicitar lo siguiente:
+
+                                El día ……. de …………. del 2020 a las …h…, se me notificó el Acto Administrativo de Inicio del Procedimiento Administrativo Sancionador en Flagrancia, mediante el cual, me da a conocer que he cometido la presunta infracción contemplada en la normativa metropolitana, en razón de que:   ……………………………………………………………………………………………………………………………………………………………………………………………………………………………………
+                                por lo que se procedió a clausurar el establecimiento de mi propiedad con la colocación del respectivo sello.
+
+                                Observaciones:
 
 
-                                    dentro del expediente administrativo No. <span class="big"><?php
-                                        echo $_GET ['expediente'];
-                                        ?></span> y, de
-                                    acuerdo a la Constitución de la República del Ecuador en el artículo
-                                    75 y 76, numeral 1 y 7, literal a) y d), solicito copias simples del expediente No.
-                                    <span class="big"><?php
-                                        echo $_GET ['expediente'];
-                                        ?></span>
-                                    <?php
-                                    if ($_GET ['otrodocumento'] != '') {
-                                        ?>
-                                        y/o del documento <span class="big"><?php
-                                            echo $_GET ['otrodocumento'];
-                                            ?></span>
-                                        <?php
-                                    }
-                                    ?>.
-                                    <br/><br/></div>
 
 
-                                <div>Señalo el correo electrónico, para posteriores notificaciones <span class="big"><?php
-                                        echo $_GET ['correoelectronico'];
-                                        ?></span><br/><br/>
-                                </div>
+                                En consecuencia, tengo a bien reconocer mi responsabilidad en el incumplimiento de la normativa considerada como infracción y me allano a las sanciones que correspondan conforme el procedimiento señalado en el Código Orgánico Administrativo, por lo tanto solicito muy comedidamente que en el menor tiempo posible se levante la clausura impuesta a mi establecimiento, a fin de retomar las actividades comerciales, comprometiéndome a no volver a incumplir con lo dispuesto en la normativa vigente.
+
+                                Adjunta Archivo de LUAE
+                                No adjunta archivo de LUAE
+                                Para futuras notificaciones dentro del procedimiento administrativo sancionador señalo mi domicilio en ………………………………….., mi correo electrónico ………………………… y número de celular ………………………..
+
+
+                                Firma:
 
                                 <div>Atentamente</br></br></br>____________________</br>
                                     <span class="big"><?php
