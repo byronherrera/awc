@@ -70,43 +70,74 @@
                                     date_default_timezone_set("America/Mexico_City");
                                     $mes = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"][date("n") - 1];
 
-                                    echo 'DMQ ' . $date->format('d') . ' de ' . $mes . ' de ' . $date->format('Y'); // 31-07-2012
+                                    echo 'Quito ' . $date->format('d') . ' de ' . $mes . ' de ' . $date->format('Y'); // ejempo 31-07-2012
                                     ?>
 
                                 </div>
                                 <div class="big separador">
                                 </div>
 
-                                <div class="title">Señor (a):</div>
-                                <div class="title">DIRECTOR y/o FUNCIONARIO DE:<br/>
+                                <div class="title">Señores:</div>
+                                <div class="title">AGENCIA METROPOLITANA DE CONTROL</div>
+                                <div class="title">ZONA <strong>"<?php echo $_GET ['zonal']; ?>"</strong></div>
+                                <div class="title">Presente.-</div>
+                                <div class="title"></div>
+                                <div class="title">De mi consideración:</div>
+                                <div class="title"></div>
+                                <div>
+                                    Yo, <strong><?php echo $_GET ['nombres'] . " " . $_GET['apellidos']; ?></strong>, en calidad de
+                                    <strong><?php echo $_GET['tipoadministrador']; ?></strong>,
+                                    del establecimiento denominado <strong><?php echo $_GET['establecimiento']; ?></strong>, con número de cédula/RUC
+                                    <strong><?php echo $_GET['cedula']; ?></strong>, ubicado en las calles  <strong><?php echo $_GET['ubicacion']; ?></strong>,
+                                    cuya actividad comercial es <strong><?php echo $_GET['actividad']; ?></strong>, tengo a bien acudir a su autoridad con el fin de exponer y
+                                    solicitar lo siguiente:
                                 </div>
-                                <div class="title"><?php echo $_GET ['direccion']; ?><br/>
+                                <div>
+                                    El día <strong><?php echo $_GET['fechaacto']; ?></strong>. de <strong><?php echo $_GET['fechaacto']; ?></strong> del <strong><?php echo $_GET['fechaacto']; ?></strong> a las <strong><?php echo $_GET['fechaacto']; ?></strong>, se me notificó el Acto Administrativo de Inicio del
+                                    Procedimiento Administrativo Sancionador en Flagrancia, mediante el cual, me da a
+                                    conocer que he
+                                    cometido la presunta infracción contemplada en la normativa metropolitana, en razón
+                                    de que:
                                 </div>
-                                Señores
-                                AGENCIA METROPOLITANA DE CONTROL
-                                ZONA ………………..
-                                Presente.-
+                                <div>
+                                    Descripcion motivo
+                                </div>
+                                <div>
+                                    por lo que se procedió a clausurar el establecimiento de mi propiedad con la
+                                    colocación del
+                                    respectivo
+                                    sello.
+                                </div>
+                                <div>
+                                    Observaciones:
+                                </div>
+                                <div>
+                                    En consecuencia, tengo a bien reconocer mi responsabilidad en el incumplimiento de
+                                    la normativa
+                                    considerada como infracción y me allano a las sanciones que correspondan conforme el
+                                    procedimiento
+                                    señalado en el Código Orgánico Administrativo, por lo tanto solicito muy
+                                    comedidamente que en el
+                                    menor
+                                    tiempo posible se levante la clausura impuesta a mi establecimiento, a fin de
+                                    retomar las
+                                    actividades
+                                    comerciales, comprometiéndome a no volver a incumplir con lo dispuesto en la
+                                    normativa vigente.
+                                </div>
+                                <div>
+                                    Adjunta Archivo de LUAE
+                                </div>
+                                <div>
+                                    Para futuras notificaciones dentro del procedimiento administrativo sancionador
+                                    señalo mi domicilio
+                                    en
+                                    ….., mi correo electrónico … y número de celular ..
 
-                                De mi consideración:
-
-                                Yo, ………………………………………….., en calidad de ………………………….., del establecimiento denominado………………………………., con número de cédula/RUC ………………………... , ubicado en las calles ………………………………………………., cuya actividad comercial es …………………………………………………, tengo a bien acudir a su autoridad con el fin de exponer y solicitar lo siguiente:
-
-                                El día ……. de …………. del 2020 a las …h…, se me notificó el Acto Administrativo de Inicio del Procedimiento Administrativo Sancionador en Flagrancia, mediante el cual, me da a conocer que he cometido la presunta infracción contemplada en la normativa metropolitana, en razón de que:   ……………………………………………………………………………………………………………………………………………………………………………………………………………………………………
-                                por lo que se procedió a clausurar el establecimiento de mi propiedad con la colocación del respectivo sello.
-
-                                Observaciones:
-
-
-
-
-                                En consecuencia, tengo a bien reconocer mi responsabilidad en el incumplimiento de la normativa considerada como infracción y me allano a las sanciones que correspondan conforme el procedimiento señalado en el Código Orgánico Administrativo, por lo tanto solicito muy comedidamente que en el menor tiempo posible se levante la clausura impuesta a mi establecimiento, a fin de retomar las actividades comerciales, comprometiéndome a no volver a incumplir con lo dispuesto en la normativa vigente.
-
-                                Adjunta Archivo de LUAE
-                                No adjunta archivo de LUAE
-                                Para futuras notificaciones dentro del procedimiento administrativo sancionador señalo mi domicilio en ………………………………….., mi correo electrónico ………………………… y número de celular ………………………..
-
-
-                                Firma:
+                                </div>
+                                <div>
+                                    Firma:
+                                </div>
 
                                 <div>Atentamente</br></br></br>____________________</br>
                                     <span class="big"><?php
@@ -116,20 +147,7 @@
                                         echo $_GET ['cedula'];
                                         ?></span>
                                 </div>
-                                <?php
-                                if ($_GET ['abogado'] != '') {
-                                    ?>
-                                    <div>y/o</br></br></br>____________________</br>
-                                        <span class="big"><?php
-                                            echo $_GET ['abogado'];
-                                            ?></span></br>
-                                        <span class="big">Matrícula No. <?php
-                                            echo $_GET ['abogadomatricula'];
-                                            ?></span>
-                                    </div>
-                                    <?php
-                                };
-                                ?>
+
 
                             </td>
                         </tr>

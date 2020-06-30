@@ -29,38 +29,44 @@ require_once('../../server/os.php');
             <div id="formulario">
                 <label for="cedula">MOTIVO*</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="materia" id="radio1" value="LUAE CON MEDIDAD CAUTELAR (CON CLAUSURA)">
+                    <input class="form-check-input" type="radio" name="materia" id="radio1"
+                           value="LUAE CON MEDIDAD CAUTELAR (CON CLAUSURA)">
                     <label class="form-check-label" for="materia1">
                         1. LUAE CON MEDIDAD CAUTELAR (CON CLAUSURA)
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="materia" id="radio2" value="LUAE SIN MEDIDA CAUTELAR (SIN CLAUSURA)">
+                    <input class="form-check-input" type="radio" name="materia" id="radio2"
+                           value="LUAE SIN MEDIDA CAUTELAR (SIN CLAUSURA)">
                     <label class="form-check-label" for="materia2">
                         2. LUAE SIN MEDIDA CAUTELAR (SIN CLAUSURA)
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="materia" id="radio3" value="MASCARILLA CON PETICIÓN DE TRABAJO COMUNITARIO">
+                    <input class="form-check-input" type="radio" name="materia" id="radio3"
+                           value="MASCARILLA CON PETICIÓN DE TRABAJO COMUNITARIO">
                     <label class="form-check-label" for="materia3">
                         3. MASCARILLA CON PETICIÓN DE TRABAJO COMUNITARIO
                     </label>
                 </div>
                 <div class="form-check disabled">
-                    <input class="form-check-input" type="radio" name="materia" id="radio4" value="MASCARILLA CON PAGO DE MULTA">
+                    <input class="form-check-input" type="radio" name="materia" id="radio4"
+                           value="MASCARILLA CON PAGO DE MULTA">
                     <label class="form-check-label" for="materia4">
                         4. MASCARILLA CON PAGO DE MULTA
                     </label>
                 </div>
                 <div class="form-check disabled">
-                    <input class="form-check-input" type="radio" name="materia" id="radio5" value="LIBADORES CON PETICIÓN DE TRABAJO COMUNITARIO"
+                    <input class="form-check-input" type="radio" name="materia" id="radio5"
+                           value="LIBADORES CON PETICIÓN DE TRABAJO COMUNITARIO"
                            required="required">
                     <label class="form-check-label" for="materia5">
                         5. LIBADORES CON PETICIÓN DE TRABAJO COMUNITARIO
                     </label>
                 </div>
                 <div class="form-check disabled">
-                    <input class="form-check-input" type="radio" name="materia" id="radio5" value="LIBADORES CON PAGO DE MULTA"
+                    <input class="form-check-input" type="radio" name="materia" id="radio5"
+                           value="LIBADORES CON PAGO DE MULTA"
                            required="required">
                     <label class="form-check-label" for="materia5">
                         6. LIBADORES CON PAGO DE MULTA
@@ -74,7 +80,8 @@ require_once('../../server/os.php');
                     </label>
                 </div>
                 <div class="form-check disabled">
-                    <input class="form-check-input" type="radio" name="materia" id="radio5" value="ACTIVIDAD ECONOMICA EN ESPACIO PÚBLICO"
+                    <input class="form-check-input" type="radio" name="materia" id="radio5"
+                           value="ACTIVIDAD ECONOMICA EN ESPACIO PÚBLICO"
                            required="required">
                     <label class="form-check-label" for="materia5">
                         8. ACTIVIDAD ECONOMICA EN ESPACIO PÚBLICO
@@ -136,7 +143,7 @@ require_once('../../server/os.php');
 
                 <div class="form-group">
                     <label for="fecha">FECHA HORA CLUASURA/SANCION</label>
-                    <div class="input-group date form_datetime  " data-date="1994-09-16T05:25:07Z"
+                    <div class="input-group date form_datetime  " data-date=""
                          data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
                         <input class="form-control" size="16" type="text" name="fechaacto" id="fechaacto"
                                required="required" style="background-color: #fff;">
@@ -238,29 +245,24 @@ require_once('../../server/os.php');
         $('#botonsolicitud').hide();
         $('#solicitud').hide();
         $('#formulario').hide();
-        $('#btn-continuar1').click( function () {
+        $('#btn-continuar1').click(function () {
             $('#formulario').fadeIn();
         });
+        /*
+                $("#btn-continuar").click(function(event) {
+                    console.log ("ee");
+                    // Fetch form to apply custom Bootstrap validation
+                    var form = $("#myForm")
 
-        $("#btn-continuar").click(function(event) {
-            console.log ("ee");
-            // Fetch form to apply custom Bootstrap validation
-            var form = $("#myForm")
+                    if (form[0].checkValidity() === false) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.addClass('was-validated');
+                    // Perform ajax submit here...
+                });
+        */
 
-            if (form[0].checkValidity() === false) {
-                event.preventDefault()
-                event.stopPropagation()
-            }
-//
-            form.addClass('was-validated');
-            // Perform ajax submit here...
-
-        });
-
-
-
-        var today = new Date();
-        var todayMaximoHoras = new Date();
         var date = new Date();
         var dateStr =
             date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
@@ -281,9 +283,10 @@ require_once('../../server/os.php');
             language: 'es',
             format: 'yyyy-mm-dd hh:ii',
             autoclose: true,
-            //  todayBtn: true,
-            // startDate: today
+            todayBtn: true,
+            defaultDate: date
         });
+
 
         $("#btn-continuar").click(function (e) {
             e.preventDefault();
@@ -305,37 +308,49 @@ require_once('../../server/os.php');
         });
 
         function validarDatos() {
+
             return $('#cedula')[0].checkValidity() &&
                 $('#nombres')[0].checkValidity() &&
-                $('#apellidos')[0].checkValidity()  ;
-
+                $('#apellidos')[0].checkValidity();
         }
 
         function prepararNuevoLink() {
             var cedula = $('#cedula').val();
             var nombres = $('#nombres').val();
             var apellidos = $('#apellidos').val();
-            var correoelectronico = $('#correoelectronico').val();
-            var abogado = $('#abogado').val();
-            var abogadomatricula = $('#abogadomatricula').val();
-
-            var idzonal = $('#idzonal').val();
-            var expediente = $('#expediente').val();
-            var otrodocumento = $('#otrodocumento').val();
-            var fecha = $('#fecha').val();
             var materia = $('input:radio[name=materia]:checked').val();
+            var idzonal = $('#idzonal').val();
+            var tipoadministrador = $('#tipoadministrador').val();
+            var establecimiento = $('#establecimiento').val();
+            var ubicacion = $('#ubicacion').val();
+            var actividad = $('#actividad').val();
+            var fechaacto = $('#fechaacto').val();
+            var descripcion = $('#descripcion').val();
+            var domicilio = $('#domicilio').val();
+            var correoelectronico = $('#correoelectronico').val();
+            var celular = $('#celular').val();
+            var fecha = $('#fecha').val();
+            var observaciones = $('#observaciones').val();
+            var zonal = $('#idzonal option:selected').text();
 
             $("#linksolicitud").attr("href", "impresion.php?cedula=" + cedula
                 + "&nombres=" + nombres
                 + "&apellidos=" + apellidos
-                + "&correoelectronico=" + correoelectronico
-                + "&abogado=" + abogado
-                + "&abogadomatricula=" + abogadomatricula
+                + "&materia=" + materia
                 + "&idzonal=" + idzonal
-                + "&expediente=" + expediente
-                + "&otrodocumento=" + otrodocumento
+                + "&tipoadministrador=" + tipoadministrador
+                + "&establecimiento=" + establecimiento
+                + "&ubicacion=" + ubicacion
+                + "&actividad=" + actividad
+                + "&fechaacto=" + fechaacto
+                + "&descripcion=" + descripcion
+                + "&domicilio=" + domicilio
+                + "&correoelectronico=" + correoelectronico
+                + "&celular=" + celular
                 + "&fecha=" + fecha
-                + "&materia=" + materia)
+                + "&observaciones=" + observaciones
+                + "&zonal=" + zonal
+            )
         };
 
         $("input").change(function () {
