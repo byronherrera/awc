@@ -179,6 +179,16 @@ require_once('../../server/os.php');
                            placeholder="Ingrese su número celular">
                 </div>
 
+
+                <div style="height: 30px"></div>
+                <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="anexaluae">
+                    <label class="form-check-label" for="defaultCheck1">
+                        ANEXA COPIA DE LUAE
+                    </label>
+                </div>
+
+                <div style="height: 30px"></div>
                 <div class="form-group">
                     <label for="fecha">FECHA SOLICITUD</label>
                     <input class="form-control senddata" size="16" type="text" name="fecha" id="fecha"
@@ -213,11 +223,20 @@ require_once('../../server/os.php');
                 <div id="botonsolicitud">
                     <div class="form-group">
                         <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Subir solicitud </label>
+                            <label class="custom-file-label" for="archivo">Subir formulario </label>
                             <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1"
                                    required="required">
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <label class="custom-file-label" for="archivo">Subir LUAE </label>
+                            <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1"
+                                   required="required">
+                        </div>
+                    </div>
+
                 </div>
 
                 <div style="height: 30px"></div>
@@ -332,6 +351,11 @@ require_once('../../server/os.php');
             var fecha = $('#fecha').val();
             var observaciones = $('#observaciones').val();
             var zonal = $('#idzonal option:selected').text();
+            if ($('#anexaluae').is(":checked"))
+            {
+                var anexaluae = 1
+            }
+
 
             $("#linksolicitud").attr("href", "impresion.php?cedula=" + cedula
                 + "&nombres=" + nombres
@@ -350,6 +374,7 @@ require_once('../../server/os.php');
                 + "&fecha=" + fecha
                 + "&observaciones=" + observaciones
                 + "&zonal=" + zonal
+                + "&anexaluae=" + anexaluae
             )
         };
 

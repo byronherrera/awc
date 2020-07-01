@@ -43,7 +43,7 @@
     <![endif]-->
 </head>
 
-<body class="contentpane">
+<body class="contentpane" style="font-size: 12px !important;">
 <div class="container-fluid" id="fav-mainwrap">
     <div class="row-fluid">
         <div id="fav-main" class="clearfix">
@@ -61,9 +61,6 @@
                         <tr>
                             <td>
                                 <div class="title center clear">AGENCIA METROPOLITANA DE CONTROL</div>
-
-                                <div class="title center"></div>
-
                                 <div class="big separador">
                                     <?php
                                     $date = new DateTime($_GET ['fecha']);
@@ -72,82 +69,94 @@
 
                                     echo 'Quito ' . $date->format('d') . ' de ' . $mes . ' de ' . $date->format('Y'); // ejempo 31-07-2012
                                     ?>
-
                                 </div>
-                                <div class="big separador">
-                                </div>
+                                <div class="">Señores:</div>
+                                <div class="">AGENCIA METROPOLITANA DE CONTROL</div>
+                                <div class="">ZONA <strong>"<?php echo $_GET ['zonal']; ?>"</strong></div>
+                                <div class="big separador"></div>
+                                <div class="">Presente.-</div>
+                                <div class="">De mi consideración:</div>
+                                <div class="big separador"></div>
 
-                                <div class="title">Señores:</div>
-                                <div class="title">AGENCIA METROPOLITANA DE CONTROL</div>
-                                <div class="title">ZONA <strong>"<?php echo $_GET ['zonal']; ?>"</strong></div>
-                                <div class="title">Presente.-</div>
-                                <div class="title"></div>
-                                <div class="title">De mi consideración:</div>
-                                <div class="title"></div>
                                 <div>
-                                    Yo, <strong><?php echo $_GET ['nombres'] . " " . $_GET['apellidos']; ?></strong>, en calidad de
+                                    Yo, <strong><?php echo $_GET ['nombres'] . " " . $_GET['apellidos']; ?></strong>, en
+                                    calidad de
                                     <strong><?php echo $_GET['tipoadministrador']; ?></strong>,
-                                    del establecimiento denominado <strong><?php echo $_GET['establecimiento']; ?></strong>, con número de cédula/RUC
-                                    <strong><?php echo $_GET['cedula']; ?></strong>, ubicado en las calles  <strong><?php echo $_GET['ubicacion']; ?></strong>,
-                                    cuya actividad comercial es <strong><?php echo $_GET['actividad']; ?></strong>, tengo a bien acudir a su autoridad con el fin de exponer y
+                                    del establecimiento denominado
+                                    <strong><?php echo $_GET['establecimiento']; ?></strong>, con número de cédula/RUC
+                                    <strong><?php echo $_GET['cedula']; ?></strong>, ubicado en las calles
+                                    <strong><?php echo $_GET['ubicacion']; ?></strong>,
+                                    cuya actividad comercial es <strong><?php echo $_GET['actividad']; ?></strong>,
+                                    tengo a bien acudir a su autoridad con el fin de exponer y
                                     solicitar lo siguiente:
                                 </div>
                                 <div>
-                                    El día <strong><?php echo $_GET['fechaacto']; ?></strong>. de <strong><?php echo $_GET['fechaacto']; ?></strong> del <strong><?php echo $_GET['fechaacto']; ?></strong> a las <strong><?php echo $_GET['fechaacto']; ?></strong>, se me notificó el Acto Administrativo de Inicio del
+                                    <?php
+                                    $fechaacto = new DateTime($_GET ['fechaacto']);
+                                    date_default_timezone_set("America/Mexico_City");
+                                    $mesacto = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"][date("n") - 1];
+                                    ?>
+
+                                    El día <strong><?php echo $fechaacto->format('d'); ?></strong>. de
+                                    <strong><?php echo $mesacto; ?></strong> del
+                                    <strong><?php echo $fechaacto->format('Y'); ?></strong> a las
+                                    <strong><?php echo $fechaacto->format('H:i'); ?></strong>, se me notificó el Acto
+                                    Administrativo de Inicio del
                                     Procedimiento Administrativo Sancionador en Flagrancia, mediante el cual, me da a
                                     conocer que he
                                     cometido la presunta infracción contemplada en la normativa metropolitana, en razón
                                     de que:
                                 </div>
                                 <div>
-                                    Descripcion motivo
-                                </div>
-                                <div>
+                                    <strong><?php echo $_GET['descripcion']; ?></strong>
                                     por lo que se procedió a clausurar el establecimiento de mi propiedad con la
-                                    colocación del
-                                    respectivo
-                                    sello.
+                                    colocación del respectivo sello.
                                 </div>
                                 <div>
-                                    Observaciones:
+                                    <?php if ($_GET['observaciones'] != '') {
+                                        ?>
+                                        Observaciones:
+                                        <strong><?php echo $_GET['observaciones']; ?></strong>
+                                        <?php
+                                    } ?>
                                 </div>
+                                <div class="big separador"></div>
                                 <div>
                                     En consecuencia, tengo a bien reconocer mi responsabilidad en el incumplimiento de
-                                    la normativa
-                                    considerada como infracción y me allano a las sanciones que correspondan conforme el
-                                    procedimiento
-                                    señalado en el Código Orgánico Administrativo, por lo tanto solicito muy
-                                    comedidamente que en el
-                                    menor
-                                    tiempo posible se levante la clausura impuesta a mi establecimiento, a fin de
-                                    retomar las
-                                    actividades
-                                    comerciales, comprometiéndome a no volver a incumplir con lo dispuesto en la
-                                    normativa vigente.
+                                    la normativa considerada como infracción y me allano a las sanciones que
+                                    correspondan conforme el procedimiento señalado en el Código Orgánico
+                                    Administrativo, por lo tanto solicito muy comedidamente que en el
+                                    menor tiempo posible se levante la clausura impuesta a mi establecimiento, a fin de
+                                    retomar las actividades comerciales, comprometiéndome a no volver a incumplir con lo
+                                    dispuesto en la normativa vigente.
                                 </div>
-                                <div>
-                                    Adjunta Archivo de LUAE
-                                </div>
+                                <div class="big separador"></div>
                                 <div>
                                     Para futuras notificaciones dentro del procedimiento administrativo sancionador
-                                    señalo mi domicilio
-                                    en
-                                    ….., mi correo electrónico … y número de celular ..
+                                    señalo mi domicilio en <strong><?php echo $_GET['domicilio']; ?></strong>, mi correo
+                                    electrónico <strong><?php echo $_GET['correoelectronico']; ?></strong> y número de
+                                    celular <strong><?php echo $_GET['celular']; ?></strong>
 
                                 </div>
+                                <div class="big separador"></div>
                                 <div>
                                     Firma:
                                 </div>
-
+                                <div class="big separador"></div>
                                 <div>Atentamente</br></br></br>____________________</br>
                                     <span class="big"><?php
                                         echo $_GET ['nombres'] . " " . $_GET['apellidos'];
                                         ?></span></br>
-                                    <span class="big">C.C <?php
-                                        echo $_GET ['cedula'];
-                                        ?></span>
+                                    <span class="big">C.C. <?php echo $_GET ['cedula']; ?></span>
                                 </div>
-
+                                <div></div>
+                                <div class="separador">
+                                    <?php if ($_GET['anexaluae'] == '1') {
+                                        ?></br>
+                                        ADJUNTA ARCHIVO DE LUAE
+                                        <?php
+                                    } ?>
+                                </div>
 
                             </td>
                         </tr>
