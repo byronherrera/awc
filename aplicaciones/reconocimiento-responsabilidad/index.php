@@ -232,11 +232,10 @@ require_once('../../server/os.php');
                     <div class="form-group">
                         <div class="custom-file">
                             <label class="custom-file-label" for="archivo">Subir LUAE </label>
-                            <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1"
+                            <input type="file" class="custom-file-input" id="archivo2" lang="es" name="archivo2"
                                    required="required">
                         </div>
                     </div>
-
                 </div>
 
                 <div style="height: 30px"></div>

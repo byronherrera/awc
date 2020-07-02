@@ -251,7 +251,7 @@ function ingresaNuevoProceso()
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado['archivo1'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado1['archivo1'] = "uploads/" . basename($today . '-' . $nombreArchivo);
         }
     }
 
@@ -272,41 +272,36 @@ function ingresaNuevoProceso()
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado['archivo2'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado2['archivo2'] = "uploads/" . basename($today . '-' . $nombreArchivo);
         }
     }
 
-    if (count($listado) > 0)
-        $data->imagenacto = json_encode($listado);
+    if (count($listado1) > 0)
+        $data->imagenasolicitud = json_encode($listado1);
+    if (count($listado2) > 0)
+        $data->imagenaluae = json_encode($listado2);
 
 
     $data->cedula = $_POST["cedula"];
     $data->nombres = $_POST["nombres"];
     $data->apellidos = $_POST["apellidos"];
 
+    $data->materia = $_POST["materia"];
+    $data->tipoadministrador = $_POST["tipoadministrador"];
+    $data->establecimiento = $_POST["establecimiento"];
+    $data->ubicacion = $_POST["ubicacion"];
+    $data->actividad = $_POST["actividad"];
+    $data->fechaacto = $_POST["fechaacto"];
+    $data->descripcion = $_POST["descripcion"];
+    $data->domicilio = $_POST["domicilio"];
     $data->correoelectronico = $_POST["correoelectronico"];
-    $data->abogado = $_POST["abogado"];
-    $data->abogadomatricula = $_POST["abogadomatricula"];
-    $data->expediente = $_POST["expediente"];
-    $data->otrodocumento = $_POST["otrodocumento"];
-    $data->direccion = $_POST["direccion"];
+    $data->celular = $_POST["celular"];
+    $data->observaciones = $_POST["observaciones"];
 
     $data->fecha = $_POST["fecha"];
     $data->idzonal = $_POST["idzonal"];
     $data->zonal = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
-    $data->ip = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
-
-function recuperaIP () {
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    return $ip;
-}
-
+    $data->ip = recuperaIP();
 
     $cadenaDatos = '';
     $cadenaCampos = '';
@@ -318,7 +313,7 @@ function recuperaIP () {
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "INSERT INTO amc_sancion_emergencia_locales ($cadenaCampos) VALUES ($cadenaDatos);";
+    $sql = "INSERT INTO amc_reconocimineto_responsabilidad ($cadenaCampos) VALUES ($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $result = $sql->execute();
 
@@ -344,6 +339,16 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 */
+function recuperaIP () {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
 //genera el archivo PDF
 function generaPdf($data)
 {
