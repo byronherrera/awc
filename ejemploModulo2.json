@@ -1,0 +1,63 @@
+{
+    "id": "allanamiento",
+    "type": "desktop/allanamiento",
+    "about": {
+        "author": "",
+        "description": "Mantenimiento de Allanamiento.",
+        "name": "Ventana Allanamiento",
+        "url": "",
+        "version": "1.0"
+    },
+    "server": {
+        "methods": [
+            { "name": "accesosSecretaria", "description": "Funcionarios que revisan documentacion para su gestion" },
+            { "name": "accesosAdministrador", "description": "Administrador reasigna quien revisa tramite" },
+            { "name": "accesosFuncionales", "description": "Usuarios que realizan el tramite" },
+            { "name": "accesosConsultas", "description": "Accesos solo de lectura" }
+        ],
+        "class": "QoAllanamiento",
+        "file": "desktop/allanamiento/allanamiento.php"
+    },
+    "client": {
+        "class": "QoDesk.AllanamientoWindow",
+        "css": [
+            {
+                "directory": "desktop/allanamiento/client/resources/",
+                "files": [ "styles.css" ]
+            },
+            {
+                "directory": "common/libraries/",
+                "files": [ "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css"  ]
+            }
+        ],
+        "javascript": [
+            {
+                "directory": "desktop/allanamiento/client/",
+                "files": [  "allanamiento-win.js" ]
+            },
+            {
+                "directory": "common/libraries/",
+                "files": [ "datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
+            },
+            {
+                "directory": "qwiki/admin/client/",
+                "files": [ "QoAdmin.js" ]
+            },
+            {
+                "directory": "qwiki/admin/client/lib/",
+                "files": [ "ActiveColumn.js", "ColumnNodeUI.js", "Nav.js", "SearchField.js", "TooltipEditor.js" ]
+            }
+        ],
+        "launcher": {
+            "config": {
+                "iconCls": "allanamiento-icon",
+                "shortcutIconCls": "allanamiento-shortcut",
+                "text": "Allanamiento",
+                "tooltip": "<b>Denuncias web</b>"
+            },
+            "paths": {
+                "startmenu": "/"
+            }
+        }
+    }
+}
