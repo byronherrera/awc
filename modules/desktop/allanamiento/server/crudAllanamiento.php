@@ -82,6 +82,44 @@ function deleteAllanamiento()
     ));
 }
 
+function selectAllanamientoForm()
+{
+    global $os;
+    $id = (int)$_POST ['id'];
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM amc_reconocimineto_responsabilidad WHERE id = $id";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data = $row;
+    }
+    $data['fecha2'] = $data['fecha'];
+    $data['nombres2'] = $data['nombres'];
+    $data['apellidos2'] = $data['apellidos'];
+    $data['correoelectronico2'] = $data['correoelectronico'];
+    $data['cedula2'] = $data['cedula'];
+    $data['totalallanamiento'] = totalpedidos($data['cedula']);
+
+    if (strlen($data['imagenasolicitud']) > 0) {
+        $link1 = json_decode($data['imagenasolicitud']);
+        $data['imagenasolicitud'] = "<a href='aplicaciones/reconocimiento-responsabilidad/" . $link1->archivo1 . "' target='_blank'>Ver solicitud</a>";;
+    } else {
+        $data['imagenasolicitud'] = '';
+    }
+
+    if (strlen($data['imagenaluae']) > 0) {
+        $link2 = json_decode($data['imagenaluae']);
+        $data['imagenaluae'] = "<a href='aplicaciones/reconocimiento-responsabilidad/" . $link2->archivo2 . "' target='_blank'>Ver LUAE</a>";
+    } else {
+        $data['imagenaluae'] = '';
+    }
+
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
 switch ($_GET['operation']) {
     case 'select' :
         selectAllanamiento();
@@ -95,4 +133,19 @@ switch ($_GET['operation']) {
     case 'delete' :
         deleteAllanamiento();
         break;
+    case 'selectForm' :
+        selectAllanamientoForm();
+        break;
+}
+
+function totalpedidos($cedula)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+    $sql = "SELECT COUNT(*) AS total FROM amc_reconocimineto_responsabilidad WHERE cedula = '$cedula'";
+    $nombre = $os->db->conn->query($sql);
+
+    $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rownombre['total'];
 }

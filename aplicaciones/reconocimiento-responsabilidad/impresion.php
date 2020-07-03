@@ -73,6 +73,7 @@
                                 <div class="">Señores:</div>
                                 <div class="">AGENCIA METROPOLITANA DE CONTROL</div>
                                 <div class="">ZONA <strong>"<?php echo $_GET ['zonal']; ?>"</strong></div>
+                                <div class="">MOTIVO <strong>"<?php echo $_GET ['materia']; ?>"</strong></div>
                                 <div class="big separador"></div>
                                 <div class="">Presente.-</div>
                                 <div class="">De mi consideración:</div>
