@@ -226,7 +226,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             }
                             else {
                                 Ext.getCmp('tb_negarallanamiento').setDisabled(false);
-                                Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
+                                // Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
                                 Ext.getCmp('motivoNegarDenuncia').setDisabled(false);
                                 Ext.getCmp('codigo_tramite_formulario').setDisabled(false);
                             }
@@ -335,7 +335,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         margins: '0 0 0 0',
                         tbar: [
                             {
-                                text: 'Aprobar denuncia',
+                                text: 'Aprobar solicitud allanamiento',
                                 scope: this,
                                 handler: this.aprobarallanamiento,
                                 iconCls: 'save-icon',
@@ -343,7 +343,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                 id: 'tb_aprobarallanamiento'
                                 , formBind: true
                             }, {
-                                text: 'Negar allanamiento',
+                                text: 'Negar solicitud allanamiento',
                                 scope: this,
                                 handler: this.negarallanamiento,
                                 iconCls: 'save-icon',
@@ -552,14 +552,19 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                                 anchor: '95%'
                                             },
                                             {
-                                                xtype:'textfield',
+                                                xtype: 'textfield',
                                                 fieldLabel: 'SITRA',
                                                 name: 'codigo_tramite',
-                                                anchor:'95%',
+                                                anchor: '95%',
                                                 allowBlank: false,
-                                                id: 'codigo_tramite_formulario'
-
-
+                                                id: 'codigo_tramite_formulario',
+                                                listeners: {
+                                                    'change': function (value, newValue, oldValue) {
+                                                        if (newValue != oldValue) {
+                                                            Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
+                                                        }
+                                                    }
+                                                }
                                             }
                                         ]
                                     }
@@ -633,7 +638,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 },
                 success: function (response, opts) {
                     mensaje = Ext.getCmp('textDenunciasAnteriores');
-                    mensaje.setText('Denuncias anteriores: ' + (response.findField('totalallanamiento').getValue() - 1))
+                    mensaje.setText('Solicitudes allanamiento anteriores: ' + (response.findField('totalallanamiento').getValue() - 1))
                 }
 
             });
@@ -730,21 +735,17 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     var myForm = Ext.getCmp('formAllanamientoDetalle').getForm();
-
                     myForm.submit({
                         url: urlAllanamiento + 'crudAllanamiento.php?operation=negarDenuncia',
                         method: 'POST',
                         waitMsg: 'Saving data',
-
                         success: function (form, action) {
-
                             Ext.getCmp('tb_negarallanamiento').setDisabled(true);
                             Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
                             store.load();
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);
-
                             Ext.Msg.show({
                                 title: 'Error campos obligatorios'
                                 , msg: errorJson.msg
