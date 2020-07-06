@@ -1,7 +1,7 @@
-.allanamiento-icon { background-image: url(images/allanamiento.png) !important; }
-.x-btn-large .allanamiento-icon { background-image: url(images/allanamiento32.png) !important; }
-.allanamiento-shortcut { background-image: url(images/allanamiento48.png) !important; }
-#allanamiento-nav-panel li { margin-bottom:5px; }
+.copiassimples-icon { background-image: url(images/copiassimples.png) !important; }
+.x-btn-large .copiassimples-icon { background-image: url(images/copiassimples32.png) !important; }
+.copiassimples-shortcut { background-image: url(images/copiassimples48.png) !important; }
+#copiassimples-nav-panel li { margin-bottom:5px; }
 .save-icon{background:transparent url(images/add.png) 0 0 no-repeat !important;}
 .delete-icon{background:transparent url(images/delete.png) 0 0 no-repeat !important;}
 .print-icon{background:transparent url(images/printer.png) 0 0 no-repeat !important;}
