@@ -129,7 +129,7 @@ require_once('../../server/os.php');
                         <p><label for="fecha">Imprima y firme la siguiente solicud. Escanéelo y lo anexa en el presente
                                 formulario</label></p>
 
-                        <label class="custom-file-label" for="archivo">ABRIR SOLICITUD</label>
+                        <label class="custom-file-label" for="solicitud">ABRIR SOLICITUD</label>
                         <a href="impresion.php" title="Print" id="linksolicitud"
                            onclick="window.open(this.href,'win2','status=no,toolbar=no,scrollbars=yes,titlebar=no,menubar=no,resizable=yes,width=720,height=560,directories=no,location=no'); return false;"
                            rel="nofollow">

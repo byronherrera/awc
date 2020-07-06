@@ -254,30 +254,30 @@ function ingresaNuevoProceso()
             $listado['archivo1'] = "uploads/" . basename($today . '-' . $nombreArchivo);
         }
     }
+    /*
+        if ($_FILES['archivo2']['name'] != null) {
 
-    if ($_FILES['archivo2']['name'] != null) {
+            $temp_file_name = $_FILES['archivo2']['tmp_name'];
 
-        $temp_file_name = $_FILES['archivo2']['tmp_name'];
+            $original_file_name = $_FILES['archivo2']['name'];
+            $uploaddir = __DIR__ . "/uploads/";
 
-        $original_file_name = $_FILES['archivo2']['name'];
-        $uploaddir = __DIR__ . "/uploads/";
+            $nombreArchivo = $_FILES['archivo2']['name'];
 
-        $nombreArchivo = $_FILES['archivo2']['name'];
+            $vowels = array("[", "]");
+            $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+            $today = date("Y-n-j-H-i");
 
-        $vowels = array("[", "]");
-        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
-        $today = date("Y-n-j-H-i");
+            $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
 
-        $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
-
-        if (move_uploaded_file($temp_file_name, $uploadfile)) {
-            //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado['archivo2'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            if (move_uploaded_file($temp_file_name, $uploadfile)) {
+                //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
+                $listado['archivo2'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            }
         }
-    }
-
+    */
     if (count($listado) > 0)
-        $data->imagenacto = json_encode($listado);
+        $data->imagenasolicitud = json_encode($listado);
 
 
     $data->cedula = $_POST["cedula"];
@@ -294,19 +294,7 @@ function ingresaNuevoProceso()
     $data->fecha = $_POST["fecha"];
     $data->idzonal = $_POST["idzonal"];
     $data->zonal = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
-    $data->ip = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
-
-function recuperaIP () {
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    return $ip;
-}
-
+    $data->ip = recuperaIP();
 
     $cadenaDatos = '';
     $cadenaCampos = '';
@@ -318,7 +306,7 @@ function recuperaIP () {
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "INSERT INTO amc_sancion_emergencia_locales ($cadenaCampos) VALUES ($cadenaDatos);";
+    $sql = "INSERT INTO amc_secretaria_copias_simples ($cadenaCampos) VALUES ($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $result = $sql->execute();
 
@@ -333,7 +321,18 @@ function recuperaIP () {
     ));
 
     return $data;
+}
 
+function recuperaIP()
+{
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
 }
 
 /* todo para proxima implementacion
