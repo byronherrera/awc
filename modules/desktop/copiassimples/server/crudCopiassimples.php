@@ -107,7 +107,6 @@ function selectCopiassimplesForm()
         $data['imagenasolicitud'] = '';
     }
 
-
     echo json_encode(array(
             "success" => true,
             "data" => $data)
@@ -144,15 +143,61 @@ function negar()
     global $os;
 
     $id = (int)$_POST ['id'];
+    $nombre = $_POST ['nombres'] . " " . $_POST ['apellidos'];
+
     $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
+    $observaciones = $_POST ['observaciones'];
+    $idingreso = $os->get_member_id();
 
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET confirmed='false', motivonegar='$motivoNegarDenuncia' WHERE (`id`='$id')");
-    $query = "UPDATE amc_denuncias_web SET prosesado='true' WHERE (`id`='$id')";
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "UPDATE amc_secretaria_copias_simples SET idingreso = $idingreso, observaciones = '$observaciones', procesado = 'true', fechaprocesado = NOW(), asignado = '-', motivo_negar = '$motivoNegarDenuncia' WHERE `id` = $id";
+    $result = $os->db->conn->query($sql);
 
-    $mensaje = getmensaje('negar', '', '', '', $motivoNegarDenuncia);
-    $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
+    //enviar mensaje a usuario
+    $mensaje = getmensaje('negar', $nombre, '', $motivoNegarDenuncia);
 
-    if ($databaseAMC->Query($query)) {
+    $envioMail = enviarEmail($_POST ['correoelectronico'], $nombre, $mensaje);
+
+    // envio resultado
+    if ($result == true) {
+        echo json_encode(array(
+            "success" => true,
+            "msg" => "Contenido actualizado exitosamente " . $envioMail
+        ));
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "msg" => "Error en la base de datos."
+        ));
+    }
+}
+
+function aprobar()
+{
+    global $os;
+
+    $id = (int)$_POST ['id'];
+    $nombre = $_POST ['nombres'] . " " . $_POST ['apellidos'];
+
+    $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
+    $observaciones = $_POST ['observaciones'];
+    $idingreso = $os->get_member_id();
+    $nombreArchivo = "pepito.pdf";
+
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+    $sql = "UPDATE amc_secretaria_copias_simples SET idingreso = $idingreso, confirmed = 'true',procesado = 'true', 
+                    fechaprocesado = NOW(), observaciones = '$observaciones', archivoexpediente = '$nombreArchivo',
+                    asignado = 'Secretaria', motivo_negar = '$motivoNegarDenuncia' WHERE `id` = $id";
+    $result = $os->db->conn->query($sql);
+
+    //enviar mensaje a usuario
+    $mensaje = getmensaje('aprobar', $nombre, $nombreArchivo, $motivoNegarDenuncia);
+
+    $envioMail = enviarEmail($_POST ['correoelectronico'], $nombre, $mensaje);
+
+    // envio resultado
+    if ($result == true) {
         echo json_encode(array(
             "success" => true,
             "msg" => "Contenido actualizado exitosamente " . $envioMail
@@ -164,58 +209,22 @@ function negar()
         ));
     }
 
-    //enviar mensaje a usuario
-
-
 }
 
-function aprobar()
-{
-    global $databaseAMC;
-    $id = (int)$_POST ['id'];
-    $codigo_tramite = $_POST ['codigo_tramite'];
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET asignado='Secretaria' WHERE (`id`='$id')");
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET codigo_tramite= '$codigo_tramite' WHERE (`id`='$id')");
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET confirmed='true' WHERE (`id`='$id')");
-    $query = "UPDATE amc_denuncias_web SET prosesado='true' WHERE (`id`='$id')";
-
-    $mensaje = getmensaje('aprobar', $_POST ['nombre'], $codigo_tramite, $id);
-    $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
-
-    if ($databaseAMC->Query($query)
-    ) {
-        echo json_encode(array(
-            "success" => true,
-            "msg" => "Contenido actualizado exitosamente" . $envioMail
-        ));
-    } else {
-        echo json_encode(array(
-            "success" => false,
-            "msg" => "Error en la base de datos."
-        ));
-    }
-}
-
-function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $motivo = '')
+function getmensaje($opcion, $nombre = '', $nombreArchivo = '', $motivo = '')
 {
     switch ($opcion) {
         case 'negar' :
             $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-<div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
+<div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="25%" /></div>
 <div style="clear: both; margin: 50px 10%; float: left;">
-<p>Estimado usuario gracias por escribirnos, su solicitud no es aprobada por el siguiente motivo: <br><br> 
+<p>Estimado/a  ' . $nombre . ', gracias por escribirnos, su solicitud no es receptada por el siguiente motivo: <br><br> 
 <span style="font-weight: bold"> ' . $motivo . '</span><br><br> 
-Adicionalmente estas son las causas para no aprobar una denuncia: <br><br>
+Una vez resuelto el motivo puede realizar nuevamente una nueva solicitud : <br><br>
 
-1. Imagen de la cédula, no válida<br>
-2. Fotografías anexas a la denunciada no son válidas.<br>
-3. En caso de ser una persona jurídica, la  imagen de nombramiento no es válida.<br>
-4. La denuncia realizada no se encuentra dentro de las competencias de la Agencia Metropolitana de Control.<br>
-5. La informacíon proporcianada como dirección, croquis, mapa, no permite ubicar el sitio de la denuncia<br>
-<br>
 <br>
 </p>
-<p>&nbsp;</p>
+</br>
 <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
 </div>
 <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
@@ -224,100 +233,86 @@ Adicionalmente estas son las causas para no aprobar una denuncia: <br><br>
             break;
 
         case 'aprobar' :
+
             $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-<div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
-<div style="clear: both; margin: 50px 10%; float: left;">
-<p><br><br>
- Estimado ciudadano gracias por escribirnos, su denuncia fue revisada y ha sido ingresada correctamente en nuestro sistema con el código ' . $codigo_tramite . '<br>
- <br>
- En el siguiente link, usted  podrá hacer el seguimiento del proceso.<br>
- <a href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/' . $id . '-' . $nombre . '" target="_blank">Click aquí</a>
-<br>    
-<br>
-</p>
-<p>&nbsp;</p>
-<p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
-</div>
-<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
-</div>
-';
+            <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
+            <div style="clear: both; margin: 50px 10%; float: left;">
+            <p><br><br>
+             Estimado/a '. $nombre .', su solicitud fue revisado  y en el siguiente link puede descargar el documento solicitado <br>
+             <br>  
+             <strong><a href="http://index.php/' . $nombreArchivo . '" target="_blank">Click aquí</a></strong>
+            <br>    
+            <br>
+            </p>
+            <p>&nbsp;</p>
+            <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
+            </div>
+            <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+            </div>';
+
             return $texto;
             break;
 
     }
 }
 
-function enviarEmail($email, $nombre, $mensaje)
+
+function enviarEmail($email, $nombre, $mensaje, $funcionarios = '')
+
 {
+    $config = new config();
 
-    require 'PHPMailer/PHPMailerAutoload.php';
-
-//Create a new PHPMailer instance
+    require '../../../common/Classes/PHPMailer/PHPMailerAutoload.php';
+    //Create a new PHPMailer instance
     $mail = new PHPMailer;
     $mail->CharSet = "UTF-8";
-//Tell PHPMailer to use SMTP
     $mail->isSMTP();
-
-//Enable SMTP debugging
-// 0 = off (for production use)
-// 1 = client messages
-// 2 = client and server messages
     $mail->SMTPDebug = 0;
-
-//Ask for HTML-friendly debug output
     $mail->Debugoutput = 'html';
+    $mail->Host = 'relay.quito.gob.ec';
+    $mail->Port = 25;
+    $mail->Username = "agencia.m.control@quito.gob.ec";
+    $mail->Password = "12345678";
 
-//Set the hostname of the mail server
-    $mail->Host = 'smtp.gmail.com';
-// use
-// $mail->Host = gethostbyname('smtp.gmail.com');
-// if your network does not support SMTP over IPv6
+    $mail->setFrom('agencia.m.control@quito.gob.ec', 'Solicitud Copias Simples - Agencia Metropolitana de Control');
 
-//Set the SMTP port number - 587 for authenticated TLS, a.k.a. RFC4409 SMTP submission
-    $mail->Port = 587;
+    $mail->AddBCC("byron.herrera@quito.gob.ec");
+    $mail->AddBCC("pamela.parreno@quito.gob.ec");
 
-//Set the encryption system to use - ssl (deprecated) or tls
-    $mail->SMTPSecure = 'tls';
-
-//Whether to use SMTP authentication
-    $mail->SMTPAuth = true;
-
-//Username to use for SMTP authentication - use full email address for gmail
-//$mail->Username = "byron.herrera@solinfo.com.ec";
-    $mail->Username = "amcdenuncias@gmail.com";
-
-//Password to use for SMTP authentication
-    $mail->Password = "amccontrol2016";
-
-//Set who the message is to be sent from
-    $mail->setFrom('denunciasamc@quito.gob.ec', 'Agencia Metropolitana de Control');
-
-//Set an alternative reply-to address
-//$mail->addReplyTo('replyto@example.com', 'First Last');
-
-//Set who the message is to be sent to
-    $mail->addAddress($email, $nombre);
-
-//Set the subject line
-    $mail->Subject = 'Actualización estado de denuncia';
-
-//Read an HTML message body from an external file, convert referenced images to embedded,
-//convert HTML into a basic plain-text alternative body
+    $mail->Subject = $nombre;
     $mail->msgHTML($mensaje);
-
-//Replace the plain text body with one created manually
     $mail->AltBody = 'Mensaje enviado';
 
-//send the message, check for errors
-    if (!$mail->send()) {
-        return "Mailer Error: " . $mail->ErrorInfo;
+    // se envia de acuerdo a si es produccion o pruebas
+    if ($config->AMBIENTE == "PRODUCCION") {
+        $mail->addAddress($email);
+        foreach ($funcionarios as $emailfuncionario) {
+            $mail->AddCC($emailfuncionario);
+        }
     } else {
-        return "Message sent!";
+        $mail->addAddress("byron.herrera@quito.gob.ec");
     }
+
+    $resultado = $mail->send();
+
+    $fichero = 'copiasSimplesEnviados.log';
+    $actual = file_get_contents($fichero);
+    if ($resultado) {
+        $actual .= "Enviado -" . date(" Y-m-d ") . "\n----\n";
+    } else
+        $actual .= "Error-" . date(" Y-m-d ") . "\n----\n";
+
+    $actual .= $email . "\n----\n";
+    $actual .= $nombre . "\n----\n";
+    $actual .= $mensaje . "\n----\n";
+    file_put_contents($fichero, $actual);
+
+    return $resultado;
 
 }
 
-function cors() {
+function cors()
+{
 
     // Allow from any origin
     if (isset($_SERVER['HTTP_ORIGIN'])) {

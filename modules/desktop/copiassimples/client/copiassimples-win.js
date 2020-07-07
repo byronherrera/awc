@@ -17,11 +17,11 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
 
         var win = desktop.getWindow('grid-win-copiassimples');
-        var urlCopiassimples = "http://agenciadecontrol.quito.gob.ec/amcserver/"; // servidor produccion
-        var urlDenunciasLocal = "modules/desktop/copiassimples/server/";
+        //var urlCopiassimples = "http://agenciadecontrol.quito.gob.ec/amcserver/"; // servidor produccion
+        var urlCopiassimples = "modules/desktop/copiassimples/server/";
 
+        //this.urlCopiassimples = urlCopiassimples;
         this.urlCopiassimples = urlCopiassimples;
-        this.urlDenunciasLocal = urlDenunciasLocal;
         var winWidth = desktop.getWinWidth();
         var winHeight = desktop.getWinHeight();
         //inicio combo activo
@@ -103,10 +103,10 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
         var proxyCopiassimples = new Ext.data.HttpProxy({
             api: {
 
-                create: urlDenunciasLocal + "crudCopiassimples.php?operation=insert",
-                read: urlDenunciasLocal + "crudCopiassimples.php?operation=select",
-                update: urlDenunciasLocal + "crudCopiassimples.php?operation=upda",
-                destroy: urlDenunciasLocal + "crudCopiassimples.php?operation=delete"
+                create: urlCopiassimples + "crudCopiassimples.php?operation=insert",
+                read: urlCopiassimples + "crudCopiassimples.php?operation=select",
+                update: urlCopiassimples + "crudCopiassimples.php?operation=upda",
+                destroy: urlCopiassimples + "crudCopiassimples.php?operation=delete"
             }
         });
 
@@ -164,7 +164,13 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'Id', dataIndex: 'id', sortable: true, width: 60, scope: this}
                 , {header: 'confirmed', dataIndex: 'confirmed', sortable: true, width: 70, scope: this}
                 , {header: 'procesado', dataIndex: 'procesado', sortable: true, width: 70, scope: this}
-                , {header: 'fechaprocesado', dataIndex: 'fechaprocesado', sortable: true, width: 100, renderer: formatDate}
+                , {
+                    header: 'fechaprocesado',
+                    dataIndex: 'fechaprocesado',
+                    sortable: true,
+                    width: 100,
+                    renderer: formatDate
+                }
                 , {header: 'asignado', dataIndex: 'asignado', sortable: true, width: 70, scope: this}
                 , {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 70, scope: this}
                 , {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 70, scope: this}
@@ -180,7 +186,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'direccion', dataIndex: 'direccion', sortable: true, width: 70, scope: this}
                 , {header: 'fecha', dataIndex: 'fecha', sortable: true, width: 100, renderer: formatDate}
                 , {header: 'ip', dataIndex: 'ip', sortable: true, width: 70, scope: this}
-                , {header: 'idingreso', dataIndex: 'idingreso', sortable: true, width: 70, scope: this}            ],
+                , {header: 'idingreso', dataIndex: 'idingreso', sortable: true, width: 70, scope: this}],
             viewConfig: {
                 forceFit: false,
                 getRowClass: function (record, index) {
@@ -201,19 +207,19 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                                 Ext.getCmp('tb_negarcopiassimples').setDisabled(true);
                                 Ext.getCmp('tb_aprobarcopiassimples').setDisabled(true);
                                 Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
-                             //   Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
+                                //   Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
                             }
                             else {
                                 Ext.getCmp('tb_negarcopiassimples').setDisabled(false);
                                 // Ext.getCmp('tb_aprobarcopiassimples').setDisabled(false);
                                 Ext.getCmp('motivoNegarDenuncia').setDisabled(false);
-                             //   Ext.getCmp('codigo_tramite_formulario').setDisabled(false);
+                                //   Ext.getCmp('codigo_tramite_formulario').setDisabled(false);
                             }
                         } else {
                             Ext.getCmp('tb_negarcopiassimples').setDisabled(true);
                             Ext.getCmp('tb_aprobarcopiassimples').setDisabled(true);
                             Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
-                        //    Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
+                            //    Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
                         }
                     }
                 }
@@ -295,6 +301,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
             this.formCopiassimplesDetalle = new Ext.FormPanel({
                 id: 'formCopiassimplesDetalle',
                 cls: 'no-border',
+                fileUpload: true,
                 items: [
                     {
                         region: 'north',
@@ -482,13 +489,13 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Motivo negar',
-                                                name: 'motivonegar',
+                                                name: 'motivo_negar',
                                                 anchor: '95%'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Total pedidos anteriores',
-                                                name: 'totalcopiassimples',
+                                                name: 'totalcopiassimples+',
                                                 anchor: '95%'
                                             },
                                             {
@@ -499,7 +506,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                                                 name: 'archivoexpediente',
                                                 buttonText: '',
                                                 anchor: '95%',
-                                                allowBlank: false,
+                                                //allowBlank: false,
                                                 buttonCfg: {
                                                     iconCls: 'upload-icon'
                                                 },
@@ -516,7 +523,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                                                 fieldLabel: 'Observaciones',
                                                 name: 'observaciones',
                                                 anchor: '95%',
-                                                allowBlank: false,
+                                                //allowBlank: false,
                                                 id: 'observaciones'
                                             }
                                         ]
@@ -548,22 +555,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                         text: 'Recargar Datos',
                         tooltip: 'Recargar datos en la grilla'
                     },
-                    /*'-',
-                     {
-                     iconCls: 'demo-grid-add',
-                     handler: this.requestCopiassimplesDataExport,
-                     scope: this,
-                     text: 'Boton 1',
-                     tooltip: 'Exportar datos en la grilla'
-                     },
-                     '-',
-                     {
-                     iconCls: 'demo-grid-add',
-                     handler: this.requestCopiassimplesEstadisticasDataExport,
-                     scope: this,
-                     text: 'Boton 2',
-                     tooltip: 'Exportar Estadisticas'
-                     },*/
+
                     '->'
                     , {
                         text: 'Buscar por:'
@@ -585,7 +577,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
             forma = Ext.getCmp('formCopiassimplesDetalle');
             forma.getForm().load({
                 waitMsg: 'Recuperando información',
-                url: urlDenunciasLocal + 'crudCopiassimples.php?operation=selectForm',
+                url: urlCopiassimples + 'crudCopiassimples.php?operation=selectForm',
                 params: {
                     id: copiassimples
                 },
@@ -618,7 +610,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
     aprobarcopiassimples: function () {
         store = this.storeCopiassimples;
         var urlCopiassimples = this.urlCopiassimples;
-        var urlDenunciasLocal = this.urlDenunciasLocal;
+        var urlCopiassimples = this.urlCopiassimples;
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Desea aprobar la copiassimples.<br>¿Desea continuar?',
@@ -629,7 +621,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     var myForm = Ext.getCmp('formCopiassimplesDetalle').getForm();
                     myForm.submit({
-                        url: urlDenunciasLocal + 'crudCopiassimples.php?operation=aprobarDenuncia',
+                        url: urlCopiassimples + 'crudCopiassimples.php?operation=aprobarDenuncia',
                         method: 'POST',
                         waitMsg: 'Saving data',
                         success: function (form, action) {
@@ -688,26 +680,29 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
             fn: function (btn) {
                 if (btn == 'yes') {
                     var myForm = Ext.getCmp('formCopiassimplesDetalle').getForm();
-                    myForm.submit({
-                        url: urlCopiassimples + 'crudCopiassimples.php?operation=negarDenuncia',
-                        method: 'POST',
-                        waitMsg: 'Saving data',
-                        success: function (form, action) {
-                            Ext.getCmp('tb_negarcopiassimples').setDisabled(true);
-                            Ext.getCmp('tb_aprobarcopiassimples').setDisabled(true);
-                            store.load();
-                        },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
-                            Ext.Msg.show({
-                                title: 'Error campos obligatorios'
-                                , msg: errorJson.msg
-                                , modal: true
-                                , icon: Ext.Msg.ERROR
-                                , buttons: Ext.Msg.OK
-                            });
-                        }
-                    });
+                    if (myForm.isValid()) {
+                        myForm.submit({
+                            url: urlCopiassimples + 'crudCopiassimples.php?operation=negarDenuncia',
+                            method: 'POST',
+                            waitMsg: 'Grabando',
+                            success: function (form, action) {
+                                Ext.getCmp('tb_negarcopiassimples').setDisabled(true);
+                                Ext.getCmp('tb_aprobarcopiassimples').setDisabled(true);
+                                store.load();
+                            },
+                            failure: function (form, action) {
+                                var errorJson = JSON.parse(action.response.responseText);
+                                Ext.Msg.show({
+                                    title: 'Error campos obligatorios'
+                                    , msg: errorJson.msg
+                                    , modal: true
+                                    , icon: Ext.Msg.ERROR
+                                    , buttons: Ext.Msg.OK
+                                });
+                            }
+                        });
+                    }
+
                 }
             }
 
