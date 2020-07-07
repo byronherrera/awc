@@ -4,7 +4,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
 
     init: function () {
         this.launcher = {
-            text: 'Copiassimples',
+            text: 'Copias simples',
             iconCls: 'copiassimples-icon',
             handler: this.createWindow,
             scope: this
@@ -201,19 +201,19 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                                 Ext.getCmp('tb_negarcopiassimples').setDisabled(true);
                                 Ext.getCmp('tb_aprobarcopiassimples').setDisabled(true);
                                 Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
-                                Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
+                             //   Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
                             }
                             else {
                                 Ext.getCmp('tb_negarcopiassimples').setDisabled(false);
                                 // Ext.getCmp('tb_aprobarcopiassimples').setDisabled(false);
                                 Ext.getCmp('motivoNegarDenuncia').setDisabled(false);
-                                Ext.getCmp('codigo_tramite_formulario').setDisabled(false);
+                             //   Ext.getCmp('codigo_tramite_formulario').setDisabled(false);
                             }
                         } else {
                             Ext.getCmp('tb_negarcopiassimples').setDisabled(true);
                             Ext.getCmp('tb_aprobarcopiassimples').setDisabled(true);
                             Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
-                            Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
+                        //    Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
                         }
                     }
                 }
@@ -322,7 +322,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                                 id: 'tb_aprobarcopiassimples'
                                 , formBind: true
                             }, {
-                                text: 'Negar solicitud copiassimples',
+                                text: 'Negar solicitud copias simples',
                                 scope: this,
                                 handler: this.negarcopiassimples,
                                 iconCls: 'save-icon',
@@ -492,19 +492,32 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                                                 anchor: '95%'
                                             },
                                             {
-                                                xtype: 'textfield',
-                                                fieldLabel: 'SITRA',
-                                                name: 'codigo_tramite',
+                                                xtype: 'fileuploadfield',
+                                                id: 'archivoexpediente',
+                                                emptyText: 'Seleccione el archivo pdf del expediente ',
+                                                fieldLabel: 'Archivo PDF',
+                                                name: 'archivoexpediente',
+                                                buttonText: '',
                                                 anchor: '95%',
                                                 allowBlank: false,
-                                                id: 'codigo_tramite_formulario',
+                                                buttonCfg: {
+                                                    iconCls: 'upload-icon'
+                                                },
                                                 listeners: {
-                                                    'change': function (value, newValue, oldValue) {
+                                                    fileselected: function (value, newValue, oldValue) {
                                                         if (newValue != oldValue) {
                                                             Ext.getCmp('tb_aprobarcopiassimples').setDisabled(false);
                                                         }
                                                     }
                                                 }
+                                            },
+                                            {
+                                                xtype: 'textfield',
+                                                fieldLabel: 'Observaciones',
+                                                name: 'observaciones',
+                                                anchor: '95%',
+                                                allowBlank: false,
+                                                id: 'observaciones'
                                             }
                                         ]
                                     }
@@ -518,7 +531,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
 
             win = desktop.createWindow({
                 id: 'grid-win-copiassimples',
-                title: 'Gestión Copiassimples',
+                title: 'Gestión Copias simples',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'copiassimples-icon',
