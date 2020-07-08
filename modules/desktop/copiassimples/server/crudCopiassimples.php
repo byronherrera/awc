@@ -11,8 +11,44 @@ function selectCopiassimples()
 {
     global $os;
 
+    $columnaBusqueda = 'id';
+    $where = '';
+    if (isset($_POST['filterField'])) {
+        $columnaBusqueda = $_POST['filterField'];
+    }
+
+    if (isset($_POST['filterText'])) {
+        $campo = $_POST['filterText'];
+        $campo = str_replace(" ", "%", $campo);
+            if ($where == '')
+                $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+            else
+                $where = $where . " AND $columnaBusqueda LIKE '%$campo%'";
+
+    }
+    // paginamiento
+    if (isset ($_POST['start']))
+        $start = $_POST['start'];
+    else
+        $start = 0;
+
+    if (isset ($_POST['limit']))
+        $limit = $_POST['limit'];
+    else
+        $limit = 100;
+
+    // ordenamiento
+    $orderby = 'ORDER BY CONVERT( amc_secretaria_copias_simples.id,UNSIGNED INTEGER) DESC';
+    if (isset($_POST['sort'])) {
+        if ($_POST['sort'] == 'id') {
+            $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) DESC';
+        } else {
+            $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
+        }
+    }
+
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_secretaria_copias_simples ORDER BY id";
+    $sql = "SELECT * FROM amc_secretaria_copias_simples $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -85,6 +121,9 @@ function deleteCopiassimples()
 function selectCopiassimplesForm()
 {
     global $os;
+    $config = new config();
+    $url = $config->URLBASE . 'aplicaciones/copias_simples/';
+
     $id = (int)$_POST ['id'];
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_secretaria_copias_simples WHERE id = $id";
@@ -106,6 +145,13 @@ function selectCopiassimplesForm()
     } else {
         $data['imagenasolicitud'] = '';
     }
+
+    if (strlen($data['archivoexpediente']) > 0) {
+        $data['urlexpediente'] = "<a href='" . $url . $data['archivoexpediente'] . "' target='_blank'>Url Expediente</a>";;
+    } else {
+        $data['urlexpediente'] = '';
+    }
+
 
     echo json_encode(array(
             "success" => true,
@@ -182,7 +228,38 @@ function aprobar()
     $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
     $observaciones = $_POST ['observaciones'];
     $idingreso = $os->get_member_id();
-    $nombreArchivo = "pepito.pdf";
+    $nombreArchivo = "";
+
+
+
+    if ($_FILES['archivoexpediente']['name'] != null) {
+
+        $temp_file_name = $_FILES['archivoexpediente']['tmp_name'];
+        //$uploaddir = __DIR__ . "..//uploads/";
+        $uploaddir = "../../../../aplicaciones/copias_simples/uploads/";
+
+        //$nombreArchivo = $_FILES['archivoexpediente']['name'];
+        $nombreArchivo = quitar_tildes($_FILES['archivoexpediente']['name']);
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-' . $id . '-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            //nombre de archivo se usa para guardar en la base la ubicacion del archivo
+            $nombreArchivo = "uploads/" . basename($today . '-' . $id . '-' . $nombreArchivo);
+        }
+    } else {
+        //validar que sea declarado el archivo
+        echo json_encode(array(
+            "success" => false,
+            "msg" => "Error falta archivo copia de expediente."
+        ));
+
+    }
+
 
     $os->db->conn->query("SET NAMES 'utf8'");
 
@@ -213,6 +290,9 @@ function aprobar()
 
 function getmensaje($opcion, $nombre = '', $nombreArchivo = '', $motivo = '')
 {
+    $config = new config();
+    $url = $config->URLBASE . 'aplicaciones/copias_simples/';
+
     switch ($opcion) {
         case 'negar' :
             $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
@@ -238,9 +318,9 @@ Una vez resuelto el motivo puede realizar nuevamente una nueva solicitud : <br><
             <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
             <div style="clear: both; margin: 50px 10%; float: left;">
             <p><br><br>
-             Estimado/a '. $nombre .', su solicitud fue revisado  y en el siguiente link puede descargar el documento solicitado <br>
+             Estimado/a ' . $nombre . ', su solicitud fue revisado  y en el siguiente link puede descargar el documento solicitado <br>
              <br>  
-             <strong><a href="http://index.php/' . $nombreArchivo . '" target="_blank">Click aquí</a></strong>
+             <strong><a href="' . $url . $nombreArchivo . '" target="_blank">Click aquí</a></strong>
             <br>    
             <br>
             </p>
@@ -295,6 +375,7 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios = '')
 
     $resultado = $mail->send();
 
+    //inicio log copias simples
     $fichero = 'copiasSimplesEnviados.log';
     $actual = file_get_contents($fichero);
     if ($resultado) {
@@ -306,7 +387,7 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios = '')
     $actual .= $nombre . "\n----\n";
     $actual .= $mensaje . "\n----\n";
     file_put_contents($fichero, $actual);
-
+    // fin log copias simples
     return $resultado;
 
 }
@@ -348,4 +429,11 @@ function totalcopiassimples($cedula)
 
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['total'];
+}
+
+function quitar_tildes($cadena) {
+    $no_permitidas= array ("á","é","í","ó","ú","Á","É","Í","Ó","Ú","ñ","À","Ã","Ì","Ò","Ù","Ã™","Ã ","Ã¨","Ã¬","Ã²","Ã¹","ç","Ç","Ã¢","ê","Ã®","Ã´","Ã»","Ã‚","ÃŠ","ÃŽ","Ã”","Ã›","ü","Ã¶","Ã–","Ã¯","Ã¤","«","Ò","Ã","Ã„","Ã‹");
+    $permitidas= array ("a","e","i","o","u","A","E","I","O","U","n","N","A","E","I","O","U","a","e","i","o","u","c","C","a","e","i","o","u","A","E","I","O","U","u","o","O","i","a","e","U","I","A","E");
+    $texto = str_replace($no_permitidas, $permitidas ,$cadena);
+    return $texto;
 }

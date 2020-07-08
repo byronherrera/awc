@@ -15,7 +15,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
         var desktop = this.app.getDesktop();
 
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
-
+        var registroProcesado = '';
         var win = desktop.getWindow('grid-win-copiassimples');
         //var urlCopiassimples = "http://agenciadecontrol.quito.gob.ec/amcserver/"; // servidor produccion
         var urlCopiassimples = "modules/desktop/copiassimples/server/";
@@ -201,9 +201,9 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                         this.idDenunciasRecuperada = rec.id;
                         /*cargar el formulario*/
                         cargaDetalle(rec.id, this.formCopiassimplesDetalle, rec);
-
+                        registroProcesado = this.record.get("procesado");
                         if (accesosSecretaria) {
-                            if (this.record.get("procesado") == 'true') {
+                            if (registroProcesado == 'true') {
                                 Ext.getCmp('tb_negarcopiassimples').setDisabled(true);
                                 Ext.getCmp('tb_aprobarcopiassimples').setDisabled(true);
                                 Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
@@ -231,7 +231,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                 pageSize: limitecopiassimples,
                 store: storeCopiassimples,
                 displayInfo: true,
-                displayMsg: 'Mostrando solicitudes copiassimpless {0} - {1} of {2}',
+                displayMsg: 'Mostrando solicitudes Copias Simpless {0} - {1} of {2}',
                 emptyMsg: "No existen copiassimpless que mostrar"
             }),
         });
@@ -280,17 +280,9 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'fecha',
+                            key: 'expediente',
                             scope: this,
-                            text: 'Fecha'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'direccion',
-                            scope: this,
-                            text: 'Dirección'
+                            text: 'Expediente'
                         }
                     ]
                 })
@@ -321,7 +313,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                         margins: '0 0 0 0',
                         tbar: [
                             {
-                                text: 'Aprobar solicitud copiassimples',
+                                text: 'Aprobar solicitud Copias Simples',
                                 scope: this,
                                 handler: this.aprobarcopiassimples,
                                 iconCls: 'save-icon',
@@ -350,9 +342,9 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                             },
                             '->',
                             {
-                                text: 'Denuncias anteriores:'
+                                text: 'Solicitudes anteriores:'
                                 , xtype: 'tbtext',
-                                id: 'textDenunciasAnteriores'
+                                id: 'textSolicitudesAnteriores'
                             }
                         ],
                         items: [
@@ -495,7 +487,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Total pedidos anteriores',
-                                                name: 'totalcopiassimples+',
+                                                name: 'totalcopiassimples',
                                                 anchor: '95%'
                                             },
                                             {
@@ -512,12 +504,24 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                                                 },
                                                 listeners: {
                                                     fileselected: function (value, newValue, oldValue) {
-                                                        if (newValue != oldValue) {
-                                                            Ext.getCmp('tb_aprobarcopiassimples').setDisabled(false);
+                                                        //
+                                                        if (accesosSecretaria) {
+                                                            if (registroProcesado == 'false') {
+                                                                if (newValue != oldValue) {
+                                                                    //en caso que ya no sea editable
+                                                                    Ext.getCmp('tb_aprobarcopiassimples').setDisabled(false);
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
                                             },
+                                            {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Expediente',
+                                                name: 'urlexpediente'
+                                            }
+                                            ,
                                             {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'Observaciones',
@@ -582,8 +586,8 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                     id: copiassimples
                 },
                 success: function (response, opts) {
-                    mensaje = Ext.getCmp('textDenunciasAnteriores');
-                    mensaje.setText('Solicitudes copiassimples anteriores: ' + (response.findField('totalcopiassimples').getValue() - 1))
+                    mensaje = Ext.getCmp('textSolicitudesAnteriores');
+                    mensaje.setText('Solicitudes Copias Simples anteriores: ' + (response.findField('totalcopiassimples').getValue() - 1))
                 }
 
             });
@@ -613,7 +617,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
         var urlCopiassimples = this.urlCopiassimples;
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Desea aprobar la copiassimples.<br>¿Desea continuar?',
+            msg: 'Desea grabar la solicitud de Copia Simple.<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
@@ -626,30 +630,9 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                         waitMsg: 'Saving data',
                         success: function (form, action) {
                             //se actualiza tabla en la web
-                            var dataReceived = JSON.parse(action.response.responseText);
-                            myForm.submit({
-                                url: urlCopiassimples + 'crudCopiassimples.php?operation=aprobarDenuncia',
-                                method: 'POST',
-                                waitMsg: 'Saving data',
-                                params: {
-                                    codigo_tramite: dataReceived.data
-                                },
-                                success: function (form, action) {
-                                    Ext.getCmp('tb_negarcopiassimples').setDisabled(true);
-                                    Ext.getCmp('tb_aprobarcopiassimples').setDisabled(true);
-                                    store.load();
-                                },
-                                failure: function (form, action) {
-                                    var errorJson = JSON.parse(action.response.responseText);
-                                    Ext.Msg.show({
-                                        title: 'Error campos obligatorios'
-                                        , msg: errorJson.msg
-                                        , modal: true
-                                        , icon: Ext.Msg.ERROR
-                                        , buttons: Ext.Msg.OK
-                                    });
-                                }
-                            });
+                            Ext.getCmp('tb_negarcopiassimples').setDisabled(true);
+                            Ext.getCmp('tb_aprobarcopiassimples').setDisabled(true);
+                            store.load();
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);
