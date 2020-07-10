@@ -12,34 +12,25 @@
 
 <head>
 
-
-    <base href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/2965"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="rights" content="Agencia Metropolitana de Control"/>
     <meta name="description" content="Agencia Metropolitana de Control"/>
     <meta name="generator" content=""/>
     <title>PETICION DE COPIAS SIMPLES</title>
-    <link href="/templates/bestcomputer/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon"/>
-    <link href="/media/joodb/css/joodb.css" rel="stylesheet" type="text/css"/>
-    <link href="/media/joodb/css/featherlight.min.css" rel="stylesheet" type="text/css"/>
-    <link href="/components/com_tlpteam/assets/css/tlpteam.css" rel="stylesheet" type="text/css"/>
-    <script src="/media/jui/js/jquery.min.js?3af170d0feddc655b7e0f41cb8925e51" type="text/javascript"></script>
-    <script src="/media/jui/js/jquery-noconflict.js?3af170d0feddc655b7e0f41cb8925e51" type="text/javascript"></script>
-    <script src="/media/jui/js/jquery-migrate.min.js?3af170d0feddc655b7e0f41cb8925e51" type="text/javascript"></script>
-    <script src="/media/joodb/js/featherlight.min.js" type="text/javascript"></script>
+    <link href="../vendor/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon"/>
 
+    <link href="../vendor/joomla/joodb.css" rel="stylesheet" type="text/css"/>
+    <link href="../vendor/joomla/featherlight.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="../vendor/joomla/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="../vendor/joomla//bootstrap-responsive.css" type="text/css"/>
+    <link rel="stylesheet" href="../vendor/joomla/joomla.css" type="text/css"/>
+    <link rel="stylesheet" href="../vendor/joomla/template.css" type="text/css"/>
+    <link rel="stylesheet" href="../vendor/joomla/k2style.css" type="text/css"/>
+    <script src="../vendor/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <link rel="stylesheet" href="/media/jui/css/bootstrap.min.css" type="text/css"/>
-    <link rel="stylesheet" href="/media/jui/css/bootstrap-responsive.css" type="text/css"/>
-    <link rel="stylesheet" href="/templates/bestcomputer/icons/css/font-awesome.css" type="text/css"/>
-    <link rel="stylesheet" href="/templates/bestcomputer/css/joomla.css" type="text/css"/>
-    <link rel="stylesheet" href="/templates/bestcomputer/css/template.css" type="text/css"/>
-    <link rel="stylesheet" href="/templates/bestcomputer/css/k2style.css" type="text/css"/>
-
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/templates/bestcomputer/icons/css/font-awesome-ie7.min.css">
     <![endif]-->
 </head>
 
@@ -54,7 +45,7 @@
                 <div class="joodb database-article">
                     <!-- see components/com_joodb/assets/joodb.css for style definitions -->
                     <div style="float: right; text-align: right; width: 100%;" class="separador"><img
-                                src="/images/logoamc.png" alt="*" class="clear"
+                                src="../vendor/logoamc.png" alt="*" class="clear"
                                 style="width: 30%; margin: 0; pading 0"/></div>
                     <table>
                         <tbody>
@@ -68,7 +59,10 @@
                                     <?php
                                     $date = new DateTime($_GET ['fecha']);
                                     date_default_timezone_set("America/Mexico_City");
-                                    $mes = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"][date("n") - 1];
+                                  $meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+					$mesacual=  date('n') - 1;
+					$mes = $meses[$mesacual];
+
 
                                     echo 'DMQ ' . $date->format('d') . ' de ' . $mes . ' de ' . $date->format('Y'); // 31-07-2012
                                     ?>
@@ -156,17 +150,14 @@
                         </tbody>
                     </table>
                 </div>
-
                 <script type="text/javascript">
                     <!--
                     // Jquery encapsulation
                     (function ($) {
-
                         $(document).ready(function () {
                             printnow = confirm('Print Page');
                             if (printnow) window.print();
                         });
-
                     })(jQuery);
                     //-->
                 </script>

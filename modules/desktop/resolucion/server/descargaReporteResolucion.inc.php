@@ -454,9 +454,10 @@ function nombreFuncionario($id_dato)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    if (($id_dato != '') and (isset($id_dato))) {
+    if (($id_dato != '') and (isset($id_dato)) and strlen($id_dato>0)) {
         $sql = "SELECT a.id, CONCAT(a.first_name,' ',a.last_name) AS nombre FROM qo_members a
             WHERE $id_dato = a.id";
+
         $nombre = $os->db->conn->query($sql);
         $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
         return $rownombre['nombre'];

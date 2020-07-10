@@ -16,9 +16,6 @@ require_once('../../server/os.php');
 
 <body>
 <div class="container contact-form">
-    <h1 style="text-align: center">SOLICITUD DE RECONOCIMIENTO DE RESPONSABILIDAD Y PAGO VOLUNTARIO
-    </h1>
-    <div style="height: 30px"></div>
     <form enctype="multipart/form-data" id="myForm" method="post">
         <div class="row">
             <label for="cedula">Acorde a lo dispuesto en el Código Orgánico Aministrativo (COA), Artículo 253, el
@@ -218,7 +215,7 @@ require_once('../../server/os.php');
                         </div>
                     </div>
                 </div>
-                <div style="height: 30px"></div>
+                <div style="height: 10px"></div>
 
                 <div id="botonsolicitud">
                     <div class="form-group">
@@ -238,12 +235,10 @@ require_once('../../server/os.php');
                     </div>
                 </div>
 
-                <div style="height: 30px"></div>
                 <div id="botonenviar">
                     <div class="form-group">
                         <input type="submit" class="btn btn-success" value="ENVIAR FORMULARIO">
                         <div class="mensaje"><p></p></div>
-                        <div style="height: 30px"></div>
                     </div>
                 </div>
             </div>
@@ -429,8 +424,11 @@ require_once('../../server/os.php');
                 contentType: false,
                 processData: false
             }).done(function (res) {
-                $('.mensaje').html('<p><b>Formulario enviado exitosamente</b></p>');
-                $('#myForm')[0].reset();
+                $('.mensaje').html('<p><b>Formulario enviado exitosamente. </br> Recibirá un correo electónico para validar su solicitud.</b></p>');
+
+                // TODO descomentar la siguiente linea en produccion
+                //  $('#myForm')[0].reset();
+
                 $('.mensajecedula').html("");
                 $("#frame").attr("src", "");
 

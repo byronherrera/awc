@@ -16,8 +16,6 @@ require_once('../../server/os.php');
 
 <body>
 <div class="container contact-form">
-    <h1 style="text-align: center">SOLICITUD DE COPIAS SIMPLES EN LINEA</h1>
-    <div style="height: 30px"></div>
     <form enctype="multipart/form-data" id="myForm" method="post">
         <div class="row">
             <label for="cedula">DIRECTOR y/o FUNCIONARIO de*</label>
@@ -44,8 +42,6 @@ require_once('../../server/os.php');
                 <label class="form-check-label" for="direccion4">
                     EJECUCIÓN
                 </label>
-
-
             </div>
             <div class="form-check disabled">
                 <input class="form-check-input" type="radio" name="direccion" id="radio5" value="SECRETARIA GENERAL"
@@ -137,7 +133,7 @@ require_once('../../server/os.php');
                     </div>
                 </div>
             </div>
-            <div style="height: 30px"></div>
+            <div style="height: 10px"></div>
 
             <div id="botonsolicitud">
                 <div class="form-group">
@@ -148,18 +144,14 @@ require_once('../../server/os.php');
                     </div>
                 </div>
             </div>
-
-            <div style="height: 30px"></div>
             <div id="botonenviar">
                 <div class="form-group">
                     <input type="submit" class="btn btn-success" value="ENVIAR FORMULARIO">
                     <div class="mensaje"><p></p></div>
-                    <div style="height: 30px"></div>
                 </div>
             </div>
     </form>
 </div>
-
 
 <script src="../vendor/jquery/jquery-1.8.3.min.js"></script>
 <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -247,7 +239,6 @@ require_once('../../server/os.php');
         });
 
         /*Guardando los datos en el LocalStorage*/
-
 
         $("#idzonal").change(function () {
             var idzonal = $('#idzonal option:selected').val();
