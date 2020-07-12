@@ -70,8 +70,8 @@ $sql->execute();
     <div class="row">
         <div class="col-sm-4"></div>
         <div class="col-sm-4 ">
-            <a href="descargaTodoEmergencia.php">Descargar todo (xls)</a>
-        </div>
+            <a href="descargaTodoEmergencia.php">Descargar todo (xls)</a>  <a href="descargaTotalesEmergencia.php">Descargar totales (xls)</a>
+         </div>
         <div class="col-sm-4"></div>
     </div>
 </div>
