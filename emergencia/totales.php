@@ -69,11 +69,12 @@ $sql->execute();
     </div>
     <div class="row">
         <div class="col-sm-4"></div>
-        <div class="col-sm-4 ">
-            <a href="descargaTodoEmergencia.php">Descargar todo (xls)</a>  <a href="descargaTotalesEmergencia.php">Descargar totales (xls)</a>
-         </div>
-        <div class="col-sm-4"></div>
+        <br class="col-sm-4 ">
+        <a href="descargaTodoEmergencia.php">Descargar todo (xls)</a> </br>
+
     </div>
+    <div class="col-sm-4"><a href="descargaTotalesEmergencia.php">Descargar totales (xls)</a></br></div>
+</div>
 </div>
 
 <script src="vendor/jquery/jquery-1.8.3.min.js"></script>
@@ -105,7 +106,11 @@ $sql->execute();
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101563972-2"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
     gtag('js', new Date());
 
     gtag('config', 'UA-101563972-2');
