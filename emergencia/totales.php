@@ -69,9 +69,10 @@ $sql->execute();
     </div>
     <div class="row">
         <div class="col-sm-4"></div>
-        <br class="col-sm-4 ">
-        <a href="descargaTodoEmergencia.php">Descargar todo (xls)</a> </br>
-        <a href="descargaTotalesEmergencia.php">Descargar totales (xls)</a></br>
+        <div class="col-sm-4 ">
+            <a href="descargaTodoEmergencia.php">Descargar todo (xls)</a> <br>
+            <a href="descargaTotalesEmergencia.php">Descargar totales (xls)</a>
+        </div>
     </div>
     <div class="col-sm-4"></div>
 </div>
