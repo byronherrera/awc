@@ -313,7 +313,7 @@ QoDesk.CopiassimplesWindow = Ext.extend(Ext.app.Module, {
                         margins: '0 0 0 0',
                         tbar: [
                             {
-                                text: 'Aprobar solicitud Copias Simples',
+                                text: 'Enviar Copias Simples',
                                 scope: this,
                                 handler: this.aprobarcopiassimples,
                                 iconCls: 'save-icon',

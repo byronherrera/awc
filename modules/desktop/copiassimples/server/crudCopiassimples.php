@@ -349,15 +349,23 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios = '')
     $mail->isSMTP();
     $mail->SMTPDebug = 0;
     $mail->Debugoutput = 'html';
+
     $mail->Host = 'relay.quito.gob.ec';
     $mail->Port = 25;
     $mail->Username = "agencia.m.control@quito.gob.ec";
     $mail->Password = "12345678";
-
     $mail->setFrom('agencia.m.control@quito.gob.ec', 'Solicitud Copias Simples - Agencia Metropolitana de Control');
+
+    $mail->Host = 'relay.quito.gob.ec';
+    $mail->Port = 25;
+    $mail->Username = "agencia.m.control@quito.gob.ec";
+    $mail->Password = "12345678";
+    $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
 
     $mail->AddBCC("byron.herrera@quito.gob.ec");
     $mail->AddBCC("pamela.parreno@quito.gob.ec");
+    $mail->AddBCC("nelly.carrera@quito.gob.ec");
+    $mail->AddBCC("fernando.aguilar@quito.gob.ec");
 
     $mail->Subject = $nombre;
     $mail->msgHTML($mensaje);
@@ -389,12 +397,10 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios = '')
     file_put_contents($fichero, $actual);
     // fin log copias simples
     return $resultado;
-
 }
 
 function cors()
 {
-
     // Allow from any origin
     if (isset($_SERVER['HTTP_ORIGIN'])) {
         // Decide if the origin in $_SERVER['HTTP_ORIGIN'] is one

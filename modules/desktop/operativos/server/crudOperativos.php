@@ -439,7 +439,7 @@ function updateOperativos()
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
-
+    $resultado = '';
     if (isset($data->visible)) {
         if ($data->visible) {
 
@@ -540,7 +540,7 @@ function updateOperativos()
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "mail" => "aa",
+        "mail" => $resultado,
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos actualizado exitosamente" : $sql->errorCode(),
         "data" => array($data)
     ));
@@ -702,19 +702,20 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $mail->isSMTP();
     $mail->SMTPDebug = 0;
     $mail->Debugoutput = 'html';
+
     $mail->Host = 'relay.quito.gob.ec';
     $mail->Port = 25;
     $mail->Username = "agencia.m.control@quito.gob.ec";
     $mail->Password = "12345678";
-
-/*    $mail->Host = 'smtp.gmail.com';
-    $mail->Port = 587;
-    $mail->SMTPSecure = 'tls';
-    $mail->SMTPAuth = true;
-    $mail->Username = "amcdenuncias@gmail.com";
-    $mail->Password = "amccontrol2016";
-*/
     $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
+
+    /*    $mail->Host = 'smtp.gmail.com';
+        $mail->Port = 587;
+        $mail->SMTPSecure = 'tls';
+        $mail->SMTPAuth = true;
+        $mail->Username = "amcdenuncias@gmail.com";
+        $mail->Password = "amccontrol2016";
+    */
 
     $mail->AddBCC("byron.herrera@quito.gob.ec");
     $mail->AddBCC("pamela.parreno@quito.gob.ec");

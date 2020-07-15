@@ -1,5 +1,6 @@
 <?php
 require_once '../../server/os.php';
+require_once '';
 $os = new os();
 
 
@@ -658,11 +659,10 @@ function getmensajeSolicitudAprobada($data)
 					  background: -moz-linear-gradient(top, #87CEEB 0%, #4682B4 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#87CEEB), 
 					  color-stop(100%,#4682B4));box-shadow: inset 0px 0px 6px #fff;  -webkit-box-shadow: inset 0px 0px 6px #fff; border: 1px solid #62C2F9; border-radius: 10px;  display: inline-block; "> 
 					  <a href="' . $url . 'accion.php?id=' . $data->id . '&accion=aprobar&cedula=' . $data->cedula . '" style="font-size: 24px; text-decoration: none; color: white;" target="_blank">Validar</a></div>
-					  
+			  
                 </div>
                 </div>
                 </div>
-
                 ';
     return $texto;
 }
@@ -735,7 +735,6 @@ function getmensajeSolicitudNegada($nombre = '', $data)
 function enviarEmail($email, $nombre, $mensaje, $mailSeguimiento, $data, $textoAdicional = "")
 {
     require_once 'admin/modules/common/Classes/PHPMailer/PHPMailerAutoload.php';
-
     $mail = new PHPMailer(true);
     $mail->Host = "smtp.office365.com";
     $mail->Port = 587;
