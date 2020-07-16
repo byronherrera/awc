@@ -818,7 +818,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Enviado',
                     dataIndex: 'mail_enviado',
                     sortable: true,
-                    width: 30 
+                    width: 30
                 },
 
                 {
@@ -1043,7 +1043,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                     // registros que estan en planificacion
                     if (record.get('id_estado') == 1) {
-                            // Ext.getCmp('id_persona_encargada').setReadOnly(true);
+                        // Ext.getCmp('id_persona_encargada').setReadOnly(true);
                         return 'gold';
                     }
                     // registros que ya estan realizados
@@ -1185,7 +1185,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     // si el operativo esta identificado como estado o planificado (1) o informe (4) se peude editar
                     if (acceso) {
                         // si el que edita es administrador de operativos puede cambiar
-                        console.log (accesosAdministradorOpe)
+                        console.log(accesosAdministradorOpe)
                         if (accesosAdministradorOpe) {
                             return true;
                         }
@@ -1585,8 +1585,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Url imagen',
                     dataIndex: 'url',
                     sortable: true,
-                    width: 100,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    width: 100
+                   // , editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
                     header: 'Imagen',
@@ -2980,7 +2980,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     cls: 'barramenu',
                                     handler: function (checkbox, isChecked) {
                                     }
-                                },                                {
+                                }, {
                                     xtype: 'checkbox',
                                     boxLabel: 'Detalle actas',
                                     id: 'checkDetalleActas',
@@ -3419,7 +3419,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         this.storeDocumentosReporte.baseParams.accesosOperativos = accesosOperativos;
         this.storeDocumentosReporte.baseParams.accesosAdministradorIns = accesosAdministradorIns;
         // para indicar en la busqueda que es desde el formulario
-        var formularioBusqueda  = 1;
+        var formularioBusqueda = 1;
         this.storeDocumentosReporte.baseParams.formularioBusqueda = formularioBusqueda;
 
         this.storeDocumentosReporte.load();
@@ -3455,7 +3455,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     generaRetiros = (Ext.getCmp('checkDetalleRecibidos').getValue());
                     generaTotalesPersonal = (Ext.getCmp('checkTotalesPersonal').getValue());
 
-                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&acciones=' + generaAcciones + '&totalespersonal=' + generaTotalesPersonal+ '&actas=' + generaActas+ '&retiros=' + generaRetiros;
+                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&acciones=' + generaAcciones + '&totalespersonal=' + generaTotalesPersonal + '&actas=' + generaActas + '&retiros=' + generaRetiros;
                 }
             }
         });
