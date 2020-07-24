@@ -317,8 +317,8 @@ function ingresaNuevoProceso()
     $envioEmail = '';
     if ($result) {
         // en caso que se graba la solicitud, se envia una notificacion
-        $mensaje =  getmensajeSolicitud($data->nombres . " " .$data->nombres, $data);
-        $envioEmail = enviarEmail($data->correoelectronico, $data->nombres . " " .$data->nombres, $mensaje, $funcionarios = '');
+        $mensaje =  getmensajeSolicitud($data->nombres . " " .$data->apellidos, $data);
+        $envioEmail = enviarEmail($data->correoelectronico, $data->nombres . " " .$data->apellidos, $mensaje, $funcionarios = '');
     }
 
 

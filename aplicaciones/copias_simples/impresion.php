@@ -86,7 +86,7 @@
                                     <?php
                                     if ($_GET ['abogado'] != '') {
                                     ?>
-                                    y/o, Doctor / Abogado <span class="big"><?php
+                                    y Doctor / Abogado <span class="big"><?php
                                         echo $_GET ['abogado'];
                                         ?></span>
                                     en calidad de abogado patrocinador de <span class="big"><?php
@@ -108,7 +108,7 @@
                                     <?php
                                     if ($_GET ['otrodocumento'] != '') {
                                         ?>
-                                        y/o del documento <span class="big"><?php
+                                        y del documento <span class="big"><?php
                                             echo $_GET ['otrodocumento'];
                                             ?></span>
                                         <?php
