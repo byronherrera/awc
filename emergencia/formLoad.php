@@ -18,6 +18,9 @@ switch ($opcion) {
     case "totales":
         getTotales();
         break;
+    case "totalesDetalle":
+        getTotalesDetalle();
+        break;
 
     case "ingreso":
         // graba en base de datos
@@ -204,10 +207,54 @@ function getTotales()
     global $os;
 
 
-    $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
+    //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
 
+    $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
     $result = $os->db->conn->query($sql);
-    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    $resultado = [];
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $row[] = "1";
+        $resultado[] = $row;
+    }
+    if (count($resultado) > 0) {
+        echo json_encode(array(
+            "success" => true,
+            "data" => array($resultado)
+        ));
+
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }
+}
+
+function getTotalesDetalle()
+{
+    global $os;
+
+
+ //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
+    $result = $os->db->conn->query($sql);
+
+    $resultado = [];
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+        //para cada fila calculamos el total por zonal
+        $fecha= $row ['texto'];
+        $sqlzonal = "SELECT id, nombre, (SELECT COUNT( id ) valor FROM amc_sancion_emergencia  WHERE DATE(fecha) = '$fecha' AND idzonal= amc_zonas.id) total  FROM amc_zonas WHERE combos = 1";
+        $resultzonal = $os->db->conn->query($sqlzonal);
+        while ($rowzonal = $resultzonal->fetch(PDO::FETCH_ASSOC)) {
+            $nombre = str_replace(' ', '', $rowzonal ['nombre']);
+            $row[$nombre] = $rowzonal['total'] ;
+        }
+        $resultado[] = $row;
+
+    }
     if (count($resultado) > 0) {
         echo json_encode(array(
             "success" => true,
