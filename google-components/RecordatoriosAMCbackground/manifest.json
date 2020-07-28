@@ -1,0 +1,21 @@
+{
+  "name": "RecordatoriosAMC",
+  "description": "Recordatorios para beber agua, y cuidados",
+  "version": "1.0",
+  "manifest_version": 2,
+  "permissions": ["background","alarms", "notifications", "storage"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_title": "Evento beber agua",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "drink_water16.png",
+    "32": "drink_water32.png",
+    "48": "drink_water48.png",
+    "128": "drink_water128.png"
+  }
+}

@@ -1,0 +1,39 @@
+<!-- Copyright 2017 The Chromium Authors. All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file. -->
+<html>
+  <head>
+    <title>A hidratarse</title>
+    <style>
+      body {
+        text-align: center;
+      }
+
+      #hydrateImage {
+        width: 100px;
+        margin: 5px;
+      }
+
+      button {
+        margin: 5px;
+        outline: none;
+      }
+
+      button:hover {
+        outline: #80DEEA dotted thick;
+      }
+    </style>
+ 
+  </head>
+  <body>
+      <img src='./logos/stay_hydrated.png' id='hydrateImage'>
+      <!-- An Alarm delay of less than the minimum 1 minute will fire
+      in approximately 1 minute incriments if released -->
+      <button id='sampleSecond' value='0.01'>Muestra mensaje</button>
+      <button id='15min' value='0.1'>Recordatorios</button>
+      <button id='cancelAlarm'>Cancelar alarma</button>
+      
+   <!-- link to non-persistent background script -->
+   <script src="popup.js"></script>
+  </body>
+</html>
