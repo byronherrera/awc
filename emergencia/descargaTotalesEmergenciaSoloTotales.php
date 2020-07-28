@@ -79,15 +79,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo3, "LISTADO SANCIO
 textoSiguieteFila("No.", 'A', 'A', 'center', true, "B");
 textoSiguieteFila("DIA", 'B', 'B', 'center', false, "B");
 textoSiguieteFila("Total", 'C', 'C', 'center', false, "B");
-textoSiguieteFila("Los Chillos", 'D', 'D', 'center', false, "B");
-textoSiguieteFila("La Mariscal", 'E', 'E', 'center', false, "B");
-textoSiguieteFila("La Delicia", 'F', 'F', 'center', false, "B");
-textoSiguieteFila("Quitumbe", 'G', 'G', 'center', false, "B");
-textoSiguieteFila("Tumbaco", 'H', 'H', 'center', false, "B");
-textoSiguieteFila("Calderon", 'I', 'I', 'center', false, "B");
-textoSiguieteFila("Manuela Saenz", 'J', 'J', 'center', false, "B");
-textoSiguieteFila("Eloy Alfaro", 'K', 'K', 'center', false, "B");
-textoSiguieteFila("Eugenio Espejo", 'L', 'L', 'center', false, "B");
+textoSiguieteFila("", 'D', 'D', 'center', false, "B");
 
 
 // recuperamos los nombres de los usuarios
@@ -98,44 +90,17 @@ textoSiguieteFila("Eugenio Espejo", 'L', 'L', 'center', false, "B");
 $numero = 1;
 $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
 $nombres = $os->db->conn->query($sql);
-
-
-
 $totales = 0;
 while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($numero, 'A', 'A', 'center');
     $numero++;
-    $fecha= $nombreDetalle ['texto'];
-    $sqlzonal = "SELECT id, nombre, 
-                (SELECT COUNT( id ) valor FROM amc_sancion_emergencia  
-                WHERE DATE(fecha) = '$fecha' AND idzonal= amc_zonas.id) total  
-                FROM amc_zonas 
-                WHERE combos = 1";
-    $resultzonal = $os->db->conn->query($sqlzonal);
-
-    while ($rowzonal = $resultzonal->fetch(PDO::FETCH_ASSOC)) {
-        $nombre = str_replace(' ', '', $rowzonal ['nombre']);
-        $nombreDetalle[$nombre] = $rowzonal['total'] ;
-
-
-    }
-
     textoSiguieteFila($nombreDetalle['texto'], 'B', 'B', 'left', false);
     textoSiguieteFila($nombreDetalle['valor'], 'C', 'C', 'center', false);
-    textoSiguieteFila($nombreDetalle['LOSCHILLOS'], 'D', 'D', 'center', false);
-    textoSiguieteFila($nombreDetalle['LAMARISCAL'], 'E', 'E', 'center', false);
-    textoSiguieteFila($nombreDetalle['LADELICIA'], 'F', 'F', 'center', false);
-    textoSiguieteFila($nombreDetalle['QUITUMBE'], 'G', 'G', 'center', false);
-    textoSiguieteFila($nombreDetalle['TUMBACO'], 'H', 'H', 'center', false);
-    textoSiguieteFila($nombreDetalle['CALDERON'], 'I', 'I', 'center', false);
-    textoSiguieteFila($nombreDetalle['MANUELASAENZ'], 'J', 'J', 'center', false);
-    textoSiguieteFila($nombreDetalle['ELOYALFARO'], 'K', 'K', 'center', false);
-    textoSiguieteFila($nombreDetalle['EUGENIOESPEJO'], 'L', 'L', 'center', false);
+    textoSiguieteFila(' ', 'D', 'D', 'left', false);
     $totales = $totales + $nombreDetalle['valor'];
-
   }
 textoSiguieteFila('TOTAL ', 'A', 'B', 'left');
-textoSiguieteFila($totales,'C', 'C', 'center', false);
+textoSiguieteFila($totales,'C', 'D', 'center', false);
 
 //borde("A" . $primeraFilaImage . ':' . 'F' . $filacabecera);
 // Elaborador por:
@@ -171,31 +136,14 @@ $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 
 // Ancho de las columnas
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(5);
+$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(6);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('B')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(10);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
 
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('C')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(12);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(22);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('D')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('E')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('F')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('G')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('H')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('I')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('J')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('L')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(15);
-$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('L')->setAutoSize(false);
-$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(15);
+$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(22);
 
 
 

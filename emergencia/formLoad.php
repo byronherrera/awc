@@ -236,8 +236,6 @@ function getTotalesDetalle()
     global $os;
 
 
- //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
-
     $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
     $result = $os->db->conn->query($sql);
 
