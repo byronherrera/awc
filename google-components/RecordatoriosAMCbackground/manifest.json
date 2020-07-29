@@ -3,7 +3,8 @@
   "description": "Recordatorios para beber agua, y cuidados",
   "version": "1.0",
   "manifest_version": 2,
-  "permissions": ["background","alarms", "notifications", "storage"],
+//  "permissions": ["background","alarms", "notifications", "storage"],  TODO INVESTIGAR "activeTab" , "GCM"
+  "permissions": ["background","alarms", "notifications", "storage","activeTab"],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
