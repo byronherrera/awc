@@ -20,43 +20,52 @@ var mensaje_actual = 0;
 
 chrome.alarms.onAlarm.addListener(function () {
     //chrome.browserAction.setBadgeText({text: ''});
-    mensaje_actual++;
-    chrome.notifications.create({
-        type: 'basic',
-        iconUrl: datos[mensaje_actual][1],
-        title: datos[mensaje_actual][0],
-        message: datos[mensaje_actual][2],
-        buttons: [
-            {title: boton}
-        ],
-        priority: 0
-    });
 
     // se recupera el usuario grabado
     chrome.storage.local.get('userAMC', function (result) {
         // en caso que si esta asignado el usuario
 
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://amcmatis.quito.gob.ec/modules/desktop/recordatorios/server/consultas.php?usuario=bherrera";
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var myArr = JSON.parse(this.responseText);
 
-            fetch('https://amcmatis.quito.gob.ec/emergencia/formLoad.php?opcion=totales')
-            .then(function (response) {
-                console.log(response)
-            }).catch(function (err) {
-                console.log(err)
 
-        });
+//                myFunction(myArr);
 
-        chrome.notifications.create({
-            type: 'basic',
-            iconUrl: datos[mensaje_actual][1],
-            title: datos[mensaje_actual][0],
-            message: datos[mensaje_actual][2],
-            buttons: [
-                {title: boton}
-            ],
-            priority: 0
-        });
+                mensaje_actual++;
+                chrome.notifications.create({
+                    type: 'basic',
+                    iconUrl: datos[mensaje_actual][1],
+                    title: myArr[1].nombre,
+                    //message: datos[mensaje_actual][2],
+                    message: myArr[1].tema +  '; Fecha: ' + myArr[1].fecha,
+                    buttons: [
+                        {title: boton}
+                    ],
+                    priority: 0
+                });
+            }
+        };
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+
+        function myFunction(arr) {
+            var out = "";
+            var i;
+            for (i = 0; i < arr.length; i++) {
+                out += arr[i].tema + ' : ' +
+                    arr[i].fecha + '<br>';
+            }
+            document.getElementById("id01").innerHTML = out;
+        }
+
 
     });
+
+
+
 
 });
 

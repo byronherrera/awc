@@ -14,7 +14,7 @@ if (!class_exists('os')) {
         <head>
             <meta charset="utf-8">
             <meta name="robots" content="noindex, nofollow">
-            <title>SOLICITUD DE COPIAS SIMPLES ON LINE</title>
+            <title>REGISTRO INFRACCIONES EMERGENCIA</title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
             <link href="vendor/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
@@ -27,12 +27,15 @@ if (!class_exists('os')) {
             <div class="contact-image">
                 <img src="img/rocket_contact.png" alt="rocket_contact"/>
             </div>
-            <h3>SOLICITUD DE COPIAS SIMPLES ON LINE</h3>
+            <h3>REGISTRO INFRACCIONES EMERGENCIA</h3>
+            <div class="iframedinar">
+                <iframe id="frame" src="" width="100%" height="80px" frameBorder="0"></iframe>
+            </div>
             <form enctype="multipart/form-data" id="myForm" method="post">
                 <div class="row">
 
                     <div class="form-group">
-                        <label for="cedula">CEDULA*</label>
+                        <label for="cedula">CEDULA INFRACTOR*</label>
                         <input type="number" class="form-control" id="cedula" name="cedula" placeholder=""
                                required="required">
                         <div class="mensajecedula"></div>
@@ -49,42 +52,38 @@ if (!class_exists('os')) {
                     </div>
 
                     <div class="form-group">
-                        <label for="lugarinfraccion">ABOGADO PATROCINADOR</label>
+                        <label for="lugarinfraccion">LUGAR INFRACCION</label>
                         <input id="lugarinfraccion" type="text" name="lugarinfraccion" class="form-control"
                                placeholder="Ingrese lugar infracción">
                     </div>
                     <div class="form-group">
-                        <label for="lugarinfraccion">MATRICULA ABOGADO PATROCINADOR</label>
-                        <input id="lugarinfraccion" type="text" name="lugarinfraccion" class="form-control"
-                               placeholder="Ingrese lugar infracción">
+                        <label for="Ordenanza">Motivo Sancion*</label>
+                        <select name="ordenanza" class="form-control" id="ordenanza" required="required"
+                                data-error="requerido.">
+                            <option value=""></option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="observaciones">Observaciones.</label>
+                        <textarea class="form-control" id="observaciones" name="observaciones" required="required"
+                                  rows="3">SANCION POR NO USAR MASCARILLA </textarea>
                     </div>
                     <div class="form-group">
-                        <label for="funcionario">CORREO ELECTRONICO*</label>
+                        <label for="funcionario">Funcionario*</label>
                         <select name="funcionario" class="form-control" id="funcionario" required="required"
                                 data-error="requerido.">
                             <option value=""></option>
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="idzonal">Dirección*</label>
+                        <label for="idzonal">Zonal*</label>
                         <select name="idzonal" class="form-control" id="idzonal" required="required"
                                 data-error="requerido.">
                             <option value=""></option>
                         </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="idzonal">Número Expediente Administrativo*</label>
-                        <select name="idzonal" class="form-control" id="idzonal" required="required"
-                                data-error="requerido.">
-                            <option value=""></option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="actainfraccion">OTRO DOCUMENTO, ESPECIFICAR</label>
-                        <input id="actainfraccion" type="text" name="actainfraccion" class="form-control"
-                               placeholder="Ingrese el numero de acta de infración">
                     </div>
 
                     <div class="form-group">
@@ -97,7 +96,11 @@ if (!class_exists('os')) {
                             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        <label for="actainfraccion">Número de acta</label>
+                        <input id="actainfraccion" type="text" name="actainfraccion" class="form-control"
+                               placeholder="Ingrese el numero de acta de infración">
+                    </div>
                     <div class="form-group">
                         <div class="custom-file">
                             <label class="custom-file-label" for="archivo">Imagen Cedula </label>
@@ -106,8 +109,22 @@ if (!class_exists('os')) {
                         </div>
                     </div>
                     <div class="form-group">
+                        <div class="custom-file">
+                            <label class="custom-file-label" for="archivo">Imagen Infracción</label>
+                            <input type="file" class="custom-file-input" id="archivo2" lang="es" name="archivo2">
+                            <label class="custom-file-label" for="archivo">Imagen Infracción.</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="geoposicionamiento">Coordenadas</label>
+                        <input id="geoposicionamiento" type="text" name="geoposicionamiento" class="form-control"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+
                         <div class="form-group col-md-6">
-                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="ENVIAR">
+                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="Grabar">
                         </div>
                         <div class="form-group col-md-6">
                             <div class="mensaje"></div>
@@ -161,21 +178,17 @@ if (!class_exists('os')) {
 
                 document.getElementById('fecha').value = dateStr;
 
-                /*Guardando los datos en el LocalStorage*/
-                $("#funcionario").change(function () {
-                    var idFuncionario = $('#funcionario option:selected').val();
-                    localStorage.setItem("idFuncionario", idFuncionario);
-                });
-
                 $("#idzonal").change(function () {
                     var idzonal = $('#idzonal option:selected').val();
                     localStorage.setItem("idzonal", idzonal);
                 });
 
                 $("input[name^='cedula']").change(function () {
+                    // carga iframe con informacion de dinardat
+                    $("#frame").attr("src", "https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
 
                     // se carga la información si ya existe información anterior
-/*                    $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
+                    $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
                         if (data.success) {
                             $('#nombres').val(data.data[0]['nombres'])
                             $('#apellidos').val(data.data[0]['apellidos'])
@@ -185,7 +198,13 @@ if (!class_exists('os')) {
                             $('#apellidos').val('')
                             $('.mensajecedula').html("")
                         }
-                    });*/
+                    });
+                });
+
+                /*Guardando los datos en el LocalStorage*/
+                $("#funcionario").change(function () {
+                    var idFuncionario = $('#funcionario option:selected').val();
+                    localStorage.setItem("idFuncionario", idFuncionario);
                 });
 
                 // llenar los datos del combobox
@@ -200,6 +219,27 @@ if (!class_exists('os')) {
 
                     }
                 });
+
+                /*Guardando los datos en ordenanza*/
+                $("#ordenanza").change(function () {
+                    var idOrdenanza = $('#ordenanza option:selected').val();
+                    localStorage.setItem("idOrdenanza", idOrdenanza);
+                });
+
+                // llenar los datos del combobox
+                $.getJSON('formLoad.php?opcion=ordenanza', function (data) {
+                    console.log(data);
+                    if (data.success) {
+                        $.each(data.data[0], function (i, el) {
+                            $('#ordenanza').append(new Option(el.text, el.valor));
+                        });
+                        $("#ordenanza").val(localStorage.getItem("idOrdenanza"));
+
+                    } else {
+
+                    }
+                });
+
 
                 // llenar los datos zonal del combobox
                 $.getJSON('formLoad.php?opcion=idzonal', function (data) {

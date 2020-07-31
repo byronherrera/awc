@@ -12,6 +12,9 @@ switch ($opcion) {
     case "funcionario":
         getFuncionarios();
         break;
+    case "ordenanza":
+        getOrdenanza();
+        break;
     case "idzonal":
         getIdzonal();
         break;
@@ -178,6 +181,27 @@ function getFuncionarios()
         ));
     }
 }
+function getOrdenanza()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT nombre AS text, id AS valor FROM `amc_ordenanzas` WHERE activo = 1 ORDER BY orden;";
+
+    $result = $os->db->conn->query($sql);
+    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+    if (count($resultado) > 0) {
+        echo json_encode(array(
+            "success" => true,
+            "data" => array($resultado)
+        ));
+
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }
+}
 
 function getIdzonal()
 {
@@ -205,7 +229,7 @@ function getIdzonal()
 function getTotales()
 {
     global $os;
-
+	header("Access-Control-Allow-Origin: *");
 
     //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -235,6 +259,8 @@ function getTotalesDetalle()
 {
     global $os;
 
+
+ //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
 
     $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
     $result = $os->db->conn->query($sql);
