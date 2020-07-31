@@ -5,7 +5,7 @@ require_once '../../../common/Classes/funciones.php';
 
 $os = new os();
 if (!$os->session_exists()) {
-    die('No existe sesión!');
+    die('No existe sesiÃ³n!');
 }
 
 
@@ -272,7 +272,6 @@ function selectOperativos()
     }
 
 
-
     if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
         $fechainicio = $_POST['busqueda_fecha_inicio'];
         if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin'] != '')) {
@@ -367,21 +366,21 @@ function insertOperativos()
     $cadenaCampos = '';
 
 
-    $datafecha_planificacion =  date('Y-m-d\TH:i:s');
+    $datafecha_planificacion = date('Y-m-d\TH:i:s');
 
     // validar fechas de inicio .. si estan en null se le pone la fecha
     if (($data->fecha_planificacion == '') or !isset ($data->fecha_planificacion)) {
         // sin no esta deinida la fecha se pone fecha con la del dia
-        $data->fecha_planificacion =   date('Y-m-d\TH:i:s');
+        $data->fecha_planificacion = date('Y-m-d\TH:i:s');
     }
 
     if (($data->fecha_inicio_planificacion == '') or !isset ($data->fecha_inicio_planificacion)) {
         // sin no esta deinida la fecha se pone fecha con la del dia
-        $data->fecha_inicio_planificacion =  date('Y-m-d\TH:i:s');
+        $data->fecha_inicio_planificacion = date('Y-m-d\TH:i:s');
     }
     if (($data->fecha_fin_planificacion == '') or !isset ($data->fecha_fin_planificacion)) {
         // sin no esta deinida la fecha se pone fecha con la del dia
-        $data->fecha_fin_planificacion =  date('Y-m-d\TH:i:s');
+        $data->fecha_fin_planificacion = date('Y-m-d\TH:i:s');
     }
 
     foreach ($data as $clave => $valor) {
@@ -419,8 +418,8 @@ function generaCodigoProcesoOperativo()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $año = date ('Y');
-    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE  recepcion_documento > '". $año ."-01-03 00:00:01'";
+    $aÃ±o = date('Y');
+    $sql = "SELECT MAX(codigo_tramite) AS maximo FROM amc_denuncias WHERE  recepcion_documento > '" . $aÃ±o . "-01-03 00:00:01'";
 
 //    $sql = "SELECT MAX(codigo_operativo) AS maximo FROM amc_operativos";
     $result = $os->db->conn->query($sql);
@@ -451,7 +450,7 @@ function updateOperativos()
 
                 $detalle = '<table border="1">
                             <tr>
-                                <td>Código</td>
+                                <td>CÃ³digo</td>
                                 <td valign="top">Fecha Inicio</td>
                                 <td valign="top">Fecha Fin</td>
                                 <td valign="top">Lugar Intervencion</td>
@@ -509,7 +508,7 @@ function updateOperativos()
     if (isset($data->id_tipo_documento)) {
         if ($data->id_tipo_documento == '1')
             if (validarCedulaCorreo($data->id)) {
-                $message = 'Ingresar número de cédula y correo electrónico';
+                $message = 'Ingresar nÃºmero de cÃ©dula y correo electrÃ³nico';
             }
     }
 
@@ -526,10 +525,14 @@ function updateOperativos()
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
         if (isset($valor))
+
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+
+
         else
             $cadenaDatos = $cadenaDatos . $clave . " = NULL, ";
     }
+
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     verificarAnteriorOperativo($data->id);
@@ -541,7 +544,7 @@ function updateOperativos()
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "mail" => $resultado,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos actualizado exitosamente" : $sql->errorCode(),
+        "msg" => $sql->errorCode() == 0 ? "UbicaciÃ³n en amc_operativos actualizado exitosamente" : $sql->errorCode(),
         "data" => array($data)
     ));
 }
@@ -592,12 +595,12 @@ function deleteOperativos()
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos, eliminado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "UbicaciÃ³n en amc_operativos, eliminado exitosamente" : $sql->errorCode()
     ));
 
-    $log =  $os->get_member_id() . "-" . $log ;
+    $log = $os->get_member_id() . "-" . $log;
 
-    $fichero = 'crudOperativos.log';    
+    $fichero = 'crudOperativos.log';
     $actual = file_get_contents($fichero);
     $actual .= $log . "\n";
     file_put_contents($fichero, $actual);
@@ -657,16 +660,16 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
                  <br>
                  "Se le recuerda al responsable del operativo que es obligatorio llenar todo el detalle en 
                  ACCIONES OPERATIVO, ACTOS INICIO y RETIROS, dicho reporte debe estar en concordancia con lo reportado en el chat. 
-                 En caso que no este correcto, se lo cambiará a estado INFORME y no se lo aceptará como finalizado.
+                 En caso que no este correcto, se lo cambiarÃ¡ a estado INFORME y no se lo aceptarÃ¡ como finalizado.
                 <br>
 
                 <br>
-                 Favor ingresar en Matis AMC, para verificar el operativo asignado <a href="http://172.20.136.60/procesos-amc">aquí</a> .
+                 Favor ingresar en Matis AMC, para verificar el operativo asignado <a href="http://172.20.136.60/procesos-amc">aquÃ­</a> .
                 <br>    
                 <br>    
                 <p>De conformidad con el Memorando No. AMC-SM-JA-2018-003, del 4 de enero de 2018, mediante el cual la 
-                Máxima Autoridad dispone</p>
-                <p>"Todo el personal de la Agencia Metropolitana de Control, deberá utilizar de manera obligatoria el módulo de operativos que se encuentra dentro de la INTRANET de la Institución, a fin de generar los informes de los operativos realizados. En el sistema se deberá llenar los datos solicitados dentro de las 24 horas siguientes de haber realizado el operativo, con el objetivo de que se genere el informe respectivo."</p>
+                MÃ¡xima Autoridad dispone</p>
+                <p>"Todo el personal de la Agencia Metropolitana de Control, deberÃ¡ utilizar de manera obligatoria el mÃ³dulo de operativos que se encuentra dentro de la INTRANET de la InstituciÃ³n, a fin de generar los informes de los operativos realizados. En el sistema se deberÃ¡ llenar los datos solicitados dentro de las 24 horas siguientes de haber realizado el operativo, con el objetivo de que se genere el informe respectivo."</p>
 
                 <br>
 
@@ -678,9 +681,9 @@ function getmensaje($nombre = '', $operativos = '', $fecha = '')
                 <p>SUPERVISION METROPOLITANA</p>
                 <p>GAD MDMQ AGENCIA METROPOLITANA DE CONTROL</p>
                 <p></p>
-                <p>INFORMACIÓN IMPORTANTE</p>
+                <p>INFORMACIÃ“N IMPORTANTE</p>
                 <p>************************************************</p>
-                <p>- No responder este correo es un Mensaje Automático.</p>
+                <p>- No responder este correo es un Mensaje AutomÃ¡tico.</p>
                 
                 <p>- Para sugerencias, escribe a tu coordinador.</p>
 
@@ -703,19 +706,21 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $mail->SMTPDebug = 0;
     $mail->Debugoutput = 'html';
 
-    $mail->Host = 'relay.quito.gob.ec';
-    $mail->Port = 25;
-    $mail->Username = "agencia.m.control@quito.gob.ec";
-    $mail->Password = "12345678";
-    $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
-
-    /*    $mail->Host = 'smtp.gmail.com';
-        $mail->Port = 587;
-        $mail->SMTPSecure = 'tls';
-        $mail->SMTPAuth = true;
-        $mail->Username = "amcdenuncias@gmail.com";
-        $mail->Password = "amccontrol2016";
+    /*    $mail->Host = 'relay.quito.gob.ec';
+        $mail->Port = 25;
+        $mail->Username = "agencia.m.control@quito.gob.ec";
+        $mail->Password = "12345678";
+        $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
     */
+
+    $mail->Host = 'smtp.gmail.com';
+    $mail->Port = 587;
+    $mail->SMTPSecure = 'tls';
+    $mail->SMTPAuth = true;
+    $mail->Username = "amcdenuncias@gmail.com";
+    $mail->Password = "amccontrol2016";
+    $mail->setFrom('denunciasamc@quito.gob.ec', 'Agencia Metropolitana de Control');
+
 
     $mail->AddBCC("byron.herrera@quito.gob.ec");
     $mail->AddBCC("pamela.parreno@quito.gob.ec");

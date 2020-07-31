@@ -294,7 +294,6 @@ function  enviarEmail ($email, $nombre, $mensaje)
     $mail->isSMTP();
     $mail->SMTPDebug = 2;
 
-    echo '111';
 
 //Enable SMTP debugging
 // 0 = off (for production use)
