@@ -17,11 +17,18 @@ chrome.alarms.onAlarm.addListener(function () {
                 if (responseArr.length > 0) {
                     // valida que exista contenido que mostrar
                     if (responseArr[0].nombre.length > 0) {
+                        // crea items
+                        var itemsNotificacion = [];
+                        responseArr.forEach(function (item, index){
+                            itemsNotificacion.push({title: item.fecha, message: item.tema});
+                        });
+
                         chrome.notifications.create({
-                            type: 'basic',
+                            type: 'list',
                             iconUrl: 'logo_amc48.png',
-                            title: responseArr[0].nombre,
-                            message: responseArr[0].tema + '; Fecha: ' + responseArr[1].fecha,
+                            title: responseArr[0].nombre + ", tareas por entregar",
+                            message:  + '; Fecha: ' + responseArr[0].fecha,
+                            items:itemsNotificacion,
                             priority: 0
                         });
                     }
