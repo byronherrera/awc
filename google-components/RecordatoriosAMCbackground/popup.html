@@ -2,37 +2,42 @@
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file. -->
 <html>
-  <head>
+<head>
     <title>Tareas Pendientes</title>
     <style>
-      body {
-        text-align: center;
-      }
+        body {
+            text-align: center;
+        }
 
-      #hydrateImage {
-        width: 100px;
-        margin: 5px;
-      }
+        #hydrateImage {
+            width: 100px;
+            margin: 5px;
+            color: #777;
+        }
 
-      button {
-        margin: 5px;
-        outline: none;
-      }
+        button {
+            margin: 5px;
+            outline: none;
+            width: 100px;
+        }
 
-      button:hover {
-        outline: #80DEEA dotted thick;
-      }
+        button:hover {
+            outline: #aaaaaa dotted thick;
+        }
     </style>
- 
-  </head>
-  <body>
-      <img src='./logos/stay_hydrated.png' id='hydrateImage'>
 
-      <button id='sampleSecond' value='0.01'>Muestra mensaje</button>
-      <button id='15min' value='0.1'>Recordatorios</button>
-      <button id='cancelAlarm'>Cancelar alarma</button>
-      
-   <!-- link to non-persistent background script -->
-   <script src="popup.js"></script>
-  </body>
+</head>
+<body>
+<img src='./logos/logo_amc128.png' id='hydrateImage'>
+
+<button id='sampleSecond' value='0.01'>Mostrar mensaje</button>
+<button id='15min' value='0.1'>Activar</button>
+<button id='cancelAlarm'>Cancelar</button>
+ <br>
+<label for="usuario">Correo electronico:</label>
+<input type="text" id="usuario" name="usuario">
+<button id='grabar'>Grabar</button>
+<!-- link to non-persistent background script -->
+<script src="popup.js"></script>
+</body>
 </html>

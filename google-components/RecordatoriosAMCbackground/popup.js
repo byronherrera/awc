@@ -17,8 +17,18 @@ function clearAlarm() {
   window.close();
 }
 
+function setUsuario() {
+    chrome.storage.local.set({userAMC: document.getElementById("usuario").value});
+    //TODO validar usuario
+    window.close();
+}
+
+chrome.storage.local.get(['userAMC'], function(result) {
+    document.getElementById("usuario").value = result.userAMC;
+});
 //An Alarm delay of less than the minimum 1 minute will fire
 // in approximately 1 minute incriments if released
 document.getElementById('sampleSecond').addEventListener('click', setAlarm);
 document.getElementById('15min').addEventListener('click', setAlarm);
 document.getElementById('cancelAlarm').addEventListener('click', clearAlarm);
+document.getElementById('grabar').addEventListener('click', setUsuario);
