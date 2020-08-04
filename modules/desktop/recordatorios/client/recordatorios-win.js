@@ -20,9 +20,93 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         var win = desktop.getWindow('grid-win-recordatorios');
         var urlRecordatorios = "modules/desktop/recordatorios/server/";
         var textField = new Ext.form.TextField({allowBlank: false});
+
         function formatDate(value) {
-            return value ? value.dateFormat('Y-m-d H:i:s') : '';
+            return value ? value.dateFormat('Y-m-d') : '';
         }
+
+        //inicio combo persona recepta la operativos GRC
+        storeGRC = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=personaloperativos',
+            baseParams: {
+                todos: 'true',
+                // accesosAdministradorOpe: accesosAdministradorOpe,
+                // accesosOperativos: accesosOperativos,
+                acceso: acceso
+            }
+
+        });
+
+
+        var comboGRC = new Ext.form.ComboBox({
+            id: 'comboGRC',
+            store: storeGRC,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            //forceSelection: true,
+            allowBlank: true
+        });
+
+        var comboGRC2 = new Ext.form.ComboBox({
+            id: 'comboGRC2',
+            store: storeGRC,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            //forceSelection: true,
+            allowBlank: true
+        });
+
+        function personaRecordatorio(id) {
+            var index = storeGRC.findExact('id', id);
+            if (index > -1) {
+                var record = storeGRC.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        storeGRC2 = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=personaloperativos',
+            baseParams: {
+                todos: 'true',
+                //   accesosAdministradorOpe: true,
+                //    accesosOperativos: false,
+                acceso: acceso
+            }
+
+        });
+
+        var comboGRC2 = new Ext.form.ComboBox({
+            id: 'comboGRC2',
+            store: storeGRC2,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            //forceSelection: true,
+            allowBlank: true
+        });
+
+        function personaReceptaRecordatorio(id) {
+            //var index = storeGRC2.findExact('id', id);
+            var index = storeGRC2.findExact('id', id);
+            if (index > -1) {
+                var record = storeGRC2.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo persona recepta la operativos GRC
+
 
         // inicio ventana recordatorios
         var proxyRecordatorios = new Ext.data.HttpProxy({
@@ -50,16 +134,16 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name:'id', allowBlank: true},
-                {name:'id_responsable', allowBlank: true},
-                {name:'nombres', allowBlank: true},
-                {name:'apellidos', allowBlank: true},
-                {name:'tema', allowBlank: true},
-                {name:'fecha_inicio', allowBlank: true},
-                {name:'fecha_entrega', allowBlank: true},
-                {name:'activo', allowBlank: true},
-                {name:'idingreso', allowBlank: true},
-                {name:'observaciones', allowBlank: true}
+                {name: 'id', allowBlank: true},
+                {name: 'id_responsable', allowBlank: false},
+                {name: 'nombres', allowBlank: true},
+                {name: 'apellidos', allowBlank: true},
+                {name: 'tema', allowBlank: false    },
+                {name: 'fecha_inicio', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_entrega', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'activo', allowBlank: true},
+                {name: 'idingreso', allowBlank: true},
+                {name: 'observaciones', allowBlank: true}
 
             ]
         });
@@ -88,17 +172,53 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             store: this.storeRecordatorios,
             columns: [
                 new Ext.grid.RowNumberer(),
-                {header:'id', dataIndex:'id', sortable: true,width: 125},
-                {header:'cedula', dataIndex:'cedula', sortable: true,width: 125},
-                {header:'lugarinfraccion', dataIndex:'lugarinfraccion', sortable: true,width: 125},
-                {header:'nombres', dataIndex:'nombres', sortable: true,width: 125},
-                {header:'apellidos', dataIndex:'apellidos', sortable: true,width: 125},
-                {header:'observaciones', dataIndex:'observaciones', sortable: true,width: 125},
-                {header:'geoposicionamiento', dataIndex:'geoposicionamiento', sortable: true,width: 125},
-                {header:'funcionario', dataIndex:'funcionario', sortable: true,width: 125},
-                {header:'idzonal', dataIndex:'idzonal', sortable: true,width: 125},
-                {header:'zonal', dataIndex:'zonal', sortable: true,width: 125},
-                {header:'fecha', dataIndex:'fecha', sortable: true,width: 125}
+                {header: 'id', dataIndex: 'id', sortable: true, width: 30},
+                {
+                    header: 'Responsable', dataIndex: 'id_responsable', sortable: true, width: 220, editor: comboGRC,
+                    renderer: personaRecordatorio
+                },
+
+                //  {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 125},
+                //  {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 125},
+                {
+                    header: 'Descripción',
+                    dataIndex: 'tema',
+                    sortable: true,
+                    width: 300,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {header: 'Fecha Inicio', dataIndex: 'fecha_inicio', sortable: true, width: 125, renderer: formatDate,
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
+                {header: 'Fecha Entrega', dataIndex: 'fecha_entrega', sortable: true, width: 125, renderer: formatDate,
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
+                {
+                    header: 'Activo'
+                    , dataIndex: 'activo'
+                    , editor: {
+                        xtype: 'checkbox'
+                    }
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Yes'
+                    , sortable: true
+                    , width: 50
+                    , xtype: 'booleancolumn'
+                },
+
+                {header: 'idingreso', dataIndex: 'idingreso', sortable: true, width: 125, hidden: true},
+                {
+                    header: 'observaciones',
+                    dataIndex: 'observaciones',
+                    sortable: true,
+                    width: 125,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                }
             ],
             viewConfig: {
                 forceFit: false
@@ -112,7 +232,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 store: storeRecordatorios,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
-                emptyMsg: "No existen trámites que mostrar"
+                emptyMsg: "No existen recordatorios  que mostrar"
             })
         });
 
@@ -149,53 +269,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                             key: 'busqueda_todos',
                             scope: this,
                             text: 'Todos'
-                        },
-                        {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'numero_tramite',
-                            scope: this,
-                            text: 'Número trámite'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'ruc_licencia',
-                            scope: this,
-                            text: 'RUC/licencia'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'codigo',
-                            scope: this,
-                            text: 'Código'
-                        }
-
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'patente',
-                            scope: this,
-                            text: 'Patente'
-                        }, {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'predio',
-                            scope: this,
-                            text: 'Predio'
-                        }, {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'razon_social',
-                            scope: this,
-                            text: 'Razón social'
                         }
                     ]
                 })
@@ -204,7 +277,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
             win = desktop.createWindow({
                 id: 'grid-win-recordatorios',
-                title: 'Consulta Sanción Recordatorios',
+                title: 'Consulta Recordatorios',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'recordatorios-icon',
@@ -212,7 +285,33 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 animCollapse: false,
                 constrainHeader: true,
                 tbar: [
-                     { text: 'Buscar por:', xtype: 'tbtext'}
+                    {
+                        text: 'Nuevo',
+                        scope: this,
+                        handler: this.addrecordatorios,
+                        iconCls: 'save-icon',
+                        id: 'addrecordatorios',
+                     //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                    },
+                    '-',
+                    {
+                        text: "Eliminar",
+                        scope: this,
+                        handler: this.deleterecordatorios,
+                        id: 'deleterecordatorios',
+                        iconCls: 'delete-icon',
+                        //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                        //disabled: true
+                    },
+                    '-',
+                    {
+                        iconCls: 'reload-icon',
+                        handler: this.requestGridData,
+                        scope: this,
+                        text: 'Recargar Datos',
+                        tooltip: 'Recargar datos'
+                    },'->',
+                    {text: 'Buscar por:', xtype: 'tbtext'}
                     , searchFieldBtn
                     , ' ', ' '
                     , new QoDesk.QoAdmin.SearchField({
@@ -232,15 +331,47 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     limit: limiterecordatorios
                 }
             });
-        }, 10);
+        }, 400);
     },
 
-    requestGridData: function () {
-        this.storeRecordatorios.load({params:
-            {
-                start: 0,
-                limit: limiterecordatorios
+    deleterecordatorios: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridRecordatorios.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeRecordatorios.remove(rows);
+                }
             }
+        });
+    },
+
+    addrecordatorios: function () {
+        var recordatorios = new this.storeRecordatorios.recordType({
+            id_responsable: '',
+            tema: '',
+            fecha_inicio: (new Date()),
+            fecha_entrega: (new Date()),
+            activo: 1,
+            observaciones: ''
+        });
+        this.gridRecordatorios.stopEditing();
+        this.storeRecordatorios.insert(0, recordatorios);
+        this.gridRecordatorios.startEditing(0, 0);
+    },
+    requestGridData: function () {
+        this.storeRecordatorios.load({
+            params:
+                {
+                    start: 0,
+                    limit: limiterecordatorios
+                }
         });
     },
 

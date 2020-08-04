@@ -16,13 +16,13 @@ chrome.alarms.onAlarm.addListener(function () {
                 var responseArr = JSON.parse(this.responseText);
                 if (responseArr.length > 0) {
                     // valida que exista contenido que mostrar
-                    if (responseArr[0].nombre.length > 0) {
+                    if (responseArr[0].tema.length > 0) {
                         // crea items
                         var itemsNotificacion = [];
                         responseArr.forEach(function (item, index){
                             itemsNotificacion.push({title: item.fecha, message: item.tema});
                         });
-
+    
                         chrome.notifications.create({
                             type: 'list',
                             iconUrl: 'logo_amc48.png',
@@ -65,7 +65,8 @@ chrome.runtime.onStartup.addListener(firstTimeRegistration);
 
 function firstTimeRegistration() {
     minutes = 1;
-    time_interval = 1000 * 60 * 10;
+    //time_interval = 1000 * 60 * 10;
+    time_interval = 1000 * 60 * 1;
     chrome.storage.local.set({minutes: minutes});
     chrome.browserAction.setBadgeText({text: 'ON'});
 

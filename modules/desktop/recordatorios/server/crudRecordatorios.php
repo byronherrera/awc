@@ -171,9 +171,8 @@ function insertDenuncias()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
-    $data->despacho_secretaria = 'false';
-    //$data->codigo_tramite = generaCodigoProcesoDenuncia();
-    $data->id_persona = $os->get_member_id();
+
+    $data->idingreso = $os->get_member_id();
     //genero el listado de nombre de campos
 
     $cadenaDatos = '';
@@ -185,7 +184,7 @@ function insertDenuncias()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_sancion_emergencia($cadenaCampos)
+    $sql = "INSERT INTO amc_general_recordatorios($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -206,13 +205,8 @@ function updateDenuncias()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
 
-    if (isset($data->despacho_secretaria)) {
-        if (!$data->despacho_secretaria)
-            $data->despacho_secretaria = 'false';
-        else
-            $data->despacho_secretaria = 'true';
-    }
-
+    if ($data->activo == true ) $data->activo = 1;
+    if ($data->activo == false ) $data->activo = 0;
     $message = '';
 
 
@@ -223,13 +217,13 @@ function updateDenuncias()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_sancion_emergencia SET  $cadenaDatos  WHERE amc_sancion_emergencia.id = '$data->id' ";
+    $sql = "UPDATE amc_general_recordatorios SET  $cadenaDatos  WHERE amc_general_recordatorios.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_sancion_emergencia actualizado exitosamente" : $sql->errorCode(),
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_general_recordatorios actualizado exitosamente" : $sql->errorCode(),
         "message" => $message
     ));
 }
@@ -239,12 +233,12 @@ function deleteDenuncias()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_sancion_emergencia WHERE id = $id";
+    $sql = "DELETE FROM amc_general_recordatorios WHERE id = $id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_sancion_emergencia, eliminado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_general_recordatorios, eliminado exitosamente" : $sql->errorCode()
     ));
 }
 

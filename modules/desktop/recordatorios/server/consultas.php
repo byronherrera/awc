@@ -28,7 +28,7 @@ function getrecordatoriosUsuario($idUsuario)
                 tema 
             FROM
                 `amc_general_recordatorios` 
-            WHERE id_responsable = $idUsuario;";
+            WHERE id_responsable = $idUsuario AND activo = 1;";
 
     $result = $os->db->conn->query($sql);
     if ($result) {

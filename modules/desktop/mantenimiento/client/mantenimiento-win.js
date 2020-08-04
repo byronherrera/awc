@@ -61,10 +61,10 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
         //Definición de url CRUD
         var proxyOrdenanzas = new Ext.data.HttpProxy({
             api: {
-                create: urlMantenimiento + "crudResoluciones.php?operation=insert",
-                read: urlMantenimiento + "crudResoluciones.php?operation=select",
-                update: urlMantenimiento + "crudResoluciones.php?operation=update",
-                destroy: urlMantenimiento + "crudResoluciones.php?operation=delete"
+                create: urlMantenimiento + "crudOrdenanzas.php?operation=insert",
+                read: urlMantenimiento + "crudOrdenanzas.php?operation=select",
+                update: urlMantenimiento + "crudOrdenanzas.php?operation=update",
+                destroy: urlMantenimiento + "crudOrdenanzas.php?operation=delete"
             }
         });
 
@@ -161,10 +161,10 @@ QoDesk.MantenimientoWindow = Ext.extend(Ext.app.Module, {
         //Definición de url CRUD
         var proxyUnidades = new Ext.data.HttpProxy({
             api: {
-                create: urlMantenimiento + "crudProvidencias.php?operation=insert",
-                read: urlMantenimiento + "crudProvidencias.php?operation=select",
-                update: urlMantenimiento + "crudProvidencias.php?operation=update",
-                destroy: urlMantenimiento + "crudProvidencias.php?operation=delete"
+                create: urlMantenimiento + "crudUnidades.php?operation=insert",
+                read: urlMantenimiento + "crudUnidades.php?operation=select",
+                update: urlMantenimiento + "crudUnidades.php?operation=update",
+                destroy: urlMantenimiento + "crudUnidades.php?operation=delete"
             }
         });
 
