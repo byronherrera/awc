@@ -79,6 +79,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     {"id": 'Amarillo', "nombre": "Amarillo"},
                     {"id": 'Rojo', "nombre": "Rojo"},
                     {"id": 'Gris', "nombre": "Gris"}
+
                 ]
             }
         });
