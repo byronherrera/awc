@@ -27,8 +27,10 @@ function getrecordatoriosUsuario($idUsuario)
                 fecha_entrega AS fecha,
                 tema 
             FROM
-                `amc_general_recordatorios` 
-            WHERE id_responsable = $idUsuario AND activo = 1;";
+                `amc_planificacion_notificaciones` 
+            WHERE id_responsable = $idUsuario 
+            AND fecha_entrega > NOW( ) + INTERVAL 1 DAY 
+	        AND activo = 1;";
 
     $result = $os->db->conn->query($sql);
     if ($result) {

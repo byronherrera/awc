@@ -9,6 +9,7 @@ chrome.alarms.onAlarm.addListener(function () {
     // se recupera el usuario grabado
     chrome.storage.local.get('userAMC', function (result) {
         // en caso que si esta asignado el usuario
+
         var xmlhttp = new XMLHttpRequest();
         var url = "https://amcmatis.quito.gob.ec/modules/desktop/recordatorios/server/consultas.php?usuario=" + result.userAMC;
         xmlhttp.onreadystatechange = function () {
@@ -66,13 +67,21 @@ chrome.runtime.onStartup.addListener(firstTimeRegistration);
 function firstTimeRegistration() {
     minutes = 1;
     //time_interval = 1000 * 60 * 10;
-    time_interval = 1000 * 60 * 1;
+    time_interval = 1000 * 60 * 20;
+
     chrome.storage.local.set({minutes: minutes});
     chrome.browserAction.setBadgeText({text: 'ON'});
-
     chrome.alarms.create({delayInMinutes: 0});
 
     setInterval(function () {
-        chrome.alarms.create({delayInMinutes: 0});
+        // verificamos horas habilitadas para el envio
+        if ((getHourLocal () == 9) || (getHourLocal () == 12) || (getHourLocal () == 16))
+            chrome.alarms.create({delayInMinutes: 0});
     }, time_interval);
+}
+
+function getHourLocal() {
+    var d = new Date();
+    var h = d.getHours();
+    return h
 }

@@ -129,7 +129,7 @@ while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
     textoSiguieteFila($nombreDetalle['id_estado'], 'S', 'S', 'left', false);
     textoSiguieteFila(regresaZonal($nombreDetalle['id_zonal']) , 'T', 'T', 'left', false);
     textoSiguieteFila($nombreDetalle['direccion'], 'U', 'U', 'left', false);
-    textoSiguieteFila($nombreDetalle['observaciones'], 'V', 'V', 'left', false);
+    textoSiguieteFila($nombreDetalle['estado'], 'V', 'V', 'left', false);
     textoSiguieteFila($nombreDetalle['fecha_entrada'], 'W', 'W', 'left', false);
     textoSiguieteFila($nombreDetalle['fecha_salida'], 'X', 'X', 'left', false);
     textoSiguieteFila($nombreDetalle['telefono1'], 'Y', 'Y', 'left', false);

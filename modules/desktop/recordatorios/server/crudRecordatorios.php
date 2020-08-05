@@ -1,5 +1,6 @@
 <?php
 require_once '../../../../server/os.php';
+require_once '../../../common/Classes/funciones.php';
 
 $os = new os();
 if (!$os->session_exists()) {
@@ -146,14 +147,14 @@ function selectDenuncias()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_general_recordatorios $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT * FROM amc_planificacion_notificaciones $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
     };
 
-    $sql = "SELECT count(*) AS total FROM amc_general_recordatorios $where";
+    $sql = "SELECT count(*) AS total FROM amc_planificacion_notificaciones $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
@@ -173,6 +174,11 @@ function insertDenuncias()
     $data = json_decode(stripslashes($_POST["data"]));
 
     $data->idingreso = $os->get_member_id();
+
+    $data->nombres =  getName($data->id_responsable);
+    $data->apellidos =  getLastName($data->id_responsable);
+
+
     //genero el listado de nombre de campos
 
     $cadenaDatos = '';
@@ -184,7 +190,7 @@ function insertDenuncias()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_general_recordatorios($cadenaCampos)
+    $sql = "INSERT INTO amc_planificacion_notificaciones($cadenaCampos)
 	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -209,6 +215,9 @@ function updateDenuncias()
     if ($data->activo == false ) $data->activo = 0;
     $message = '';
 
+    $data->nombres =  getName($data->id_responsable);
+    $data->apellidos =  getLastName($data->id_responsable);
+
 
     // genero el listado de valores a insertar
     $cadenaDatos = '';
@@ -217,13 +226,13 @@ function updateDenuncias()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_general_recordatorios SET  $cadenaDatos  WHERE amc_general_recordatorios.id = '$data->id' ";
+    $sql = "UPDATE amc_planificacion_notificaciones SET  $cadenaDatos  WHERE amc_planificacion_notificaciones.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_general_recordatorios actualizado exitosamente" : $sql->errorCode(),
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_notificaciones actualizado exitosamente" : $sql->errorCode(),
         "message" => $message
     ));
 }
@@ -233,12 +242,12 @@ function deleteDenuncias()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_general_recordatorios WHERE id = $id";
+    $sql = "DELETE FROM amc_planificacion_notificaciones WHERE id = $id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_general_recordatorios, eliminado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_notificaciones, eliminado exitosamente" : $sql->errorCode()
     ));
 }
 

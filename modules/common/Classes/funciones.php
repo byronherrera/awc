@@ -133,6 +133,43 @@ function regresaNombre($id_dato)
 
 }
 
+function getName($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id_dato != '') {
+        $sql = "SELECT qo_members.first_name AS nombre
+            FROM qo_members WHERE id = " . $id_dato;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre'];
+    } else
+        return '* No asignado';
+
+}
+
+function getLastName($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id_dato != '') {
+        $sql = "SELECT qo_members.last_name AS nombre
+            FROM qo_members WHERE id = " . $id_dato;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre'];
+    } else
+        return '* No asignado';
+}
+
 function regresaEmail($id_dato)
 {
     global $os;
