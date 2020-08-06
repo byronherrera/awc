@@ -292,6 +292,20 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', sortable: true, width: 30, hidden: true},
                 {
+                    header: '',
+                    dataIndex: 'semaforo',
+                    width: 12,
+                    renderer: function (value, metaData, record) {
+                        // si estado es cerrado retorna amarillo
+                        recuperaEstado = value;
+                        if (recuperaEstado === 'Verde') {
+                            return '<span class="circleBase goldstate">aaa</span>';
+                        }
+                        // valor por defecto
+                        return value;
+                    }
+                },
+                {
                     header: 'Responsable', dataIndex: 'id_responsable', sortable: true, width: 220, editor: comboGRC,
                     renderer: personaRecordatorio
                 },
@@ -328,8 +342,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         xtype: 'checkbox'
                     }
                     , falseText: 'No'
-                    , menuDisabled: true
                     , trueText: 'Yes'
+                    , menuDisabled: true
                     , sortable: true
                     , width: 50
                     , xtype: 'booleancolumn'

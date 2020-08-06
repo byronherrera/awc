@@ -175,8 +175,8 @@ function insertDenuncias()
 
     $data->idingreso = $os->get_member_id();
 
-    $data->nombres =  getName($data->id_responsable);
-    $data->apellidos =  getLastName($data->id_responsable);
+    $data->nombres = getName($data->id_responsable);
+    $data->apellidos = getLastName($data->id_responsable);
 
 
     //genero el listado de nombre de campos
@@ -211,22 +211,28 @@ function updateDenuncias()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
 
-    if ($data->activo == true ) $data->activo = 1;
-    if ($data->activo == false ) $data->activo = 0;
     $message = '';
 
-    $data->nombres =  getName($data->id_responsable);
-    $data->apellidos =  getLastName($data->id_responsable);
+    //$data->activo = $data->activo == 1 ? true : false;
+
+    $data->nombres = getName($data->id_responsable);
+    $data->apellidos = getLastName($data->id_responsable);
 
 
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        if (($clave == "fecha_inicio") || ($clave == "fecha_entrega") || ($clave == "idingreso")|| ($clave == "porcentaje") || ($clave == "valor")) {
+            if ($valor == '')
+            $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
+        } else {
+            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        }
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "UPDATE amc_planificacion_notificaciones SET  $cadenaDatos  WHERE amc_planificacion_notificaciones.id = '$data->id' ";
+
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
