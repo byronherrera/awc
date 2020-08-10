@@ -239,3 +239,67 @@ function generaCodigoProcesoDenuncia()
 
     }
 }
+
+
+
+function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionariosBCC)
+{
+    $config = new config();
+
+    require 'PHPMailer/PHPMailerAutoload.php';
+
+    //Create a new PHPMailer instance
+    $mail = new PHPMailer;
+    $mail->CharSet = "UTF-8";
+    $mail->isSMTP();
+    $mail->SMTPDebug = 0;
+    $mail->Debugoutput = 'html';
+
+    $mail->Host = 'smtp.gmail.com';
+    $mail->Port = 587;
+    $mail->SMTPSecure = 'tls';
+    $mail->SMTPAuth = true;
+    $mail->Username = "amcdenuncias@gmail.com";
+    $mail->Password = "amccontrol2016";
+    $mail->setFrom('denunciasamc@quito.gob.ec', 'Agencia Metropolitana de Control');
+
+
+    $mail->AddBCC("byron.herrera@quito.gob.ec");
+    $mail->AddBCC("pamela.parreno@quito.gob.ec");
+    $mail->AddBCC("galo.salazar@quito.gob.ec");
+    $mail->AddBCC("eduardo.chicaiza@quito.gob.ec");
+
+    $mail->Subject = $nombre;
+    $mail->msgHTML($mensaje);
+    $mail->AltBody = 'Mensaje enviado';
+
+    // se envia de acuerdo a si es produccion o pruebas
+    if ($config->AMBIENTE == "PRODUCCION") {
+        $mail->addAddress($email);
+        foreach ($funcionariosCC as $emailfuncionario) {
+            $mail->AddCC($emailfuncionario);
+        };
+        foreach ($funcionariosBCC as $emailfuncionario) {
+            $mail->AddBCC($emailfuncionario);
+        }
+    } else {
+        $mail->addAddress("byron.herrera@quito.gob.ec");
+    }
+
+    $resultado = $mail->send();
+
+    $fichero = 'emailEnviados.log';
+    $actual = file_get_contents($fichero);
+    if ($resultado) {
+        $actual .= "Enviado -" . date(" Y-m-d ") . "\n----\n";
+    } else
+        $actual .= "Error-" . date(" Y-m-d ") . "\n----\n";
+
+    $actual .= $email . "\n----\n";
+    $actual .= $nombre . "\n----\n";
+    $actual .= $mensaje . "\n----\n";
+    file_put_contents($fichero, $actual);
+    return $resultado;
+
+}
+

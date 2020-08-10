@@ -16,14 +16,27 @@
 .fondogris .x-form-field{ background-color: #e0eaee !important; }
 .x-combo-list-inner, .x-combo-list {min-width: 220px !important;}
 
-.bluestate {
-    background: #67df59;
+.Verde {
+    background: #00cf18;
     border: 1px solid #67df59;
+}
+
+.Amarillo {
+    background: #cfcb00;
+    border: 1px solid #cfcb00;
+}
+.Rojo {
+    background: #cf0009;
+    border: 1px solid #cf0009;
+}
+.Gris {
+    background: #bfb3b7;
+    border: 1px solid #bfb3b7;
 }
 .circleBase {
     border-radius: 50%;
-    width: 14px;
-    height: 14px;
+    width: 8px;
+    height: 8px;
     padding-right: 7px;
     padding-left: 7px;
     margin-right: 5px;

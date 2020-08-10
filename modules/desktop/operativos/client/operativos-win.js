@@ -800,6 +800,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         this.gridOperativos = new Ext.grid.EditorGridPanel({
             height: desktop.getWinHeight() - 380,
             store: this.storeOperativos,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 /* {
@@ -1277,6 +1278,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             autoScroll: true,
             store: this.storeOperativosPersonal,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -1403,6 +1405,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             autoScroll: true,
             store: this.storeOperativosParticipantes,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -1599,7 +1602,8 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             id: 'gridOperativosImagenes',
             autoHeight: true,
             store: this.storeOperativosImagenes,
-            columns: [
+            clicksToEdit: 1,
+                columns: [
                 new Ext.grid.RowNumberer(),
                 {
                     header: 'Url imagen',
@@ -1718,6 +1722,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             autoScroll: true,
             store: this.storeOperativosInforme,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -1866,6 +1871,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             autoScroll: true,
             store: this.storeOperativosRetiros,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 /*       {
@@ -2013,6 +2019,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             autoScroll: true,
             store: this.storeOperativosAcciones,
+            clicksToEdit: 1,
             columns: [
                 {
                     header: 'Operativo',
@@ -2103,6 +2110,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             height: desktop.getWinHeight() - 268,
             autoScroll: true,
             store: this.storeDocumentosReporte,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {

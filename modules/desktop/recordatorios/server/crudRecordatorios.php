@@ -213,7 +213,7 @@ function updateDenuncias()
 
     $message = '';
 
-    //$data->activo = $data->activo == 1 ? true : false;
+
 
     $data->nombres = getName($data->id_responsable);
     $data->apellidos = getLastName($data->id_responsable);
@@ -222,9 +222,9 @@ function updateDenuncias()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        if (($clave == "fecha_inicio") || ($clave == "fecha_entrega") || ($clave == "idingreso")|| ($clave == "porcentaje") || ($clave == "valor")) {
+        if (($clave == "fecha_inicio") || ($clave == "fecha_entrega") || ($clave == "idingreso") || ($clave == "porcentaje") || ($clave == "valor")) {
             if ($valor == '')
-            $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
+                $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
         } else {
             $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
         }
@@ -241,6 +241,78 @@ function updateDenuncias()
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_notificaciones actualizado exitosamente" : $sql->errorCode(),
         "message" => $message
     ));
+    // envio de notificacion a usuario asignado
+    if (isset($data->activo)) {
+        if ($data->activo) {
+
+            $fechaActual = date('d-m-Y H:i:s');
+            $funcionario = $data->id_responsable;
+
+            $mensaje = getmensajeRecordatorios(regresaNombre($data->id_responsable), $detalle, $fechaActual);
+
+            $email = regresaEmail($funcionario);
+            //   $email = "byron.herrera@quito.gob.ec";
+            $asunto = "Nuevo operativo asignado, " . " - " . regresaEmail($funcionario);
+            $resultado = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios);
+            if ($resultado) {
+                $sqlUpdate = "UPDATE `amc_operativos` SET `mail_enviado` = 1 WHERE `id` = " . $data->id;
+                $sql = $os->db->conn->prepare($sqlUpdate);
+                $grabaresultado = $sql->execute();
+                $data->mail_enviado = '1';
+            }
+
+
+
+        }
+    }
+}
+
+function getmensajeRecordatorios ($nombre = '', $operativos = '', $fecha = '')
+{
+    $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
+                <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
+                <div style="clear: both; margin: 50px 10%; float: left;">
+                <p><br><br>
+                 Estimado, ' . $nombre . ' ha sido asignado al  siguiente operativo como responsable:<br>
+                 <br>
+                 <br>
+                 ' . $operativos . '
+                 <br>
+                 <br>
+                 "Se le recuerda al responsable del operativo que es obligatorio llenar todo el detalle en 
+                 ACCIONES OPERATIVO, ACTOS INICIO y RETIROS, dicho reporte debe estar en concordancia con lo reportado en el chat. 
+                 En caso que no este correcto, se lo cambiarÃ¡ a estado INFORME y no se lo aceptarÃ¡ como finalizado.
+                <br>
+
+                <br>
+                 Favor ingresar en Matis AMC, para verificar el operativo asignado <a href="http://amcmatis.quito.gob.ec/procesos-amc">aquí</a> .
+                <br>    
+                <br>    
+                <p>De conformidad con el Memorando No. AMC-SM-JA-2018-003, del 4 de enero de 2018, mediante el cual la 
+                MÃ¡xima Autoridad dispone</p>
+                <p>"Todo el personal de la Agencia Metropolitana de Control, deberÃ¡ utilizar de manera obligatoria el mÃ³dulo de operativos que se encuentra dentro de la INTRANET de la InstituciÃ³n, a fin de generar los informes de los operativos realizados. En el sistema se deberÃ¡ llenar los datos solicitados dentro de las 24 horas siguientes de haber realizado el operativo, con el objetivo de que se genere el informe respectivo."</p>
+
+                <br>
+
+                <br>
+
+                <p>Fecha : ' . $fecha . '</p>
+                <p>Atentamente </p>
+                
+                <p>SUPERVISION METROPOLITANA</p>
+                <p>GAD MDMQ AGENCIA METROPOLITANA DE CONTROL</p>
+                <p></p>
+                <p>INFORMACIÃ“N IMPORTANTE</p>
+                <p>************************************************</p>
+                <p>- No responder este correo es un Mensaje AutomÃ¡tico.</p>
+                
+                <p>- Para sugerencias, escribe a tu coordinador.</p>
+
+                </div>
+                <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                </div>
+                ';
+    return $texto;
 }
 
 

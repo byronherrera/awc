@@ -706,13 +706,6 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $mail->SMTPDebug = 0;
     $mail->Debugoutput = 'html';
 
-    /*    $mail->Host = 'relay.quito.gob.ec';
-        $mail->Port = 25;
-        $mail->Username = "agencia.m.control@quito.gob.ec";
-        $mail->Password = "12345678";
-        $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
-    */
-
     $mail->Host = 'smtp.gmail.com';
     $mail->Port = 587;
     $mail->SMTPSecure = 'tls';

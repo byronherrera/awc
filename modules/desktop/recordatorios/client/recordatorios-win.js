@@ -75,10 +75,10 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 users: [
-                    {"id": 'Verde', "nombre": "Verde"},
-                    {"id": 'Amarillo', "nombre": "Amarillo"},
-                    {"id": 'Rojo', "nombre": "Rojo"},
-                    {"id": 'Gris', "nombre": "Gris"}
+                    {"id": 'Verde', "nombre": "<div class='Verde'>Verde</div>"},
+                    {"id": 'Amarillo', "nombre": "<div class='Amarillo'>Amarillo</div>"},
+                    {"id": 'Rojo', "nombre": "<div class='Rojo'>Rojo</div>"},
+                    {"id": 'Gris', "nombre": "<div class='Gris'>Gris</div>"}
 
                 ]
             }
@@ -97,7 +97,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             var index = storeSEMAFORO.findExact('id', id);
             if (index > -1) {
                 var record = storeSEMAFORO.getAt(index);
-                return record.get('nombre');
+                return record.get("nombre");
             }
         }
 
@@ -288,21 +288,16 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         this.gridRecordatorios = new Ext.grid.EditorGridPanel({
             height: '100%',
             store: this.storeRecordatorios,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', sortable: true, width: 30, hidden: true},
                 {
                     header: '',
                     dataIndex: 'semaforo',
-                    width: 12,
+                    width: 24,
                     renderer: function (value, metaData, record) {
-                        // si estado es cerrado retorna amarillo
-                        recuperaEstado = value;
-                        if (recuperaEstado === 'Verde') {
-                            return '<span class="circleBase goldstate">aaa</span>';
-                        }
-                        // valor por defecto
-                        return value;
+                            return '<span class="circleBase ' + value +  '"></span>';
                     }
                 },
                 {
@@ -371,6 +366,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Semáforo',
                     dataIndex: 'semaforo',
                     sortable: true,
+                    align: 'center',
                     width: 70,
                     editor: comboSEMAFORO,
                     renderer: planificacionSemaforo
