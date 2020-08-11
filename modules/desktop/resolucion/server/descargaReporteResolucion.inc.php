@@ -95,6 +95,23 @@ if (isset($data->articulo_actual) && $data->articulo_actual != "") {
         $where = $where . " AND articulo_actual LIKE '%$filtro_articulo_actual%' ";
     }
 }
+if (isset($data->envio_expediente) && $data->envio_expediente != "") {
+    $filtro_envio_expediente = $data->envio_expediente;
+    if ($where == '') {
+        $where = " WHERE envio_expediente LIKE '%$filtro_envio_expediente%' ";
+    } else {
+        $where = $where . " AND envio_expediente LIKE '%$filtro_envio_expediente%' ";
+    }
+}
+if (isset($data->fecha_envio_inicio) && isset($data->fecha_envio_fin) && $data->fecha_envio_inicio != "" && $data->fecha_envio_fin != "") {
+    $busqueda_fecha_inicio = $data->fecha_envio_inicio;
+    $busqueda_fecha_fin = $data->fecha_envio_fin;
+    if ($where == '') {
+        $where = " WHERE cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
+    } else {
+        $where = $where . " AND cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
+    }
+}
 $orderby = 'ORDER BY a.id ASC';
 if (isset($_POST['sort'])) {
     if ($_POST['sort'] == 'id') {
@@ -454,10 +471,9 @@ function nombreFuncionario($id_dato)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    if (($id_dato != '') and (isset($id_dato)) and strlen($id_dato>0)) {
+    if (($id_dato != '') and (isset($id_dato))) {
         $sql = "SELECT a.id, CONCAT(a.first_name,' ',a.last_name) AS nombre FROM qo_members a
             WHERE $id_dato = a.id";
-
         $nombre = $os->db->conn->query($sql);
         $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
         return $rownombre['nombre'];
