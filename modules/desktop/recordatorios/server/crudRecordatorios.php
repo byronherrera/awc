@@ -213,11 +213,8 @@ function updateDenuncias()
 
     $message = '';
 
-
-
     $data->nombres = getName($data->id_responsable);
     $data->apellidos = getLastName($data->id_responsable);
-
 
     // genero el listado de valores a insertar
     $cadenaDatos = '';
@@ -247,13 +244,17 @@ function updateDenuncias()
 
             $fechaActual = date('d-m-Y H:i:s');
             $funcionario = $data->id_responsable;
+            $detalle = "Un texto ";
 
             $mensaje = getmensajeRecordatorios(regresaNombre($data->id_responsable), $detalle, $fechaActual);
 
             $email = regresaEmail($funcionario);
             //   $email = "byron.herrera@quito.gob.ec";
-            $asunto = "Nuevo operativo asignado, " . " - " . regresaEmail($funcionario);
-            $resultado = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios);
+            $asunto = "Nuevo operativo asignado, " . " - " .$email;
+            $funcionarios = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
+            $funcionariosSeguimiento  = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
+            $prueba = true ;
+            $resultado = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $prueba );
             if ($resultado) {
                 $sqlUpdate = "UPDATE `amc_operativos` SET `mail_enviado` = 1 WHERE `id` = " . $data->id;
                 $sql = $os->db->conn->prepare($sqlUpdate);

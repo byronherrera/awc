@@ -62,7 +62,6 @@ function generaNuevoCodigoInstruccion()
     }
 }
 
-
 function generaNuevoCodigoConstrucciones()
 {
     global $os;
@@ -242,7 +241,7 @@ function generaCodigoProcesoDenuncia()
 
 
 
-function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionariosBCC)
+function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionariosBCC=[], $prueba = false)
 {
     $config = new config();
 
@@ -264,17 +263,14 @@ function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionario
     $mail->setFrom('denunciasamc@quito.gob.ec', 'Agencia Metropolitana de Control');
 
 
-    $mail->AddBCC("byron.herrera@quito.gob.ec");
-    $mail->AddBCC("pamela.parreno@quito.gob.ec");
-    $mail->AddBCC("galo.salazar@quito.gob.ec");
-    $mail->AddBCC("eduardo.chicaiza@quito.gob.ec");
+
 
     $mail->Subject = $nombre;
     $mail->msgHTML($mensaje);
     $mail->AltBody = 'Mensaje enviado';
 
     // se envia de acuerdo a si es produccion o pruebas
-    if ($config->AMBIENTE == "PRODUCCION") {
+    if (($config->AMBIENTE == "PRODUCCION") or ($prueba)) {
         $mail->addAddress($email);
         foreach ($funcionariosCC as $emailfuncionario) {
             $mail->AddCC($emailfuncionario);
