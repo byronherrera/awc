@@ -110,14 +110,13 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 users: [
-                    {"id": 'Preparatoria', "nombre": "Preparatoria"},
-                    {"id": 'Precontractual', "nombre": "Precontractual"},
-                    {"id": 'Interactual', "nombre": "Interactual"},
-                    {"id": 'Proceso pago', "nombre": "Proceso pago"}
+                    {"id": 'Fase Preparatoria', "nombre": "Fase Preparatoria"},
+                    {"id": 'Fase Precontractual', "nombre": "Fase Precontractual"},
+                    {"id": 'Fase contractual', "nombre": "Fase contractual"},
+                    {"id": 'Pago', "nombre": "Pago"}
                 ]
             }
         });
-
         var comboFASE = new Ext.form.ComboBox({
             id: 'comboFASE',
             store: storeFASE,
@@ -151,8 +150,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             }
 
         });
-
-
         var comboGRC = new Ext.form.ComboBox({
             id: 'comboGRC',
             store: storeGRC,
@@ -163,7 +160,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             //forceSelection: true,
             allowBlank: true
         });
-
         var comboGRC2 = new Ext.form.ComboBox({
             id: 'comboGRC2',
             store: storeGRC,
@@ -196,7 +192,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             }
 
         });
-
         var comboGRC2 = new Ext.form.ComboBox({
             id: 'comboGRC2',
             store: storeGRC2,
@@ -219,7 +214,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo persona recepta la operativos GRC
 
-
         // inicio ventana recordatorios
         var proxyRecordatorios = new Ext.data.HttpProxy({
             api: {
@@ -238,7 +232,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
-
         var readerRecordatorios = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
@@ -297,7 +290,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'semaforo',
                     width: 24,
                     renderer: function (value, metaData, record) {
-                            return '<span class="circleBase ' + value +  '"></span>';
+                        return '<span class="circleBase ' + value + '"></span>';
                     }
                 },
                 {
@@ -447,7 +440,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
             var targetHandler = function (item, checked) {
                 if (checked) {
-                    //var store = this.storeRecordatorios;
+
                     this.seleccionDepar = item.key;
                     this.targetFieldBtn.setText(item.text);
                 }
@@ -544,7 +537,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             }
         });
     },
-
     addrecordatorios: function () {
         var recordatorios = new this.storeRecordatorios.recordType({
             id_responsable: '',

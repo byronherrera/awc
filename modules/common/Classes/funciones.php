@@ -270,7 +270,7 @@ function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionario
     $mail->AltBody = 'Mensaje enviado';
 
     // se envia de acuerdo a si es produccion o pruebas
-    if (($config->AMBIENTE == "PRODUCCION") or ($prueba)) {
+    if (($config->AMBIENTE == "PRODUCCION") or (!$prueba)) {
         $mail->addAddress($email);
         foreach ($funcionariosCC as $emailfuncionario) {
             $mail->AddCC($emailfuncionario);
