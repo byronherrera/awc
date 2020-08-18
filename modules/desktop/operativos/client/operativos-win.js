@@ -2686,6 +2686,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     , store: this.storeOperativos
                                 })
                             ],
+
                             items: [
                                 {
                                     id: 'formcabeceraoperativos',

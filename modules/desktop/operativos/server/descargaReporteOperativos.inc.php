@@ -420,8 +420,14 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
         $rowdetalle['id_nivel_complejidad'] = '';
     }
 
+    // si ultimo caracter es ',' se quita ese caracter
+    if (substr($rowdetalle['id_tipo_control'], -1) == ",") {
+        $rowdetalle['id_tipo_control'] = rtrim($rowdetalle['id_tipo_control'],',');
+    }
+
     //cambio para impresion el tipo de control
     $sql = "SELECT nombre_completo as nombre  FROM amc_ordenanzas WHERE id in (" . $rowdetalle['id_tipo_control'] . ")";
+
     $nombres = $os->db->conn->query($sql);
     $nombresUsuarios = array();
     while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {

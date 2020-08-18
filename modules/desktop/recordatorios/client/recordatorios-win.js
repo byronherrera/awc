@@ -279,7 +279,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         };
 
         this.gridRecordatorios = new Ext.grid.EditorGridPanel({
-            height: '100%',
+            //height: '100%',
+            height: desktop.getWinHeight() - 92,
             store: this.storeRecordatorios,
             clicksToEdit: 1,
             columns: [
@@ -430,6 +431,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
             this.seleccionDepar = 3;
 
+
+            //boton busqueda
             var checkHandler = function (item, checked) {
                 if (checked) {
                     var store = this.storeRecordatorios;
@@ -460,53 +463,257 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 })
                 , text: 'Todos'
             });
+            //fin boton busqueda
+
+
+            this.formConsultaRecordatorios = new Ext.FormPanel({
+                layout: 'column',
+                title: 'Ingrese los parámetros',
+                frame: true,
+                bodyStyle: 'padding:5px 5px 0',
+                items: [
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'datetimefield',
+                                fieldLabel: 'Fecha Inicio',
+                                id: 'busqueda_fecha_inicio',
+                                anchor: '95%',
+                                dateFormat: 'Y-m-d',
+                                timeFormat: 'H:i:s'
+                            },
+                            {
+                                xtype: 'datetimefield',
+                                fieldLabel: 'Fecha Fin',
+                                id: 'busqueda_fecha_fin',
+                                anchor: '95%',
+                                dateFormat: 'Y-m-d',
+                                timeFormat: 'H:i:s'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Responsable',
+                                id: 'busqueda_persona_encargada',
+                                name: 'busqueda_persona_encargada',
+                                hiddenName: 'busqueda_persona_encargada',
+
+                                anchor: '95%',
+                                store: storeGRC,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Activo',
+                                id: 'busqueda_activo',
+                                name: 'busqueda_activo',
+                                hiddenName: 'busqueda_activo',
+
+                                anchor: '95%',
+                                store: storeTIPOCONTRATA,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Unidad',
+                                id: 'busqueda_tipo_contratacion',
+                                name: 'busqueda_tipo_contratacion',
+                                hiddenName: 'busqueda_tipo_contratacion',
+
+                                anchor: '95%',
+                                store: storeTIPOCONTRATA,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Semáforo',
+                                id: 'busqueda_semaforo',
+                                name: 'busqueda_semaforo',
+                                hiddenName: 'busqueda_semaforo',
+
+                                anchor: '95%',
+                                store: storeSEMAFORO,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Func.operante',
+                                id: 'busqueda_fase',
+                                name: 'busqueda_fase',
+                                hiddenName: 'busqueda_fase',
+
+                                anchor: '95%',
+                                    store: storeFASE,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Palabra clave',
+                                id: 'busqueda_observaciones',
+                                name: 'busqueda_observaciones',
+                                anchor: '95%'
+                            }
+                        ]
+                    }
+                ]
+            });
+
 
             win = desktop.createWindow({
                 id: 'grid-win-recordatorios',
-                title: 'Consulta Recordatorios',
+                title: 'Recordatorios',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'recordatorios-icon',
                 shim: false,
                 animCollapse: false,
                 constrainHeader: true,
-                tbar: [
-                    {
-                        text: 'Nuevo',
-                        scope: this,
-                        handler: this.addrecordatorios,
-                        iconCls: 'save-icon',
-                        id: 'addrecordatorios',
-                        //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                    },
-                    '-',
-                    {
-                        text: "Eliminar",
-                        scope: this,
-                        handler: this.deleterecordatorios,
-                        id: 'deleterecordatorios',
-                        iconCls: 'delete-icon',
-                        //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                        //disabled: true
-                    },
-                    '-',
-                    {
-                        iconCls: 'reload-icon',
-                        handler: this.requestGridData,
-                        scope: this,
-                        text: 'Recargar Datos',
-                        tooltip: 'Recargar datos'
-                    }, '->',
-                    {text: 'Buscar por:', xtype: 'tbtext'}
-                    , searchFieldBtn
-                    , ' ', ' '
-                    , new QoDesk.QoAdmin.SearchField({
-                        paramName: 'filterText'
-                        , store: this.storeRecordatorios
-                    })
-                ],
                 layout: 'fit',
-                items: this.gridRecordatorios
+                items: new Ext.TabPanel({
+                    activeTab: 0,
+                    border: false,
+                    items: [
+                        {
+                            title: 'Detalle',
+                            layout: 'column',
+                            id: 'detalleRecordatoriosTab',
+
+                            items: this.gridRecordatorios,
+                            disabled: false,
+                            autoScroll: true,
+                            tbar: [
+                                {
+                                    text: 'Nuevo',
+                                    scope: this,
+                                    handler: this.addrecordatorios,
+                                    iconCls: 'save-icon',
+                                    id: 'addrecordatorios',
+                                    //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                },
+                                '-',
+                                {
+                                    text: "Eliminar",
+                                    scope: this,
+                                    handler: this.deleterecordatorios,
+                                    id: 'deleterecordatorios',
+                                    iconCls: 'delete-icon',
+                                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                    //disabled: true
+                                },
+                                '-',
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridData,
+                                    scope: this,
+                                    text: 'Recargar Datos',
+                                    tooltip: 'Recargar datos'
+                                }, '->',
+                                {text: 'Buscar por:', xtype: 'tbtext'}
+                                , searchFieldBtn
+                                , ' ', ' '
+                                , new QoDesk.QoAdmin.SearchField({
+                                    paramName: 'filterText'
+                                    , store: this.storeRecordatorios
+                                })
+                            ]
+
+                        },
+
+                        {
+                            title: 'Reportes',
+                            layout: 'column',
+                            id: 'reportesRecordatoriosTab',
+
+                            //items: this.gridRecordatorios,
+                            disabled: false,
+                            autoScroll: true,
+                            tbar: [
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridDataRecordatoriosReporte,
+                                    scope: this,
+                                    text: 'Buscar'
+
+                                },
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridDataRecordatoriosReporteReset,
+                                    scope: this,
+                                    text: 'Borrar formulario'
+
+                                },
+                                '-',
+
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarRecordatoriosReporte,
+                                    scope: this,
+                                    text: 'Exportar listado',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada'
+                                }
+
+                            ],
+
+                            items: [
+                                {
+                                    region: 'north',
+                                    height: 120,
+                                    minSize: 100,
+                                    maxSize: 170,
+                                    closable: true,
+                                    autoScroll: false,
+                                    items: this.formConsultaRecordatorios
+                                },
+                                {
+                                    // lazily created panel (xtype:'panel' is default)
+                                    region: 'center',
+                                    split: true,
+                                    autoScroll: true,
+                                    height: 270,
+                                    minSize: 100,
+                                    maxSize: 150,
+                                    //    items: this.gridDocumentosReporte
+                                }
+                            ]
+
+                        }
+                    ]
+                })
+
+
             });
         }
         win.show();
@@ -560,4 +767,66 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         });
     },
 
+    showError: function (msg, title) {
+        title = title || 'Error';
+        Ext.Msg.show({
+            title: title
+            , msg: msg
+            , modal: true
+            , icon: Ext.Msg.ERROR
+            , buttons: Ext.Msg.OK
+        });
+    },
+    requestGridDataRecordatoriosReporte: function () {
+        this.storeDocumentosReporte.baseParams = this.formConsultaRecordatorios.getForm().getValues();
+
+        var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
+        var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
+        var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
+        this.storeDocumentosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
+
+        this.storeDocumentosReporte.baseParams.accesosOperativos = accesosOperativos;
+        this.storeDocumentosReporte.baseParams.accesosAdministradorIns = accesosAdministradorIns;
+        // para indicar en la busqueda que es desde el formulario
+        var formularioBusqueda = 1;
+        this.storeDocumentosReporte.baseParams.formularioBusqueda = formularioBusqueda;
+
+        this.storeDocumentosReporte.load();
+    },
+
+    requestGridDataRecordatoriosReporteReset: function () {
+        this.formConsultaRecordatorios.getForm().reset();
+    },
+    botonExportarRecordatoriosReporte: function () {
+        var rows = this.storeDocumentosReporte.getCount()
+        if (rows === 0) {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Busqueda sin resultados',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+        // mensaje continuar y llamada a descarga archivo
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    valueParams = JSON.stringify(this.formConsultaRecordatorios.getForm().getValues());
+
+                    generaAcciones = (Ext.getCmp('checkDetalleAcciones').getValue());
+                    generaActas = (Ext.getCmp('checkDetalleActas').getValue());
+                    generaRetiros = (Ext.getCmp('checkDetalleRecibidos').getValue());
+                    generaTotalesPersonal = (Ext.getCmp('checkTotalesPersonal').getValue());
+
+                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&acciones=' + generaAcciones + '&totalespersonal=' + generaTotalesPersonal + '&actas=' + generaActas + '&retiros=' + generaRetiros;
+                }
+            }
+        });
+    }
 });
