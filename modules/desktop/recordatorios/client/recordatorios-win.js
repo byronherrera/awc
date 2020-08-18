@@ -28,6 +28,21 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         var textField = new Ext.form.TextField({allowBlank: false});
 
         //inicio combo tipo contratacion
+        storeSINO = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": '1', "nombre": "Si"},
+                    {"id": '0', "nombre": "Si"}
+
+                ]
+            }
+        });
+        //si no
+
+        //inicio combo tipo contratacion
         storeTIPOCONTRATA = new Ext.data.JsonStore({
             root: 'users',
             fields: ['id', 'nombre'],
@@ -423,6 +438,170 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             })
         });
 
+        //datastore y grid para reporte
+        this.storeRecordatoriosReporte = new Ext.data.Store({
+            id: "id",
+            proxy: proxyRecordatorios,
+            reader: readerRecordatorios,
+            writer: writerRecordatorios,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true,
+            baseParams: {}
+        });
+        storeRecordatoriosReporte = this.storeRecordatoriosReporte;
+
+        storeRecordatoriosReporte.baseParams = {
+            limit: limiterecordatorios
+        };
+
+        this.gridRecordatoriosReporte = new Ext.grid.EditorGridPanel({
+            //height: '100%',
+            height: desktop.getWinHeight() - 220,
+            with: '100%',
+            store: this.storeRecordatoriosReporte,
+            clicksToEdit: 1,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {header: 'id', dataIndex: 'id', sortable: true, width: 30, hidden: true},
+                {
+                    header: '',
+                    dataIndex: 'semaforo',
+                    width: 24,
+                    renderer: function (value, metaData, record) {
+                        return '<span class="circleBase ' + value + '"></span>';
+                    }
+                },
+                {
+                    header: 'Responsable', dataIndex: 'id_responsable', sortable: true, width: 220, editor: comboGRC,
+                    renderer: personaRecordatorio
+                },
+
+                //  {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 125},
+                //  {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 125},
+                {
+                    header: 'Producto / servicio',
+                    dataIndex: 'tema',
+                    sortable: true,
+                    width: 300,
+                    editor: textField
+                },
+                {
+                    header: 'Fecha Inicio', dataIndex: 'fecha_inicio', sortable: true, width: 80, renderer: formatDate,
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
+                {
+                    header: 'Fecha Entrega',
+                    dataIndex: 'fecha_entrega',
+                    sortable: true,
+                    width: 80,
+                    renderer: formatDate,
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
+                {
+                    header: 'Activo'
+                    , dataIndex: 'activo'
+                    , editor: {
+                        xtype: 'checkbox'
+                    }
+                    , falseText: 'No'
+                    , trueText: 'Yes'
+                    , menuDisabled: true
+                    , sortable: true
+                    , width: 50
+                    , xtype: 'booleancolumn'
+                },
+                {
+                    header: 'Encargado Ingreso', dataIndex: 'idingreso', sortable: true, width: 125, hidden: true,
+                    renderer: personaReceptaRecordatorio
+                }
+                , {
+                    header: 'Estado',
+                    dataIndex: 'estado',
+                    sortable: true,
+                    width: 125,
+                    editor: textField
+                }
+                , {
+                    header: 'Tipo contratación',
+                    dataIndex: 'tipocontratacion',
+                    sortable: true,
+                    width: 125,
+                    editor: comboTIPOCONTRATA,
+                    renderer: planificacionTipoContratacio
+                }
+                , {
+                    header: 'Semáforo',
+                    dataIndex: 'semaforo',
+                    sortable: true,
+                    align: 'center',
+                    width: 70,
+                    editor: comboSEMAFORO,
+                    renderer: planificacionSemaforo
+                }
+                , {
+                    header: 'Fase',
+                    dataIndex: 'fase',
+                    sortable: true,
+                    width: 70,
+                    editor: comboFASE,
+                    renderer: planificacionFase
+                }
+                , {
+                    header: 'Valor',
+                    dataIndex: 'valor',
+                    sortable: true,
+                    width: 100,
+                    align: 'right',
+                    renderer: 'usMoney',
+                    editor: new Ext.form.NumberField({
+                        allowBlank: false,
+                        allowNegative: false,
+                        maxValue: 100000000
+                    })
+                }
+                , {
+                    header: '%',
+                    dataIndex: 'porcentaje',
+                    sortable: true,
+                    align: 'right',
+                    width: 50,
+                    editor: new Ext.form.NumberField({
+                        allowBlank: false,
+                        allowNegative: false,
+                        maxValue: 1,
+                        minValue: 0
+                    })
+                },
+                {
+                    header: 'Observaciones',
+                    dataIndex: 'observaciones',
+                    sortable: true,
+                    width: 160,
+                    editor: textField
+                },
+            ],
+            viewConfig: {
+                forceFit: false
+            },
+            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            bbar: new Ext.PagingToolbar({
+                pageSize: limiterecordatorios,
+                store: storeRecordatorios,
+                displayInfo: true,
+                displayMsg: 'Mostrando : {0} - {1} de {2} - AMC',
+                emptyMsg: "No existen recordatorios  que mostrar"
+            })
+        });
+        //findatastore y grid para reporte
+
+
         var win = desktop.getWindow('layout-win');
 
         if (!win) {
@@ -521,7 +700,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                                 hiddenName: 'busqueda_activo',
 
                                 anchor: '95%',
-                                store: storeTIPOCONTRATA,
+                                store: storeSINO,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -530,7 +709,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Unidad',
+                                fieldLabel: 'Tipo Contratación',
                                 id: 'busqueda_tipo_contratacion',
                                 name: 'busqueda_tipo_contratacion',
                                 hiddenName: 'busqueda_tipo_contratacion',
@@ -566,13 +745,13 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         items: [
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Func.operante',
+                                fieldLabel: 'Fase',
                                 id: 'busqueda_fase',
                                 name: 'busqueda_fase',
                                 hiddenName: 'busqueda_fase',
 
                                 anchor: '95%',
-                                    store: storeFASE,
+                                store: storeFASE,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -657,7 +836,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                             layout: 'column',
                             id: 'reportesRecordatoriosTab',
 
-                            //items: this.gridRecordatorios,
+
                             disabled: false,
                             autoScroll: true,
                             tbar: [
@@ -690,9 +869,9 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                             items: [
                                 {
                                     region: 'north',
-                                    height: 120,
+                                    height: 130,
                                     minSize: 100,
-                                    maxSize: 170,
+                                    maxSize: 190,
                                     closable: true,
                                     autoScroll: false,
                                     items: this.formConsultaRecordatorios
@@ -702,10 +881,9 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                                     region: 'center',
                                     split: true,
                                     autoScroll: true,
-                                    height: 270,
                                     minSize: 100,
                                     maxSize: 150,
-                                    //    items: this.gridDocumentosReporte
+                                    items: this.gridRecordatoriosReporte
                                 }
                             ]
 
@@ -750,7 +928,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             tema: '',
             fecha_inicio: (new Date()),
             fecha_entrega: (new Date()),
-            activo: 1,
+            activo: '',
             estado: ''
         });
         this.gridRecordatorios.stopEditing();
@@ -778,27 +956,27 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         });
     },
     requestGridDataRecordatoriosReporte: function () {
-        this.storeDocumentosReporte.baseParams = this.formConsultaRecordatorios.getForm().getValues();
+        this.storeRecordatoriosReporte.baseParams = this.formConsultaRecordatorios.getForm().getValues();
 
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
         var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
         var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
-        this.storeDocumentosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
+        this.storeRecordatoriosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
 
-        this.storeDocumentosReporte.baseParams.accesosOperativos = accesosOperativos;
-        this.storeDocumentosReporte.baseParams.accesosAdministradorIns = accesosAdministradorIns;
+        this.storeRecordatoriosReporte.baseParams.accesosOperativos = accesosOperativos;
+        this.storeRecordatoriosReporte.baseParams.accesosAdministradorIns = accesosAdministradorIns;
         // para indicar en la busqueda que es desde el formulario
         var formularioBusqueda = 1;
-        this.storeDocumentosReporte.baseParams.formularioBusqueda = formularioBusqueda;
+        this.storeRecordatoriosReporte.baseParams.formularioBusqueda = formularioBusqueda;
 
-        this.storeDocumentosReporte.load();
+        this.storeRecordatoriosReporte.load();
     },
 
     requestGridDataRecordatoriosReporteReset: function () {
-        this.formConsultaRecordatorios.getForm().reset();
+        this.storeRecordatoriosReporte.getForm().reset();
     },
     botonExportarRecordatoriosReporte: function () {
-        var rows = this.storeDocumentosReporte.getCount()
+        var rows = this.storeRecordatoriosReporte.getCount()
         if (rows === 0) {
             Ext.Msg.show({
                 title: 'Atencion',

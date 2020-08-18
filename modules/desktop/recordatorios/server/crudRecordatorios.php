@@ -25,24 +25,14 @@ function selectDenuncias()
             $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
         } else {
             $listadoCampos = array(
-                'numero_tramite',
-                'ruc_licencia',
-                'razon_social',
-                'codigo',
-                'descripcion_actividad_economica',
-                'patente',
-                'predio',
-                'categoria',
-                'secretaria_otorgante',
-                'parroquia',
-                'calle',
-                'calle2',
-                'numero',
-                'telefono1',
-                'telefono2',
-                'mail',
+                'nombres',
+                'apellidos',
+                'tema',
+                'fecha_inicio',
+                'fecha_entrega',
                 'estado',
-                'zonal'
+                'semaforo',
+                'observaciones'
             );
             $cadena = '';
             foreach ($listadoCampos as &$valor) {
