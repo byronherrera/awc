@@ -57,7 +57,7 @@ if (!class_exists('os')) {
                                placeholder="Ingrese lugar infracción">
                     </div>
                     <div class="form-group">
-                        <label for="Ordenanza">Motivo Sancion*</label>
+                        <label for="Materia">Motivo Sancion*</label>
                         <select name="ordenanza" class="form-control" id="ordenanza" required="required"
                                 data-error="requerido.">
                             <option value=""></option>
@@ -228,10 +228,10 @@ if (!class_exists('os')) {
 
                 // llenar los datos del combobox
                 $.getJSON('formLoad.php?opcion=ordenanza', function (data) {
-                    console.log(data);
+
                     if (data.success) {
                         $.each(data.data[0], function (i, el) {
-                            $('#ordenanza').append(new Option(el.text, el.valor));
+                            $('#ordenanza').append(new Option(el.text, el.text));
                         });
                         $("#ordenanza").val(localStorage.getItem("idOrdenanza"));
 

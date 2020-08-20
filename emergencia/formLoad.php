@@ -357,6 +357,7 @@ function ingresaNuevoProceso()
     $data->apellidos = $_POST["apellidos"];
     $data->lugarinfraccion = $_POST["lugarinfraccion"];
     $data->observaciones = $_POST["observaciones"];
+    $data->materia = $_POST["ordenanza"];
     $data->geoposicionamiento = $_POST["geoposicionamiento"];
     $data->funcionario = $_POST["funcionario"];
     $data->fecha = $_POST["fecha"];

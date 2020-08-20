@@ -7,7 +7,7 @@ if (!$os->session_exists()) {
     die('No existe sesión!');
 }
 
-function selectDenuncias()
+function selectRecordatorios()
 {
     global $os;
 
@@ -44,23 +44,7 @@ function selectDenuncias()
         }
     }
 
-    if (isset($_POST['unidadfiltro'])) {
-        $unidad = $_POST['unidadfiltro'];
-        if ($where == '') {
-            $where = "WHERE reasignacion = $unidad ";
-        } else {
-            $where = " AND reasignacion = $unidad ";
-        }
-    }
-    if (isset($_POST['noenviados'])) {
-        if ($_POST['noenviados'] == 'true') {
-            if ($where == '') {
-                $where = " WHERE despacho_secretaria <> 'true'";
-            } else {
-                $where = $where . " AND despacho_secretaria <> 'true' ";
-            }
-        }
-    }
+
 
     if (isset ($_POST['start']))
         $start = $_POST['start'];
@@ -129,9 +113,9 @@ function selectDenuncias()
         }
 
         if ($where == '') {
-            $where = "WHERE recepcion_documento between '$fechainicio' and '$fechafin'  ";
+            $where = "WHERE fecha_entrega between '$fechainicio' and '$fechafin'  ";
         } else {
-            $where = $where . " AND recepcion_documento between '$fechainicio' and '$fechafin' ";
+            $where = $where . " AND fecha_entrega between '$fechainicio' and '$fechafin' ";
         }
     }
 
@@ -156,7 +140,7 @@ function selectDenuncias()
     );
 }
 
-function insertDenuncias()
+function insertRecordatorios()
 {
     global $os;
 
@@ -195,7 +179,7 @@ function insertDenuncias()
     ));
 }
 
-function updateDenuncias()
+function updateRecordatorios()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -251,10 +235,7 @@ function updateDenuncias()
                 $grabaresultado = $sql->execute();
                 $data->mail_enviado = '1';
             }
-
-
-
-        }
+         }
     }
 }
 
@@ -307,7 +288,7 @@ function getmensajeRecordatorios ($nombre = '', $operativos = '', $fecha = '')
 }
 
 
-function deleteDenuncias()
+function deleteRecordatorios()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
@@ -322,15 +303,15 @@ function deleteDenuncias()
 
 switch ($_GET['operation']) {
     case 'select' :
-        selectDenuncias();
+        selectRecordatorios();
         break;
     case 'insert' :
-        insertDenuncias();
+        insertRecordatorios();
         break;
     case 'update' :
-        updateDenuncias();
+        updateRecordatorios();
         break;
     case 'delete' :
-        deleteDenuncias();
+        deleteRecordatorios();
         break;
 }
