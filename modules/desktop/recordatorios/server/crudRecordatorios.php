@@ -190,6 +190,7 @@ function updateRecordatorios()
     $data->nombres = getName($data->id_responsable);
     $data->apellidos = getLastName($data->id_responsable);
 
+    $estadoAnterior = getEstadoOriginal ($data->id);
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
@@ -238,6 +239,20 @@ function updateRecordatorios()
          }
     }
 }
+
+
+function getEstadoOriginal ($id){
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id != '') {
+        $sql = "SELECT qo_members.last_name AS nombre
+            FROM qo_members WHERE id = " . $id_dato;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre'];
+    } else
+        return '* No asignado';
+};
 
 function getmensajeRecordatorios ($nombre = '', $operativos = '', $fecha = '')
 {
