@@ -45,7 +45,6 @@ function selectRecordatorios()
     }
 
 
-
     if (isset ($_POST['start']))
         $start = $_POST['start'];
     else
@@ -60,48 +59,60 @@ function selectRecordatorios()
         $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
     }
     // para los reportes
-    if (isset($_POST['busqueda_tipo_documento']) and ($_POST['busqueda_tipo_documento'] != '')) {
-        $tipo = $_POST['busqueda_tipo_documento'];
+    if (isset($_POST['busqueda_persona_encargada']) and ($_POST['busqueda_persona_encargada'] != '')) {
+        $tipo = $_POST['busqueda_persona_encargada'];
         if ($where == '') {
-            $where = "WHERE id_tipo_documento = $tipo ";
+            $where = "WHERE id_responsable = $tipo ";
         } else {
-            $where = $where . " AND id_tipo_documento = $tipo ";
-        }
-    }
-    if (isset($_POST['busqueda_institucion']) and ($_POST['busqueda_institucion'] != '')) {
-        $tipo = $_POST['busqueda_institucion'];
-        if ($where == '') {
-            $where = "WHERE institucion = '$tipo' ";
-        } else {
-            $where = $where . " AND institucion = '$tipo' ";
-        }
-    }
-    if (isset($_POST['busqueda_caracter_tramite']) and ($_POST['busqueda_caracter_tramite'] != '')) {
-        $tipo = $_POST['busqueda_caracter_tramite'];
-        if ($where == '') {
-            $where = "WHERE id_caracter_tramite = '$tipo' ";
-        } else {
-            $where = $where . " AND id_caracter_tramite = '$tipo' ";
+            $where = $where . " AND id_responsable = $tipo ";
         }
     }
 
-    if (isset($_POST['busqueda_guia']) and ($_POST['busqueda_guia'] != '')) {
-        $tipo = $_POST['busqueda_guia'];
+    if (isset($_POST['busqueda_activo']) and ($_POST['busqueda_activo'] != '')) {
+        $tipo = $_POST['busqueda_activo'];
         if ($where == '') {
-            $where = "WHERE guia = '$tipo' ";
+            $where = "WHERE activo = $tipo ";
         } else {
-            $where = $where . " AND guia = '$tipo' ";
+            $where = $where . " AND activo = $tipo ";
         }
     }
 
-    if (isset($_POST['busqueda_reasignacion']) and ($_POST['busqueda_reasignacion'] != '')) {
-        $tipo = $_POST['busqueda_reasignacion'];
+    if (isset($_POST['busqueda_tipo_contratacion']) and ($_POST['busqueda_tipo_contratacion'] != '')) {
+        $tipo = $_POST['busqueda_tipo_contratacion'];
         if ($where == '') {
-            $where = "WHERE reasignacion in ($tipo) ";
+            $where = "WHERE tipocontratacion = $tipo ";
         } else {
-            $where = $where . " AND reasignacion in ($tipo) ";
+            $where = $where . " AND tipocontratacion = $tipo ";
         }
     }
+
+    if (isset($_POST['busqueda_semaforo']) and ($_POST['busqueda_semaforo'] != '')) {
+        $tipo = $_POST['busqueda_semaforo'];
+        if ($where == '') {
+            $where = "WHERE semaforo = $tipo ";
+        } else {
+            $where = $where . " AND semaforo = $tipo ";
+        }
+    }
+
+    if (isset($_POST['busqueda_fase']) and ($_POST['busqueda_fase'] != '')) {
+        $tipo = $_POST['busqueda_fase'];
+        if ($where == '') {
+            $where = "WHERE fase = $tipo ";
+        } else {
+            $where = $where . " AND fase = $tipo ";
+        }
+    }
+
+    if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
+        $tipo = $_POST['busqueda_observaciones'];
+        if ($where == '') {
+            $where = "WHERE observaciones = $tipo ";
+        } else {
+            $where = $where . " AND observaciones = $tipo ";
+        }
+    }
+
 
 
     if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
@@ -190,71 +201,91 @@ function updateRecordatorios()
     $data->nombres = getName($data->id_responsable);
     $data->apellidos = getLastName($data->id_responsable);
 
-    $estadoAnterior = getEstadoOriginal ($data->id);
+    $data->fecha_inicio =  substr($data->fecha_inicio, 0, 10);
+    $data->fecha_entrega =  substr($data->fecha_entrega, 0, 10);
+
+
+    $estadoAnterior = getEstadoOriginal($data->id);
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        if (($clave == "fecha_inicio") || ($clave == "fecha_entrega") || ($clave == "idingreso") || ($clave == "porcentaje") || ($clave == "valor")) {
-            if ($valor == '')
-                $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
-        } else {
-            $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        // verifico cambios anteriores
+        if ($estadoAnterior[$clave] != $valor) {
+            if (($clave == "fecha_inicio") || ($clave == "fecha_entrega") || ($clave == "idingreso") || ($clave == "porcentaje") || ($clave == "valor")) {
+                if ($valor === '')
+                    $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
+                else
+                    $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+            } else {
+                $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+            }
         }
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
+    if (strlen($cadenaDatos) > 0) {
+        $sql = "UPDATE amc_planificacion_notificaciones SET  $cadenaDatos  WHERE amc_planificacion_notificaciones.id = '$data->id' ";
 
-    $sql = "UPDATE amc_planificacion_notificaciones SET  $cadenaDatos  WHERE amc_planificacion_notificaciones.id = '$data->id' ";
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
 
-    $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
+        echo json_encode(array(
+            "success" => $sql->errorCode() == 0,
+            "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_notificaciones actualizado exitosamente" : $sql->errorCode(),
+            "message" => $message
+        ));
 
-    echo json_encode(array(
-        "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_notificaciones actualizado exitosamente" : $sql->errorCode(),
-        "message" => $message
-    ));
+    } else {
+        echo json_encode(array(
+            "success" => true,
+            "msg" => "Nothing to do"
+        ));
+    }
     // envio de notificacion a usuario asignado
     if (isset($data->activo)) {
-        if ($data->activo) {
+        if ($estadoAnterior['activo'] != $data->activo) {
+            if ($data->activo) {
+                $fechaActual = date('d-m-Y H:i:s');
+                $funcionario = $data->id_responsable;
+                $detalle = "Un texto ";
 
-            $fechaActual = date('d-m-Y H:i:s');
-            $funcionario = $data->id_responsable;
-            $detalle = "Un texto ";
+                $mensaje = getmensajeRecordatorios(regresaNombre($data->id_responsable), $detalle, $fechaActual);
 
-            $mensaje = getmensajeRecordatorios(regresaNombre($data->id_responsable), $detalle, $fechaActual);
-
-            $email = regresaEmail($funcionario);
-            //   $email = "byron.herrera@quito.gob.ec";
-            $asunto = "Nuevo operativo asignado, " . " - " .$email;
-            $funcionarios = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
-            $funcionariosSeguimiento  = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
-            $prueba = true ;
-            $resultado = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $prueba );
-            if ($resultado) {
-                $sqlUpdate = "UPDATE `amc_operativos` SET `mail_enviado` = 1 WHERE `id` = " . $data->id;
-                $sql = $os->db->conn->prepare($sqlUpdate);
-                $grabaresultado = $sql->execute();
-                $data->mail_enviado = '1';
+                $email = regresaEmail($funcionario);
+                //   $email = "byron.herrera@quito.gob.ec";
+                $asunto = "Nuevo operativo asignado, " . " - " . $email;
+                $funcionarios = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
+                $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
+                $prueba = true;
+                $resultado = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $prueba);
+                if ($resultado) {
+                    $sqlUpdate = "UPDATE `amc_operativos` SET `mail_enviado` = 1 WHERE `id` = " . $data->id;
+                    $sql = $os->db->conn->prepare($sqlUpdate);
+                    $grabaresultado = $sql->execute();
+                    $data->mail_enviado = '1';
+                }
             }
-         }
+        }
     }
 }
 
 
-function getEstadoOriginal ($id){
+function getEstadoOriginal($id)
+{
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     if ($id != '') {
-        $sql = "SELECT qo_members.last_name AS nombre
-            FROM qo_members WHERE id = " . $id_dato;
+        $sql = "SELECT *
+            FROM amc_planificacion_notificaciones WHERE id = " . $id;
         $nombre = $os->db->conn->query($sql);
-        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre'];
+        $rowData = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rowData;
     } else
         return '* No asignado';
-};
+}
 
-function getmensajeRecordatorios ($nombre = '', $operativos = '', $fecha = '')
+;
+
+function getmensajeRecordatorios($nombre = '', $operativos = '', $fecha = '')
 {
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
                 <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
