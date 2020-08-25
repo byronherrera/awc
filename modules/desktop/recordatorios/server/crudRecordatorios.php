@@ -62,54 +62,54 @@ function selectRecordatorios()
     if (isset($_POST['busqueda_persona_encargada']) and ($_POST['busqueda_persona_encargada'] != '')) {
         $tipo = $_POST['busqueda_persona_encargada'];
         if ($where == '') {
-            $where = "WHERE id_responsable = $tipo ";
+            $where = "WHERE id_responsable = '$tipo' ";
         } else {
-            $where = $where . " AND id_responsable = $tipo ";
+            $where = $where . " AND id_responsable = '$tipo' ";
         }
     }
 
     if (isset($_POST['busqueda_activo']) and ($_POST['busqueda_activo'] != '')) {
         $tipo = $_POST['busqueda_activo'];
         if ($where == '') {
-            $where = "WHERE activo = $tipo ";
+            $where = "WHERE activo = '$tipo' ";
         } else {
-            $where = $where . " AND activo = $tipo ";
+            $where = $where . " AND activo = '$tipo' ";
         }
     }
 
     if (isset($_POST['busqueda_tipo_contratacion']) and ($_POST['busqueda_tipo_contratacion'] != '')) {
         $tipo = $_POST['busqueda_tipo_contratacion'];
         if ($where == '') {
-            $where = "WHERE tipocontratacion = $tipo ";
+            $where = "WHERE tipocontratacion = '$tipo' ";
         } else {
-            $where = $where . " AND tipocontratacion = $tipo ";
+            $where = $where . " AND tipocontratacion = '$tipo' ";
         }
     }
 
     if (isset($_POST['busqueda_semaforo']) and ($_POST['busqueda_semaforo'] != '')) {
         $tipo = $_POST['busqueda_semaforo'];
         if ($where == '') {
-            $where = "WHERE semaforo = $tipo ";
+            $where = "WHERE semaforo = '$tipo' ";
         } else {
-            $where = $where . " AND semaforo = $tipo ";
+            $where = $where . " AND semaforo = '$tipo' ";
         }
     }
 
     if (isset($_POST['busqueda_fase']) and ($_POST['busqueda_fase'] != '')) {
         $tipo = $_POST['busqueda_fase'];
         if ($where == '') {
-            $where = "WHERE fase = $tipo ";
+            $where = "WHERE fase = '$tipo' ";
         } else {
-            $where = $where . " AND fase = $tipo ";
+            $where = $where . " AND fase = '$tipo' ";
         }
     }
 
     if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
         $tipo = $_POST['busqueda_observaciones'];
         if ($where == '') {
-            $where = "WHERE observaciones = $tipo ";
+            $where = "WHERE observaciones = '$tipo' ";
         } else {
-            $where = $where . " AND observaciones = $tipo ";
+            $where = $where . " AND observaciones = '$tipo' ";
         }
     }
 

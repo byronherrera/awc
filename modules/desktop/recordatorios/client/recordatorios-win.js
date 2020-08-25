@@ -732,7 +732,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                                 anchor: '95%',
                                 store: storeSEMAFORO,
                                 valueField: 'id',
-                                displayField: 'nombre',
+                                displayField: 'id',
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
@@ -973,7 +973,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
     },
 
     requestGridDataRecordatoriosReporteReset: function () {
-        this.storeRecordatoriosReporte.getForm().reset();
+        this.formConsultaRecordatorios.getForm().reset();
     },
     botonExportarRecordatoriosReporte: function () {
         var rows = this.storeRecordatoriosReporte.getCount()
@@ -1002,7 +1002,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     generaRetiros = (Ext.getCmp('checkDetalleRecibidos').getValue());
                     generaTotalesPersonal = (Ext.getCmp('checkTotalesPersonal').getValue());
 
-                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&acciones=' + generaAcciones + '&totalespersonal=' + generaTotalesPersonal + '&actas=' + generaActas + '&retiros=' + generaRetiros;
+                    window.location.href = 'modules/desktop/recordatorios/server/descargaReporteRecordatorios.php?param=' + valueParams + '&acciones=' + generaAcciones + '&totalespersonal=' + generaTotalesPersonal + '&actas=' + generaActas + '&retiros=' + generaRetiros;
                 }
             }
         });
