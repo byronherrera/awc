@@ -997,12 +997,12 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaRecordatorios.getForm().getValues());
 
-                    generaAcciones = (Ext.getCmp('checkDetalleAcciones').getValue());
-                    generaActas = (Ext.getCmp('checkDetalleActas').getValue());
-                    generaRetiros = (Ext.getCmp('checkDetalleRecibidos').getValue());
-                    generaTotalesPersonal = (Ext.getCmp('checkTotalesPersonal').getValue());
+                    //generaAcciones = (Ext.getCmp('checkDetalleAcciones').getValue());
+                    //generaActas = (Ext.getCmp('checkDetalleActas').getValue());
+                    //generaRetiros = (Ext.getCmp('checkDetalleRecibidos').getValue());
+                    //generaTotalesPersonal = (Ext.getCmp('checkTotalesPersonal').getValue());
 
-                    window.location.href = 'modules/desktop/recordatorios/server/descargaReporteRecordatorios.php?param=' + valueParams + '&acciones=' + generaAcciones + '&totalespersonal=' + generaTotalesPersonal + '&actas=' + generaActas + '&retiros=' + generaRetiros;
+                    window.location.href = 'modules/desktop/recordatorios/server/descargaReporteRecordatorios.php?param=' + valueParams;
                 }
             }
         });

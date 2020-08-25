@@ -50,11 +50,12 @@ if (isset($data->busqueda_fecha_inicio) && isset($data->busqueda_fecha_fin) && $
     $busqueda_fecha_inicio = $data->busqueda_fecha_inicio;
     $busqueda_fecha_fin = $data->busqueda_fecha_fin;
     if ($where == '') {
-        $where = " WHERE cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
+        $where = " WHERE fecha_entrega between '$busqueda_fecha_inicio' and '$busqueda_fecha_fin'  ";
     } else {
-        $where = $where . " AND cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
+        $where = $where . " AND fecha_entrega between '$busqueda_fecha_inicio' and '$busqueda_fecha_fin'  ";
     }
 }
+
 if (isset($data->ordenanza) && $data->ordenanza != "") {
     $filtroOrdenanza = $data->ordenanza;
     if ($where == '') {
@@ -63,55 +64,8 @@ if (isset($data->ordenanza) && $data->ordenanza != "") {
         $where = $where . " AND ordenanza = '$filtroOrdenanza' ";
     }
 }
-if (isset($data->resolucion_de) && $data->resolucion_de != "") {
-    $filtroResolucion_de = $data->resolucion_de;
-    if ($where == '') {
-        $where = " WHERE resolucion_de = '$filtroResolucion_de' ";
-    } else {
-        $where = $where . " AND resolucion_de = '$filtroResolucion_de' ";
-    }
-}
-if (isset($data->funcionario) && $data->funcionario != "") {
-    $filtroFuncionario = $data->funcionario;
-    if ($where == '') {
-        $where = " WHERE funcionario = '$filtroFuncionario' ";
-    } else {
-        $where = $where . " AND funcionario = '$filtroFuncionario' ";
-    }
-}
-if (isset($data->numero_resolucion) && $data->numero_resolucion != "") {
-    $filtronumero_resolucion = $data->numero_resolucion;
-    if ($where == '') {
-        $where = " WHERE numero_resolucion LIKE '%$filtronumero_resolucion%' ";
-    } else {
-        $where = $where . " AND numero_resolucion LIKE '%$filtronumero_resolucion%' ";
-    }
-}
-if (isset($data->articulo_actual) && $data->articulo_actual != "") {
-    $filtro_articulo_actual = $data->articulo_actual;
-    if ($where == '') {
-        $where = " WHERE articulo_actual LIKE '%$filtro_articulo_actual%' ";
-    } else {
-        $where = $where . " AND articulo_actual LIKE '%$filtro_articulo_actual%' ";
-    }
-}
-if (isset($data->envio_expediente) && $data->envio_expediente != "") {
-    $filtro_envio_expediente = $data->envio_expediente;
-    if ($where == '') {
-        $where = " WHERE envio_expediente LIKE '%$filtro_envio_expediente%' ";
-    } else {
-        $where = $where . " AND envio_expediente LIKE '%$filtro_envio_expediente%' ";
-    }
-}
-if (isset($data->fecha_envio_inicio) && isset($data->fecha_envio_fin) && $data->fecha_envio_inicio != "" && $data->fecha_envio_fin != "") {
-    $busqueda_fecha_inicio = $data->fecha_envio_inicio;
-    $busqueda_fecha_fin = $data->fecha_envio_fin;
-    if ($where == '') {
-        $where = " WHERE cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
-    } else {
-        $where = $where . " AND cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
-    }
-}
+
+
 $orderby = 'ORDER BY a.id ASC';
 if (isset($_POST['sort'])) {
     if ($_POST['sort'] == 'id') {
