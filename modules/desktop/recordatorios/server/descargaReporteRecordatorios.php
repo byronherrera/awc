@@ -46,6 +46,60 @@ if (isset($data->accesosResolutores) && $data->accesosResolutores != "") {
     }
 }
 
+if (isset($data->busqueda_persona_encargada) and ($data->busqueda_persona_encargada != '')) {
+    $tipo = $data->busqueda_persona_encargada;
+    if ($where == '') {
+        $where = "WHERE id_responsable = '$tipo' ";
+    } else {
+        $where = $where . " AND id_responsable = '$tipo' ";
+    }
+}
+
+if (isset($data->busqueda_activo) and ($data->busqueda_activo != '')) {
+    $tipo = $data->busqueda_activo;
+    if ($where == '') {
+        $where = "WHERE activo = '$tipo' ";
+    } else {
+        $where = $where . " AND activo = '$tipo' ";
+    }
+}
+
+if (isset($data->busqueda_tipo_contratacion) and ($data->busqueda_tipo_contratacion != '')) {
+    $tipo = $data->busqueda_tipo_contratacion;
+    if ($where == '') {
+        $where = "WHERE tipocontratacion = '$tipo' ";
+    } else {
+        $where = $where . " AND tipocontratacion = '$tipo' ";
+    }
+}
+
+if (isset($data->busqueda_semaforo) and ($data->busqueda_semaforo != '')) {
+    $tipo = $data->busqueda_semaforo;
+    if ($where == '') {
+        $where = "WHERE semaforo = '$tipo' ";
+    } else {
+        $where = $where . " AND semaforo = '$tipo' ";
+    }
+}
+
+if (isset($data->busqueda_fase) and ($data->busqueda_fase != '')) {
+    $tipo = $data->busqueda_fase;
+    if ($where == '') {
+        $where = "WHERE fase = '$tipo' ";
+    } else {
+        $where = $where . " AND fase = '$tipo' ";
+    }
+}
+
+if (isset($data->busqueda_observaciones) and ($data->busqueda_observaciones != '')) {
+    $tipo = $data->busqueda_observaciones;
+    if ($where == '') {
+        $where = "WHERE observaciones = '$tipo' ";
+    } else {
+        $where = $where . " AND observaciones = '$tipo' ";
+    }
+}
+
 if (isset($data->busqueda_fecha_inicio) && isset($data->busqueda_fecha_fin) && $data->busqueda_fecha_inicio != "" && $data->busqueda_fecha_fin != "") {
     $busqueda_fecha_inicio = $data->busqueda_fecha_inicio;
     $busqueda_fecha_fin = $data->busqueda_fecha_fin;
@@ -56,17 +110,8 @@ if (isset($data->busqueda_fecha_inicio) && isset($data->busqueda_fecha_fin) && $
     }
 }
 
-if (isset($data->ordenanza) && $data->ordenanza != "") {
-    $filtroOrdenanza = $data->ordenanza;
-    if ($where == '') {
-        $where = " WHERE ordenanza = '$filtroOrdenanza' ";
-    } else {
-        $where = $where . " AND ordenanza = '$filtroOrdenanza' ";
-    }
-}
 
-
-$orderby = 'ORDER BY a.id ASC';
+$orderby = 'ORDER BY id ASC';
 if (isset($_POST['sort'])) {
     if ($_POST['sort'] == 'id') {
         $orderby = 'ORDER BY id ASC';
@@ -87,11 +132,12 @@ if (isset ($_POST['limit']))
     $limit = $_POST['limit'];
 else
     $limit = 100;
-//    $orderby = 'ORDER BY a.id ASC';
+
+
 
 $os->db->conn->query("SET NAMES 'utf8'");
-$sql = "SELECT * FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby";
-
+$sql = "SELECT * FROM amc_planificacion_notificaciones $where $orderby";
+echo $sql;
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
 
