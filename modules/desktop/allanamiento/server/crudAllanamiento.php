@@ -12,7 +12,7 @@ function selectAllanamiento()
     global $os;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_reconocimineto_responsabilidad ORDER BY id";
+    $sql = "SELECT * FROM amc_proc_reconocimineto_responsabilidad ORDER BY id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -31,7 +31,7 @@ function insertAllanamiento()
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
 
-    $sql = "INSERT INTO amc_reconocimineto_responsabilidad (nombre, activo )
+    $sql = "INSERT INTO amc_proc_reconocimineto_responsabilidad (nombre, activo )
 	values('$data->nombre','$data->activo');";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -56,10 +56,10 @@ function updateAllanamiento()
     if (is_null($data))
         $data = json_decode(stripslashes($_POST["data"]));
 
-    $sql = "UPDATE amc_reconocimineto_responsabilidad SET
+    $sql = "UPDATE amc_proc_reconocimineto_responsabilidad SET
             nombre='$data->nombre',
             activo='$data->activo'
-	  WHERE amc_reconocimineto_responsabilidad.id = '$data->id' ";
+	  WHERE amc_proc_reconocimineto_responsabilidad.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
@@ -73,7 +73,7 @@ function deleteAllanamiento()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_reconocimineto_responsabilidad WHERE id=$id";
+    $sql = "DELETE FROM amc_proc_reconocimineto_responsabilidad WHERE id=$id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
@@ -87,7 +87,7 @@ function selectAllanamientoForm()
     global $os;
     $id = (int)$_POST ['id'];
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_reconocimineto_responsabilidad WHERE id = $id";
+    $sql = "SELECT * FROM amc_proc_reconocimineto_responsabilidad WHERE id = $id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -354,7 +354,7 @@ function totalpedidos($cedula)
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    $sql = "SELECT COUNT(*) AS total FROM amc_reconocimineto_responsabilidad WHERE cedula = '$cedula'";
+    $sql = "SELECT COUNT(*) AS total FROM amc_proc_reconocimineto_responsabilidad WHERE cedula = '$cedula'";
     $nombre = $os->db->conn->query($sql);
 
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);

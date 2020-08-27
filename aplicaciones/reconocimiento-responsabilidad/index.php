@@ -89,7 +89,7 @@ require_once('../../server/os.php');
 
                 <div class="form-group">
                     <label for="cedula">CEDULA*</label>
-                    <input type="number" class="form-control senddata" id="cedula" name="cedula" placeholder=""
+                    <input type="text" class="form-control senddata" id="cedula" name="cedula" placeholder=""
                            required="required">
                     <div class="mensajecedula"></div>
                 </div>
@@ -116,7 +116,7 @@ require_once('../../server/os.php');
                 <div class="form-group">
                     <label for="tipoadministrador">TIPO ADMINISTRADOR</label>
                     <input id="tipoadministrador" type="text" name="tipoadministrador" class="form-control senddata"
-                           placeholder="En c" required="required">
+                           placeholder="Propietario, Arrendador, etc" required="required">
                 </div>
 
                 <div class="form-group">
@@ -153,6 +153,11 @@ require_once('../../server/os.php');
                     <label for="descripcion">DESCRIPICON</label>
                     <input id="descripcion" type="text" name="descripcion" class="form-control senddata"
                            placeholder="Ingrese la descripción de la sanción / clausura">
+                </div>
+                <div class="form-group">
+                    <label for="actoinicio">NÚMERO DE ACTO DE INICIO</label>
+                    <input id="actoinicio" type="text" name="actoinicio" class="form-control senddata"
+                           placeholder="Ingrese el número del Acto de Inicio">
                 </div>
                 <div class="form-group">
                     <label for="observaciones">OBSERVACIONES</label>
@@ -220,7 +225,7 @@ require_once('../../server/os.php');
                 <div id="botonsolicitud">
                     <div class="form-group">
                         <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Subir formulario </label>
+                            <label class="custom-file-label" for="archivo">Subir formulario firmado y escaneado.</label>
                             <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1"
                                    required="required">
                         </div>
@@ -228,11 +233,20 @@ require_once('../../server/os.php');
 
                     <div class="form-group">
                         <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Subir LUAE </label>
+                            <label class="custom-file-label" for="archivo">Subir imagen LUAE </label>
                             <input type="file" class="custom-file-input" id="archivo2" lang="es" name="archivo2"
                                    required="required">
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <label class="custom-file-label" for="archivo">Subir imagen 'Acto Administrativo de Inicio' </label>
+                            <input type="file" class="custom-file-input" id="archivo3" lang="es" name="archivo3"
+                                   required="required">
+                        </div>
+                    </div>
+
                 </div>
 
                 <div id="botonenviar">
@@ -261,20 +275,7 @@ require_once('../../server/os.php');
         $('#btn-continuar1').click(function () {
             $('#formulario').fadeIn();
         });
-        /*
-                $("#btn-continuar").click(function(event) {
-                    console.log ("ee");
-                    // Fetch form to apply custom Bootstrap validation
-                    var form = $("#myForm")
 
-                    if (form[0].checkValidity() === false) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.addClass('was-validated');
-                    // Perform ajax submit here...
-                });
-        */
 
         var date = new Date();
         var dateStr =
@@ -284,13 +285,7 @@ require_once('../../server/os.php');
             ("00" + date.getMinutes()).slice(-2) + ':00';
 
         document.getElementById('fecha').value = dateStr;
-        /*
-                $("#btn-continuar").click(function () {
-                    validarDatos();
-                    prepararNuevoLink();
-                    $('#solicitud').show();
-                });
-        */
+
 
         $('.form_datetime').datetimepicker({
             language: 'es',
@@ -339,6 +334,7 @@ require_once('../../server/os.php');
             var actividad = $('#actividad').val();
             var fechaacto = $('#fechaacto').val();
             var descripcion = $('#descripcion').val();
+            var actoinicio = $('#actoinicio').val();
             var domicilio = $('#domicilio').val();
             var correoelectronico = $('#correoelectronico').val();
             var celular = $('#celular').val();
@@ -362,6 +358,7 @@ require_once('../../server/os.php');
                 + "&actividad=" + actividad
                 + "&fechaacto=" + fechaacto
                 + "&descripcion=" + descripcion
+                + "&actoinicio=" + actoinicio
                 + "&domicilio=" + domicilio
                 + "&correoelectronico=" + correoelectronico
                 + "&celular=" + celular
@@ -449,4 +446,3 @@ require_once('../../server/os.php');
 
 </body>
 </html>
-    

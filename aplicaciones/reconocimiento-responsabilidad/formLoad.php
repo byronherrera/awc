@@ -1,6 +1,6 @@
 <?php
 require_once '../../server/os.php';
-require_once '';
+//require_once '';
 $os = new os();
 
 
@@ -248,11 +248,33 @@ function ingresaNuevoProceso()
             $listado2['archivo2'] = "uploads/" . basename($today . '-' . $nombreArchivo);
         }
     }
+    if ($_FILES['archivo3']['name'] != null) {
+
+        $temp_file_name = $_FILES['archivo3']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo3']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo3']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
+            $listado3['archivo3'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+        }
+    }
 
     if (count($listado1) > 0)
         $data->imagenasolicitud = json_encode($listado1);
     if (count($listado2) > 0)
         $data->imagenaluae = json_encode($listado2);
+    if (count($listado3) > 0)
+        $data->imagenactoinicio = json_encode($listado2);
 
 
     $data->cedula = $_POST["cedula"];
@@ -266,6 +288,7 @@ function ingresaNuevoProceso()
     $data->actividad = $_POST["actividad"];
     $data->fechaacto = $_POST["fechaacto"];
     $data->descripcion = $_POST["descripcion"];
+    $data->actoinicio = $_POST["actoinicio"];
     $data->domicilio = $_POST["domicilio"];
     $data->correoelectronico = $_POST["correoelectronico"];
     $data->celular = $_POST["celular"];
@@ -286,7 +309,7 @@ function ingresaNuevoProceso()
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "INSERT INTO amc_reconocimineto_responsabilidad ($cadenaCampos) VALUES ($cadenaDatos);";
+    $sql = "INSERT INTO amc_proc_reconocimineto_responsabilidad ($cadenaCampos) VALUES ($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $result = $sql->execute();
 
