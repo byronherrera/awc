@@ -192,7 +192,8 @@ if (!class_exists('os')) {
                         if (data.success) {
                             $('#nombres').val(data.data[0]['nombres'])
                             $('#apellidos').val(data.data[0]['apellidos'])
-                            $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción</h3>")
+//                            $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción</h3>")
+                            $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción,fecha: " + data.data[0]['fecha_creacion'] + "</h3>")
                         } else {
                             $('#nombres').val('')
                             $('#apellidos').val('')

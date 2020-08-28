@@ -29,7 +29,7 @@ function getrecordatoriosUsuario($idUsuario)
             FROM
                 `amc_planificacion_notificaciones` 
             WHERE id_responsable = $idUsuario 
-            AND fecha_entrega > NOW( ) + INTERVAL 1 DAY 
+            AND fecha_entrega > NOW( ) + INTERVAL 10 DAY 
 	        AND activo = 1;";
 
     $result = $os->db->conn->query($sql);
