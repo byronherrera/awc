@@ -12,11 +12,17 @@ switch ($opcion) {
     case "funcionario":
         getFuncionarios();
         break;
+    case "ordenanza":
+        getOrdenanza();
+        break;
     case "idzonal":
         getIdzonal();
         break;
     case "totales":
         getTotales();
+        break;
+    case "totalesDetalle":
+        getTotalesDetalle();
         break;
 
     case "ingreso":
@@ -175,6 +181,27 @@ function getFuncionarios()
         ));
     }
 }
+function getOrdenanza()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT nombre AS text, id AS valor FROM `amc_ordenanzas` WHERE activo = 1 ORDER BY orden;";
+
+    $result = $os->db->conn->query($sql);
+    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+    if (count($resultado) > 0) {
+        echo json_encode(array(
+            "success" => true,
+            "data" => array($resultado)
+        ));
+
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }
+}
 
 function getIdzonal()
 {
@@ -202,12 +229,56 @@ function getIdzonal()
 function getTotales()
 {
     global $os;
+	header("Access-Control-Allow-Origin: *");
 
+    //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
 
     $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
-
     $result = $os->db->conn->query($sql);
-    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    $resultado = [];
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $row[] = "1";
+        $resultado[] = $row;
+    }
+    if (count($resultado) > 0) {
+        echo json_encode(array(
+            "success" => true,
+            "data" => array($resultado)
+        ));
+
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }
+}
+
+function getTotalesDetalle()
+{
+    global $os;
+
+
+ //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
+    $result = $os->db->conn->query($sql);
+
+    $resultado = [];
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+        //para cada fila calculamos el total por zonal
+        $fecha= $row ['texto'];
+        $sqlzonal = "SELECT id, nombre, (SELECT COUNT( id ) valor FROM amc_sancion_emergencia  WHERE DATE(fecha) = '$fecha' AND idzonal= amc_zonas.id) total  FROM amc_zonas WHERE combos = 1";
+        $resultzonal = $os->db->conn->query($sqlzonal);
+        while ($rowzonal = $resultzonal->fetch(PDO::FETCH_ASSOC)) {
+            $nombre = str_replace(' ', '', $rowzonal ['nombre']);
+            $row[$nombre] = $rowzonal['total'] ;
+        }
+        $resultado[] = $row;
+
+    }
     if (count($resultado) > 0) {
         echo json_encode(array(
             "success" => true,
@@ -286,6 +357,7 @@ function ingresaNuevoProceso()
     $data->apellidos = $_POST["apellidos"];
     $data->lugarinfraccion = $_POST["lugarinfraccion"];
     $data->observaciones = $_POST["observaciones"];
+    $data->materia = $_POST["ordenanza"];
     $data->geoposicionamiento = $_POST["geoposicionamiento"];
     $data->funcionario = $_POST["funcionario"];
     $data->fecha = $_POST["fecha"];

@@ -22,9 +22,12 @@ if(isset($_POST['data'])){
             $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
 
             $uploadfile = $uploaddir . basename($_POST['data']. '-' .$nombreArchivo );
+            echo $temp_file_name . '<br>';
+            echo $uploadfile . '<br>';
+            
             if (move_uploaded_file($temp_file_name, $uploadfile)) {
                 // en caso de ser exito el ingreso entonces se inserta un registro en la base de datos
-/*
+
                 $origen=$uploadfile;
                 $destino=$uploadfile;
                 $destino_temporal=tempnam("tmp/","tmp");
@@ -34,9 +37,9 @@ if(isset($_POST['data'])){
                 $fp=fopen($destino,"w");
                 fputs($fp,fread(fopen($destino_temporal,"r"),filesize($destino_temporal)));
                 fclose($fp);
- */
+
+                insertParticipantes('imagenes/operativos/' .$_POST['data']. '-' . $_FILES['photo-path']['name'], $_POST['data']);
             }
-            insertParticipantes('imagenes/operativos/' .$_POST['data']. '-' . $_FILES['photo-path']['name'], $_POST['data']);
 
         }
     }

@@ -800,6 +800,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         this.gridOperativos = new Ext.grid.EditorGridPanel({
             height: desktop.getWinHeight() - 380,
             store: this.storeOperativos,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 /* {
@@ -818,7 +819,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Enviado',
                     dataIndex: 'mail_enviado',
                     sortable: true,
-                    width: 30 
+                    width: 30
                 },
 
                 {
@@ -844,13 +845,33 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     renderer: operativosEstados
                 },
                 {
-                    header: 'Fecha inicio',
+                    header: 'Fecha inicio111',
                     dataIndex: 'fecha_inicio_planificacion',
                     sortable: true,
                     width: 100,
                     renderer: formatDate,
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
+                    editor: new Ext.ux.form.DateTimeField({
+                        dateFormat: 'Y-m-d',
+                        timeFormat: 'H:i',
+                        listeners: {
+                            change: function (field, val, valOld) {
+                                //fecha inicial debe ser mayor que la final
+                                if (val > fecha_fin_planificacion)
+                                //AppMsg.setAlert("Alerta ", 'Fecha inicial no  debe ser mayor que fecha final');
+                                    fecha_inicio_planificacion = val
+                                //fecha inicial no debe ser mayor de 12 horas
+                                var diff = Math.abs(fecha_fin_planificacion - fecha_inicio_planificacion) / 3600000;
+                                if (diff > 12)
+                                    AppMsg.setAlert("Alerta ", 'Fecha final supera las 12 horas de operativo, están ' + parseFloat(diff).toFixed(1) + " horas");
+                                else
+                                    AppMsg.setAlert("Observación ", 'Están ' + parseFloat(diff).toFixed(1) + " horas de operativo");
+                                // alerta fecha menor a la actual
+                                fecha_actual = new Date();
+                                if (val < fecha_actual) {
+                                    //AppMsg.setAlert("Observación ", 'La fecha del operativo anterior a la fecha actual');
+                                }
+                            }
+                        }
                     })
                 },
                 {
@@ -1043,7 +1064,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
 
                     // registros que estan en planificacion
                     if (record.get('id_estado') == 1) {
-                            // Ext.getCmp('id_persona_encargada').setReadOnly(true);
+                        // Ext.getCmp('id_persona_encargada').setReadOnly(true);
                         return 'gold';
                     }
                     // registros que ya estan realizados
@@ -1185,7 +1206,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     // si el operativo esta identificado como estado o planificado (1) o informe (4) se peude editar
                     if (acceso) {
                         // si el que edita es administrador de operativos puede cambiar
-                        console.log (accesosAdministradorOpe)
+                        console.log(accesosAdministradorOpe)
                         if (accesosAdministradorOpe) {
                             return true;
                         }
@@ -1257,6 +1278,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             autoScroll: true,
             store: this.storeOperativosPersonal,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -1383,6 +1405,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             autoScroll: true,
             store: this.storeOperativosParticipantes,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -1579,14 +1602,15 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             id: 'gridOperativosImagenes',
             autoHeight: true,
             store: this.storeOperativosImagenes,
-            columns: [
+            clicksToEdit: 1,
+                columns: [
                 new Ext.grid.RowNumberer(),
                 {
                     header: 'Url imagen',
                     dataIndex: 'url',
                     sortable: true,
-                    width: 100,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    width: 100
+                   // , editor: new Ext.form.TextField({allowBlank: false})
                 },
                 {
                     header: 'Imagen',
@@ -1698,6 +1722,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             autoScroll: true,
             store: this.storeOperativosInforme,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -1846,6 +1871,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             autoScroll: true,
             store: this.storeOperativosRetiros,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 /*       {
@@ -1993,6 +2019,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             autoScroll: true,
             store: this.storeOperativosAcciones,
+            clicksToEdit: 1,
             columns: [
                 {
                     header: 'Operativo',
@@ -2083,6 +2110,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             height: desktop.getWinHeight() - 268,
             autoScroll: true,
             store: this.storeDocumentosReporte,
+            clicksToEdit: 1,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
@@ -2658,6 +2686,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     , store: this.storeOperativos
                                 })
                             ],
+
                             items: [
                                 {
                                     id: 'formcabeceraoperativos',
@@ -2980,7 +3009,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     cls: 'barramenu',
                                     handler: function (checkbox, isChecked) {
                                     }
-                                },                                {
+                                }, {
                                     xtype: 'checkbox',
                                     boxLabel: 'Detalle actas',
                                     id: 'checkDetalleActas',
@@ -3419,7 +3448,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
         this.storeDocumentosReporte.baseParams.accesosOperativos = accesosOperativos;
         this.storeDocumentosReporte.baseParams.accesosAdministradorIns = accesosAdministradorIns;
         // para indicar en la busqueda que es desde el formulario
-        var formularioBusqueda  = 1;
+        var formularioBusqueda = 1;
         this.storeDocumentosReporte.baseParams.formularioBusqueda = formularioBusqueda;
 
         this.storeDocumentosReporte.load();
@@ -3455,7 +3484,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     generaRetiros = (Ext.getCmp('checkDetalleRecibidos').getValue());
                     generaTotalesPersonal = (Ext.getCmp('checkTotalesPersonal').getValue());
 
-                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&acciones=' + generaAcciones + '&totalespersonal=' + generaTotalesPersonal+ '&actas=' + generaActas+ '&retiros=' + generaRetiros;
+                    window.location.href = 'modules/desktop/operativos/server/descargaReporteOperativos.inc.php?param=' + valueParams + '&acciones=' + generaAcciones + '&totalespersonal=' + generaTotalesPersonal + '&actas=' + generaActas + '&retiros=' + generaRetiros;
                 }
             }
         });

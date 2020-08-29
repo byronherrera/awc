@@ -62,7 +62,6 @@ function generaNuevoCodigoInstruccion()
     }
 }
 
-
 function generaNuevoCodigoConstrucciones()
 {
     global $os;
@@ -131,6 +130,43 @@ function regresaNombre($id_dato)
     } else
         return '* No asignado';
 
+}
+
+function getName($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id_dato != '') {
+        $sql = "SELECT qo_members.first_name AS nombre
+            FROM qo_members WHERE id = " . $id_dato;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre'];
+    } else
+        return '* No asignado';
+
+}
+
+function getLastName($id_dato)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id_dato != '') {
+        $sql = "SELECT qo_members.last_name AS nombre
+            FROM qo_members WHERE id = " . $id_dato;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre'];
+    } else
+        return '* No asignado';
 }
 
 function regresaEmail($id_dato)
@@ -202,3 +238,64 @@ function generaCodigoProcesoDenuncia()
 
     }
 }
+
+
+
+function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionariosBCC=[], $prueba = false)
+{
+    $config = new config();
+
+    require 'PHPMailer/PHPMailerAutoload.php';
+
+    //Create a new PHPMailer instance
+    $mail = new PHPMailer;
+    $mail->CharSet = "UTF-8";
+    $mail->isSMTP();
+    $mail->SMTPDebug = 0;
+    $mail->Debugoutput = 'html';
+
+    $mail->Host = 'smtp.gmail.com';
+    $mail->Port = 587;
+    $mail->SMTPSecure = 'tls';
+    $mail->SMTPAuth = true;
+    $mail->Username = "amcdenuncias@gmail.com";
+    $mail->Password = "amccontrol2016";
+    $mail->setFrom('denunciasamc@quito.gob.ec', 'Agencia Metropolitana de Control');
+
+
+
+
+    $mail->Subject = $nombre;
+    $mail->msgHTML($mensaje);
+    $mail->AltBody = 'Mensaje enviado';
+
+    // se envia de acuerdo a si es produccion o pruebas
+    if (($config->AMBIENTE == "PRODUCCION") or (!$prueba)) {
+        $mail->addAddress($email);
+        foreach ($funcionariosCC as $emailfuncionario) {
+            $mail->AddCC($emailfuncionario);
+        };
+        foreach ($funcionariosBCC as $emailfuncionario) {
+            $mail->AddBCC($emailfuncionario);
+        }
+    } else {
+        $mail->addAddress("byron.herrera@quito.gob.ec");
+    }
+
+    $resultado = $mail->send();
+
+    $fichero = 'emailEnviados.log';
+    $actual = file_get_contents($fichero);
+    if ($resultado) {
+        $actual .= "Enviado -" . date(" Y-m-d ") . "\n----\n";
+    } else
+        $actual .= "Error-" . date(" Y-m-d ") . "\n----\n";
+
+    $actual .= $email . "\n----\n";
+    $actual .= $nombre . "\n----\n";
+    $actual .= $mensaje . "\n----\n";
+    file_put_contents($fichero, $actual);
+    return $resultado;
+
+}
+

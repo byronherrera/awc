@@ -1,5 +1,6 @@
 <?php
 require_once '../../server/os.php';
+//require_once '';
 $os = new os();
 
 
@@ -22,39 +23,12 @@ switch ($opcion) {
     case "ingreso":
         // graba en base de datos
         $data = ingresaNuevoProceso();
-        //    generaPdf ($data);
-        // codigo futuro funcionamiento
-        /*        $id = $data->id;
-        $data = getDataId($id);
-        $etapa = $data['etapa'];
-        $area = $data['departamento'];
-        $flujo = getDataFlujo($area);
-        $usuarioData = getUsuario($flujo['idusuarioetapa1']);
-        $usuarioDataSeguimiento = getUsuario($flujo['usurioscopiaetapa1']);
-        $usuarioDataSeguimiento2 = getUsuario($flujo['usurioscopiaetapa2']);
-        $usuarioDataFin = getUsuario($flujo['idusuariofinal']);
-
-
-        // etapa 0
-        // 1 se envia email a la persona que realiza la solicitud
-        $contenidoMailPersona = getmensajeSolicitud($data['nombres'], $data);
+        // se genera el texto para el envio del mail de notificación
+        $contenidoMailPersona = getmensajeSolicitudAprobada($data);
         // envio email al encargado del negocio
-        $envioMail = enviarEmail($data['emailConcesionario'], $data['concesionario'], $contenidoMailPersona, "", $data);
-        // envio email al encargado del negocio
-        $envioMail = enviarEmail($data['emailSolicitante'], $data['nombres'], $contenidoMailPersona, "", $data);
-        //TODO validar en caso que email no se envie
-
-        // 2 se envia email a la persona que realiza la aprobación de la solicitud
-
-        // se cambia los estados para la etapa 0
-        $retorno = setDataIdEtapa0($id);
-        $data['etapa'] = 1;
-        $contenidoMailAutorizacion1 = getmensajeEtapa($usuarioData['nombre'] . " - encargado de aprobacion de etapa 1", $data);
-
-        $envioMail = enviarEmail($usuarioData['email'], $data['negocio'], $contenidoMailAutorizacion1, $usuarioDataSeguimiento['email'], $data, " Aprobación Etapa 1");
-        //TODO validar en caso que email no se envie
-        */
+        $envioMail = enviarEmail($data->correoelectronico, $data->nombres . '' . $data->apellidos , $contenidoMailPersona, "", $data);
         break;
+
     case "aprobar":
         // recuperamos variables
         $id = isset($_GET['id']) ? $_GET['id'] : '';
@@ -91,7 +65,7 @@ switch ($opcion) {
             } else {
                 // dependiendo si se aprueba o niega se envia el correo al nombres
                 if ($accion == 'aprobar') {
-                    $contenidoMailAutorizacion2 = getmensajeSolicitudAprobada($data['negocio'], $data);
+                    $contenidoMailAutorizacion2 = getmensajeSolicitudAprobada($data);
                     $estado = " APROBADO ";
 
                 } else {
@@ -202,7 +176,6 @@ function getTotales()
 {
     global $os;
 
-
     $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia_locales GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
 
     $result = $os->db->conn->query($sql);
@@ -251,7 +224,7 @@ function ingresaNuevoProceso()
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado['archivo1'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado1['archivo1'] = "uploads/" . basename($today . '-' . $nombreArchivo);
         }
     }
 
@@ -272,41 +245,59 @@ function ingresaNuevoProceso()
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado['archivo2'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado2['archivo2'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+        }
+    }
+    if ($_FILES['archivo3']['name'] != null) {
+
+        $temp_file_name = $_FILES['archivo3']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo3']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo3']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
+            $listado3['archivo3'] = "uploads/" . basename($today . '-' . $nombreArchivo);
         }
     }
 
-    if (count($listado) > 0)
-        $data->imagenacto = json_encode($listado);
+    if (count($listado1) > 0)
+        $data->imagenasolicitud = json_encode($listado1);
+    if (count($listado2) > 0)
+        $data->imagenaluae = json_encode($listado2);
+    if (count($listado3) > 0)
+        $data->imagenactoinicio = json_encode($listado2);
 
 
     $data->cedula = $_POST["cedula"];
     $data->nombres = $_POST["nombres"];
     $data->apellidos = $_POST["apellidos"];
 
+    $data->materia = $_POST["materia"];
+    $data->tipoadministrador = $_POST["tipoadministrador"];
+    $data->establecimiento = $_POST["establecimiento"];
+    $data->ubicacion = $_POST["ubicacion"];
+    $data->actividad = $_POST["actividad"];
+    $data->fechaacto = $_POST["fechaacto"];
+    $data->descripcion = $_POST["descripcion"];
+    $data->actoinicio = $_POST["actoinicio"];
+    $data->domicilio = $_POST["domicilio"];
     $data->correoelectronico = $_POST["correoelectronico"];
-    $data->abogado = $_POST["abogado"];
-    $data->abogadomatricula = $_POST["abogadomatricula"];
-    $data->expediente = $_POST["expediente"];
-    $data->otrodocumento = $_POST["otrodocumento"];
-    $data->direccion = $_POST["direccion"];
+    $data->celular = $_POST["celular"];
+    $data->observaciones = $_POST["observaciones"];
 
     $data->fecha = $_POST["fecha"];
     $data->idzonal = $_POST["idzonal"];
     $data->zonal = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
-    $data->ip = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
-
-function recuperaIP () {
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    return $ip;
-}
-
+    $data->ip = recuperaIP();
 
     $cadenaDatos = '';
     $cadenaCampos = '';
@@ -318,7 +309,7 @@ function recuperaIP () {
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "INSERT INTO amc_sancion_emergencia_locales ($cadenaCampos) VALUES ($cadenaDatos);";
+    $sql = "INSERT INTO amc_proc_reconocimineto_responsabilidad ($cadenaCampos) VALUES ($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $result = $sql->execute();
 
@@ -344,6 +335,18 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 */
+function recuperaIP()
+{
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+
 //genera el archivo PDF
 function generaPdf($data)
 {
@@ -658,68 +661,30 @@ function getmensajeEtapa($nombre = '', $data)
 						  <a href="http://romsegroup.com/invede-dev/accion.php?id=' . $data['id'] . '&accion=negar&etapa=' . $data['etapa'] . '" style="font-size: 24px; text-decoration: none; color: white;" target="_blank">Negar</a></div>
 						  
 	                </div>
-                </div>
-                ';
+                </div>';
     return $texto;
 }
 
-function getmensajeSolicitudAprobada($nombre = '', $data)
+function getmensajeSolicitudAprobada($data)
 {
+    $config = new config();
+    $url = $config->URLBASE . 'aplicaciones/reconocimiento-responsabilidad/';
+
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
                 <div style="text-align: center;"><img style="width: 200px;" src="http://www.romsegroup.com/invede-dev/img/logo-jardin-corto.png" alt="" width="30%" /></div>
 
                 <div style="clear: both; margin: 20px 10%; float: left;">
-                <h2><span style="font-family:Calibri Light;color:rgb(47,84,150) ">Número ' . $data['id'] . '</span></h2>
-                <p  style="font-family:Calibri Light; font-size: 1.3em ">Estimado <strong>' . $nombre . ' - <span style="font-style: italic;">gracias por escribirnos, su solicitud FUE APROBADA</span></strong></p>
-                 <p style="font-family:Calibri Light;color:rgb(47,84,150);font-size: 1.3em;font-weight: bold">Observación:</p>
-                 <p style="font-family:Calibri Light;color:rgb(47,84,150);font-size: 1.3em;font-weight: bold">' . $data['motivo1'] . '</p>
-                 <p style="font-family:Calibri Light;color:rgb(47,84,150);font-size: 1.3em;font-weight: bold">' . $data['motivo2'] . '</p>
-                <p style="font-family:Calibri Light;color:rgb(47,84,150);font-size: 1.3em;font-weight: bold">Los datos enviados son:</p>
-                <table style="margin: 0 auto;border: 1px solid #1C6EA4; background-color: rgb(241,241,241);   text-align: left;border-collapse: collapse;">
-                    <tbody>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230);width: 30% ">Arrendatario:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['negocio'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Administrador:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['concesionario'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Email Administrador:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['emailConcesionario'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Fecha solicitud:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['fecha'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Fecha trabajo:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['fechaTrabajo'] . '</td></tr>
-                
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Solicitante:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['nombres'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Email Solicitante:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['emailSolicitante'] . '</td></tr>
-                
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Duración:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['duracion'] . ' horas.</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Solicitud:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['pedido'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Archivos Adjuntos:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;"><a href="' . $data['anexo'] . '"  target="_blank">' . $data['anexo'] . '</a></td></tr>
+                <h2><span style="font-family:Calibri Light;color:rgb(47,84,150) ">Número ' . $data->id . '</span></h2>
+                <p  style="font-family:Calibri Light; font-size: 1.3em ">Estimado <strong>' . $data->nombres . '  ' . $data->apellidos . '<span style="font-style: italic;">, su solicitud fue recibida, se requiere validar su correo de click en el boton </span></strong></p>
 
-                    </tbody>
-                </table>
-                
-                <p style="font-family:Calibri Light;color:rgb(47,84,150);font-size: 1.3em;font-weight: bold" >Listado de personal</p>
-                
-                <table style="margin: 0 auto; border: 1px solid #1C6EA4; background-color: rgb(241,241,241);   text-align: left;border-collapse: collapse;">
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); width: 35% ">Persona autorizada 1:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['nombre1'] . ', ' . $data['cedula1'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Persona autorizada 2:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['nombre2'] . ', ' . $data['cedula2'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Persona autorizada 3:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['nombre3'] . ', ' . $data['cedula3'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Persona autorizada 4:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['nombre4'] . ', ' . $data['cedula4'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Persona autorizada 5:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['nombre5'] . ', ' . $data['cedula5'] . '</td></tr>
-                    <tr><td style="font-weight: bolder; font-family:Calibri Light; font-size: 1.2em; border: 1px solid #1C6EA4; background-color: rgb(231,230,230); ">Persona autorizada 6:</td>
-                        <td style="font-family:Calibri Light; font-size: 1.2em;border: 1px solid #1C6EA4;">' . $data['nombre6'] . ', ' . $data['cedula6'] . '</td></tr>
-                    </tbody>
-                </table>
+                <div style="clear: both; margin: 50px 10%;  text-align: center;">
+					  <div class="hijo" style="display: block; width: 230px; height: 50px; padding: 10px 0 0 0; margin: 0 auto; background: #4682B4;  
+					  background: -moz-linear-gradient(top, #87CEEB 0%, #4682B4 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#87CEEB), 
+					  color-stop(100%,#4682B4));box-shadow: inset 0px 0px 6px #fff;  -webkit-box-shadow: inset 0px 0px 6px #fff; border: 1px solid #62C2F9; border-radius: 10px;  display: inline-block; "> 
+					  <a href="' . $url . 'accion.php?id=' . $data->id . '&accion=aprobar&cedula=' . $data->cedula . '" style="font-size: 24px; text-decoration: none; color: white;" target="_blank">Validar</a></div>
+			  
+                </div>
+                </div>
                 </div>
                 ';
     return $texto;
@@ -793,7 +758,6 @@ function getmensajeSolicitudNegada($nombre = '', $data)
 function enviarEmail($email, $nombre, $mensaje, $mailSeguimiento, $data, $textoAdicional = "")
 {
     require_once 'admin/modules/common/Classes/PHPMailer/PHPMailerAutoload.php';
-
     $mail = new PHPMailer(true);
     $mail->Host = "smtp.office365.com";
     $mail->Port = 587;
@@ -807,14 +771,14 @@ function enviarEmail($email, $nombre, $mensaje, $mailSeguimiento, $data, $textoA
     $mail->Username = "solicitudes@malleljardin.com.ec";
     $mail->Password = 'Mall@2020';
 
-    $mail->setFrom('solicitudes@malleljardin.com.ec', 'Mall el Jardín - Registro de trabajos');
+    $mail->setFrom('solicitudes@malleljardin.com.ec', 'Recepcion - Registro de trabajos');
 
     $mail->addAddress($email, $nombre);
 
     if ($mailSeguimiento != "")
         $mail->addAddress($mailSeguimiento, $nombre);
 
-    $mail->Subject = 'Solicitud de trabajos # ' . $data['id'] . ". $textoAdicional";
+    $mail->Subject = 'Solicitud de allanamiento # ' . $data['id'] . ". $textoAdicional";
     $mail->msgHTML($mensaje);
 
     $mail->AltBody = 'Mensaje enviado..';

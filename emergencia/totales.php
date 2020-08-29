@@ -56,11 +56,11 @@ $sql->execute();
         <div class="col-sm-4 lead"></div>
     </div>
     <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4 ">
-            <div class="mensajetotales"></div>
+
+        <div class="col-sm-12 ">
+            <div class="mensajetotales">DESCARGANDO...</div>
         </div>
-        <div class="col-sm-4 lead"></div>
+
     </div>
     <div class="row">
         <div class="col-sm-4"></div>
@@ -70,10 +70,12 @@ $sql->execute();
     <div class="row">
         <div class="col-sm-4"></div>
         <div class="col-sm-4 ">
-            <a href="descargaTodoEmergencia.php">Descargar todo (xls)</a>
+            <a href="descargaTodoEmergencia.php">Descargar todo (xls)</a> <br>
+            <a href="descargaTotalesEmergencia.php">Descargar totales (xls)</a>
         </div>
-        <div class="col-sm-4"></div>
     </div>
+    <div class="col-sm-4"></div>
+</div>
 </div>
 
 <script src="vendor/jquery/jquery-1.8.3.min.js"></script>
@@ -84,15 +86,37 @@ $sql->execute();
 <script type="text/javascript">
     $(document).ready(function () {
         // llenar los datos del combobox
-        $.getJSON('formLoad.php?opcion=totales', function (data) {
+        $.getJSON('formLoad.php?opcion=totalesDetalle', function (data) {
             if (data.success) {
-                var cadena = '<table width="100%" ><tr><th><div class="lead">Fecha</div></th><th><div class="lead">Sanciones</div></th></tr>'
+                var cadena = '<table border="1" width="95%" align="center" ><tr><th><div class="lead">Fecha</div></th><th class="text-center"><div >Total sanciones</div></th>' +
+                    '<th class="text-center"><div >Los Chillos</div></th>' +
+                    '<th class="text-center"><div >La Mariscal</div></th>' +
+                    '<th class="text-center"><div >La Delicia</div></th>' +
+                    '<th class="text-center"><div >Quitumbe</div></th>' +
+                    '<th class="text-center"><div >Tumbaco</div></th>' +
+                    '<th class="text-center"><div >Calderon</div></th>' +
+                    '<th class="text-center"><div >Manuela Saenz</div></th>' +
+                    '<th class="text-center"><div >Eloy Alfaro</div></th>' +
+                    '<th class="text-center"><div >Eugenio Espejo</div></th>' +
+                    '</tr>'
                 total = 0;
                 $.each(data.data[0], function (i, el) {
-                    cadena = cadena + '<tr><td>' + el.texto + '</th><td>' + el.valor + '</td></tr>';
+                    cadena = cadena + '<tr><td><strong>' + el.texto + '</strong> </th><td  align=\'center\'><strong>' + el.valor + '</strong></td>' +
+                        '<td align=\'center\'>' + el.LOSCHILLOS + '</td>' +
+                        '<td align=\'center\'>' + el.LAMARISCAL + '</td>' +
+                        '<td align=\'center\'>' + el.LADELICIA + '</td>' +
+                        '<td align=\'center\'>' + el.QUITUMBE + '</td>' +
+                        '<td align=\'center\'>' + el.TUMBACO + '</td>' +
+                        '<td align=\'center\'>' + el.CALDERON + '</td>' +
+                        '<td align=\'center\'>' + el.MANUELASAENZ + '</td>' +
+                        '<td align=\'center\'>' + el.ELOYALFARO + '</td>' +
+                        '<td align=\'center\'>' + el.EUGENIOESPEJO + '</td>' +
+                        '</tr>';
+
+
                     total = total + parseInt(el.valor);
                 });
-                cadena = cadena + '<tr><td>Total </th><td>' + total + '</td></tr>';
+                cadena = cadena + '<tr><td>Total </td><td class="text-center">' + total + '</td></tr>';
                 cadena = cadena + '</table>';
                 $('.mensajetotales').html(cadena)
             } else {
@@ -105,7 +129,11 @@ $sql->execute();
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101563972-2"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
     gtag('js', new Date());
 
     gtag('config', 'UA-101563972-2');

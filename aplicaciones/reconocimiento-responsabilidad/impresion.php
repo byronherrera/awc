@@ -11,39 +11,29 @@
 <html class="no-js" lang="en"> <!--<![endif]-->
 
 <head>
-
-
-    <base href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/2965"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="rights" content="Agencia Metropolitana de Control"/>
     <meta name="description" content="Agencia Metropolitana de Control"/>
     <meta name="generator" content=""/>
-    <title>PETICION DE COPIAS SIMPLES</title>
-    <link href="/templates/bestcomputer/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon"/>
-    <link href="/media/joodb/css/joodb.css" rel="stylesheet" type="text/css"/>
-    <link href="/media/joodb/css/featherlight.min.css" rel="stylesheet" type="text/css"/>
-    <link href="/components/com_tlpteam/assets/css/tlpteam.css" rel="stylesheet" type="text/css"/>
-    <script src="/media/jui/js/jquery.min.js?3af170d0feddc655b7e0f41cb8925e51" type="text/javascript"></script>
-    <script src="/media/jui/js/jquery-noconflict.js?3af170d0feddc655b7e0f41cb8925e51" type="text/javascript"></script>
-    <script src="/media/jui/js/jquery-migrate.min.js?3af170d0feddc655b7e0f41cb8925e51" type="text/javascript"></script>
-    <script src="/media/joodb/js/featherlight.min.js" type="text/javascript"></script>
+    <title>SOLICITUD DE RECONOCIMIENTO DE RESPONSABILIDAD Y PAGO VOLUNTARIO</title>
+     <link href="../vendor/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon"/>
 
+    <link href="../vendor/joomla/joodb.css" rel="stylesheet" type="text/css"/>
+    <link href="../vendor/joomla/featherlight.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="../vendor/joomla/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="../vendor/joomla//bootstrap-responsive.css" type="text/css"/>
+    <link rel="stylesheet" href="../vendor/joomla/joomla.css" type="text/css"/>
+    <link rel="stylesheet" href="../vendor/joomla/template.css" type="text/css"/>
+    <link rel="stylesheet" href="../vendor/joomla/k2style.css" type="text/css"/>
+    <script src="../vendor/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <link rel="stylesheet" href="/media/jui/css/bootstrap.min.css" type="text/css"/>
-    <link rel="stylesheet" href="/media/jui/css/bootstrap-responsive.css" type="text/css"/>
-    <link rel="stylesheet" href="/templates/bestcomputer/icons/css/font-awesome.css" type="text/css"/>
-    <link rel="stylesheet" href="/templates/bestcomputer/css/joomla.css" type="text/css"/>
-    <link rel="stylesheet" href="/templates/bestcomputer/css/template.css" type="text/css"/>
-    <link rel="stylesheet" href="/templates/bestcomputer/css/k2style.css" type="text/css"/>
-
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/templates/bestcomputer/icons/css/font-awesome-ie7.min.css">
     <![endif]-->
 </head>
 
-<body class="contentpane">
+<body class="contentpane" style="font-size: 12px !important;">
 <div class="container-fluid" id="fav-mainwrap">
     <div class="row-fluid">
         <div id="fav-main" class="clearfix">
@@ -54,102 +44,118 @@
                 <div class="joodb database-article">
                     <!-- see components/com_joodb/assets/joodb.css for style definitions -->
                     <div style="float: right; text-align: right; width: 100%;" class="separador"><img
-                                src="/images/logoamc.png" alt="*" class="clear"
+                                src="../vendorl/ogoamc.png" alt="*" class="clear"
                                 style="width: 30%; margin: 0; pading 0"/></div>
                     <table>
                         <tbody>
                         <tr>
                             <td>
                                 <div class="title center clear">AGENCIA METROPOLITANA DE CONTROL</div>
-
-                                <div class="title center">PETICION DE COPIAS SIMPLES</div>
-
                                 <div class="big separador">
                                     <?php
                                     $date = new DateTime($_GET ['fecha']);
                                     date_default_timezone_set("America/Mexico_City");
-                                    $mes = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"][date("n") - 1];
+                                    $meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+                                    $mesacual=  date('n') - 1;
+                                    $mes = $meses[$mesacual];
 
-                                    echo 'DMQ ' . $date->format('d') . ' de ' . $mes . ' de ' . $date->format('Y'); // 31-07-2012
+                                    echo 'Quito ' . $date->format('d') . ' de ' . $mes . ' de ' . $date->format('Y'); // ejempo 31-07-2012
                                     ?>
+                                </div>
+                                <div class="">Señores:</div>
+                                <div class="">AGENCIA METROPOLITANA DE CONTROL</div>
+                                <div class="">ZONA <strong>"<?php echo $_GET ['zonal']; ?>"</strong></div>
+                                <div class="">MOTIVO <strong>"<?php echo $_GET ['materia']; ?>"</strong></div>
+                                <div class="big separador"></div>
+                                <div class="">Presente.-</div>
+                                <div class="">De mi consideración:</div>
+                                <div class="big separador"></div>
 
+                                <div>
+                                    Yo, <strong><?php echo $_GET ['nombres'] . " " . $_GET['apellidos']; ?></strong>, en
+                                    calidad de
+                                    <strong><?php echo $_GET['tipoadministrador']; ?></strong>,
+                                    del establecimiento denominado
+                                    <strong><?php echo $_GET['establecimiento']; ?></strong>, con número de cédula/RUC
+                                    <strong><?php echo $_GET['cedula']; ?></strong>, ubicado en las calles
+                                    <strong><?php echo $_GET['ubicacion']; ?></strong>,
+                                    cuya actividad comercial es <strong><?php echo $_GET['actividad']; ?></strong>,
+                                    tengo a bien acudir a su autoridad con el fin de exponer y
+                                    solicitar lo siguiente:
                                 </div>
-                                <div class="big separador">
-                                </div>
-
-                                <div class="title">Señor (a):</div>
-                                <div class="title">DIRECTOR y/o FUNCIONARIO DE:<br/>
-                                </div>
-                                <div class="title"><?php echo $_GET ['direccion']; ?><br/>
-                                </div>
-
-                                <div>Yo, <span class="big"><?php
-                                        echo $_GET ['nombres'] . " " . $_GET['apellidos'];
-                                        ?></span> con cédula de ciudadanía No.
-                                    <span class="big"><?php
-                                        echo $_GET ['cedula'];
-                                        ?></span>
+                                <div>
                                     <?php
-                                    if ($_GET ['abogado'] != '') {
-                                    ?>
-                                    y/o, Doctor / Abogado <span class="big"><?php
-                                        echo $_GET ['abogado'];
-                                        ?></span>
-                                    en calidad de abogado patrocinador de <span class="big"><?php
-                                        echo $_GET ['nombres'] . " " . $_GET['apellidos'];
-                                        ?></span>
-                                        <?php
-                                    };
-                                    ?>
+                                    $fechaacto = new DateTime($_GET ['fechaacto']);
+                                    date_default_timezone_set("America/Mexico_City");
+                                    $meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+                                    $mesacual=  date('n') - 1;
+                                     
 
 
-                                    dentro del expediente administrativo No. <span class="big"><?php
-                                        echo $_GET ['expediente'];
-                                        ?></span> y, de
-                                    acuerdo a la Constitución de la República del Ecuador en el artículo
-                                    75 y 76, numeral 1 y 7, literal a) y d), solicito copias simples del expediente No.
-                                    <span class="big"><?php
-                                        echo $_GET ['expediente'];
-                                        ?></span>
-                                    <?php
-                                    if ($_GET ['otrodocumento'] != '') {
+
+                                    $mesacto =  $meses[$mesacual];
+                                    ?>
+
+                                    El día <strong><?php echo $fechaacto->format('d'); ?></strong>. de
+                                    <strong><?php echo $mesacto; ?></strong> del
+                                    <strong><?php echo $fechaacto->format('Y'); ?></strong> a las
+                                    <strong><?php echo $fechaacto->format('H:i'); ?></strong>, se me notificó el Acto
+                                    Administrativo de Inicio del
+                                    Procedimiento Administrativo Sancionador en Flagrancia, mediante el cual, me da a
+                                    conocer que he
+                                    cometido la presunta infracción contemplada en la normativa metropolitana, en razón
+                                    de que:
+                                </div>
+                                <div>
+                                    <strong><?php echo $_GET['descripcion']; ?></strong>
+                                    por lo que se procedió a clausurar el establecimiento de mi propiedad con la
+                                    colocación del respectivo sello.
+                                </div>
+                                <div>
+                                    <?php if ($_GET['observaciones'] != '') {
                                         ?>
-                                        y/o del documento <span class="big"><?php
-                                            echo $_GET ['otrodocumento'];
-                                            ?></span>
+                                        Observaciones:
+                                        <strong><?php echo $_GET['observaciones']; ?></strong>
                                         <?php
-                                    }
-                                    ?>.
-                                    <br/><br/></div>
-
-
-                                <div>Señalo el correo electrónico, para posteriores notificaciones <span class="big"><?php
-                                        echo $_GET ['correoelectronico'];
-                                        ?></span><br/><br/>
+                                    } ?>
                                 </div>
+                                <div class="big separador"></div>
+                                <div>
+                                    En consecuencia, tengo a bien reconocer mi responsabilidad en el incumplimiento de
+                                    la normativa considerada como infracción y me allano a las sanciones que
+                                    correspondan conforme el procedimiento señalado en el Código Orgánico
+                                    Administrativo, por lo tanto solicito muy comedidamente que en el
+                                    menor tiempo posible se levante la clausura impuesta a mi establecimiento, a fin de
+                                    retomar las actividades comerciales, comprometiéndome a no volver a incumplir con lo
+                                    dispuesto en la normativa vigente.
+                                </div>
+                                <div class="big separador"></div>
+                                <div>
+                                    Para futuras notificaciones dentro del procedimiento administrativo sancionador
+                                    señalo mi domicilio en <strong><?php echo $_GET['domicilio']; ?></strong>, mi correo
+                                    electrónico <strong><?php echo $_GET['correoelectronico']; ?></strong> y número de
+                                    celular <strong><?php echo $_GET['celular']; ?></strong>
 
+                                </div>
+                                <div class="big separador"></div>
+                                <div>
+                                    Firma:
+                                </div>
+                                <div class="big separador"></div>
                                 <div>Atentamente</br></br></br>____________________</br>
                                     <span class="big"><?php
                                         echo $_GET ['nombres'] . " " . $_GET['apellidos'];
                                         ?></span></br>
-                                    <span class="big">C.C <?php
-                                        echo $_GET ['cedula'];
-                                        ?></span>
+                                    <span class="big">C.C. <?php echo $_GET ['cedula']; ?></span>
                                 </div>
-                                <?php
-                                if ($_GET ['abogado'] != '') {
-                                    ?>
-                                    <div>y/o</br></br></br>____________________</br>
-                                        <span class="big"><?php
-                                            echo $_GET ['abogado'];
-                                            ?></span></br>
-                                        <span class="big">Matrícula No. <?php
-                                            echo $_GET ['abogadomatricula'];
-                                            ?></span>
-                                    </div>
-                                    <?php
-                                };
-                                ?>
+                                <div></div>
+                                <div class="separador">
+                                    <?php if ($_GET['anexaluae'] == '1') {
+                                        ?></br>
+                                        ADJUNTA ARCHIVO DE LUAE
+                                        <?php
+                                    } ?>
+                                </div>
 
                             </td>
                         </tr>
