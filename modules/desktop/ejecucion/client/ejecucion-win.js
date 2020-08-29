@@ -1085,7 +1085,6 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'numero_expediente_ejecucion', allowBlank: true},
                 {name: 'anio_ejecucion', allowBlank: true},
                 {name: 'fojas_ejecucion', allowBlank: true},
-                {name: 'unidad_comisaria_ejecucion', allowBlank: true},
                 {name: 'nombre_administrado_ejecucion', allowBlank: true},
                 {name: 'nombre_establecimiento_ejecucion', allowBlank: true},
                 {name: 'ordenanza_ejecucion', allowBlank: true},
@@ -1097,7 +1096,6 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'nombre_denunciante', allowBlank: true},
                 {name: 'fecha_resolucion', allowBlank: true},
                 {name: 'numero_resolucion', allowBlank: true},
-                {name: 'unidad_ejecucion', allowBlank: true},
                 {name: 'tipo_zona_ejecucion', allowBlank: true},
             ]
         });
@@ -1132,7 +1130,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
         //Inicio formato grid Libro Diario
         this.gridLibroDiario = new Ext.grid.EditorGridPanel({
             //height: winHeight / 2 - 50,  CC ESTRUCTURA DE 2
-            height: winHeight - 95, //CC ESTRUCTURA DE 1
+            height: winHeight / 2 + 120, //CC ESTRUCTURA DE 1
             store: this.storeLibroDiario,
             columns: [
                 //Definición de campos bdd Libro Diario
@@ -1502,7 +1500,6 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'numero_expediente_ejecucion', allowBlank: false},
                 {name: 'anio_ejecucion', allowBlank: false},
                 {name: 'fojas_ejecucion', allowBlank: false},
-                {name: 'unidad_comisaria_ejecucion', allowBlank: false},
                 {name: 'nombre_administrado_ejecucion', allowBlank: false},
                 {name: 'nombre_establecimiento_ejecucion', allowBlank: false},
                 {name: 'ordenanza_ejecucion', allowBlank: false},
@@ -2799,7 +2796,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                             },
                             {
                                 xtype: 'textfield',
-                                fieldLabel: 'No expediente',
+                                fieldLabel: 'Num. expediente',
                                 id: 'numero_expediente',
                                 name: 'numero_expediente',
                                 anchor: '80%'
@@ -2827,9 +2824,9 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Zona',
-                                id: 'zona',
-                                name: 'zona',
-                                hiddenName: 'zona',
+                                id: 'unidad_ejecucion',
+                                name: 'unidad_ejecucion',
+                                hiddenName: 'unidad_ejecucion',
 
                                 anchor: '40%',
                                 store:  storeUnidadEjecucion,
@@ -3537,6 +3534,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 , text: 'Todos'
             });
 
+
             win = desktop.createWindow({
                 id: 'grid-win-resolucion',
                 title: 'Módulo Ejecución',
@@ -3591,6 +3589,29 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                                     text: 'Recargar'
                                 },
                                 '-',
+                                {
+                                    iconCls: 'send-icon',
+                                    handler: this.requestGridDataLibroDiario,
+                                    scope: this,
+                                    text: 'Buscar'
+
+                                },
+                                {
+                                    iconCls: 'send-icon',
+                                    handler: this.requestGridDataLibroDiarioReset,
+                                    scope: this,
+                                    text: 'Borrar formulario'
+
+                                },
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarReporteResolucion,
+                                    scope: this,
+                                    text: 'Exportar reporte',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada',
+                                    // disabled: accesosResolutores,
+                                    disabled: true,
+                                },
                                 {
                                     xtype: 'checkbox',
                                     boxLabel: 'Filtro pendientes',
@@ -3654,7 +3675,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                             }*/
                 {
                     region: 'north',
-                    height: 150,
+                    height: 120,
                     minSize: 50,
                     maxSize: 150,
                     closable: true,
@@ -3663,11 +3684,12 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     region: 'center',
-                    height: winHeight - 250,
+                    height: winHeight - 220,
                     minSize: 50,
                     maxSize: 100,
                     closable: true,
-                    autoScroll: false,
+                    autoScroll: true,
+                    layout: 'column',
                     items: this.gridLibroDiario
                 }
 
@@ -4124,7 +4146,6 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             numero_expediente_ejecucion: '',
             anio_ejecucion: '',
             fojas_ejecucion: '',
-            unidad_comisaria_ejecucion: '',
             nombre_administrado_ejecucion: '',
             nombre_establecimiento_ejecucion: '',
             ordenanza_ejecucion: '',
@@ -4167,7 +4188,14 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
 
     //Función para actualizar los datos mostrados en pantalla de la pestaña de Libro Diario
     requestGridDataLibroDiario: function () {
+        this.storeLibroDiario.baseParams = this.formConsultaLibroDiario.getForm().getValues();
+        this.storeLibroDiario.baseParams.accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
         this.storeLibroDiario.load();
+        //
+    },
+
+    requestGridDataLibroDiarioReset: function () {
+        this.formConsultaLibroDiario.getForm().reset();
     },
 
 

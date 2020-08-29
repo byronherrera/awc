@@ -68,6 +68,38 @@ function selectOrdenanzas()
             }
         }
     }
+    if (isset($_POST['numero_expediente']) && $_POST['numero_expediente']!="" ) {
+        $filtronumero_resolucion = $_POST['numero_expediente'];
+        if($where == ''){
+            $where = " WHERE numero_expediente_ejecucion LIKE '%$filtronumero_resolucion%' ";
+        }else{
+            $where = $where . " AND numero_expediente_ejecucion LIKE '%$filtronumero_resolucion%' ";
+        }
+    }
+    if (isset($_POST['nombre_administrado']) && $_POST['nombre_administrado']!="" ) {
+        $filtro_nombre_administrado = $_POST['nombre_administrado'];
+        if($where == ''){
+            $where = " WHERE nombre_administrado_ejecucion LIKE '%$filtro_nombre_administrado%' ";
+        }else{
+            $where = $where . " AND nombre_administrado_ejecucion LIKE '%$filtro_nombre_administrado%' ";
+        }
+    }
+    if (isset($_POST['cedula_ruc']) && $_POST['cedula_ruc']!="" ) {
+        $filtro_cedula_ruc = $_POST['cedula_ruc'];
+        if($where == ''){
+            $where = " WHERE cedula_ruc LIKE '%$filtro_cedula_ruc%' ";
+        }else{
+            $where = $where . " AND cedula_ruc LIKE '%$filtro_cedula_ruc%' ";
+        }
+    }
+    if (isset($_POST['zona']) && $_POST['zona']!="" ) {
+        $filtro_zona = $_POST['zona'];
+        if($where == ''){
+            $where = " WHERE unidad_comisaria_ejecucion LIKE '%$filtro_zona%' ";
+        }else{
+            $where = $where . " AND unidad_comisaria_ejecucion LIKE '%$filtro_zona%' ";
+        }
+    }
 
 //    $orderby = 'ORDER BY a.id ASC';
     if (isset($_POST['sort'])) {

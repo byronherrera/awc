@@ -271,7 +271,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     {"id": 2, "nombre": "Archivo"},
                     {"id": 3, "nombre": "Nulidad"},
                     {"id": 4, "nombre": "Caducidad"},
-                    {"id": 5, "nombre": "Anulado"}
+                    {"id": 5, "nombre": "Anulado"},
+                    {"id": 6, "nombre": "Sanción-trabajo comunitario"}
                 ]
             }
         });
@@ -293,6 +294,38 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             }
         }
         //Fin combo RESOLUCION DE
+
+        //Inicio combo APELACION
+        storeAPELACION = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": 0, "nombre": "Por favor seleccione"},
+                    {"id": 1, "nombre": "Si"},
+                    {"id": 2, "nombre": "No"}
+                ]
+            }
+        });
+
+        var comboAPELACION = new Ext.form.ComboBox({
+            id: 'comboAPELACION',
+            store: storeAPELACION,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function functionAPELACION(id) {
+            var index = storeAPELACION.find('id', id);
+            if (index > -1) {
+                var record = storeAPELACION.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        //Fin combo APELACION
 
         //Inicio combo REPORTE RESOLUCION DE
         storeREPORTERESOLUCIONDE = new Ext.data.JsonStore({
@@ -709,6 +742,10 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'articulo_actual', allowBlank: false},
                 {name: 'resolucion_de', allowBlank: false},
                 {name: 'multa_impuesta', allowBlank: false},
+                {name: 'horas_trabajo_comunitario', allowBlank: false},
+                {name: 'apelacion', allowBlank: false},
+                {name: 'numero_memo_apelacion', allowBlank: false},
+                {name: 'fecha_envio_apelacion', allowBlank: false},
                 {name: 'observaciones', allowBlank: false},
             ]
         });
@@ -779,6 +816,41 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     width: 140,
                     editor: comboRESOLUCIONDE,
                     renderer: functionRESOLUCIONDE
+                },
+                {
+                    header: 'Horas de trabajo comunitario',
+                    allowBlank: true,
+                    dataIndex: 'horas_trabajo_comunitario',
+                    sortable: true,
+                    width: 200,
+                    editor: textField
+                },
+                {
+                    header: 'Apelación',
+                    dataIndex: 'apelacion',
+                    allowBlank: true,
+                    sortable: true,
+                    width: 140,
+                    editor: comboAPELACION,
+                    renderer: functionAPELACION
+                },
+                {
+                    header: 'Número de memo de envío a apelación',
+                    allowBlank: true,
+                    dataIndex: 'numero_memo_apelacion',
+                    sortable: true,
+                    width: 200,
+                    editor: textField
+                },
+                {
+                    header: 'Fecha Envío Apelación',
+                    dataIndex: 'fecha_envio_apelacion',
+                    sortable: true,
+                    width: 140,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
                 },
                 {
                     header: 'Multa impuesta',
@@ -1019,7 +1091,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 },
                 //{header: 'Número de Predio', dataIndex: 'numero_predio', allowBlank:true, width: 100, editor: textField},
                 {
-                    header: 'Ordenanza',
+                    header: 'Materia',
                     dataIndex: 'ordenanza',
                     allowBlank: true,
                     sortable: true,
@@ -1182,6 +1254,10 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'articulo_actual', allowBlank: false},
                 {name: 'resolucion_de', allowBlank: false},
                 {name: 'multa_impuesta', allowBlank: false},
+                {name: 'horas_trabajo_comunitario', allowBlank: false},
+                {name: 'apelacion', allowBlank: false},
+                {name: 'numero_memo_apelacion', allowBlank: false},
+                {name: 'fecha_envio_apelacion', allowBlank: false},
                 {name: 'fecha_ingreso', allowBlank: false},
                 {name: 'unidad', allowBlank: false},
                 {name: 'tipo_unidad', allowBlank: false},
@@ -1285,6 +1361,30 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     allowBlank: true,
                     width: 100,
                     renderer: 'usMoney',
+                },
+                {
+                    header: 'Horas trabajo comunitario',
+                    dataIndex: 'horas_trabajo_comunitario',
+                    allowBlank: true,
+                    width: 100,
+                },
+                {
+                    header: 'Apelación',
+                    dataIndex: 'apelacion',
+                    allowBlank: true,
+                    width: 100,
+                },
+                {
+                    header: 'Número de memo de envío a apelación',
+                    dataIndex: 'numero_memo_apelacion',
+                    allowBlank: true,
+                    width: 100,
+                },
+                {
+                    header: 'Fecha de envío a apelación',
+                    dataIndex: 'fecha_envio_apelacion',
+                    allowBlank: true,
+                    width: 100,
                 },
                 {
                     header: 'Número Interno',
@@ -3394,6 +3494,10 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             articulo_actual: ' ',
             resolucion_de: '0',
             multa_impuesta: ' ',
+            horas_trabajo_comunitario: ' ',
+            numero_memo_apelacion: ' ',
+            fecha_envio_apelacion: ' ',
+            apelacion: 0,
             observaciones: ' ',
         });
         this.gridResoluciones.stopEditing();

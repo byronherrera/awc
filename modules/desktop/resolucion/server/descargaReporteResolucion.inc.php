@@ -95,6 +95,23 @@ if (isset($data->articulo_actual) && $data->articulo_actual != "") {
         $where = $where . " AND articulo_actual LIKE '%$filtro_articulo_actual%' ";
     }
 }
+if (isset($data->envio_expediente) && $data->envio_expediente != "") {
+    $filtro_envio_expediente = $data->envio_expediente;
+    if ($where == '') {
+        $where = " WHERE envio_expediente LIKE '%$filtro_envio_expediente%' ";
+    } else {
+        $where = $where . " AND envio_expediente LIKE '%$filtro_envio_expediente%' ";
+    }
+}
+if (isset($data->fecha_envio_inicio) && isset($data->fecha_envio_fin) && $data->fecha_envio_inicio != "" && $data->fecha_envio_fin != "") {
+    $busqueda_fecha_inicio = $data->fecha_envio_inicio;
+    $busqueda_fecha_fin = $data->fecha_envio_fin;
+    if ($where == '') {
+        $where = " WHERE cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
+    } else {
+        $where = $where . " AND cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
+    }
+}
 $orderby = 'ORDER BY a.id ASC';
 if (isset($_POST['sort'])) {
     if ($_POST['sort'] == 'id') {
