@@ -42,6 +42,3 @@ function getrecordatoriosUsuario($idUsuario)
         echo '[{"nombre": "", "fecha": "", "tema": "" }]';
     }
 }
-
-
-

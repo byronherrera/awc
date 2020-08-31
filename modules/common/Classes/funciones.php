@@ -251,7 +251,7 @@ function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionario
     $mail = new PHPMailer;
     $mail->CharSet = "UTF-8";
     $mail->isSMTP();
-    $mail->SMTPDebug = 0;
+    $mail->SMTPDebug = 2;
     $mail->Debugoutput = 'html';
 
     $mail->Host = 'smtp.gmail.com';
@@ -261,9 +261,6 @@ function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionario
     $mail->Username = "amcdenuncias@gmail.com";
     $mail->Password = "amccontrol2016";
     $mail->setFrom('denunciasamc@quito.gob.ec', 'Agencia Metropolitana de Control');
-
-
-
 
     $mail->Subject = $nombre;
     $mail->msgHTML($mensaje);

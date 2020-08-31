@@ -114,7 +114,6 @@ function selectRecordatorios()
     }
 
 
-
     if (isset($_POST['busqueda_fecha_inicio']) and ($_POST['busqueda_fecha_inicio'] != '')) {
         $fechainicio = $_POST['busqueda_fecha_inicio'];
         if (isset($_POST['busqueda_fecha_fin']) and ($_POST['busqueda_fecha_fin'] != '')) {
@@ -201,12 +200,12 @@ function updateRecordatorios()
     $data->nombres = getName($data->id_responsable);
     $data->apellidos = getLastName($data->id_responsable);
 
-    $data->fecha_inicio =  substr($data->fecha_inicio, 0, 10);
-    $data->fecha_entrega =  substr($data->fecha_entrega, 0, 10);
-
+    $data->fecha_inicio = substr($data->fecha_inicio, 0, 10);
+    $data->fecha_entrega = substr($data->fecha_entrega, 0, 10);
 
     $estadoAnterior = getEstadoOriginal($data->id);
     // genero el listado de valores a insertar
+
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
         // verifico cambios anteriores
@@ -251,18 +250,19 @@ function updateRecordatorios()
                 $mensaje = getmensajeRecordatorios(regresaNombre($data->id_responsable), $detalle, $fechaActual);
 
                 $email = regresaEmail($funcionario);
-                //   $email = "byron.herrera@quito.gob.ec";
                 $asunto = "Nuevo operativo asignado, " . " - " . $email;
                 $funcionarios = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
                 $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
                 $prueba = true;
                 $resultado = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $prueba);
-                if ($resultado) {
-                    $sqlUpdate = "UPDATE `amc_operativos` SET `mail_enviado` = 1 WHERE `id` = " . $data->id;
-                    $sql = $os->db->conn->prepare($sqlUpdate);
-                    $grabaresultado = $sql->execute();
-                    $data->mail_enviado = '1';
-                }
+
+
+                print_r($email);
+                print_r($asunto);
+                print_r($mensaje);
+                print_r($funcionarios);
+                print_r($funcionariosSeguimiento);
+                print_r($prueba);
             }
         }
     }
