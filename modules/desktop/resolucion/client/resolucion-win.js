@@ -107,7 +107,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             data: {
                 datos: [
                     {"id": 0, "nombre": "UDC"},
-                    {"id": 1, "nombre": "ASEO"}
+                    {"id": 1, "nombre": "ASEO"},
+                    {"id": 2, "nombre": "CADUCIDAD"}
                 ]
             }
         });
@@ -1373,6 +1374,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'apelacion',
                     allowBlank: true,
                     width: 100,
+                    renderer: functionAPELACION
                 },
                 {
                     header: 'Número de memo de envío a apelación',
@@ -1402,7 +1404,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     width: 120,
                     // editor: textFieldResolucionesLibroDiario
                 },
-                // {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, sortable: true, width: 150, editor: textFieldLibroDiario},
+                 {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, sortable: true, width: 150, editor: textFieldLibroDiario},
                 {
                     header: 'Fecha de Ingreso',
                     dataIndex: 'fecha_ingreso',
@@ -2305,6 +2307,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 triggerAction: 'all',
                                 mode: 'local'
                             },
+                            {
+                                xtype: 'datefield',
+                                fieldLabel: 'Fecha Ingreso',
+                                id: 'fecha_ingreso',
+                                anchor: '95%',
+                                format: 'Y-m-d'
+                            }
                             // {
                             //     xtype: 'textfield',
                             //     fieldLabel: 'Artículo actual',
@@ -2376,6 +2385,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 mode: 'local'
+                            },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Memo Ingreso',
+                                id: 'memo_ingreso',
+                                name: 'memo_ingreso',
+                                anchor: '95%'
                             }
                         ]
                     },
@@ -2615,6 +2631,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 anchor: '95%',
                                 format: 'Y-m-d'
                             },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Memo Ingreso',
+                                id: 'memo_ingreso_providencias',
+                                name: 'memo_ingreso_providencias',
+                                anchor: '95%'
+                            }
                         ]
                     }
                 ]
@@ -2796,6 +2819,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 anchor: '95%',
                                 format: 'Y-m-d'
                             },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Memo Ingreso',
+                                id: 'memo_ingreso_resoluciones',
+                                name: 'memo_ingreso_resoluciones',
+                                anchor: '95%'
+                            }
 ]
                     }
                 ]
@@ -2827,7 +2857,29 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             key: 'busqueda_todos',
                             scope: this,
                             text: 'Todos'
-                        }
+                        },
+                        {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'fecha_ingreso',
+                            scope: this,
+                            text: 'Fecha de ingreso'
+                        },                        {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'memo_ingreso',
+                            scope: this,
+                            text: 'Memo de ingreso'
+                        },                        {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'nombre_funcionario',
+                            scope: this,
+                            text: 'Nombre funcionario'
+                        },
                     ]
                 })
                 , text: 'Todos'
@@ -3240,9 +3292,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             items: [
                                 {
                                     region: 'north',
-                                    height: 150,
+                                    height: 180,
                                     minSize: 50,
-                                    maxSize: 150,
+                                    maxSize: 180,
                                     closable: true,
                                     autoScroll: false,
                                     items: this.formConsultaLibroDiario
@@ -3313,7 +3365,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
                         },
                         {
-                            title: 'Reportes Resoluciones',
+                            title: 'Reportes Pendientes',
                             closable: true,
                             layout: 'border',
                             disabled: !accesoTotalesResoluciones,

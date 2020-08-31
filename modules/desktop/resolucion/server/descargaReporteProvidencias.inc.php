@@ -213,28 +213,64 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('S')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('S')->setWidth(30);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('T')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('T')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('U')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('U')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('V')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('V')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('W')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('W')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('X')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('X')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('Y')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('Y')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('Z')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('Z')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AA')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('AA')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AB')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('AB')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AC')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('AC')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AD')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('AD')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AE')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('AE')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AF')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('AF')->setWidth(16.30);
 
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Memo Ingreso');
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Número Interno');
 $objPHPExcel->getActiveSheet()->setCellValue('C' . $filacabecera, 'Número de Providencia');
 $objPHPExcel->getActiveSheet()->setCellValue('D' . $filacabecera, 'Fecha de Providencia');
-$objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Tipo');
-$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Fecha de Ingreso');
-$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Unidad');
-$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Tipo de Unidad');
-$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Número de expediente');
-$objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Nombre de administrado');
-$objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Nombre de establecimiento');
-$objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Dirección de notificación');
-$objPHPExcel->getActiveSheet()->setCellValue('M' . $filacabecera, 'Dirección de domicilio');
-$objPHPExcel->getActiveSheet()->setCellValue('N' . $filacabecera, 'Cédula RUC');
-$objPHPExcel->getActiveSheet()->setCellValue('O' . $filacabecera, 'Reincidencia');
-$objPHPExcel->getActiveSheet()->setCellValue('P' . $filacabecera, 'Ordenanza');
-$objPHPExcel->getActiveSheet()->setCellValue('Q' . $filacabecera, 'Fecha de sorteo');
-$objPHPExcel->getActiveSheet()->setCellValue('R' . $filacabecera, 'Envío expediente');
-$objPHPExcel->getActiveSheet()->setCellValue('S' . $filacabecera, 'Número de memorando');
-$objPHPExcel->getActiveSheet()->setCellValue('T' . $filacabecera, 'Fecha de envío');
+$objPHPExcel->getActiveSheet()->setCellValue('E' . $filacabecera, 'Dia Providencia');
+$objPHPExcel->getActiveSheet()->setCellValue('F' . $filacabecera, 'Mes Providencia');
+$objPHPExcel->getActiveSheet()->setCellValue('G' . $filacabecera, 'Año Providencia');
+$objPHPExcel->getActiveSheet()->setCellValue('H' . $filacabecera, 'Tipo');
+$objPHPExcel->getActiveSheet()->setCellValue('I' . $filacabecera, 'Fecha de Ingreso');
+$objPHPExcel->getActiveSheet()->setCellValue('J' . $filacabecera, 'Dia Ingreso');
+$objPHPExcel->getActiveSheet()->setCellValue('K' . $filacabecera, 'Mes Ingreso');
+$objPHPExcel->getActiveSheet()->setCellValue('L' . $filacabecera, 'Año Ingreso');
+$objPHPExcel->getActiveSheet()->setCellValue('M' . $filacabecera, 'Unidad');
+$objPHPExcel->getActiveSheet()->setCellValue('N' . $filacabecera, 'Tipo de Unidad');
+$objPHPExcel->getActiveSheet()->setCellValue('O' . $filacabecera, 'Número de expediente');
+$objPHPExcel->getActiveSheet()->setCellValue('P' . $filacabecera, 'Nombre de administrado');
+$objPHPExcel->getActiveSheet()->setCellValue('Q' . $filacabecera, 'Nombre de establecimiento');
+$objPHPExcel->getActiveSheet()->setCellValue('R' . $filacabecera, 'Dirección de notificación');
+$objPHPExcel->getActiveSheet()->setCellValue('S' . $filacabecera, 'Dirección de domicilio');
+$objPHPExcel->getActiveSheet()->setCellValue('T' . $filacabecera, 'Cédula RUC');
+$objPHPExcel->getActiveSheet()->setCellValue('U' . $filacabecera, 'Reincidencia');
+$objPHPExcel->getActiveSheet()->setCellValue('V' . $filacabecera, 'Ordenanza');
+$objPHPExcel->getActiveSheet()->setCellValue('W' . $filacabecera, 'Fecha de sorteo');
+$objPHPExcel->getActiveSheet()->setCellValue('X' . $filacabecera, 'Dia sorteo');
+$objPHPExcel->getActiveSheet()->setCellValue('Y' . $filacabecera, 'Mes sorteo');
+$objPHPExcel->getActiveSheet()->setCellValue('Z' . $filacabecera, 'Año sorteo');
+$objPHPExcel->getActiveSheet()->setCellValue('AA' . $filacabecera, 'Envío expediente');
+$objPHPExcel->getActiveSheet()->setCellValue('AB' . $filacabecera, 'Número de memorando');
+$objPHPExcel->getActiveSheet()->setCellValue('AC' . $filacabecera, 'Fecha de envío');
+$objPHPExcel->getActiveSheet()->setCellValue('AD' . $filacabecera, 'Dia envío');
+$objPHPExcel->getActiveSheet()->setCellValue('AE' . $filacabecera, 'Mes envío');
+$objPHPExcel->getActiveSheet()->setCellValue('AF' . $filacabecera, 'Año envío');
 
 $noExistenFilas = true;
 
@@ -247,25 +283,37 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['memo_ingreso']);
     $objPHPExcel->getActiveSheet()->setCellValue('B' . $filaInicio, $rowdetalle['numero_interno']);
     $objPHPExcel->getActiveSheet()->setCellValue('C' . $filaInicio, $rowdetalle['numero_providencia']);
-    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, $rowdetalle['fecha_providencia']);
-    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, $rowdetalle['tipo_providencia']);
-    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, $rowdetalle['fecha_ingreso']);
-    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio,  regresaUnidad ($rowdetalle['unidad']));
-    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, tipoUnidad ($rowdetalle['tipo_unidad']));
-    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, $rowdetalle['numero_expediente']);
-    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, $rowdetalle['nombre_administrado']);
-    $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, $rowdetalle['nombre_establecimiento']);
-    $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, $rowdetalle['direccion_notificacion']);
-    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio, $rowdetalle['direccion_domicilio']);
-    $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, $rowdetalle['cedula_ruc']);
-    $objPHPExcel->getActiveSheet()->setCellValue('O' . $filaInicio, ($rowdetalle['reincidencia']==1) ? "SI":" ");
-    $objPHPExcel->getActiveSheet()->setCellValue('P' . $filaInicio, getOrdenanza ($rowdetalle['ordenanza']));
-    $objPHPExcel->getActiveSheet()->setCellValue('Q' . $filaInicio, $rowdetalle['fecha_sorteo']);
-    $objPHPExcel->getActiveSheet()->setCellValue('R' . $filaInicio, envioExpediente($rowdetalle['envio_expediente']));
-    $objPHPExcel->getActiveSheet()->setCellValue('S' . $filaInicio, $rowdetalle['numero_memorando']);
-    $objPHPExcel->getActiveSheet()->setCellValue('T' . $filaInicio, $rowdetalle['fecha_envio']);
+    $objPHPExcel->getActiveSheet()->setCellValue('D' . $filaInicio, (isset($rowdetalle['fecha_providencia'])&&strlen($rowdetalle['fecha_providencia'])>9)  ? substr($rowdetalle['fecha_providencia'], 0, 10): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('E' . $filaInicio, (isset($rowdetalle['fecha_providencia'])&&strlen($rowdetalle['fecha_providencia'])>9)  ? substr($rowdetalle['fecha_providencia'], 8, 2): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('F' . $filaInicio, (isset($rowdetalle['fecha_providencia'])&&strlen($rowdetalle['fecha_providencia'])>9)  ? substr($rowdetalle['fecha_providencia'], 5, 2): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('G' . $filaInicio, (isset($rowdetalle['fecha_providencia'])&&strlen($rowdetalle['fecha_providencia'])>9)  ? substr($rowdetalle['fecha_providencia'], 0, 4): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('H' . $filaInicio, tipoProvidencia ($rowdetalle['tipo_providencia']));
+    $objPHPExcel->getActiveSheet()->setCellValue('I' . $filaInicio, (isset($rowdetalle['fecha_ingreso'])&&strlen($rowdetalle['fecha_ingreso'])>9)  ? substr($rowdetalle['fecha_ingreso'], 0, 10): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('J' . $filaInicio, (isset($rowdetalle['fecha_ingreso'])&&strlen($rowdetalle['fecha_ingreso'])>9)  ? substr($rowdetalle['fecha_ingreso'], 8, 2): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('K' . $filaInicio, (isset($rowdetalle['fecha_ingreso'])&&strlen($rowdetalle['fecha_ingreso'])>9)  ? substr($rowdetalle['fecha_ingreso'], 5, 2): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('L' . $filaInicio, (isset($rowdetalle['fecha_ingreso'])&&strlen($rowdetalle['fecha_ingreso'])>9)  ? substr($rowdetalle['fecha_ingreso'], 0, 4): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('M' . $filaInicio,  regresaUnidad ($rowdetalle['unidad']));
+    $objPHPExcel->getActiveSheet()->setCellValue('N' . $filaInicio, tipoUnidad ($rowdetalle['tipo_unidad']));
+    $objPHPExcel->getActiveSheet()->setCellValue('O' . $filaInicio, $rowdetalle['numero_expediente']);
+    $objPHPExcel->getActiveSheet()->setCellValue('P' . $filaInicio, $rowdetalle['nombre_administrado']);
+    $objPHPExcel->getActiveSheet()->setCellValue('Q' . $filaInicio, $rowdetalle['nombre_establecimiento']);
+    $objPHPExcel->getActiveSheet()->setCellValue('R' . $filaInicio, $rowdetalle['direccion_notificacion']);
+    $objPHPExcel->getActiveSheet()->setCellValue('S' . $filaInicio, $rowdetalle['direccion_domicilio']);
+    $objPHPExcel->getActiveSheet()->setCellValue('T' . $filaInicio, $rowdetalle['cedula_ruc']);
+    $objPHPExcel->getActiveSheet()->setCellValue('U' . $filaInicio, ($rowdetalle['reincidencia']==1) ? "SI":" ");
+    $objPHPExcel->getActiveSheet()->setCellValue('V' . $filaInicio, getOrdenanza ($rowdetalle['ordenanza']));
+    $objPHPExcel->getActiveSheet()->setCellValue('W' . $filaInicio, (isset($rowdetalle['fecha_sorteo'])&&strlen($rowdetalle['fecha_sorteo'])>9)  ? substr($rowdetalle['fecha_sorteo'], 0, 10): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('X' . $filaInicio, (isset($rowdetalle['fecha_sorteo'])&&strlen($rowdetalle['fecha_sorteo'])>9)  ? substr($rowdetalle['fecha_sorteo'], 8, 2): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('Y' . $filaInicio, (isset($rowdetalle['fecha_sorteo'])&&strlen($rowdetalle['fecha_sorteo'])>9)  ? substr($rowdetalle['fecha_sorteo'], 5, 2): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('Z' . $filaInicio, (isset($rowdetalle['fecha_sorteo'])&&strlen($rowdetalle['fecha_sorteo'])>9)  ? substr($rowdetalle['fecha_sorteo'], 0, 4): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('AA' . $filaInicio, envioExpediente($rowdetalle['envio_expediente']));
+    $objPHPExcel->getActiveSheet()->setCellValue('AB' . $filaInicio, $rowdetalle['numero_memorando']);
+    $objPHPExcel->getActiveSheet()->setCellValue('AC' . $filaInicio, (isset($rowdetalle['fecha_envio'])&&strlen($rowdetalle['fecha_envio'])>9) ? substr($rowdetalle['fecha_envio'], 0, 10): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('AD' . $filaInicio, (isset($rowdetalle['fecha_envio'])&&strlen($rowdetalle['fecha_envio'])>9)  ? substr($rowdetalle['fecha_envio'], 8, 2): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('AE' . $filaInicio, (isset($rowdetalle['fecha_envio'])&&strlen($rowdetalle['fecha_envio'])>9)  ? substr($rowdetalle['fecha_envio'], 5, 2): "");
+    $objPHPExcel->getActiveSheet()->setCellValue('AF' . $filaInicio, (isset($rowdetalle['fecha_envio'])&&strlen($rowdetalle['fecha_envio'])>9)  ? substr($rowdetalle['fecha_envio'], 0, 4): "");
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':T' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':AF' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -291,7 +339,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:T1000')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:AF1000')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -299,7 +347,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:T1000')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:T1000')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:AF1000')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -307,10 +355,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:T1000')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:T1000')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:AF1000')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':T' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':AF' . $filacabecera)->applyFromArray($styleArray);
 
 //$objPHPExcel->getActiveSheet()->getStyle('A7:D7')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
@@ -322,8 +370,8 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:T3')->getFont()->setSize(14);
-$objPHPExcel->getActiveSheet()->getStyle('A4:T1000')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A1:AF3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A4:AF1000')->getFont()->setSize(10);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();
@@ -389,11 +437,10 @@ function regresaUnidad($id_dato)
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     if (($id_dato != '') and (isset($id_dato))) {
-        $sql = "SELECT *
-            FROM amc_unidades WHERE id = " . $id_dato;
+        $sql = "SELECT * FROM amc_zonas WHERE activo = 1 AND id = " . $id_dato;
         $nombre = $os->db->conn->query($sql);
         $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre_completo'];
+        return $rownombre['nombre'];
     } else
         return '';
 
@@ -407,7 +454,7 @@ function getOrdenanza($id_dato)
             FROM amc_ordenanzas WHERE id = " . $id_dato;
         $nombre = $os->db->conn->query($sql);
         $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre_completo'];
+        return $rownombre['nombre'];
     } else
         return '';
 
@@ -415,8 +462,17 @@ function getOrdenanza($id_dato)
 function tipoUnidad($id)
 {
     if ((isset($id)) and ($id!=" ")){
-
         $opciones = array(0 => "UDC", 1 => "ASEO");
+        return $opciones [$id];
+    } else {
+        return '';
+    }
+}
+
+function tipoProvidencia($id)
+{
+    if ((isset($id)) and ($id!=" ")){
+        $opciones = array(0 => " ", 1 => "Nulidad", 2 => "Subsanación", 3 => "Atención a escrito", 4 => "Subsanación", 5 => "Previo a resolver", 6 => "Copias", 7 => "Insistencia a informe", 8 => "Archivo", 9 => "Derecho a recurso", 10 => "Extensión del plazo");
         return $opciones [$id];
     } else {
         return '';

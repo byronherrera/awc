@@ -112,6 +112,22 @@ if (isset($data->fecha_envio_inicio) && isset($data->fecha_envio_fin) && $data->
         $where = $where . " AND cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
     }
 }
+if (isset($_POST['fecha_ingreso']) && $_POST['fecha_ingreso']!="") {
+    $busqueda_fecha_ingreso= $_POST['fecha_ingreso'];
+    if($where == ''){
+        $where = " WHERE cast(a.fecha_ingreso - 1 as date) = '$busqueda_fecha_ingreso'";
+    }else{
+        $where = $where . " AND cast(a.fecha_ingreso - 1 as date) = '$busqueda_fecha_ingreso'";
+    }
+}
+if (isset($_POST['memo_ingreso']) && $_POST['memo_ingreso']!="" ) {
+    $filtro_memo_ingreso = $_POST['memo_ingreso'];
+    if($where == ''){
+        $where = " WHERE memo_ingreso LIKE '%$filtro_memo_ingreso%' ";
+    }else{
+        $where = $where . " AND memo_ingreso LIKE '%$filtro_memo_ingreso%' ";
+    }
+}
 $orderby = 'ORDER BY a.id ASC';
 if (isset($_POST['sort'])) {
     if ($_POST['sort'] == 'id') {
@@ -159,8 +175,8 @@ $styleArray = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':W' . $filaTitulo1);
-$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':W' . $filaTitulo2);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':AB' . $filaTitulo1);
+$objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':AB' . $filaTitulo2);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "REPORTE DE LIBRO DIARIO");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Dirección de Resolución');
@@ -238,6 +254,16 @@ $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('V')->setAutoSize(fal
 $objPHPExcel->getActiveSheet()->getColumnDimension('V')->setWidth(16.30);
 $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('W')->setAutoSize(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('W')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('X')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('X')->setWidth(25);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('Y')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('Y')->setWidth(25);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('Z')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('Z')->setWidth(25);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AA')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('AA')->setWidth(16.30);
+$objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('AB')->setAutoSize(false);
+$objPHPExcel->getActiveSheet()->getColumnDimension('AB')->setWidth(30);
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Memo Ingreso');
 $objPHPExcel->getActiveSheet()->setCellValue('B' . $filacabecera, 'Número Interno');
@@ -262,6 +288,11 @@ $objPHPExcel->getActiveSheet()->setCellValue('T' . $filacabecera, 'Envío expedi
 $objPHPExcel->getActiveSheet()->setCellValue('U' . $filacabecera, 'Número de memorando');
 $objPHPExcel->getActiveSheet()->setCellValue('V' . $filacabecera, 'Fecha de envío');
 $objPHPExcel->getActiveSheet()->setCellValue('W' . $filacabecera, 'Funcionario');
+$objPHPExcel->getActiveSheet()->setCellValue('X' . $filacabecera, 'Numero Memo Apelacion');
+$objPHPExcel->getActiveSheet()->setCellValue('Y' . $filacabecera, 'Fecha Envio Apelacion');
+$objPHPExcel->getActiveSheet()->setCellValue('Z' . $filacabecera, 'Horas Trabajo Comunitario');
+$objPHPExcel->getActiveSheet()->setCellValue('AA' . $filacabecera, 'Fecha Envio Apelacion');
+$objPHPExcel->getActiveSheet()->setCellValue('AB' . $filacabecera, 'Observaciones');
 
 
 $noExistenFilas = true;
@@ -296,8 +327,13 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('U' . $filaInicio, $rowdetalle['numero_memorando']);
     $objPHPExcel->getActiveSheet()->setCellValue('V' . $filaInicio, $rowdetalle['fecha_envio']);
     $objPHPExcel->getActiveSheet()->setCellValue('W' . $filaInicio, nombreFuncionario($rowdetalle['funcionario']));
+    $objPHPExcel->getActiveSheet()->setCellValue('X' . $filaInicio, $rowdetalle['numero_memo_apelacion']);
+    $objPHPExcel->getActiveSheet()->setCellValue('Y' . $filaInicio, $rowdetalle['fecha_envio_apelacion']);
+    $objPHPExcel->getActiveSheet()->setCellValue('Z' . $filaInicio, $rowdetalle['horas_trabajo_comunitario']);
+    $objPHPExcel->getActiveSheet()->setCellValue('AA' . $filaInicio, $rowdetalle['apelacion']);
+    $objPHPExcel->getActiveSheet()->setCellValue('AB' . $filaInicio, $rowdetalle['observaciones']);
 
-    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':W' . $filaInicio)->applyFromArray($styleArray);
+    $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':AB' . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
 }
 
@@ -323,7 +359,7 @@ $styleThinBlackBorderOutline = array(
 );
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:W600')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A1:AB600')->applyFromArray(
     array(
         'alignment' => array(
             'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
@@ -331,7 +367,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:W600')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:W200')->applyFromArray(
+$objPHPExcel->getActiveSheet()->getStyle('A4:AB200')->applyFromArray(
     array(
         'alignment' => array(
             'vertical' => PHPExcel_Style_Alignment::VERTICAL_TOP,
@@ -339,10 +375,10 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:W200')->applyFromArray(
     )
 );
 
-$objPHPExcel->getActiveSheet()->getStyle('A4:W1000')->getAlignment()->setWrapText(true);
+$objPHPExcel->getActiveSheet()->getStyle('A4:AB1000')->getAlignment()->setWrapText(true);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':W' . $filacabecera)->applyFromArray($styleArray);
+$objPHPExcel->getActiveSheet()->getStyle('A' . $filacabecera . ':AB' . $filacabecera)->applyFromArray($styleArray);
 
 //$objPHPExcel->getActiveSheet()->getStyle('A7:D7')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
@@ -354,8 +390,8 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A1:W3')->getFont()->setSize(14);
-$objPHPExcel->getActiveSheet()->getStyle('A4:W1000')->getFont()->setSize(10);
+$objPHPExcel->getActiveSheet()->getStyle('A1:AB3')->getFont()->setSize(14);
+$objPHPExcel->getActiveSheet()->getStyle('A4:AB1000')->getFont()->setSize(10);
 
 
 $pageMargins = $objPHPExcel->getActiveSheet()->getPageMargins();

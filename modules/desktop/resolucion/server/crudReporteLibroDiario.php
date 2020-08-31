@@ -133,6 +133,22 @@ function selectOrdenanzas()
             $where = $where . " AND cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
         }
     }
+    if (isset($_POST['fecha_ingreso']) && $_POST['fecha_ingreso']!="") {
+        $busqueda_fecha_ingreso= $_POST['fecha_ingreso'];
+        if($where == ''){
+            $where = " WHERE cast(a.fecha_ingreso - 1 as date) = '$busqueda_fecha_ingreso'";
+        }else{
+            $where = $where . " AND cast(a.fecha_ingreso - 1 as date) = '$busqueda_fecha_ingreso'";
+        }
+    }
+    if (isset($_POST['memo_ingreso']) && $_POST['memo_ingreso']!="" ) {
+        $filtro_memo_ingreso = $_POST['memo_ingreso'];
+        if($where == ''){
+            $where = " WHERE memo_ingreso LIKE '%$filtro_memo_ingreso%' ";
+        }else{
+            $where = $where . " AND memo_ingreso LIKE '%$filtro_memo_ingreso%' ";
+        }
+    }
 
     $orderby = 'ORDER BY a.id ASC';
     if (isset($_POST['sort'])) {
@@ -142,6 +158,12 @@ function selectOrdenanzas()
             $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
         }
     }
+
+    //if (isset($_POST['sort'])) {
+     //   $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
+    //}else{
+    //    $orderby = 'ORDER BY id ASC';
+   // }
 
     //$usuarioLog = $os->get_member_id();
 

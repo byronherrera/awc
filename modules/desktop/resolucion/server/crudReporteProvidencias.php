@@ -124,6 +124,14 @@ function selectOrdenanzas()
             $where = $where . " AND cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
         }
     }
+    if (isset($_POST['memo_ingreso_providencias']) && $_POST['memo_ingreso_providencias']!="" ) {
+        $filtro_memo_ingreso = $_POST['memo_ingreso_providencias'];
+        if($where == ''){
+            $where = " WHERE memo_ingreso LIKE '%$filtro_memo_ingreso%' ";
+        }else{
+            $where = $where . " AND memo_ingreso LIKE '%$filtro_memo_ingreso%' ";
+        }
+    }
 
     //$usuarioLog = $os->get_member_id();
 
