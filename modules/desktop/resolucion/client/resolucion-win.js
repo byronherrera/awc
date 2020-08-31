@@ -963,6 +963,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'envio_expediente', allowBlank: true},
                 {name: 'fecha_envio', allowBlank: true},
                 {name: 'fecha_sorteo', allowBlank: true},
+                {name: 'fecha_ultima_notificacion', allowBlank: true},
                 {name: 'numero_memorando', allowBlank: true}
             ]
         });
@@ -1177,6 +1178,16 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                         format: 'Y-m-d'
                     })
                 },
+                {
+                    header: 'Fecha de Última Notificación',
+                    dataIndex: 'fecha_ultima_notificacion',
+                    sortable: true,
+                    width: 100,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
 
             ],
             viewConfig: {
@@ -1280,7 +1291,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'envio_expediente', allowBlank: false},
                 {name: 'fecha_envio', allowBlank: false},
                 {name: 'fecha_sorteo', allowBlank: false},
-                {name: 'numero_memorando', allowBlank: false}
+                {name: 'numero_memorando', allowBlank: false},
+                {name: 'fecha_ultima_notificacion', allowBlank: false}
             ]
         });
 
@@ -1571,7 +1583,16 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     //     format: 'Y-m-d'
                     // })
                 },
-
+                {
+                    header: 'Fecha de Ultima Notificacion',
+                    dataIndex: 'fecha_ultima_notificacion',
+                    sortable: true,
+                    width: 100,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    // editor: new Ext.form.DateField({
+                    //     format: 'Y-m-d'
+                    // })
+                }
             ],
             viewConfig: {
                 forceFit: false
@@ -1665,7 +1686,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'envio_expediente', allowBlank: false},
                 {name: 'fecha_envio', allowBlank: false},
                 {name: 'fecha_sorteo', allowBlank: false},
-                {name: 'numero_memorando', allowBlank: false}
+                {name: 'numero_memorando', allowBlank: false},
+                {name: 'fecha_ultima_notificacion', allowBlank: false}
             ]
         });
 
@@ -1908,6 +1930,16 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Fecha de Envío',
                     dataIndex: 'fecha_envio',
+                    sortable: true,
+                    width: 100,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    // editor: new Ext.form.DateField({
+                    //     format: 'Y-m-d'
+                    // })
+                },
+                {
+                    header: 'Fecha de Ultima Notificacion',
+                    dataIndex: 'fecha_ultima_notificacion',
                     sortable: true,
                     width: 100,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
@@ -3507,6 +3539,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             envio_expediente: ' ',
             numero_memorando: ' ',
             fecha_sorteo:  ' ',
+            fecha_ultima_notificacion:  ' ',
             // fecha_envio: (new Date()),
         });
         this.gridLibroDiario.stopEditing();
