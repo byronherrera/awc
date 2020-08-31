@@ -1191,7 +1191,25 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
             ],
             viewConfig: {
-                forceFit: false
+                forceFit: false,
+                getRowClass: function (record, index) {
+                    var minutes = 1000*60;
+                    var hours = minutes*60;
+                    var days = hours*24;
+                    // validamos la fecha
+                    fechaActual = new Date();
+                    if(record.get('fecha_ultima_notificacion')!=null){
+                        fechaUltimaModificacion = record.get('fecha_ultima_notificacion').substring(0, 10);
+                        var arregloFecha =fechaUltimaModificacion.split('-');
+                        var mydate = new Date(arregloFecha[0], arregloFecha[1] - 1, arregloFecha[2]);
+                        console.log(mydate);
+                        var diasDif =  Math.round((mydate.getTime() - fechaActual.getTime())/days)
+                        console.log(diasDif);
+                        if (diasDif>=24) {
+                            return 'redstate';
+                        }
+                    }
+                }
             },
             sm: new Ext.grid.RowSelectionModel({
                 singleSelect: true,
