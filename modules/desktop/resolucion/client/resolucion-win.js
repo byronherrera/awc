@@ -2882,7 +2882,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
             var checkHandler = function (item, checked) {
                 if (checked) {
-                    var store = this.storeResoluciones;
+                    var store = this.storeLibroDiario;
                     store.baseParams.filterField = item.key;
                     searchFieldBtn.setText(item.text);
                 }
@@ -2907,21 +2907,21 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             text: 'Todos'
                         },
                         {
-                            checked: false,
+                            checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
                             key: 'fecha_ingreso',
                             scope: this,
                             text: 'Fecha de ingreso'
                         },                        {
-                            checked: false,
+                            checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
                             key: 'memo_ingreso',
                             scope: this,
                             text: 'Memo de ingreso'
                         },                        {
-                            checked: false,
+                            checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
                             key: 'nombre_funcionario',

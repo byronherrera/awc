@@ -17,31 +17,43 @@ function selectOrdenanzas()
         $columnaBusqueda = $_POST['filterField'];
     }
 
+
     if (isset($_POST['filterText'])) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
-        if ($columnaBusqueda != 'busqueda_todos') {
+        if ($columnaBusqueda == 'fecha_ingreso') {
             $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-        } else {
+        }
+        elseif ($columnaBusqueda == 'memo_ingreso') {
+            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+        }
+        elseif ($columnaBusqueda == 'nombre_funcionario') {
+                $sql = "SELECT id FROM qo_members WHERE first_name like UPPER('%$campo%') OR last_name like UPPER('%$campo%') ";
+                $result = $os->db->conn->query($sql);
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    if (strlen($row['id']) > 0) {
+                        $campo = $row['id'];
+                        if ($where == '')
+                            $where = " WHERE funcionario = '$campo'";
+                        else
+                            $where = $where . " OR funcionario = '$campo'";
+                    }
+                }
+        }
+        else{
             $listadoCampos = array(
-                'memo_ingreso',
                 'fecha_ingreso',
-                'unidad',
                 'numero_expediente',
                 'nombre_administrado',
                 'nombre_establecimiento',
+                'direccion_notificacion',
+                'direccion_domicilio',
                 'cedula_ruc',
-                'reincidencia',
-                'ordenanza',
-//                'articulo_numeral',
-                'iniciado_por',
                 'entidad',
                 'numero_informe',
-                'medida_cautelar',
-                'estado',
-//                'funcionario',
-                'envio_expediente',
                 'fecha_envio',
+                'numero_memorando',
+                'memo_ingreso'
             );
             $cadena = '';
             foreach ($listadoCampos as &$valor) {
@@ -49,7 +61,7 @@ function selectOrdenanzas()
             }
 
             $cadena = substr($cadena,0,-3);
-            $where = " WHERE ($cadena ";
+            $where = " WHERE (".$cadena;
         }
 
     }
@@ -62,11 +74,12 @@ function selectOrdenanzas()
             }else{
                 $where = $where . " ) AND funcionario = $usuarioLog ";
             }
-        }else{
-            if($where != ''){
-                $where = $where . " ) ";
-            }
         }
+        //else{
+         //   if($where != ''){
+        //       $where = $where . " ) ";
+         //   }
+        //}
     }
 
 //    $orderby = 'ORDER BY a.id ASC';
@@ -95,7 +108,7 @@ function selectOrdenanzas()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
+     $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
 //    echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
