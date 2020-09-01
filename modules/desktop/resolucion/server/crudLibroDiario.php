@@ -61,7 +61,7 @@ function selectOrdenanzas()
             }
 
             $cadena = substr($cadena,0,-3);
-            $where = " WHERE (".$cadena;
+            $where = " WHERE ".$cadena;
         }
 
     }
