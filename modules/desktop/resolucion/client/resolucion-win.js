@@ -3706,7 +3706,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
         // mensaje continuar y llamada a descarga archivo
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Se descarga el archivo Excel<br>¿Desea continuarxx?',
+            msg: 'Se descarga el archivo Excel<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
