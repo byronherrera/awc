@@ -72,7 +72,7 @@ function selectOrdenanzas()
             if($where == ''){
                 $where = " WHERE funcionario = $usuarioLog ";
             }else{
-                $where = $where . " ) AND funcionario = $usuarioLog ";
+                $where = $where . "  AND funcionario = $usuarioLog ";
             }
         }
         //else{
@@ -108,7 +108,7 @@ function selectOrdenanzas()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-     $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
+    echo $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
 //    echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
