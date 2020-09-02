@@ -108,7 +108,7 @@ function selectOrdenanzas()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    echo $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
 //    echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
