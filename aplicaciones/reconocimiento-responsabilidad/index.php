@@ -90,39 +90,39 @@ require_once('../../server/os.php');
                 <div class="form-group">
                     <label for="cedula">CEDULA*</label>
                     <input type="text" class="form-control senddata" id="cedula" name="cedula" placeholder=""
-                           required="required">
+                           required="required" data-error="Ingrese Cédula">
                     <div class="mensajecedula"></div>
                 </div>
                 <div class="form-group">
                     <div class="form-group col-md-6">
                         <label for="nombres">NOMBRES COMPLETOS*</label>
                         <input type="text" class="form-control senddata" id="nombres" name="nombres" required="required"
-                               placeholder="Nombres">
+                               placeholder="Nombres" data-error="Ingrese Nombres">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="apellidos">APELLIDOS COMPLETOS*</label>
                         <input type="text" class="form-control senddata" id="apellidos" name="apellidos"
-                               required="required"
+                               required="required" data-error="Ingrese Apellidos"
                                placeholder="Apellidos">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="idzonal">ZONAL*</label>
                     <select name="idzonal" class="form-control senddata" id="idzonal" required="required"
-                            data-error="requerido." placeholder="Ingrese zonal">
+                            data-error="Requerido" placeholder="Ingrese zonal">
                         <option value=""></option>
                     </select>
+                    <p><a href="https://www.google.com/maps/d/edit?mid=19S3rWVyJGHxHbpYz1cjDauS2vTZJkjMW&usp=sharing" target="_blank">Mapa de distribución de zonales en el Distrito metropolitano </a></p>
                 </div>
                 <div class="form-group">
                     <label for="tipoadministrador">TIPO ADMINISTRADOR</label>
                     <input id="tipoadministrador" type="text" name="tipoadministrador" class="form-control senddata"
-                           placeholder="Propietario, Arrendador, etc" required="required">
+                           placeholder="Propietario, Arrendador, etc"  >
                 </div>
 
                 <div class="form-group">
-                    <label for="establecimiento">NOMBRE ESTABLECIMIENTO*</label>
+                    <label for="establecimiento">NOMBRE ESTABLECIMIENTO</label>
                     <input id="establecimiento" type="text" name="establecimiento" class="form-control senddata"
-                           required="required"
                            placeholder="Ingrese el nombre del estrablecimiento">
                 </div>
 
@@ -266,6 +266,8 @@ require_once('../../server/os.php');
 <script type="text/javascript" src="../vendor/datetimepicker/locales/bootstrap-datetimepicker.es.js"
         charset="UTF-8"></script>
 <script type="text/javascript">
+
+    //TODO ACTIVA
     $(document).ready(function () {
 
         $('#botonenviar').hide();

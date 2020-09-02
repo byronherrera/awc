@@ -6,6 +6,7 @@ $os = new os();
 header("Access-Control-Allow-Origin: *");
 
 $idUsuario = getIdUsuario($_GET["usuario"]);
+
 getrecordatoriosUsuario($idUsuario);
 
 function getIdUsuario($email)
@@ -29,7 +30,7 @@ function getrecordatoriosUsuario($idUsuario)
             FROM
                 `amc_planificacion_notificaciones` 
             WHERE id_responsable = $idUsuario 
-            AND fecha_entrega > NOW( ) + INTERVAL 10 DAY 
+            AND fecha_entrega BETWEEN NOW() AND NOW( ) + INTERVAL 3 DAY 
 	        AND activo = 1;";
 
     $result = $os->db->conn->query($sql);

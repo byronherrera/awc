@@ -1603,7 +1603,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             autoHeight: true,
             store: this.storeOperativosImagenes,
             clicksToEdit: 1,
-                columns: [
+            columns: [
                 new Ext.grid.RowNumberer(),
                 {
                     header: 'Url imagen',
@@ -2686,7 +2686,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                     , store: this.storeOperativos
                                 })
                             ],
-
                             items: [
                                 {
                                     id: 'formcabeceraoperativos',
