@@ -940,30 +940,30 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'memo_ingreso', allowBlank: false},
-                {name: 'fecha_ingreso', allowBlank: false},
-                {name: 'unidad', allowBlank: false},
-                {name: 'tipo_unidad', allowBlank: false},
-                {name: 'numero_expediente', allowBlank: false},
-                {name: 'numero_interno', allowBlank: false},
-                {name: 'nombre_administrado', allowBlank: false},
-                {name: 'nombre_establecimiento', allowBlank: false},
-                {name: 'direccion_notificacion', allowBlank: false},
-                {name: 'direccion_domicilio', allowBlank: false},
-                {name: 'cedula_ruc', allowBlank: false},
-                {name: 'reincidencia', allowBlank: false},
-                {name: 'ordenanza', allowBlank: false},
+                {name: 'memo_ingreso', allowBlank: true},
+                {name: 'numero_interno', allowBlank: true},
+                {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_ingreso', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_sorteo', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_ultima_notificacion', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'unidad', allowBlank: true},
+                {name: 'tipo_unidad', allowBlank: true},
+                {name: 'numero_expediente', allowBlank: true},
+                {name: 'nombre_administrado', allowBlank: true},
+                {name: 'nombre_establecimiento', allowBlank: true},
+                {name: 'direccion_notificacion', allowBlank: true},
+                {name: 'direccion_domicilio', allowBlank: true},
+                {name: 'cedula_ruc', allowBlank: true},
+                {name: 'reincidencia', allowBlank: true},
+                {name: 'ordenanza', allowBlank: true},
                 // {name: 'articulo_numeral', allowBlank: false},
-                {name: 'iniciado_por', allowBlank: false},
-                {name: 'entidad', allowBlank: false},
-                {name: 'numero_informe', allowBlank: false},
-                {name: 'medida_cautelar', allowBlank: false},
-                {name: 'estado', allowBlank: false},
-                {name: 'funcionario', allowBlank: false},
+                {name: 'iniciado_por', allowBlank: true},
+                {name: 'entidad', allowBlank: true},
+                {name: 'numero_informe', allowBlank: true},
+                {name: 'medida_cautelar', allowBlank: true},
+                {name: 'estado', allowBlank: true},
+                {name: 'funcionario', allowBlank: true},
                 {name: 'envio_expediente', allowBlank: true},
-                {name: 'fecha_envio', allowBlank: true},
-                {name: 'fecha_sorteo', allowBlank: true},
-                {name: 'fecha_ultima_notificacion', allowBlank: true},
                 {name: 'numero_memorando', allowBlank: true}
             ]
         });
@@ -1015,6 +1015,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Fecha de Ingreso',
                     dataIndex: 'fecha_ingreso',
+                    allowBlank: true,
                     sortable: true,
                     width: 110,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
@@ -1144,6 +1145,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Fecha de Sorteo',
                     dataIndex: 'fecha_sorteo',
+                    allowBlank: true,
                     sortable: true,
                     width: 100,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
@@ -1171,6 +1173,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Fecha de Envío',
                     dataIndex: 'fecha_envio',
+                    allowBlank: true,
                     sortable: true,
                     width: 100,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
@@ -1181,6 +1184,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Fecha de Última Notificación',
                     dataIndex: 'fecha_ultima_notificacion',
+                    allowBlank: true,
                     sortable: true,
                     width: 100,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
@@ -1198,17 +1202,17 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     var days = hours*24;
                     // validamos la fecha
                     fechaActual = new Date();
-                    if(record.get('fecha_ultima_notificacion')!=null){
-                        fechaUltimaModificacion = record.get('fecha_ultima_notificacion').substring(0, 10);
-                        var arregloFecha =fechaUltimaModificacion.split('-');
-                        var mydate = new Date(arregloFecha[0], arregloFecha[1] - 1, arregloFecha[2]);
-                        console.log(mydate);
-                        var diasDif =  Math.round((mydate.getTime() - fechaActual.getTime())/days)
-                        console.log(diasDif);
-                        if (diasDif>=24) {
-                            return 'redstate';
-                        }
-                    }
+                    // if(record.get('fecha_ultima_notificacion')!=null){
+                    //     fechaUltimaModificacion = record.get('fecha_ultima_notificacion').substring(0, 10);
+                    //     var arregloFecha =fechaUltimaModificacion.split('-');
+                    //     var mydate = new Date(arregloFecha[0], arregloFecha[1] - 1, arregloFecha[2]);
+                    //     console.log(mydate);
+                    //     var diasDif =  Math.round((mydate.getTime() - fechaActual.getTime())/days)
+                    //     console.log(diasDif);
+                    //     if (diasDif>=24) {
+                    //         return 'redstate';
+                    //     }
+                    // }
                 }
             },
             sm: new Ext.grid.RowSelectionModel({
@@ -1280,15 +1284,17 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'memo_ingreso', allowBlank: false},
                 {name: 'numero_interno', allowBlank: false},
                 {name: 'numero_resolucion', allowBlank: false},
-                {name: 'fecha_resolucion', allowBlank: false},
                 {name: 'articulo_actual', allowBlank: false},
                 {name: 'resolucion_de', allowBlank: false},
                 {name: 'multa_impuesta', allowBlank: false},
                 {name: 'horas_trabajo_comunitario', allowBlank: false},
                 {name: 'apelacion', allowBlank: false},
                 {name: 'numero_memo_apelacion', allowBlank: false},
-                {name: 'fecha_envio_apelacion', allowBlank: false},
-                {name: 'fecha_ingreso', allowBlank: false},
+                {name: 'fecha_ultima_notificacion', allowBlank: false},
+                {name: 'fecha_resolucion', type: 'date', dateFormat: 'c', allowBlank: false},
+                {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: false},
+                {name: 'fecha_sorteo', type: 'date', dateFormat: 'c', allowBlank: false},
+                {name: 'fecha_ingreso', type: 'date', dateFormat: 'c', allowBlank: false},
                 {name: 'unidad', allowBlank: false},
                 {name: 'tipo_unidad', allowBlank: false},
                 {name: 'numero_expediente', allowBlank: false},
@@ -1307,10 +1313,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'estado', allowBlank: false},
                 {name: 'funcionario', allowBlank: false},
                 {name: 'envio_expediente', allowBlank: false},
-                {name: 'fecha_envio', allowBlank: false},
-                {name: 'fecha_sorteo', allowBlank: false},
-                {name: 'numero_memorando', allowBlank: false},
-                {name: 'fecha_ultima_notificacion', allowBlank: false}
+                {name: 'numero_memorando', allowBlank: false}
             ]
         });
 
@@ -1680,10 +1683,12 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'numero_providencia', allowBlank: false},
                 {name: 'fecha_providencia', allowBlank: false},
                 {name: 'tipo_providencia', allowBlank: false},
-                {name: 'fecha_providencia', allowBlank: false},
                 {name: 'memo_ingreso', allowBlank: false},
                 {name: 'numero_interno', allowBlank: false},
-                {name: 'fecha_ingreso', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'fecha_ingreso', type: 'date', dateFormat: 'c', allowBlank: false},
+                {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: false},
+                {name: 'fecha_sorteo', type: 'date', dateFormat: 'c', allowBlank: false},
+                {name: 'fecha_ultima_notificacion', allowBlank: false},
                 {name: 'unidad', allowBlank: false},
                 {name: 'tipo_unidad', allowBlank: false},
                 {name: 'numero_expediente', allowBlank: false},
@@ -1702,10 +1707,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'estado', allowBlank: false},
                 {name: 'funcionario', allowBlank: false},
                 {name: 'envio_expediente', allowBlank: false},
-                {name: 'fecha_envio', allowBlank: false},
-                {name: 'fecha_sorteo', allowBlank: false},
-                {name: 'numero_memorando', allowBlank: false},
-                {name: 'fecha_ultima_notificacion', allowBlank: false}
+                {name: 'numero_memorando', allowBlank: false}
             ]
         });
 
