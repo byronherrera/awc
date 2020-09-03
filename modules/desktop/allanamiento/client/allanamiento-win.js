@@ -608,7 +608,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         text: 'Recargar Datos',
                         tooltip: 'Recargar datos en la grilla'
                     },
-
                     '->'
                     , {
                         text: 'Buscar por:'
