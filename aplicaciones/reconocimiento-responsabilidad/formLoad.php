@@ -274,7 +274,7 @@ function ingresaNuevoProceso()
     if (count($listado2) > 0)
         $data->imagenaluae = json_encode($listado2);
     if (count($listado3) > 0)
-        $data->imagenactoinicio = json_encode($listado2);
+        $data->imagenactoinicio = json_encode($listado3);
 
 
     $data->cedula = $_POST["cedula"];

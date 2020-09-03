@@ -13,11 +13,19 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
     createWindow: function () {
         var desktop = this.app.getDesktop();
+        // define a que tiene acceso los funcionario de acuerdo al perfil
 
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
+        var accesosInstruccion = this.app.isAllowedTo('accesosInstruccion', this.id);
+        var accesosResolucion = this.app.isAllowedTo('accesosResolucion', this.id);
+        var accesosEjecucion = this.app.isAllowedTo('accesosEjecucion', this.id);
+        var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
+        var accesosConsultas = this.app.isAllowedTo('accesosConsultas', this.id);
+
+
 
         var win = desktop.getWindow('grid-win-allanamiento');
-        //var urlAllanamiento = "amcserver/";
+
         var urlAllanamiento = "http://agenciadecontrol.quito.gob.ec/amcserver/"; // servidor produccion
         var urlDenunciasLocal = "modules/desktop/allanamiento/server/";
 
@@ -531,13 +539,18 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                             }
                                             , {
                                                 xtype: 'displayfield',
-                                                fieldLabel: 'Solicitud',
+                                                fieldLabel: 'Solicitud Allanamiento',
                                                 name: 'imagenasolicitud'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'LUAE',
                                                 name: 'imagenaluae'
+                                            }
+                                            , {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Acto Inicio',
+                                                name: 'imagenactoinicio'
                                             }
                                             , {
                                                 xtype: 'displayfield',
@@ -595,22 +608,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         text: 'Recargar Datos',
                         tooltip: 'Recargar datos en la grilla'
                     },
-                    /*'-',
-                     {
-                     iconCls: 'demo-grid-add',
-                     handler: this.requestAllanamientoDataExport,
-                     scope: this,
-                     text: 'Boton 1',
-                     tooltip: 'Exportar datos en la grilla'
-                     },
-                     '-',
-                     {
-                     iconCls: 'demo-grid-add',
-                     handler: this.requestAllanamientoEstadisticasDataExport,
-                     scope: this,
-                     text: 'Boton 2',
-                     tooltip: 'Exportar Estadisticas'
-                     },*/
+
                     '->'
                     , {
                         text: 'Buscar por:'

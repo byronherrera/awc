@@ -241,29 +241,23 @@ function generaCodigoProcesoDenuncia()
 
 
 
-function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionariosBCC=[], $prueba = false)
+function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionariosBCC=[], $from = 'Agencia Metropolitana de Control', $prueba = false)
 {
     $config = new config();
 
     require 'PHPMailer/PHPMailerAutoload.php';
 
-    //Create a new PHPMailer instance
     $mail = new PHPMailer;
     $mail->CharSet = "UTF-8";
     $mail->isSMTP();
     $mail->SMTPDebug = 0;
     $mail->Debugoutput = 'html';
 
-    $mail->Host = 'smtp.gmail.com';
-    $mail->Port = 587;
-    $mail->SMTPSecure = 'tls';
-    $mail->SMTPAuth = true;
-    $mail->Username = "amcdenuncias@gmail.com";
-    $mail->Password = "amccontrol2016";
-    $mail->setFrom('denunciasamc@quito.gob.ec', 'Agencia Metropolitana de Control');
-
-
-
+    $mail->Host = 'relay.quito.gob.ec';
+    $mail->Port = 25;
+    $mail->Username = "agencia.m.control@quito.gob.ec";
+    $mail->Password = "12345678";
+    $mail->setFrom('agencia.m.control@quito.gob.ec', $from);
 
     $mail->Subject = $nombre;
     $mail->msgHTML($mensaje);

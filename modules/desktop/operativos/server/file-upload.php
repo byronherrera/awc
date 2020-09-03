@@ -8,6 +8,7 @@ if (!$os->session_exists()) {
 }
 
 
+
 if(isset($_POST['data'])){
     if($_POST['data']!= '0'){
         if(isset($_FILES)){
@@ -22,8 +23,7 @@ if(isset($_POST['data'])){
             $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
 
             $uploadfile = $uploaddir . basename($_POST['data']. '-' .$nombreArchivo );
-            echo $temp_file_name . '<br>';
-            echo $uploadfile . '<br>';
+ 
             
             if (move_uploaded_file($temp_file_name, $uploadfile)) {
                 // en caso de ser exito el ingreso entonces se inserta un registro en la base de datos

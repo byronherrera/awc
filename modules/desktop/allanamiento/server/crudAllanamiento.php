@@ -113,6 +113,12 @@ function selectAllanamientoForm()
     } else {
         $data['imagenaluae'] = '';
     }
+    if (strlen($data['imagenactoinicio']) > 0) {
+        $link3 = json_decode($data['imagenactoinicio']);
+        $data['imagenactoinicio'] = "<a href='aplicaciones/reconocimiento-responsabilidad/" . $link3->archivo3 . "' target='_blank'>Ver Acto de Inicio</a>";
+    } else {
+        $data['imagenactoinicio'] = '';
+    }
 
     echo json_encode(array(
             "success" => true,

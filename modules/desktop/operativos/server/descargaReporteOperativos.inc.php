@@ -419,7 +419,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     } else {
         $rowdetalle['id_nivel_complejidad'] = '';
     }
-
+    
     // si ultimo caracter es ',' se quita ese caracter
     if (substr($rowdetalle['id_tipo_control'], -1) == ",") {
         $rowdetalle['id_tipo_control'] = rtrim($rowdetalle['id_tipo_control'],',');

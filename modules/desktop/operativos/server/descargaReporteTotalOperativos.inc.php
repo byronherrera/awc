@@ -254,7 +254,7 @@ $sql = "SELECT  funcionario,
 FROM (SELECT id, id_persona_encargada funcionario ,fecha_inicio_planificacion,fecha_fin_planificacion, 'E' tipo, 
 TIMESTAMPDIFF(HOUR,fecha_inicio_planificacion,fecha_fin_planificacion) horasencargado, 0 horasapoyo
 FROM amc_operativos  
-$where  
+$where 
 UNION 
 SELECT m.id,
 id_member funcionario, m.fecha_inicio_planificacion, m.fecha_fin_planificacion, 'A' tipo, 0 horasencargado, TIMESTAMPDIFF(HOUR,fecha_inicio_planificacion,fecha_fin_planificacion) horasapoyo
@@ -276,8 +276,8 @@ $objPHPExcel->setActiveSheetIndex(0);
 
 $filaTitulo1 = 2;
 $filaTitulo2 = 3;
-$filacabecera = 6;
-$filaInicio = 7;
+$filacabecera = 5;
+$filaInicio = 6;
 
 
 $styleArray = array(
@@ -296,7 +296,6 @@ $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "TOTAL HORAS PO
 
 
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, $titulosegundo);
-$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 + 2), $titulosegundo);
 
 //$offsetTotalesTipo = totalesPorTipo($number_of_rows + $filaInicio, $where);
 $offsetTotalesTipo = 0;
