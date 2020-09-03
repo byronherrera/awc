@@ -32,8 +32,11 @@ $today = date("Y-n-j-H-i-s");
 
 // para los reportes
 $where = '';
-if (isset ($_POST['accesosResolutores'])) {
-    $acceso = $_POST['accesosResolutores'];
+
+$usuarioLog = $os->get_member_id();
+
+if (isset($data->accesosResolutores) && $data->accesosResolutores != "") {
+    $acceso = $data->accesosResolutores;
     if ($acceso == 'true') {
         if ($where == '') {
             $where = " WHERE funcionario = $usuarioLog ";
@@ -43,13 +46,13 @@ if (isset ($_POST['accesosResolutores'])) {
     }
 }
 
-if (isset($data->busqueda_fecha_inicio) && isset($data->busqueda_fecha_fin) && $data->busqueda_fecha_inicio != "" && $data->busqueda_fecha_fin != "") {
-    $busqueda_fecha_inicio = $data->busqueda_fecha_inicio;
-    $busqueda_fecha_fin = $data->busqueda_fecha_fin;
+if (isset($data->busqueda_fecha_inicio_providencias) && isset($data->busqueda_fecha_fin_providencias) && $data->busqueda_fecha_inicio_providencias != "" && $data->busqueda_fecha_fin_providencias != "") {
+    $busqueda_fecha_inicio = $data->busqueda_fecha_inicio_providencias;
+    $busqueda_fecha_fin = $data->busqueda_fecha_fin_providencias;
     if ($where == '') {
-        $where = " WHERE cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
+        $where = " WHERE cast(b.fecha_providencia as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_providencia as date) <= '$busqueda_fecha_fin' ";
     } else {
-        $where = $where . " AND cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
+        $where = $where . " AND cast(b.fecha_providencia as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_providencia as date) <= '$busqueda_fecha_fin' ";
     }
 }
 if (isset($data->ordenanza) && $data->ordenanza != "") {
@@ -60,12 +63,12 @@ if (isset($data->ordenanza) && $data->ordenanza != "") {
         $where = $where . " AND ordenanza = '$filtroOrdenanza' ";
     }
 }
-if (isset($data->resolucion_de) && $data->resolucion_de != "") {
-    $filtroResolucion_de = $data->resolucion_de;
+if (isset($data->tipo_providencia) && $data->tipo_providencia != "") {
+    $filtro_tipo_providencia = $data->tipo_providencia;
     if ($where == '') {
-        $where = " WHERE resolucion_de = '$filtroResolucion_de' ";
+        $where = " WHERE tipo_providencia = '$filtro_tipo_providencia' ";
     } else {
-        $where = $where . " AND resolucion_de = '$filtroResolucion_de' ";
+        $where = $where . " AND tipo_providencia = '$filtro_tipo_providencia' ";
     }
 }
 if (isset($data->funcionario) && $data->funcionario != "") {
@@ -116,8 +119,7 @@ else
 //    $orderby = 'ORDER BY a.id ASC';
 
 $os->db->conn->query("SET NAMES 'utf8'");
-$sql = "SELECT *
-FROM amc_libro_diario a INNER JOIN amc_providencias b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
+$sql = "SELECT * FROM amc_libro_diario a INNER JOIN amc_providencias b ON a.id = b.id_libro_diario $where $orderby";
 //echo $sql;
 $result = $os->db->conn->query($sql);
 $number_of_rows = $result->rowCount();
