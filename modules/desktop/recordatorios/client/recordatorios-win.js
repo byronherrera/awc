@@ -890,8 +890,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         }
                     ]
                 })
-
-
             });
         }
         win.show();

@@ -1,5 +1,6 @@
 <?php
 require_once '../../server/os.php';
+require_once '../../modules/common/Classes/funciones.php';
 //require_once '';
 $os = new os();
 
@@ -24,9 +25,23 @@ switch ($opcion) {
         // graba en base de datos
         $data = ingresaNuevoProceso();
         // se genera el texto para el envio del mail de notificación
-        $contenidoMailPersona = getmensajeSolicitudAprobada($data);
+        $fecha = date("Y-m-d, G:i");
+        $nombre = $data->nombres;
+        $contenidoMailRecepcion = getmensajeSolicitudReceptada($nombre , $fecha);
         // envio email al encargado del negocio
-        $envioMail = enviarEmail($data->correoelectronico, $data->nombres . '' . $data->apellidos , $contenidoMailPersona, "", $data);
+
+        $email = $data->correoelectronico;
+        $asunto = "Nueva Solicitud Allanamiento, " . " - " . $email;
+        //TODO a quien enviar
+        //recuperar funcionario encargado zonal
+        getFuncionarioEncargado ( $data->idzonal) ;
+        $funcionarios = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
+        //TODO quien hace el seguimiento
+        $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "pamela.parreno@quito.gob.ec"];
+        $from = 'Solicitud de Allanamiento - Agencia Metropolitana de Control';
+        $prueba = true;
+        $resultado = enviarEmailAmc($email, $asunto, $contenidoMailRecepcion, $funcionarios, $funcionariosSeguimiento, $from , $prueba);
+
         break;
 
     case "aprobar":
@@ -665,26 +680,30 @@ function getmensajeEtapa($nombre = '', $data)
     return $texto;
 }
 
-function getmensajeSolicitudAprobada($data)
+function getmensajeSolicitudReceptada($nombre = '', $fecha = '')
 {
-    $config = new config();
-    $url = $config->URLBASE . 'aplicaciones/reconocimiento-responsabilidad/';
-
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-                <div style="text-align: center;"><img style="width: 200px;" src="http://www.romsegroup.com/invede-dev/img/logo-jardin-corto.png" alt="" width="30%" /></div>
+                <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
+                <div style="clear: both; margin: 50px 10%; float: left;">
+                <p><br><br>
+                 Estimado, ' . $nombre . ' hemos recibido su solicitud, se validarán los datos enviados, para dar inicio al trámite correspondiete:<br>
+                 
+                <br>
 
-                <div style="clear: both; margin: 20px 10%; float: left;">
-                <h2><span style="font-family:Calibri Light;color:rgb(47,84,150) ">Número ' . $data->id . '</span></h2>
-                <p  style="font-family:Calibri Light; font-size: 1.3em ">Estimado <strong>' . $data->nombres . '  ' . $data->apellidos . '<span style="font-style: italic;">, su solicitud fue recibida, se requiere validar su correo de click en el boton </span></strong></p>
+                <br>    
 
-                <div style="clear: both; margin: 50px 10%;  text-align: center;">
-					  <div class="hijo" style="display: block; width: 230px; height: 50px; padding: 10px 0 0 0; margin: 0 auto; background: #4682B4;  
-					  background: -moz-linear-gradient(top, #87CEEB 0%, #4682B4 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#87CEEB), 
-					  color-stop(100%,#4682B4));box-shadow: inset 0px 0px 6px #fff;  -webkit-box-shadow: inset 0px 0px 6px #fff; border: 1px solid #62C2F9; border-radius: 10px;  display: inline-block; "> 
-					  <a href="' . $url . 'accion.php?id=' . $data->id . '&accion=aprobar&cedula=' . $data->cedula . '" style="font-size: 24px; text-decoration: none; color: white;" target="_blank">Validar</a></div>
-			  
+                <p>Fecha : ' . $fecha . '</p>
+                <p>Atentamente </p>
+                
+                <p>GAD MDMQ AGENCIA METROPOLITANA DE CONTROL</p>
+                <p></p>
+                <p>IMPORTANTE</p>
+                <p>************************************************</p>
+                <p>- No responder este correo es un Mensaje Automático.</p>
+                
+
                 </div>
-                </div>
+                <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
                 </div>
                 ';
     return $texto;
@@ -757,36 +776,6 @@ function getmensajeSolicitudNegada($nombre = '', $data)
 // funcion envio email
 function enviarEmail($email, $nombre, $mensaje, $mailSeguimiento, $data, $textoAdicional = "")
 {
-    require_once 'admin/modules/common/Classes/PHPMailer/PHPMailerAutoload.php';
-    $mail = new PHPMailer(true);
-    $mail->Host = "smtp.office365.com";
-    $mail->Port = 587;
-    $mail->SMTPSecure = '';
-    $mail->SMTPAuth = true;
-    $mail->SMTPDebug = 2;
-    $mail->SMTPDebug = 2;
-    $mail->IsHTML(true);
-    $mail->CharSet = "UTF-8";
 
-    $mail->Username = "solicitudes@malleljardin.com.ec";
-    $mail->Password = 'Mall@2020';
-
-    $mail->setFrom('solicitudes@malleljardin.com.ec', 'Recepcion - Registro de trabajos');
-
-    $mail->addAddress($email, $nombre);
-
-    if ($mailSeguimiento != "")
-        $mail->addAddress($mailSeguimiento, $nombre);
-
-    $mail->Subject = 'Solicitud de allanamiento # ' . $data['id'] . ". $textoAdicional";
-    $mail->msgHTML($mensaje);
-
-    $mail->AltBody = 'Mensaje enviado..';
-
-    //send the message, check for errors
-    if (!$mail->send()) {
-        return "Mailer Error: " . $mail->ErrorInfo;
-    } else {
-        return "Message sent!";
-    }
 }
+

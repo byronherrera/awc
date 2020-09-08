@@ -320,7 +320,6 @@ function getmensajeRecordatorios($nombre = '', $detalle = '', $fecha = '')
     return $texto;
 }
 
-
 function deleteRecordatorios()
 {
     global $os;

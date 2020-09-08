@@ -23,7 +23,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         var accesosConsultas = this.app.isAllowedTo('accesosConsultas', this.id);
 
 
-
         var win = desktop.getWindow('grid-win-allanamiento');
 
         var urlAllanamiento = "http://agenciadecontrol.quito.gob.ec/amcserver/"; // servidor produccion
@@ -320,24 +319,260 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 , text: 'Código trámite'
             });
 
-
             this.formAllanamientoDetalle = new Ext.FormPanel({
                 id: 'formAllanamientoDetalle',
                 cls: 'no-border',
                 items: [
                     {
-                        region: 'north',
-                        height: 200,
+                        activeTab: 0,
+                        autoWidth: true,
+                        cls: 'no-border',
+                        layout: 'column',
+                        items: [
+                            {
+                                columnWidth: 1 / 3,
+                                cls: 'margen10',
+                                layout: 'form',
+                                monitorValid: true,
+                                items: [
+                                    {xtype: 'hidden', name: 'id'},
+                                    {xtype: 'hidden', name: 'fecha'},
+                                    {xtype: 'hidden', name: 'urlallanamiento'},
+                                    {xtype: 'hidden', name: 'nombres'},
+                                    {xtype: 'hidden', name: 'apellidos'},
+                                    {xtype: 'hidden', name: 'cedula'},
+                                    {xtype: 'hidden', name: 'correoelectronico'},
 
+                                    {xtype: 'hidden', name: 'ampliacionallanamiento'},
+                                    {xtype: 'hidden', name: 'direccionallanamientodo'},
+                                    {xtype: 'hidden', name: 'geoposicionamiento2'},
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'Fecha',
+                                        name: 'fecha2'
+                                    },
+                                    //  {xtype: 'displayfield', fieldLabel: 'Denuncia', name: 'urlallanamiento2'},
+                                    {
+                                        xtype: 'displayfield',
+                                        hideLabel: true,
+                                        value: '1. DATOS DEL SOLICITANTE',
+                                        cls: 'negrilla',
+                                        anchor: '95%'
+                                    }
+                                    , {
+                                        xtype: 'compositefield',
+                                        fieldLabel: 'Nombres',
+                                        msgTarget: 'under',
+                                        items: [
+                                            {
+                                                xtype: 'textfield',
+                                                name: 'nombres2',
+                                                width: '45%',
+                                                disabled: true,
+                                                cls: 'disabled'
+                                            },
+                                            {
+                                                xtype: 'textfield',
+                                                name: 'apellidos2',
+                                                width: '45%',
+                                                margins: '0 5 0 0',
+                                                disabled: true,
+                                                cls: 'disabled'
+                                            }
+                                        ]
+                                    }
+                                    , {xtype: 'displayfield', fieldLabel: 'Email', name: 'correoelectronico2'}
+                                    , {xtype: 'displayfield', fieldLabel: 'Cédula', name: 'cedula2'}
+                                    , {
+                                        xtype: 'compositefield',
+                                        fieldLabel: 'Teléfonos',
+                                        msgTarget: 'under',
+                                        items: [
+                                            {
+                                                xtype: 'textfield',
+                                                name: 'celular',
+                                                width: '45%',
+                                                disabled: true,
+                                                cls: 'disabled'
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'Dirección domicilio',
+                                        name: 'domicilio',
+                                        anchor: '96%'
+                                    }
+                                ]
+                            },
+                            {
+
+
+                                cls: 'fondogris',
+                                columnWidth: 1 / 3,
+                                layout: 'form',
+                                items: [
+
+                                    {
+                                        xtype: 'displayfield',
+                                        hideLabel: true,
+                                        value: '2. DATOS DE LA INFRACCIÓN',
+                                        cls: 'negrilla',
+                                        anchor: '95%'
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'materia',
+                                        name: 'materia',
+                                        anchor: '96%'
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'tipoadministrador',
+                                        name: 'tipoadministrador',
+                                        anchor: '96%'
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'establecimiento',
+                                        name: 'establecimiento',
+                                        anchor: '96%'
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'ubicacion',
+                                        name: 'ubicacion',
+                                        anchor: '96%'
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'actividad',
+                                        name: 'actividad',
+                                        anchor: '96%'
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'descripcion',
+                                        name: 'descripcion',
+                                        anchor: '96%'
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'observaciones',
+                                        name: 'observaciones',
+                                        anchor: '96%'
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'fechaacto',
+                                        name: 'fechaacto',
+                                        anchor: '96%'
+                                    }
+                                ]
+                            },
+                            {
+                                columnWidth: 1 / 3,
+                                layout: 'form',
+                                cls: 'margen10',
+                                items: [
+                                    {
+                                        xtype: 'displayfield',
+                                        hideLabel: true,
+                                        value: '3. ANEXOS',
+                                        cls: 'negrilla',
+                                        anchor: '95%'
+                                    }
+                                    , {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'Solicitud Allanamiento',
+                                        name: 'imagenasolicitud'
+                                    }
+                                    , {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'LUAE',
+                                        name: 'imagenaluae'
+                                    }
+                                    , {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'Acto Inicio',
+                                        name: 'imagenactoinicio'
+                                    }
+                                    , {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'Motivo negar',
+                                        name: 'motivonegar',
+                                        anchor: '95%'
+                                    }
+                                    , {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'Total pedidos anteriores',
+                                        name: 'totalallanamiento',
+                                        anchor: '95%'
+                                    },
+                                    {
+                                        xtype: 'textfield',
+                                        fieldLabel: 'SITRA',
+                                        name: 'codigo_tramite',
+                                        anchor: '95%',
+                                        allowBlank: false,
+                                        id: 'codigo_tramite_formulario',
+                                        listeners: {
+                                            'change': function (value, newValue, oldValue) {
+                                                if (newValue != oldValue) {
+                                                    Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            });
+/*
+            win = desktop.createWindow({
+                id: 'grid-win-allanamiento',
+                title: 'Gestión Allanamiento',
+                width: winWidth,
+                height: winHeight,
+                iconCls: 'allanamiento-icon',
+                shim: false,
+                animCollapse: false,
+                constrainHeader: true,
+                items: [
+                    {
+                        region: 'north',
+                        height: 230,
                         autoScroll: false,
-                        id: 'formcabeceraallanamiento',
+                        tbar: [
+                            {
+                                id: 'recargardatos',
+                                iconCls: 'reload-icon',
+                                handler: this.requestAllanamientoData,
+                                scope: this,
+                                text: 'Recargar Datos',
+                                tooltip: 'Recargar datos en la grilla'
+                            },
+
+                            '->'
+                            , {
+                                text: 'Buscar por:'
+                                , xtype: 'tbtext'
+                            }
+                            , searchFieldBtn
+                            , ' ', ' '
+                            , new QoDesk.QoAdmin.SearchField({
+                                paramName: 'filterText'
+                                , store: this.storeAllanamiento
+                            })
+                        ],
                         items: this.gridAllanamiento
                     },
                     {
                         region: 'center',
                         split: true,
                         autoScroll: true,
-
                         height: winHeight - 265,
                         minSize: 100,
                         margins: '0 0 0 0',
@@ -377,252 +612,53 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                 id: 'textDenunciasAnteriores'
                             }
                         ],
-                        items: [
-                            {
-                                activeTab: 0,
-                                autoWidth: true,
-                                cls: 'no-border',
-                                layout: 'column',
-                                items: [
-                                    {
-                                        columnWidth: 1 / 3,
-                                        cls: 'margen10',
-                                        layout: 'form',
-                                        monitorValid: true,
-                                        items: [
-                                            {xtype: 'hidden', name: 'id'},
-                                            {xtype: 'hidden', name: 'fecha'},
-                                            {xtype: 'hidden', name: 'urlallanamiento'},
-                                            {xtype: 'hidden', name: 'nombres'},
-                                            {xtype: 'hidden', name: 'apellidos'},
-                                            {xtype: 'hidden', name: 'cedula'},
-                                            {xtype: 'hidden', name: 'correoelectronico'},
-
-                                            {xtype: 'hidden', name: 'ampliacionallanamiento'},
-                                            {xtype: 'hidden', name: 'direccionallanamientodo'},
-                                            {xtype: 'hidden', name: 'geoposicionamiento2'},
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Fecha',
-                                                name: 'fecha2'
-                                            },
-                                            //  {xtype: 'displayfield', fieldLabel: 'Denuncia', name: 'urlallanamiento2'},
-                                            {
-                                                xtype: 'displayfield',
-                                                hideLabel: true,
-                                                value: '1. DATOS DEL SOLICITANTE',
-                                                cls: 'negrilla',
-                                                anchor: '95%'
-                                            }
-                                            , {
-                                                xtype: 'compositefield',
-                                                fieldLabel: 'Nombres',
-                                                msgTarget: 'under',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        name: 'nombres2',
-                                                        width: '45%',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    },
-                                                    {
-                                                        xtype: 'textfield',
-                                                        name: 'apellidos2',
-                                                        width: '45%',
-                                                        margins: '0 5 0 0',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
-                                                ]
-                                            }
-                                            , {xtype: 'displayfield', fieldLabel: 'Email', name: 'correoelectronico2'}
-                                            , {xtype: 'displayfield', fieldLabel: 'Cédula', name: 'cedula2'}
-                                            , {
-                                                xtype: 'compositefield',
-                                                fieldLabel: 'Teléfonos',
-                                                msgTarget: 'under',
-                                                items: [
-                                                    {
-                                                        xtype: 'textfield',
-                                                        name: 'celular',
-                                                        width: '45%',
-                                                        disabled: true,
-                                                        cls: 'disabled'
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Dirección domicilio',
-                                                name: 'domicilio',
-                                                anchor: '96%'
-                                            }
-                                        ]
-                                    },
-                                    {
-
-
-                                        cls: 'fondogris',
-                                        columnWidth: 1 / 3,
-                                        layout: 'form',
-                                        items: [
-
-                                            {
-                                                xtype: 'displayfield',
-                                                hideLabel: true,
-                                                value: '2. DATOS DE LA INFRACCIÓN',
-                                                cls: 'negrilla',
-                                                anchor: '95%'
-                                            },
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'materia',
-                                                name: 'materia',
-                                                anchor: '96%'
-                                            },
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'tipoadministrador',
-                                                name: 'tipoadministrador',
-                                                anchor: '96%'
-                                            },
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'establecimiento',
-                                                name: 'establecimiento',
-                                                anchor: '96%'
-                                            },
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'ubicacion',
-                                                name: 'ubicacion',
-                                                anchor: '96%'
-                                            },
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'actividad',
-                                                name: 'actividad',
-                                                anchor: '96%'
-                                            },
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'descripcion',
-                                                name: 'descripcion',
-                                                anchor: '96%'
-                                            },
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'observaciones',
-                                                name: 'observaciones',
-                                                anchor: '96%'
-                                            },
-                                            {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'fechaacto',
-                                                name: 'fechaacto',
-                                                anchor: '96%'
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        columnWidth: 1 / 3,
-                                        layout: 'form',
-                                        cls: 'margen10',
-                                        items: [
-                                            {
-                                                xtype: 'displayfield',
-                                                hideLabel: true,
-                                                value: '3. ANEXOS',
-                                                cls: 'negrilla',
-                                                anchor: '95%'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Solicitud Allanamiento',
-                                                name: 'imagenasolicitud'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'LUAE',
-                                                name: 'imagenaluae'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Acto Inicio',
-                                                name: 'imagenactoinicio'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Motivo negar',
-                                                name: 'motivonegar',
-                                                anchor: '95%'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Total pedidos anteriores',
-                                                name: 'totalallanamiento',
-                                                anchor: '95%'
-                                            },
-                                            {
-                                                xtype: 'textfield',
-                                                fieldLabel: 'SITRA',
-                                                name: 'codigo_tramite',
-                                                anchor: '95%',
-                                                allowBlank: false,
-                                                id: 'codigo_tramite_formulario',
-                                                listeners: {
-                                                    'change': function (value, newValue, oldValue) {
-                                                        if (newValue != oldValue) {
-                                                            Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-
-                        ]
+                        items: this.formAllanamientoDetalle
                     }
                 ]
             });
 
+            */
+
             win = desktop.createWindow({
-                id: 'grid-win-allanamiento',
-                title: 'Gestión Allanamiento',
+                id: 'grid-win-recordatorios',
+                title: 'Recordatorios',
                 width: winWidth,
                 height: winHeight,
-                iconCls: 'allanamiento-icon',
+                iconCls: 'recordatorios-icon',
                 shim: false,
                 animCollapse: false,
                 constrainHeader: true,
                 layout: 'fit',
-                tbar: [
-                    {
-                        id: 'recargardatos',
-                        iconCls: 'reload-icon',
-                        handler: this.requestAllanamientoData,
-                        scope: this,
-                        text: 'Recargar Datos',
-                        tooltip: 'Recargar datos en la grilla'
-                    },
+                items: new Ext.TabPanel({
+                    activeTab: 0,
+                    border: false,
+                    items: [
+                        {
+                            title: 'Detalle',
+                            layout: 'column',
+                            id: 'detalleRecordatoriosTab',
 
-                    '->'
-                    , {
-                        text: 'Buscar por:'
-                        , xtype: 'tbtext'
-                    }
-                    , searchFieldBtn
-                    , ' ', ' '
-                    , new QoDesk.QoAdmin.SearchField({
-                        paramName: 'filterText'
-                        , store: this.storeAllanamiento
-                    })
-                ],
-                items: this.formAllanamientoDetalle
+
+                            disabled: false,
+                            autoScroll: true,
+
+                        },
+
+                        {
+                            title: 'Reportes',
+                            layout: 'column',
+                            id: 'reportesRecordatoriosTab',
+
+
+                            disabled: false,
+                            autoScroll: true,
+
+
+                        }
+                    ]
+                })
             });
+
         }
         win.show();
 
