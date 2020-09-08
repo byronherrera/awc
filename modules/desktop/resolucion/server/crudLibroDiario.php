@@ -22,10 +22,10 @@ function selectOrdenanzas()
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
         if ($columnaBusqueda == 'fecha_ingreso') {
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+            $where = " WHERE ($columnaBusqueda LIKE '%$campo%'";
         }
         elseif ($columnaBusqueda == 'memo_ingreso') {
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+            $where = " WHERE ($columnaBusqueda LIKE '%$campo%'";
         }
         elseif ($columnaBusqueda == 'nombre_funcionario') {
                 $sql = "SELECT id FROM qo_members WHERE first_name like UPPER('%$campo%') OR last_name like UPPER('%$campo%') ";
@@ -34,7 +34,7 @@ function selectOrdenanzas()
                     if (strlen($row['id']) > 0) {
                         $campo = $row['id'];
                         if ($where == '')
-                            $where = " WHERE funcionario = '$campo'";
+                            $where = " WHERE (funcionario = '$campo'";
                         else
                             $where = $where . " OR funcionario = '$campo'";
                     }
@@ -61,7 +61,7 @@ function selectOrdenanzas()
             }
 
             $cadena = substr($cadena,0,-3);
-            $where = " WHERE ".$cadena;
+            $where = " WHERE (".$cadena;
         }
 
     }
@@ -72,7 +72,7 @@ function selectOrdenanzas()
             if($where == ''){
                 $where = " WHERE funcionario = $usuarioLog ";
             }else{
-                $where = $where . "  AND funcionario = $usuarioLog ";
+                $where = $where . " ) AND funcionario = $usuarioLog ";
             }
         }
         //else{
