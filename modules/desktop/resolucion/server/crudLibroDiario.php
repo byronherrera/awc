@@ -75,12 +75,12 @@ function selectOrdenanzas()
                 $where = $where . " ) AND funcionario = $usuarioLog ";
             }
         }
-        //else{
-         //   if($where != ''){
-        //       $where = $where . " ) ";
-         //   }
-        //}
-    }
+        else{
+            if($where != ''){
+                $where = $where . " ) ";
+            }
+            }
+        }
 
 //    $orderby = 'ORDER BY a.id ASC';
     if (isset($_POST['sort'])) {
