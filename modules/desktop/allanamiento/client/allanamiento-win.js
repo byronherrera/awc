@@ -23,6 +23,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         var accesosConsultas = this.app.isAllowedTo('accesosConsultas', this.id);
 
 
+
         var win = desktop.getWindow('grid-win-allanamiento');
 
         var urlAllanamiento = "http://agenciadecontrol.quito.gob.ec/amcserver/"; // servidor produccion
@@ -319,9 +320,46 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 , text: 'Código trámite'
             });
 
+
             this.formAllanamientoDetalle = new Ext.FormPanel({
                 id: 'formAllanamientoDetalle',
                 cls: 'no-border',
+                tbar: [
+                    {
+                        text: 'Receptar solicitud allanamiento',
+                        scope: this,
+                        handler: this.aprobarallanamiento,
+                        iconCls: 'save-icon',
+                        disabled: true,
+                        id: 'tb_aprobarallanamiento'
+                        , formBind: true
+                    }, {
+                        text: 'Devolver solicitud allanamiento',
+                        scope: this,
+                        handler: this.negarallanamiento,
+                        iconCls: 'save-icon',
+                        disabled: true,
+                        id: 'tb_negarallanamiento',
+                        formBind: true
+                    },
+                    {
+                        text: '| Motivo negar:'
+                        , xtype: 'tbtext',
+                    },
+                    {
+                        xtype: 'textfield',
+                        id: 'motivoNegarDenuncia',
+                        disabled: true,
+                        anchor: '40%',
+                        width: '500'
+                    },
+                    '->',
+                    {
+                        text: 'Denuncias anteriores:'
+                        , xtype: 'tbtext',
+                        id: 'textDenunciasAnteriores'
+                    }
+                ],
                 items: [
                     {
                         activeTab: 0,
@@ -528,9 +566,10 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             }
                         ]
                     }
+
                 ]
             });
-/*
+
             win = desktop.createWindow({
                 id: 'grid-win-allanamiento',
                 title: 'Gestión Allanamiento',
@@ -540,125 +579,260 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 shim: false,
                 animCollapse: false,
                 constrainHeader: true,
-                items: [
-                    {
-                        region: 'north',
-                        height: 230,
-                        autoScroll: false,
-                        tbar: [
-                            {
-                                id: 'recargardatos',
-                                iconCls: 'reload-icon',
-                                handler: this.requestAllanamientoData,
-                                scope: this,
-                                text: 'Recargar Datos',
-                                tooltip: 'Recargar datos en la grilla'
-                            },
-
-                            '->'
-                            , {
-                                text: 'Buscar por:'
-                                , xtype: 'tbtext'
-                            }
-                            , searchFieldBtn
-                            , ' ', ' '
-                            , new QoDesk.QoAdmin.SearchField({
-                                paramName: 'filterText'
-                                , store: this.storeAllanamiento
-                            })
-                        ],
-                        items: this.gridAllanamiento
-                    },
-                    {
-                        region: 'center',
-                        split: true,
-                        autoScroll: true,
-                        height: winHeight - 265,
-                        minSize: 100,
-                        margins: '0 0 0 0',
-                        tbar: [
-                            {
-                                text: 'Aprobar solicitud allanamiento',
-                                scope: this,
-                                handler: this.aprobarallanamiento,
-                                iconCls: 'save-icon',
-                                disabled: true,
-                                id: 'tb_aprobarallanamiento'
-                                , formBind: true
-                            }, {
-                                text: 'Negar solicitud allanamiento',
-                                scope: this,
-                                handler: this.negarallanamiento,
-                                iconCls: 'save-icon',
-                                disabled: true,
-                                id: 'tb_negarallanamiento',
-                                formBind: true
-                            },
-                            {
-                                text: '| Motivo negar:'
-                                , xtype: 'tbtext',
-                            },
-                            {
-                                xtype: 'textfield',
-                                id: 'motivoNegarDenuncia',
-                                disabled: true,
-                                anchor: '40%',
-                                width: '500'
-                            },
-                            '->',
-                            {
-                                text: 'Denuncias anteriores:'
-                                , xtype: 'tbtext',
-                                id: 'textDenunciasAnteriores'
-                            }
-                        ],
-                        items: this.formAllanamientoDetalle
-                    }
-                ]
-            });
-
-            */
-
-            win = desktop.createWindow({
-                id: 'grid-win-recordatorios',
-                title: 'Recordatorios',
-                width: winWidth,
-                height: winHeight,
-                iconCls: 'recordatorios-icon',
-                shim: false,
-                animCollapse: false,
-                constrainHeader: true,
                 layout: 'fit',
                 items: new Ext.TabPanel({
                     activeTab: 0,
                     border: false,
                     items: [
                         {
-                            title: 'Detalle',
-                            layout: 'column',
-                            id: 'detalleRecordatoriosTab',
-
-
-                            disabled: false,
                             autoScroll: true,
+                            title: 'Solicitudesde Allanamiento',
+                            closable: true,
 
+                            items: [
+                                {
+                                    id: 'formcabeceraoperativos',
+                                    titleCollapse: true,
+                                    split: true,
+                                    flex: 1,
+                                    autoScroll: true,
+                                    layout: 'column',
+                                    tbar: [
+                                        {
+                                            id: 'recargardatos',
+                                            iconCls: 'reload-icon',
+                                            handler: this.requestAllanamientoData,
+                                            scope: this,
+                                            text: 'Recargar Datos',
+                                            tooltip: 'Recargar datos en la grilla'
+                                        },
+
+                                        '->'
+                                        , {
+                                            text: 'Buscar por:'
+                                            , xtype: 'tbtext'
+                                        }
+                                        , searchFieldBtn
+                                        , ' ', ' '
+                                        , new QoDesk.QoAdmin.SearchField({
+                                            paramName: 'filterText'
+                                            , store: this.storeAllanamiento
+                                        })
+                                    ],
+                                    items: this.gridAllanamiento
+                                },
+                                {
+                                    flex: 2,
+                                    bodyStyle: 'padding:0; background: #DFE8F6',
+                                    layout: 'column',
+                                    items: [
+                                        {
+                                            xtype: 'tabpanel',
+                                            activeTab: 0,
+                                            width: winWidth,
+                                            cls: 'no-border',
+                                            items: [
+                                                {
+                                                    title: 'Resumen Operativo',
+                                                    layout: 'column',
+                                                    id: 'detalleOperativosTab',
+                                                    height: 250,
+
+                                                    items: this.formAllanamientoDetalle,
+                                                    disabled: true,
+                                                    autoScroll: true
+
+                                                },
+                                               /* {
+                                                    title: 'Instituciones Participantes',
+                                                    layout: 'column',
+                                                    height: 250,
+                                                    items: this.gridOperativosParticipantes,
+                                                    autoScroll: true,
+                                                    tbar: [
+                                                        {
+                                                            text: 'Nuevo',
+                                                            scope: this,
+                                                            //handler: this.addoperativosPersonal,
+                                                            handler: this.addoperativosParticipantes,
+                                                            iconCls: 'save-icon',
+                                                            disabled: true,
+                                                            id: 'addoperativoparticipantes'
+                                                            //disabled: !acceso
+                                                        },
+                                                        '-',
+                                                        {
+                                                            text: "Eliminar",
+                                                            scope: this,
+                                                            handler: this.deleteoperativosPersonal,
+                                                            handler: this.deleteoperativosParticipantes,
+                                                            id: 'borraroperativoparticipantes',
+                                                            iconCls: 'delete-icon',
+                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                            disabled: true
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    title: 'Personal asignado',
+                                                    layout: 'column',
+                                                    height: 250,
+                                                    items: this.gridOperativosPersonal,
+                                                    autoScroll: true,
+                                                    tbar: [
+                                                        {
+                                                            text: 'Nuevo',
+                                                            scope: this,
+                                                            handler: this.addoperativosPersonal,
+                                                            iconCls: 'save-icon',
+                                                            //disabled: true,
+                                                            id: 'addoperativodetalle',
+                                                            //disabled: !acceso
+                                                        },
+                                                        '-',
+                                                        {
+                                                            text: "Eliminar",
+                                                            scope: this,
+                                                            handler: this.deleteoperativosPersonal,
+                                                            id: 'borraroperativodetalle',
+                                                            iconCls: 'delete-icon',
+                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                            //disabled: true
+                                                        }
+                                                    ]
+                                                },*/
+
+                                            ]
+                                        }
+
+                                    ]
+                                }
+                            ]
                         },
-
-                        {
+                       /* {
                             title: 'Reportes',
-                            layout: 'column',
-                            id: 'reportesRecordatoriosTab',
+                            closable: true,
+                            layout: 'border',
+                            //disabled: this.app.isAllowedTo('accesosOperativos', this.id) ? false : true,
+                            tbar: [
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridDataDocumentoReporte,
+                                    scope: this,
+                                    text: 'Buscar'
 
+                                },
+                                {
+                                    iconCls: 'reload-icon',
+                                    handler: this.requestGridDataDocumentoReporteReset,
+                                    scope: this,
+                                    text: 'Borrar formulario'
 
-                            disabled: false,
-                            autoScroll: true,
+                                },
+                                {
+                                    xtype: 'checkbox',
+                                    boxLabel: 'Detalle acciones',
+                                    id: 'checkDetalleAcciones',
+                                    name: 'detalleacciones',
+                                    checked: false,
+                                    inputValue: '1',
+                                    tooltip: 'Detalle de las acciones efectuados en el reporte',
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                    }
+                                }, {
+                                    xtype: 'checkbox',
+                                    boxLabel: 'Detalle actas',
+                                    id: 'checkDetalleActas',
+                                    name: 'detalleactas',
+                                    checked: false,
+                                    inputValue: '1',
+                                    tooltip: 'Detalle de las actas efectuados en el reporte',
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                    }
+                                }, {
+                                    xtype: 'checkbox',
+                                    boxLabel: 'Detalle retiros',
+                                    id: 'checkDetalleRecibidos',
+                                    name: 'detalleretiros',
+                                    checked: false,
+                                    inputValue: '1',
+                                    tooltip: 'Detalle de los retiros efectuados en el reporte',
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                    }
+                                }, {
+                                    xtype: 'checkbox',
+                                    boxLabel: 'Totales personal',
+                                    id: 'checkTotalesPersonal',
+                                    name: 'totalespersonal',
+                                    checked: false,
+                                    inputValue: '1',
+                                    tooltip: 'Detalle de los retiros efectuados en el reporte',
+                                    cls: 'barramenu',
+                                    handler: function (checkbox, isChecked) {
+                                    }
+                                }, '-',
 
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporte,
+                                    scope: this,
+                                    text: 'Exportar listado',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada'
+                                },
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporteCalendarioPersonal,
+                                    scope: this,
+                                    text: 'Calendario  personas',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada'
+                                }
+                                ,
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporteCalendarioOperativos,
+                                    scope: this,
+                                    text: 'Calendario  operativos',
+                                    tooltip: 'Se genera archivo Excel con la información solicitada'
+                                }
+                                ,
+                                {
+                                    iconCls: 'excel-icon',
+                                    handler: this.botonExportarDocumentoReporteTotalOperativos,
+                                    scope: this,
+                                    text: 'Operativos tiempo',
+                                    tooltip: 'Se genera archivo Excel con total tiempo por operativo'
+                                }
+                            ],
+                            items: [
+                                {
+                                    region: 'north',
+                                    height: 175,
+                                    minSize: 100,
+                                    maxSize: 170,
+                                    closable: true,
+                                    autoScroll: false,
+                                    items: this.formConsultaDocumentos
+                                },
+                                {
+                                    // lazily created panel (xtype:'panel' is default)
+                                    region: 'center',
+                                    split: true,
+                                    autoScroll: true,
+                                    height: 270,
+                                    minSize: 100,
+                                    maxSize: 150,
+                                    items: this.gridDocumentosReporte
+                                }
+                            ]
 
-                        }
+                            //this.gridReportes
+                        } */
                     ]
                 })
             });
-
         }
         win.show();
 

@@ -346,7 +346,8 @@ amc_operativos.mail_enviado FROM amc_operativos $innerJoin  $where $orderby LIMI
     echo json_encode(array(
             "total" => $total,
             "success" => true,
-            "data" => $data)
+            "data" => $data,
+            "sql" => $sql)
     );
 }
 

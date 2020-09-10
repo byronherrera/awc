@@ -228,7 +228,9 @@ if (isset($data->busqueda_fecha_inicio) and ($data->busqueda_fecha_inicio != '')
 
 $os->db->conn->query("SET NAMES 'utf8'");
 
-$sql = "SELECT *, (SELECT nombre FROM amc_operativos_estados AS c WHERE  c.id = b.id_estado ) estado FROM amc_operativos as b $innerJoin $where  ORDER BY b.fecha_inicio_planificacion";
+$sql = "SELECT b.id, b.id_persona, b.codigo_operativo, b.visible, b.fecha_planificacion, b.fecha_inicio_planificacion, b.fecha_fin_planificacion, b.fecha_impresion_informe, b.id_tipo_control, b.id_zonal, b.id_nivel_complejidad, b.id_unidad, b.punto_encuentro_planificado, b.zona, b.id_persona_encargada, b.tramite, b.fecha_creacion, b.finalizado, b.fallido, b.detalle, b.observaciones, b.parroquias, b.barrios, b.id_estado, b.tipo_operativo, b.fecha_informe, b.fecha_real_inicio, b.fecha_real_fin, b.mail_enviado,
+        (SELECT nombre FROM amc_operativos_estados AS c WHERE  c.id = b.id_estado ) estado FROM amc_operativos as b $innerJoin $where  ORDER BY b.fecha_inicio_planificacion";
+
 
 $result = $os->db->conn->query($sql);
  

@@ -712,6 +712,38 @@ function comboPersonalDistributivoEmail()
             "data" => $data)
     );
 }
+function comboTiposActivPoa()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT id, actividad as nombre FROM amc_planificacion_actividades WHERE activo=1 ORDER BY orden";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+function comboTiposActivPoaFase()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT id, fase as nombre FROM amc_planificacion_actividades WHERE activo=1 ORDER BY orden";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $data[] = $row;
+    }
+
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
 
 switch ($_GET['tipo']) {
     case 'usuario' :
@@ -835,6 +867,12 @@ switch ($_GET['tipo']) {
         break;
     case 'personal_distributivo_email' :
         comboPersonalDistributivoEmail();
+        break;
+    case 'tiposActivPoa' :
+        comboTiposActivPoa();
+        break;
+    case 'tiposActivPoaFase' :
+        comboTiposActivPoaFase();
         break;
 
     case 'zonas' :

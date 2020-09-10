@@ -4,7 +4,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
     init: function () {
         this.launcher = {
-            text: 'Recordatorios',
+            text: 'SegPOA',
             iconCls: 'recordatorios-icon',
             handler: this.createWindow,
             scope: this
@@ -21,11 +21,19 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         var urlRecordatorios = "modules/desktop/recordatorios/server/";
         var textField = new Ext.form.TextField({allowBlank: false});
 
+        limiterecordatorios = 100;
+
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d') : '';
         }
 
         var textField = new Ext.form.TextField({allowBlank: false});
+        var numberField = new Ext.ux.form.SpinnerField({
+            fieldLabel: 'Age',
+            name: 'age',
+            minValue: 0,
+            maxValue: 1000
+        });
 
         //inicio combo tipo contratacion
         storeSINO = new Ext.data.JsonStore({
@@ -42,6 +50,59 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         });
         //si no
 
+        //inicio combo tipo MEDIDA operativo
+        storeTIPOACTIVPOA = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=tiposActivPoa'
+        });
+
+        var comboTIPOACTIVPOA = new Ext.form.ComboBox({
+            id: 'comboTIPOACTIVPOA',
+            store: storeTIPOACTIVPOA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function tipoActividadPoa(id) {
+            var index = storeTIPOACTIVPOA.findExact('id', id);
+            if (index > -1) {
+                var record = storeTIPOACTIVPOA.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo nivel MEDIDA OPERATIVO
+        //inicio combo tipo fase
+        storeTIPOACTIVPOAFASE = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=tiposActivPoaFase'
+        });
+
+        var comboTIPOACTIVPOAFASE = new Ext.form.ComboBox({
+            id: 'comboTIPOACTIVPOAFASE',
+            store: storeTIPOACTIVPOAFASE,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function tipoActividadPoaFase(id) {
+            var index = storeTIPOACTIVPOAFASE.findExact('id', id);
+            if (index > -1) {
+                var record = storeTIPOACTIVPOAFASE.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo nivel fase
+
         //inicio combo tipo contratacion
         storeTIPOCONTRATA = new Ext.data.JsonStore({
             root: 'users',
@@ -55,11 +116,10 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     {"id": 'Caja chica', "nombre": "Caja chica"},
                     {"id": 'Contratación directa', "nombre": "Contratación directa"},
                     {"id": 'Servicios básicos', "nombre": "Servicios básicos"},
-                    {"id": 'TTHH', "nombre": "TTHH"},
+                    {"id": 'Menor cuantía', "nombre": "Menor cuantía"},
                     {"id": 'Catálogo electrónico', "nombre": "Catálogo electrónico"},
                     {"id": 'Subasta inversa', "nombre": "Subasta inversa"},
-                    {"id": 'Régimen especial', "nombre": "Régimen especial"},
-                    {"id": 'Menor cuantía', "nombre": "Menor cuantía"}
+                    {"id": 'Régimen especial', "nombre": "Régimen especial"}
                 ]
             }
         });
@@ -159,8 +219,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             url: 'modules/common/combos/combos.php?tipo=personaloperativos',
             baseParams: {
                 todos: 'true',
-                // accesosAdministradorOpe: accesosAdministradorOpe,
-                // accesosOperativos: accesosOperativos,
                 acceso: acceso
             }
 
@@ -287,7 +345,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             baseParams: {}
         });
         storeRecordatorios = this.storeRecordatorios;
-        limiterecordatorios = 100;
+
 
         storeRecordatorios.baseParams = {
             limit: limiterecordatorios
@@ -295,7 +353,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
         this.gridRecordatorios = new Ext.grid.EditorGridPanel({
             //height: '100%',
-            height: desktop.getWinHeight() - 92,
+            height: 250,
+            //height: desktop.getWinHeight() - 92,
             store: this.storeRecordatorios,
             clicksToEdit: 1,
             columns: [
@@ -360,7 +419,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     header: 'Estado',
                     dataIndex: 'estado',
                     sortable: true,
-                    width: 125,
+                    width: 150,
                     editor: textField
                 }
                 , {
@@ -437,10 +496,192 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 emptyMsg: "No existen recordatorios  que mostrar"
             })
         });
+        // fin ventana recordatorios
+
+        // inicio ventana recordatoriosDetalle
+        var proxyRecordatoriosDetalle = new Ext.data.HttpProxy({
+            api: {
+                create: urlRecordatorios + "crudRecordatoriosDetalle.php?operation=insert",
+                read: urlRecordatorios + "crudRecordatoriosDetalle.php?operation=select",
+                update: urlRecordatorios + "crudRecordatoriosDetalle.php?operation=update",
+                destroy: urlRecordatorios + "crudRecordatoriosDetalle.php?operation=delete"
+            },
+            listeners: {
+                write: function (proxy, action, result, res, rs) {
+                    if (typeof res.message !== 'undefined') {
+                        if (res.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
+                        }
+                    }
+                }
+            }
+        });
+        var readerRecordatoriosDetalle = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id', allowBlank: true}
+                , {name: 'id_planificacion', allowBlank: false}
+                , {name: 'id_actividad', allowBlank: false}
+                , {name: 'cumplimiento', allowBlank: false}
+                , {name: 'detalle', allowBlank: true}
+                , {name: 'fecha_cumplimiento', type: 'date', dateFormat: 'c', allowBlank: true}
+                , {name: 'dias', allowBlank: false}
+                , {name: 'fecha_compromiso', type: 'date', dateFormat: 'c', allowBlank: false}
+                , {name: 'observaciones', allowBlank: true}
+            ]
+        });
+
+        var writerRecordatoriosDetalle = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+        this.storeRecordatoriosDetalle = new Ext.data.Store({
+            id: "storeRecordatoriosDetalle",
+            proxy: proxyRecordatoriosDetalle,
+            reader: readerRecordatoriosDetalle,
+            writer: writerRecordatoriosDetalle,
+            autoSave: true,
+            remoteSort: true,
+            baseParams: {}
+        });
+        storeRecordatoriosDetalle = this.storeRecordatoriosDetalle;
+
+
+        storeRecordatoriosDetalle.baseParams = {
+            limit: limiterecordatorios
+        };
+
+        this.gridRecordatoriosDetalle = new Ext.grid.EditorGridPanel({
+            id : 'gridRecordatoriosDetalle',
+            height: desktop.getWinHeight() - 345,
+            store: this.storeRecordatoriosDetalle,
+            title: 'Detalle planificación',
+            clicksToEdit: 1,
+            tbar: [
+                {
+                    text: 'Nuevo',
+                    scope: this,
+                    handler: this.addrecordatoriosDetalle,
+                    iconCls: 'save-icon',
+                    id: 'addrecordatorios',
+                    //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                },
+                '-',
+                {
+                    text: "Eliminar",
+                    scope: this,
+                    handler: this.deleterecordatoriosDetalle,
+                    id: 'deleterecordatorios',
+                    iconCls: 'delete-icon',
+                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                    //disabled: true
+                },
+                '-',
+                {
+                    iconCls: 'reload-icon',
+                    handler: this.requestGridDatarecordatoriosDetalle,
+                    scope: this,
+                    text: 'Recargar Datos',
+                    tooltip: 'Recargar datos'
+                }
+
+            ],
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {header: 'id', dataIndex: 'id', sortable: true, width: 30, hidden: true},
+                {header: 'id_planificacion', dataIndex: 'id_planificacion', sortable: true, width: 30, hidden: true},
+             /*   {
+                    header: 'Fase', dataIndex: 'id_actividad', sortable: true, width: 120,
+                    renderer: tipoActividadPoaFase
+                },*/
+                {
+                    header: 'Actividad', dataIndex: 'id_actividad', sortable: true, width: 220,
+                    editor: comboTIPOACTIVPOA,
+                    renderer: tipoActividadPoa
+                },
+                {
+                    header: 'Cumplimiento'
+                    , dataIndex: 'cumplimiento'
+                    , editor: {
+                        xtype: 'checkbox'
+                    }
+                    , falseText: 'No'
+                    , trueText: 'Si'
+                    , menuDisabled: true
+                    , sortable: true
+                    , width: 80
+                    , xtype: 'booleancolumn'
+                    , align: 'center'
+                },
+                {
+                    header: 'Detalle',
+                    dataIndex: 'detalle',
+                    sortable: true,
+                    width: 350,
+                    editor: textField
+                },
+                {
+                    header: 'Fecha<br>Compromiso',
+                    dataIndex: 'fecha_compromiso',
+                    sortable: true,
+                    width: 80,
+                    renderer: formatDate,
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
+                {
+                    header: 'Dias<br>Compromiso'
+                    , dataIndex: 'dias'
+                    , sortable: true
+                    , width: 70
+                    , editor: numberField
+                    , align: 'center'
+                },
+                {
+                    header: 'Fecha<br>Cumplimiento',
+                    dataIndex: 'fecha_cumplimiento',
+                    sortable: true,
+                    width: 80,
+                    renderer: formatDate,
+                    editor: new Ext.form.DateField({
+                        format: 'Y-m-d'
+                    })
+                },
+                {
+                    header: 'Observaciones',
+                    dataIndex: 'observaciones',
+                    sortable: true,
+                    width: 300,
+                    editor: textField
+                }
+
+            ],
+            viewConfig: {
+                forceFit: false
+            },
+            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            /* bbar: new Ext.PagingToolbar({
+                 pageSize: limiterecordatorios,
+                 store: storeRecordatoriosDetalle,
+                 displayInfo: true,
+                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
+                 emptyMsg: "No existen recordatorios  que mostrar"
+             })*/
+        });
+        // fin ventana recordatorios detalle
+
 
         //datastore y grid para reporte
         this.storeRecordatoriosReporte = new Ext.data.Store({
-            id: "id",
+            id: "storeRecordatoriosReporte",
             proxy: proxyRecordatorios,
             reader: readerRecordatorios,
             writer: writerRecordatorios,
@@ -773,7 +1014,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
             win = desktop.createWindow({
                 id: 'grid-win-recordatorios',
-                title: 'Recordatorios',
+                title: 'SegPOA',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'recordatorios-icon',
@@ -787,46 +1028,60 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     items: [
                         {
                             title: 'Detalle',
-                            layout: 'column',
-                            id: 'detalleRecordatoriosTab',
-
-                            items: this.gridRecordatorios,
-                            disabled: false,
                             autoScroll: true,
-                            tbar: [
+                            closable: true,
+                            items: [
                                 {
-                                    text: 'Nuevo',
-                                    scope: this,
-                                    handler: this.addrecordatorios,
-                                    iconCls: 'save-icon',
-                                    id: 'addrecordatorios',
-                                    //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                    id: 'cabeceraOperativos',
+                                    titleCollapse: true,
+                                    split: true,
+                                    flex: 1,
+                                    autoScroll: true,
+                                    layout: 'column',
+                                    tbar: [
+                                        {
+                                            text: 'Nuevo',
+                                            scope: this,
+                                            handler: this.addrecordatorios,
+                                            iconCls: 'save-icon',
+                                            id: 'addrecordatorios',
+                                            //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                        },
+                                        '-',
+                                        {
+                                            text: "Eliminar",
+                                            scope: this,
+                                            handler: this.deleterecordatorios,
+                                            id: 'deleterecordatorios',
+                                            iconCls: 'delete-icon',
+                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                            //disabled: true
+                                        },
+                                        '-',
+                                        {
+                                            iconCls: 'reload-icon',
+                                            handler: this.requestGridData,
+                                            scope: this,
+                                            text: 'Recargar Datos',
+                                            tooltip: 'Recargar datos'
+                                        }, '->',
+                                        {text: 'Buscar por:', xtype: 'tbtext'}
+                                        , searchFieldBtn
+                                        , ' ', ' '
+                                        , new QoDesk.QoAdmin.SearchField({
+                                            paramName: 'filterText'
+                                            , store: this.storeRecordatorios
+                                        })
+                                    ],
+                                    items: this.gridRecordatorios,
                                 },
-                                '-',
                                 {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleterecordatorios,
-                                    id: 'deleterecordatorios',
-                                    iconCls: 'delete-icon',
-                                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                    //disabled: true
-                                },
-                                '-',
-                                {
-                                    iconCls: 'reload-icon',
-                                    handler: this.requestGridData,
-                                    scope: this,
-                                    text: 'Recargar Datos',
-                                    tooltip: 'Recargar datos'
-                                }, '->',
-                                {text: 'Buscar por:', xtype: 'tbtext'}
-                                , searchFieldBtn
-                                , ' ', ' '
-                                , new QoDesk.QoAdmin.SearchField({
-                                    paramName: 'filterText'
-                                    , store: this.storeRecordatorios
-                                })
+                                    id: 'detalleOperativos',
+                                    flex: 2,
+                                    bodyStyle: 'padding:0; background: #DFE8F6',
+                                    layout: 'column',
+                                    items: this.gridRecordatoriosDetalle
+                                }
                             ]
 
                         },
@@ -835,8 +1090,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                             title: 'Reportes',
                             layout: 'column',
                             id: 'reportesRecordatoriosTab',
-
-
                             disabled: false,
                             autoScroll: true,
                             tbar: [
@@ -865,7 +1118,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                                 }
 
                             ],
-
                             items: [
                                 {
                                     region: 'north',
@@ -890,6 +1142,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         }
                     ]
                 })
+
+
             });
         }
         win.show();
@@ -935,6 +1189,46 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
     },
     requestGridData: function () {
         this.storeRecordatorios.load({
+            params:
+                {
+                    start: 0,
+                    limit: limiterecordatorios
+                }
+        });
+    },
+
+    deleterecordatoriosDetalle: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridRecordatoriosDetalle.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeRecordatoriosDetalle.remove(rows);
+                }
+            }
+        });
+    },
+    addrecordatoriosDetalle: function () {
+        var recordatorios = new this.storeRecordatoriosDetalle.recordType({
+            id_responsable: '',
+            tema: '',
+            fecha_inicio: (new Date()),
+            fecha_entrega: (new Date()),
+            activo: '',
+            estado: ''
+        });
+        this.gridRecordatoriosDetalle.stopEditing();
+        this.storeRecordatoriosDetalle.insert(0, recordatorios);
+        this.gridRecordatoriosDetalle.startEditing(0, 0);
+    },
+    requestGridDatarecordatoriosDetalle: function () {
+        this.storeRecordatoriosDetalle.load({
             params:
                 {
                     start: 0,

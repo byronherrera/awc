@@ -184,6 +184,7 @@ $datosColumnas = [
     , ["columna" => "E", "ancho" => 15, "titulo" => 'Semaforo', "data" => 'semaforo']
     , ["columna" => "F", "ancho" => 12, "titulo" => 'Valor', "data" => 'valor']
     , ["columna" => "G", "ancho" => 10, "titulo" => '%', "data" => 'porcentaje']
+    , ["columna" => "H", "ancho" => 10, "titulo" => 'Fecha Entrega', "data" => 'fecha_entrega']
 ];
 $totalColumnas = count($datosColumnas) - 1;
 
@@ -222,10 +223,6 @@ foreach ($datosColumnas as &$valorColumna) {
     $objPHPExcel->getActiveSheet()->getColumnDimension($valorColumna['columna'])->setWidth($valorColumna['ancho']);
     $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filacabecera, $valorColumna['titulo']);
 
-//    $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn('A')->setAutoSize(false);
-//    $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(16.86);
-//    $objPHPExcel->getActiveSheet()->setCellValue('A' . $filacabecera, 'Memo Ingreso');
-
 }
 
 
@@ -236,11 +233,8 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $noExistenFilas = false;
 
     foreach ($datosColumnas as &$valorColumna) {
-//        $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaInicio, $rowdetalle['memo_ingreso']);
-
         $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filaInicio, $rowdetalle[$valorColumna['data']]);
     }
-
 
     $objPHPExcel->getActiveSheet()->getStyle($datosColumnas[0]['columna'] . $filaInicio . ':' . $datosColumnas[$totalColumnas]['columna'] . $filaInicio)->applyFromArray($styleArray);
     $filaInicio++;
@@ -248,7 +242,6 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 
 
 // Set document properties
-//echo date('H:i:s') , " Set document properties" , PHP_EOL;
 $objPHPExcel->getProperties()->setCreator("Byron Herrera ")
     ->setLastModifiedBy("Byron Herrera ")
     ->setTitle("AMC reporte")
@@ -290,11 +283,8 @@ $totalColumnas = count($datosColumnas) - 1;
 $objPHPExcel->getActiveSheet()->getStyle($datosColumnas[0]['columna'] . $filacabecera . ':' . $datosColumnas[$totalColumnas]['columna'] . $filacabecera)->applyFromArray($styleArray);
 
 
-//$objPHPExcel->getActiveSheet()->getStyle('A7:D7')->getBorders()->getLeft()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-
 
 // Set page orientation and size
-//echo date('H:i:s') , " Set page orientation and size" , PHP_EOL;
 $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_PORTRAIT);
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
 $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
@@ -323,11 +313,12 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Workshee
 // se crea la cabecera de archivo y se lo graba al archivo
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 header('Content-Type: application/vnd.ms-excel');
-header('Content-Disposition: attachment;filename="reporte-Resolucion-MATIS-' . $today . '.xls"');
+header('Content-Disposition: attachment;filename="reporte-Planificacion-MATIS-' . $today . '.xls"');
 header('Cache-Control: max-age=0');
 $objWriter->save('php://output');
 
 exit;
+
 function quitar_tildes($cadena)
 {
     $no_permitidas = array("á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "ñ", "À", "Ã", "Ì", "Ò", "Ù", "Ã™", "Ã ", "Ã¨", "Ã¬", "Ã²", "Ã¹", "ç", "Ç", "Ã¢", "ê", "Ã®", "Ã´", "Ã»", "Ã‚", "ÃŠ", "ÃŽ", "Ã”", "Ã›", "ü", "Ã¶", "Ã–", "Ã¯", "Ã¤", "«", "Ò", "Ã", "Ã„", "Ã‹");
@@ -343,91 +334,4 @@ function quitar_espacio($cadena)
     $texto = str_replace($no_permitidas, $permitidas, $cadena);
     return $texto;
 }
-
-function resolucionDe($id)
-{
-    if (($id >= 1) and ($id <= 5)) {
-        if ((isset($id)) and ($id != ' ')) {
-
-            $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad", 5 => "Anulada");
-            return $opciones [$id];
-        } else {
-            return '';
-        }
-
-    } else
-        return '';
-
-}
-
-function regresaUnidad($id_dato)
-{
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    if (($id_dato != '') and (isset($id_dato))) {
-        $sql = "SELECT * FROM amc_zonas WHERE activo = 1 AND id = " . $id_dato;
-        $nombre = $os->db->conn->query($sql);
-        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre'];
-    } else
-        return '';
-
-}
-
-function getOrdenanza($id_dato)
-{
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    if (($id_dato != '') and (isset($id_dato))) {
-        $sql = "SELECT *
-            FROM amc_ordenanzas WHERE id = " . $id_dato;
-        $nombre = $os->db->conn->query($sql);
-        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre'];
-    } else
-        return '';
-
-}
-
-function tipoUnidad($id)
-{
-    if ((isset($id)) and ($id != " ")) {
-
-        $opciones = array(0 => "UDC", 1 => "ASEO");
-        return $opciones [$id];
-    } else {
-        return '';
-    }
-}
-
-function envioExpediente($id)
-{
-    if (($id >= 1) and ($id <= 4)) {
-        if ((isset($id)) and ($id != ' ')) {
-            $opciones = array(1 => "Ejecución", 2 => "Instrucción", 3 => "Secretaría", 4 => "Apelación");
-            return $opciones [$id];
-        } else {
-            return '';
-        }
-
-    } else
-        return '';
-
-}
-
-function nombreFuncionario($id_dato)
-{
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-    if (($id_dato != '') and (isset($id_dato))) {
-        $sql = "SELECT a.id, CONCAT(a.first_name,' ',a.last_name) AS nombre FROM qo_members a
-            WHERE $id_dato = a.id";
-        $nombre = $os->db->conn->query($sql);
-        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
-        return $rownombre['nombre'];
-    } else
-        return '';
-
-}
-
 
