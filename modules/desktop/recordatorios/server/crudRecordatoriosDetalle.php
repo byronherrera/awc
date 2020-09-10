@@ -201,7 +201,7 @@ function updateRecordatorios()
 
 
 
-    $data->cumplimiento = substr($data->fecha_compromiso, 0, 10);
+    $data->cumplimiento = $data->cumplimiento;
 
     $data->fecha_compromiso = substr($data->fecha_compromiso, 0, 10);
     $data->fecha_cumplimiento = substr($data->fecha_cumplimiento, 0, 10);
@@ -226,15 +226,16 @@ function updateRecordatorios()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
     if (strlen($cadenaDatos) > 0) {
-        $sql = "UPDATE amc_planificacion_detalle SET  $cadenaDatos  WHERE amc_planificacion_detalle.id = '$data->id' ";
+        $sqlOriginal = "UPDATE amc_planificacion_detalle SET  $cadenaDatos  WHERE amc_planificacion_detalle.id = '$data->id' ";
 
-        $sql = $os->db->conn->prepare($sql);
+        $sql = $os->db->conn->prepare($sqlOriginal);
         $sql->execute();
 
         echo json_encode(array(
             "success" => $sql->errorCode() == 0,
             "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_detalle actualizado exitosamente" : $sql->errorCode(),
-            "message" => $message
+            "message" => $message,
+            "sql" => $sqlOriginal,
         ));
 
     } else {
