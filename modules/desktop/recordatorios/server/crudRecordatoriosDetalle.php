@@ -14,6 +14,16 @@ function selectRecordatorios()
     $columnaBusqueda = 'busqueda_todos';
     $where = '';
 
+    if (isset($_POST['id_proceso']) and ($_POST['id_proceso'] != '')) {
+        $tipo = $_POST['id_proceso'];
+        if ($where == '') {
+            $where = "WHERE id_proceso = '$tipo' ";
+        } else {
+            $where = $where . " AND id_proceso = '$tipo' ";
+        }
+    }
+
+
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
     }
@@ -200,27 +210,33 @@ function updateRecordatorios()
 //    $data->apellidos = getLastName($data->id_responsable);
 
 
-
     $data->cumplimiento = $data->cumplimiento;
 
     $data->fecha_compromiso = substr($data->fecha_compromiso, 0, 10);
     $data->fecha_cumplimiento = substr($data->fecha_cumplimiento, 0, 10);
 
-    $estadoAnterior = getEstadoOriginal($data->id);
-    // genero el listado de valores a insertar
+    $data->cumplimiento = ($data->cumplimiento) ? 'true' : 'false';
 
+    $estadoAnterior = getEstadoOriginal($data->id);
+
+
+    $actualizarPorcentaje = [];
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
         // verifico cambios anteriores
         if ($estadoAnterior[$clave] != $valor) {
-          //  if (($clave == "fecha_compromiso") || ($clave == "fecha_cumplimiento") || ($clave == "idingreso") || ($clave == "porcentaje") || ($clave == "valor")) {
-            if (($clave == "fecha_compromiso") || ($clave == "fecha_cumplimiento") ) {
+            //  if (($clave == "fecha_compromiso") || ($clave == "fecha_cumplimiento") || ($clave == "idingreso") || ($clave == "porcentaje") || ($clave == "valor")) {
+            if (($clave == "fecha_compromiso") || ($clave == "fecha_cumplimiento")) {
                 if ($valor === '')
                     $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
                 else
                     $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
             } else {
                 $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+            }
+            if (($clave == 'cumplimiento') && ($valor == 'true')) {
+                // en caso que cumplimiento sea true actualizamos el avance fisico
+                $actualizarPorcentaje = ["id_proceo" => $data->id_proceso, "id_actividad" => $data->id_actividad];
             }
         }
     }
@@ -232,11 +248,15 @@ function updateRecordatorios()
         $sql->execute();
 
         echo json_encode(array(
-            "success" => $sql->errorCode() == 0,
-            "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_detalle actualizado exitosamente" : $sql->errorCode(),
-            "message" => $message,
-            "sql" => $sqlOriginal,
+            "success" => $sql->errorCode() == 0
+        , "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_detalle actualizado exitosamente" : $sql->errorCode()
+        , "message" => $message
+        , "sql" => $sqlOriginal
         ));
+
+        // luego de actualizar el detalle actualizamos el padre
+        if ($actualizarPorcentaje)
+            actualizarPorcentaje($actualizarPorcentaje['id_proceo'], $actualizarPorcentaje['id_actividad']);
 
     } else {
         echo json_encode(array(
@@ -245,7 +265,7 @@ function updateRecordatorios()
         ));
     }
     // envio de notificacion a usuario asignado
-   /* if (isset($data->activo)) {
+    /* if (isset($data->activo)) {
         if ($estadoAnterior['activo'] != $data->activo) {
             if ($data->activo) {
                 $fechaActual = date('d-m-Y H:i:s');
@@ -287,7 +307,35 @@ function getEstadoOriginal($id)
         return '* No asignado';
 }
 
-;
+function actualizarPorcentaje($id_proceso, $id_actividad)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $valorPorcentaje = getValActividad($id_actividad);
+    $valorFse = getFaseActividad($id_actividad);
+    $sql = "UPDATE amc_planificacion_notificaciones SET porcentaje = $valorPorcentaje, fase = '$valorFse' WHERE id = $id_proceso";
+    $nombre = $os->db->conn->query($sql);
+    //$rowData = $nombre->fetch(PDO::FETCH_ASSOC);
+
+}
+
+function getValActividad($id_actividad)
+{
+    global $os;
+    $sql = "SELECT porcentaje FROM amc_planificacion_actividades WHERE id = " . $id_actividad;
+    $nombre = $os->db->conn->query($sql);
+    $rowData = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rowData['porcentaje'];
+}
+
+function getFaseActividad($id_actividad)
+{
+    global $os;
+    $sql = "SELECT fase FROM amc_planificacion_actividades WHERE id = " . $id_actividad;
+    $nombre = $os->db->conn->query($sql);
+    $rowData = $nombre->fetch(PDO::FETCH_ASSOC);
+    return $rowData['fase'];
+}
 
 function getmensajeRecordatorios($nombre = '', $detalle = '', $fecha = '')
 {

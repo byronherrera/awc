@@ -129,7 +129,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_caracter_tramite', readOnly: true, allowBlank: false},
                 {name: 'cantidad_fojas', readOnly: true, allowBlank: true},
                 {name: 'procesado_inspeccion', allowBlank: true},
-                {name: 'id_planificacion', allowBlank: true},
+                {name: 'id_proceso', allowBlank: true},
                 {name: 'id_tipo', allowBlank: true}
                 /*
                 {name: 'despacho_secretaria', allowBlank: true},
@@ -2699,7 +2699,7 @@ QoDesk.InspeccionWindow = Ext.extend(Ext.app.Module, {
                 {header: 'Fojas', dataIndex: 'cantidad_fojas', width: 55, editor: textField},
                 {
                     header: 'Planificación',
-                    dataIndex: 'id_planificacion',
+                    dataIndex: 'id_proceso',
                     sortable: true,
                     width: 80,
                     editor: comboCONTROLPROGRAMADO,

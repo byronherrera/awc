@@ -20,14 +20,14 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         var win = desktop.getWindow('grid-win-recordatorios');
         var urlRecordatorios = "modules/desktop/recordatorios/server/";
         var textField = new Ext.form.TextField({allowBlank: false});
-
+        selectProceso = 0;
         limiterecordatorios = 100;
 
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d') : '';
         }
 
-        var textField = new Ext.form.TextField({allowBlank: false});
+        var textField2 = new Ext.form.TextField({allowBlank: false});
         var numberField = new Ext.ux.form.SpinnerField({
             fieldLabel: 'Age',
             name: 'age',
@@ -185,13 +185,14 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 users: [
-                    {"id": 'Fase Preparatoria', "nombre": "Fase Preparatoria"},
-                    {"id": 'Fase Precontractual', "nombre": "Fase Precontractual"},
+                    {"id": 'Fase preparatoria', "nombre": "Fase preparatoria"},
+                    {"id": 'Fase precontractual', "nombre": "Fase precontractual"},
                     {"id": 'Fase contractual', "nombre": "Fase contractual"},
                     {"id": 'Pago', "nombre": "Pago"}
                 ]
             }
         });
+
         var comboFASE = new Ext.form.ComboBox({
             id: 'comboFASE',
             store: storeFASE,
@@ -301,7 +302,9 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         if (res.message != '') {
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
                         }
-                    }
+                    };
+
+
                 }
             }
         });
@@ -342,6 +345,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             writer: writerRecordatorios,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
+            autoSave: true,
             baseParams: {}
         });
         storeRecordatorios = this.storeRecordatorios;
@@ -353,7 +357,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
         this.gridRecordatorios = new Ext.grid.EditorGridPanel({
             //height: '100%',
-            height: 250,
+            height: 220,
             //height: desktop.getWinHeight() - 92,
             store: this.storeRecordatorios,
             clicksToEdit: 1,
@@ -416,7 +420,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     renderer: personaReceptaRecordatorio
                 }
                 , {
-                    header: 'Estado',
+                    header: 'Detalle avance',
                     dataIndex: 'estado',
                     sortable: true,
                     width: 150,
@@ -440,14 +444,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     renderer: planificacionSemaforo
                 }
                 , {
-                    header: 'Fase',
-                    dataIndex: 'fase',
-                    sortable: true,
-                    width: 70,
-                    editor: comboFASE,
-                    renderer: planificacionFase
-                }
-                , {
                     header: 'Valor',
                     dataIndex: 'valor',
                     sortable: true,
@@ -460,18 +456,30 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         maxValue: 100000000
                     })
                 }
+
                 , {
-                    header: '%',
+                    header: 'Fase',
+                    dataIndex: 'fase',
+                    sortable: true,
+                    width: 120,
+                    editor: comboFASE,
+                    renderer: planificacionFase
+                }
+                , {
+                    header: 'Avance físico',
                     dataIndex: 'porcentaje',
                     sortable: true,
-                    align: 'right',
-                    width: 50,
+                    align: 'center',
+                    width: 80,
                     editor: new Ext.form.NumberField({
                         allowBlank: false,
                         allowNegative: false,
                         maxValue: 1,
                         minValue: 0
-                    })
+                    }),
+                    renderer  : function(rate) {
+                        return Ext.util.Format.number(rate * 100, '0 %');
+                    }
                 },
                 {
                     header: 'Observaciones',
@@ -484,7 +492,115 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             viewConfig: {
                 forceFit: false
             },
-            sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true,
+
+
+                listeners: {
+                    rowselect: function (sm, row, rec) {
+                        //fecha_inicio_planificacion = rec.get('fecha_inicio_planificacion')
+                        //fecha_fin_planificacion = rec.get('fecha_fin_planificacion');
+
+                        // recuperamos la informacion de personal asignado a ese operativo
+                        selectProceso = rec.id;
+                        storeRecordatoriosDetalle.load({params: {id_proceso: rec.id}});
+
+                        // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
+                     /*   if (acceso) {
+                            if (rec.get("id_estado") != 1) {
+                                Ext.getCmp('informesAccionesTab').setDisabled(acceso ? false : true);
+                                Ext.getCmp('informesOperativosTab').setDisabled(acceso ? false : true);
+                                Ext.getCmp('imagenesOperativosTab').setDisabled(acceso ? false : true);
+                                Ext.getCmp('detalleOperativosTab').setDisabled(acceso ? false : true);
+                                Ext.getCmp('retirosOperativosTab').setDisabled(acceso ? false : true);
+                            }
+                            else {
+                                Ext.getCmp('informesAccionesTab').setDisabled(true);
+                                Ext.getCmp('informesOperativosTab').setDisabled(true);
+                                Ext.getCmp('imagenesOperativosTab').setDisabled(true);
+                                Ext.getCmp('detalleOperativosTab').setDisabled(true);
+                                Ext.getCmp('retirosOperativosTab').setDisabled(true);
+                            }
+                            cargaDetalle(rec.id);
+
+                            if ((rec.get("id_estado") == 1) || (rec.get("id_estado") == 4)) {
+                                gridBlockOperativos = false;
+                                Ext.getCmp('savedetalleoperativo').setDisabled(false);
+
+                                Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
+                                Ext.getCmp('addoperativos').setDisabled(accesosAdministradorOpe ? false : true);
+
+                                Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
+                                Ext.getCmp('addoperativoparticipantes').setDisabled(false);
+                                // en caso que se tenga acceso tambien se habilitan o deshabilitan los botones para agregar detalle
+                                // valido si es el caso operativo tipo Permanentes Zonales
+
+
+                                if (rec.get("tipo_operativo") == 2) {
+                                    Ext.getCmp('borraroperativodetalle').setDisabled(false);
+                                    Ext.getCmp('addoperativodetalle').setDisabled(false);
+                                    //Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
+                                    // Ext.getCmp('addoperativoparticipantes').setDisabled(false);
+                                } else {
+                                    Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
+                                    Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
+                                }
+
+                                Ext.getCmp('borraroperativodetalleacciones').setDisabled(false);
+                                Ext.getCmp('addoperativodetalleacciones').setDisabled(false);
+
+                                Ext.getCmp('borraroperativodetalleInforme').setDisabled(false);
+                                Ext.getCmp('addoperativodetalleInforme').setDisabled(false);
+
+                                Ext.getCmp('borraroperativoimagenes').setDisabled(false);
+
+                                Ext.getCmp('addoperativoimagenes').setDisabled(false);
+                                Ext.getCmp('subirimagen').setDisabled(false);
+                                // solamente para el caso
+                            }
+                            else {
+
+                                // caso que el operativo sea tipo 2, 3, 5 ( cumplido, fallido, cancelado
+                                gridBlockOperativos = true;
+                                Ext.getCmp('savedetalleoperativo').setDisabled(true);
+
+                                Ext.getCmp('borraroperativo').setDisabled(true);
+                                Ext.getCmp('addoperativos').setDisabled(true);
+
+                                Ext.getCmp('borraroperativodetalle').setDisabled(true);
+                                Ext.getCmp('addoperativodetalle').setDisabled(true);
+
+                                Ext.getCmp('borraroperativoparticipantes').setDisabled(true);
+                                Ext.getCmp('addoperativoparticipantes').setDisabled(true);
+
+                                Ext.getCmp('borraroperativodetalleacciones').setDisabled(true);
+                                Ext.getCmp('addoperativodetalleacciones').setDisabled(true);
+
+                                Ext.getCmp('borraroperativodetalleInforme').setDisabled(true);
+                                Ext.getCmp('addoperativodetalleInforme').setDisabled(true);
+
+                                Ext.getCmp('borraroperativoimagenes').setDisabled(true);
+                                Ext.getCmp('addoperativoimagenes').setDisabled(true);
+                                Ext.getCmp('subirimagen').setDisabled(true);
+
+                            }
+
+
+                            //para el caso que se es administrador
+                            if (accesosAdministradorOpe) {
+                                Ext.getCmp('savedetalleoperativo').setDisabled(false);
+                            }
+                        }
+                        //para el caso  de los botones
+                        if ((rec.get("id_estado") == 2) || (rec.get("id_estado") == 3) || (rec.get("id_estado") == 5)) {
+                            Ext.getCmp('tb_repoteOperativos').setDisabled(false);
+                        } else {
+                            Ext.getCmp('tb_repoteOperativos').setDisabled(true);
+                        }
+                     */
+                    }
+                }
+            }),
             border: false,
             stripeRows: true,
             // paging bar on the bottom
@@ -513,7 +629,14 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
                         }
                     }
+                    if (typeof res.message !== 'undefined') {
+                        if (res.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
+                        }
+                    }
+                    storeRecordatorios.load();
                 }
+
             }
         });
         var readerRecordatoriosDetalle = new Ext.data.JsonReader({
@@ -524,14 +647,16 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'id', allowBlank: true}
-                , {name: 'id_planificacion', allowBlank: false}
+                , {name: 'id_proceso', allowBlank: false}
                 , {name: 'id_actividad', allowBlank: false}
                 , {name: 'cumplimiento', allowBlank: false}
                 , {name: 'detalle', allowBlank: true}
                 , {name: 'fecha_cumplimiento', type: 'date', dateFormat: 'c', allowBlank: true}
                 , {name: 'dias', allowBlank: false}
                 , {name: 'fecha_compromiso', type: 'date', dateFormat: 'c', allowBlank: false}
-                , {name: 'observaciones', allowBlank: true}
+                , {name: 'notas', allowBlank: true}
+                , {name: 'entregable', allowBlank: true}
+                , {name: 'id_asignado', allowBlank: true}
             ]
         });
 
@@ -556,10 +681,10 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         };
 
         this.gridRecordatoriosDetalle = new Ext.grid.EditorGridPanel({
-            id : 'gridRecordatoriosDetalle',
-            height: desktop.getWinHeight() - 345,
+            id: 'gridRecordatoriosDetalle',
+            height: desktop.getWinHeight() - 315,
             store: this.storeRecordatoriosDetalle,
-            title: 'Detalle planificación',
+            title: 'Detalle Proceso Planificación - Listado de Actividades',
             clicksToEdit: 1,
             tbar: [
                 {
@@ -593,11 +718,11 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', sortable: true, width: 30, hidden: true},
-                {header: 'id_planificacion', dataIndex: 'id_planificacion', sortable: true, width: 30, hidden: true},
-             /*   {
-                    header: 'Fase', dataIndex: 'id_actividad', sortable: true, width: 120,
-                    renderer: tipoActividadPoaFase
-                },*/
+                {header: 'id_proceso', dataIndex: 'id_proceso', sortable: true, width: 30, hidden: true},
+                   {
+                       header: 'Fase', dataIndex: 'id_actividad', sortable: true, width: 120,
+                       renderer: tipoActividadPoaFase
+                   },
                 {
                     header: 'Actividad', dataIndex: 'id_actividad', sortable: true, width: 220,
                     editor: comboTIPOACTIVPOA,
@@ -613,16 +738,17 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     , trueText: 'Si'
                     , menuDisabled: true
                     , sortable: true
-                    , width: 80
+                    , width: 75
                     , xtype: 'booleancolumn'
                     , align: 'center'
                 },
                 {
+                    id: 'descripcion',
                     header: 'Detalle',
                     dataIndex: 'detalle',
                     sortable: true,
                     width: 350,
-                    editor: textField
+                    editor: textField2
                 },
                 {
                     header: 'Fecha<br>Compromiso',
@@ -653,11 +779,25 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     })
                 },
                 {
-                    header: 'Observaciones',
-                    dataIndex: 'observaciones',
+                    header: 'Entregable',
+                    dataIndex: 'entregable',
                     sortable: true,
                     width: 300,
-                    editor: textField
+                    editor: textField2
+                },
+                {
+                    header: 'Funcionario Asignado',
+                    dataIndex: 'id_asignado',
+                    sortable: true,
+                    width: 220,
+                    editor: textField2
+                },
+                {
+                    header: 'Observaciones',
+                    dataIndex: 'notas',
+                    sortable: true,
+                    width: 300,
+                    editor: textField2
                 }
 
             ],
@@ -733,7 +873,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     })
                 },
                 {
-                    header: 'Fecha Entrega',
+                    header: 'Fecha Finalizado',
                     dataIndex: 'fecha_entrega',
                     sortable: true,
                     width: 80,
@@ -1027,7 +1167,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     border: false,
                     items: [
                         {
-                            title: 'Detalle',
+                            title: 'Listado Procesos Contratación',
                             autoScroll: true,
                             closable: true,
                             items: [
@@ -1232,7 +1372,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             params:
                 {
                     start: 0,
-                    limit: limiterecordatorios
+                    limit: limiterecordatorios,
+                    id_proceso: selectProceso
                 }
         });
     },
