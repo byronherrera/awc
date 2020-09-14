@@ -105,7 +105,7 @@ function selectOrdenanzas()
     if (isset($_POST['sort'])) {
         $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
     }else{
-        $orderby = 'ORDER BY id ASC';
+        $orderby = 'ORDER BY id DESC';
     }
 
     //$usuarioLog = $os->get_member_id();

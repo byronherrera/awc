@@ -1202,17 +1202,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     var days = hours*24;
                     // validamos la fecha
                     fechaActual = new Date();
-                    // if(record.get('fecha_ultima_notificacion')!=null){
-                    //     fechaUltimaModificacion = record.get('fecha_ultima_notificacion').substring(0, 10);
-                    //     var arregloFecha =fechaUltimaModificacion.split('-');
-                    //     var mydate = new Date(arregloFecha[0], arregloFecha[1] - 1, arregloFecha[2]);
-                    //     console.log(mydate);
-                    //     var diasDif =  Math.round((mydate.getTime() - fechaActual.getTime())/days)
-                    //     console.log(diasDif);
-                    //     if (diasDif>=24) {
-                    //         return 'redstate';
-                    //     }
-                    // }
+                    if(record.get('fecha_ultima_notificacion')!=null){
+                        var diasDif =  Math.round((fechaActual.getTime() - record.get('fecha_ultima_notificacion').getTime())/days)
+                        console.log(diasDif);
+                        if (diasDif>=24) {
+                            return 'redstate';
+                        }
+                    }
                 }
             },
             sm: new Ext.grid.RowSelectionModel({
@@ -3420,8 +3416,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             title: 'Reportes Pendientes',
                             closable: true,
                             layout: 'border',
-                            disabled: !accesoTotalesResoluciones,
-                            // disabled: false,
+                            //disabled: !accesoTotalesResoluciones,
+                            disabled: false,
                             tbar: [
                                 {
                                     iconCls: 'reload-icon',
