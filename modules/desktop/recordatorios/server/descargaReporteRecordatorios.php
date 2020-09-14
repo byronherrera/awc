@@ -29,6 +29,7 @@ if (isset($_GET['param'])) {
 }
 
 $today = date("Y-n-j-H-i-s");
+$today2 = date("Y-n-j H:i");
 
 // para los reportes
 $where = '';
@@ -55,12 +56,12 @@ if (isset($data->busqueda_persona_encargada) and ($data->busqueda_persona_encarg
     }
 }
 
-if (isset($data->busqueda_activo) and ($data->busqueda_activo != '')) {
-    $tipo = $data->busqueda_activo;
+if (isset($data->busqueda_estado) and ($data->busqueda_estado != '')) {
+    $tipo = $data->busqueda_estado;
     if ($where == '') {
-        $where = "WHERE activo = '$tipo' ";
+        $where = "WHERE estado = '$tipo' ";
     } else {
-        $where = $where . " AND activo = '$tipo' ";
+        $where = $where . " AND estado = '$tipo' ";
     }
 }
 
@@ -143,13 +144,13 @@ $sql = "SELECT
         tema,
         fecha_inicio,
         fecha_entrega,
-        activo,
-        tipocontratacion,
         estado,
+        tipocontratacion,
+        detalle_avance,
         semaforo,
         fase,
-        valor,
-        porcentaje,
+        FORMAT(valor,2,'de_DE') AS valor,
+        CONCAT((porcentaje * 100), ' %') as porcentaje,
         observaciones 
         FROM
         amc_planificacion_notificaciones
@@ -180,10 +181,10 @@ $datosColumnas = [
     ["columna" => "A", "ancho" => 16.86, "titulo" => 'Tipo de Contratación', "data" => 'tipocontratacion']
     , ["columna" => "B", "ancho" => 40, "titulo" => 'Producto / Servicio', "data" => 'tema']
     , ["columna" => "C", "ancho" => 30, "titulo" => 'Responsable', "data" => 'nombres']
-    , ["columna" => "D", "ancho" => 40, "titulo" => 'Estado', "data" => 'estado']
+    , ["columna" => "D", "ancho" => 40, "titulo" => 'Estado', "data" => 'detalle_avance']
     , ["columna" => "E", "ancho" => 15, "titulo" => 'Semaforo', "data" => 'semaforo']
     , ["columna" => "F", "ancho" => 12, "titulo" => 'Valor', "data" => 'valor']
-    , ["columna" => "G", "ancho" => 10, "titulo" => '%', "data" => 'porcentaje']
+    , ["columna" => "G", "ancho" => 10, "titulo" => 'Avance Físico', "data" => 'porcentaje']
     , ["columna" => "H", "ancho" => 10, "titulo" => 'Fecha Entrega', "data" => 'fecha_entrega']
 ];
 $totalColumnas = count($datosColumnas) - 1;
@@ -192,9 +193,11 @@ $totalColumnas = count($datosColumnas) - 1;
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':' . $datosColumnas[$totalColumnas]['columna'] . $filaTitulo1);
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':' . $datosColumnas[$totalColumnas]['columna'] . $filaTitulo2);
 
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO PENDIENTES");
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "SEGUIMIENTO POA");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Unidad Planificiación');
 
+$objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 1) . ':B' . ($filaTitulo2 + 1));
+$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 + 1), "Fecha: . $today2");
 
 $os->db->conn->query("SET NAMES 'utf8'");
 $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
@@ -234,6 +237,16 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 
     foreach ($datosColumnas as &$valorColumna) {
         $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filaInicio, $rowdetalle[$valorColumna['data']]);
+        if ($valorColumna['columna'] == "semaforo") {
+            $objPHPExcel->getActiveSheet()->getStyle($valorColumna['columna'] . $filaInicio)->applyFromArray(
+                array(
+                    'fill' => array(
+                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                        'color' => array('rgb' => 'FF')
+                    )
+                )
+            );
+        }
     }
 
     $objPHPExcel->getActiveSheet()->getStyle($datosColumnas[0]['columna'] . $filaInicio . ':' . $datosColumnas[$totalColumnas]['columna'] . $filaInicio)->applyFromArray($styleArray);
@@ -277,11 +290,20 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:W200')->applyFromArray(
     )
 );
 
+// estilo colores
+$objPHPExcel->getActiveSheet()->getStyle('A' . ($filaTitulo2 + 2) . ':' . $datosColumnas[$totalColumnas]['columna'] . ($filaTitulo2 + 2))->applyFromArray(
+    array(
+        'fill' => array(
+            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+            'color' => array('rgb' => 'DADADA')
+        )
+    )
+);
+
 $objPHPExcel->getActiveSheet()->getStyle('A4:W1000')->getAlignment()->setWrapText(true);
 
 $totalColumnas = count($datosColumnas) - 1;
 $objPHPExcel->getActiveSheet()->getStyle($datosColumnas[0]['columna'] . $filacabecera . ':' . $datosColumnas[$totalColumnas]['columna'] . $filacabecera)->applyFromArray($styleArray);
-
 
 
 // Set page orientation and size

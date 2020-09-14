@@ -226,8 +226,8 @@ function updateRecordatorios()
         // verifico cambios anteriores
         if ($estadoAnterior[$clave] != $valor) {
             //  if (($clave == "fecha_compromiso") || ($clave == "fecha_cumplimiento") || ($clave == "idingreso") || ($clave == "porcentaje") || ($clave == "valor")) {
-            if (($clave == "fecha_compromiso") || ($clave == "fecha_cumplimiento")) {
-                if ($valor === '')
+            if (($clave == "fecha_compromiso") || ($clave == "fecha_cumplimiento")|| ($clave == "dias")) {
+                if (strlen($valor) == 0)
                     $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
                 else
                     $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
@@ -310,13 +310,14 @@ function getEstadoOriginal($id)
 function actualizarPorcentaje($id_proceso, $id_actividad)
 {
     global $os;
+    $semaforo = '';
     $os->db->conn->query("SET NAMES 'utf8'");
     $valorPorcentaje = getValActividad($id_actividad);
     $valorFse = getFaseActividad($id_actividad);
-    $sql = "UPDATE amc_planificacion_notificaciones SET porcentaje = $valorPorcentaje, fase = '$valorFse' WHERE id = $id_proceso";
+    if ($valorFse == "Pago") $valorSemaforo = "Verde"; else $valorSemaforo = "Amarillo";
+    $semaforo = " , semaforo =  '$valorSemaforo' ";
+    $sql = "UPDATE amc_planificacion_notificaciones SET porcentaje = $valorPorcentaje, fase = '$valorFse'  $semaforo WHERE id = $id_proceso";
     $nombre = $os->db->conn->query($sql);
-    //$rowData = $nombre->fetch(PDO::FETCH_ASSOC);
-
 }
 
 function getValActividad($id_actividad)

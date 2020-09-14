@@ -31,6 +31,7 @@ function selectRecordatorios()
                 'fecha_inicio',
                 'fecha_entrega',
                 'estado',
+                'detalle_avance',
                 'semaforo',
                 'observaciones'
             );
@@ -68,12 +69,12 @@ function selectRecordatorios()
         }
     }
 
-    if (isset($_POST['busqueda_activo']) and ($_POST['busqueda_activo'] != '')) {
-        $tipo = $_POST['busqueda_activo'];
+    if (isset($_POST['busqueda_estado']) and ($_POST['busqueda_estado'] != '')) {
+        $tipo = $_POST['busqueda_estado'];
         if ($where == '') {
-            $where = "WHERE activo = '$tipo' ";
+            $where = "WHERE estado = '$tipo' ";
         } else {
-            $where = $where . " AND activo = '$tipo' ";
+            $where = $where . " AND estado = '$tipo' ";
         }
     }
 
@@ -206,6 +207,31 @@ function updateRecordatorios()
     $estadoAnterior = getEstadoOriginal($data->id);
     // genero el listado de valores a insertar
 
+    if (isset($data->estado)) {
+        if ($estadoAnterior['estado'] != $data->estado) {
+            if ($data->estado == "En ejecución") {
+                if ($data->fase == "Pago") {
+                    $data->semaforo = "Verde";
+                } else {
+                    $data->semaforo = "Amarillo";
+                }
+            }
+            if ($data->estado == "Detenido") {
+                $data->semaforo = "Rojo";
+            }
+            if ($data->estado == "En propuesta") {
+                $data->semaforo = "";
+            }
+            if ($data->estado == "Dado de baja") {
+                $data->semaforo = "Gris";
+            }
+            if ($data->estado == "Finalizado") {
+                $data->semaforo = "Gris";
+            }
+
+        }
+    }
+
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
         // verifico cambios anteriores
@@ -230,7 +256,8 @@ function updateRecordatorios()
         echo json_encode(array(
             "success" => $sql->errorCode() == 0,
             "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_notificaciones actualizado exitosamente" : $sql->errorCode(),
-            "message" => $message
+            "message" => $message,
+            "data" => $data
         ));
 
     } else {
@@ -240,19 +267,20 @@ function updateRecordatorios()
         ));
     }
     // envio de notificacion a usuario asignado
-    if (isset($data->activo)) {
-        if ($estadoAnterior['activo'] != $data->activo) {
-            if ($data->activo) {
+    if (isset($data->estado)) {
+        if ($estadoAnterior['estado'] != $data->estado) {
+            if (($data->estado == "En ejecución") || ($data->estado == "Detenido")) {
                 $fechaActual = date('d-m-Y H:i:s');
                 $funcionario = $data->id_responsable;
                 $detalle = "<table border='1'>" .
-                    "<tr><td>TEMA</td><td>ESTADO</td><td>SEMAFORO</td><td>VALOR</td><td>FECHA ENTREGA</td></tr>" .
+                    "<tr><td>TEMA</td><td>ESTADO</td><td>DETALLE AVANCE</td><td>SEMAFORO</td><td>VALOR</td><td>FECHA ENTREGA</td></tr>" .
                     "<tr>" .
-                    "<td>" . $data->tema. "</td>" .
-                    "<td>" . $data->estado. "</td>" .
-                    "<td>" . $data->semaforo. "</td>" .
-                    "<td>" . $data->valor. "</td>" .
-                    "<td>" . $data->fecha_entrega. "</td>" .
+                    "<td>" . $data->tema . "</td>" .
+                    "<td>" . $data->estado . "</td>" .
+                    "<td>" . $data->detalle_avance . "</td>" .
+                    "<td>" . $data->semaforo . "</td>" .
+                    "<td>" . $data->valor . "</td>" .
+                    "<td>" . $data->fecha_entrega . "</td>" .
                     "</tr></table>";
                 $mensaje = getmensajeRecordatorios(regresaNombre($data->id_responsable), $detalle, $fechaActual);
 
@@ -262,7 +290,7 @@ function updateRecordatorios()
                 $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
                 $from = 'Planificación - Agencia Metropolitana de Control';
                 $prueba = true;
-                $resultado = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from , $prueba);
+                $resultado = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
             }
         }
     }
