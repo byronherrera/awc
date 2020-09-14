@@ -237,12 +237,12 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 
     foreach ($datosColumnas as &$valorColumna) {
         $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filaInicio, $rowdetalle[$valorColumna['data']]);
-        if ($valorColumna['columna'] == "semaforo") {
+        if ($valorColumna['data'] == "semaforo") {
             $objPHPExcel->getActiveSheet()->getStyle($valorColumna['columna'] . $filaInicio)->applyFromArray(
                 array(
                     'fill' => array(
                         'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                        'color' => array('rgb' => 'FF')
+                        'color' => array('rgb' => 'FF0000')
                     )
                 )
             );
