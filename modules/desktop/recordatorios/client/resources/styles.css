@@ -17,21 +17,21 @@
 .x-combo-list-inner, .x-combo-list {min-width: 220px !important;}
 
 .Verde {
-    background: #00cf18;
-    border: 1px solid #67df59;
+    background: #6EFF4B;
+    border: 1px solid #6EFF4B;
 }
 
 .Amarillo {
-    background: #cfcb00;
-    border: 1px solid #cfcb00;
+    background: #F7FF4B;
+    border: 1px solid #F7FF4B;
 }
 .Rojo {
-    background: #cf0009;
-    border: 1px solid #cf0009;
+    background: #FF6B4B;
+    border: 1px solid #FF6B4B;
 }
 .Gris {
-    background: #bfb3b7;
-    border: 1px solid #bfb3b7;
+    background: #CCCCCC;
+    border: 1px solid #CCCCCC;
 }
 .circleBase {
     border-radius: 50%;
@@ -41,3 +41,4 @@
     padding-left: 7px;
     margin-right: 5px;
 }
+

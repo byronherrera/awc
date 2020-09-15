@@ -149,7 +149,7 @@ $sql = "SELECT
         detalle_avance,
         semaforo,
         fase,
-        FORMAT(valor,2,'de_DE') AS valor,
+        valor,
         CONCAT((porcentaje * 100), ' %') as porcentaje,
         observaciones 
         FROM
@@ -207,7 +207,7 @@ $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
 $nombreUsuario = $rownombre['nombre'];
 
 $filascabecera = $number_of_rows + $filaInicio + 2;
-$objPHPExcel->getActiveSheet()->mergeCells('B' . ($filascabecera) . ':C' . ($filascabecera));
+$objPHPExcel->getActiveSheet()->mergeCells('B' . $filascabecera . ':C' . $filascabecera);
 $objPHPExcel->getActiveSheet()->mergeCells('B' . ($filascabecera + 1) . ':C' . ($filascabecera + 1));
 $objPHPExcel->getActiveSheet()->mergeCells('B' . ($filascabecera + 2) . ':C' . ($filascabecera + 2));
 
@@ -216,17 +216,18 @@ $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 1), $nombre
 $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 2), "Unidad de Planificación");
 
 $objPHPExcel->getActiveSheet()->mergeCells('E' . ($filascabecera + 1) . ':I' . ($filascabecera + 2));
-//$objPHPExcel->getActiveSheet()->setCellValue('E' . ($filascabecera + 1), $nombreUnidad);
 $objPHPExcel->getActiveSheet()->mergeCells('E' . $filascabecera . ':I' . $filascabecera);
 $objPHPExcel->getActiveSheet()->setCellValue('E' . $filascabecera, '__________________');
 
-
+// creacion de los titulos
 foreach ($datosColumnas as &$valorColumna) {
     $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($valorColumna['columna'])->setAutoSize(false);
     $objPHPExcel->getActiveSheet()->getColumnDimension($valorColumna['columna'])->setWidth($valorColumna['ancho']);
     $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filacabecera, $valorColumna['titulo']);
 
 }
+
+$objPHPExcel->getActiveSheet()->getStyle('F')->getNumberFormat()->setFormatCode('#,##0.00');
 
 
 $noExistenFilas = true;
@@ -237,12 +238,13 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
 
     foreach ($datosColumnas as &$valorColumna) {
         $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filaInicio, $rowdetalle[$valorColumna['data']]);
+        $colorCelda = getColorCelda($rowdetalle[$valorColumna['data']]);
         if ($valorColumna['data'] == "semaforo") {
             $objPHPExcel->getActiveSheet()->getStyle($valorColumna['columna'] . $filaInicio)->applyFromArray(
                 array(
                     'fill' => array(
                         'type' => PHPExcel_Style_Fill::FILL_SOLID,
-                        'color' => array('rgb' => 'FF0000')
+                        'color' => array('rgb' => $colorCelda)
                     )
                 )
             );
@@ -343,7 +345,7 @@ exit;
 
 function quitar_tildes($cadena)
 {
-    $no_permitidas = array("á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "ñ", "À", "Ã", "Ì", "Ò", "Ù", "Ã™", "Ã ", "Ã¨", "Ã¬", "Ã²", "Ã¹", "ç", "Ç", "Ã¢", "ê", "Ã®", "Ã´", "Ã»", "Ã‚", "ÃŠ", "ÃŽ", "Ã”", "Ã›", "ü", "Ã¶", "Ã–", "Ã¯", "Ã¤", "«", "Ò", "Ã", "Ã„", "Ã‹");
+    $no_permitidas = array("á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "ñ", "À", "Ã", "Ì", "Ò", "Ù", "Ã™", "Ã ", "Ã¨", "Ã¬", "Ã²", "Ã¹", "ç", "Ç", "Ã¢", "ê", "DIA DHEREDIA DONOSO ANDRES IGNACIOONOSO ANDRES IGNACIOÃ®", "Ã´", "Ã»", "Ã‚", "ÃŠ", "ÃŽ", "Ã”", "Ã›", "ü", "Ã¶", "Ã–", "Ã¯", "Ã¤", "«", "Ò", "Ã", "Ã„", "Ã‹");
     $permitidas = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "n", "N", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "c", "C", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "u", "o", "O", "i", "a", "e", "U", "I", "A", "E");
     $texto = str_replace($no_permitidas, $permitidas, $cadena);
     return $texto;
@@ -357,3 +359,23 @@ function quitar_espacio($cadena)
     return $texto;
 }
 
+function getColorCelda($color = "")
+{
+    switch ($color) {
+        case 'Rojo':
+            $retornaColor = "FF6B4B";
+            break;
+        case 'Amarillo':
+            $retornaColor = "F7FF4B";
+            break;
+        case 'Gris':
+            $retornaColor = "CCCCCC";
+            break;
+        case 'Verde':
+            $retornaColor = "6EFF4B";
+            break;
+        default:
+            $retornaColor = "FFFFFF";
+    }
+    return $retornaColor;
+}

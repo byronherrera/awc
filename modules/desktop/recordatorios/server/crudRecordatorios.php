@@ -371,7 +371,35 @@ switch ($_GET['operation']) {
     case 'update' :
         updateRecordatorios();
         break;
-    case 'delete' :
-        deleteRecordatorios();
+    case 'getRecordatoriosTotal' :
+        getRecordatoriosTotal();
         break;
+}
+
+function getRecordatoriosTotal()
+{
+    global $os;
+
+
+ //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    $sql = "SELECT * FROM amc_sancion_emergencia";
+    $result = $os->db->conn->query($sql);
+
+    $resultado = [];
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $resultado[] = $row;
+    }
+    if (count($resultado) > 0) {
+        echo json_encode(array(
+            "success" => true,
+            "data" => array($resultado)
+        ));
+
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }
 }
