@@ -181,7 +181,7 @@ $datosColumnas = [
     ["columna" => "A", "ancho" => 16.86, "titulo" => 'Tipo de Contratación', "data" => 'tipocontratacion']
     , ["columna" => "B", "ancho" => 40, "titulo" => 'Producto / Servicio', "data" => 'tema']
     , ["columna" => "C", "ancho" => 30, "titulo" => 'Responsable', "data" => 'nombres']
-    , ["columna" => "D", "ancho" => 40, "titulo" => 'Estado', "data" => 'detalle_avance']
+    , ["columna" => "D", "ancho" => 60, "titulo" => 'Estado', "data" => 'detalle_avance']
     , ["columna" => "E", "ancho" => 15, "titulo" => 'Semaforo', "data" => 'semaforo']
     , ["columna" => "F", "ancho" => 12, "titulo" => 'Valor', "data" => 'valor']
     , ["columna" => "G", "ancho" => 10, "titulo" => 'Avance Físico', "data" => 'porcentaje']
@@ -237,8 +237,8 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $noExistenFilas = false;
 
     foreach ($datosColumnas as &$valorColumna) {
-        $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filaInicio, $rowdetalle[$valorColumna['data']]);
         $colorCelda = getColorCelda($rowdetalle[$valorColumna['data']]);
+        // para el cambio de color de la columna semaforo
         if ($valorColumna['data'] == "semaforo") {
             $objPHPExcel->getActiveSheet()->getStyle($valorColumna['columna'] . $filaInicio)->applyFromArray(
                 array(
@@ -249,6 +249,15 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
                 )
             );
         }
+        // para el cambio de color de la columna semaforo
+        if ($valorColumna['data'] == "detalle_avance") {
+            $textoDetalle = recuperaDetalle($rowdetalle['id']);
+        } else {
+            $textoDetalle = "";
+        }
+
+        $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filaInicio, $rowdetalle[$valorColumna['data']] . $textoDetalle);
+
     }
 
     $objPHPExcel->getActiveSheet()->getStyle($datosColumnas[0]['columna'] . $filaInicio . ':' . $datosColumnas[$totalColumnas]['columna'] . $filaInicio)->applyFromArray($styleArray);
@@ -378,4 +387,37 @@ function getColorCelda($color = "")
             $retornaColor = "FFFFFF";
     }
     return $retornaColor;
+}
+
+function recuperaDetalle($id)
+{
+    global $os;
+    $sql = "SELECT
+            MIN((SELECT orden FROM amc_planificacion_actividades WHERE amc_planificacion_detalle.id_actividad = amc_planificacion_actividades.id)) as orden, 
+            (SELECT fase FROM amc_planificacion_actividades WHERE amc_planificacion_detalle.id_actividad = amc_planificacion_actividades.id) as fase, 
+            amc_planificacion_detalle.actividad,
+            amc_planificacion_detalle.detalle,
+            amc_planificacion_detalle.fecha_compromiso,
+            amc_planificacion_detalle.notas,
+            amc_planificacion_detalle.entregable,
+            (SELECT CONCAT(last_name,' ',first_name) FROM qo_members WHERE qo_members.id = amc_planificacion_detalle.id_asignado) AS asignado 
+            FROM
+            amc_planificacion_detalle
+            WHERE
+            amc_planificacion_detalle.id_proceso = $id AND
+            amc_planificacion_detalle.cumplimiento = 'false'";
+
+    $nombre = $os->db->conn->query($sql);
+    $rowData = $nombre->fetch(PDO::FETCH_ASSOC);
+    $retornaEstado = '';
+    $retornaEstado .= (strlen($rowData['fase']) > 0) ? "\n" . $rowData['fase'] : '';
+    $retornaEstado .= (strlen($rowData['actividad']) > 0) ? "\n Actividad: " . $rowData['actividad'] : '';
+    $retornaEstado .= (strlen($rowData['detalle']) > 0) ? "\n Descripción: " . $rowData['detalle'] : '';
+    $retornaEstado .= (strlen($rowData['fecha_compromiso']) > 0) ? "\n Fecha compromiso: " . $rowData['fecha_compromiso'] : '';
+    $retornaEstado .= (strlen($rowData['notas']) > 0) ? "\n Observaciones: " . $rowData['notas'] : '';
+    $retornaEstado .= (strlen($rowData['entregable']) > 0) ? "\n Entregable: " . $rowData['entregable'] : '';
+    $retornaEstado .= (strlen($rowData['asignado']) > 0) ? "\n Asignado: " .  $rowData['asignado'] : '';
+
+    return $retornaEstado;
+
 }

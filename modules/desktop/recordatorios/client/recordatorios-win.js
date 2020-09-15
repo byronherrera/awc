@@ -377,7 +377,20 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
             autoSave: true,
-            baseParams: {}
+            baseParams: {},
+            listeners: {
+                exception: function (proxy, response, operation) {
+                    if (operation === 'destroy') {
+                        Ext.Msg.show({
+                            title: 'Error'
+                            , msg: 'No se puede borrar este proceso pues estan ingresados actividades'
+                            , modal: true
+                            , icon: Ext.Msg.ERROR
+                            , buttons: Ext.Msg.OK
+                        });
+                    }
+                }
+            }
         });
 
         storeRecordatorios = this.storeRecordatorios;
@@ -715,7 +728,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     scope: this,
                     handler: this.addrecordatoriosDetalle,
                     iconCls: 'save-icon',
-                    id: 'addrecordatorios',
+                    id: 'addrecordatoriosDetalle',
                     //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                 },
                 '-',
@@ -723,7 +736,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     text: "Eliminar",
                     scope: this,
                     handler: this.deleterecordatoriosDetalle,
-                    id: 'deleterecordatorios',
+                    id: 'deleterecordatoriosDetalle',
                     iconCls: 'delete-icon',
                     //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                     //disabled: true
@@ -1318,8 +1331,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             tema: '',
             fecha_inicio: (new Date()),
             fecha_entrega: (new Date()),
-            estado: '',
-            estado: ''
+            estado: 'En propuesta',
+            detalle_avance: ''
         });
         this.gridRecordatorios.stopEditing();
         this.storeRecordatorios.insert(0, recordatorios);
@@ -1354,12 +1367,16 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
     },
     addrecordatoriosDetalle: function () {
         var recordatorios = new this.storeRecordatoriosDetalle.recordType({
-            id_responsable: '',
-            tema: '',
-            fecha_inicio: (new Date()),
-            fecha_entrega: (new Date()),
-            estado: '',
-            detalle_avance: ''
+            id_proceso: selectProceso,
+            id_actividad: '',
+            actividad: '',
+            cumplimiento: '',
+            detalle: '',
+            dias: 0,
+            fecha_compromiso: (new Date()),
+            fecha_cumplimiento: (new Date()),
+            notas: '',
+            entregable: ''
         });
         this.gridRecordatoriosDetalle.stopEditing();
         this.storeRecordatoriosDetalle.insert(0, recordatorios);

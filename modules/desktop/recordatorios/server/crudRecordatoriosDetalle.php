@@ -64,11 +64,13 @@ function selectRecordatorios()
         $limit = $_POST['limit'];
     else
         $limit = 100;
-    $orderby = 'ORDER BY id ASC';
+
+    $orderby = 'ORDER BY orden ASC';
     if (isset($_POST['sort'])) {
         $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
     }
     // para los reportes
+
     if (isset($_POST['busqueda_persona_encargada']) and ($_POST['busqueda_persona_encargada'] != '')) {
         $tipo = $_POST['busqueda_persona_encargada'];
         if ($where == '') {
@@ -140,7 +142,9 @@ function selectRecordatorios()
     }
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_planificacion_detalle $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT *,
+             (SELECT orden FROM amc_planificacion_actividades WHERE amc_planificacion_detalle.id_actividad = amc_planificacion_actividades.id) as orden
+             FROM amc_planificacion_detalle $where $orderby LIMIT $start, $limit";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -168,8 +172,6 @@ function insertRecordatorios()
 
     $data->idingreso = $os->get_member_id();
 
-    $data->nombres = getName($data->id_responsable);
-    $data->apellidos = getLastName($data->id_responsable);
 
 
     //genero el listado de nombre de campos
@@ -185,6 +187,8 @@ function insertRecordatorios()
 
     $sql = "INSERT INTO amc_planificacion_detalle($cadenaCampos)
 	values($cadenaDatos);";
+
+
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
@@ -205,10 +209,6 @@ function updateRecordatorios()
     $data = json_decode($_POST["data"]);
 
     $message = '';
-
-//    $data->nombres = getName($data->id_responsable);
-//    $data->apellidos = getLastName($data->id_responsable);
-
 
     $data->cumplimiento = $data->cumplimiento;
 

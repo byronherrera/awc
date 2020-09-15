@@ -352,13 +352,23 @@ function deleteRecordatorios()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_planificacion_notificaciones WHERE id = $id";
-    $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
-    echo json_encode(array(
-        "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_notificaciones, eliminado exitosamente" : $sql->errorCode()
-    ));
+
+    // se valida que no existan registros en la tabla hija
+    if (validaRelacion($id, 'id_proceso', 'amc_planificacion_detalle')) {
+        $sql = "DELETE FROM amc_planificacion_notificaciones WHERE id = $id";
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
+        echo json_encode(array(
+            "success" => $sql->errorCode() == 0,
+            "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_notificaciones, eliminado exitosamente" : $sql->errorCode()
+        ));
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "msg" => "Error tiene detalle",
+            "message" => "Error tiene detalle"
+        ));
+    }
 }
 
 switch ($_GET['operation']) {
@@ -370,6 +380,9 @@ switch ($_GET['operation']) {
         break;
     case 'update' :
         updateRecordatorios();
+        break;
+    case 'delete' :
+        deleteRecordatorios();
         break;
     case 'getRecordatoriosTotal' :
         getRecordatoriosTotal();

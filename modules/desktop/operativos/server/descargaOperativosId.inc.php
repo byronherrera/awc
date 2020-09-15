@@ -450,6 +450,10 @@ function regresaTipoOperativo($id_dato)
 
 function tiposDeControl($id_dato)
 {
+    // en caso que por accidente se envie una , al final
+    if (substr($id_dato, -1) == ',')
+        $id_dato = substr($id_dato, 0, -1);
+
     $porciones = explode(",", $id_dato);
     $cadena = array();
     foreach ($porciones as &$valor) {
