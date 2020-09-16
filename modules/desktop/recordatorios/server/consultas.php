@@ -23,15 +23,20 @@ function getrecordatoriosUsuario($idUsuario)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT
-                nombres AS nombre,
-                fecha_entrega AS fecha,
-                tema 
+    $sql= "SELECT
+            CONCAT(amc_planificacion_notificaciones.apellidos, ' ',amc_planificacion_notificaciones.nombres) AS nombre,
+            CONCAT( amc_planificacion_notificaciones.tema, ' - ', amc_planificacion_detalle.actividad) AS tema,
+            amc_planificacion_detalle.fecha_compromiso AS fecha
             FROM
-                `amc_planificacion_notificaciones` 
-            WHERE id_responsable = $idUsuario 
-            AND fecha_entrega BETWEEN NOW() AND NOW( ) + INTERVAL 3 DAY 
-	        AND activo = 1;";
+            amc_planificacion_notificaciones
+            INNER JOIN amc_planificacion_detalle ON amc_planificacion_notificaciones.id = amc_planificacion_detalle.id_proceso
+            WHERE
+            amc_planificacion_notificaciones.id_responsable = $idUsuario AND
+            amc_planificacion_detalle.cumplimiento = 'false' AND
+            amc_planificacion_detalle.fecha_compromiso BETWEEN NOW( ) AND NOW( ) + INTERVAL 7 DAY AND 
+            amc_planificacion_notificaciones.estado = 'En ejecución' OR amc_planificacion_notificaciones.estado = 'Detenido'
+            ORDER BY
+            amc_planificacion_detalle.fecha_compromiso ASC;";
 
     $result = $os->db->conn->query($sql);
     if ($result) {

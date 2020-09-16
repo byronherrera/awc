@@ -33,6 +33,13 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             maxValue: 1000
         });
 
+        var numberFieldDecimal = new Ext.ux.form.SpinnerField({
+            minValue: 0,
+            maxValue: 1,
+            value: .00,
+            stepValue: .01
+        });
+
         //inicio combo tipo contratacion
         storeSINO = new Ext.data.JsonStore({
             root: 'users',
@@ -236,6 +243,22 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function planificacionFase(id) {
+            var index = storeFASE.findExact('id', id);
+            if (index > -1) {
+                var record = storeFASE.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        var comboFASE2 = new Ext.form.ComboBox({
+            id: 'comboFASE',
+            store: storeFASE,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function planificacionFase2(id) {
             var index = storeFASE.findExact('id', id);
             if (index > -1) {
                 var record = storeFASE.getAt(index);
@@ -665,11 +688,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
                         }
                     }
-                    if (typeof res.message !== 'undefined') {
-                        if (res.message != '') {
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
-                        }
-                    }
+
                     storeRecordatorios.load();
                 }
 
@@ -757,7 +776,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 {header: 'id_proceso', dataIndex: 'id_proceso', sortable: true, width: 30, hidden: true},
                 {
                     header: 'Fase', dataIndex: 'id_actividad', sortable: true, width: 120,
-                    renderer: tipoActividadPoaFase
+                    renderer: planificacionFase
                 },
                 {
                     header: 'Actividad', dataIndex: 'id_actividad', sortable: true, width: 220,
@@ -854,6 +873,161 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
              })*/
         });
         // fin ventana recordatorios detalle
+
+        // inicio ventana recordatorios
+        var proxyTipoActividades = new Ext.data.HttpProxy({
+            api: {
+                create: urlRecordatorios + "crudTipoActividades.php?operation=insert",
+                read: urlRecordatorios + "crudTipoActividades.php?operation=select",
+                update: urlRecordatorios + "crudTipoActividades.php?operation=update",
+                destroy: urlRecordatorios + "crudTipoActividades.php?operation=delete"
+            },
+            listeners: {
+                write: function (proxy, action, result, res, rs) {
+                    if (typeof res.message !== 'undefined') {
+                        if (res.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
+                        }
+                    }
+                }
+            }
+        });
+        var readerTipoActividades = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id', allowBlank: true}
+                , {name: 'fase', allowBlank: false}
+                , {name: 'actividad', allowBlank: false}
+                , {name: 'porcentaje', allowBlank: false}
+                , {name: 'tipo', allowBlank: false}
+                , {name: 'orden', allowBlank: false}
+                , {name: 'activo', type: 'boolean', allowBlank: false}
+            ]
+        });
+        var writerTipoActividades = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+        this.storeTipoActividades = new Ext.data.Store({
+            id: "id",
+            proxy: proxyTipoActividades,
+            reader: readerTipoActividades,
+            writer: writerTipoActividades,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true,
+            autoSave: true,
+            baseParams: {},
+            listeners: {
+                exception: function (proxy, response, operation) {
+                    if (operation === 'destroy') {
+                        Ext.Msg.show({
+                            title: 'Error'
+                            , msg: 'Error al borrar '
+                            , modal: true
+                            , icon: Ext.Msg.ERROR
+                            , buttons: Ext.Msg.OK
+                        });
+                    }
+                }
+            }
+        });
+
+        storeTipoActividades = this.storeTipoActividades;
+        storeTipoActividades.baseParams = {
+            limit: limiterecordatorios
+        };
+
+        this.gridTipoActividades = new Ext.grid.EditorGridPanel({
+            height: desktop.getWinHeight() - 68,
+            store: this.storeTipoActividades,
+            clicksToEdit: 1,
+            tbar: [
+                {
+                    text: 'Nuevo',
+                    scope: this,
+                    handler: this.addTipoActividades,
+                    iconCls: 'save-icon',
+                    id: 'addTipoActividades',
+                    //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                },
+                '-',
+                {
+                    text: "Eliminar",
+                    scope: this,
+                    handler: this.deleteTipoActividades,
+                    id: 'deleteTipoActividades',
+                    iconCls: 'delete-icon',
+                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                    //disabled: true
+                },
+                '-',
+                {
+                    iconCls: 'reload-icon',
+                    handler: this.requestGridDataTipoActividades,
+                    scope: this,
+                    text: 'Recargar Datos',
+                    tooltip: 'Recargar datos'
+                }
+
+            ],
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {header: 'id', dataIndex: 'id', sortable: true, width: 30, hidden: true},
+                {header: 'Fase', dataIndex: 'fase', sortable: true, width: 160, editor: comboFASE2,
+                    renderer: planificacionFase2},
+                {header: 'Actividad', dataIndex: 'actividad', sortable: true, width: 360, editor: textField},
+                {
+                    header: 'Porcentaje',
+                    dataIndex: 'porcentaje',
+                    sortable: true,
+                    width: 80,
+                    align: 'center',
+                    editor: textField
+                },
+                {header: 'tipo', dataIndex: 'tipo', sortable: true, width: 60, align: 'center', editor: textField},
+                {header: 'orden', dataIndex: 'orden', sortable: true, width: 60, editor: numberField, align: 'center'},
+
+                {
+                    header: 'Activo',
+                    dataIndex: 'activo',
+                    sortable: true,
+                    width: 45,
+                    align: 'center',
+                    editor: {
+                        xtype: 'checkbox'
+                    }
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Si'
+                    , xtype: 'booleancolumn'
+                },
+            ],
+            viewConfig: {
+                forceFit: false
+            },
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true,
+                listeners: {
+                    rowselect: function (sm, row, rec) {
+                    }
+                }
+            }),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            bbar: new Ext.PagingToolbar({
+                pageSize: limiterecordatorios,
+                store: storeTipoActividades,
+                displayInfo: true,
+                displayMsg: 'Mostrando actividades: {0} - {1} de {2} - AMC',
+                emptyMsg: "No existen actividades que mostrar"
+            })
+        });
+        // fin ventana recordatorios
 
 
         //datastore y grid para reporte
@@ -1236,7 +1410,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                             ]
 
                         },
-
                         {
                             title: 'Reportes',
                             layout: 'column',
@@ -1290,6 +1463,19 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ]
 
+                        },
+                        {
+                            title: 'Listados de actividades',
+                            autoScroll: true,
+                            closable: true,
+
+                            id: 'detalleOperativos',
+                            flex: 2,
+                            bodyStyle: 'padding:0; background: #DFE8F6',
+                            layout: 'column',
+                            items: this.gridTipoActividades
+
+
                         }
                     ]
                 })
@@ -1305,7 +1491,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     limit: limiterecordatorios
                 }
             });
-        }, 400);
+            this.storeTipoActividades.load()
+        }, 600);
     },
 
     deleterecordatorios: function () {
@@ -1454,5 +1641,52 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
+    },
+
+    // eventos de boton Tipo Actividades
+    deleteTipoActividades: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridTipoActividades.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeTipoActividades.remove(rows);
+                }
+            }
+        });
+    },
+    addTipoActividades: function () {
+        var recordatorios = new this.storeTipoActividades.recordType({
+            id_proceso: selectProceso,
+            id_actividad: '',
+            actividad: '',
+            cumplimiento: '',
+            detalle: '',
+            dias: 0,
+            fecha_compromiso: (new Date()),
+            fecha_cumplimiento: (new Date()),
+            notas: '',
+            entregable: ''
+        });
+        this.gridTipoActividades.stopEditing();
+        this.storeTipoActividades.insert(0, recordatorios);
+        this.gridTipoActividades.startEditing(0, 0);
+    },
+    requestGridDataTipoActividades: function () {
+        this.storeTipoActividades.load({
+            params:
+                {
+                    start: 0,
+                    limit: limiterecordatorios,
+                    id_proceso: selectProceso
+                }
+        });
     }
+    // eventos de boton Tipo Actividades
 });
