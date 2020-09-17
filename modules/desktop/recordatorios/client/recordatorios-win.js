@@ -1,3 +1,4 @@
+selectProceso = 0;
 QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
     id: 'recordatorios',
     type: 'desktop/recordatorios',
@@ -20,7 +21,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         var win = desktop.getWindow('grid-win-recordatorios');
         var urlRecordatorios = "modules/desktop/recordatorios/server/";
         var textField = new Ext.form.TextField({allowBlank: false});
-        selectProceso = 0;
+
         limiterecordatorios = 100;
 
         function formatDate(value) {
@@ -249,6 +250,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         var comboFASE2 = new Ext.form.ComboBox({
             id: 'comboFASE',
             store: storeFASE,
@@ -563,6 +565,10 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         // recuperamos la informacion de personal asignado a ese operativo
                         selectProceso = rec.id;
                         storeRecordatoriosDetalle.load({params: {id_proceso: rec.id}});
+                        Ext.getCmp('cargaAutomaticaSubasta').setDisabled(false);
+                        Ext.getCmp('cargaAutomaticaInfima').setDisabled(false);
+//                        Ext.getCmp('cargaAutomaticaSubasta').setDisabled(acceso ? false : true);
+//                        Ext.getCmp('cargaAutomaticaInversa').setDisabled(acceso ? false : true);
 
                         // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
                         /*   if (acceso) {
@@ -707,7 +713,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 , {name: 'cumplimiento', allowBlank: false}
                 , {name: 'detalle', allowBlank: true}
                 , {name: 'fecha_cumplimiento', type: 'date', dateFormat: 'c', allowBlank: true}
-                , {name: 'dias', allowBlank: false}
+                , {name: 'dias', allowBlank: true}
                 , {name: 'fecha_compromiso', type: 'date', dateFormat: 'c', allowBlank: false}
                 , {name: 'notas', allowBlank: true}
                 , {name: 'entregable', allowBlank: true}
@@ -753,7 +759,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 '-',
                 {
                     text: "Eliminar",
-                    scope: this,
                     handler: this.deleterecordatoriosDetalle,
                     id: 'deleterecordatoriosDetalle',
                     iconCls: 'delete-icon',
@@ -767,8 +772,25 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     scope: this,
                     text: 'Recargar Datos',
                     tooltip: 'Recargar datos'
+                }, '-',
+                {
+                    id: 'cargaAutomaticaSubasta',
+                    scope: this,
+                    iconCls: 'save-icon',
+                    handler: this.cargaAutomatica,
+                    text: 'Subasta Inversa',
+                    tooltip: 'Agregar todas las actividades automaticamente de subasta inversa',
+                    disabled: true
+                }, '-',
+                {
+                    id: 'cargaAutomaticaInfima',
+                    scope: this,
+                    iconCls: 'save-icon',
+                    handler: this.cargaAutomatica,
+                    text: 'Infima/Regimen Especial',
+                    tooltip: 'Agregar todas las actividades automaticamente de Infima/Régimen especial',
+                    disabled: true
                 }
-
             ],
             columns: [
                 new Ext.grid.RowNumberer(),
@@ -776,7 +798,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 {header: 'id_proceso', dataIndex: 'id_proceso', sortable: true, width: 30, hidden: true},
                 {
                     header: 'Fase', dataIndex: 'id_actividad', sortable: true, width: 120,
-                    renderer: planificacionFase
+                    renderer: tipoActividadPoaFase
                 },
                 {
                     header: 'Actividad', dataIndex: 'id_actividad', sortable: true, width: 220,
@@ -977,18 +999,33 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', sortable: true, width: 30, hidden: true},
-                {header: 'Fase', dataIndex: 'fase', sortable: true, width: 160, editor: comboFASE2,
-                    renderer: planificacionFase2},
-                {header: 'Actividad', dataIndex: 'actividad', sortable: true, width: 360, editor: textField},
+                {
+                    header: 'Fase', dataIndex: 'fase', sortable: true, width: 160, editor: comboFASE2,
+                    renderer: planificacionFase2
+                },
+                {
+                    header: 'Actividad',
+                    dataIndex: 'actividad',
+                    sortable: true,
+                    width: 360,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
                 {
                     header: 'Porcentaje',
                     dataIndex: 'porcentaje',
                     sortable: true,
                     width: 80,
                     align: 'center',
-                    editor: textField
+                    editor: new Ext.form.TextField({allowBlank: false})
                 },
-                {header: 'tipo', dataIndex: 'tipo', sortable: true, width: 60, align: 'center', editor: textField},
+                {
+                    header: 'tipo',
+                    dataIndex: 'tipo',
+                    sortable: true,
+                    width: 60,
+                    align: 'center',
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
                 {header: 'orden', dataIndex: 'orden', sortable: true, width: 60, editor: numberField, align: 'center'},
 
                 {
@@ -1579,6 +1616,66 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 }
         });
     },
+
+    cargaAutomatica: function (tipo) {
+        if (tipo.id == 'cargaAutomaticaSubasta') {
+            tipo = 'subasta'
+        }
+        if (tipo.id == 'cargaAutomaticaInfima') {
+            tipo = 'infima'
+        }
+
+
+        var rows = this.storeRecordatoriosDetalle.getCount()
+        if (rows === 0) {
+            // mensaje continuar y llamada a descarga archivo
+            Ext.Msg.show({
+                title: 'Advertencia',
+                msg: 'Se generaran automaticamente las actividades para <strong>Subasta Inversa</strong> <br>¿Desea continuar?',
+                scope: this,
+                icon: Ext.Msg.WARNING,
+                buttons: Ext.Msg.YESNO,
+                fn: function (btn) {
+                    if (btn == 'yes') {
+                        //    window.location.href = 'modules/desktop/recordatorios/server/descargaReporteRecordatorios.php?param=' + valueParams;
+                        var dataObj = null;
+                        var urlRecordatorios = "modules/desktop/recordatorios/server/";
+                        // envio a la carga de actividades
+                        Ext.Ajax.request({
+                            url: urlRecordatorios + 'crudRecordatoriosDetalle.php?operation=fillAuto&tipo=' + tipo + '&id_proceso=' + selectProceso,
+                            params: {tipo: tipo, id_proceso: selectProceso},
+                            failure: function (response, options) {
+                                // error
+                                console.log('Error de carga ');
+                            },
+                            success: function (response, options) {
+                                //assuming the response is a JSON string...
+                                dataObj = Ext.decode(response.responseText);
+                                //luego de la carga se recarga el dataStore
+                                this.storeRecordatoriosDetalle.load({
+                                    params:
+                                        {
+                                            start: 0,
+                                            limit: limiterecordatorios,
+                                            id_proceso: selectProceso
+                                        }
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Ya existen datos',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+    },
+
 
     showError: function (msg, title) {
         title = title || 'Error';
