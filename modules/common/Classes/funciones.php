@@ -293,3 +293,22 @@ function enviarEmailAmc($email, $nombre, $mensaje, $funcionariosCC, $funcionario
 
 }
 
+
+function validaRelacion($id, $idTablaHija = '', $tablaHija = '')
+{
+    global $os;
+
+    $sql = "SELECT COUNT(*) as total  FROM $tablaHija where $idTablaHija = $id ";
+
+    $result = $os->db->conn->query($sql);
+    $total = 0;
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        if (!is_null($row ['total']))
+            $total = $row ['total'];
+    }
+
+    if ($total > 0)
+        return false;
+    else
+        return true;
+}

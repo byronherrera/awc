@@ -26,7 +26,7 @@ chrome.alarms.onAlarm.addListener(function () {
     
                         chrome.notifications.create({
                             type: 'list',
-                            iconUrl: 'logo_amc48.png',
+                            iconUrl: 'alerta.png',
                             title: responseArr[0].nombre + ", tareas por entregar",
                             message:  + '; Fecha: ' + responseArr[0].fecha,
                             items:itemsNotificacion,

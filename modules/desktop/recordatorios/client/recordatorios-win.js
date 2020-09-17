@@ -29,10 +29,15 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
         var textField2 = new Ext.form.TextField({allowBlank: false});
         var numberField = new Ext.ux.form.SpinnerField({
-            fieldLabel: 'Age',
-            name: 'age',
             minValue: 0,
             maxValue: 1000
+        });
+
+        var numberFieldDecimal = new Ext.ux.form.SpinnerField({
+            minValue: 0,
+            maxValue: 1,
+            value: .00,
+            stepValue: .01
         });
 
         //inicio combo tipo contratacion
@@ -44,7 +49,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 users: [
                     {"id": '1', "nombre": "Si"},
                     {"id": '0', "nombre": "Si"}
-
                 ]
             }
         });
@@ -143,6 +147,42 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo tipo contratacion
 
+        //inicio combo estado
+        storeTIPOESTADO = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 'En propuesta', "nombre": "En propuesta"}
+                    , {"id": 'En ejecución', "nombre": "En ejecución"}
+                    , {"id": 'Dado de baja', "nombre": "Dado de baja"}
+                    , {"id": 'Detenido', "nombre": "Detenido"}
+                    , {"id": 'Finalizado', "nombre": "Finalizado"}
+                ]
+            }
+        });
+
+        var comboTIPOESTADO = new Ext.form.ComboBox({
+            id: 'comboTIPOESTADO',
+            store: storeTIPOESTADO,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function planificacionTipoEstado(id) {
+            var index = storeTIPOESTADO.findExact('id', id);
+            if (index > -1) {
+                var record = storeTIPOESTADO.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo estado
+
+
         //inicio combo semaforo
         storeSEMAFORO = new Ext.data.JsonStore({
             root: 'users',
@@ -203,6 +243,22 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         });
 
         function planificacionFase(id) {
+            var index = storeFASE.findExact('id', id);
+            if (index > -1) {
+                var record = storeFASE.getAt(index);
+                return record.get('nombre');
+            }
+        }
+        var comboFASE2 = new Ext.form.ComboBox({
+            id: 'comboFASE',
+            store: storeFASE,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function planificacionFase2(id) {
             var index = storeFASE.findExact('id', id);
             if (index > -1) {
                 var record = storeFASE.getAt(index);
@@ -302,9 +358,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         if (res.message != '') {
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
                         }
-                    };
-
-
+                    }
                 }
             }
         });
@@ -322,9 +376,9 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 , {name: 'tema', allowBlank: false}
                 , {name: 'fecha_inicio', type: 'date', dateFormat: 'c', allowBlank: true}
                 , {name: 'fecha_entrega', type: 'date', dateFormat: 'c', allowBlank: true}
-                , {name: 'activo', allowBlank: true}
-                , {name: 'idingreso', allowBlank: true}
                 , {name: 'estado', allowBlank: true}
+                , {name: 'idingreso', allowBlank: true}
+                , {name: 'detalle_avance', allowBlank: true}
                 , {name: 'tipocontratacion', allowBlank: true}
                 , {name: 'semaforo', allowBlank: true}
                 , {name: 'fase', allowBlank: true}
@@ -346,19 +400,29 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
             autoSave: true,
-            baseParams: {}
+            baseParams: {},
+            listeners: {
+                exception: function (proxy, response, operation) {
+                    if (operation === 'destroy') {
+                        Ext.Msg.show({
+                            title: 'Error'
+                            , msg: 'No se puede borrar este proceso pues estan ingresados actividades'
+                            , modal: true
+                            , icon: Ext.Msg.ERROR
+                            , buttons: Ext.Msg.OK
+                        });
+                    }
+                }
+            }
         });
+
         storeRecordatorios = this.storeRecordatorios;
-
-
         storeRecordatorios.baseParams = {
             limit: limiterecordatorios
         };
 
         this.gridRecordatorios = new Ext.grid.EditorGridPanel({
-            //height: '100%',
             height: 220,
-            //height: desktop.getWinHeight() - 92,
             store: this.storeRecordatorios,
             clicksToEdit: 1,
             columns: [
@@ -403,17 +467,12 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     })
                 },
                 {
-                    header: 'Activo'
-                    , dataIndex: 'activo'
-                    , editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , trueText: 'Yes'
-                    , menuDisabled: true
-                    , sortable: true
-                    , width: 50
-                    , xtype: 'booleancolumn'
+                    header: 'Estado',
+                    dataIndex: 'estado',
+                    sortable: true,
+                    width: 125,
+                    renderer: planificacionTipoEstado,
+                    editor: comboTIPOESTADO,
                 },
                 {
                     header: 'Encargado Ingreso', dataIndex: 'idingreso', sortable: true, width: 125, hidden: true,
@@ -421,7 +480,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 }
                 , {
                     header: 'Detalle avance',
-                    dataIndex: 'estado',
+                    dataIndex: 'detalle_avance',
                     sortable: true,
                     width: 150,
                     editor: textField
@@ -477,7 +536,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         maxValue: 1,
                         minValue: 0
                     }),
-                    renderer  : function(rate) {
+                    renderer: function (rate) {
                         return Ext.util.Format.number(rate * 100, '0 %');
                     }
                 },
@@ -506,98 +565,98 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         storeRecordatoriosDetalle.load({params: {id_proceso: rec.id}});
 
                         // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
-                     /*   if (acceso) {
-                            if (rec.get("id_estado") != 1) {
-                                Ext.getCmp('informesAccionesTab').setDisabled(acceso ? false : true);
-                                Ext.getCmp('informesOperativosTab').setDisabled(acceso ? false : true);
-                                Ext.getCmp('imagenesOperativosTab').setDisabled(acceso ? false : true);
-                                Ext.getCmp('detalleOperativosTab').setDisabled(acceso ? false : true);
-                                Ext.getCmp('retirosOperativosTab').setDisabled(acceso ? false : true);
-                            }
-                            else {
-                                Ext.getCmp('informesAccionesTab').setDisabled(true);
-                                Ext.getCmp('informesOperativosTab').setDisabled(true);
-                                Ext.getCmp('imagenesOperativosTab').setDisabled(true);
-                                Ext.getCmp('detalleOperativosTab').setDisabled(true);
-                                Ext.getCmp('retirosOperativosTab').setDisabled(true);
-                            }
-                            cargaDetalle(rec.id);
+                        /*   if (acceso) {
+                               if (rec.get("id_estado") != 1) {
+                                   Ext.getCmp('informesAccionesTab').setDisabled(acceso ? false : true);
+                                   Ext.getCmp('informesOperativosTab').setDisabled(acceso ? false : true);
+                                   Ext.getCmp('imagenesOperativosTab').setDisabled(acceso ? false : true);
+                                   Ext.getCmp('detalleOperativosTab').setDisabled(acceso ? false : true);
+                                   Ext.getCmp('retirosOperativosTab').setDisabled(acceso ? false : true);
+                               }
+                               else {
+                                   Ext.getCmp('informesAccionesTab').setDisabled(true);
+                                   Ext.getCmp('informesOperativosTab').setDisabled(true);
+                                   Ext.getCmp('imagenesOperativosTab').setDisabled(true);
+                                   Ext.getCmp('detalleOperativosTab').setDisabled(true);
+                                   Ext.getCmp('retirosOperativosTab').setDisabled(true);
+                               }
+                               cargaDetalle(rec.id);
 
-                            if ((rec.get("id_estado") == 1) || (rec.get("id_estado") == 4)) {
-                                gridBlockOperativos = false;
-                                Ext.getCmp('savedetalleoperativo').setDisabled(false);
+                               if ((rec.get("id_estado") == 1) || (rec.get("id_estado") == 4)) {
+                                   gridBlockOperativos = false;
+                                   Ext.getCmp('savedetalleoperativo').setDisabled(false);
 
-                                Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
-                                Ext.getCmp('addoperativos').setDisabled(accesosAdministradorOpe ? false : true);
+                                   Ext.getCmp('borraroperativo').setDisabled(accesosAdministradorOpe ? false : true);
+                                   Ext.getCmp('addoperativos').setDisabled(accesosAdministradorOpe ? false : true);
 
-                                Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
-                                Ext.getCmp('addoperativoparticipantes').setDisabled(false);
-                                // en caso que se tenga acceso tambien se habilitan o deshabilitan los botones para agregar detalle
-                                // valido si es el caso operativo tipo Permanentes Zonales
-
-
-                                if (rec.get("tipo_operativo") == 2) {
-                                    Ext.getCmp('borraroperativodetalle').setDisabled(false);
-                                    Ext.getCmp('addoperativodetalle').setDisabled(false);
-                                    //Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
-                                    // Ext.getCmp('addoperativoparticipantes').setDisabled(false);
-                                } else {
-                                    Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
-                                    Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
-                                }
-
-                                Ext.getCmp('borraroperativodetalleacciones').setDisabled(false);
-                                Ext.getCmp('addoperativodetalleacciones').setDisabled(false);
-
-                                Ext.getCmp('borraroperativodetalleInforme').setDisabled(false);
-                                Ext.getCmp('addoperativodetalleInforme').setDisabled(false);
-
-                                Ext.getCmp('borraroperativoimagenes').setDisabled(false);
-
-                                Ext.getCmp('addoperativoimagenes').setDisabled(false);
-                                Ext.getCmp('subirimagen').setDisabled(false);
-                                // solamente para el caso
-                            }
-                            else {
-
-                                // caso que el operativo sea tipo 2, 3, 5 ( cumplido, fallido, cancelado
-                                gridBlockOperativos = true;
-                                Ext.getCmp('savedetalleoperativo').setDisabled(true);
-
-                                Ext.getCmp('borraroperativo').setDisabled(true);
-                                Ext.getCmp('addoperativos').setDisabled(true);
-
-                                Ext.getCmp('borraroperativodetalle').setDisabled(true);
-                                Ext.getCmp('addoperativodetalle').setDisabled(true);
-
-                                Ext.getCmp('borraroperativoparticipantes').setDisabled(true);
-                                Ext.getCmp('addoperativoparticipantes').setDisabled(true);
-
-                                Ext.getCmp('borraroperativodetalleacciones').setDisabled(true);
-                                Ext.getCmp('addoperativodetalleacciones').setDisabled(true);
-
-                                Ext.getCmp('borraroperativodetalleInforme').setDisabled(true);
-                                Ext.getCmp('addoperativodetalleInforme').setDisabled(true);
-
-                                Ext.getCmp('borraroperativoimagenes').setDisabled(true);
-                                Ext.getCmp('addoperativoimagenes').setDisabled(true);
-                                Ext.getCmp('subirimagen').setDisabled(true);
-
-                            }
+                                   Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
+                                   Ext.getCmp('addoperativoparticipantes').setDisabled(false);
+                                   // en caso que se tenga acceso tambien se habilitan o deshabilitan los botones para agregar detalle
+                                   // valido si es el caso operativo tipo Permanentes Zonales
 
 
-                            //para el caso que se es administrador
-                            if (accesosAdministradorOpe) {
-                                Ext.getCmp('savedetalleoperativo').setDisabled(false);
-                            }
-                        }
-                        //para el caso  de los botones
-                        if ((rec.get("id_estado") == 2) || (rec.get("id_estado") == 3) || (rec.get("id_estado") == 5)) {
-                            Ext.getCmp('tb_repoteOperativos').setDisabled(false);
-                        } else {
-                            Ext.getCmp('tb_repoteOperativos').setDisabled(true);
-                        }
-                     */
+                                   if (rec.get("tipo_operativo") == 2) {
+                                       Ext.getCmp('borraroperativodetalle').setDisabled(false);
+                                       Ext.getCmp('addoperativodetalle').setDisabled(false);
+                                       //Ext.getCmp('borraroperativoparticipantes').setDisabled(false);
+                                       // Ext.getCmp('addoperativoparticipantes').setDisabled(false);
+                                   } else {
+                                       Ext.getCmp('borraroperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
+                                       Ext.getCmp('addoperativodetalle').setDisabled(accesosAdministradorOpe ? false : true);
+                                   }
+
+                                   Ext.getCmp('borraroperativodetalleacciones').setDisabled(false);
+                                   Ext.getCmp('addoperativodetalleacciones').setDisabled(false);
+
+                                   Ext.getCmp('borraroperativodetalleInforme').setDisabled(false);
+                                   Ext.getCmp('addoperativodetalleInforme').setDisabled(false);
+
+                                   Ext.getCmp('borraroperativoimagenes').setDisabled(false);
+
+                                   Ext.getCmp('addoperativoimagenes').setDisabled(false);
+                                   Ext.getCmp('subirimagen').setDisabled(false);
+                                   // solamente para el caso
+                               }
+                               else {
+
+                                   // caso que el operativo sea tipo 2, 3, 5 ( cumplido, fallido, cancelado
+                                   gridBlockOperativos = true;
+                                   Ext.getCmp('savedetalleoperativo').setDisabled(true);
+
+                                   Ext.getCmp('borraroperativo').setDisabled(true);
+                                   Ext.getCmp('addoperativos').setDisabled(true);
+
+                                   Ext.getCmp('borraroperativodetalle').setDisabled(true);
+                                   Ext.getCmp('addoperativodetalle').setDisabled(true);
+
+                                   Ext.getCmp('borraroperativoparticipantes').setDisabled(true);
+                                   Ext.getCmp('addoperativoparticipantes').setDisabled(true);
+
+                                   Ext.getCmp('borraroperativodetalleacciones').setDisabled(true);
+                                   Ext.getCmp('addoperativodetalleacciones').setDisabled(true);
+
+                                   Ext.getCmp('borraroperativodetalleInforme').setDisabled(true);
+                                   Ext.getCmp('addoperativodetalleInforme').setDisabled(true);
+
+                                   Ext.getCmp('borraroperativoimagenes').setDisabled(true);
+                                   Ext.getCmp('addoperativoimagenes').setDisabled(true);
+                                   Ext.getCmp('subirimagen').setDisabled(true);
+
+                               }
+
+
+                               //para el caso que se es administrador
+                               if (accesosAdministradorOpe) {
+                                   Ext.getCmp('savedetalleoperativo').setDisabled(false);
+                               }
+                           }
+                           //para el caso  de los botones
+                           if ((rec.get("id_estado") == 2) || (rec.get("id_estado") == 3) || (rec.get("id_estado") == 5)) {
+                               Ext.getCmp('tb_repoteOperativos').setDisabled(false);
+                           } else {
+                               Ext.getCmp('tb_repoteOperativos').setDisabled(true);
+                           }
+                        */
                     }
                 }
             }),
@@ -629,11 +688,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
                         }
                     }
-                    if (typeof res.message !== 'undefined') {
-                        if (res.message != '') {
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
-                        }
-                    }
+
                     storeRecordatorios.load();
                 }
 
@@ -692,7 +747,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     scope: this,
                     handler: this.addrecordatoriosDetalle,
                     iconCls: 'save-icon',
-                    id: 'addrecordatorios',
+                    id: 'addrecordatoriosDetalle',
                     //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                 },
                 '-',
@@ -700,7 +755,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     text: "Eliminar",
                     scope: this,
                     handler: this.deleterecordatoriosDetalle,
-                    id: 'deleterecordatorios',
+                    id: 'deleterecordatoriosDetalle',
                     iconCls: 'delete-icon',
                     //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                     //disabled: true
@@ -719,10 +774,10 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', sortable: true, width: 30, hidden: true},
                 {header: 'id_proceso', dataIndex: 'id_proceso', sortable: true, width: 30, hidden: true},
-                   {
-                       header: 'Fase', dataIndex: 'id_actividad', sortable: true, width: 120,
-                       renderer: tipoActividadPoaFase
-                   },
+                {
+                    header: 'Fase', dataIndex: 'id_actividad', sortable: true, width: 120,
+                    renderer: planificacionFase
+                },
                 {
                     header: 'Actividad', dataIndex: 'id_actividad', sortable: true, width: 220,
                     editor: comboTIPOACTIVPOA,
@@ -790,7 +845,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_asignado',
                     sortable: true,
                     width: 220,
-                    editor: textField2
+                    editor: comboGRC2,
+                    renderer: personaReceptaRecordatorio
                 },
                 {
                     header: 'Observaciones',
@@ -817,6 +873,161 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
              })*/
         });
         // fin ventana recordatorios detalle
+
+        // inicio ventana recordatorios
+        var proxyTipoActividades = new Ext.data.HttpProxy({
+            api: {
+                create: urlRecordatorios + "crudTipoActividades.php?operation=insert",
+                read: urlRecordatorios + "crudTipoActividades.php?operation=select",
+                update: urlRecordatorios + "crudTipoActividades.php?operation=update",
+                destroy: urlRecordatorios + "crudTipoActividades.php?operation=delete"
+            },
+            listeners: {
+                write: function (proxy, action, result, res, rs) {
+                    if (typeof res.message !== 'undefined') {
+                        if (res.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
+                        }
+                    }
+                }
+            }
+        });
+        var readerTipoActividades = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id', allowBlank: true}
+                , {name: 'fase', allowBlank: false}
+                , {name: 'actividad', allowBlank: false}
+                , {name: 'porcentaje', allowBlank: false}
+                , {name: 'tipo', allowBlank: false}
+                , {name: 'orden', allowBlank: false}
+                , {name: 'activo', type: 'boolean', allowBlank: false}
+            ]
+        });
+        var writerTipoActividades = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+        this.storeTipoActividades = new Ext.data.Store({
+            id: "id",
+            proxy: proxyTipoActividades,
+            reader: readerTipoActividades,
+            writer: writerTipoActividades,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true,
+            autoSave: true,
+            baseParams: {},
+            listeners: {
+                exception: function (proxy, response, operation) {
+                    if (operation === 'destroy') {
+                        Ext.Msg.show({
+                            title: 'Error'
+                            , msg: 'Error al borrar '
+                            , modal: true
+                            , icon: Ext.Msg.ERROR
+                            , buttons: Ext.Msg.OK
+                        });
+                    }
+                }
+            }
+        });
+
+        storeTipoActividades = this.storeTipoActividades;
+        storeTipoActividades.baseParams = {
+            limit: limiterecordatorios
+        };
+
+        this.gridTipoActividades = new Ext.grid.EditorGridPanel({
+            height: desktop.getWinHeight() - 68,
+            store: this.storeTipoActividades,
+            clicksToEdit: 1,
+            tbar: [
+                {
+                    text: 'Nuevo',
+                    scope: this,
+                    handler: this.addTipoActividades,
+                    iconCls: 'save-icon',
+                    id: 'addTipoActividades',
+                    //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                },
+                '-',
+                {
+                    text: "Eliminar",
+                    scope: this,
+                    handler: this.deleteTipoActividades,
+                    id: 'deleteTipoActividades',
+                    iconCls: 'delete-icon',
+                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                    //disabled: true
+                },
+                '-',
+                {
+                    iconCls: 'reload-icon',
+                    handler: this.requestGridDataTipoActividades,
+                    scope: this,
+                    text: 'Recargar Datos',
+                    tooltip: 'Recargar datos'
+                }
+
+            ],
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {header: 'id', dataIndex: 'id', sortable: true, width: 30, hidden: true},
+                {header: 'Fase', dataIndex: 'fase', sortable: true, width: 160, editor: comboFASE2,
+                    renderer: planificacionFase2},
+                {header: 'Actividad', dataIndex: 'actividad', sortable: true, width: 360, editor: textField},
+                {
+                    header: 'Porcentaje',
+                    dataIndex: 'porcentaje',
+                    sortable: true,
+                    width: 80,
+                    align: 'center',
+                    editor: textField
+                },
+                {header: 'tipo', dataIndex: 'tipo', sortable: true, width: 60, align: 'center', editor: textField},
+                {header: 'orden', dataIndex: 'orden', sortable: true, width: 60, editor: numberField, align: 'center'},
+
+                {
+                    header: 'Activo',
+                    dataIndex: 'activo',
+                    sortable: true,
+                    width: 45,
+                    align: 'center',
+                    editor: {
+                        xtype: 'checkbox'
+                    }
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Si'
+                    , xtype: 'booleancolumn'
+                },
+            ],
+            viewConfig: {
+                forceFit: false
+            },
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true,
+                listeners: {
+                    rowselect: function (sm, row, rec) {
+                    }
+                }
+            }),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            bbar: new Ext.PagingToolbar({
+                pageSize: limiterecordatorios,
+                store: storeTipoActividades,
+                displayInfo: true,
+                displayMsg: 'Mostrando actividades: {0} - {1} de {2} - AMC',
+                emptyMsg: "No existen actividades que mostrar"
+            })
+        });
+        // fin ventana recordatorios
 
 
         //datastore y grid para reporte
@@ -853,65 +1064,50 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     }
                 },
                 {
-                    header: 'Responsable', dataIndex: 'id_responsable', sortable: true, width: 220, editor: comboGRC,
+                    header: 'Responsable', dataIndex: 'id_responsable', sortable: true, width: 220,
                     renderer: personaRecordatorio
                 },
-
-                //  {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 125},
-                //  {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 125},
                 {
                     header: 'Producto / servicio',
                     dataIndex: 'tema',
                     sortable: true,
-                    width: 300,
-                    editor: textField
+                    width: 300
                 },
                 {
-                    header: 'Fecha Inicio', dataIndex: 'fecha_inicio', sortable: true, width: 80, renderer: formatDate,
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
+                    header: 'Fecha Inicio', dataIndex: 'fecha_inicio', sortable: true, width: 80, renderer: formatDate
+
                 },
                 {
                     header: 'Fecha Finalizado',
                     dataIndex: 'fecha_entrega',
                     sortable: true,
                     width: 80,
-                    renderer: formatDate,
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
+                    renderer: formatDate
+
                 },
                 {
-                    header: 'Activo'
-                    , dataIndex: 'activo'
-                    , editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , trueText: 'Yes'
-                    , menuDisabled: true
-                    , sortable: true
-                    , width: 50
-                    , xtype: 'booleancolumn'
+                    header: 'Estado'
+                    , dataIndex: 'estado',
+
+                    sortable: true,
+                    width: 125,
+                    renderer: planificacionTipoEstado
                 },
                 {
                     header: 'Encargado Ingreso', dataIndex: 'idingreso', sortable: true, width: 125, hidden: true,
                     renderer: personaReceptaRecordatorio
                 }
                 , {
-                    header: 'Estado',
-                    dataIndex: 'estado',
+                    header: 'Detalle avance',
+                    dataIndex: 'detalle_avance',
                     sortable: true,
-                    width: 125,
-                    editor: textField
+                    width: 125
                 }
                 , {
                     header: 'Tipo contratación',
                     dataIndex: 'tipocontratacion',
                     sortable: true,
                     width: 125,
-                    editor: comboTIPOCONTRATA,
                     renderer: planificacionTipoContratacio
                 }
                 , {
@@ -920,7 +1116,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     align: 'center',
                     width: 70,
-                    editor: comboSEMAFORO,
                     renderer: planificacionSemaforo
                 }
                 , {
@@ -928,7 +1123,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'fase',
                     sortable: true,
                     width: 70,
-                    editor: comboFASE,
                     renderer: planificacionFase
                 }
                 , {
@@ -937,32 +1131,23 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 100,
                     align: 'right',
-                    renderer: 'usMoney',
-                    editor: new Ext.form.NumberField({
-                        allowBlank: false,
-                        allowNegative: false,
-                        maxValue: 100000000
-                    })
+                    renderer: 'usMoney'
                 }
                 , {
-                    header: '%',
+                    header: 'Avance físico',
                     dataIndex: 'porcentaje',
                     sortable: true,
                     align: 'right',
                     width: 50,
-                    editor: new Ext.form.NumberField({
-                        allowBlank: false,
-                        allowNegative: false,
-                        maxValue: 1,
-                        minValue: 0
-                    })
+                    renderer: function (rate) {
+                        return Ext.util.Format.number(rate * 100, '0 %');
+                    }
                 },
                 {
                     header: 'Observaciones',
                     dataIndex: 'observaciones',
                     sortable: true,
-                    width: 160,
-                    editor: textField
+                    width: 160
                 },
             ],
             viewConfig: {
@@ -1075,13 +1260,13 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         items: [
                             {
                                 xtype: 'combo',
-                                fieldLabel: 'Activo',
-                                id: 'busqueda_activo',
-                                name: 'busqueda_activo',
-                                hiddenName: 'busqueda_activo',
+                                fieldLabel: 'Estado',
+                                id: 'busqueda_estado',
+                                name: 'busqueda_estado',
+                                hiddenName: 'busqueda_estado',
 
                                 anchor: '95%',
-                                store: storeSINO,
+                                store: storeTIPOESTADO,
                                 valueField: 'id',
                                 displayField: 'nombre',
                                 typeAhead: true,
@@ -1225,7 +1410,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                             ]
 
                         },
-
                         {
                             title: 'Reportes',
                             layout: 'column',
@@ -1279,6 +1463,19 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ]
 
+                        },
+                        {
+                            title: 'Listados de actividades',
+                            autoScroll: true,
+                            closable: true,
+
+                            id: 'detalleOperativos',
+                            flex: 2,
+                            bodyStyle: 'padding:0; background: #DFE8F6',
+                            layout: 'column',
+                            items: this.gridTipoActividades
+
+
                         }
                     ]
                 })
@@ -1294,7 +1491,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     limit: limiterecordatorios
                 }
             });
-        }, 400);
+            this.storeTipoActividades.load()
+        }, 600);
     },
 
     deleterecordatorios: function () {
@@ -1320,8 +1518,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             tema: '',
             fecha_inicio: (new Date()),
             fecha_entrega: (new Date()),
-            activo: '',
-            estado: ''
+            estado: 'En propuesta',
+            detalle_avance: ''
         });
         this.gridRecordatorios.stopEditing();
         this.storeRecordatorios.insert(0, recordatorios);
@@ -1356,12 +1554,16 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
     },
     addrecordatoriosDetalle: function () {
         var recordatorios = new this.storeRecordatoriosDetalle.recordType({
-            id_responsable: '',
-            tema: '',
-            fecha_inicio: (new Date()),
-            fecha_entrega: (new Date()),
-            activo: '',
-            estado: ''
+            id_proceso: selectProceso,
+            id_actividad: '',
+            actividad: '',
+            cumplimiento: '',
+            detalle: '',
+            dias: 0,
+            fecha_compromiso: (new Date()),
+            fecha_cumplimiento: (new Date()),
+            notas: '',
+            entregable: ''
         });
         this.gridRecordatoriosDetalle.stopEditing();
         this.storeRecordatoriosDetalle.insert(0, recordatorios);
@@ -1439,5 +1641,52 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
+    },
+
+    // eventos de boton Tipo Actividades
+    deleteTipoActividades: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridTipoActividades.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeTipoActividades.remove(rows);
+                }
+            }
+        });
+    },
+    addTipoActividades: function () {
+        var recordatorios = new this.storeTipoActividades.recordType({
+            id_proceso: selectProceso,
+            id_actividad: '',
+            actividad: '',
+            cumplimiento: '',
+            detalle: '',
+            dias: 0,
+            fecha_compromiso: (new Date()),
+            fecha_cumplimiento: (new Date()),
+            notas: '',
+            entregable: ''
+        });
+        this.gridTipoActividades.stopEditing();
+        this.storeTipoActividades.insert(0, recordatorios);
+        this.gridTipoActividades.startEditing(0, 0);
+    },
+    requestGridDataTipoActividades: function () {
+        this.storeTipoActividades.load({
+            params:
+                {
+                    start: 0,
+                    limit: limiterecordatorios,
+                    id_proceso: selectProceso
+                }
+        });
     }
+    // eventos de boton Tipo Actividades
 });

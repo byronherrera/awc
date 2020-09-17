@@ -29,6 +29,7 @@ if (isset($_GET['param'])) {
 }
 
 $today = date("Y-n-j-H-i-s");
+$today2 = date("Y-n-j H:i");
 
 // para los reportes
 $where = '';
@@ -55,12 +56,12 @@ if (isset($data->busqueda_persona_encargada) and ($data->busqueda_persona_encarg
     }
 }
 
-if (isset($data->busqueda_activo) and ($data->busqueda_activo != '')) {
-    $tipo = $data->busqueda_activo;
+if (isset($data->busqueda_estado) and ($data->busqueda_estado != '')) {
+    $tipo = $data->busqueda_estado;
     if ($where == '') {
-        $where = "WHERE activo = '$tipo' ";
+        $where = "WHERE estado = '$tipo' ";
     } else {
-        $where = $where . " AND activo = '$tipo' ";
+        $where = $where . " AND estado = '$tipo' ";
     }
 }
 
@@ -143,13 +144,13 @@ $sql = "SELECT
         tema,
         fecha_inicio,
         fecha_entrega,
-        activo,
-        tipocontratacion,
         estado,
+        tipocontratacion,
+        detalle_avance,
         semaforo,
         fase,
         valor,
-        porcentaje,
+        CONCAT((porcentaje * 100), ' %') as porcentaje,
         observaciones 
         FROM
         amc_planificacion_notificaciones
@@ -180,10 +181,10 @@ $datosColumnas = [
     ["columna" => "A", "ancho" => 16.86, "titulo" => 'Tipo de Contratación', "data" => 'tipocontratacion']
     , ["columna" => "B", "ancho" => 40, "titulo" => 'Producto / Servicio', "data" => 'tema']
     , ["columna" => "C", "ancho" => 30, "titulo" => 'Responsable', "data" => 'nombres']
-    , ["columna" => "D", "ancho" => 40, "titulo" => 'Estado', "data" => 'estado']
+    , ["columna" => "D", "ancho" => 60, "titulo" => 'Estado', "data" => 'detalle_avance']
     , ["columna" => "E", "ancho" => 15, "titulo" => 'Semaforo', "data" => 'semaforo']
     , ["columna" => "F", "ancho" => 12, "titulo" => 'Valor', "data" => 'valor']
-    , ["columna" => "G", "ancho" => 10, "titulo" => '%', "data" => 'porcentaje']
+    , ["columna" => "G", "ancho" => 10, "titulo" => 'Avance Físico', "data" => 'porcentaje']
     , ["columna" => "H", "ancho" => 10, "titulo" => 'Fecha Entrega', "data" => 'fecha_entrega']
 ];
 $totalColumnas = count($datosColumnas) - 1;
@@ -192,9 +193,11 @@ $totalColumnas = count($datosColumnas) - 1;
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo1 . ':' . $datosColumnas[$totalColumnas]['columna'] . $filaTitulo1);
 $objPHPExcel->getActiveSheet()->mergeCells('A' . $filaTitulo2 . ':' . $datosColumnas[$totalColumnas]['columna'] . $filaTitulo2);
 
-$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "LISTADO PENDIENTES");
+$objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo1, "SEGUIMIENTO POA");
 $objPHPExcel->getActiveSheet()->setCellValue('A' . $filaTitulo2, 'Unidad Planificiación');
 
+$objPHPExcel->getActiveSheet()->mergeCells('A' . ($filaTitulo2 + 1) . ':B' . ($filaTitulo2 + 1));
+$objPHPExcel->getActiveSheet()->setCellValue('A' . ($filaTitulo2 + 1), "Fecha: . $today2");
 
 $os->db->conn->query("SET NAMES 'utf8'");
 $sql = "SELECT CONCAT(qo_members.first_name, ' ', qo_members.last_name) AS nombre
@@ -204,7 +207,7 @@ $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
 $nombreUsuario = $rownombre['nombre'];
 
 $filascabecera = $number_of_rows + $filaInicio + 2;
-$objPHPExcel->getActiveSheet()->mergeCells('B' . ($filascabecera) . ':C' . ($filascabecera));
+$objPHPExcel->getActiveSheet()->mergeCells('B' . $filascabecera . ':C' . $filascabecera);
 $objPHPExcel->getActiveSheet()->mergeCells('B' . ($filascabecera + 1) . ':C' . ($filascabecera + 1));
 $objPHPExcel->getActiveSheet()->mergeCells('B' . ($filascabecera + 2) . ':C' . ($filascabecera + 2));
 
@@ -213,17 +216,18 @@ $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 1), $nombre
 $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 2), "Unidad de Planificación");
 
 $objPHPExcel->getActiveSheet()->mergeCells('E' . ($filascabecera + 1) . ':I' . ($filascabecera + 2));
-//$objPHPExcel->getActiveSheet()->setCellValue('E' . ($filascabecera + 1), $nombreUnidad);
 $objPHPExcel->getActiveSheet()->mergeCells('E' . $filascabecera . ':I' . $filascabecera);
 $objPHPExcel->getActiveSheet()->setCellValue('E' . $filascabecera, '__________________');
 
-
+// creacion de los titulos
 foreach ($datosColumnas as &$valorColumna) {
     $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($valorColumna['columna'])->setAutoSize(false);
     $objPHPExcel->getActiveSheet()->getColumnDimension($valorColumna['columna'])->setWidth($valorColumna['ancho']);
     $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filacabecera, $valorColumna['titulo']);
 
 }
+
+$objPHPExcel->getActiveSheet()->getStyle('F')->getNumberFormat()->setFormatCode('#,##0.00');
 
 
 $noExistenFilas = true;
@@ -233,7 +237,27 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $noExistenFilas = false;
 
     foreach ($datosColumnas as &$valorColumna) {
-        $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filaInicio, $rowdetalle[$valorColumna['data']]);
+        $colorCelda = getColorCelda($rowdetalle[$valorColumna['data']]);
+        // para el cambio de color de la columna semaforo
+        if ($valorColumna['data'] == "semaforo") {
+            $objPHPExcel->getActiveSheet()->getStyle($valorColumna['columna'] . $filaInicio)->applyFromArray(
+                array(
+                    'fill' => array(
+                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                        'color' => array('rgb' => $colorCelda)
+                    )
+                )
+            );
+        }
+        // para el cambio de color de la columna semaforo
+        if ($valorColumna['data'] == "detalle_avance") {
+            $textoDetalle = recuperaDetalle($rowdetalle['id']);
+        } else {
+            $textoDetalle = "";
+        }
+
+        $objPHPExcel->getActiveSheet()->setCellValue($valorColumna['columna'] . $filaInicio, $rowdetalle[$valorColumna['data']] . $textoDetalle);
+
     }
 
     $objPHPExcel->getActiveSheet()->getStyle($datosColumnas[0]['columna'] . $filaInicio . ':' . $datosColumnas[$totalColumnas]['columna'] . $filaInicio)->applyFromArray($styleArray);
@@ -277,11 +301,20 @@ $objPHPExcel->getActiveSheet()->getStyle('A4:W200')->applyFromArray(
     )
 );
 
+// estilo colores
+$objPHPExcel->getActiveSheet()->getStyle('A' . ($filaTitulo2 + 2) . ':' . $datosColumnas[$totalColumnas]['columna'] . ($filaTitulo2 + 2))->applyFromArray(
+    array(
+        'fill' => array(
+            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+            'color' => array('rgb' => 'DADADA')
+        )
+    )
+);
+
 $objPHPExcel->getActiveSheet()->getStyle('A4:W1000')->getAlignment()->setWrapText(true);
 
 $totalColumnas = count($datosColumnas) - 1;
 $objPHPExcel->getActiveSheet()->getStyle($datosColumnas[0]['columna'] . $filacabecera . ':' . $datosColumnas[$totalColumnas]['columna'] . $filacabecera)->applyFromArray($styleArray);
-
 
 
 // Set page orientation and size
@@ -321,7 +354,7 @@ exit;
 
 function quitar_tildes($cadena)
 {
-    $no_permitidas = array("á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "ñ", "À", "Ã", "Ì", "Ò", "Ù", "Ã™", "Ã ", "Ã¨", "Ã¬", "Ã²", "Ã¹", "ç", "Ç", "Ã¢", "ê", "Ã®", "Ã´", "Ã»", "Ã‚", "ÃŠ", "ÃŽ", "Ã”", "Ã›", "ü", "Ã¶", "Ã–", "Ã¯", "Ã¤", "«", "Ò", "Ã", "Ã„", "Ã‹");
+    $no_permitidas = array("á", "é", "í", "ó", "ú", "Á", "É", "Í", "Ó", "Ú", "ñ", "À", "Ã", "Ì", "Ò", "Ù", "Ã™", "Ã ", "Ã¨", "Ã¬", "Ã²", "Ã¹", "ç", "Ç", "Ã¢", "ê", "DIA DHEREDIA DONOSO ANDRES IGNACIOONOSO ANDRES IGNACIOÃ®", "Ã´", "Ã»", "Ã‚", "ÃŠ", "ÃŽ", "Ã”", "Ã›", "ü", "Ã¶", "Ã–", "Ã¯", "Ã¤", "«", "Ò", "Ã", "Ã„", "Ã‹");
     $permitidas = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "n", "N", "A", "E", "I", "O", "U", "a", "e", "i", "o", "u", "c", "C", "a", "e", "i", "o", "u", "A", "E", "I", "O", "U", "u", "o", "O", "i", "a", "e", "U", "I", "A", "E");
     $texto = str_replace($no_permitidas, $permitidas, $cadena);
     return $texto;
@@ -335,3 +368,56 @@ function quitar_espacio($cadena)
     return $texto;
 }
 
+function getColorCelda($color = "")
+{
+    switch ($color) {
+        case 'Rojo':
+            $retornaColor = "FF6B4B";
+            break;
+        case 'Amarillo':
+            $retornaColor = "F7FF4B";
+            break;
+        case 'Gris':
+            $retornaColor = "CCCCCC";
+            break;
+        case 'Verde':
+            $retornaColor = "6EFF4B";
+            break;
+        default:
+            $retornaColor = "FFFFFF";
+    }
+    return $retornaColor;
+}
+
+function recuperaDetalle($id)
+{
+    global $os;
+    $sql = "SELECT
+            MIN((SELECT orden FROM amc_planificacion_actividades WHERE amc_planificacion_detalle.id_actividad = amc_planificacion_actividades.id)) as orden, 
+            (SELECT fase FROM amc_planificacion_actividades WHERE amc_planificacion_detalle.id_actividad = amc_planificacion_actividades.id) as fase, 
+            amc_planificacion_detalle.actividad,
+            amc_planificacion_detalle.detalle,
+            amc_planificacion_detalle.fecha_compromiso,
+            amc_planificacion_detalle.notas,
+            amc_planificacion_detalle.entregable,
+            (SELECT CONCAT(last_name,' ',first_name) FROM qo_members WHERE qo_members.id = amc_planificacion_detalle.id_asignado) AS asignado 
+            FROM
+            amc_planificacion_detalle
+            WHERE
+            amc_planificacion_detalle.id_proceso = $id AND
+            amc_planificacion_detalle.cumplimiento = 'false'";
+
+    $nombre = $os->db->conn->query($sql);
+    $rowData = $nombre->fetch(PDO::FETCH_ASSOC);
+    $retornaEstado = '';
+    $retornaEstado .= (strlen($rowData['fase']) > 0) ? "\n" . $rowData['fase'] : '';
+    $retornaEstado .= (strlen($rowData['actividad']) > 0) ? "\n Actividad: " . $rowData['actividad'] : '';
+    $retornaEstado .= (strlen($rowData['detalle']) > 0) ? "\n Descripción: " . $rowData['detalle'] : '';
+    $retornaEstado .= (strlen($rowData['fecha_compromiso']) > 0) ? "\n Fecha compromiso: " . $rowData['fecha_compromiso'] : '';
+    $retornaEstado .= (strlen($rowData['notas']) > 0) ? "\n Observaciones: " . $rowData['notas'] : '';
+    $retornaEstado .= (strlen($rowData['entregable']) > 0) ? "\n Entregable: " . $rowData['entregable'] : '';
+    $retornaEstado .= (strlen($rowData['asignado']) > 0) ? "\n Asignado: " .  $rowData['asignado'] : '';
+
+    return $retornaEstado;
+
+}

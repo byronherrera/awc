@@ -29,6 +29,6 @@ chrome.storage.local.get(['userAMC'], function(result) {
 //An Alarm delay of less than the minimum 1 minute will fire
 // in approximately 1 minute incriments if released
 document.getElementById('sampleSecond').addEventListener('click', setAlarm);
-document.getElementById('15min').addEventListener('click', setAlarm);
-document.getElementById('cancelAlarm').addEventListener('click', clearAlarm);
 document.getElementById('grabar').addEventListener('click', setUsuario);
+//document.getElementById('15min').addEventListener('click', setAlarm);
+//document.getElementById('cancelAlarm').addEventListener('click', clearAlarm);
