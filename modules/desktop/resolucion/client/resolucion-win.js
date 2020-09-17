@@ -737,17 +737,17 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id_libro_diario', allowBlank: false},
-                {name: 'numero_resolucion', allowBlank: false},
-                {name: 'fecha_resolucion', allowBlank: false},
-                {name: 'articulo_actual', allowBlank: false},
-                {name: 'resolucion_de', allowBlank: false},
-                {name: 'multa_impuesta', allowBlank: false},
-                {name: 'horas_trabajo_comunitario', allowBlank: false},
-                {name: 'apelacion', allowBlank: false},
-                {name: 'numero_memo_apelacion', allowBlank: false},
-                {name: 'fecha_envio_apelacion', allowBlank: false},
-                {name: 'observaciones', allowBlank: false},
+                {name: 'id_libro_diario', allowBlank: true},
+                {name: 'numero_resolucion', allowBlank: true},
+                {name: 'fecha_resolucion', allowBlank: true},
+                {name: 'articulo_actual', allowBlank: true},
+                {name: 'resolucion_de', allowBlank: true},
+                {name: 'multa_impuesta', allowBlank: true},
+                {name: 'horas_trabajo_comunitario', allowBlank: true},
+                {name: 'apelacion', allowBlank: true},
+                {name: 'numero_memo_apelacion', allowBlank: true},
+                {name: 'fecha_envio_apelacion', allowBlank: true},
+                {name: 'observaciones', allowBlank: true},
             ]
         });
 
@@ -794,6 +794,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {
                     header: 'Fecha de Resolución',
                     dataIndex: 'fecha_resolucion',
+                    allowBlank: true,
                     sortable: true,
                     width: 140,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
@@ -845,6 +846,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 },
                 {
                     header: 'Fecha Envío Apelación',
+                    allowBlank: true,
                     dataIndex: 'fecha_envio_apelacion',
                     sortable: true,
                     width: 140,
@@ -864,7 +866,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     editor: new Ext.ux.form.SpinnerField({
                         minValue: 0,
 //                        maxValue: 200,
-                        allowBlank: false
+                        allowBlank: true
                     }),
                     renderer: 'usMoney',
 //                    allowNegative: false
