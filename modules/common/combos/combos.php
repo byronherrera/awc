@@ -738,7 +738,6 @@ function comboTiposActivPoaFase()
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
     }
-
     echo json_encode(array(
             "success" => true,
             "data" => $data)

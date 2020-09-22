@@ -202,6 +202,48 @@ function insertRecordatorios()
     ));
 }
 
+function fillAuto()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $tipo = $_POST["tipo"];  //tipos(subasta,infima)
+    $id_proceso = $_POST["id_proceso"];
+
+    if ($tipo == 'infima')
+        $sql = "SELECT id, actividad FROM amc_planificacion_actividades WHERE activo = 1 AND tipo = 1 ORDER BY orden";
+    else
+        $sql = "SELECT
+                id,
+                fase,
+                actividad 
+                FROM
+                amc_planificacion_actividades
+                WHERE
+                activo = 1 AND 
+                fase IN ('Fase preparatoria', 'Fase contractual', 'Pago') OR (fase = 'Fase precontractual' AND tipo = 2)
+                ORDER BY orden ";
+
+    $result = $os->db->conn->query($sql);
+    $memberId = $os->get_member_id();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        // al listado
+        $id_actividad = $row['id'];
+        $actividad = $row['actividad'];
+        $sql = "INSERT INTO `amc_planificacion_detalle` ( `id_proceso`, `id_actividad`, `actividad`, `cumplimiento`, `fecha_compromiso`, `idingreso` )
+                VALUES
+                    ( '$id_proceso', '$id_actividad', '$actividad', 'false', NOW(), '$memberId' )";
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
+
+    };
+
+    echo json_encode(array(
+        "success" => true,
+        "msg" => 'mensaje',
+        "data" => $tipo .  $id_proceso
+    ));
+}
+
 function updateRecordatorios()
 {
     global $os;
@@ -399,5 +441,8 @@ switch ($_GET['operation']) {
         break;
     case 'delete' :
         deleteRecordatorios();
+        break;
+    case 'fillAuto' :
+        fillAuto();
         break;
 }

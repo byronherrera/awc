@@ -1,5 +1,6 @@
+selectProceso = 0;
 QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
-    id: 'recordatorios',
+    id: 'SegPOA',
     type: 'desktop/recordatorios',
 
     init: function () {
@@ -11,16 +12,19 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         }
     },
     createWindow: function () {
-        var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
-        var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
-        var accesosZonales = this.app.isAllowedTo('accesosZonales', this.id);
-        var acceso = (accesosAdministrador || accesosSecretaria || accesosZonales) ? true : false
+        //variables de acceso
+        var accesosPlanificacion = this.app.isAllowedTo('accesosPlanificacion', this.id);
+        var accesosConsulta = this.app.isAllowedTo('accesosConsulta', this.id);
+        var accesosFuncionario = this.app.isAllowedTo('accesosFuncionario', this.id);
+        var acceso = false;
+        acceso = (accesosPlanificacion ||  accesosFuncionario) ? true : false
+
         var desktop = this.app.getDesktop();
         var AppMsg = new Ext.AppMsg({});
         var win = desktop.getWindow('grid-win-recordatorios');
         var urlRecordatorios = "modules/desktop/recordatorios/server/";
         var textField = new Ext.form.TextField({allowBlank: false});
-        selectProceso = 0;
+
         limiterecordatorios = 100;
 
         function formatDate(value) {
@@ -249,6 +253,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         var comboFASE2 = new Ext.form.ComboBox({
             id: 'comboFASE',
             store: storeFASE,
@@ -268,7 +273,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo fase
 
-        //inicio combo persona recepta la operativos GRC
+        //inicio combo persona recepta
         storeGRC = new Ext.data.JsonStore({
             root: 'data',
             fields: ['id', 'nombre'],
@@ -278,7 +283,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 todos: 'true',
                 acceso: acceso
             }
-
         });
         var comboGRC = new Ext.form.ComboBox({
             id: 'comboGRC',
@@ -315,10 +319,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=personaloperativos',
             baseParams: {
-                todos: 'true',
-                //   accesosAdministradorOpe: true,
-                //    accesosOperativos: false,
-                acceso: acceso
             }
 
         });
@@ -399,7 +399,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             writer: writerRecordatorios,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
-            autoSave: true,
             baseParams: {},
             listeners: {
                 exception: function (proxy, response, operation) {
@@ -420,6 +419,10 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         storeRecordatorios.baseParams = {
             limit: limiterecordatorios
         };
+// se envian variables de perfil
+        storeRecordatorios.baseParams.accesosPlanificacion = accesosPlanificacion;
+        storeRecordatorios.baseParams.accesosConsulta = accesosConsulta;
+        storeRecordatorios.baseParams.accesosFuncionario = accesosFuncionario;
 
         this.gridRecordatorios = new Ext.grid.EditorGridPanel({
             height: 220,
@@ -563,6 +566,10 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         // recuperamos la informacion de personal asignado a ese operativo
                         selectProceso = rec.id;
                         storeRecordatoriosDetalle.load({params: {id_proceso: rec.id}});
+                        Ext.getCmp('cargaAutomaticaSubasta').setDisabled(false);
+                        Ext.getCmp('cargaAutomaticaInfima').setDisabled(false);
+//                        Ext.getCmp('cargaAutomaticaSubasta').setDisabled(acceso ? false : true);
+//                        Ext.getCmp('cargaAutomaticaInversa').setDisabled(acceso ? false : true);
 
                         // para el caso que el operativo se haya finalizado se bloquea ya el borrar o editar
                         /*   if (acceso) {
@@ -707,7 +714,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 , {name: 'cumplimiento', allowBlank: false}
                 , {name: 'detalle', allowBlank: true}
                 , {name: 'fecha_cumplimiento', type: 'date', dateFormat: 'c', allowBlank: true}
-                , {name: 'dias', allowBlank: false}
+                , {name: 'dias', allowBlank: true}
                 , {name: 'fecha_compromiso', type: 'date', dateFormat: 'c', allowBlank: false}
                 , {name: 'notas', allowBlank: true}
                 , {name: 'entregable', allowBlank: true}
@@ -724,7 +731,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             proxy: proxyRecordatoriosDetalle,
             reader: readerRecordatoriosDetalle,
             writer: writerRecordatoriosDetalle,
-            autoSave: true,
+            autoSave: acceso,
             remoteSort: true,
             baseParams: {}
         });
@@ -748,17 +755,15 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     handler: this.addrecordatoriosDetalle,
                     iconCls: 'save-icon',
                     id: 'addrecordatoriosDetalle',
-                    //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                    disabled: !acceso
                 },
                 '-',
                 {
                     text: "Eliminar",
-                    scope: this,
                     handler: this.deleterecordatoriosDetalle,
                     id: 'deleterecordatoriosDetalle',
                     iconCls: 'delete-icon',
-                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                    //disabled: true
+                    disabled: !acceso
                 },
                 '-',
                 {
@@ -767,8 +772,25 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     scope: this,
                     text: 'Recargar Datos',
                     tooltip: 'Recargar datos'
+                }, '-',
+                {
+                    id: 'cargaAutomaticaSubasta',
+                    scope: this,
+                    iconCls: 'save-icon',
+                    handler: this.cargaAutomatica,
+                    text: 'Subasta Inversa',
+                    tooltip: 'Agregar todas las actividades automaticamente de subasta inversa',
+                    disabled: true
+                }, '-',
+                {
+                    id: 'cargaAutomaticaInfima',
+                    scope: this,
+                    iconCls: 'save-icon',
+                    handler: this.cargaAutomatica,
+                    text: 'Infima/Regimen Especial',
+                    tooltip: 'Agregar todas las actividades automaticamente de Infima/Régimen especial',
+                    disabled: true
                 }
-
             ],
             columns: [
                 new Ext.grid.RowNumberer(),
@@ -776,7 +798,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 {header: 'id_proceso', dataIndex: 'id_proceso', sortable: true, width: 30, hidden: true},
                 {
                     header: 'Fase', dataIndex: 'id_actividad', sortable: true, width: 120,
-                    renderer: planificacionFase
+                    renderer: tipoActividadPoaFase
                 },
                 {
                     header: 'Actividad', dataIndex: 'id_actividad', sortable: true, width: 220,
@@ -919,7 +941,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             writer: writerTipoActividades,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
-            autoSave: true,
             baseParams: {},
             listeners: {
                 exception: function (proxy, response, operation) {
@@ -952,7 +973,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     handler: this.addTipoActividades,
                     iconCls: 'save-icon',
                     id: 'addTipoActividades',
-                    //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                    disabled: !acceso
                 },
                 '-',
                 {
@@ -961,8 +982,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     handler: this.deleteTipoActividades,
                     id: 'deleteTipoActividades',
                     iconCls: 'delete-icon',
-                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                    //disabled: true
+                    disabled: !acceso
                 },
                 '-',
                 {
@@ -977,18 +997,33 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             columns: [
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', sortable: true, width: 30, hidden: true},
-                {header: 'Fase', dataIndex: 'fase', sortable: true, width: 160, editor: comboFASE2,
-                    renderer: planificacionFase2},
-                {header: 'Actividad', dataIndex: 'actividad', sortable: true, width: 360, editor: textField},
+                {
+                    header: 'Fase', dataIndex: 'fase', sortable: true, width: 160, editor: comboFASE2,
+                    renderer: planificacionFase2
+                },
+                {
+                    header: 'Actividad',
+                    dataIndex: 'actividad',
+                    sortable: true,
+                    width: 360,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
                 {
                     header: 'Porcentaje',
                     dataIndex: 'porcentaje',
                     sortable: true,
                     width: 80,
                     align: 'center',
-                    editor: textField
+                    editor: new Ext.form.TextField({allowBlank: false})
                 },
-                {header: 'tipo', dataIndex: 'tipo', sortable: true, width: 60, align: 'center', editor: textField},
+                {
+                    header: 'tipo',
+                    dataIndex: 'tipo',
+                    sortable: true,
+                    width: 60,
+                    align: 'center',
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
                 {header: 'orden', dataIndex: 'orden', sortable: true, width: 60, editor: numberField, align: 'center'},
 
                 {
@@ -1036,7 +1071,6 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             proxy: proxyRecordatorios,
             reader: readerRecordatorios,
             writer: writerRecordatorios,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
             baseParams: {}
         });
@@ -1370,7 +1404,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                                             handler: this.addrecordatorios,
                                             iconCls: 'save-icon',
                                             id: 'addrecordatorios',
-                                            //   disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                            disabled: !acceso
                                         },
                                         '-',
                                         {
@@ -1379,8 +1413,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                                             handler: this.deleterecordatorios,
                                             id: 'deleterecordatorios',
                                             iconCls: 'delete-icon',
-                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                            //disabled: true
+                                            disabled: !acceso
                                         },
                                         '-',
                                         {
@@ -1580,6 +1613,66 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         });
     },
 
+    cargaAutomatica: function (tipo) {
+        if (tipo.id == 'cargaAutomaticaSubasta') {
+            tipo = 'subasta'
+        }
+        if (tipo.id == 'cargaAutomaticaInfima') {
+            tipo = 'infima'
+        }
+
+
+        var rows = this.storeRecordatoriosDetalle.getCount()
+        if (rows === 0) {
+            // mensaje continuar y llamada a descarga archivo
+            Ext.Msg.show({
+                title: 'Advertencia',
+                msg: 'Se generaran automaticamente las actividades para <strong>Subasta Inversa</strong> <br>¿Desea continuar?',
+                scope: this,
+                icon: Ext.Msg.WARNING,
+                buttons: Ext.Msg.YESNO,
+                fn: function (btn) {
+                    if (btn == 'yes') {
+                        //    window.location.href = 'modules/desktop/recordatorios/server/descargaReporteRecordatorios.php?param=' + valueParams;
+                        var dataObj = null;
+                        var urlRecordatorios = "modules/desktop/recordatorios/server/";
+                        // envio a la carga de actividades
+                        Ext.Ajax.request({
+                            url: urlRecordatorios + 'crudRecordatoriosDetalle.php?operation=fillAuto&tipo=' + tipo + '&id_proceso=' + selectProceso,
+                            params: {tipo: tipo, id_proceso: selectProceso},
+                            failure: function (response, options) {
+                                // error
+                                console.log('Error de carga ');
+                            },
+                            success: function (response, options) {
+                                //assuming the response is a JSON string...
+                                dataObj = Ext.decode(response.responseText);
+                                //luego de la carga se recarga el dataStore
+                                this.storeRecordatoriosDetalle.load({
+                                    params:
+                                        {
+                                            start: 0,
+                                            limit: limiterecordatorios,
+                                            id_proceso: selectProceso
+                                        }
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            Ext.Msg.show({
+                title: 'Atencion',
+                msg: 'Ya existen datos',
+                scope: this,
+                icon: Ext.Msg.WARNING
+            });
+            return false;
+        }
+    },
+
+
     showError: function (msg, title) {
         title = title || 'Error';
         Ext.Msg.show({
@@ -1593,13 +1686,14 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
     requestGridDataRecordatoriosReporte: function () {
         this.storeRecordatoriosReporte.baseParams = this.formConsultaRecordatorios.getForm().getValues();
 
-        var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
-        var accesosOperativos = this.app.isAllowedTo('accesosOperativos', this.id);
-        var accesosAdministradorIns = this.app.isAllowedTo('accesosAdministradorIns', this.id);
-        this.storeRecordatoriosReporte.baseParams.accesosAdministradorOpe = accesosAdministradorOpe;
+        var accesosPlanificacion = this.app.isAllowedTo('accesosPlanificacion', this.id);
+        var accesosConsulta = this.app.isAllowedTo('accesosConsulta', this.id);
+        var accesosFuncionario = this.app.isAllowedTo('accesosFuncionario', this.id);
 
-        this.storeRecordatoriosReporte.baseParams.accesosOperativos = accesosOperativos;
-        this.storeRecordatoriosReporte.baseParams.accesosAdministradorIns = accesosAdministradorIns;
+        this.storeRecordatoriosReporte.baseParams.accesosPlanificacion = accesosPlanificacion;
+        this.storeRecordatoriosReporte.baseParams.accesosConsulta = accesosConsulta;
+        this.storeRecordatoriosReporte.baseParams.accesosFuncionario = accesosFuncionario;
+
         // para indicar en la busqueda que es desde el formulario
         var formularioBusqueda = 1;
         this.storeRecordatoriosReporte.baseParams.formularioBusqueda = formularioBusqueda;
