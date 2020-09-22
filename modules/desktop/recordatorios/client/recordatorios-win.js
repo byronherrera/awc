@@ -110,6 +110,40 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
         }
 
         //fin combo nivel fase
+        //inicio combo proyecto inversion
+        storePROTECINVER = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 'Control del cumplimiento de la normativa metropolitana en el DMQ', "nombre": "Control del cumplimiento de la normativa metropolitana en el DMQ"},
+                    {"id": 'Gastos administrativos', "nombre": "Gastos administrativos"},
+                    {"id": 'Control y buen uso del espacio público "Quito es mío"', "nombre": 'Control y buen uso del espacio público "Quito es mío"'},
+                    {"id": 'Remuneración de personal', "nombre": "Remuneración de personal"}
+
+                ]
+            }
+        });
+
+        var comboPROTECINVER = new Ext.form.ComboBox({
+            id: 'comboPROTECINVER',
+            store: storePROTECINVER,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function planificacionTipoProyecInver(id) {
+            var index = storePROTECINVER.findExact('id', id);
+            if (index > -1) {
+                var record = storePROTECINVER.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo proyecto inversion
 
         //inicio combo tipo contratacion
         storeTIPOCONTRATA = new Ext.data.JsonStore({
@@ -319,6 +353,8 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=personaloperativos',
             baseParams: {
+                todos: 'true',
+                acceso: acceso
             }
 
         });
@@ -380,6 +416,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 , {name: 'idingreso', allowBlank: true}
                 , {name: 'detalle_avance', allowBlank: true}
                 , {name: 'tipocontratacion', allowBlank: true}
+                , {name: 'proyecto_inversion', allowBlank: true}
                 , {name: 'semaforo', allowBlank: true}
                 , {name: 'fase', allowBlank: true}
                 , {name: 'valor', allowBlank: true}
@@ -495,6 +532,14 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     width: 125,
                     editor: comboTIPOCONTRATA,
                     renderer: planificacionTipoContratacio
+                }
+                , {
+                    header: 'Proyecto Inversión',
+                    dataIndex: 'proyecto_inversion',
+                    sortable: true,
+                    width: 125,
+                    editor: comboPROTECINVER,
+                    renderer:planificacionTipoProyecInver
                 }
                 , {
                     header: 'Semáforo',
@@ -760,6 +805,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                 '-',
                 {
                     text: "Eliminar",
+                    scope: this,
                     handler: this.deleterecordatoriosDetalle,
                     id: 'deleterecordatoriosDetalle',
                     iconCls: 'delete-icon',
@@ -1145,6 +1191,13 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                     renderer: planificacionTipoContratacio
                 }
                 , {
+                    header: 'Proyecto Inversión',
+                    dataIndex: 'proyecto_inversion',
+                    sortable: true,
+                    width: 125,
+                    renderer:planificacionTipoProyecInver
+                }
+                , {
                     header: 'Semáforo',
                     dataIndex: 'semaforo',
                     sortable: true,
@@ -1343,6 +1396,21 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
                         columnWidth: 1 / 3,
                         layout: 'form',
                         items: [
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Proyecto inversión',
+                                id: 'busqueda_proyecto_inversion',
+                                name: 'busqueda_proyecto_inversion',
+                                hiddenName: 'busqueda_proyecto_inversion',
+
+                                anchor: '95%',
+                                store: storePROTECINVER,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
                             {
                                 xtype: 'combo',
                                 fieldLabel: 'Fase',
@@ -1569,7 +1637,7 @@ QoDesk.RecordatoriosWindow = Ext.extend(Ext.app.Module, {
     },
 
     deleterecordatoriosDetalle: function () {
-        Ext.Msg.show({
+            Ext.Msg.show({
             title: 'Confirmación',
             msg: 'Está seguro de querer borrar?',
             scope: this,
