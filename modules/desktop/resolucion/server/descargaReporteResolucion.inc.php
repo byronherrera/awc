@@ -488,7 +488,7 @@ function resolucionDe($id)
     if (($id >= 1) and ($id <= 5)) {
         if ((isset($id)) and ($id != ' ')) {
 
-            $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad", 5 => "Anulada");
+            $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad", 5 => "Anulada", 6 => "Sanción-trabajo comunitario");
             return $opciones [$id];
         } else {
             return '';
