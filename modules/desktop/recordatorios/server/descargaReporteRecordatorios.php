@@ -150,6 +150,7 @@ $sql = "SELECT
         semaforo,
         fase,
         valor,
+        proyecto_inversion,
         CONCAT((porcentaje * 100), ' %') as porcentaje,
         observaciones 
         FROM
@@ -180,12 +181,14 @@ $styleArray = array(
 $datosColumnas = [
     ["columna" => "A", "ancho" => 16.86, "titulo" => 'Tipo de Contratación', "data" => 'tipocontratacion']
     , ["columna" => "B", "ancho" => 40, "titulo" => 'Producto / Servicio', "data" => 'tema']
-    , ["columna" => "C", "ancho" => 30, "titulo" => 'Responsable', "data" => 'nombres']
-    , ["columna" => "D", "ancho" => 60, "titulo" => 'Estado', "data" => 'detalle_avance']
-    , ["columna" => "E", "ancho" => 15, "titulo" => 'Semaforo', "data" => 'semaforo']
-    , ["columna" => "F", "ancho" => 12, "titulo" => 'Valor', "data" => 'valor']
-    , ["columna" => "G", "ancho" => 10, "titulo" => 'Avance Físico', "data" => 'porcentaje']
-    , ["columna" => "H", "ancho" => 10, "titulo" => 'Fecha Entrega', "data" => 'fecha_entrega']
+    , ["columna" => "C", "ancho" => 40, "titulo" => 'Producto / Servicio', "data" => 'tema']
+    , ["columna" => "D", "ancho" => 30, "titulo" => 'Responsable', "data" => 'nombres']
+    , ["columna" => "E", "ancho" => 60, "titulo" => 'Estado', "data" => 'detalle_avance']
+    , ["columna" => "F", "ancho" => 15, "titulo" => 'Semaforo', "data" => 'semaforo']
+    , ["columna" => "G", "ancho" => 12, "titulo" => 'Valor', "data" => 'valor']
+    , ["columna" => "H", "ancho" => 10, "titulo" => 'Avance Físico', "data" => 'porcentaje']
+    , ["columna" => "I", "ancho" => 10, "titulo" => 'Fecha Entrega', "data" => 'fecha_entrega']
+    , ["columna" => "J", "ancho" => 30, "titulo" => 'Proyecto Inversión', "data" => 'proyecto_inversion']
 ];
 $totalColumnas = count($datosColumnas) - 1;
 
@@ -218,6 +221,8 @@ $objPHPExcel->getActiveSheet()->setCellValue('B' . ($filascabecera + 2), "Unidad
 $objPHPExcel->getActiveSheet()->mergeCells('E' . ($filascabecera + 1) . ':I' . ($filascabecera + 2));
 $objPHPExcel->getActiveSheet()->mergeCells('E' . $filascabecera . ':I' . $filascabecera);
 $objPHPExcel->getActiveSheet()->setCellValue('E' . $filascabecera, '__________________');
+$objPHPExcel->getActiveSheet()->setCellValue('E' . ($filascabecera + 1), "Andraa Veónica García Paz");
+$objPHPExcel->getActiveSheet()->setCellValue('E' . ($filascabecera + 2), "Responsable Unidad de Planificación");
 
 // creacion de los titulos
 foreach ($datosColumnas as &$valorColumna) {

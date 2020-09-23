@@ -229,9 +229,9 @@ function fillAuto()
         // al listado
         $id_actividad = $row['id'];
         $actividad = $row['actividad'];
-        $sql = "INSERT INTO `amc_planificacion_detalle` ( `id_proceso`, `id_actividad`, `actividad`, `cumplimiento`, `fecha_compromiso`, `idingreso` )
+        $sql = "INSERT INTO `amc_planificacion_detalle` ( `id_proceso`, `id_actividad`, `actividad`, `cumplimiento`,    `idingreso` )
                 VALUES
-                    ( '$id_proceso', '$id_actividad', '$actividad', 'false', NOW(), '$memberId' )";
+                    ( '$id_proceso', '$id_actividad', '$actividad', 'false',   '$memberId' )";
         $sql = $os->db->conn->prepare($sql);
         $sql->execute();
 

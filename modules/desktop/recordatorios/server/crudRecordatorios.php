@@ -104,6 +104,14 @@ function selectRecordatorios()
             $where = $where . " AND fase = '$tipo' ";
         }
     }
+    if (isset($_POST['busqueda_proyecto_inversion']) and ($_POST['busqueda_proyecto_inversion'] != '')) {
+        $tipo = $_POST['busqueda_proyecto_inversion'];
+        if ($where == '') {
+            $where = "WHERE proyecto_inversion = '$tipo' ";
+        } else {
+            $where = $where . " AND proyecto_inversion = '$tipo' ";
+        }
+    }
 
     if (isset($_POST['busqueda_observaciones']) and ($_POST['busqueda_observaciones'] != '')) {
         $tipo = $_POST['busqueda_observaciones'];
