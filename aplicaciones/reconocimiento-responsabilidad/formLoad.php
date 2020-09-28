@@ -34,12 +34,13 @@ switch ($opcion) {
         $asunto = "Nueva Solicitud Allanamiento, " . " - " . $email;
         //TODO a quien enviar
         //recuperar funcionario encargado zonal
-        getFuncionarioEncargado ( $data->idzonal) ;
-        $funcionarios = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
+       // getFuncionarioEncargado ( $data->idzonal) ;
+       // getFuncionarioEncargado ( $data->idzonal) ;
+        $funcionarios = ["byron.herrera@quito.gob.ec" ];
         //TODO quien hace el seguimiento
         $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "pamela.parreno@quito.gob.ec"];
         $from = 'Solicitud de Allanamiento - Agencia Metropolitana de Control';
-        $prueba = true;
+        $prueba = false;
         $resultado = enviarEmailAmc($email, $asunto, $contenidoMailRecepcion, $funcionarios, $funcionariosSeguimiento, $from , $prueba);
 
         break;

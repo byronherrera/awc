@@ -294,11 +294,11 @@ function updateRecordatorios()
 
                 $email = regresaEmail($funcionario);
                 $asunto = "Tarea asignada, " . " - " . $email;
-                $funcionarios = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
-                $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "byronherrera@hotmail.com"];
+                $funcionarios = ["katherine.montenegro@quito.gob.ec", "andrea.garcia@quito.gob.ec"];
+                $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "pamela.parreno@quito.gob.ec"];
                 $from = 'Planificación - Agencia Metropolitana de Control';
-                $prueba = true;
-                $resultado = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
+                $prueba = false;
+                 enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
             }
         }
     }

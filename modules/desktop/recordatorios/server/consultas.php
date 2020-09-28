@@ -22,10 +22,11 @@ function getIdUsuario($email)
 function getrecordatoriosUsuario($idUsuario)
 {
     global $os;
+
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql= "SELECT
+    $sql = "SELECT
             CONCAT(amc_planificacion_notificaciones.apellidos, ' ',amc_planificacion_notificaciones.nombres) AS nombre,
-            CONCAT( amc_planificacion_notificaciones.tema, ' - ', amc_planificacion_detalle.actividad) AS tema,
+            CONCAT( amc_planificacion_detalle.actividad,  ' - ',  amc_planificacion_notificaciones.tema) AS tema,
             amc_planificacion_detalle.fecha_compromiso AS fecha
             FROM
             amc_planificacion_notificaciones
@@ -33,10 +34,11 @@ function getrecordatoriosUsuario($idUsuario)
             WHERE
             amc_planificacion_notificaciones.id_responsable = $idUsuario AND
             amc_planificacion_detalle.cumplimiento = 'false' AND
-            amc_planificacion_detalle.fecha_compromiso BETWEEN NOW( ) AND NOW( ) + INTERVAL 7 DAY AND 
-            amc_planificacion_notificaciones.estado = 'En ejecución' OR amc_planificacion_notificaciones.estado = 'Detenido'
+          	amc_planificacion_detalle.fecha_compromiso <  NOW( ) + INTERVAL 15 DAY AND 
+			amc_planificacion_detalle.fecha_compromiso  != 'null' AND
+            amc_planificacion_notificaciones.estado in ('En ejecución', 'Detenido')
             ORDER BY
-            amc_planificacion_detalle.fecha_compromiso ASC;";
+            amc_planificacion_detalle.fecha_compromiso DESC;";
 
     $result = $os->db->conn->query($sql);
     if ($result) {

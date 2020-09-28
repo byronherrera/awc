@@ -175,10 +175,30 @@ function negar()
             "msg" => "Error en la base de datos."
         ));
     }
+    //enviar mensaje a usuari
+    ////////////////////////
 
-    //enviar mensaje a usuario
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+    $id = (int)$_POST ['id'];
+    $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
+
+    $a = 1;
 
 
+    $sql = "UPDATE amc_proc_reconocimineto_responsabilidad SET
+            prosesado='true' 
+            WHERE (`id`='$id')";
+
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
+
+    echo json_encode(array(
+        "success" => $sql->errorCode() == 0,
+        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode()
+    ));
 }
 
 function aprobar()
