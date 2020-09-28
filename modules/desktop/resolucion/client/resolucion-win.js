@@ -340,7 +340,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     {"id": 2, "nombre": "Archivo"},
                     {"id": 3, "nombre": "Nulidad"},
                     {"id": 4, "nombre": "Caducidad"},
-                    {"id": 5, "nombre": "Anulado"}
+                    {"id": 5, "nombre": "Anulado"},
+                    {"id": 6, "nombre": "Sanción-trabajo comunitario"}
                 ]
             }
         });
@@ -375,7 +376,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     {"id": 2, "nombre": "Archivo"},
                     {"id": 3, "nombre": "Nulidad"},
                     {"id": 4, "nombre": "Caducidad"},
-                    {"id": 5, "nombre": "Anulado"}
+                    {"id": 5, "nombre": "Anulado"},
+                    {"id": 6, "nombre": "Sanción-trabajo comunitario"}
                 ]
             }
         });
