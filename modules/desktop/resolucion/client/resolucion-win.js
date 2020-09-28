@@ -966,7 +966,9 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'estado', allowBlank: true},
                 {name: 'funcionario', allowBlank: true},
                 {name: 'envio_expediente', allowBlank: true},
-                {name: 'numero_memorando', allowBlank: true}
+                {name: 'numero_memorando', allowBlank: true},
+                {name: 'cedula_duplicada', allowBlank: true},
+                {name: 'nombre_duplicado', allowBlank: true}
             ]
         });
 
@@ -1005,6 +1007,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 //Definición de campos bdd Libro Diario
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldLibroDiario},
+                {header: 'cedula_duplicada', dataIndex: 'cedula_duplicada', width: 100, hidden: true},
+                {header: 'nombre_duplicado', dataIndex: 'nombre_duplicado', width: 100, hidden: true},
                 {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, sortable: true, width: 100, editor: textFieldLibroDiario},
                 {
                     header: 'Número Interno',
@@ -1211,6 +1215,13 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                             return 'redstate';
                         }
                     }
+                    else if(record.get('cedula_duplicada')==1){
+                        return 'bluestate';
+                    }
+                    else if(record.get('nombre_duplicado')==1){
+                        return 'bluestate';
+                    }
+                    //nombre_duplicado
                 }
             },
             sm: new Ext.grid.RowSelectionModel({
