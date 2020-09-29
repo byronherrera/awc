@@ -1054,6 +1054,8 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
+                {name: 'numero_resolucion', allowBlank: false},
+                {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'memo_ingreso', allowBlank: true},
                 {name: 'fecha_ingreso', allowBlank: true},
                 {name: 'unidad', allowBlank: true},
@@ -1136,13 +1138,27 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 //Definición de campos bdd Libro Diario
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldLibroDiario},
-                {header: 'Memo Ingreso', dataIndex: 'memo_ingreso_ejecucion', allowBlank: true, sortable: true, width: 120, editor: textFieldLibroDiario},
+                /*{header: 'Memo Ingreso', dataIndex: 'memo_ingreso_ejecucion', allowBlank: true, sortable: true, width: 120, editor: textFieldLibroDiario},*/
                 {
                     header: 'Memo Ingreso Resolución',
                     dataIndex: 'memo_ingreso',
                     allowBlank: true,
                     sortable: true,
                     width: 150
+                },
+                {
+                    header: 'Memo ingreso',
+                    dataIndex: 'numero_resolucion',
+                    sortable: true,
+                    width: 200,
+                    editor: textFieldLibroDiario
+                },
+               {
+                    header: 'Fecha de Ingreso Resolución',
+                    dataIndex: 'fecha_envio',
+                    sortable: true,
+                    width: 110,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d')
                 },
                 {
                     header: 'Fecha de Ingreso',
@@ -1155,13 +1171,6 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                         format: 'Y-m-d'
                     })
                 },
-/*                {
-                    header: 'Fecha de Ingreso Resolución',
-                    dataIndex: 'fecha_ingreso',
-                    sortable: true,
-                    width: 110,
-                    renderer: Ext.util.Format.dateRenderer('Y-m-d')
-                },*/
                 {
                     header: 'Número Expediente',
                     dataIndex: 'numero_expediente_ejecucion',
@@ -4179,6 +4188,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             envio_expediente: ' ',
             numero_memorando: ' ',
             fecha_sorteo:  ' ',
+            es_ejecucion: 1,
             // fecha_envio: (new Date()),
         });
         this.gridLibroDiario.stopEditing();
