@@ -485,7 +485,7 @@ function quitar_espacio($cadena)
 
 function resolucionDe($id)
 {
-    if (($id >= 1) and ($id <= 5)) {
+    if (($id >= 1) and ($id <= 6)) {
         if ((isset($id)) and ($id != ' ')) {
 
             $opciones = array(1 => "Sanción", 2 => "Archivo", 3 => "Nulidad", 4 => "Caducidad", 5 => "Anulada", 6 => "Sanción-trabajo comunitario");
