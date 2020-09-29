@@ -150,6 +150,13 @@ function selectOrdenanzas()
         }
     }
 
+    if ($where == '') {
+        $where = " WHERE es_ejecucion = 0";
+    }
+    else {
+        $where = " AND es_ejecucion = 0";
+    }
+    
     $orderby = 'ORDER BY a.id ASC';
     if (isset($_POST['sort'])) {
         if ($_POST['sort'] == 'id') {
