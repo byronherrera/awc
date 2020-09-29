@@ -158,13 +158,19 @@ function negar()
     $id = (int)$_POST ['id'];
     $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
 
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET confirmed='false', motivonegar='$motivoNegarDenuncia' WHERE (`id`='$id')");
-    $query = "UPDATE amc_denuncias_web SET prosesado='true' WHERE (`id`='$id')";
+    $sql  = "UPDATE amc_proc_reconocimineto_responsabilidad 
+            SET secretaria_procesado='true', secretaria_confirmed='false',secretaria_motivonegar='$motivoNegarDenuncia', secretaria_fecha_procesado =  CURDATE() WHERE (`id`='$id')";
+echo $sql;
+    $sql = $os->db->conn->prepare($sql);
+    $resultado = $sql->execute();
 
+    //enviar mensaje a usuari
     $mensaje = getmensaje('negar', '', '', '', $motivoNegarDenuncia);
-    $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
-
-    if ($databaseAMC->Query($query)) {
+ //   $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
+    $envioMail = '';
+    ////////////////////////
+    ///
+    if ($resultado) {
         echo json_encode(array(
             "success" => true,
             "msg" => "Contenido actualizado exitosamente " . $envioMail
@@ -175,30 +181,7 @@ function negar()
             "msg" => "Error en la base de datos."
         ));
     }
-    //enviar mensaje a usuari
-    ////////////////////////
 
-
-    global $os;
-    $os->db->conn->query("SET NAMES 'utf8'");
-
-    $id = (int)$_POST ['id'];
-    $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
-
-    $a = 1;
-
-
-    $sql = "UPDATE amc_proc_reconocimineto_responsabilidad SET
-            prosesado='true' 
-            WHERE (`id`='$id')";
-
-    $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
-
-    echo json_encode(array(
-        "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode()
-    ));
 }
 
 function aprobar()
@@ -213,6 +196,18 @@ function aprobar()
 
     $mensaje = getmensaje('aprobar', $_POST ['nombre'], $codigo_tramite, $id);
     $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
+
+    /*
+     *                 $email = regresaEmail($funcionario);
+                $asunto = "Tarea asignada, " . " - " . $email;
+                $funcionarios = ["katherine.montenegro@quito.gob.ec", "andrea.garcia@quito.gob.ec"];
+                $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "pamela.parreno@quito.gob.ec"];
+                $from = 'Planificación - Agencia Metropolitana de Control';
+                $prueba = false;
+                 enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
+
+     *
+     */
 
     if ($databaseAMC->Query($query)
     ) {
@@ -279,75 +274,6 @@ Adicionalmente estas son las causas para no aprobar una denuncia: <br><br>
     }
 }
 
-function enviarEmail($email, $nombre, $mensaje)
-{
-
-    require 'PHPMailer/PHPMailerAutoload.php';
-
-//Create a new PHPMailer instance
-    $mail = new PHPMailer;
-    $mail->CharSet = "UTF-8";
-//Tell PHPMailer to use SMTP
-    $mail->isSMTP();
-
-//Enable SMTP debugging
-// 0 = off (for production use)
-// 1 = client messages
-// 2 = client and server messages
-    $mail->SMTPDebug = 0;
-
-//Ask for HTML-friendly debug output
-    $mail->Debugoutput = 'html';
-
-//Set the hostname of the mail server
-    $mail->Host = 'smtp.gmail.com';
-// use
-// $mail->Host = gethostbyname('smtp.gmail.com');
-// if your network does not support SMTP over IPv6
-
-//Set the SMTP port number - 587 for authenticated TLS, a.k.a. RFC4409 SMTP submission
-    $mail->Port = 587;
-
-//Set the encryption system to use - ssl (deprecated) or tls
-    $mail->SMTPSecure = 'tls';
-
-//Whether to use SMTP authentication
-    $mail->SMTPAuth = true;
-
-//Username to use for SMTP authentication - use full email address for gmail
-//$mail->Username = "byron.herrera@solinfo.com.ec";
-    $mail->Username = "amcdenuncias@gmail.com";
-
-//Password to use for SMTP authentication
-    $mail->Password = "amccontrol2016";
-
-//Set who the message is to be sent from
-    $mail->setFrom('denunciasamc@quito.gob.ec', 'Agencia Metropolitana de Control');
-
-//Set an alternative reply-to address
-//$mail->addReplyTo('replyto@example.com', 'First Last');
-
-//Set who the message is to be sent to
-    $mail->addAddress($email, $nombre);
-
-//Set the subject line
-    $mail->Subject = 'Actualización estado de denuncia';
-
-//Read an HTML message body from an external file, convert referenced images to embedded,
-//convert HTML into a basic plain-text alternative body
-    $mail->msgHTML($mensaje);
-
-//Replace the plain text body with one created manually
-    $mail->AltBody = 'Mensaje enviado';
-
-//send the message, check for errors
-    if (!$mail->send()) {
-        return "Mailer Error: " . $mail->ErrorInfo;
-    } else {
-        return "Message sent!";
-    }
-
-}
 
 function cors() {
 
