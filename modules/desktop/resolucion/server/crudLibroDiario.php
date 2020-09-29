@@ -152,11 +152,12 @@ function insertOrdenanzas()
     foreach ($data as $clave => $valor) {
         $cadenaCampos = $cadenaCampos . $clave . ',';
         $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+
     }
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_libro_diario($cadenaCampos)
+   echo  $sql = "INSERT INTO amc_libro_diario($cadenaCampos)
 	values($cadenaDatos);";
      $sql = $os->db->conn->prepare($sql);
     $sql->execute();
