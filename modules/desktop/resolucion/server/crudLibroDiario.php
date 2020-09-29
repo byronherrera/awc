@@ -86,7 +86,7 @@ function selectOrdenanzas()
         $where = " WHERE es_ejecucion = 0";
     }
     else {
-        $where = " AND es_ejecucion = 0";
+        $where = $where . " AND es_ejecucion = 0";
     }
 
 //    $orderby = 'ORDER BY a.id ASC';
@@ -116,7 +116,7 @@ function selectOrdenanzas()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
-//    echo $sql;
+    //echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
