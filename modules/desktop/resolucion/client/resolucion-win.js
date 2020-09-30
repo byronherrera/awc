@@ -3574,7 +3574,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             numero_memorando: ' ',
             fecha_sorteo:  ' ',
             fecha_ultima_notificacion:  ' ',
-            es_ejecucion: 1
+            es_ejecucion: 0
             // fecha_envio: (new Date()),
         });
         this.gridLibroDiario.stopEditing();
