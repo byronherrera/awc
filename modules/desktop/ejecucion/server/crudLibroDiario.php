@@ -111,7 +111,7 @@ function selectOrdenanzas()
     if (isset($_POST['sort'])) {
         $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
     }else{
-        $orderby = 'ORDER BY id ASC';
+        $orderby = 'ORDER BY id DESC';
     }
 
     //$usuarioLog = $os->get_member_id();
@@ -134,7 +134,7 @@ function selectOrdenanzas()
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
-//    echo $sql;
+    //echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

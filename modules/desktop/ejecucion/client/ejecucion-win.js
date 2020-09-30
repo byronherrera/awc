@@ -912,7 +912,8 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             proxy: proxyResoluciones,
             reader: readerResoluciones,
             writer: writerResoluciones,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            //autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            autoSave: true,
             remoteSort: true,
             autoSave: true,
             baseParams: {}
