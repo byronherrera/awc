@@ -16,7 +16,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
 
     createWindow: function () {
         var accesosAdministradorOpe = this.app.isAllowedTo('accesosAdministradorOpe', this.id);
-        var accesosResolutores = this.app.isAllowedTo('accesosEjecutores', this.id);
+        var accesosEjecutores = this.app.isAllowedTo('accesosEjecutores', this.id);
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
         var accesosAdminResolucion = this.app.isAllowedTo('accesosAdminResolucion', this.id);
 
@@ -25,12 +25,12 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
         this.selectResolucion = 0;
         selectResolucion = 0;
 
-        var acceso = (accesosResolutores || accesosSecretaria) ? false : true
-        var accesoLibroDiario = (accesosSecretaria || accesosResolutores) ? false : true
-        var accesoResoluciones = (accesosResolutores || accesosAdminResolucion) ? true : false
-        var accesoTotalesResoluciones = (accesosSecretaria || accesosResolutores) ? false : true
+        var acceso = (accesosEjecutores || accesosSecretaria) ? false : true
+        var accesoLibroDiario = (accesosSecretaria || accesosEjecutores) ? false : true
+        var accesoResoluciones = (accesosEjecutores || accesosAdminResolucion) ? true : false
+        var accesoTotalesResoluciones = (accesosSecretaria || accesosEjecutores) ? false : true
         console.log("accesosAdministradorOpe ",accesosAdministradorOpe);
-        console.log("accesosResolutores ",accesosResolutores);
+        console.log("accesosEjecutores ",accesosEjecutores);
         console.log("accesosSecretaria ",accesosSecretaria);
         console.log("accesosAdminResolucion ",accesosAdminResolucion);
         console.log("acceso ",acceso);
@@ -1099,6 +1099,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'fecha_resolucion', allowBlank: true},
                 {name: 'numero_resolucion', allowBlank: true},
                 {name: 'tipo_zona_ejecucion', allowBlank: true},
+                {name: 'es_ejecucion', allowBlank: true},
             ]
         });
 
@@ -1124,7 +1125,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
         limiteresolucion = 100;
         storeLibroDiario.baseParams = {
             limit: limiteresolucion,
-            accesosResolutores : accesosResolutores
+            //accesosEjecutores : accesosEjecutores
         };
 
         this.storeLibroDiario.load();
@@ -1138,6 +1139,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 //Definición de campos bdd Libro Diario
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldLibroDiario},
+                {header: 'es_ejecucion', dataIndex: 'es_ejecucion', width: 100, hidden: true, editor: textFieldLibroDiario},
                 /*{header: 'Memo Ingreso', dataIndex: 'memo_ingreso_ejecucion', allowBlank: true, sortable: true, width: 120, editor: textFieldLibroDiario},*/
                 {
                     header: 'Memo Ingreso Resolución',
@@ -1568,7 +1570,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             autoSave: true,
             // baseParams: {
             //     test:1,
-            //     accesosResolutores:this.accesosResolutores
+            //     accesosEjecutores:this.accesosEjecutores
             // }
         });
 
@@ -1576,7 +1578,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
         limiteresolucion = 100;
         storeReporteLibroDiario.baseParams = {
             limit: limiteresolucion,
-            accesosResolutores : accesosResolutores
+            accesosEjecutores : accesosEjecutores
         };
 
         this.storeReporteLibroDiario.load();
@@ -1849,7 +1851,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             listeners:{
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (!accesosResolutores) {
+                    if (!accesosEjecutores) {
                         return true;
                     } else {
                         return false;
@@ -1929,7 +1931,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             autoSave: true,
             // baseParams: {
             //     test:1,
-            //     accesosResolutores:this.accesosResolutores
+            //     accesosEjecutores:this.accesosEjecutores
             // }
         });
 
@@ -1937,7 +1939,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
         limiteresolucion = 100;
         storeReporteNTLibroDiario.baseParams = {
             limit: limiteresolucion,
-            accesosResolutores : accesosResolutores
+            accesosEjecutores : accesosEjecutores
         };
 
         this.storeReporteNTLibroDiario.load();
@@ -2162,7 +2164,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             listeners:{
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (!accesosResolutores) {
+                    if (!accesosEjecutores) {
                         return true;
                     } else {
                         return false;
@@ -2245,7 +2247,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
         limiteresolucion = 100;
         storeReporteProvidenciasLibroDiario.baseParams = {
             limit: limiteresolucion,
-            accesosResolutores : accesosResolutores
+            accesosEjecutores : accesosEjecutores
         };
 
         this.storeReporteProvidenciasLibroDiario.load();
@@ -2505,7 +2507,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             listeners:{
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (!accesosResolutores) {
+                    if (!accesosEjecutores) {
                         return true;
                     } else {
                         return false;
@@ -2565,7 +2567,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
         limiteresolucion = 100;
         storeReporteResoluciones.baseParams = {
             limit: limiteresolucion,
-            accesosResolutores : accesosResolutores
+            accesosEjecutores : accesosEjecutores
         };
 
         this.storeReporteResoluciones.load();
@@ -2619,7 +2621,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             listeners:{
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (!accesosResolutores) {
+                    if (!accesosEjecutores) {
                         return true;
                     } else {
                         return false;
@@ -2801,7 +2803,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                         items: [
                             {
                                 xtype: 'hidden',
-                                id: 'accesosResolutores',
+                                id: 'accesosEjecutores',
                             },
                             {
                                 xtype: 'textfield',
@@ -3566,7 +3568,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                             closable: false,
                             //  layout: 'fit',
                             height: winHeight - 70,
-                            //disabled: accesosResolutores,
+                            //disabled: accesosEjecutores,
                             hidden: true,
                             id: 'libro-diario',
                             //Barra de botones
@@ -3576,7 +3578,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                                     text: 'Nuevo',
                                     scope: this,
                                     handler: this.addLibroDiario,
-                                    disabled: accesosResolutores,
+                                    disabled: accesosEjecutores,
                                     iconCls: 'save-icon'
                                 },
                                 '-',
@@ -3585,7 +3587,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                                     text: "Eliminar",
                                     scope: this,
                                     handler: this.deleteLibroDiario,
-                                    disabled: accesosResolutores,
+                                    disabled: accesosEjecutores,
                                     //disabled: !creacionTramites,
                                     iconCls: 'delete-icon'
                                 },
@@ -3618,7 +3620,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Exportar reporte',
                                     tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    // disabled: accesosResolutores,
+                                    // disabled: accesosEjecutores,
                                     disabled: true,
                                 },
                                 {
@@ -3874,7 +3876,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                             closable: true,
                             layout: 'border',
                             height: winHeight/4,
-                            // disabled: accesosResolutores,
+                            // disabled: accesosEjecutores,
                             disabled: false,
                             tbar: [
                                 {
@@ -3897,7 +3899,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Exportar reporte de Resoluciones',
                                     tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    // disabled: accesosResolutores,
+                                    // disabled: accesosEjecutores,
                                     disabled: false,
                                 }
                             ],
@@ -3928,7 +3930,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                             closable: true,
                             layout: 'border',
                             height: winHeight/3,
-                            // disabled: accesosResolutores,
+                            // disabled: accesosEjecutores,
                             disabled: false,
                             tbar: [
                                 {
@@ -3949,7 +3951,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Exportar reporte de Providencias',
                                     tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    // disabled: accesosResolutores,
+                                    // disabled: accesosEjecutores,
                                     disabled: false,
                                 }
 
@@ -3981,7 +3983,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                             closable: true,
                             layout: 'border',
                             height: winHeight/4,
-                            // disabled: accesosResolutores,
+                            // disabled: accesosEjecutores,
                             disabled: false,
                             tbar: [
                                 {
@@ -4004,7 +4006,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                                     scope: this,
                                     text: 'Exportar reporte de No tramitados',
                                     tooltip: 'Se genera archivo Excel con la información solicitada',
-                                    // disabled: accesosResolutores,
+                                    // disabled: accesosEjecutores,
                                     disabled: false,
                                 }
                             ],
@@ -4114,7 +4116,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                     limit: limiteresolucion,
                     //finalizados: Ext.getCmp('checkNoRecibidos').getValue(),
                     accesosAdministradorOpe: accesosAdministradorOpe,
-                    accesosResolutores: accesosResolutores
+                    accesosEjecutores: accesosEjecutores
                 }
             });
             this.storeProvidencias.load({
@@ -4199,7 +4201,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
     //Función para actualizar los datos mostrados en pantalla de la pestaña de Libro Diario
     requestGridDataLibroDiario: function () {
         this.storeLibroDiario.baseParams = this.formConsultaLibroDiario.getForm().getValues();
-        this.storeLibroDiario.baseParams.accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
+ //cc obtiene solo los expedientes asignados       this.storeLibroDiario.baseParams.accesosEjecutores = this.app.isAllowedTo('accesosEjecutores', this.id);
         this.storeLibroDiario.load();
         //
     },
@@ -4300,7 +4302,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
 
     requestGridDataDocumentoReporte: function () {
         this.storeReporteResoluciones.baseParams = this.formConsultaResoluciones.getForm().getValues();
-        this.storeReporteLibroDiario.baseParams.accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
+        this.storeReporteLibroDiario.baseParams.accesosEjecutores = this.app.isAllowedTo('accesosEjecutores', this.id);
         this.storeReporteResoluciones.load();
     },
 
@@ -4310,7 +4312,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
 
     requestGridDataReporteLibroDiario: function () {
         this.storeReporteLibroDiario.baseParams = this.formConsultaLibroDiario.getForm().getValues();
-        this.storeReporteLibroDiario.baseParams.accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
+        this.storeReporteLibroDiario.baseParams.accesosEjecutores = this.app.isAllowedTo('accesosEjecutores', this.id);
         this.storeReporteLibroDiario.load();
     },
 
@@ -4321,7 +4323,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
     requestGridDataReporteProvidencias: function () {
         // this.storeDocumentosReporte.baseParams = this.formConsultaDocumentos.getForm().getValues();
         this.storeReporteProvidenciasLibroDiario.baseParams = this.formConsultaProvidenciasLibroDiario.getForm().getValues();
-        this.storeReporteProvidenciasLibroDiario.baseParams.accesosResolutores = this.app.isAllowedTo('accesosResolutores', this.id);
+        this.storeReporteProvidenciasLibroDiario.baseParams.accesosEjecutores = this.app.isAllowedTo('accesosEjecutores', this.id);
         this.storeReporteProvidenciasLibroDiario.load();
     },
 
@@ -4350,7 +4352,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     // agrego el valor de parametro accesoresolutores
 
-                    this.formConsultaLibroDiario.getForm().setValues( {accesosResolutores : this.app.isAllowedTo('accesosResolutores', this.id) })
+                    this.formConsultaLibroDiario.getForm().setValues( {accesosEjecutores : this.app.isAllowedTo('accesosEjecutores', this.id) })
                     valueParams = JSON.stringify(this.formConsultaLibroDiario.getForm().getValues());
 
                     window.location.href = 'modules/desktop/resolucion/server/descargaReporteResolucion.inc.php?param=' + valueParams;
