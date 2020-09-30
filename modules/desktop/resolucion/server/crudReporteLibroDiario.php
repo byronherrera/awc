@@ -154,7 +154,7 @@ function selectOrdenanzas()
         $where = " WHERE es_ejecucion = 0";
     }
     else {
-        $where = " AND es_ejecucion = 0";
+        $where = $where. " AND es_ejecucion = 0";
     }
 
     $orderby = 'ORDER BY a.id ASC';
