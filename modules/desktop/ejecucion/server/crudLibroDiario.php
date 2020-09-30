@@ -98,12 +98,12 @@ function selectOrdenanzas()
             $where = $where . " AND cedula_ruc LIKE '%$filtro_cedula_ruc%' ";
         }
     }
-    if (isset($_POST['zona']) && $_POST['zona']!="" ) {
-        $filtro_zona = $_POST['zona'];
+    if (isset($_POST['unidad_ejecucion']) && $_POST['unidad_ejecucion']!="" ) {
+        $filtro_zona = $_POST['unidad_ejecucion'];
         if($where == ''){
-            $where = " WHERE unidad_comisaria_ejecucion LIKE '%$filtro_zona%' ";
+            $where = " WHERE unidad_comisaria_ejecucion LIKE '%$filtro_zona%' OR unidad LIKE '%$filtro_zona%' ";
         }else{
-            $where = $where . " AND unidad_comisaria_ejecucion LIKE '%$filtro_zona%' ";
+            $where = $where . " AND unidad_comisaria_ejecucion LIKE '%$filtro_zona%' OR unidad LIKE '%$filtro_zona%'";
         }
     }
 
