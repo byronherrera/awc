@@ -970,7 +970,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'envio_expediente', allowBlank: true},
                 {name: 'numero_memorando', allowBlank: true},
                 {name: 'cedula_duplicada', allowBlank: true},
-                {name: 'nombre_duplicado', allowBlank: true}
+                {name: 'nombre_duplicado', allowBlank: true},
+                {name: 'es_ejecucion', allowBlank: true}
             ]
         });
 
@@ -1009,6 +1010,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 //Definición de campos bdd Libro Diario
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldLibroDiario},
+                {header: 'es_ejecucion', dataIndex: 'es_ejecucion', width: 100, hidden: true, editor: textFieldLibroDiario},
                 {header: 'cedula_duplicada', dataIndex: 'cedula_duplicada', width: 100, hidden: true},
                 {header: 'nombre_duplicado', dataIndex: 'nombre_duplicado', width: 100, hidden: true},
                 {header: 'Memo Ingreso', dataIndex: 'memo_ingreso', allowBlank: true, sortable: true, width: 100, editor: textFieldLibroDiario},
@@ -1324,7 +1326,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'estado', allowBlank: false},
                 {name: 'funcionario', allowBlank: false},
                 {name: 'envio_expediente', allowBlank: false},
-                {name: 'numero_memorando', allowBlank: false}
+                {name: 'numero_memorando', allowBlank: false},
+                {name: 'es_ejecucion', allowBlank: false}
             ]
         });
 
@@ -3571,7 +3574,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             numero_memorando: ' ',
             fecha_sorteo:  ' ',
             fecha_ultima_notificacion:  ' ',
-            es_ejecucion: 0
+            es_ejecucion: 1
             // fecha_envio: (new Date()),
         });
         this.gridLibroDiario.stopEditing();

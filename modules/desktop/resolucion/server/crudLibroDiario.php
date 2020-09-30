@@ -123,7 +123,7 @@ function selectOrdenanzas()
         $data[] = $row;
     };
 
-    $sql = "SELECT count(*) AS total FROM amc_libro_diario $where";
+    $sql = "SELECT count(*) AS total FROM amc_libro_diario ";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
@@ -157,7 +157,7 @@ function insertOrdenanzas()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-   echo  $sql = "INSERT INTO amc_libro_diario($cadenaCampos)
+     $sql = "INSERT INTO amc_libro_diario($cadenaCampos)
 	values($cadenaDatos);";
      $sql = $os->db->conn->prepare($sql);
     $sql->execute();
