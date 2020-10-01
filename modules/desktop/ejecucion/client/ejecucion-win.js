@@ -1143,19 +1143,19 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 {header: 'es_ejecucion', dataIndex: 'es_ejecucion', width: 100, hidden: true, editor: textFieldLibroDiario},
                 /*{header: 'Memo Ingreso', dataIndex: 'memo_ingreso_ejecucion', allowBlank: true, sortable: true, width: 120, editor: textFieldLibroDiario},*/
                 {
-                    header: 'Memo Ingreso Resolución',
+                    header: 'Memo Ingreso',
                     dataIndex: 'memo_ingreso',
                     allowBlank: true,
                     sortable: true,
                     width: 150
                 },
-                {
+                /*{
                     header: 'Memo ingreso',
                     dataIndex: 'numero_resolucion',
                     sortable: true,
                     width: 200,
                     editor: textFieldLibroDiario
-                },
+                },*/
                {
                     header: 'Fecha de Ingreso Resolución',
                     dataIndex: 'fecha_envio',
