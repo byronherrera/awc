@@ -154,6 +154,7 @@ function getdataEjecucion($id)
 // fin de recuperacion de datos
 function getFuncionarios()
 {
+
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT CONCAT(last_name,' ',first_name) AS text, id AS valor FROM `qo_members` WHERE active = 1 ORDER BY text;";
