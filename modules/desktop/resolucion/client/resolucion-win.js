@@ -43,6 +43,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
 
         var win = desktop.getWindow('grid-win-resolucion');
         var urlResolucion = "modules/desktop/resolucion/server/";
+        var urlResolucionServer = "../";
 
         var textField = new Ext.form.TextField({allowBlank: false});
         var textFieldProvidencia = new Ext.form.TextField({allowBlank: false});
@@ -3180,8 +3181,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     handler: function () {
                                         if (Ext.getCmp('fp').getForm().isValid()) {
                                             Ext.getCmp('fp').getForm().submit({
-                                                url: urlResolucion + 'file-upload.php',
-                                                params: {data: selectOperativos},
+                                                url: 'file-upload.php',
+                                                params: {data: libroDiarioSeleccionado},
                                                 waitMsg: 'Subiendo Documento...',
                                                 success: function (fp, o) {
 
