@@ -46,9 +46,7 @@ function getactosbioseguridad($id)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-
     $sql = "SELECT * FROM amc_sancion_emergencia  WHERE cedula = '$id';";
-
     $result = $os->db->conn->query($sql);
     $resultados = $result->fetchAll(PDO::FETCH_ASSOC);
     if (count($resultados) > 0) {
@@ -90,8 +88,10 @@ function getdataInstruccion($id)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
+// TODO falta declarar
+    $sql = "SELECT * FROM amc_expediente  WHERE cedula_ruc = '$id';";
 
-    $sql = "SELECT * FROM amc_expediente  WHERE cedula = '$id';";
+
 
     $result = $os->db->conn->query($sql);
     $resultados = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -112,8 +112,7 @@ function getdataResolucion($id)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-
-    $sql = "SELECT * FROM amc_sancion_emergencia  WHERE cedula = '$id';";
+    $sql = "SELECT * FROM amc_libro_diario  WHERE cedula_ruc = '$id' AND es_ejecucion = 0 ;";
 
     $result = $os->db->conn->query($sql);
     $resultados = $result->fetchAll(PDO::FETCH_ASSOC);
