@@ -25,11 +25,9 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
         var win = desktop.getWindow('grid-win-allanamiento');
 
-        var urlAllanamiento = "http://agenciadecontrol.quito.gob.ec/amcserver/"; // servidor produccion
-        var urlDenunciasLocal = "modules/desktop/allanamiento/server/";
+        var urlAllanamientoLocal = "modules/desktop/allanamiento/server/";
 
-        this.urlAllanamiento = urlAllanamiento;
-        this.urlDenunciasLocal = urlDenunciasLocal;
+        this.urlAllanamientoLocal = urlAllanamientoLocal;
         var winWidth = desktop.getWinWidth();
         var winHeight = desktop.getWinHeight();
         //inicio combo activo
@@ -91,7 +89,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "")
 
             Ext.Ajax.request({
-                url: urlAllanamiento + 'uploadimagen.php',
+                url: urlAllanamientoLocal + 'uploadimagen.php',
                 method: 'POST',
                 params: {
                     imageData: Pic,
@@ -111,10 +109,10 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         var proxyAllanamiento = new Ext.data.HttpProxy({
             api: {
 
-                create: urlDenunciasLocal + "crudAllanamiento.php?operation=insert",
-                read: urlDenunciasLocal + "crudAllanamiento.php?operation=select",
-                update: urlDenunciasLocal + "crudAllanamiento.php?operation=upda",
-                destroy: urlDenunciasLocal + "crudAllanamiento.php?operation=delete"
+                create: urlAllanamientoLocal + "crudAllanamiento.php?operation=insert",
+                read: urlAllanamientoLocal + "crudAllanamiento.php?operation=select",
+                update: urlAllanamientoLocal + "crudAllanamiento.php?operation=upda",
+                destroy: urlAllanamientoLocal + "crudAllanamiento.php?operation=delete"
             }
         });
 
@@ -179,8 +177,8 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'Id', dataIndex: 'id', sortable: true, width: 60, scope: this}
                 , {header: 'SITRA', dataIndex: 'codigo_tramite', sortable: true, width: 170, scope: this}
                 , {header: 'asignado', dataIndex: 'asignado', sortable: true, width: 80, scope: this}
-                , {header: 'confirmed', dataIndex: 'confirmed', sortable: true, width: 70, scope: this}
-                , {header: 'procesado', dataIndex: 'procesado', sortable: true, width: 70, scope: this}
+                , {header: 'confirmed', dataIndex: 'secretaria_confirmed', sortable: true, width: 70, scope: this}
+                , {header: 'procesado', dataIndex: 'secretaria_procesado', sortable: true, width: 70, scope: this}
                 , {
                     header: 'fechaprocesado',
                     dataIndex: 'fechaprocesado',
@@ -342,22 +340,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         id: 'tb_negarallanamiento',
                         formBind: true
                     },
-                    {
-                        text: '| Motivo negar:'
-                        , xtype: 'tbtext',
-                    },
-                    {
-                        xtype: 'textfield',
-                        id: 'motivoNegarDenuncia',
-                        disabled: true,
-                        anchor: '35%',
-                        width: '500',
-                        listeners : {
-                            change : function (f, e){
-                                Ext.getCmp('tb_negarallanamiento').setDisabled(false);
-                            }
-                        }
-                    },
+
                     '->',
                     {
                         text: 'Denuncias anteriores:'
@@ -563,6 +546,21 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                             'change': function (value, newValue, oldValue) {
                                                 if (newValue != oldValue) {
                                                     Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        xtype: 'textfield',
+                                        fieldLabel: 'Motivo negar',
+                                        name: 'motivoNegarDenuncia',
+                                        anchor: '95%',
+                                        allowBlank: false,
+                                        id: 'motivoNegarDenuncia',
+                                        listeners: {
+                                            'change': function (value, newValue, oldValue) {
+                                                if (newValue != oldValue) {
+                                                    Ext.getCmp('tb_negarallanamiento').setDisabled(false);
                                                 }
                                             }
                                         }
@@ -844,7 +842,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             forma = Ext.getCmp('formAllanamientoDetalle');
             forma.getForm().load({
                 waitMsg: 'Recuperando información',
-                url: urlDenunciasLocal + 'crudAllanamiento.php?operation=selectForm',
+                url: urlAllanamientoLocal + 'crudAllanamiento.php?operation=selectForm',
                 params: {
                     id: allanamiento
                 },
@@ -876,8 +874,8 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
     },
     aprobarallanamiento: function () {
         store = this.storeAllanamiento;
-        var urlAllanamiento = this.urlAllanamiento;
-        var urlDenunciasLocal = this.urlDenunciasLocal;
+
+        var urlAllanamientoLocal = this.urlAllanamientoLocal;
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Desea aprobar la allanamiento.<br>¿Desea continuar?',
@@ -888,14 +886,14 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     var myForm = Ext.getCmp('formAllanamientoDetalle').getForm();
                     myForm.submit({
-                        url: urlDenunciasLocal + 'crudAllanamiento.php?operation=aprobarDenuncia',
+                        url: urlAllanamientoLocal + 'crudAllanamiento.php?operation=aprobarDenuncia',
                         method: 'POST',
                         waitMsg: 'Saving data',
                         success: function (form, action) {
                             //se actualiza tabla en la web
                             var dataReceived = JSON.parse(action.response.responseText);
                             myForm.submit({
-                                url: urlAllanamiento + 'crudAllanamiento.php?operation=aprobarDenuncia',
+                                url: urlAllanamientoLocal + 'crudAllanamiento.php?operation=aprobarDenuncia',
                                 method: 'POST',
                                 waitMsg: 'Saving data',
                                 params: {
@@ -904,7 +902,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                 success: function (form, action) {
                                     Ext.getCmp('tb_negarallanamiento').setDisabled(true);
                                     Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
-                                    store.load();
+                                    storeAllanamiento.load();
                                 },
                                 failure: function (form, action) {
                                     var errorJson = JSON.parse(action.response.responseText);
@@ -937,7 +935,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
     },
     negarallanamiento: function () {
         store = this.storeAllanamiento;
-        var urlAllanamiento = this.urlAllanamiento;
+        var urlAllanamientoLocal = this.urlAllanamientoLocal;
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Desea negar el allanamiento, .<br>¿Desea continuar?',
@@ -946,15 +944,18 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
+                    Ext.getCmp('codigo_tramite_formulario').setValue ("n/a");
+
                     var myForm = Ext.getCmp('formAllanamientoDetalle').getForm();
+
                     myForm.submit({
-                        url: urlAllanamiento + 'crudAllanamiento.php?operation=negarDenuncia',
+                        url: urlAllanamientoLocal + 'crudAllanamiento.php?operation=negarDenuncia',
                         method: 'POST',
                         waitMsg: 'Saving data',
                         success: function (form, action) {
                             Ext.getCmp('tb_negarallanamiento').setDisabled(true);
                             Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
-                            store.load();
+                           // store.load();
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);

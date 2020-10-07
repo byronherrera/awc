@@ -60,8 +60,8 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                 {name: 'telefono2', allowBlank: true},
                 {name: 'mail', allowBlank: true},
                 {name: 'estado', allowBlank: true},
-                {name: 'zonal', allowBlank: true},
-            ]
+                {name: 'zonal', allowBlank: true}
+                ]
         });
         var writerBodega = new Ext.data.JsonWriter({
             encode: true,
