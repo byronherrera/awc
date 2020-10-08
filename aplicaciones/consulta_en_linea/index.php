@@ -12,13 +12,12 @@
 </head>
 
 <body>
-<h3 class="text-center">CONSULTAS EN LINEA DEL CIUDADANO</h3>
 <div class="container contact-form">
     <form enctype="multipart/form-data" id="myForm" method="post">
         <div class="row col-md-12">
             <div class="form-group">
-                <label for="cedula">INGRESE CEDULA*</label>
-                <input type="number" class="form-control" id="cedula" name="cedula" placeholder=""
+                <label for="cedula">INGRESE CEDULA / NOMBRES COMPLETOS / NÚMERO DE ACTA / NUMERO DE EXPEDIENTE*</label>
+                <input type="text" class="form-control" id="cedula" name="cedula" placeholder=""
                        required="required">
             </div>
             <div class="form-group">
@@ -83,7 +82,13 @@
         charset="UTF-8"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        var existeInformacion = 0;
+
         $("input[name^='cedula']").change(function () {
+            console.log($("input[name^='cedula']").val().length)
+            if ($("input[name^='cedula']").val().length == 0) return
+
+            $('.mensaje').html('<div class="blink_me"><b>Buscando</b></div>');
             cedula = $("input[name^='cedula']").val();
             llamadaDatos(cedula);
         });
@@ -108,9 +113,11 @@
         function getContent(cedula, opcion, destino) {
             // carga iframe con informacion de dinardat
             $(destino).html('');
-            $.getJSON('formLoad.php?opcion='+opcion+'&usuario=' + cedula, function (data) {
+
+            $.getJSON('formLoad.php?opcion=' + opcion + '&usuario=' + cedula, function (data) {
+
                 if (data.success) {
-                    switch(opcion) {
+                    switch (opcion) {
                         case 'actosbioseguridad' :
                             html = formatoactosbioseguridad(data)
                             break;
@@ -130,124 +137,27 @@
                         // code
                     }
                     $(destino).html(html)
+                } else {
+                    if (!existeInformacion)
+                        $('.mensaje').html('<div><b>No se encuentra información</b></div>');
+                    else
+                        $('.mensaje').html('');
                 }
             });
         }
 
-        function formatoactosbioseguridad(data){
-            var html= '';
+        function formatoactosbioseguridad(data) {
+            var html = '';
             $.each(data.data, function (key, val) {
+                if (!existeInformacion)
+                    existeInformacion = 1;
                 nombres = val['nombres'];
                 apellidos = val['apellidos'];
                 if (JSON.parse(val['imagenacto']) != null)
                     imagenes = JSON.parse(val['imagenacto']);
                 else
                     imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
-                html += "<h3>" + (key + 1) + ".- ACTOS INICIO BIOSEGURIDAD ORDENANZA 049</h3>" +
-                    "                   <table class=\"table\">\n" +
-                    "                    <tbody>\n" +
-                    "                    <tr><th scope=\"row\">Cédula</th><td>" + validaTexto(val['cedula']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres) + " " + validaTexto(apellidos) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Lugar Infracción</th><td>" + validaTexto(val['lugarinfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Observaciones</th><td>" + validaTexto(val['observaciones']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(val['zonal']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fecha']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(val['actainfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
-                    "                    </tbody>\n" +
-                    "                </table>"
-            });
-            return html;
-        }
-        function formatoactosclausura(data){
-            var html= '';
-            $.each(data.data, function (key, val) {
-                nombres = val['nombres'];
-                apellidos = val['apellidos'];
-                if (JSON.parse(val['imagenacto']) != null)
-                    imagenes = JSON.parse(val['imagenacto']);
-                else
-                    imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
-                html += "<h3>" + (key + 1) + ".- ACTOS INICIO LOCALES ORDENANZA 049</h3>" +
-                    "                   <table class=\"table\">\n" +
-                    "                    <tbody>\n" +
-                    "                    <tr><th scope=\"row\">Cédula</th><td>" + validaTexto(val['cedula']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres) + " " + validaTexto(apellidos) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Lugar Infracción</th><td>" + validaTexto(val['lugarinfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Observaciones</th><td>" + validaTexto(val['observaciones']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(val['zonal']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fecha']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(val['actainfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
-                    "                    </tbody>\n" +
-                    "                </table>"
-            });
-            return html;
-        }
-        function formatodataInstruccion(data){
-            var html= '';
-            $.each(data.data, function (key, val) {
-                nombres = val['nombres'];
-                apellidos = val['apellidos'];
-                if (JSON.parse(val['imagenacto']) != null)
-                    imagenes = JSON.parse(val['imagenacto']);
-                else
-                    imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
-                html += "<h3>" + (key + 1) + ".- TRAMITES EN INSTRUCCION</h3>" +
-                    "                   <table class=\"table\">\n" +
-                    "                    <tbody>\n" +
-                    "                    <tr><th scope=\"row\">Cédula</th><td>" + validaTexto(val['cedula']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres) + " " + validaTexto(apellidos) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Lugar Infracción</th><td>" + validaTexto(val['lugarinfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Observaciones</th><td>" + validaTexto(val['observaciones']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(val['zonal']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fecha']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(val['actainfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
-                    "                    </tbody>\n" +
-                    "                </table>"
-            });
-            return html;
-        }
-        function formatodataResolucion(data){
-            var html= '';
-            $.each(data.data, function (key, val) {
-                nombres = val['nombres'];
-                apellidos = val['apellidos'];
-                if (JSON.parse(val['imagenacto']) != null)
-                    imagenes = JSON.parse(val['imagenacto']);
-                else
-                    imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
-                html += "<h3>" + (key + 1) + ".- TRAMITES EN RESOLUCION</h3>" +
-                    "                   <table class=\"table\">\n" +
-                    "                    <tbody>\n" +
-                    "                    <tr><th scope=\"row\">Cédula</th><td>" + validaTexto(val['cedula']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres) + " " + validaTexto(apellidos) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Lugar Infracción</th><td>" + validaTexto(val['lugarinfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Observaciones</th><td>" + validaTexto(val['observaciones']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(val['zonal']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fecha']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(val['actainfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
-                    "                    </tbody>\n" +
-                    "                </table>"
-            });
-            return html;
-        }
-        function formatodataEjecucion(data){
-            var html= '';
-            $.each(data.data, function (key, val) {
-                nombres = val['nombres'];
-                apellidos = val['apellidos'];
-                if (JSON.parse(val['imagenacto']) != null)
-                    imagenes = JSON.parse(val['imagenacto']);
-                else
-                    imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
-                html += "<h3>" + (key + 1) + ".- TRAMITES EN EJECUCION</h3>" +
+                html += "<h3>ACTOS INICIO BIOSEGURIDAD ORDENANZA 049</h3>" +
                     "                   <table class=\"table\">\n" +
                     "                    <tbody>\n" +
                     "                    <tr><th scope=\"row\">Cédula</th><td>" + validaTexto(val['cedula']) + "</td></tr>\n" +
@@ -265,6 +175,122 @@
             return html;
         }
 
+        function formatoactosclausura(data) {
+            var html = '';
+            if (!existeInformacion)
+                existeInformacion = 1;
+
+            $.each(data.data, function (key, val) {
+                nombres = val['nombres'];
+                apellidos = val['apellidos'];
+                if (JSON.parse(val['imagenacto']) != null)
+                    imagenes = JSON.parse(val['imagenacto']);
+                else
+                    imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
+                html += "<h3>ACTOS INICIO LOCALES ORDENANZA 049</h3>" +
+                    "                   <table class=\"table\">\n" +
+                    "                    <tbody>\n" +
+                    "                    <tr><th scope=\"row\">Cédula</th><td>" + validaTexto(val['cedula']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres) + " " + validaTexto(apellidos) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Lugar Infracción</th><td>" + validaTexto(val['lugarinfraccion']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Observaciones</th><td>" + validaTexto(val['observaciones']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(val['zonal']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fecha']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(val['actainfraccion']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    </tbody>\n" +
+                    "                </table>"
+            });
+            return html;
+        }
+
+        function formatodataInstruccion(data) {
+            var html = '';
+            if (!existeInformacion)
+                existeInformacion = 1;
+            $.each(data.data, function (key, val) {
+                nombres = val['nombres'];
+                apellidos = val['apellidos'];
+                if (JSON.parse(val['imagenacto']) != null)
+                    imagenes = JSON.parse(val['imagenacto']);
+                else
+                    imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
+                html += "<h3>TRAMITES EN INSTRUCCION</h3>" +
+                    "                   <table class=\"table\">\n" +
+                    "                    <tbody>\n" +
+                    "                    <tr><th scope=\"row\">Cédula</th><td>" + validaTexto(val['cedula']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres) + " " + validaTexto(apellidos) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Lugar Infracción</th><td>" + validaTexto(val['lugarinfraccion']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Observaciones</th><td>" + validaTexto(val['observaciones']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(val['zonal']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fecha']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(val['actainfraccion']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    </tbody>\n" +
+                    "                </table>"
+            });
+            return html;
+        }
+
+        function formatodataResolucion(data) {
+            var html = '';
+            if (!existeInformacion)
+                existeInformacion = 1;
+
+            $.each(data.data, function (key, val) {
+                /* if (JSON.parse(val['imagenacto']) != null)
+                     imagenes = JSON.parse(val['imagenacto']);
+                 else
+                     imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');*/
+                html += "<h3>TRAMITES EN RESOLUCION</h3>" +
+                    "                   <table class=\"table\">\n" +
+                    "                    <tbody>\n" +
+                    "                    <tr><th scope=\"row\">Cédula/Ruc</th><td>" + validaTexto(val['cedula_ruc']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Nombre Establecimiento</th><td>" + validaTexto(val['nombre_establecimiento']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Fecha Ingreso</th><td>" + validaFecha(val['fecha_ingreso']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Materia</th><td>" + validaTexto(val['ordenanza']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Funcionario Decisor</th><td>" + validaTexto(val['funcionario']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Apela Ejecución</th><td>" + validaTexto(val['numero_memorando']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Estado</th><td>" + validaTexto(val['numero_memorando']) + "</td></tr>\n" +
+                    //"                    <tr><th scope=\"row\">Imagen Acta</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    </tbody>\n" +
+                    "                </table>"
+                nombres = val['nombre_administrado'];
+            });
+            return html;
+        }
+
+        function formatodataEjecucion(data) {
+            var html = '';
+            if (!existeInformacion)
+                existeInformacion = 1;
+            $.each(data.data, function (key, val) {
+                nombres = val['nombres'];
+                apellidos = val['apellidos'];
+                if (JSON.parse(val['imagenacto']) != null)
+                    imagenes = JSON.parse(val['imagenacto']);
+                else
+                    imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
+                html += "<h3>TRAMITES EN RESOLUCIÓN</h3>" +
+                    "                   <table class=\"table\">\n" +
+                    "                    <tbody>\n" +
+                    "                    <tr><th scope=\"row\">Cédula/Ruc</th><td>" + validaTexto(val['cedula_ruc']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Memo ingreso</th><td>" + validaTexto(val['memo_ingreso']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Fecha Ingreso</th><td>" + validaFecha(val['fecha_ingreso']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Observaciones</th><td>" + validaTexto(val['numero_expediente']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(val['nombre_establecimiento']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(val['numero_memorando']) + "</td></tr>\n" +
+                    /*                    "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                                        "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +*/
+                    "                    </tbody>\n" +
+                    "                </table>"
+            });
+            return html;
+        }
 
         function validaImagen(archivo = '', path = '') {
             if ((archivo != null) && (archivo.length > 0)) {
@@ -274,22 +300,23 @@
             else
                 return "n/a";
         }
+
         function validaTexto(texto) {
             if (texto != null)
                 return texto;
             else
                 return "";
         }
+
         function validaFecha(fecha) {
             if (fecha != null)
                 return fecha.substr(0, 10);
             else
                 return "";
         }
-
     });
-
 </script>
+
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101563972-2"></script>
 <script>
@@ -302,6 +329,5 @@
     gtag('js', new Date());
     gtag('config', 'UA-101563972-2');
 </script>
-
 </body>
 </html>

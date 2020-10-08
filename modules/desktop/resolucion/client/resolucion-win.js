@@ -3181,7 +3181,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     handler: function () {
                                         if (Ext.getCmp('fp').getForm().isValid()) {
                                             Ext.getCmp('fp').getForm().submit({
-                                                url: 'file-upload.php',
+                                                url: urlResolucion +  'file-upload.php',
                                                 params: {data: libroDiarioSeleccionado},
                                                 waitMsg: 'Subiendo Documento...',
                                                 success: function (fp, o) {
