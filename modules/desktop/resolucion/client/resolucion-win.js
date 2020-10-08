@@ -3164,7 +3164,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                             emptyText: 'Seleccione documento a subir',
                                             fieldLabel: 'Documento',
                                             name: 'photo-path',
-                                            regex: /^.*.(pdf|PDF)$/,
+                                            regex: /^.*.(pdf|PDF|jpg|JPG|png|PNG)$/,
                                             regexText: 'Solo pdf ',
                                             buttonText: '',
                                             //buttonOnly: true,

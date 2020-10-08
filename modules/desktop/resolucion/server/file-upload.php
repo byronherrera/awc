@@ -4,7 +4,7 @@
 require_once '../../../../server/os.php';
 $os = new os();
 if (!$os->session_exists()) {
-    die('No existe sesión!');
+    die('No existe sesiÃ³n!');
 }
 
 
@@ -14,7 +14,7 @@ if(isset($_POST['data'])){
             $temp_file_name = $_FILES['photo-path']['tmp_name'];
 
             $original_file_name = $_FILES['photo-path']['name'];
-            $uploaddir =   __DIR__  . "\\";
+            $uploaddir =   __DIR__  . "/../../../../imagenes/resolucion/";
 
             $nombreArchivo = $_FILES['photo-path']['name'];
 
@@ -22,20 +22,14 @@ if(isset($_POST['data'])){
             $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
 
             $uploadfile = $uploaddir . basename($_POST['data']. '-' .$nombreArchivo );
+
+
             if (move_uploaded_file($temp_file_name, $uploadfile)) {
-                // en caso de ser exito el ingreso entonces se inserta un registro en la base de datos
 
-                $origen=$uploadfile;
-                $destino=$uploadfile;
-                $destino_temporal=tempnam("tmp/","tmp");
-                //redimensionar_jpeg($origen, $destino_temporal, 1000, 1000, 70);
+                //insertParticipantes('imagenes/resolucion/' .$_POST['data']. '-' . $_FILES['photo-path']['name'], $_POST['data']);
 
-                // guardamos la imagen
-                $fp=fopen($destino,"w");
-                fputs($fp,fread(fopen($destino_temporal,"r"),filesize($destino_temporal)));
-                fclose($fp);
-                //insertParticipantes('imagenes/operativos/' .$_POST['data']. '-' . $_FILES['photo-path']['name'], $_POST['data']);
             }
+
         }
     }
 }
