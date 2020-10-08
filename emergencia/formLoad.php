@@ -139,12 +139,13 @@ switch ($opcion) {
 
 function getUsuarioExterno($id)
 {
+
     global $os;
-
-
-    $sql = "SELECT * FROM amc_sancion_emergencia  WHERE cedula = '$id' limit 1;";
-    $result = $os->db->conn->query($sql);
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM amc_sancion_emergencia WHERE cedula = '$id' limit 1";
+     $result = $os->db->conn->query($sql);
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+
     if (count($resultado) > 0) {
         $resultado[0]['observaciones'] = utf8_encode($resultado[0]['observaciones']);
         $resultado[0]['lugarinfraccion'] = utf8_encode($resultado[0]['lugarinfraccion']);
@@ -163,7 +164,7 @@ function getUsuarioExterno($id)
 function getFuncionarios()
 {
     global $os;
-
+    $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT CONCAT(last_name,' ',first_name) AS text, id AS valor FROM `qo_members` WHERE active = 1 ORDER BY text;";
 
     $result = $os->db->conn->query($sql);
@@ -207,7 +208,7 @@ function getIdzonal()
 {
     global $os;
 
-
+    $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT nombre AS text, id AS valor FROM `amc_zonas` WHERE activo = 1 and combos = 1 ORDER BY text;";
 
     $result = $os->db->conn->query($sql);
@@ -231,7 +232,7 @@ function getTotales()
     global $os;
 	header("Access-Control-Allow-Origin: *");
 
-    //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
+    $os->db->conn->query("SET NAMES 'utf8'");
 
     $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
     $result = $os->db->conn->query($sql);

@@ -14,7 +14,7 @@ if (!class_exists('os')) {
         <head>
             <meta charset="utf-8">
             <meta name="robots" content="noindex, nofollow">
-            <title>REGISTRO INFRACCIONES EMERGENCIA</title>
+            <title>ACTUALIZAR INFRACCIONES EMERGENCIA</title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
             <link href="vendor/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
@@ -27,7 +27,7 @@ if (!class_exists('os')) {
             <div class="contact-image">
                 <img src="img/rocket_contact.png" alt="rocket_contact"/>
             </div>
-            <h3>REGISTRO INFRACCIONES EMERGENCIA</h3>
+            <h3>ACTUALIZAR INFRACCIONES EMERGENCIA</h3>
             <div class="iframedinar">
                 <iframe id="frame" src="" width="100%" height="80px" frameBorder="0"></iframe>
             </div>
@@ -68,7 +68,7 @@ if (!class_exists('os')) {
                     <div class="form-group">
                         <label for="observaciones">Observaciones.</label>
                         <textarea class="form-control" id="observaciones" name="observaciones" required="required"
-                                  rows="3">SANCION POR NO USAR MASCARILLA </textarea>
+                                  rows="3"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="funcionario">Funcionario*</label>
@@ -96,45 +96,50 @@ if (!class_exists('os')) {
                             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label for="actainfraccion">Número de acta</label>
                         <input id="actainfraccion" type="text" name="actainfraccion" class="form-control"
                                placeholder="Ingrese el numero de acta de infración">
                     </div>
+
                     <div class="form-group">
-                        <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Imagen Cedula </label>
-                            <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1">
-                            <label class="custom-file-label" for="archivo">Imagen Cedula.</label>
+                        <div class="form-group col-md-6">
+                            <div class="custom-file">
+                                <label class="custom-file-label" for="archivo">Imagen Cedula </label>
+                                <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1">
+                                <label class="custom-file-label" for="archivo">Imagen Cedula.</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Imagen Infracción</label>
-                            <input type="file" class="custom-file-input" id="archivo2" lang="es" name="archivo2">
-                            <label class="custom-file-label" for="archivo">Imagen Infracción.</label>
+                        <div class="form-group col-md-6">
+                            <div class=" form-control" id="mostrar-imagen1"></div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="geoposicionamiento">Coordenadas</label>
-                        <input id="geoposicionamiento" type="text" name="geoposicionamiento" class="form-control"
-                               readonly>
                     </div>
 
                     <div class="form-group">
-
-                        <div class="form-group col-md-4">
-                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="Grabar Nuevo">
+                        <div class="form-group col-md-6">
+                            <div class="custom-file">
+                                <label class="custom-file-label" for="archivo">Fotografía Infracción</label>
+                                <input type="file" class="custom-file-input" id="archivo2" lang="es" name="archivo2">
+                                <label class="custom-file-label" for="archivo">Imagen Infracción.</label>
+                            </div>
                         </div>
-                      
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
+                            <div class=" form-control" id="mostrar-imagen2"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input id="geoposicionamiento" type="hidden" name="geoposicionamiento" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group col-md-6">
+                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="ACTUALIZAR">
+                        </div>
+                        <div class="form-group col-md-6">
                             <div class="mensaje"></div>
                         </div>
-                        <div class="form-group col-md-4">
-                            <input type="button" class="btn btn-success btn-send " value="Modificar"
-                                   onclick="window.location='actualizar.php';">
-                        </div>
-
                     </div>
             </form>
         </div>
@@ -146,47 +151,10 @@ if (!class_exists('os')) {
                 charset="UTF-8"></script>
         <script type="text/javascript">
             $(document).ready(function () {
-
-                var today = new Date();
-
-                var todayMaximoHoras = new Date();
-                //    todayMaximoHoras.setHours(15, 0, 0, 0);
-                //    todayMaximoHoras.setHours(0, 30, 0, 0);
-
-                //  si el ingreso de la solicitud es mas de las 13 horas cambiamos el
-                /*if (today > todayMaximoHoras) {
-                    // si es mas tarde de la hora maxima la reserva se pasa para pasado mañana
-                   // dia = today.getDate() + 1;
-                    today.setDate(dia);
-                    today.setHours(21, 0, 0, 0);
-                    $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*, (reservas a partir del dia de mañana)');
-                } else {
-                    dia = today.getDate();
-                    today.setDate(dia);
-                    today.setHours(21, 0, 0, 0);
-                    //  $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*');
-                }*/
-
                 $('.form_datetime').datetimepicker({
                     language: 'es',
                     format: 'yyyy-mm-dd hh:ii',
-                    autoclose: true,
-                    //  todayBtn: true,
-                    // startDate: today
-                });
-
-                var date = new Date();
-                var dateStr =
-                    date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
-                    ("00" + date.getDate()).slice(-2) + "T" +
-                    ("00" + date.getHours()).slice(-2) + ":" +
-                    ("00" + date.getMinutes()).slice(-2) + ':00';
-
-                document.getElementById('fecha').value = dateStr;
-
-                $("#idzonal").change(function () {
-                    var idzonal = $('#idzonal option:selected').val();
-                    localStorage.setItem("idzonal", idzonal);
+                    autoclose: true
                 });
 
                 $("input[name^='cedula']").change(function () {
@@ -198,20 +166,35 @@ if (!class_exists('os')) {
                         if (data.success) {
                             $('#nombres').val(data.data[0]['nombres'])
                             $('#apellidos').val(data.data[0]['apellidos'])
-//                            $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción</h3>")
+                            $('#lugarinfraccion').val(data.data[0]['lugarinfraccion'])
+                            $('#ordenanza').val(data.data[0]['materia'])
+                            $('#observaciones').val(data.data[0]['observaciones'])
+                            $('#funcionario').val(data.data[0]['funcionario'])
+                            $('#idzonal').val(data.data[0]['idzonal'])
+                            $('#fecha').val(data.data[0]['fecha'])
+                            $('#actainfraccion').val(data.data[0]['actainfraccion'])
+                            $('#mostrarimagen1').val(data.data[0]['archivo1'])
+                            $('#mostrarimagen2').val(data.data[0]['archivo2'])
+                            $('#geoposicionamiento').val(data.data[0]['geoposicionamiento'])
+
                             $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción,fecha: " + data.data[0]['fecha_creacion'] + "</h3>")
                         } else {
                             $('#nombres').val('')
                             $('#apellidos').val('')
+                            $('#lugarinfraccion').val('')
+                            $('#ordenanza').val('')
+                            $('#observaciones').val('')
+                            $('#funcionario').val('')
+                            $('#idzonal').val('')
+                            $('#fecha').val('')
+                            $('#actainfraccion').val('')
+                            $('#archivo1').val('')
+                            $('#archivo2').val('')
+                            $('#geoposicionamiento').val('')
+
                             $('.mensajecedula').html("")
                         }
                     });
-                });
-
-                /*Guardando los datos en el LocalStorage*/
-                $("#funcionario").change(function () {
-                    var idFuncionario = $('#funcionario option:selected').val();
-                    localStorage.setItem("idFuncionario", idFuncionario);
                 });
 
                 // llenar los datos del combobox
@@ -220,33 +203,19 @@ if (!class_exists('os')) {
                         $.each(data.data[0], function (i, el) {
                             $('#funcionario').append(new Option(el.text, el.valor));
                         });
-                        $("#funcionario").val(localStorage.getItem("idFuncionario"));
-
-                    } else {
-
+                        //$("#funcionario").val(localStorage.getItem("idFuncionario"));
                     }
-                });
-
-                /*Guardando los datos en ordenanza*/
-                $("#ordenanza").change(function () {
-                    var idOrdenanza = $('#ordenanza option:selected').val();
-                    localStorage.setItem("idOrdenanza", idOrdenanza);
                 });
 
                 // llenar los datos del combobox
                 $.getJSON('formLoad.php?opcion=ordenanza', function (data) {
-
                     if (data.success) {
                         $.each(data.data[0], function (i, el) {
                             $('#ordenanza').append(new Option(el.text, el.text));
                         });
-                        $("#ordenanza").val(localStorage.getItem("idOrdenanza"));
-
-                    } else {
-
+                        // $("#ordenanza").val(localStorage.getItem("idOrdenanza"));
                     }
                 });
-
 
                 // llenar los datos zonal del combobox
                 $.getJSON('formLoad.php?opcion=idzonal', function (data) {
@@ -254,10 +223,7 @@ if (!class_exists('os')) {
                         $.each(data.data[0], function (i, el) {
                             $('#idzonal').append(new Option(el.text, el.valor));
                         });
-                        $("#idzonal").val(localStorage.getItem("idzonal"));
-
-                    } else {
-
+                        // $("#idzonal").val(localStorage.getItem("idzonal"));
                     }
                 });
 
@@ -267,19 +233,8 @@ if (!class_exists('os')) {
                     var f = $(this);
                     var formData = new FormData(document.getElementById("myForm"));
                     formData.append("dato", "valor");
-
-                    // actualizamos la hora, a la hora de envio del formulario
-                    /*var dateStr =
-                        date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
-                        ("00" + date.getDate()).slice(-2) + " " +
-                        ("00" + date.getHours()).slice(-2) + ":" +
-                        ("00" + date.getMinutes()).slice(-2);
-
-                    document.getElementById('fecha').value = dateStr;*/
-                    // fin actualizar hora
-
                     $.ajax({
-                        url: 'formLoad.php?opcion=ingreso',
+                        url: 'formLoad.php?opcion=actualizacion',
                         type: "post",
                         dataType: "html",
                         data: formData,
@@ -288,36 +243,9 @@ if (!class_exists('os')) {
                         processData: false
                     }).done(function (res) {
                         $('.mensaje').html('<b>Formulario enviado</b>');
-                        $('#myForm')[0].reset();
-                        $('.mensajecedula').html("");
-                        $("#frame").attr("src", "");
 
-                        // luego de resetear la hora volvemos a cargar la hora
-                        var dateStr =
-                            date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
-                            ("00" + date.getDate()).slice(-2) + " " +
-                            ("00" + date.getHours()).slice(-2) + ":" +
-                            ("00" + date.getMinutes()).slice(-2);
-
-                        document.getElementById('fecha').value = dateStr;
-                        // fin actualizar la hora
                     });
                 })
-
-                if ("geolocation" in navigator) { //check geolocation available
-                    //try to get user current location using getCurrentPosition() method
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        $("#geoposicionamiento").val(position.coords.latitude + "," + position.coords.longitude);
-
-                        // llenar la direccion
-                        $.getJSON('https://open.mapquestapi.com/geocoding/v1/reverse?key=JAlrvA8ymVjfxpr46TKwrH9zM3VNMXEE&location=' + position.coords.latitude + "," + position.coords.longitude + '&includeRoadMetadata=true&incl', function (data) {
-                            if (data) {
-                                var direccion = data.results[0].locations[0].street;
-                                $("#lugarinfraccion").val(direccion);
-                            }
-                        });
-                    });
-                }
             });
         </script>
         </body>
