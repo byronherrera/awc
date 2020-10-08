@@ -14,7 +14,7 @@ if(isset($_POST['data'])){
             $temp_file_name = $_FILES['photo-path']['tmp_name'];
 
             $original_file_name = $_FILES['photo-path']['name'];
-            $uploaddir =   __DIR__  . "modules/desktop/resolucion/server/";
+            $uploaddir =   __DIR__  . "\\";
 
             $nombreArchivo = $_FILES['photo-path']['name'];
 
