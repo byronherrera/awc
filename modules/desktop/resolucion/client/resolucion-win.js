@@ -3179,27 +3179,29 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                     text: "Subir Archivo",
                                     scope: this,
                                     handler: function () {
-                                        if (Ext.getCmp('fp').getForm().isValid()) {
-                                            Ext.getCmp('fp').getForm().submit({
-                                                url: urlResolucion +  'file-upload.php',
-                                                params: {data: libroDiarioSeleccionado},
-                                                waitMsg: 'Subiendo Documento...',
-                                                success: function (fp, o) {
+                                        if (libroDiarioSeleccionado != '') {
+                                            if (Ext.getCmp('fp').getForm().isValid()) {
+                                                Ext.getCmp('fp').getForm().submit({
+                                                    url: urlResolucion +  'file-upload.php',
+                                                    params: {data: libroDiarioSeleccionado},
+                                                    waitMsg: 'Subiendo Documento...',
+                                                    success: function (fp, o) {
 
-                                                    //storeOperativosImagenes.load({params: {id_operativo: selectOperativos}});
-                                                    //Ext.getCmp('fp').getForm().reset();
-                                                },
-                                                failure: function (form, action) {
-                                                    var errorJson = JSON.parse(action.response.responseText);
-                                                    Ext.Msg.show({
-                                                        title: 'Error '
-                                                        , msg: errorJson.msg
-                                                        , modal: true
-                                                        , icon: Ext.Msg.ERROR
-                                                        , buttons: Ext.Msg.OK
-                                                    });
-                                                }
-                                            });
+                                                        //storeOperativosImagenes.load({params: {id_operativo: selectOperativos}});
+                                                        //Ext.getCmp('fp').getForm().reset();
+                                                    },
+                                                    failure: function (form, action) {
+                                                        var errorJson = JSON.parse(action.response.responseText);
+                                                        Ext.Msg.show({
+                                                            title: 'Error '
+                                                            , msg: errorJson.msg
+                                                            , modal: true
+                                                            , icon: Ext.Msg.ERROR
+                                                            , buttons: Ext.Msg.OK
+                                                        });
+                                                    }
+                                                });
+                                            }
                                         }
                                     },
                                     id: 'subirimagen',
