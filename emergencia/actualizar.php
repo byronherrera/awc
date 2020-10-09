@@ -255,7 +255,7 @@ if (!class_exists('os')) {
 
                             $urlArchivos = 'https://amcmatis.quito.gob.ec/emergencia/';
 
-                            $urlArchivos = 'http://localhost/procesos/emergencia/';
+                          //  $urlArchivos = 'http://localhost/procesos/emergencia/';
                             $('#mostrarimagen1').html(validaImagen(imagenes.archivo1, $urlArchivos))
                             $('#mostrarimagen2').html(validaImagen(imagenes.archivo2, $urlArchivos))
                             $('#mostrarimagen3').html(validaImagen(imagenes.archivo3, $urlArchivos))
