@@ -3136,16 +3136,6 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                 },
                                 '-',
                                 {
-                                    text: "Eliminar",
-                                    scope: this,
-                                    handler: this.deleteoperativosImagenes,
-                                    id: 'borraroperativoimagenes',
-                                    iconCls: 'delete-icon',
-                                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                    disabled: true
-                                },
-                                '-',
-                                {
                                     xtype: 'form',
                                     fileUpload: true,
                                     width: 300,
@@ -3163,7 +3153,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                                             id: 'form-file',
                                             emptyText: 'Seleccione documento a subir',
                                             fieldLabel: 'Documento',
-                                            name: 'photo-path',
+                                            name: 'doc-path',
                                             regex: /^.*.(pdf|PDF|jpg|JPG|png|PNG)$/,
                                             regexText: 'Solo pdf ',
                                             buttonText: '',
