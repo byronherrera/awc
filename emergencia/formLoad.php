@@ -28,38 +28,10 @@ switch ($opcion) {
     case "ingreso":
         // graba en base de datos
         $data = ingresaNuevoProceso();
-        //    generaPdf ($data);
-        // codigo futuro funcionamiento
-        /*        $id = $data->id;
-        $data = getDataId($id);
-        $etapa = $data['etapa'];
-        $area = $data['departamento'];
-        $flujo = getDataFlujo($area);
-        $usuarioData = getUsuario($flujo['idusuarioetapa1']);
-        $usuarioDataSeguimiento = getUsuario($flujo['usurioscopiaetapa1']);
-        $usuarioDataSeguimiento2 = getUsuario($flujo['usurioscopiaetapa2']);
-        $usuarioDataFin = getUsuario($flujo['idusuariofinal']);
-
-
-        // etapa 0
-        // 1 se envia email a la persona que realiza la solicitud
-        $contenidoMailPersona = getmensajeSolicitud($data['nombres'], $data);
-        // envio email al encargado del negocio
-        $envioMail = enviarEmail($data['emailConcesionario'], $data['concesionario'], $contenidoMailPersona, "", $data);
-        // envio email al encargado del negocio
-        $envioMail = enviarEmail($data['emailSolicitante'], $data['nombres'], $contenidoMailPersona, "", $data);
-        //TODO validar en caso que email no se envie
-
-        // 2 se envia email a la persona que realiza la aprobación de la solicitud
-
-        // se cambia los estados para la etapa 0
-        $retorno = setDataIdEtapa0($id);
-        $data['etapa'] = 1;
-        $contenidoMailAutorizacion1 = getmensajeEtapa($usuarioData['nombre'] . " - encargado de aprobacion de etapa 1", $data);
-
-        $envioMail = enviarEmail($usuarioData['email'], $data['negocio'], $contenidoMailAutorizacion1, $usuarioDataSeguimiento['email'], $data, " Aprobación Etapa 1");
-        //TODO validar en caso que email no se envie
-        */
+        break;
+    case "actualizacion":
+        // graba en base de datos
+        $data = actualizacion();
         break;
     case "aprobar":
         // recuperamos variables
@@ -143,7 +115,7 @@ function getUsuarioExterno($id)
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_sancion_emergencia WHERE cedula = '$id' limit 1";
-     $result = $os->db->conn->query($sql);
+    $result = $os->db->conn->query($sql);
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($resultado) > 0) {
@@ -158,6 +130,23 @@ function getUsuarioExterno($id)
             "success" => false,
             "data" => array()
         ));
+    }
+}
+
+function getUsuarioExternoData($id)
+{
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM amc_sancion_emergencia WHERE cedula = '$id' limit 1";
+    $result = $os->db->conn->query($sql);
+    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($resultado) > 0) {
+        return $resultado[0];
+
+    } else {
+        return array();
     }
 }
 
@@ -182,6 +171,7 @@ function getFuncionarios()
         ));
     }
 }
+
 function getOrdenanza()
 {
     global $os;
@@ -230,7 +220,7 @@ function getIdzonal()
 function getTotales()
 {
     global $os;
-	header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Origin: *");
 
     $os->db->conn->query("SET NAMES 'utf8'");
 
@@ -261,7 +251,7 @@ function getTotalesDetalle()
     global $os;
 
 
- //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
+    //  $resultado1 = $result->fetchAll(PDO::FETCH_ASSOC);
 
     $sql = "SELECT COUNT( id ) valor, DATE_FORMAT( fecha, '%Y-%m-%d' ) texto FROM amc_sancion_emergencia GROUP BY DATE_FORMAT( fecha, '%Y%m%d')";
     $result = $os->db->conn->query($sql);
@@ -270,12 +260,12 @@ function getTotalesDetalle()
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
         //para cada fila calculamos el total por zonal
-        $fecha= $row ['texto'];
+        $fecha = $row ['texto'];
         $sqlzonal = "SELECT id, nombre, (SELECT COUNT( id ) valor FROM amc_sancion_emergencia  WHERE DATE(fecha) = '$fecha' AND idzonal= amc_zonas.id) total  FROM amc_zonas WHERE combos = 1";
         $resultzonal = $os->db->conn->query($sqlzonal);
         while ($rowzonal = $resultzonal->fetch(PDO::FETCH_ASSOC)) {
             $nombre = str_replace(' ', '', $rowzonal ['nombre']);
-            $row[$nombre] = $rowzonal['total'] ;
+            $row[$nombre] = $rowzonal['total'];
         }
         $resultado[] = $row;
 
@@ -292,6 +282,161 @@ function getTotalesDetalle()
             "data" => array()
         ));
     }
+}
+
+function actualizacion()
+{
+    global $os;
+    $data = '';
+    if (!is_object($data)) {
+        $data = new stdClass;
+    }
+
+    $imagenes = json_decode($data->imagenacto);
+    $cedula = $_POST["cedula"];
+    $estadoAnterior = getUsuarioExternoData($cedula);
+    $imagenesAnteriore = json_decode($estadoAnterior['imagenacto']);
+
+    $listado = array();
+
+    if ($_FILES['archivo1']['name'] != null) {
+
+        $temp_file_name = $_FILES['archivo1']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo1']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo1']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-cedula-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            $listado['archivo1'] = "uploads/" . basename($today . '-cedula-' . $nombreArchivo);
+        }
+    } else {
+        if ($imagenesAnteriore->archivo1 != null) {
+            $listado['archivo1'] = $imagenesAnteriore->archivo1;
+        }
+    }
+
+    if ($_FILES['archivo2']['name'] != null) {
+
+        $temp_file_name = $_FILES['archivo2']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo2']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo2']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-foto-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
+            $listado['archivo2'] = "uploads/" . basename($today . '-foto-' . $nombreArchivo);
+        }
+    } else {
+        if ($imagenesAnteriore->archivo2 != null) {
+            $listado['archivo2'] = $imagenesAnteriore->archivo2;
+        }
+    }
+
+    if ($_FILES['archivo3']['name'] != null) {
+
+        $temp_file_name = $_FILES['archivo3']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo3']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo3']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-actoinicio-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            $listado['archivo3'] = "uploads/" . basename($today . '-actoinicio-' . $nombreArchivo);
+        }
+    } else {
+        if ($imagenesAnteriore->archivo3 != null) {
+            $listado['archivo3'] = $imagenesAnteriore->archivo3;
+        }
+    }
+
+    if ($_FILES['archivo4']['name'] != null) {
+        $temp_file_name = $_FILES['archivo4']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo4']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo4']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-actoinicio2-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            $listado['archivo4'] = "uploads/" . basename($today . '-actoinicio2-' . $nombreArchivo);
+        }
+    } else {
+        if ($imagenesAnteriore->archivo4 != null) {
+            $listado['archivo4'] = $imagenesAnteriore->archivo4;
+        }
+    }
+
+    if (count($listado) > 0)
+        $data->imagenacto = json_encode($listado);
+
+    $data->nombres = $_POST["nombres"];
+    $data->apellidos = $_POST["apellidos"];
+    $data->lugarinfraccion = $_POST["lugarinfraccion"];
+    $data->observaciones = $_POST["observaciones"];
+    $data->materia = $_POST["ordenanza"];
+    $data->funcionario = $_POST["funcionario"];
+    $data->fecha = $_POST["fecha"];
+    $data->idzonal = $_POST["idzonal"];
+    $data->zonal = getNombreZonal($_POST["idzonal"]);
+
+    $data->actainfraccion = $_POST["actainfraccion"];
+
+    $cadenaCampos = '';
+    foreach ($data as $clave => $valor) {
+        $cadenaCampos .= $clave . " = '" . $valor . "',";
+
+    }
+
+    $cadenaCampos = substr($cadenaCampos, 0, -1);
+
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "UPDATE `amc_sancion_emergencia` SET  $cadenaCampos WHERE `cedula` = '$cedula'";
+
+
+    $sql = $os->db->conn->prepare($sql);
+    $result = $sql->execute();
+
+// genero el nuevo codigo de proceso
+    $ultimo = $os->db->conn->lastInsertId();
+    $data->id = $ultimo;
+
+    echo json_encode(array(
+        "success" => true,
+        "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
+        "data" => array($data)
+    ));
+
+    return $data;
+
 }
 
 function ingresaNuevoProceso()
@@ -320,11 +465,10 @@ function ingresaNuevoProceso()
         $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
         $today = date("Y-n-j-H-i");
 
-        $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
+        $uploadfile = $uploaddir . basename($today . '-cedula-' . $nombreArchivo);
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
-            //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado['archivo1'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado['archivo1'] = "uploads/" . basename($today . '-cedula-' . $nombreArchivo);
         }
     }
 
@@ -341,11 +485,50 @@ function ingresaNuevoProceso()
         $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
         $today = date("Y-n-j-H-i");
 
-        $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
+        $uploadfile = $uploaddir . basename($today . '-foto-' . $nombreArchivo);
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado['archivo2'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado['archivo2'] = "uploads/" . basename($today . '-foto-' . $nombreArchivo);
+        }
+    }
+
+    if ($_FILES['archivo3']['name'] != null) {
+
+        $temp_file_name = $_FILES['archivo3']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo3']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo3']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-actoinicio-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            $listado['archivo3'] = "uploads/" . basename($today . '-actoinicio-' . $nombreArchivo);
+        }
+    }
+
+    if ($_FILES['archivo4']['name'] != null) {
+        $temp_file_name = $_FILES['archivo4']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo4']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo4']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-actoinicio2-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            $listado['archivo4'] = "uploads/" . basename($today . '-actoinicio2-' . $nombreArchivo);
         }
     }
 

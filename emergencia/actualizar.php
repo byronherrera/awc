@@ -103,29 +103,53 @@ if (!class_exists('os')) {
                                placeholder="Ingrese el numero de acta de infración">
                     </div>
 
-                    <div class="form-group">
-                        <div class="form-group col-md-6">
+                    <div class="row" style="clear: both; padding-top: 20px">
+                        <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Imagen Cedula </label>
                                 <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1">
-                                <label class="custom-file-label" for="archivo">Imagen Cedula.</label>
                             </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <div class=" form-control" id="mostrar-imagen1"></div>
+                        <div class="col-md-6">
+                            <div id="mostrarimagen1"></div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <div class="form-group col-md-6">
+                    <div class="row" style="clear: both; padding-top: 20px">
+                        <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Fotografía Infracción</label>
-                                <input type="file" class="custom-file-input" id="archivo2" lang="es" name="archivo2">
-                                <label class="custom-file-label" for="archivo">Imagen Infracción.</label>
+                                <input type="file" class="custom-file-input" id="archivo2" lang="es"
+                                       name="archivo2">
                             </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <div class=" form-control" id="mostrar-imagen2"></div>
+                        <div class="col-md-6">
+                            <div id="mostrarimagen2"></div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="clear: both; padding-top: 20px">
+                        <div class="col-md-6">
+                            <div class="custom-file">
+                                <label class="custom-file-label" for="archivo">Acto de Inicio</label>
+                                <input type="file" class="custom-file-input" id="archivo3" lang="es"
+                                       name="archivo3">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="mostrarimagen3"></div>
+                        </div>
+                    </div>
+                    <div class="row" style="clear: both; padding-top: 20px">
+                        <div class="col-md-6">
+                            <div class="custom-file">
+                                <label class="custom-file-label" for="archivo">Acto Instrucción</label>
+                                <input type="file" class="custom-file-input" id="archivo4" lang="es"
+                                       name="archivo4">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="mostrarimagen4"></div>
                         </div>
                     </div>
 
@@ -133,7 +157,7 @@ if (!class_exists('os')) {
                         <input id="geoposicionamiento" type="hidden" name="geoposicionamiento" class="form-control">
                     </div>
 
-                    <div class="form-group">
+                    <div class="row" style="clear: both; padding-top: 20px">
                         <div class="form-group col-md-6">
                             <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="ACTUALIZAR">
                         </div>
@@ -141,6 +165,7 @@ if (!class_exists('os')) {
                             <div class="mensaje"></div>
                         </div>
                     </div>
+
             </form>
         </div>
 
@@ -158,43 +183,7 @@ if (!class_exists('os')) {
                 });
 
                 $("input[name^='cedula']").change(function () {
-                    // carga iframe con informacion de dinardat
-                    $("#frame").attr("src", "https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
-
-                    // se carga la información si ya existe información anterior
-                    $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
-                        if (data.success) {
-                            $('#nombres').val(data.data[0]['nombres'])
-                            $('#apellidos').val(data.data[0]['apellidos'])
-                            $('#lugarinfraccion').val(data.data[0]['lugarinfraccion'])
-                            $('#ordenanza').val(data.data[0]['materia'])
-                            $('#observaciones').val(data.data[0]['observaciones'])
-                            $('#funcionario').val(data.data[0]['funcionario'])
-                            $('#idzonal').val(data.data[0]['idzonal'])
-                            $('#fecha').val(data.data[0]['fecha'])
-                            $('#actainfraccion').val(data.data[0]['actainfraccion'])
-                            $('#mostrarimagen1').val(data.data[0]['archivo1'])
-                            $('#mostrarimagen2').val(data.data[0]['archivo2'])
-                            $('#geoposicionamiento').val(data.data[0]['geoposicionamiento'])
-
-                            $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción,fecha: " + data.data[0]['fecha_creacion'] + "</h3>")
-                        } else {
-                            $('#nombres').val('')
-                            $('#apellidos').val('')
-                            $('#lugarinfraccion').val('')
-                            $('#ordenanza').val('')
-                            $('#observaciones').val('')
-                            $('#funcionario').val('')
-                            $('#idzonal').val('')
-                            $('#fecha').val('')
-                            $('#actainfraccion').val('')
-                            $('#archivo1').val('')
-                            $('#archivo2').val('')
-                            $('#geoposicionamiento').val('')
-
-                            $('.mensajecedula').html("")
-                        }
-                    });
+                    cargaData()
                 });
 
                 // llenar los datos del combobox
@@ -203,7 +192,6 @@ if (!class_exists('os')) {
                         $.each(data.data[0], function (i, el) {
                             $('#funcionario').append(new Option(el.text, el.valor));
                         });
-                        //$("#funcionario").val(localStorage.getItem("idFuncionario"));
                     }
                 });
 
@@ -213,7 +201,6 @@ if (!class_exists('os')) {
                         $.each(data.data[0], function (i, el) {
                             $('#ordenanza').append(new Option(el.text, el.text));
                         });
-                        // $("#ordenanza").val(localStorage.getItem("idOrdenanza"));
                     }
                 });
 
@@ -223,7 +210,6 @@ if (!class_exists('os')) {
                         $.each(data.data[0], function (i, el) {
                             $('#idzonal').append(new Option(el.text, el.valor));
                         });
-                        // $("#idzonal").val(localStorage.getItem("idzonal"));
                     }
                 });
 
@@ -243,9 +229,68 @@ if (!class_exists('os')) {
                         processData: false
                     }).done(function (res) {
                         $('.mensaje').html('<b>Formulario enviado</b>');
-
+                        cargaData();
                     });
                 })
+
+                function cargaData() {
+                    // carga iframe con informacion de dinardat
+                    $("#frame").attr("src", "https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
+                    // se carga la información si ya existe información anterior
+                    $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
+                        if (data.success) {
+                            $('#nombres').val(data.data[0]['nombres'])
+                            $('#apellidos').val(data.data[0]['apellidos'])
+                            $('#lugarinfraccion').val(data.data[0]['lugarinfraccion'])
+                            $('#ordenanza').val(data.data[0]['materia'])
+                            $('#observaciones').val(data.data[0]['observaciones'])
+                            $('#funcionario').val(data.data[0]['funcionario'])
+                            $('#idzonal').val(data.data[0]['idzonal'])
+                            $('#fecha').val(data.data[0]['fecha'])
+                            $('#actainfraccion').val(data.data[0]['actainfraccion'])
+                            if (JSON.parse(data.data[0]['imagenacto']) != null)
+                                imagenes = JSON.parse(data.data[0]['imagenacto']);
+                            else
+                                imagenes = JSON.parse('{"archivo1":null,"archivo2":null,"archivo3":null,"archivo4":null}');
+
+                            $urlArchivos = 'https://amcmatis.quito.gob.ec/emergencia/';
+
+                            $urlArchivos = 'http://localhost/procesos/emergencia/';
+                            $('#mostrarimagen1').html(validaImagen(imagenes.archivo1, $urlArchivos))
+                            $('#mostrarimagen2').html(validaImagen(imagenes.archivo2, $urlArchivos))
+                            $('#mostrarimagen3').html(validaImagen(imagenes.archivo3, $urlArchivos))
+                            $('#mostrarimagen4').html(validaImagen(imagenes.archivo4, $urlArchivos))
+
+                            $('#geoposicionamiento').val(data.data[0]['geoposicionamiento'])
+
+                            $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción,fecha: " + data.data[0]['fecha_creacion'] + "</h3>")
+                        } else {
+                            $('#nombres').val('')
+                            $('#apellidos').val('')
+                            $('#lugarinfraccion').val('')
+                            $('#ordenanza').val('')
+                            $('#observaciones').val('')
+                            $('#funcionario').val('')
+                            $('#idzonal').val('')
+                            $('#fecha').val('')
+                            $('#actainfraccion').val('')
+                            $('#archivo1').html('')
+                            $('#archivo2').html('')
+                            $('#geoposicionamiento').val('')
+
+                            $('.mensajecedula').html("")
+                        }
+                    });
+                }
+
+                function validaImagen(archivo = '', path = '') {
+                    if ((archivo != null) && (archivo.length > 0)) {
+                        var archivo = archivo.replace(/ /g, "%20");
+                        return "<a href='" + path + archivo + "' target='_blank'><img src=" + path + archivo + " height=\"120\"></a>";
+                    }
+                    else
+                        return "n/a";
+                }
             });
         </script>
         </body>

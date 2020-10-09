@@ -64,7 +64,6 @@ if (!class_exists('os')) {
                         </select>
                     </div>
 
-
                     <div class="form-group">
                         <label for="observaciones">Observaciones.</label>
                         <textarea class="form-control" id="observaciones" name="observaciones" required="required"
@@ -101,28 +100,38 @@ if (!class_exists('os')) {
                         <input id="actainfraccion" type="text" name="actainfraccion" class="form-control"
                                placeholder="Ingrese el numero de acta de infración">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="padding: 20px 0;">
                         <div class="custom-file">
                             <label class="custom-file-label" for="archivo">Imagen Cedula </label>
                             <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1">
-                            <label class="custom-file-label" for="archivo">Imagen Cedula.</label>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="padding: 20px 0;">
                         <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Imagen Infracción</label>
+                            <label class="custom-file-label" for="archivo">Fotografía Infracción</label>
                             <input type="file" class="custom-file-input" id="archivo2" lang="es" name="archivo2">
-                            <label class="custom-file-label" for="archivo">Imagen Infracción.</label>
                         </div>
                     </div>
+                    <div class="form-group" style="padding: 20px 0;">
+                        <div class="custom-file">
+                            <label class="custom-file-label" for="archivo">Acto de Inicio</label>
+                            <input type="file" class="custom-file-input" id="archivo3" lang="es" name="archivo3">
+                        </div>
+                    </div>
+                    <div class="form-group" style="padding: 20px 0;">
+                        <div class="custom-file">
+                            <label class="custom-file-label" for="archivo">Acto de Instrucción</label>
+                            <input type="file" class="custom-file-input" id="archivo4" lang="es" name="archivo4">
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <label for="geoposicionamiento">Coordenadas</label>
-                        <input id="geoposicionamiento" type="text" name="geoposicionamiento" class="form-control"
+                        <label for="geoposicionamiento" style="display:none">Coordenadas</label>
+                        <input id="geoposicionamiento" type="hidden" name="geoposicionamiento" class="form-control"
                                readonly>
                     </div>
 
-                    <div class="form-group">
-
+                    <div class="form-group" style="padding: 20px 0">
                         <div class="form-group col-md-4">
                             <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="Grabar Nuevo">
                         </div>
@@ -150,29 +159,11 @@ if (!class_exists('os')) {
                 var today = new Date();
 
                 var todayMaximoHoras = new Date();
-                //    todayMaximoHoras.setHours(15, 0, 0, 0);
-                //    todayMaximoHoras.setHours(0, 30, 0, 0);
-
-                //  si el ingreso de la solicitud es mas de las 13 horas cambiamos el
-                /*if (today > todayMaximoHoras) {
-                    // si es mas tarde de la hora maxima la reserva se pasa para pasado mañana
-                   // dia = today.getDate() + 1;
-                    today.setDate(dia);
-                    today.setHours(21, 0, 0, 0);
-                    $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*, (reservas a partir del dia de mañana)');
-                } else {
-                    dia = today.getDate();
-                    today.setDate(dia);
-                    today.setHours(21, 0, 0, 0);
-                    //  $('label#fechaTrabajoTitulo').html('Fecha de trabajo a realizarse*');
-                }*/
 
                 $('.form_datetime').datetimepicker({
                     language: 'es',
                     format: 'yyyy-mm-dd hh:ii',
                     autoclose: true,
-                    //  todayBtn: true,
-                    // startDate: today
                 });
 
                 var date = new Date();
@@ -288,7 +279,7 @@ if (!class_exists('os')) {
                         processData: false
                     }).done(function (res) {
                         $('.mensaje').html('<b>Formulario enviado</b>');
-                        $('#myForm')[0].reset();
+               //         $('#myForm')[0].reset();
                         $('.mensajecedula').html("");
                         $("#frame").attr("src", "");
 
