@@ -279,7 +279,7 @@ if (!class_exists('os')) {
                         processData: false
                     }).done(function (res) {
                         $('.mensaje').html('<b>Formulario enviado</b>');
-               //         $('#myForm')[0].reset();
+                        $('#myForm')[0].reset();
                         $('.mensajecedula').html("");
                         $("#frame").attr("src", "");
 

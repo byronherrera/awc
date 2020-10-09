@@ -238,7 +238,9 @@ if (!class_exists('os')) {
                     $("#frame").attr("src", "https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
                     // se carga la información si ya existe información anterior
                     $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
+                        $('#myForm')[0].reset();
                         if (data.success) {
+                            $('#cedula').val(data.data[0]['cedula'])
                             $('#nombres').val(data.data[0]['nombres'])
                             $('#apellidos').val(data.data[0]['apellidos'])
                             $('#lugarinfraccion').val(data.data[0]['lugarinfraccion'])
