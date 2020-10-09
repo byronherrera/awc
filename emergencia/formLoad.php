@@ -416,6 +416,7 @@ function actualizacion()
 
     }
 
+
     $cadenaCampos = substr($cadenaCampos, 0, -1);
 
     $os->db->conn->query("SET NAMES 'utf8'");
