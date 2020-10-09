@@ -278,6 +278,11 @@ if (!class_exists('os')) {
                             $('#archivo2').html('')
                             $('#geoposicionamiento').val('')
 
+                            $('#mostrarimagen1').html('');
+                            $('#mostrarimagen2').html('');
+                            $('#mostrarimagen3').html('');
+                            $('#mostrarimagen4').html('');
+
                             $('.mensajecedula').html("")
                         }
                     });
