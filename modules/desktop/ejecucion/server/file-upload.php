@@ -26,7 +26,7 @@ if(isset($_POST['data'])){
 
             if (move_uploaded_file($temp_file_name, $uploadfile)) {
 
-                insertDocumentos('documentos/resolucion/' .$_POST['data']. '-' . $_FILES['doc-path']['name'], $_POST['data']);
+                insertDocumentos('documentos/ejecucion/' .$_POST['data']. '-' . $_FILES['doc-path']['name'], $_POST['data']);
 
             }
 

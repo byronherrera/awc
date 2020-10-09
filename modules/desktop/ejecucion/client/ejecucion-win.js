@@ -3649,6 +3649,71 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                                         //}
                                     }
                                 },
+                                '-',
+                                {
+                                    xtype: 'form',
+                                    fileUpload: true,
+                                    width: 300,
+                                    frame: true,
+                                    autoHeight: 60,
+                                    defaults: {
+                                        anchor: '100%',
+                                        allowBlank: false
+
+                                    },
+                                    id: "fp",
+                                    items: [
+                                        {
+                                            xtype: 'fileuploadfield',
+                                            id: 'form-file',
+                                            emptyText: 'Seleccione documento a subir',
+                                            fieldLabel: 'Documento',
+                                            name: 'doc-path',
+                                            regex: /^.*.(pdf|PDF|jpg|JPG|png|PNG)$/,
+                                            regexText: 'Solo pdf ',
+                                            buttonText: '',
+                                            //buttonOnly: true,
+                                            buttonCfg: {
+                                                iconCls: 'ux-start-menu-submenu'
+                                            }
+                                        }
+                                    ]
+                                },
+                                '-',
+                                {
+                                    text: "Subir Archivo",
+                                    scope: this,
+                                    handler: function () {
+                                        if (libroDiarioSeleccionado != '') {
+                                            if (Ext.getCmp('fp').getForm().isValid()) {
+                                                Ext.getCmp('fp').getForm().submit({
+                                                    url: urlResolucion +  'file-upload.php',
+                                                    params: {data: libroDiarioSeleccionado},
+                                                    waitMsg: 'Subiendo Documento...',
+                                                    success: function (fp, o) {
+
+                                                        //storeOperativosImagenes.load({params: {id_operativo: selectOperativos}});
+                                                        //Ext.getCmp('fp').getForm().reset();
+                                                    },
+                                                    failure: function (form, action) {
+                                                        var errorJson = JSON.parse(action.response.responseText);
+                                                        Ext.Msg.show({
+                                                            title: 'Error '
+                                                            , msg: errorJson.msg
+                                                            , modal: true
+                                                            , icon: Ext.Msg.ERROR
+                                                            , buttons: Ext.Msg.OK
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    },
+                                    id: 'subirimagen',
+                                    iconCls: 'subir-icon',
+                                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                    disabled: false
+                                },
                                 // '-',
                                 //bh boton generar
                                 // {
