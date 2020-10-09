@@ -255,7 +255,7 @@ if (!class_exists('os')) {
 
                             $urlArchivos = 'https://amcmatis.quito.gob.ec/emergencia/';
 
-                          //  $urlArchivos = 'http://localhost/procesos/emergencia/';
+                            //  $urlArchivos = 'http://localhost/procesos/emergencia/';
                             $('#mostrarimagen1').html(validaImagen(imagenes.archivo1, $urlArchivos))
                             $('#mostrarimagen2').html(validaImagen(imagenes.archivo2, $urlArchivos))
                             $('#mostrarimagen3').html(validaImagen(imagenes.archivo3, $urlArchivos))
@@ -286,10 +286,18 @@ if (!class_exists('os')) {
                 function validaImagen(archivo = '', path = '') {
                     if ((archivo != null) && (archivo.length > 0)) {
                         var archivo = archivo.replace(/ /g, "%20");
-                        return "<a href='" + path + archivo + "' target='_blank'><img src=" + path + archivo + " height=\"120\"></a>";
+                        // verificar si es imagen o pdf
+                        if (get_extension(archivo) == 'pdf')
+                            return "<a href='" + path + archivo + "' target='_blank'>Ver Archivo</a>";
+                        else
+                            return "<a href='" + path + archivo + "' target='_blank'><img src=" + path + archivo + " height=\"120\"></a>";
                     }
                     else
                         return "n/a";
+                }
+
+                function get_extension(filename) {
+                    return filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
                 }
             });
         </script>
