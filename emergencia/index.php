@@ -120,7 +120,7 @@ if (!class_exists('os')) {
                     </div>
                     <div class="form-group" style="padding: 20px 0;">
                         <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Acto de Instrucción</label>
+                            <label class="custom-file-label" for="archivo">Providencia</label>
                             <input type="file" class="custom-file-input" id="archivo4" lang="es" name="archivo4">
                         </div>
                     </div>

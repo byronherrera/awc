@@ -143,7 +143,7 @@ if (!class_exists('os')) {
                     <div class="row" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
-                                <label class="custom-file-label" for="archivo">Acto Instrucción</label>
+                                <label class="custom-file-label" for="archivo">Providencia</label>
                                 <input type="file" class="custom-file-input" id="archivo4" lang="es"
                                        name="archivo4">
                             </div>
