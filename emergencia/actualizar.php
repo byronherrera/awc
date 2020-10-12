@@ -98,7 +98,7 @@ if (!class_exists('os')) {
                     </div>
 
                     <div class="form-group">
-                        <label for="actainfraccion">Número de acta</label>
+                        <label for="actainfraccion">Número de acto</label>
                         <input id="actainfraccion" type="text" name="actainfraccion" class="form-control"
                                placeholder="Ingrese el numero de acta de infración">
                     </div>
@@ -106,7 +106,7 @@ if (!class_exists('os')) {
                     <div class="row" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
-                                <label class="custom-file-label" for="archivo">Imagen Cedula </label>
+                                <label class="custom-file-label" for="archivo">Imagen Cédula </label>
                                 <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1">
                             </div>
                         </div>
@@ -140,10 +140,11 @@ if (!class_exists('os')) {
                             <div id="mostrarimagen3"></div>
                         </div>
                     </div>
+
                     <div class="row" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
-                                <label class="custom-file-label" for="archivo">Providencia</label>
+                                <label class="custom-file-label" for="archivo">Expediente</label>
                                 <input type="file" class="custom-file-input" id="archivo4" lang="es"
                                        name="archivo4">
                             </div>
@@ -152,6 +153,8 @@ if (!class_exists('os')) {
                             <div id="mostrarimagen4"></div>
                         </div>
                     </div>
+
+
 
                     <div class="form-group">
                         <input id="geoposicionamiento" type="hidden" name="geoposicionamiento" class="form-control">
@@ -263,6 +266,7 @@ if (!class_exists('os')) {
                             $('#mostrarimagen3').html(validaImagen(imagenes.archivo3, $urlArchivos))
                             $('#mostrarimagen4').html(validaImagen(imagenes.archivo4, $urlArchivos))
 
+
                             $('#geoposicionamiento').val(data.data[0]['geoposicionamiento'])
 
                             $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción,fecha: " + data.data[0]['fecha_creacion'] + "</h3>")
@@ -284,6 +288,7 @@ if (!class_exists('os')) {
                             $('#mostrarimagen2').html('');
                             $('#mostrarimagen3').html('');
                             $('#mostrarimagen4').html('');
+
 
                             $('.mensajecedula').html("")
                         }

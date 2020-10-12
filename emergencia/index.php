@@ -96,7 +96,7 @@ if (!class_exists('os')) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="actainfraccion">Número de acta</label>
+                        <label for="actainfraccion">Número de acto</label>
                         <input id="actainfraccion" type="text" name="actainfraccion" class="form-control"
                                placeholder="Ingrese el numero de acta de infración">
                     </div>
@@ -120,7 +120,7 @@ if (!class_exists('os')) {
                     </div>
                     <div class="form-group" style="padding: 20px 0;">
                         <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Providencia</label>
+                            <label class="custom-file-label" for="archivo">Expediente</label>
                             <input type="file" class="custom-file-input" id="archivo4" lang="es" name="archivo4">
                         </div>
                     </div>

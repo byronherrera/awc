@@ -92,7 +92,6 @@ function getdataInstruccion($id)
     $sql = "SELECT * FROM amc_expediente  WHERE cedula_ruc = '$id';";
 
 
-
     $result = $os->db->conn->query($sql);
     $resultados = $result->fetchAll(PDO::FETCH_ASSOC);
     if (count($resultados) > 0) {
@@ -134,7 +133,7 @@ function getdataEjecucion($id)
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    $sql = "SELECT * FROM amc_sancion_emergencia  WHERE cedula = '$id';";
+    $sql = "SELECT * FROM amc_libro_diario  WHERE cedula_ruc = '$id' AND es_ejecucion = 1 ;";
 
     $result = $os->db->conn->query($sql);
     $resultados = $result->fetchAll(PDO::FETCH_ASSOC);

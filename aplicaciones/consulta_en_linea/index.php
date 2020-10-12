@@ -105,7 +105,7 @@
         function llamadaDatos(cedula) {
             getContent(cedula, 'actosbioseguridad', '.actosbioseguridad');
             getContent(cedula, 'actosclausura', '.actosclausura');
-            getContent(cedula, 'dataInstruccion', '.dataInstruccion');
+          //  getContent(cedula, 'dataInstruccion', '.dataInstruccion');
             getContent(cedula, 'dataResolucion', '.dataResolucion');
             getContent(cedula, 'dataEjecucion', '.dataEjecucion');
         }
@@ -167,8 +167,10 @@
                     "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(val['zonal']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fecha']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(val['actainfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Fotografía Infracción</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo3, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Providencia</th><td>" + validaImagen(imagenes.archivo4, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
                     "                    </tbody>\n" +
                     "                </table>"
             });
@@ -274,20 +276,21 @@
                     imagenes = JSON.parse(val['imagenacto']);
                 else
                     imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
-                html += "<h3>TRAMITES EN RESOLUCIÓN</h3>" +
+                html += "<h3>TRAMITES EN EJECUCION</h3>" +
                     "                   <table class=\"table\">\n" +
                     "                    <tbody>\n" +
                     "                    <tr><th scope=\"row\">Cédula/Ruc</th><td>" + validaTexto(val['cedula_ruc']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(nombres) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Memo ingreso</th><td>" + validaTexto(val['memo_ingreso']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Nombre Establecimiento</th><td>" + validaTexto(val['nombre_establecimiento']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Fecha Ingreso</th><td>" + validaFecha(val['fecha_ingreso']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Observaciones</th><td>" + validaTexto(val['numero_expediente']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Zonal</th><td>" + validaTexto(val['nombre_establecimiento']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Número Acta</th><td>" + validaTexto(val['numero_memorando']) + "</td></tr>\n" +
-                    /*                    "                    <tr><th scope=\"row\">Imagen Cédula</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
-                                        "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +*/
+                    "                    <tr><th scope=\"row\">Materia</th><td>" + validaTexto(val['ordenanza']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Funcionario Decisor</th><td>" + validaTexto(val['funcionario']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Apela Ejecución</th><td>" + validaTexto(val['numero_memorando']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Estado</th><td>" + validaTexto(val['numero_memorando']) + "</td></tr>\n" +
+                    //"                    <tr><th scope=\"row\">Imagen Acta</th><td>" + validaImagen(imagenes.archivo1, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
                     "                    </tbody>\n" +
                     "                </table>"
+
             });
             return html;
         }
@@ -295,10 +298,18 @@
         function validaImagen(archivo = '', path = '') {
             if ((archivo != null) && (archivo.length > 0)) {
                 var archivo = archivo.replace(/ /g, "%20");
-                return "<a href='" + path + archivo + "' target='_blank'><img src=" + path + archivo + " height=\"150\"></a>";
+                // verificar si es imagen o pdf
+                if (get_extension(archivo) == 'pdf')
+                    return "<a href='" + path + archivo + "' target='_blank'>Ver Archivo</a>";
+                else
+                    return "<a href='" + path + archivo + "' target='_blank'><img src=" + path + archivo + " height=\"120\"></a>";
             }
             else
                 return "n/a";
+        }
+
+        function get_extension(filename) {
+            return filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
         }
 
         function validaTexto(texto) {

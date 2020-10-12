@@ -408,10 +408,12 @@ function insertOperativos()
         "data" => array($data)
     ));
 
+    $today = date("Y-n-j-H-i-s");
     $fichero = 'crudOperativos.log';
     $actual = file_get_contents($fichero);
-    $actual .= $log . "\n";
+    $actual .= $os->get_member_id() . "**" . $today. "**" . "\n". $log . "\n";
     file_put_contents($fichero, $actual);
+
 }
 
 function generaCodigoProcesoOperativo()

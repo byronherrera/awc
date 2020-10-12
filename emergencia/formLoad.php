@@ -297,103 +297,13 @@ function actualizacion()
     $estadoAnterior = getUsuarioExternoData($cedula);
     $imagenesAnteriore = json_decode($estadoAnterior['imagenacto']);
 
+    global $listado;
     $listado = array();
 
-    if ($_FILES['archivo1']['name'] != null) {
-
-        $temp_file_name = $_FILES['archivo1']['tmp_name'];
-
-        $original_file_name = $_FILES['archivo1']['name'];
-        $uploaddir = __DIR__ . "/uploads/";
-
-        $nombreArchivo = $_FILES['archivo1']['name'];
-
-        $vowels = array("[", "]");
-        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
-        $today = date("Y-n-j-H-i");
-
-        $uploadfile = $uploaddir . basename($today . '-cedula-' . $nombreArchivo);
-
-        if (move_uploaded_file($temp_file_name, $uploadfile)) {
-            $listado['archivo1'] = "uploads/" . basename($today . '-cedula-' . $nombreArchivo);
-        }
-    } else {
-        if ($imagenesAnteriore->archivo1 != null) {
-            $listado['archivo1'] = $imagenesAnteriore->archivo1;
-        }
-    }
-
-    if ($_FILES['archivo2']['name'] != null) {
-
-        $temp_file_name = $_FILES['archivo2']['tmp_name'];
-
-        $original_file_name = $_FILES['archivo2']['name'];
-        $uploaddir = __DIR__ . "/uploads/";
-
-        $nombreArchivo = $_FILES['archivo2']['name'];
-
-        $vowels = array("[", "]");
-        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
-        $today = date("Y-n-j-H-i");
-
-        $uploadfile = $uploaddir . basename($today . '-foto-' . $nombreArchivo);
-
-        if (move_uploaded_file($temp_file_name, $uploadfile)) {
-            //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
-            $listado['archivo2'] = "uploads/" . basename($today . '-foto-' . $nombreArchivo);
-        }
-    } else {
-        if ($imagenesAnteriore->archivo2 != null) {
-            $listado['archivo2'] = $imagenesAnteriore->archivo2;
-        }
-    }
-
-    if ($_FILES['archivo3']['name'] != null) {
-
-        $temp_file_name = $_FILES['archivo3']['tmp_name'];
-
-        $original_file_name = $_FILES['archivo3']['name'];
-        $uploaddir = __DIR__ . "/uploads/";
-
-        $nombreArchivo = $_FILES['archivo3']['name'];
-
-        $vowels = array("[", "]");
-        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
-        $today = date("Y-n-j-H-i");
-
-        $uploadfile = $uploaddir . basename($today . '-actoinicio-' . $nombreArchivo);
-
-        if (move_uploaded_file($temp_file_name, $uploadfile)) {
-            $listado['archivo3'] = "uploads/" . basename($today . '-actoinicio-' . $nombreArchivo);
-        }
-    } else {
-        if ($imagenesAnteriore->archivo3 != null) {
-            $listado['archivo3'] = $imagenesAnteriore->archivo3;
-        }
-    }
-
-    if ($_FILES['archivo4']['name'] != null) {
-        $temp_file_name = $_FILES['archivo4']['tmp_name'];
-
-        $original_file_name = $_FILES['archivo4']['name'];
-        $uploaddir = __DIR__ . "/uploads/";
-
-        $nombreArchivo = $_FILES['archivo4']['name'];
-
-        $vowels = array("[", "]");
-        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
-        $today = date("Y-n-j-H-i");
-
-        $uploadfile = $uploaddir . basename($today . '-actoinicio2-' . $nombreArchivo);
-
-        if (move_uploaded_file($temp_file_name, $uploadfile)) {
-            $listado['archivo4'] = "uploads/" . basename($today . '-actoinicio2-' . $nombreArchivo);
-        }
-    } else {
-        if ($imagenesAnteriore->archivo4 != null) {
-            $listado['archivo4'] = $imagenesAnteriore->archivo4;
-        }
-    }
+    ingresaImagen ('archivo1', $cedula, 'cedula' );
+    ingresaImagen ('archivo2', $cedula, 'fotogracia' );
+    ingresaImagen ('archivo3', $cedula, 'actoinicio' );
+    ingresaImagen ('archivo4', $cedula, 'expediente' );
 
     if (count($listado) > 0)
         $data->imagenacto = json_encode($listado);
@@ -412,16 +322,21 @@ function actualizacion()
 
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaCampos .= $clave . " = '" . $valor . "',";
-
+        if ($estadoAnterior[$clave] != $valor) {
+            $cadenaCampos .= $clave . " = '" . $valor . "',";
+        }
     }
 
+    $today = date("Y-n-j-H-i-s");
+
+    $cadenaCampos .= "idactualizacion = '" . $os->get_member_id() . "',";
+    $cadenaCampos .= "fecha_actualizacion  = '" . $today . "',";
 
     $cadenaCampos = substr($cadenaCampos, 0, -1);
 
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "UPDATE `amc_sancion_emergencia` SET  $cadenaCampos WHERE `cedula` = '$cedula'";
-
+    $log = $sql;
 
     $sql = $os->db->conn->prepare($sql);
     $result = $sql->execute();
@@ -436,9 +351,46 @@ function actualizacion()
         "data" => array($data)
     ));
 
+
+    $fichero = 'sancionEmergencia.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $os->get_member_id() . "**" . $today . "**" . "\n" . $log . "\n";
+    file_put_contents($fichero, $actual);
+
     return $data;
 
 }
+
+function ingresaImagen ($archivo, $cedula, $nombre) {
+    global  $listado;
+
+    $estadoAnterior = getUsuarioExternoData($cedula);
+    $imagenesAnteriore = json_decode($estadoAnterior['imagenacto']);
+
+    if ($_FILES[$archivo]['name'] != null) {
+
+        $temp_file_name = $_FILES[$archivo]['tmp_name'];
+
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES[$archivo]['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-'.$nombre. '-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            $listado[$archivo] = "uploads/" . basename($today . '-'.$nombre. '-' . $nombreArchivo);
+        }
+    } else {
+        if ($imagenesAnteriore->{$archivo} != null) {
+            $listado[$archivo] = $imagenesAnteriore->{$archivo};
+        }
+    }
+}
+
 
 function ingresaNuevoProceso()
 {
@@ -529,13 +481,12 @@ function ingresaNuevoProceso()
         $uploadfile = $uploaddir . basename($today . '-actoinicio2-' . $nombreArchivo);
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
-            $listado['archivo4'] = "uploads/" . basename($today . '-actoinicio2-' . $nombreArchivo);
+            $listado['archivo4'] = "uploads/" . basename($today . '-expediente-' . $nombreArchivo);
         }
     }
 
     if (count($listado) > 0)
         $data->imagenacto = json_encode($listado);
-
 
     $data->cedula = $_POST["cedula"];
     $data->nombres = $_POST["nombres"];
