@@ -14,7 +14,7 @@ if(isset($_POST['data'])){
             $temp_file_name = $_FILES['doc-path']['tmp_name'];
 
             $original_file_name = $_FILES['doc-path']['name'];
-            $uploaddir =   __DIR__  . "";
+            $uploaddir =   __DIR__  . "/../../../../archivos/ejecucion/";
 
             $nombreArchivo = $_FILES['doc-path']['name'];
 
@@ -26,7 +26,7 @@ if(isset($_POST['data'])){
 
             if (move_uploaded_file($temp_file_name, $uploadfile)) {
 
-                insertDocumentos('documentos/ejecucion/' .$_POST['data']. '-' . $_FILES['doc-path']['name'], $_POST['data']);
+                insertDocumentos('https://amcmatis.quito.gob.ec/archivos/ejecucion/' .$_POST['data']. '-' . $_FILES['doc-path']['name'], $_POST['data']);
 
             }
 

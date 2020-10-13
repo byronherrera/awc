@@ -1058,6 +1058,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'numero_resolucion', allowBlank: false},
                 {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'memo_ingreso', allowBlank: true},
+                {name: 'url_documento', allowBlank: true},
                 {name: 'fecha_ingreso', allowBlank: true},
                 {name: 'unidad', allowBlank: true},
                 {name: 'unidad_ejecucion', allowBlank: true},
@@ -1142,6 +1143,17 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldLibroDiario},
                 {header: 'es_ejecucion', dataIndex: 'es_ejecucion', width: 100, hidden: true, editor: textFieldLibroDiario},
                 /*{header: 'Memo Ingreso', dataIndex: 'memo_ingreso_ejecucion', allowBlank: true, sortable: true, width: 120, editor: textFieldLibroDiario},*/
+                {
+                    header: 'Adjunto',
+                    dataIndex: 'url_documento',
+                    width: 100,
+                    renderer: function (value, metaData, record) {
+                        if((typeof value != 'undefined') && (value != null )) {
+                            return '<a href="' + value + '" target="_blank">Ver documento</a>';
+                        } else
+                            return ''
+                    }
+                },
                 {
                     header: 'Memo Ingreso',
                     dataIndex: 'memo_ingreso',
