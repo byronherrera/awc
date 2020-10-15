@@ -111,7 +111,7 @@ function getdataResolucion($id)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_libro_diario  WHERE cedula_ruc = '$id' AND es_ejecucion = 0 ;";
+    $sql = "SELECT * FROM amc_libro_diario  WHERE cedula_ruc = '$id' AND es_ejecucion = '0' ;";
 
     $result = $os->db->conn->query($sql);
     $resultados = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -133,7 +133,7 @@ function getdataEjecucion($id)
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    $sql = "SELECT * FROM amc_libro_diario  WHERE cedula_ruc = '$id' AND es_ejecucion = 1 ;";
+    $sql = "SELECT * FROM amc_libro_diario  WHERE cedula_ruc = '$id' AND es_ejecucion = '1' ;";
 
     $result = $os->db->conn->query($sql);
     $resultados = $result->fetchAll(PDO::FETCH_ASSOC);

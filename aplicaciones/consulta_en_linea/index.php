@@ -76,6 +76,76 @@
         </div>
     </div>
 </section>
+
+<div class="container contact-form" id="consulta" style="display: none">
+
+    <h3>CONSULTE SU TRAMITE O SANCION </h3>
+    <P>Actualmente nos encontramos trabajando duramente por poner a disposición de la ciudadanía toda la información que disponemos, en caso de
+    no desplegarse lo solitado llene el siguiente formulario, uno de nuestros funcionarios realizará la búsqueda en nuestro registros, y se contactará con usted.</P>
+    <form enctype="multipart/form-data" id="formulario" method="post">
+        <div class="row">
+
+            <div class="form-group">
+                <label for="cedulaformulario">CEDULA *</label>
+                <input type="text" class="form-control" id="cedulaformulario" name="cedulaformulario" placeholder=""
+                       required="required">
+            </div>
+            <div class="form-group">
+                <label for="nombresformulario">NOMBRES COMPLETOS*</label>
+                <input type="text" class="form-control " id="nombresformulario" name="nombresformulario" required="required"
+                       placeholder="Nombres">
+            </div>
+            <div class="form-group">
+                <label for="apellidosformulario">APELLIDOS COMPLETOS*</label>
+                <input type="text" class="form-control " id="apellidosformulario" name="apellidosformulario" required="required"
+                       placeholder="Apellidos">
+            </div>
+
+            <div class="form-group">
+                <label for="correo">CORREO ELECTRONICO*</label>
+                <input id="correoformulario" type="text" name="correoformulario" class="form-control" required="required"
+                       placeholder="Ingrese su correo">
+            </div>
+            <div class="form-group">
+                <label for="celularformulario">CELULAR</label>
+                <input id="celularformulario" type="text" name="celularformulario" class="form-control" required="required"
+                       placeholder="Ingrese su número celular">
+            </div>
+
+            <div class="form-group">
+                <label for="documentoformulario">DOCUMENTO SOLICITADO (OFICIO, MEMO, EXPEDIENTE, ETC).</label>
+                <textarea class="form-control" id="documentoformulario" name="documentoformulario" required="required"
+                          rows="3" placeholder="Ingrese el número de documento solicitado"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="observacionesformulario">OBSERVACIONES.</label>
+                <textarea class="form-control" id="observacionesformulario" name="observacionesformulario" required="required"
+                          rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="idzonal">Zonal*</label>
+                <select name="idzonal" class="form-control" id="idzonal" required="required"
+                        data-error="requerido.">
+                    <option value=""></option>
+                </select>
+            </div>
+
+            <div class="form-group" style="padding: 20px 0">
+                <div class="form-group col-md-4">
+                    <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="ENVIAR FORMULARIO">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <div class="mensajeformulario"></div>
+                </div>
+                <div class="form-group col-md-4">
+                </div>
+
+            </div>
+    </form>
+</div>
+
 <script src="../vendor/jquery/jquery-1.8.3.min.js"></script>
 <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../vendor/datetimepicker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
@@ -86,12 +156,24 @@
         var existeInformacion = 0;
 
         $("input[name^='cedula']").change(function () {
-            console.log($("input[name^='cedula']").val().length)
+
             if ($("input[name^='cedula']").val().length == 0) return
 
             $('.mensaje').html('<div class="blink_me"><b>Buscando</b></div>');
             cedula = $("input[name^='cedula']").val();
             llamadaDatos(cedula);
+        });
+    // llenar los datos zonal del combobox
+        $.getJSON('formLoad.php?opcion=idzonal', function (data) {
+            if (data.success) {
+                $.each(data.data[0], function (i, el) {
+                    $('#idzonal').append(new Option(el.text, el.valor));
+                });
+                $("#idzonal").val(localStorage.getItem("idzonal"));
+
+            } else {
+
+            }
         });
 
         $("#myForm").on("submit", function (e) {
@@ -104,6 +186,7 @@
         })
 
         function llamadaDatos(cedula) {
+            $("#consulta").show();
             getContent(cedula, 'actosbioseguridad', '.actosbioseguridad');
             getContent(cedula, 'actosclausura', '.actosclausura');
             //  getContent(cedula, 'dataInstruccion', '.dataInstruccion');
@@ -121,18 +204,23 @@
                     switch (opcion) {
                         case 'actosbioseguridad' :
                             html = formatoactosbioseguridad(data)
+                            $("#consulta").hide();
                             break;
                         case 'actosclausura' :
                             html = formatoactosclausura(data)
+                            $("#consulta").hide();
                             break;
                         case 'dataInstruccion' :
                             html = formatodataInstruccion(data)
+                            $("#consulta").hide();
                             break;
                         case 'dataResolucion' :
                             html = formatodataResolucion(data)
+                            $("#consulta").hide();
                             break;
                         case 'dataEjecucion' :
                             html = formatodataEjecucion(data)
+                            $("#consulta").hide();
                             break;
                         default:
                         // code
@@ -308,8 +396,6 @@
         function get_extension(filename) {
             return filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
         }
-
-        validaURL
 
         function validaTexto(texto) {
             if (texto != null)

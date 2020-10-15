@@ -36,7 +36,7 @@ if (!class_exists('os')) {
 
                     <div class="form-group">
                         <label for="cedula">CEDULA INFRACTOR*</label>
-                        <input type="number" class="form-control" id="cedula" name="cedula" placeholder=""
+                        <input type="text" class="form-control" id="cedula" name="cedula" placeholder=""
                                required="required">
                         <div class="mensajecedula"></div>
                     </div>
@@ -133,7 +133,7 @@ if (!class_exists('os')) {
 
                     <div class="form-group" style="padding: 20px 0">
                         <div class="form-group col-md-4">
-                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="Grabar Nuevo">
+                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" id="grabarnuevo" value="Grabar Nuevo">
                         </div>
                       
                         <div class="form-group col-md-4">
@@ -253,21 +253,14 @@ if (!class_exists('os')) {
                 });
 
                 $("#myForm").on("submit", function (e) {
+                    $('#grabarnuevo').hide();
                     $('.mensaje').html('<div class="blink_me"><b>Enviado formulario</b></div>');
                     e.preventDefault();
                     var f = $(this);
                     var formData = new FormData(document.getElementById("myForm"));
                     formData.append("dato", "valor");
 
-                    // actualizamos la hora, a la hora de envio del formulario
-                    /*var dateStr =
-                        date.getFullYear() + "-" + ("00" + (date.getMonth() + 1)).slice(-2) + "-" +
-                        ("00" + date.getDate()).slice(-2) + " " +
-                        ("00" + date.getHours()).slice(-2) + ":" +
-                        ("00" + date.getMinutes()).slice(-2);
 
-                    document.getElementById('fecha').value = dateStr;*/
-                    // fin actualizar hora
 
                     $.ajax({
                         url: 'formLoad.php?opcion=ingreso',
@@ -292,6 +285,7 @@ if (!class_exists('os')) {
 
                         document.getElementById('fecha').value = dateStr;
                         // fin actualizar la hora
+                        $('#grabarnuevo').show();
                     });
                 })
 

@@ -478,7 +478,7 @@ function ingresaNuevoProceso()
         $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
         $today = date("Y-n-j-H-i");
 
-        $uploadfile = $uploaddir . basename($today . '-actoinicio2-' . $nombreArchivo);
+        $uploadfile = $uploaddir . basename($today . '-expediente-' . $nombreArchivo);
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             $listado['archivo4'] = "uploads/" . basename($today . '-expediente-' . $nombreArchivo);

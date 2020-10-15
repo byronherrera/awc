@@ -162,10 +162,14 @@ if (!class_exists('os')) {
 
                     <div class="row" style="clear: both; padding-top: 20px">
                         <div class="form-group col-md-6">
-                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="ACTUALIZAR">
+                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" id="actualizar" value="ACTUALIZAR">
                         </div>
                         <div class="form-group col-md-6">
                             <div class="mensaje"></div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="button" class="btn btn-success btn-send " value="Nuevo"
+                                   onclick="window.location='index.php';">
                         </div>
                     </div>
 
@@ -217,6 +221,7 @@ if (!class_exists('os')) {
                 });
 
                 $("#myForm").on("submit", function (e) {
+                    $('#actualizar').hide();
                     $('.mensaje').html('<div class="blink_me"><b>Enviado formulario</b></div>');
                     e.preventDefault();
                     var f = $(this);
@@ -233,6 +238,7 @@ if (!class_exists('os')) {
                     }).done(function (res) {
                         $('.mensaje').html('<b>Formulario enviado</b>');
                         cargaData();
+                        $('#actualizar').show();
                     });
                 })
 
