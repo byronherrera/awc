@@ -36,7 +36,7 @@ if (!class_exists('os')) {
 
                     <div class="form-group">
                         <label for="cedula">CEDULA INFRACTOR*</label>
-                        <input type="number" class="form-control" id="cedula" name="cedula" placeholder=""
+                        <input type="text" class="form-control" id="cedula" name="cedula" placeholder=""
                                required="required">
                         <div class="mensajecedula"></div>
                     </div>
@@ -161,14 +161,16 @@ if (!class_exists('os')) {
                     </div>
 
                     <div class="row" style="clear: both; padding-top: 20px">
-                        <div class="form-group col-md-6">
-                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" id="actualizar" value="ACTUALIZAR">
-                        </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
+                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" id="actualizar" value="GRABAR">
                             <div class="mensaje"></div>
                         </div>
                         <div class="form-group col-md-4">
-                            <input type="button" class="btn btn-success btn-send " value="Nuevo"
+
+                            <input type="button" class="btn btn-success btn-send " id="botonnuevo" value="Buscar Nuevo">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="button" class="btn btn-success btn-send " value="Nuevo registro"
                                    onclick="window.location='index.php';">
                         </div>
                     </div>
@@ -241,6 +243,13 @@ if (!class_exists('os')) {
                         $('#actualizar').show();
                     });
                 })
+
+                $( "#botonnuevo" ).click(function() {
+                    $('#myForm')[0].reset();
+                    $("input[name^='cedula']").focus();
+                    $('.mensajecedula').html('');
+                    $("#frame").attr("src", "");
+                });
 
                 function cargaData() {
                     // carga iframe con informacion de dinardat
