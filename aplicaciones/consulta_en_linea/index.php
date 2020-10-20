@@ -8,12 +8,12 @@
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="../vendor/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
     <link href="css/form-ifram.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>+
 </head>
 
 <body>
 <div class="container contact-form">
-    <form enctype="multipart/form-data" id="myForm" method="post">
+    <form enctype="multipart/form-data" id="formularioCedula" method="post">
         <div class="row col-md-12">
             <div class="form-group">
                 <label for="cedula">INGRESE CEDULA *</label>
@@ -77,12 +77,12 @@
     </div>
 </section>
 
-<div class="container contact-form" id="consulta" style="display: none">
+<div class="container contact-form" id="consulta" style="display: block">
 
     <h3>CONSULTE SU TRAMITE O SANCION </h3>
     <P>Actualmente nos encontramos trabajando duramente por poner a disposición de la ciudadanía toda la información que disponemos, en caso de
     no desplegarse lo solitado llene el siguiente formulario, uno de nuestros funcionarios realizará la búsqueda en nuestro registros, y se contactará con usted.</P>
-    <form enctype="multipart/form-data" id="formulario" method="post">
+    <form enctype="multipart/form-data" id="formularioConsulta" method="post">
         <div class="row">
 
             <div class="form-group">
@@ -131,13 +131,21 @@
                 </select>
             </div>
 
+            <div class="form-group">
+                <div class="custom-file">
+                    <label class="custom-file-label" for="archivo">Imagen Cédula.</label>
+                    <input type="file" class="custom-file-input" id="archivo1" lang="es" name="archivo1"
+                           required="required" onchange="validarFile(this);">
+                </div>
+            </div>
+
             <div class="form-group" style="padding: 20px 0">
                 <div class="form-group col-md-4">
                     <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="ENVIAR FORMULARIO">
                 </div>
 
                 <div class="form-group col-md-4">
-                    <div class="mensajeformulario"></div>
+                    <div class="mensaje2"></div>
                 </div>
                 <div class="form-group col-md-4">
                 </div>
@@ -176,13 +184,36 @@
             }
         });
 
-        $("#myForm").on("submit", function (e) {
+        $("#formularioCedula").on("submit", function (e) {
             $('.mensaje').html('<div class="blink_me"><b>Buscando</b></div>');
             e.preventDefault();
-            var formData = new FormData(document.getElementById("myForm"));
+            var formData = new FormData(document.getElementById("formularioCedula"));
             formData.append("dato", "valor");
             var cedula = $("input[name^='cedula']").val();
             llamadaDatos(cedula);
+        })
+
+
+        $("#formularioConsulta").on("submit", function (e) {
+
+            $('.mensaje2').html('<div class="blink_me"><b>Enviando</b></div>');
+            e.preventDefault();
+            var formData = new FormData(document.getElementById("formularioConsulta"));
+            //formData.append("dato", "valor");
+            $.ajax({
+                url: 'formLoad.php?opcion=ingresoConsulta',
+                type: "post",
+                dataType: "html",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            }).done(function (res) {
+                $('.mensaje2').html('<p><b>Formulario enviado exitosamente. </br> Recibirá un correo electónico para validar su solicitud.</b></p>');
+
+                // TODO descomentar la siguiente linea en produccion
+                //  $('#myForm')[0].reset();
+            });
         })
 
         function llamadaDatos(cedula) {
@@ -204,27 +235,21 @@
                     switch (opcion) {
                         case 'actosbioseguridad' :
                             html = formatoactosbioseguridad(data)
-                            $("#consulta").hide();
                             break;
                         case 'actosclausura' :
                             html = formatoactosclausura(data)
-                            $("#consulta").hide();
                             break;
                         case 'dataInstruccion' :
                             html = formatodataInstruccion(data)
-                            $("#consulta").hide();
                             break;
                         case 'dataResolucion' :
                             html = formatodataResolucion(data)
-                            $("#consulta").hide();
                             break;
                         case 'dataEjecucion' :
                             html = formatodataEjecucion(data)
-                            $("#consulta").hide();
                             break;
-                        default:
-                        // code
                     }
+                    //$("#consulta").hide();
                     $(destino).html(html)
                 } else {
                     if (!existeInformacion)
@@ -417,18 +442,41 @@
             else
                 return "";
         }
+
+
+
     });
+
+    function validarFile(all)
+    {
+        //EXTENSIONES Y TAMANO PERMITIDO.
+        var extensiones_permitidas = [".png",".jpg", ".jpeg", ".pdf", ".doc", ".docx" ];
+        var tamano = 8; // EXPRESADO EN MB.
+        var rutayarchivo = all.value;
+        var ultimo_punto = all.value.lastIndexOf(".");
+        var extension = rutayarchivo.slice(ultimo_punto, rutayarchivo.length);
+        if(extensiones_permitidas.indexOf(extension) == -1)
+        {
+            alert("Extensión de archivo no valida");
+            document.getElementById(all.id).value = "";
+            return; // Si la extension es no válida ya no chequeo lo de abajo.
+        }
+        if((all.files[0].size / 1048576) > tamano)
+        {
+            alert("El archivo no puede superar los "+tamano+"MB");
+            document.getElementById(all.id).value = "";
+            return;
+        }
+    }
 </script>
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101563972-2"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
-
     function gtag() {
         dataLayer.push(arguments);
     }
-
     gtag('js', new Date());
     gtag('config', 'UA-101563972-2');
 </script>

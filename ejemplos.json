@@ -1,43 +1,45 @@
 {
-  "id": "emergencia",
-  "type": "desktop/emergencia",
+  "id": "consultaciudadana",
+  "type": "desktop/consultaciudadana",
   "about": {
     "author": "",
-    "description": "Mantenimiento de Emergencia.",
-    "name": "Ventana Emergencia",
+    "description": "Mantenimiento de Consultaciudadana.",
+    "name": "Ventana Consultaciudadana",
     "url": "",
     "version": "1.0"
   },
   "server": {
     "methods": [
-      { "name": "accesosAdministrador", "description": "Full acceso" },
-      { "name": "accesosSecretaria", "description": "Full acceso" },
-      { "name": "accesosZonales", "description": "Personal de zonales" }
-
+      { "name": "accesosSecretaria", "description": "Funcionarios de secretaria general/secretarios abogados" },
+      { "name": "accesosInstruccion", "description": "Funcionarios de instruccion" },
+      { "name": "accesosResolucion", "description": "Funcionarios de resolucion" },
+      { "name": "accesosEjecucion", "description": "Funcionarios de Ejecucion" },
+      { "name": "accesosAdministrador", "description": "Administrador reasigna quien revisa tramite" },
+      { "name": "accesosConsultas", "description": "Accesos solo de lectura" }
     ],
-    "class": "QoEmergencia",
-    "file": "desktop/emergencia/emergencia.php"
+    "class": "QoConsultaciudadana",
+    "file": "desktop/consultaciudadana/consultaciudadana.php"
   },
   "client": {
-    "class": "QoDesk.EmergenciaWindow",
+    "class": "QoDesk.ConsultaciudadanaWindow",
     "css": [
       {
-        "directory": "desktop/emergencia/client/resources/",
+        "directory": "desktop/consultaciudadana/client/resources/",
         "files": [ "styles.css" ]
       },
       {
         "directory": "common/libraries/",
-        "files": [  "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css"   ]
+        "files": [ "datetime/date-time-ux.css", "Spinner/Spinner.css", "MultiSelect.css"  ]
       }
     ],
     "javascript": [
       {
-        "directory": "common/libraries/",
-        "files": [ "AppMsg.js","datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
+        "directory": "desktop/consultaciudadana/client/",
+        "files": [  "consultaciudadana-win.js" ]
       },
       {
-        "directory": "desktop/emergencia/client/",
-        "files": [  "emergencia-win.js" ]
+        "directory": "common/libraries/",
+        "files": [ "datetime/date-time-ux.js","CheckColumn.js", "Spinner/SpinnerField.js", "Spinner/Spinner.js","MultiSelect.js"  ]
       },
       {
         "directory": "qwiki/admin/client/",
@@ -50,10 +52,10 @@
     ],
     "launcher": {
       "config": {
-        "iconCls": "emergencia-icon",
-        "shortcutIconCls": "emergencia-shortcut",
-        "text": "Emergencia",
-        "tooltip": "<b>Emergencia</b>"
+        "iconCls": "consultaciudadana-icon",
+        "shortcutIconCls": "consultaciudadana-shortcut",
+        "text": "Consultaciudadana",
+        "tooltip": "<b>Consultaciudadana gestion</b>"
       },
       "paths": {
         "startmenu": "/"

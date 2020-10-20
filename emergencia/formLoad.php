@@ -29,6 +29,8 @@ switch ($opcion) {
         // graba en base de datos
         $data = ingresaNuevoProceso();
         break;
+
+
     case "actualizacion":
         // graba en base de datos
         $data = actualizacion();
