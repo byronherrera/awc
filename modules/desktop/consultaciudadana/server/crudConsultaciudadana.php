@@ -7,7 +7,7 @@ if (!$os->session_exists()) {
 }
 
 
-function selectAllanamiento()
+function selectConsultaciudadana()
 {
     global $os;
 
@@ -25,7 +25,7 @@ function selectAllanamiento()
     );
 }
 
-function insertAllanamiento()
+/*function insertConsultaciudadana()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -46,30 +46,57 @@ function insertAllanamiento()
             )
         )
     ));
-}
+} */
 
-function updateAllanamiento()
+function updateConsultaciudadana()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode($_POST["data"]);
     if (is_null($data))
         $data = json_decode(stripslashes($_POST["data"]));
+    $cadenaSql = '';
+    $finalizado = false;
+    if ($data->secretaria_estado == 'En proceso') {
+        $data->secretaria_fecha_inicio = date('Y-m-d H:i:s');
+        $cadenaSql .= ", secretaria_fecha_inicio =" . "'". $data->secretaria_fecha_inicio ."'";
+
+        $data->secretaria_id_secretaria = $os->get_member_id();
+        $cadenaSql .= ", secretaria_id_secretaria =" . "'". $data->secretaria_id_secretaria ."'";
+    }
+
+    if ($data->secretaria_estado == 'Finalizado') {
+        $data->secretaria_fecha_finalizado = date('Y-m-d H:i:s');
+        $cadenaSql .= ", secretaria_fecha_finalizado =" . "'". $data->secretaria_fecha_finalizado ."' ";
+        $finalizado = true;
+    }
+
 
     $sql = "UPDATE amc_proc_solicitud_informacion SET
-            nombre='$data->nombre',
-            activo='$data->activo'
-	  WHERE amc_proc_solicitud_informacion.id = '$data->id' ";
+            secretaria_estado='$data->secretaria_estado'  
+            $cadenaSql 
+	  WHERE id = '$data->id' ";
+    $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
+
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode(),
+        "data" => $data,
+        "finalizado" => $finalizado
     ));
+
+    // genero archivo de log
+    $fichero = 'consultas_ciudadanas.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $log . "\n";
+    file_put_contents($fichero, $actual);
+
 }
 
 
-function deleteAllanamiento()
+/*function deleteConsultaciudadana()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
@@ -80,9 +107,9 @@ function deleteAllanamiento()
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Registro, eliminado exitosamente" : $sql->errorCode()
     ));
-}
+}*/
 
-function selectAllanamientoForm()
+function selectConsultaciudadanaForm()
 {
     global $os;
     $id = (int)$_POST ['id'];
@@ -128,19 +155,19 @@ function selectAllanamientoForm()
 
 switch ($_GET['operation']) {
     case 'select' :
-        selectAllanamiento();
+        selectConsultaciudadana();
         break;
     case 'insert' :
-        insertAllanamiento();
+        insertConsultaciudadana();
         break;
     case 'update' :
-        updateAllanamiento();
+        updateConsultaciudadana();
         break;
     case 'delete' :
-        deleteAllanamiento();
+        deleteConsultaciudadana();
         break;
     case 'selectForm' :
-        selectAllanamientoForm();
+        selectConsultaciudadanaForm();
         break;
 
     case 'negarDenuncia' :
@@ -158,15 +185,15 @@ function negar()
     $id = (int)$_POST ['id'];
     $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
 
-    $sql  = "UPDATE amc_proc_solicitud_informacion 
+    $sql = "UPDATE amc_proc_solicitud_informacion 
             SET secretaria_procesado='true', secretaria_confirmed='false',secretaria_motivonegar='$motivoNegarDenuncia', secretaria_fecha_procesado =  CURDATE() WHERE (`id`='$id')";
-echo $sql;
+    echo $sql;
     $sql = $os->db->conn->prepare($sql);
     $resultado = $sql->execute();
 
     //enviar mensaje a usuari
     $mensaje = getmensaje('negar', '', '', '', $motivoNegarDenuncia);
- //   $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
+    //   $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
     $envioMail = '';
     ////////////////////////
     ///
@@ -275,7 +302,8 @@ Adicionalmente estas son las causas para no aprobar una denuncia: <br><br>
 }
 
 
-function cors() {
+function cors()
+{
 
     // Allow from any origin
     if (isset($_SERVER['HTTP_ORIGIN'])) {

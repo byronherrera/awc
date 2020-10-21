@@ -4,7 +4,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
 
     init: function () {
         this.launcher = {
-            text: 'Consultaciudadana',
+            text: 'Consulta ciudadana',
             iconCls: 'consultaciudadana-icon',
             handler: this.createWindow,
             scope: this
@@ -16,9 +16,6 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         // define a que tiene acceso los funcionario de acuerdo al perfil
 
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
-        var accesosInstruccion = this.app.isAllowedTo('accesosInstruccion', this.id);
-        var accesosResolucion = this.app.isAllowedTo('accesosResolucion', this.id);
-        var accesosEjecucion = this.app.isAllowedTo('accesosEjecucion', this.id);
         var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
         var accesosConsultas = this.app.isAllowedTo('accesosConsultas', this.id);
 
@@ -30,6 +27,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         this.urlConsultaciudadanaLocal = urlConsultaciudadanaLocal;
         var winWidth = desktop.getWinWidth();
         var winHeight = desktop.getWinHeight();
+
         //inicio combo activo
         storeSASINO = new Ext.data.JsonStore({
             root: 'users',
@@ -75,35 +73,41 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         });
 
         function renderGeneraImagen(value, id, r) {
-            return '<input type="button" value="Genera Imagen' + value + ' " id="' + value + '"/>';
+            var url = Ext.util.JSON.decode(value);
+            return '<a href="' + url.archivo1 + ' " target="_blank">Ver Cédula</\>';
         }
 
-        function llenaVideo(canvasId, videoSubidoId, nombreArchivoSubido) {
-            var canvas = document.getElementById(canvasId);
-            var video = document.getElementById(videoSubidoId);
-            canvas.width = 200;
-            canvas.height = 157;
-            canvas.getContext('2d').drawImage(video, 0, 0, 300, 150);
+        //inicio combo Estado consulta
+        storeESTCONS = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 'Emitido', "nombre": "Emitido"},
+                    {"id": 'En proceso', "nombre": "En proceso"},
+                    {"id": 'Finalizado', "nombre": "Finalizado"}
+                ]
+            }
+        });
 
-            var Pic = document.getElementById(canvasId).toDataURL("image/png");
-            Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "")
+        var comboESTCONS = new Ext.form.ComboBox({
+            id: 'comboOPNICO',
+            store: storeESTCONS,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
 
-            Ext.Ajax.request({
-                url: urlConsultaciudadanaLocal + 'uploadimagen.php',
-                method: 'POST',
-                params: {
-                    imageData: Pic,
-                    nombreArchivoSubido: nombreArchivoSubido
-                },
-                success: function (response, opts) {
-                    var obj = Ext.decode(response.responseText);
-
-                },
-                failure: function (response, opts) {
-                    console.log('server-side failure with status code ' + response.status);
-                }
-            });
+        function estadoConsultaCiudadanan(id) {
+            var index = storeESTCONS.findExact('id', id);
+            if (index > -1) {
+                var record = storeESTCONS.getAt(index);
+                return record.get('nombre');
+            }
         }
+        //fin combo combo Estado consulta
 
         //Consultaciudadana tab
         var proxyConsultaciudadana = new Ext.data.HttpProxy({
@@ -111,7 +115,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
 
                 create: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=insert",
                 read: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=select",
-                update: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=upda",
+                update: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=update",
                 destroy: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=delete"
             }
         });
@@ -136,15 +140,13 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 {name: 'imagencedula', allowBlank: false},
                 {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: true},
 
-                {name: 'secretaria_id_secretaria', allowBlank: false},
-                {name: 'secretaria_confirmed', allowBlank: false},
-                {name: 'secretaria_motivonegar', allowBlank: false},
-                {name: 'secretaria_fecha_procesado', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'secretaria_sitra_respuesta', allowBlank: false},
-                {name: 'secretaria_url_respuesta', allowBlank: false},
-                {name: 'secretaria_procesado', allowBlank: false},
+                {name: 'secretaria_id_secretaria', allowBlank: true},
+                {name: 'secretaria_estado', allowBlank: false},
+                {name: 'secretaria_fecha_inicio', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'secretaria_fecha_finalizado', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'secretaria_sitra_respuesta', allowBlank: true},
+                {name: 'secretaria_observacion', allowBlank: true}
 
-                {name: 'ip', allowBlank: false}
             ]
         });
 
@@ -169,34 +171,45 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             widht: '100%',
             store: storeConsultaciudadana, columns: [
                 new Ext.grid.RowNumberer({width: 40})
-                , {header: 'Id', dataIndex: 'id', sortable: true, width: 60, scope: this}
+                , {header: 'Id', dataIndex: 'id', sortable: true, width: 50, scope: this}
                 , {
-                    header: 'Finalizado',
-                    dataIndex: 'secretaria_confirmed',
+                    header: 'Encargado',
+                    dataIndex: 'secretaria_id_secretaria',
                     sortable: true,
-                    width: 170,
-                    scope: this
-                }
-                , {
-                    header: 'SITRA',
-                    dataIndex: 'secretaria_sitra_respuesta',
-                    sortable: true,
-                    width: 70,
-                    scope: this
-                }
-                , {
-                    header: 'Procesado',
-                    dataIndex: 'secretaria_procesado',
+                    width: 90,
+                    scope: this,
+                    hidden: true
+                }, {
+                    header: 'Estado',
+                    dataIndex: 'secretaria_estado',
                     sortable: true,
                     width: 70,
-                    scope: this
+                    scope: this,
+                    editor: comboESTCONS,
+                    renderer: estadoConsultaCiudadanan
                 }
                 , {
-                    header: 'Fecha respuesta',
-                    dataIndex: 'secretaria_fecha_procesado',
+                    header: 'Fecha Inicio',
+                    dataIndex: 'secretaria_fecha_inicio',
                     sortable: true,
                     width: 100,
+                    scope: this,
                     renderer: formatDate
+                }
+                , {
+                    header: 'Fecha Fin',
+                    dataIndex: 'secretaria_fecha_finalizado',
+                    sortable: true,
+                    width: 100,
+                    scope: this,
+                    renderer: formatDate
+                }
+                , {
+                    header: 'Respuesta SITRA',
+                    dataIndex: 'secretaria_sitra_respuesta',
+                    sortable: true,
+                    width: 120,
+                    scope: this
                 }
 
                 , {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 70, scope: this}
@@ -205,14 +218,15 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'Correo electronico', dataIndex: 'correoelectronico', sortable: true, width: 180, scope: this}
                 , {header: 'Celular', dataIndex: 'celular', sortable: true, width: 100, scope: this}
                 , {header: 'Zonal', dataIndex: 'zonal', sortable: true, width: 80, scope: this}
-                , {header: 'Imagen cédula', dataIndex: 'imagenaluae', sortable: true, width: 50, scope: this}
+                , {header: 'Imagen cédula', dataIndex: 'imagencedula', sortable: true, width: 70, scope: this, renderer: renderGeneraImagen}
                 , {header: 'Fecha', dataIndex: 'fecha', sortable: true, width: 100, renderer: formatDate}
-                , {header: 'observaciones', dataIndex: 'observaciones', sortable: true, width: 280, scope: this}
+                , {header: 'observaciones', dataIndex: 'observaciones', sortable: true, width: 180, scope: this}
             ],
             viewConfig: {
                 forceFit: false,
                 getRowClass: function (record, index) {
-                    if (record.get('procesado') == 'false') return 'gold';
+                    if (record.get('secretaria_estado') == 'Emitido') return 'gold';
+                    if (record.get('secretaria_estado') == 'En proceso') return 'bluestate';
                 }
             },
             sm: new Ext.grid.RowSelectionModel({
@@ -249,6 +263,22 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             border: false,
             stripeRows: true,
             // paging bar on the bottom
+            listeners: {
+                beforeedit: function (e) {
+                    // si el operativo ya esta marcado como finalizado no se lo puede editar
+                    if (acceso) {
+                        if (gridBlockOperativos) {
+                            //verifico que si no es administrador se bloque la edicion
+                            if (!accesosAdministradorOpe)
+                                return false;
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+
             bbar: new Ext.PagingToolbar({
                 pageSize: limiteconsultaciudadana,
                 store: storeConsultaciudadana,

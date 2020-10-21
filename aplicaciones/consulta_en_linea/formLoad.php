@@ -84,7 +84,7 @@ function ingresaPedidoInformacion()
     if ($_FILES['archivo1']['name'] != null) {
 
         $temp_file_name = $_FILES['archivo1']['tmp_name'];
-        $uploaddir = __DIR__ . "/uploads/";
+        $uploaddir = __DIR__ . "/../../archivos/consulta_en_linea/";
 
         $nombreArchivo = $_FILES['archivo1']['name'];
 
@@ -95,7 +95,7 @@ function ingresaPedidoInformacion()
         $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
-            $listado1['archivo1'] = "uploads/" . basename($today . '-' . $nombreArchivo);
+            $listado1['archivo1'] = "archivos/consulta_en_linea/" . basename($today . '-' . $nombreArchivo);
         }
     }
 
