@@ -12,7 +12,8 @@ function selectConsultaciudadana()
     global $os;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_proc_solicitud_informacion ORDER BY id";
+    $sql = "SELECT * FROM amc_proc_solicitud_informacion ORDER BY FIELD(secretaria_estado,  'En proceso', 'Emitido', 'Finalizado'), fecha";
+
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -59,23 +60,18 @@ function updateConsultaciudadana()
     $finalizado = false;
     if ($data->secretaria_estado == 'En proceso') {
         $data->secretaria_fecha_inicio = date('Y-m-d H:i:s');
-        $cadenaSql .= ", secretaria_fecha_inicio =" . "'". $data->secretaria_fecha_inicio ."'";
-
+        $cadenaSql .= ", secretaria_fecha_inicio = '". $data->secretaria_fecha_inicio ."'";
         $data->secretaria_id_secretaria = $os->get_member_id();
-        $cadenaSql .= ", secretaria_id_secretaria =" . "'". $data->secretaria_id_secretaria ."'";
+        $cadenaSql .= ", secretaria_id_secretaria = '". $data->secretaria_id_secretaria ."'";
     }
 
     if ($data->secretaria_estado == 'Finalizado') {
         $data->secretaria_fecha_finalizado = date('Y-m-d H:i:s');
-        $cadenaSql .= ", secretaria_fecha_finalizado =" . "'". $data->secretaria_fecha_finalizado ."' ";
+        $cadenaSql .= ", secretaria_fecha_finalizado = '". $data->secretaria_fecha_finalizado ."' ";
         $finalizado = true;
     }
 
-
-    $sql = "UPDATE amc_proc_solicitud_informacion SET
-            secretaria_estado='$data->secretaria_estado'  
-            $cadenaSql 
-	  WHERE id = '$data->id' ";
+    $sql = "UPDATE amc_proc_solicitud_informacion SET secretaria_estado='$data->secretaria_estado' $cadenaSql WHERE id = '$data->id';";
     $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -90,7 +86,7 @@ function updateConsultaciudadana()
     // genero archivo de log
     $fichero = 'consultas_ciudadanas.log';
     $actual = file_get_contents($fichero);
-    $actual .= $log . "\n";
+    $actual .= $os->get_member_id() . "\n" . $log . "\n\n";
     file_put_contents($fichero, $actual);
 
 }
@@ -127,26 +123,13 @@ function selectConsultaciudadanaForm()
     $data['cedula2'] = $data['cedula'];
     $data['totalallanamiento'] = totalpedidos($data['cedula']);
 
-    if (strlen($data['imagenasolicitud']) > 0) {
-        $link1 = json_decode($data['imagenasolicitud']);
-        $data['imagenasolicitud'] = "<a href='aplicaciones/reconocimiento-responsabilidad/" . $link1->archivo1 . "' target='_blank'>Ver solicitud</a>";;
+    if (strlen($data['imagencedula']) > 0) {
+        $link = json_decode($data['imagencedula']);
+        $data['imagencedula'] = "<a href='" . $link->archivo1 . "' target='_blank'>Ver cédula</a>";;
     } else {
-        $data['imagenasolicitud'] = '';
+        $data['imagencedula'] = '';
     }
-
-    if (strlen($data['imagenaluae']) > 0) {
-        $link2 = json_decode($data['imagenaluae']);
-        $data['imagenaluae'] = "<a href='aplicaciones/reconocimiento-responsabilidad/" . $link2->archivo2 . "' target='_blank'>Ver LUAE</a>";
-    } else {
-        $data['imagenaluae'] = '';
-    }
-    if (strlen($data['imagenactoinicio']) > 0) {
-        $link3 = json_decode($data['imagenactoinicio']);
-        $data['imagenactoinicio'] = "<a href='aplicaciones/reconocimiento-responsabilidad/" . $link3->archivo3 . "' target='_blank'>Ver Acto de Inicio</a>";
-    } else {
-        $data['imagenactoinicio'] = '';
-    }
-
+ 
     echo json_encode(array(
             "success" => true,
             "data" => $data)

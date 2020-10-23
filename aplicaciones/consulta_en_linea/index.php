@@ -212,7 +212,7 @@
                 $('.mensaje2').html('<p><b>Formulario enviado exitosamente. </br> Recibirá un correo electónico para validar su solicitud.</b></p>');
 
                 // TODO descomentar la siguiente linea en produccion
-                //  $('#myForm')[0].reset();
+                //  $('#formularioConsulta')[0].reset();
             });
         })
 
@@ -450,7 +450,7 @@
     function validarFile(all)
     {
         //EXTENSIONES Y TAMANO PERMITIDO.
-        var extensiones_permitidas = [".png",".jpg", ".jpeg", ".pdf", ".doc", ".docx" ];
+        var extensiones_permitidas = [".png",   ".jpg", ".jpeg", ".pdf", ".doc", ".docx" ];
         var tamano = 8; // EXPRESADO EN MB.
         var rutayarchivo = all.value;
         var ultimo_punto = all.value.lastIndexOf(".");
@@ -474,9 +474,11 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101563972-2"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
+
     function gtag() {
         dataLayer.push(arguments);
     }
+
     gtag('js', new Date());
     gtag('config', 'UA-101563972-2');
 </script>

@@ -19,6 +19,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
         var accesosConsultas = this.app.isAllowedTo('accesosConsultas', this.id);
 
+        var acceso = (accesosSecretaria || accesosAdministrador) ? true : false
 
         var win = desktop.getWindow('grid-win-consultaciudadana');
 
@@ -107,6 +108,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo combo Estado consulta
 
         //Consultaciudadana tab
@@ -188,6 +190,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                     editor: comboESTCONS,
                     renderer: estadoConsultaCiudadanan
                 }
+                , {header: 'Fecha pedido', dataIndex: 'fecha', sortable: true, width: 100, renderer: formatDate}
                 , {
                     header: 'Fecha Inicio',
                     dataIndex: 'secretaria_fecha_inicio',
@@ -215,13 +218,27 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 70, scope: this}
                 , {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 120, scope: this}
                 , {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 120, scope: this}
-                , {header: 'Correo electronico', dataIndex: 'correoelectronico', sortable: true, width: 180, scope: this}
+                , {
+                    header: 'Correo electronico',
+                    dataIndex: 'correoelectronico',
+                    sortable: true,
+                    width: 180,
+                    scope: this
+                }
                 , {header: 'Celular', dataIndex: 'celular', sortable: true, width: 100, scope: this}
                 , {header: 'Zonal', dataIndex: 'zonal', sortable: true, width: 80, scope: this}
-                , {header: 'Imagen cédula', dataIndex: 'imagencedula', sortable: true, width: 70, scope: this, renderer: renderGeneraImagen}
-                , {header: 'Fecha', dataIndex: 'fecha', sortable: true, width: 100, renderer: formatDate}
+                , {
+                    header: 'Imagen cédula',
+                    dataIndex: 'imagencedula',
+                    sortable: true,
+                    width: 70,
+                    scope: this,
+                    renderer: renderGeneraImagen
+                }
+
                 , {header: 'observaciones', dataIndex: 'observaciones', sortable: true, width: 180, scope: this}
             ],
+            clicksToEdit: 1,
             viewConfig: {
                 forceFit: false,
                 getRowClass: function (record, index) {
@@ -267,10 +284,13 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
-                        if (gridBlockOperativos) {
-                            //verifico que si no es administrador se bloque la edicion
-                            if (!accesosAdministradorOpe)
-                                return false;
+                        // si
+                        if (accesosAdministrador)
+                            return true;
+
+                        if (e.field == 'secretaria_estado') {
+                            if (e.value == 'Finalizado')
+                                return false
                         }
                         return true;
                     } else {
@@ -395,15 +415,10 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                 items: [
                                     {xtype: 'hidden', name: 'id'},
                                     {xtype: 'hidden', name: 'fecha'},
-                                    {xtype: 'hidden', name: 'urlconsultaciudadana'},
                                     {xtype: 'hidden', name: 'nombres'},
                                     {xtype: 'hidden', name: 'apellidos'},
                                     {xtype: 'hidden', name: 'cedula'},
                                     {xtype: 'hidden', name: 'correoelectronico'},
-
-                                    {xtype: 'hidden', name: 'ampliacionconsultaciudadana'},
-                                    {xtype: 'hidden', name: 'direccionconsultaciudadanado'},
-                                    {xtype: 'hidden', name: 'geoposicionamiento2'},
                                     {
                                         xtype: 'displayfield',
                                         fieldLabel: 'Fecha',
@@ -443,7 +458,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                     , {xtype: 'displayfield', fieldLabel: 'Cédula', name: 'cedula2'}
                                     , {
                                         xtype: 'compositefield',
-                                        fieldLabel: 'Teléfonos',
+                                        fieldLabel: 'Teléfono',
                                         msgTarget: 'under',
                                         items: [
                                             {
@@ -455,17 +470,9 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                             }
                                         ]
                                     },
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'Dirección domicilio',
-                                        name: 'domicilio',
-                                        anchor: '96%'
-                                    }
                                 ]
                             },
                             {
-
-
                                 cls: 'fondogris',
                                 columnWidth: 1 / 3,
                                 layout: 'form',
@@ -474,44 +481,21 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                     {
                                         xtype: 'displayfield',
                                         hideLabel: true,
-                                        value: '2. DATOS DE LA INFRACCIÓN',
+                                        value: '2. DATOS DE LA SOLICITUD',
                                         cls: 'negrilla',
                                         anchor: '95%'
                                     },
+                                   /* {xtype: 'displayfield', fieldLabel: 'materia ??', name: 'materia', anchor: '96%'},*/
                                     {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'materia',
-                                        name: 'materia',
+                                        fieldLabel: 'Zonal',
+                                        name: 'zonal',
                                         anchor: '96%'
                                     },
                                     {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'tipoadministrador',
-                                        name: 'tipoadministrador',
-                                        anchor: '96%'
-                                    },
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'establecimiento',
-                                        name: 'establecimiento',
-                                        anchor: '96%'
-                                    },
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'ubicacion',
-                                        name: 'ubicacion',
-                                        anchor: '96%'
-                                    },
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'actividad',
-                                        name: 'actividad',
-                                        anchor: '96%'
-                                    },
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'descripcion',
-                                        name: 'descripcion',
+                                        fieldLabel: 'solicitud',
+                                        name: 'solicitud',
                                         anchor: '96%'
                                     },
                                     {
@@ -522,8 +506,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                     },
                                     {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'fechaacto',
-                                        name: 'fechaacto',
+                                        fieldLabel: 'imagencedula',
+                                        name: 'imagencedula',
                                         anchor: '96%'
                                     }
                                 ]
@@ -536,44 +520,40 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                     {
                                         xtype: 'displayfield',
                                         hideLabel: true,
-                                        value: '3. ANEXOS',
+                                        value: '3. Respuesta Secretaria General',
                                         cls: 'negrilla',
                                         anchor: '95%'
                                     }
                                     , {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'Solicitud Consulta Ciudadana',
-                                        name: 'imagenasolicitud'
+                                        fieldLabel: 'Funcionario Atiende',
+                                        name: 'secretaria_id_secretaria'
                                     }
                                     , {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'LUAE',
-                                        name: 'imagenaluae'
+                                        fieldLabel: 'Estado',
+                                        name: 'secretaria_estado'
+                                    }
+
+
+                                    , {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'Fecha Inicio',
+                                        name: 'secretaria_fecha_inicio'
                                     }
                                     , {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'Acto Inicio',
-                                        name: 'imagenactoinicio'
-                                    }
-                                    , {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'Motivo negar',
-                                        name: 'motivonegar',
-                                        anchor: '95%'
-                                    }
-                                    , {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'Total pedidos anteriores',
-                                        name: 'totalconsultaciudadana',
+                                        fieldLabel: 'Fecha Finalizado',
+                                        name: 'secretaria_fecha_finalizado',
                                         anchor: '95%'
                                     },
-                                    {
+                                     {
                                         xtype: 'textfield',
                                         fieldLabel: 'SITRA',
-                                        name: 'codigo_tramite',
+                                        name: 'secretaria_sitra_respuesta',
                                         anchor: '95%',
                                         allowBlank: false,
-                                        id: 'codigo_tramite_formulario',
+                                        id: 'secretaria_sitra_respuesta',
                                         listeners: {
                                             'change': function (value, newValue, oldValue) {
                                                 if (newValue != oldValue) {
@@ -584,11 +564,11 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                     },
                                     {
                                         xtype: 'textfield',
-                                        fieldLabel: 'Motivo negar',
-                                        name: 'motivoNegarDenuncia',
+                                        fieldLabel: 'Observaciones',
+                                        name: 'secretaria_observacion',
                                         anchor: '95%',
                                         allowBlank: false,
-                                        id: 'motivoNegarDenuncia',
+                                        id: 'secretaria_observacion',
                                         listeners: {
                                             'change': function (value, newValue, oldValue) {
                                                 if (newValue != oldValue) {
