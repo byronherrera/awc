@@ -60,14 +60,24 @@ function updateConsultaciudadana()
     $finalizado = false;
     if ($data->secretaria_estado == 'En proceso') {
         $data->secretaria_fecha_inicio = date('Y-m-d H:i:s');
-        $cadenaSql .= ", secretaria_fecha_inicio = '". $data->secretaria_fecha_inicio ."'";
+        $cadenaSql .= ", secretaria_fecha_inicio = '" . $data->secretaria_fecha_inicio . "'";
         $data->secretaria_id_secretaria = $os->get_member_id();
-        $cadenaSql .= ", secretaria_id_secretaria = '". $data->secretaria_id_secretaria ."'";
+        $cadenaSql .= ", secretaria_id_secretaria = '" . $data->secretaria_id_secretaria . "'";
     }
 
     if ($data->secretaria_estado == 'Finalizado') {
+        if ((strlen($data->secretaria_sitra_respuesta) > 0) || (!isset($data->secretaria_sitra_respuesta)) || (strlen($data->secretaria_observacion) > 0)|| (!isset($data->secretaria_observacion))) {
+            $data->secretaria_estado == 'En proceso';
+            echo json_encode(array(
+                "success" => false,
+                "msg" => "Faltan respuesta SITRA y Observaciones",
+                "message" => "Faltan respuesta SITRA y Observaciones"
+            ));
+            return;
+        }
+
         $data->secretaria_fecha_finalizado = date('Y-m-d H:i:s');
-        $cadenaSql .= ", secretaria_fecha_finalizado = '". $data->secretaria_fecha_finalizado ."' ";
+        $cadenaSql .= ", secretaria_fecha_finalizado = '" . $data->secretaria_fecha_finalizado . "' ";
         $finalizado = true;
     }
 
@@ -92,25 +102,12 @@ function updateConsultaciudadana()
 }
 
 
-/*function deleteConsultaciudadana()
-{
-    global $os;
-    $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_proc_solicitud_informacion WHERE id=$id";
-    $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
-    echo json_encode(array(
-        "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Registro, eliminado exitosamente" : $sql->errorCode()
-    ));
-}*/
-
 function selectConsultaciudadanaForm()
 {
     global $os;
     $id = (int)$_POST ['id'];
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_proc_solicitud_informacion WHERE id = $id";
+    $sql = "SELECT * FROM amc_proc_solicitud_informacion a WHERE id = $id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -121,7 +118,7 @@ function selectConsultaciudadanaForm()
     $data['apellidos2'] = $data['apellidos'];
     $data['correoelectronico2'] = $data['correoelectronico'];
     $data['cedula2'] = $data['cedula'];
-    $data['totalallanamiento'] = totalpedidos($data['cedula']);
+    $data['totalconsultaciudadana'] = totalpedidos($data['cedula']);
 
     if (strlen($data['imagencedula']) > 0) {
         $link = json_decode($data['imagencedula']);
@@ -129,7 +126,8 @@ function selectConsultaciudadanaForm()
     } else {
         $data['imagencedula'] = '';
     }
- 
+
+
     echo json_encode(array(
             "success" => true,
             "data" => $data)
@@ -153,84 +151,41 @@ switch ($_GET['operation']) {
         selectConsultaciudadanaForm();
         break;
 
-    case 'negarDenuncia' :
-        negar();
-        break;
+
     case 'aprobarDenuncia' :
         aprobar();
         break;
 }
 
-function negar()
-{
-    global $os;
-
-    $id = (int)$_POST ['id'];
-    $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
-
-    $sql = "UPDATE amc_proc_solicitud_informacion 
-            SET secretaria_procesado='true', secretaria_confirmed='false',secretaria_motivonegar='$motivoNegarDenuncia', secretaria_fecha_procesado =  CURDATE() WHERE (`id`='$id')";
-    echo $sql;
-    $sql = $os->db->conn->prepare($sql);
-    $resultado = $sql->execute();
-
-    //enviar mensaje a usuari
-    $mensaje = getmensaje('negar', '', '', '', $motivoNegarDenuncia);
-    //   $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
-    $envioMail = '';
-    ////////////////////////
-    ///
-    if ($resultado) {
-        echo json_encode(array(
-            "success" => true,
-            "msg" => "Contenido actualizado exitosamente " . $envioMail
-        ));
-    } else {
-        echo json_encode(array(
-            "success" => false,
-            "msg" => "Error en la base de datos."
-        ));
-    }
-
-}
 
 function aprobar()
 {
-    global $databaseAMC;
-    $id = (int)$_POST ['id'];
-    $codigo_tramite = $_POST ['codigo_tramite'];
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET asignado='Secretaria' WHERE (`id`='$id')");
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET codigo_tramite= '$codigo_tramite' WHERE (`id`='$id')");
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET confirmed='true' WHERE (`id`='$id')");
-    $query = "UPDATE amc_denuncias_web SET prosesado='true' WHERE (`id`='$id')";
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $data = $_POST;
 
-    $mensaje = getmensaje('aprobar', $_POST ['nombre'], $codigo_tramite, $id);
-    $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
+    $secretariaRespeusta = (isset($data["secretaria_sitra_respuesta"])) ? $data["secretaria_sitra_respuesta"] : '';
+    $secretariaObservacion = (isset($data["secretaria_observacion"])) ? $data["secretaria_observacion"]: '';
+    $id = $data["id"];
 
-    /*
-     *                 $email = regresaEmail($funcionario);
-                $asunto = "Tarea asignada, " . " - " . $email;
-                $funcionarios = ["katherine.montenegro@quito.gob.ec", "andrea.garcia@quito.gob.ec"];
-                $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "pamela.parreno@quito.gob.ec"];
-                $from = 'Planificación - Agencia Metropolitana de Control';
-                $prueba = false;
-                 enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
+    $sql = "UPDATE amc_proc_solicitud_informacion SET secretaria_sitra_respuesta='$secretariaRespeusta', 
+            secretaria_observacion='$secretariaObservacion'
+            WHERE id = '$id';";
+    $log = $sql;
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
 
-     *
-     */
+    echo json_encode(array(
+        "success" => $sql->errorCode() == 0,
+        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode(),
+        "data" => $data
+    ));
 
-    if ($databaseAMC->Query($query)
-    ) {
-        echo json_encode(array(
-            "success" => true,
-            "msg" => "Contenido actualizado exitosamente" . $envioMail
-        ));
-    } else {
-        echo json_encode(array(
-            "success" => false,
-            "msg" => "Error en la base de datos."
-        ));
-    }
+    // genero archivo de log
+    $fichero = 'consultas_ciudadanas.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $os->get_member_id() . "\n" . $log . "\n\n";
+    file_put_contents($fichero, $actual);
 }
 
 function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $motivo = '')

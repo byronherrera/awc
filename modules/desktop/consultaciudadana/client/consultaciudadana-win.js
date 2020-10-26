@@ -22,7 +22,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         var acceso = (accesosSecretaria || accesosAdministrador) ? true : false
 
         var win = desktop.getWindow('grid-win-consultaciudadana');
-
+        var AppMsg = new Ext.AppMsg({});
         var urlConsultaciudadanaLocal = "modules/desktop/consultaciudadana/server/";
 
         this.urlConsultaciudadanaLocal = urlConsultaciudadanaLocal;
@@ -68,11 +68,6 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             return value ? value.dateFormat('Y-m-d H:i') : '';
         }
 
-        var formatoFechaMax = new Ext.form.DateField({
-            format: 'Y-m-d',
-            background: '#0000ff'
-        });
-
         function renderGeneraImagen(value, id, r) {
             var url = Ext.util.JSON.decode(value);
             return '<a href="' + url.archivo1 + ' " target="_blank">Ver Cédula</\>';
@@ -98,7 +93,12 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
-            mode: 'local'
+            mode: 'local',
+            listeners: {
+                change: function (field, val, valOld) {
+                    console.log (field, val, valOld)
+                }
+            }
         });
 
         function estadoConsultaCiudadanan(id) {
@@ -119,6 +119,15 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 read: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=select",
                 update: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=update",
                 destroy: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=delete"
+            },
+            listeners: {
+                exception: function (proxy, type, action, options, response, arg) {
+                    if (typeof response.message !== 'undefined') {
+                        if (response.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, response.message);
+                        }
+                    }
+                }
             }
         });
 
@@ -251,28 +260,19 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 listeners: {
                     rowselect: function (sm, row, rec) {
                         this.record = rec;
-                        this.idDenunciasRecuperada = rec.id;
+
                         /*cargar el formulario*/
                         cargaDetalle(rec.id, this.formConsultaciudadanaDetalle, rec);
-                        Ext.getCmp('tb_negarconsultaciudadana').setDisabled(true);
-                        if (accesosSecretaria) {
-                            if (this.record.get("procesado") == 'true') {
-                                //         Ext.getCmp('tb_negarconsultaciudadana').setDisabled(true);
-                                Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(true);
-                                Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
-                                Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
+
+                        if (acceso) {
+                            if (this.record.get("secretaria_estado") != 'En proceso') {
+                                Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
                             }
                             else {
-                                //       Ext.getCmp('tb_negarconsultaciudadana').setDisabled(false);
-                                // Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(false);
-                                Ext.getCmp('motivoNegarDenuncia').setDisabled(false);
-                                Ext.getCmp('codigo_tramite_formulario').setDisabled(false);
+                                Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(false);
                             }
                         } else {
-                            //    Ext.getCmp('tb_negarconsultaciudadana').setDisabled(true);
-                            Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(true);
-                            Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
-                            Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
+                            Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
                         }
                     }
                 }
@@ -284,16 +284,18 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
-                        // si
+
                         if (accesosAdministrador)
                             return true;
-
                         if (e.field == 'secretaria_estado') {
-                            if (e.value == 'Finalizado')
+                            // en caso que ya este finalizado no se puede editar
+                            if (e.value == 'Finalizado') {
                                 return false
+                            }
                         }
                         return true;
                     } else {
+                        // si no se tiene acceso se bloquea el registro
                         return false;
                     }
                 }
@@ -376,26 +378,17 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 width: winWidth - 24,
                 tbar: [
                     {
-                        text: 'Receptar solicitud consultaciudadana',
+                        text: 'Grabar cambios',
                         scope: this,
-                        handler: this.aprobarconsultaciudadana,
+                        handler: this.grabarconsultaciudadana,
                         iconCls: 'save-icon',
                         disabled: true,
-                        id: 'tb_aprobarconsultaciudadana',
-                        formBind: true
-                    }, {
-                        text: 'Devolver solicitud consultaciudadana',
-                        scope: this,
-                        handler: this.negarconsultaciudadana,
-                        iconCls: 'save-icon',
-                        disabled: true,
-                        id: 'tb_negarconsultaciudadana',
+                        id: 'tb_grabarconsultaciudadana',
                         formBind: true
                     },
-
                     '->',
                     {
-                        text: 'Denuncias anteriores:'
+                        text: 'Solicitudes anteriores:'
                         , xtype: 'tbtext',
                         id: 'textDenunciasAnteriores'
                     }
@@ -485,7 +478,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                         cls: 'negrilla',
                                         anchor: '95%'
                                     },
-                                   /* {xtype: 'displayfield', fieldLabel: 'materia ??', name: 'materia', anchor: '96%'},*/
+                                    /* {xtype: 'displayfield', fieldLabel: 'materia ??', name: 'materia', anchor: '96%'},*/
                                     {
                                         xtype: 'displayfield',
                                         fieldLabel: 'Zonal',
@@ -547,20 +540,13 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                         name: 'secretaria_fecha_finalizado',
                                         anchor: '95%'
                                     },
-                                     {
+                                    {
                                         xtype: 'textfield',
                                         fieldLabel: 'SITRA',
                                         name: 'secretaria_sitra_respuesta',
                                         anchor: '95%',
                                         allowBlank: false,
-                                        id: 'secretaria_sitra_respuesta',
-                                        listeners: {
-                                            'change': function (value, newValue, oldValue) {
-                                                if (newValue != oldValue) {
-                                                    Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(false);
-                                                }
-                                            }
-                                        }
+                                        id: 'secretaria_sitra_respuesta'
                                     },
                                     {
                                         xtype: 'textfield',
@@ -572,7 +558,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                         listeners: {
                                             'change': function (value, newValue, oldValue) {
                                                 if (newValue != oldValue) {
-                                                    Ext.getCmp('tb_negarconsultaciudadana').setDisabled(false);
+
                                                 }
                                             }
                                         }
@@ -850,7 +836,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         }
         win.show();
 
-        function cargaDetalle(consultaciudadana, forma, bloqueo) {
+        function cargaDetalle(consultaciudadana, forma) {
             forma = Ext.getCmp('formConsultaciudadanaDetalle');
             forma.getForm().load({
                 waitMsg: 'Recuperando información',
@@ -860,11 +846,9 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 },
                 success: function (response, opts) {
                     mensaje = Ext.getCmp('textDenunciasAnteriores');
-                    mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (response.findField('totalconsultaciudadana').getValue() - 1))
+                    mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
                 }
-
             });
-
         };
 
         function bloquearLectura(forma, activar) {
@@ -884,7 +868,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         };
 
     },
-    aprobarconsultaciudadana: function () {
+    grabarconsultaciudadana: function () {
         store = this.storeConsultaciudadana;
 
         var urlConsultaciudadanaLocal = this.urlConsultaciudadanaLocal;
@@ -912,8 +896,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                     codigo_tramite: dataReceived.data
                                 },
                                 success: function (form, action) {
-                                    Ext.getCmp('tb_negarconsultaciudadana').setDisabled(true);
-                                    Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(true);
+
+                                    Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
                                     storeConsultaciudadana.load();
                                 },
                                 failure: function (form, action) {
@@ -945,46 +929,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         });
 
     },
-    negarconsultaciudadana: function () {
-        store = this.storeConsultaciudadana;
-        var urlConsultaciudadanaLocal = this.urlConsultaciudadanaLocal;
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Desea negar el consultaciudadana, .<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    Ext.getCmp('codigo_tramite_formulario').setValue("n/a");
 
-                    var myForm = Ext.getCmp('formConsultaciudadanaDetalle').getForm();
-
-                    myForm.submit({
-                        url: urlConsultaciudadanaLocal + 'crudConsultaciudadana.php?operation=negarDenuncia',
-                        method: 'POST',
-                        waitMsg: 'Saving data',
-                        success: function (form, action) {
-                            Ext.getCmp('tb_negarconsultaciudadana').setDisabled(true);
-                            Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(true);
-                            // store.load();
-                        },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
-                            Ext.Msg.show({
-                                title: 'Error campos obligatorios'
-                                , msg: errorJson.msg
-                                , modal: true
-                                , icon: Ext.Msg.ERROR
-                                , buttons: Ext.Msg.OK
-                            });
-                        }
-                    });
-                }
-            }
-
-        });
-    },
 
     requestConsultaciudadanaParticipantesData: function () {
         this.storeConsultaciudadanaParticipantes.load();
