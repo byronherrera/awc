@@ -7,12 +7,13 @@ if (!$os->session_exists()) {
 }
 
 
-function selectConsultaciudadana()
+function selectMensajesConsultas()
 {
     global $os;
+    $id = (int)$_POST ['id'];
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_proc_solicitud_informacion ORDER BY FIELD(secretaria_estado,  'En proceso', 'Emitido', 'Finalizado'), fecha";
+    $sql = "SELECT * FROM amc_proc_solicitud_detalle WHERE id_solicitud = $id ORDER BY fecha_envio ";
 
     $result = $os->db->conn->query($sql);
     $data = array();
@@ -26,13 +27,13 @@ function selectConsultaciudadana()
     );
 }
 
-/*function insertConsultaciudadana()
+/*function insertMensajesConsultas()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
 
-    $sql = "INSERT INTO amc_proc_solicitud_informacion (nombre, activo )
+    $sql = "INSERT INTO amc_proc_solicitud_detalle (nombre, activo )
 	values('$data->nombre','$data->activo');";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -49,7 +50,7 @@ function selectConsultaciudadana()
     ));
 } */
 
-function updateConsultaciudadana()
+function updateMensajesConsultas()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -70,7 +71,7 @@ function updateConsultaciudadana()
 
     if ($data->secretaria_estado == 'Finalizado') {
         //recuperar valores grabados de secretaria_sitra_respuesta y secretaria_observacion
-        $sql = "SELECT secretaria_sitra_respuesta, secretaria_observacion FROM amc_proc_solicitud_informacion WHERE id = '$data->id'";
+        $sql = "SELECT secretaria_sitra_respuesta, secretaria_observacion FROM amc_proc_solicitud_detalle WHERE id = '$data->id'";
         $sql = $os->db->conn->query($sql);
 
         $rownombre = $sql->fetch(PDO::FETCH_ASSOC);
@@ -93,7 +94,7 @@ function updateConsultaciudadana()
         $finalizado = true;
     }
 
-    $sql = "UPDATE amc_proc_solicitud_informacion SET secretaria_estado='$data->secretaria_estado' $cadenaSql WHERE id = '$data->id';";
+    $sql = "UPDATE amc_proc_solicitud_detalle SET secretaria_estado='$data->secretaria_estado' $cadenaSql WHERE id = '$data->id';";
     $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -114,12 +115,12 @@ function updateConsultaciudadana()
 }
 
 
-function selectConsultaciudadanaForm()
+function selectMensajesConsultasForm()
 {
     global $os;
     $id = (int)$_POST ['id'];
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_proc_solicitud_informacion a WHERE id = $id";
+    $sql = "SELECT * FROM amc_proc_solicitud_detalle a WHERE id = $id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -130,7 +131,7 @@ function selectConsultaciudadanaForm()
     $data['apellidos2'] = $data['apellidos'];
     $data['correoelectronico2'] = $data['correoelectronico'];
     $data['cedula2'] = $data['cedula'];
-    $data['totalconsultaciudadana'] = totalpedidos($data['cedula']);
+    $data['totalMensajesConsultas'] = totalpedidos($data['cedula']);
 
     if (strlen($data['imagencedula']) > 0) {
         $link = json_decode($data['imagencedula']);
@@ -148,19 +149,19 @@ function selectConsultaciudadanaForm()
 
 switch ($_GET['operation']) {
     case 'select' :
-        selectConsultaciudadana();
+        selectMensajesConsultas();
         break;
     case 'insert' :
-        insertConsultaciudadana();
+        insertMensajesConsultas();
         break;
     case 'update' :
-        updateConsultaciudadana();
+        updateMensajesConsultas();
         break;
     case 'delete' :
-        deleteConsultaciudadana();
+        deleteMensajesConsultas();
         break;
     case 'selectForm' :
-        selectConsultaciudadanaForm();
+        selectMensajesConsultasForm();
         break;
 
 
@@ -180,7 +181,7 @@ function aprobar()
     $secretariaObservacion = (isset($data["secretaria_observacion"])) ? $data["secretaria_observacion"]: '';
     $id = $data["id"];
 
-    $sql = "UPDATE amc_proc_solicitud_informacion SET secretaria_sitra_respuesta='$secretariaRespeusta', 
+    $sql = "UPDATE amc_proc_solicitud_detalle SET secretaria_sitra_respuesta='$secretariaRespeusta', 
             secretaria_observacion='$secretariaObservacion'
             WHERE id = '$id';";
     $log = $sql;
@@ -284,7 +285,7 @@ function totalpedidos($cedula)
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
 
-    $sql = "SELECT COUNT(*) AS total FROM amc_proc_solicitud_informacion WHERE cedula = '$cedula'";
+    $sql = "SELECT COUNT(*) AS total FROM amc_proc_solicitud_detalle WHERE cedula = '$cedula'";
     $nombre = $os->db->conn->query($sql);
 
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
