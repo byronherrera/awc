@@ -25,29 +25,28 @@ function selectOrdenanzas()
         } else {
             $listadoCampos = array(
                 'memo_ingreso',
-                'numero_resolucion',
                 'fecha_envio',
-                'fecha_ingreso_ejecucion',
-                'numero_expediente_ejecucion',
+                //'fecha_ingreso_ejecucion',
+                //'numero_expediente_ejecucion',
                 'numero_expediente',
-                'fojas_ejecucion',
-                'unidad_ejecucion',
-                'tipo_zona_ejecucion',
+                //'fojas_ejecucion',
+                //'unidad_ejecucion',
+                //'tipo_zona_ejecucion',
                 'unidad',
                 'tipo_unidad',
-                'nombre_administrado_ejecucion',
+                //'nombre_administrado_ejecucion',
                 'nombre_administrado',
                 'cedula_ruc',
 //                'articulo_numeral',
-                'nombre_denunciante',
-                'nombre_establecimiento_ejecucion',
+                //'nombre_denunciante',
+                //'nombre_establecimiento_ejecucion',
                 'nombre_establecimiento',
-                'articulo_ejecucion',
-                'numero_resolucion',
+                //'articulo_ejecucion',
+                //'numero_resolucion',
 //                'funcionario',
-                'fecha_resolucion',
-                'fecha_sorteo_ejecucion',
-                'observaciones_ejecucion',
+               // 'fecha_resolucion',
+                //'fecha_sorteo_ejecucion',
+                //'observaciones_ejecucion',
             );
             $cadena = '';
             foreach ($listadoCampos as &$valor) {
@@ -55,7 +54,7 @@ function selectOrdenanzas()
             }
 
             $cadena = substr($cadena,0,-3);
-            $where = " WHERE ($cadena ";
+            $where = " WHERE $cadena ";
         }
 
     }
