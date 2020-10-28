@@ -27,7 +27,7 @@ function selectMensajesConsultas()
     );
 }
 
-/*function insertMensajesConsultas()
+function insertMensajesConsultas()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -48,7 +48,7 @@ function selectMensajesConsultas()
             )
         )
     ));
-} */
+}
 
 function updateMensajesConsultas()
 {
@@ -58,60 +58,34 @@ function updateMensajesConsultas()
     if (is_null($data))
         $data = json_decode(stripslashes($_POST["data"]));
 
-    $cadenaSql = '';
+    $estadoAnterior = getEstadoOriginal($data->id);
 
-    $finalizado = false;
-
-    if ($data->secretaria_estado == 'En proceso') {
-        $data->secretaria_fecha_inicio = date('Y-m-d H:i:s');
-        $cadenaSql .= ", secretaria_fecha_inicio = '" . $data->secretaria_fecha_inicio . "'";
-        $data->secretaria_id_secretaria = $os->get_member_id();
-        $cadenaSql .= ", secretaria_id_secretaria = '" . $data->secretaria_id_secretaria . "'";
-    }
-
-    if ($data->secretaria_estado == 'Finalizado') {
-        //recuperar valores grabados de secretaria_sitra_respuesta y secretaria_observacion
-        $sql = "SELECT secretaria_sitra_respuesta, secretaria_observacion FROM amc_proc_solicitud_detalle WHERE id = '$data->id'";
-        $sql = $os->db->conn->query($sql);
-
-        $rownombre = $sql->fetch(PDO::FETCH_ASSOC);
-        $secretaria_observacion =  $rownombre['secretaria_observacion'];
-        $secretaria_sitra_respuesta =  $rownombre['secretaria_sitra_respuesta'];
-
-        if ((strlen($secretaria_observacion) == 0) || (!isset($secretaria_observacion)) || (strlen($secretaria_sitra_respuesta) == 0)|| (!isset($secretaria_sitra_respuesta))) {
-            $data->secretaria_estado == 'En proceso';
-            echo json_encode(array(
-                "success" => false,
-                "msg" => "Faltan respuesta SITRA y Observaciones",
-                "message" => "Faltan respuesta SITRA y Observaciones"
-            ));
-            return;
+    $cadenaDatos = '';
+    foreach ($data as $clave => $valor) {
+        // verifico cambios anteriores
+        if ($estadoAnterior[$clave] != $valor) {
+            if ($valor === '')
+                $cadenaDatos = $cadenaDatos . $clave . " = NULL,";
+            else
+                $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
         }
-
-        $data->secretaria_fecha_finalizado = date('Y-m-d H:i:s');
-        $cadenaSql .= ", secretaria_fecha_finalizado = '" . $data->secretaria_fecha_finalizado . "' ";
-
-        $finalizado = true;
     }
 
-    $sql = "UPDATE amc_proc_solicitud_detalle SET secretaria_estado='$data->secretaria_estado' $cadenaSql WHERE id = '$data->id';";
+    $cadenaDatos = substr($cadenaDatos, 0, -1);
+    $sql = "UPDATE amc_proc_solicitud_detalle SET  $cadenaDatos  WHERE id = '$data->id' ";
     $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
-
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode(),
-        "data" => $data,
-        "finalizado" => $finalizado
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos_personal actualizado exitosamente" : $sql->errorCode()
     ));
 
     // genero archivo de log
-    $fichero = 'consultas_ciudadanas.log';
+    $fichero = 'consultas_ciudadanas_mensajes.log';
     $actual = file_get_contents($fichero);
     $actual .= $os->get_member_id() . "\n" . $log . "\n\n";
     file_put_contents($fichero, $actual);
-
 }
 
 
@@ -178,7 +152,7 @@ function aprobar()
     $data = $_POST;
 
     $secretariaRespeusta = (isset($data["secretaria_sitra_respuesta"])) ? $data["secretaria_sitra_respuesta"] : '';
-    $secretariaObservacion = (isset($data["secretaria_observacion"])) ? $data["secretaria_observacion"]: '';
+    $secretariaObservacion = (isset($data["secretaria_observacion"])) ? $data["secretaria_observacion"] : '';
     $id = $data["id"];
 
     $sql = "UPDATE amc_proc_solicitud_detalle SET secretaria_sitra_respuesta='$secretariaRespeusta', 
@@ -290,4 +264,19 @@ function totalpedidos($cedula)
 
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['total'];
+}
+
+
+function getEstadoOriginal($id)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id != '') {
+        $sql = "SELECT *
+            FROM amc_proc_solicitud_detalle WHERE id = " . $id;
+        $nombre = $os->db->conn->query($sql);
+        $rowData = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rowData;
+    } else
+        return '* No asignado';
 }

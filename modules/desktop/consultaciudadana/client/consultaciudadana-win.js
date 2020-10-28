@@ -212,7 +212,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         this.gridConsultaciudadana = new Ext.grid.EditorGridPanel({
             height: 200,
             widht: '100%',
-            store: storeConsultaciudadana, columns: [
+            store: storeConsultaciudadana,
+            columns: [
                 new Ext.grid.RowNumberer({width: 40})
                 , {header: 'Id', dataIndex: 'id', sortable: true, width: 50, scope: this}
                 , {
@@ -292,15 +293,14 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 listeners: {
                     rowselect: function (sm, row, rec) {
                         this.record = rec;
-
-
-
                         /*cargar el formulario*/
                         cargaDetalle(rec.id);
 
-                        storeMensajesConsultas.baseParams.id  = rec.id;
+                        //   storeMensajesConsultas.baseParams.id  = rec.id;
+                        var id_local = rec.id;
+                        storeMensajesConsultas.baseParams.id = id_local;
                         storeMensajesConsultas.load();
-
+                        this.record.get("secretaria_estado")
                         if (acceso) {
                             if (this.record.get("secretaria_estado") != 'En proceso') {
                                 Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
@@ -460,7 +460,11 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 }
             ],
             viewConfig: {
-                forceFit: true
+                forceFit: true,
+                getRowClass: function (record, index) {
+                    return 'gold'
+//                    return 'multiline-row';
+                }
             },
             sm: new Ext.grid.RowSelectionModel(
                 {
@@ -472,17 +476,21 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             // paging bar on the bottom
             listeners: {
                 beforeedit: function (e) {
+                    return true
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
                         // verifico variable que permite editar o no
+                        gridBlockOperativos = true;
                         if (gridBlockOperativos) {
                             //verifico que si no es administrador se bloque la edicion
-                            if (!accesosAdministradorOpe)
-                                return false;
+                            if (!accesosAdministradorOpe) {
+
+                                //return false;
+                            }
                         }
-                        return true;
+                        //  return true;
                     } else {
-                        return false;
+                        //  return false;
                     }
                 }
             }
@@ -556,7 +564,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_entidad',
                     sortable: true,
                     width: 30,
-                    hidden:true
+                    hidden: true
                 },
                 {
                     header: 'contenido',
@@ -578,9 +586,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 20,
                     align: 'left',
-                    renderer: personaEnviaRespuesta,
-                    editor: comboCCM
-
+                    renderer: personaEnviaRespuesta
+                    //, editor: comboCCM
                 },
                 {
                     header: 'fecha_envio',
@@ -588,7 +595,6 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 60,
                     renderer: formatDate
-
                 }
             ],
             viewConfig: {
@@ -605,8 +611,10 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             listeners: {
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
+                    return true
                     if (acceso) {
                         // verifico variable que permite editar o no
+                        var gridBlockOperativos = true
                         if (gridBlockOperativos) {
                             //verifico que si no es administrador se bloque la edicion
                             if (!accesosAdministradorOpe)
@@ -614,6 +622,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                         }
                         return true;
                     } else {
+                        return false;
                         return false;
                     }
                 }
@@ -968,21 +977,30 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                                             //TODO funcion nuevo
                                                             handler: this.addoperativosParticipantes,
                                                             iconCls: 'save-icon',
-                                                            disabled: true,
+//                                                            disabled: true,
                                                             id: 'addoperativoparticipantes'
                                                             //disabled: !acceso
                                                         },
-                                                        /*                                                         '-',
-                                                                                                                 {
-                                                                                                                     text: "Eliminar",
-                                                                                                                     scope: this,
-                                                                                                                     handler: this.deleteoperativosPersonal,
-                                                                                                                     handler: this.deleteoperativosParticipantes,
-                                                                                                                     id: 'borraroperativoparticipantes',
-                                                                                                                     iconCls: 'delete-icon',
-                                                                                                                     //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                                                                                     disabled: true
-                                                                                                                 }*/
+                                                        '-',
+                                                        {
+                                                            text: "Eliminar",
+                                                            scope: this,
+                                                            handler: this.deleteoperativosParticipantes,
+                                                            id: 'borraroperativoparticipantes',
+                                                            iconCls: 'delete-icon',
+                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+  //                                                          disabled: true
+                                                        },
+                                                        '-',
+                                                        {
+                                                            text: "Enviar Mensaje",
+                                                            scope: this,
+                                                            handler: this.deleteoperativosParticipantes,
+                                                            id: 'envioMensajeDetalle',
+                                                            iconCls: 'send-icon',
+                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+//                                                            disabled: true
+                                                        }
                                                     ]
                                                 },
                                             ]

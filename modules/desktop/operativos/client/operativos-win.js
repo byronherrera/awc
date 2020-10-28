@@ -2523,7 +2523,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 ]
             });
 
-
             var checkHandler = function (item, checked) {
                 if (checked) {
                     var store = this.storeOperativos;
