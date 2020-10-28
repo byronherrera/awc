@@ -4,7 +4,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
 
     init: function () {
         this.launcher = {
-            text: 'Consultaciudadana',
+            text: 'Consulta ciudadana',
             iconCls: 'consultaciudadana-icon',
             handler: this.createWindow,
             scope: this
@@ -16,20 +16,19 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         // define a que tiene acceso los funcionario de acuerdo al perfil
 
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
-        var accesosInstruccion = this.app.isAllowedTo('accesosInstruccion', this.id);
-        var accesosResolucion = this.app.isAllowedTo('accesosResolucion', this.id);
-        var accesosEjecucion = this.app.isAllowedTo('accesosEjecucion', this.id);
         var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
         var accesosConsultas = this.app.isAllowedTo('accesosConsultas', this.id);
 
+        var acceso = (accesosSecretaria || accesosAdministrador) ? true : false
 
         var win = desktop.getWindow('grid-win-consultaciudadana');
-
+        var AppMsg = new Ext.AppMsg({});
         var urlConsultaciudadanaLocal = "modules/desktop/consultaciudadana/server/";
 
         this.urlConsultaciudadanaLocal = urlConsultaciudadanaLocal;
         var winWidth = desktop.getWinWidth();
         var winHeight = desktop.getWinHeight();
+
         //inicio combo activo
         storeSASINO = new Ext.data.JsonStore({
             root: 'users',
@@ -69,41 +68,80 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             return value ? value.dateFormat('Y-m-d H:i') : '';
         }
 
-        var formatoFechaMax = new Ext.form.DateField({
-            format: 'Y-m-d',
-            background: '#0000ff'
+        function renderGeneraImagen(value, id, r) {
+            var url = Ext.util.JSON.decode(value);
+            return '<a href="' + url.archivo1 + ' " target="_blank">Ver Cédula</\>';
+        }
+
+        //inicio combo persona recepta la operativos CCM
+        storeCCM = new Ext.data.JsonStore({
+            root: 'data',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            url: 'modules/common/combos/combos.php?tipo=personalsecretaria',
+            baseParams: {
+                todos: 'true',
+                accesosAdministradorOpe: true,
+                accesosOperativos: true,
+                acceso: true
+            }
+
         });
 
-        function renderGeneraImagen(value, id, r) {
-            return '<input type="button" value="Genera Imagen' + value + ' " id="' + value + '"/>';
+        var comboCCM = new Ext.form.ComboBox({
+            id: 'comboCCM',
+            store: storeCCM,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local',
+            //forceSelection: true,
+            allowBlank: true
+        });
+
+        function personaEnviaRespuesta(id) {
+            //var index = storeCCM.findExact('id', id);
+            var index = storeCCM.findExact('id', id);
+            if (index > -1) {
+                var record = storeCCM.getAt(index);
+                return record.get('nombre');
+            }
         }
 
-        function llenaVideo(canvasId, videoSubidoId, nombreArchivoSubido) {
-            var canvas = document.getElementById(canvasId);
-            var video = document.getElementById(videoSubidoId);
-            canvas.width = 200;
-            canvas.height = 157;
-            canvas.getContext('2d').drawImage(video, 0, 0, 300, 150);
+        //fin combo persona recepta la operativos CCM
 
-            var Pic = document.getElementById(canvasId).toDataURL("image/png");
-            Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "")
+        //inicio combo Estado consulta
+        storeESTCONS = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 'Emitido', "nombre": "Emitido"},
+                    {"id": 'En proceso', "nombre": "En proceso"},
+                    {"id": 'Finalizado', "nombre": "Finalizado"}
+                ]
+            }
+        });
 
-            Ext.Ajax.request({
-                url: urlConsultaciudadanaLocal + 'uploadimagen.php',
-                method: 'POST',
-                params: {
-                    imageData: Pic,
-                    nombreArchivoSubido: nombreArchivoSubido
-                },
-                success: function (response, opts) {
-                    var obj = Ext.decode(response.responseText);
+        var comboESTCONS = new Ext.form.ComboBox({
+            id: 'comboOPNICO',
+            store: storeESTCONS,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
 
-                },
-                failure: function (response, opts) {
-                    console.log('server-side failure with status code ' + response.status);
-                }
-            });
+        function estadoConsultaCiudadanan(id) {
+            var index = storeESTCONS.findExact('id', id);
+            if (index > -1) {
+                var record = storeESTCONS.getAt(index);
+                return record.get('nombre');
+            }
         }
+
+        //fin combo combo Estado consulta
 
         //Consultaciudadana tab
         var proxyConsultaciudadana = new Ext.data.HttpProxy({
@@ -111,8 +149,17 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
 
                 create: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=insert",
                 read: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=select",
-                update: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=upda",
+                update: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=update",
                 destroy: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=delete"
+            },
+            listeners: {
+                exception: function (proxy, type, action, options, response, arg) {
+                    if (typeof response.message !== 'undefined') {
+                        if (response.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, response.message);
+                        }
+                    }
+                }
             }
         });
 
@@ -136,15 +183,13 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 {name: 'imagencedula', allowBlank: false},
                 {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: true},
 
-                {name: 'secretaria_id_secretaria', allowBlank: false},
-                {name: 'secretaria_confirmed', allowBlank: false},
-                {name: 'secretaria_motivonegar', allowBlank: false},
-                {name: 'secretaria_fecha_procesado', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'secretaria_sitra_respuesta', allowBlank: false},
-                {name: 'secretaria_url_respuesta', allowBlank: false},
-                {name: 'secretaria_procesado', allowBlank: false},
+                {name: 'secretaria_id_secretaria', allowBlank: true},
+                {name: 'secretaria_estado', allowBlank: false},
+                {name: 'secretaria_fecha_inicio', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'secretaria_fecha_finalizado', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'secretaria_sitra_respuesta', allowBlank: true},
+                {name: 'secretaria_observacion', allowBlank: true}
 
-                {name: 'ip', allowBlank: false}
             ]
         });
 
@@ -169,50 +214,77 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             widht: '100%',
             store: storeConsultaciudadana, columns: [
                 new Ext.grid.RowNumberer({width: 40})
-                , {header: 'Id', dataIndex: 'id', sortable: true, width: 60, scope: this}
+                , {header: 'Id', dataIndex: 'id', sortable: true, width: 50, scope: this}
                 , {
-                    header: 'Finalizado',
-                    dataIndex: 'secretaria_confirmed',
+                    header: 'Encargado',
+                    dataIndex: 'secretaria_id_secretaria',
                     sortable: true,
-                    width: 170,
-                    scope: this
-                }
-                , {
-                    header: 'SITRA',
-                    dataIndex: 'secretaria_sitra_respuesta',
-                    sortable: true,
-                    width: 70,
-                    scope: this
-                }
-                , {
-                    header: 'Procesado',
-                    dataIndex: 'secretaria_procesado',
+                    width: 90,
+                    scope: this,
+                    hidden: true
+                }, {
+                    header: 'Estado',
+                    dataIndex: 'secretaria_estado',
                     sortable: true,
                     width: 70,
-                    scope: this
+                    scope: this,
+                    editor: comboESTCONS,
+                    renderer: estadoConsultaCiudadanan
                 }
+                , {header: 'Fecha pedido', dataIndex: 'fecha', sortable: true, width: 100, renderer: formatDate}
                 , {
-                    header: 'Fecha respuesta',
-                    dataIndex: 'secretaria_fecha_procesado',
+                    header: 'Fecha Inicio',
+                    dataIndex: 'secretaria_fecha_inicio',
                     sortable: true,
                     width: 100,
+                    scope: this,
                     renderer: formatDate
+                }
+                , {
+                    header: 'Fecha Fin',
+                    dataIndex: 'secretaria_fecha_finalizado',
+                    sortable: true,
+                    width: 100,
+                    scope: this,
+                    renderer: formatDate
+                }
+                , {
+                    header: 'Respuesta SITRA',
+                    dataIndex: 'secretaria_sitra_respuesta',
+                    sortable: true,
+                    width: 120,
+                    scope: this
                 }
 
                 , {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 70, scope: this}
                 , {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 120, scope: this}
                 , {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 120, scope: this}
-                , {header: 'Correo electronico', dataIndex: 'correoelectronico', sortable: true, width: 180, scope: this}
+                , {
+                    header: 'Correo electronico',
+                    dataIndex: 'correoelectronico',
+                    sortable: true,
+                    width: 180,
+                    scope: this
+                }
                 , {header: 'Celular', dataIndex: 'celular', sortable: true, width: 100, scope: this}
                 , {header: 'Zonal', dataIndex: 'zonal', sortable: true, width: 80, scope: this}
-                , {header: 'Imagen cédula', dataIndex: 'imagenaluae', sortable: true, width: 50, scope: this}
-                , {header: 'Fecha', dataIndex: 'fecha', sortable: true, width: 100, renderer: formatDate}
-                , {header: 'observaciones', dataIndex: 'observaciones', sortable: true, width: 280, scope: this}
+                , {
+                    header: 'Imagen cédula',
+                    dataIndex: 'imagencedula',
+                    sortable: true,
+                    width: 70,
+                    scope: this,
+                    renderer: renderGeneraImagen
+                }
+
+                , {header: 'observaciones', dataIndex: 'observaciones', sortable: true, width: 180, scope: this}
             ],
+            clicksToEdit: 1,
             viewConfig: {
                 forceFit: false,
                 getRowClass: function (record, index) {
-                    if (record.get('procesado') == 'false') return 'gold';
+                    if (record.get('secretaria_estado') == 'Emitido') return 'gold';
+                    if (record.get('secretaria_estado') == 'En proceso') return 'bluestate';
                 }
             },
             sm: new Ext.grid.RowSelectionModel({
@@ -220,28 +292,24 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 listeners: {
                     rowselect: function (sm, row, rec) {
                         this.record = rec;
-                        this.idDenunciasRecuperada = rec.id;
+
+
+
                         /*cargar el formulario*/
-                        cargaDetalle(rec.id, this.formConsultaciudadanaDetalle, rec);
-                        Ext.getCmp('tb_negarconsultaciudadana').setDisabled(true);
-                        if (accesosSecretaria) {
-                            if (this.record.get("procesado") == 'true') {
-                                //         Ext.getCmp('tb_negarconsultaciudadana').setDisabled(true);
-                                Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(true);
-                                Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
-                                Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
+                        cargaDetalle(rec.id);
+
+                        storeMensajesConsultas.baseParams.id  = rec.id;
+                        storeMensajesConsultas.load();
+
+                        if (acceso) {
+                            if (this.record.get("secretaria_estado") != 'En proceso') {
+                                Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
                             }
                             else {
-                                //       Ext.getCmp('tb_negarconsultaciudadana').setDisabled(false);
-                                // Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(false);
-                                Ext.getCmp('motivoNegarDenuncia').setDisabled(false);
-                                Ext.getCmp('codigo_tramite_formulario').setDisabled(false);
+                                Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(false);
                             }
                         } else {
-                            //    Ext.getCmp('tb_negarconsultaciudadana').setDisabled(true);
-                            Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(true);
-                            Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
-                            Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
+                            Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
                         }
                     }
                 }
@@ -249,6 +317,27 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             border: false,
             stripeRows: true,
             // paging bar on the bottom
+            listeners: {
+                beforeedit: function (e) {
+                    // si el operativo ya esta marcado como finalizado no se lo puede editar
+                    if (acceso) {
+
+                        if (accesosAdministrador)
+                            return true;
+                        if (e.field == 'secretaria_estado') {
+                            // en caso que ya este finalizado no se puede editar
+                            if (e.value == 'Finalizado') {
+                                return false
+                            }
+                        }
+                        return true;
+                    } else {
+                        // si no se tiene acceso se bloquea el registro
+                        return false;
+                    }
+                }
+            },
+
             bbar: new Ext.PagingToolbar({
                 pageSize: limiteconsultaciudadana,
                 store: storeConsultaciudadana,
@@ -258,6 +347,281 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             }),
         });
         //fin Consultaciudadana tab
+
+        // inicio ventana envio mensajes
+        var proxyMensajesConsultas = new Ext.data.HttpProxy({
+            api: {
+                create: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=insert",
+                read: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=select",
+                update: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=update",
+                destroy: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=delete"
+            },
+            listeners: {
+                write: function (proxy, action, result, res, rs) {
+                    if (typeof res.message !== 'undefined') {
+                        if (res.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
+                        }
+                    }
+                }
+            }
+        });
+
+        var readerMensajesConsultas = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id_entidad', allowBlank: false},
+                {name: 'id_operativo', allowBlank: false},
+                {name: 'jefe_grupo', allowBlank: false},
+                {name: 'personas', allowBlank: true},
+                {name: 'observaciones', allowBlank: true},
+                {name: 'asistencia', type: 'boolean', allowBlank: true}
+            ]
+        });
+        var writerMensajesConsultas = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        this.storeMensajesConsultas = new Ext.data.Store({
+            id: "id",
+            proxy: proxyMensajesConsultas,
+            reader: readerMensajesConsultas,
+            writer: writerMensajesConsultas,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true
+        });
+
+        storeMensajesConsultas = this.storeMensajesConsultas;
+
+        this.gridMensajesConsultas = new Ext.grid.EditorGridPanel({
+            id: 'gridMensajesConsultas',
+            autoHeight: true,
+            autoScroll: true,
+            store: this.storeMensajesConsultas,
+            clicksToEdit: 1,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {
+                    header: 'Participantes',
+                    dataIndex: 'id_entidad',
+                    sortable: true,
+                    width: 30,
+
+                },
+                {
+                    header: 'Operativo',
+                    dataIndex: 'id_operativo',
+                    sortable: true,
+                    width: 30, hidden: true
+                },
+                {
+                    header: 'Jefe Grupo',
+                    dataIndex: 'jefe_grupo',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'Total personal',
+                    dataIndex: 'personas',
+                    sortable: true,
+                    width: 20,
+                    align: 'right',
+                    editor: new Ext.form.NumberField({
+                        allowBlank: false,
+                        allowNegative: false,
+                        maxValue: 100000
+                    })
+                },
+                {
+                    header: 'Observaciones',
+                    dataIndex: 'observaciones',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'Asistencia',
+                    dataIndex: 'asistencia',
+                    sortable: true,
+                    width: 30,
+                    editor: {
+                        xtype: 'checkbox'
+                    }
+                    , falseText: 'No'
+                    , menuDisabled: true
+                    , trueText: 'Si'
+                    , xtype: 'booleancolumn'
+                }
+            ],
+            viewConfig: {
+                forceFit: true
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }
+            ),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            listeners: {
+                beforeedit: function (e) {
+                    // si el operativo ya esta marcado como finalizado no se lo puede editar
+                    if (acceso) {
+                        // verifico variable que permite editar o no
+                        if (gridBlockOperativos) {
+                            //verifico que si no es administrador se bloque la edicion
+                            if (!accesosAdministradorOpe)
+                                return false;
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        });
+
+        var gridMensajesConsultas = this.gridMensajesConsultas
+        // fin ventana envio mensajes
+        // inicio ventana envio mensajes
+        var proxyMensajesConsultas = new Ext.data.HttpProxy({
+            api: {
+                create: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=insert",
+                read: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=select",
+                update: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=update",
+                destroy: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=delete"
+            },
+            listeners: {
+                write: function (proxy, action, result, res, rs) {
+                    if (typeof res.message !== 'undefined') {
+                        if (res.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
+                        }
+                    }
+                }
+            }
+        });
+
+        var readerMensajesConsultas = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id_solicitud', allowBlank: false},
+                {name: 'contenido', allowBlank: false},
+                {name: 'estado_envio', allowBlank: false},
+                {name: 'id_funcionario', allowBlank: true},
+                {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: false},
+            ]
+        });
+        var writerMensajesConsultas = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+
+        this.storeMensajesConsultas = new Ext.data.Store({
+            id: "id",
+            proxy: proxyMensajesConsultas,
+            reader: readerMensajesConsultas,
+            writer: writerMensajesConsultas,
+            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            remoteSort: true,
+            baseParams: {
+                id: 1,
+            }
+        });
+
+
+        storeMensajesConsultas = this.storeMensajesConsultas;
+
+        this.gridMensajesConsultas = new Ext.grid.EditorGridPanel({
+            id: 'gridMensajesConsultas',
+            autoHeight: true,
+            autoScroll: true,
+            store: this.storeMensajesConsultas,
+            clicksToEdit: 1,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {
+                    header: 'id_solicitud',
+                    dataIndex: 'id_entidad',
+                    sortable: true,
+                    width: 30,
+                    hidden:true
+                },
+                {
+                    header: 'contenido',
+                    dataIndex: 'contenido',
+                    sortable: true,
+                    width: 140,
+                    editor: textField
+                },
+                {
+                    header: 'estado_envio',
+                    dataIndex: 'estado_envio',
+                    sortable: true,
+                    width: 60,
+                    editor: new Ext.form.TextField({allowBlank: false})
+                },
+                {
+                    header: 'id_funcionario',
+                    dataIndex: 'id_funcionario',
+                    sortable: true,
+                    width: 20,
+                    align: 'left',
+                    renderer: personaEnviaRespuesta,
+                    editor: comboCCM
+
+                },
+                {
+                    header: 'fecha_envio',
+                    dataIndex: 'fecha_envio',
+                    sortable: true,
+                    width: 60,
+                    renderer: formatDate
+
+                }
+            ],
+            viewConfig: {
+                forceFit: true
+            },
+            sm: new Ext.grid.RowSelectionModel(
+                {
+                    singleSelect: true
+                }
+            ),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            listeners: {
+                beforeedit: function (e) {
+                    // si el operativo ya esta marcado como finalizado no se lo puede editar
+                    if (acceso) {
+                        // verifico variable que permite editar o no
+                        if (gridBlockOperativos) {
+                            //verifico que si no es administrador se bloque la edicion
+                            if (!accesosAdministradorOpe)
+                                return false;
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        });
+
+        var gridMensajesConsultas = this.gridMensajesConsultas
+        // fin ventana envio mensajes
 
         var win = desktop.getWindow('layout-win');
 
@@ -326,26 +690,17 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 width: winWidth - 24,
                 tbar: [
                     {
-                        text: 'Receptar solicitud consultaciudadana',
+                        text: 'Grabar cambios',
                         scope: this,
-                        handler: this.aprobarconsultaciudadana,
+                        handler: this.grabarconsultaciudadana,
                         iconCls: 'save-icon',
                         disabled: true,
-                        id: 'tb_aprobarconsultaciudadana',
-                        formBind: true
-                    }, {
-                        text: 'Devolver solicitud consultaciudadana',
-                        scope: this,
-                        handler: this.negarconsultaciudadana,
-                        iconCls: 'save-icon',
-                        disabled: true,
-                        id: 'tb_negarconsultaciudadana',
+                        id: 'tb_grabarconsultaciudadana',
                         formBind: true
                     },
-
                     '->',
                     {
-                        text: 'Denuncias anteriores:'
+                        text: 'Solicitudes anteriores:'
                         , xtype: 'tbtext',
                         id: 'textDenunciasAnteriores'
                     }
@@ -365,15 +720,10 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                 items: [
                                     {xtype: 'hidden', name: 'id'},
                                     {xtype: 'hidden', name: 'fecha'},
-                                    {xtype: 'hidden', name: 'urlconsultaciudadana'},
                                     {xtype: 'hidden', name: 'nombres'},
                                     {xtype: 'hidden', name: 'apellidos'},
                                     {xtype: 'hidden', name: 'cedula'},
                                     {xtype: 'hidden', name: 'correoelectronico'},
-
-                                    {xtype: 'hidden', name: 'ampliacionconsultaciudadana'},
-                                    {xtype: 'hidden', name: 'direccionconsultaciudadanado'},
-                                    {xtype: 'hidden', name: 'geoposicionamiento2'},
                                     {
                                         xtype: 'displayfield',
                                         fieldLabel: 'Fecha',
@@ -413,7 +763,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                     , {xtype: 'displayfield', fieldLabel: 'Cédula', name: 'cedula2'}
                                     , {
                                         xtype: 'compositefield',
-                                        fieldLabel: 'Teléfonos',
+                                        fieldLabel: 'Teléfono',
                                         msgTarget: 'under',
                                         items: [
                                             {
@@ -425,17 +775,9 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                             }
                                         ]
                                     },
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'Dirección domicilio',
-                                        name: 'domicilio',
-                                        anchor: '96%'
-                                    }
                                 ]
                             },
                             {
-
-
                                 cls: 'fondogris',
                                 columnWidth: 1 / 3,
                                 layout: 'form',
@@ -444,44 +786,21 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                     {
                                         xtype: 'displayfield',
                                         hideLabel: true,
-                                        value: '2. DATOS DE LA INFRACCIÓN',
+                                        value: '2. DATOS DE LA SOLICITUD',
                                         cls: 'negrilla',
                                         anchor: '95%'
                                     },
+                                    /* {xtype: 'displayfield', fieldLabel: 'materia ??', name: 'materia', anchor: '96%'},*/
                                     {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'materia',
-                                        name: 'materia',
+                                        fieldLabel: 'Zonal',
+                                        name: 'zonal',
                                         anchor: '96%'
                                     },
                                     {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'tipoadministrador',
-                                        name: 'tipoadministrador',
-                                        anchor: '96%'
-                                    },
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'establecimiento',
-                                        name: 'establecimiento',
-                                        anchor: '96%'
-                                    },
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'ubicacion',
-                                        name: 'ubicacion',
-                                        anchor: '96%'
-                                    },
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'actividad',
-                                        name: 'actividad',
-                                        anchor: '96%'
-                                    },
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'descripcion',
-                                        name: 'descripcion',
+                                        fieldLabel: 'solicitud',
+                                        name: 'solicitud',
                                         anchor: '96%'
                                     },
                                     {
@@ -492,8 +811,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                     },
                                     {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'fechaacto',
-                                        name: 'fechaacto',
+                                        fieldLabel: 'imagencedula',
+                                        name: 'imagencedula',
                                         anchor: '96%'
                                     }
                                 ]
@@ -506,63 +825,52 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                     {
                                         xtype: 'displayfield',
                                         hideLabel: true,
-                                        value: '3. ANEXOS',
+                                        value: '3. Respuesta Secretaria General',
                                         cls: 'negrilla',
                                         anchor: '95%'
                                     }
                                     , {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'Solicitud Consulta Ciudadana',
-                                        name: 'imagenasolicitud'
+                                        fieldLabel: 'Funcionario Atiende',
+                                        name: 'secretaria_id_secretaria'
                                     }
                                     , {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'LUAE',
-                                        name: 'imagenaluae'
+                                        fieldLabel: 'Estado',
+                                        name: 'secretaria_estado'
+                                    }
+
+
+                                    , {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'Fecha Inicio',
+                                        name: 'secretaria_fecha_inicio'
                                     }
                                     , {
                                         xtype: 'displayfield',
-                                        fieldLabel: 'Acto Inicio',
-                                        name: 'imagenactoinicio'
-                                    }
-                                    , {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'Motivo negar',
-                                        name: 'motivonegar',
-                                        anchor: '95%'
-                                    }
-                                    , {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'Total pedidos anteriores',
-                                        name: 'totalconsultaciudadana',
+                                        fieldLabel: 'Fecha Finalizado',
+                                        name: 'secretaria_fecha_finalizado',
                                         anchor: '95%'
                                     },
                                     {
                                         xtype: 'textfield',
                                         fieldLabel: 'SITRA',
-                                        name: 'codigo_tramite',
+                                        name: 'secretaria_sitra_respuesta',
                                         anchor: '95%',
                                         allowBlank: false,
-                                        id: 'codigo_tramite_formulario',
-                                        listeners: {
-                                            'change': function (value, newValue, oldValue) {
-                                                if (newValue != oldValue) {
-                                                    Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(false);
-                                                }
-                                            }
-                                        }
+                                        id: 'secretaria_sitra_respuesta'
                                     },
                                     {
                                         xtype: 'textfield',
-                                        fieldLabel: 'Motivo negar',
-                                        name: 'motivoNegarDenuncia',
+                                        fieldLabel: 'Observaciones',
+                                        name: 'secretaria_observacion',
                                         anchor: '95%',
                                         allowBlank: false,
-                                        id: 'motivoNegarDenuncia',
+                                        id: 'secretaria_observacion',
                                         listeners: {
                                             'change': function (value, newValue, oldValue) {
                                                 if (newValue != oldValue) {
-                                                    Ext.getCmp('tb_negarconsultaciudadana').setDisabled(false);
+
                                                 }
                                             }
                                         }
@@ -647,65 +955,36 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                                     disabled: false,
                                                     autoScroll: true
                                                 },
-                                                /* {
-                                                     title: 'Instituciones Participantes',
-                                                     layout: 'column',
-                                                     height: 250,
-                                                     items: this.gridOperativosParticipantes,
-                                                     autoScroll: true,
-                                                     tbar: [
-                                                         {
-                                                             text: 'Nuevo',
-                                                             scope: this,
-                                                             //handler: this.addoperativosPersonal,
-                                                             handler: this.addoperativosParticipantes,
-                                                             iconCls: 'save-icon',
-                                                             disabled: true,
-                                                             id: 'addoperativoparticipantes'
-                                                             //disabled: !acceso
-                                                         },
-                                                         '-',
-                                                         {
-                                                             text: "Eliminar",
-                                                             scope: this,
-                                                             handler: this.deleteoperativosPersonal,
-                                                             handler: this.deleteoperativosParticipantes,
-                                                             id: 'borraroperativoparticipantes',
-                                                             iconCls: 'delete-icon',
-                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                             disabled: true
-                                                         }
-                                                     ]
-                                                 },
-                                                 {
-                                                     title: 'Personal asignado',
-                                                     layout: 'column',
-                                                     height: 250,
-                                                     items: this.gridOperativosPersonal,
-                                                     autoScroll: true,
-                                                     tbar: [
-                                                         {
-                                                             text: 'Nuevo',
-                                                             scope: this,
-                                                             handler: this.addoperativosPersonal,
-                                                             iconCls: 'save-icon',
-                                                             //disabled: true,
-                                                             id: 'addoperativodetalle',
-                                                             //disabled: !acceso
-                                                         },
-                                                         '-',
-                                                         {
-                                                             text: "Eliminar",
-                                                             scope: this,
-                                                             handler: this.deleteoperativosPersonal,
-                                                             id: 'borraroperativodetalle',
-                                                             iconCls: 'delete-icon',
-                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                             //disabled: true
-                                                         }
-                                                     ]
-                                                 },*/
-
+                                                {
+                                                    title: 'Menajes enviados',
+                                                    layout: 'column',
+                                                    height: winHeight - 325,
+                                                    items: this.gridMensajesConsultas,
+                                                    autoScroll: true,
+                                                    tbar: [
+                                                        {
+                                                            text: 'Nuevo',
+                                                            scope: this,
+                                                            //TODO funcion nuevo
+                                                            handler: this.addoperativosParticipantes,
+                                                            iconCls: 'save-icon',
+                                                            disabled: true,
+                                                            id: 'addoperativoparticipantes'
+                                                            //disabled: !acceso
+                                                        },
+                                                        /*                                                         '-',
+                                                                                                                 {
+                                                                                                                     text: "Eliminar",
+                                                                                                                     scope: this,
+                                                                                                                     handler: this.deleteoperativosPersonal,
+                                                                                                                     handler: this.deleteoperativosParticipantes,
+                                                                                                                     id: 'borraroperativoparticipantes',
+                                                                                                                     iconCls: 'delete-icon',
+                                                                                                                     //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                                                                                                     disabled: true
+                                                                                                                 }*/
+                                                    ]
+                                                },
                                             ]
                                         }
 
@@ -840,7 +1119,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         }
         win.show();
 
-        function cargaDetalle(consultaciudadana, forma, bloqueo) {
+        function cargaDetalle(consultaciudadana) {
             forma = Ext.getCmp('formConsultaciudadanaDetalle');
             forma.getForm().load({
                 waitMsg: 'Recuperando información',
@@ -850,31 +1129,14 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 },
                 success: function (response, opts) {
                     mensaje = Ext.getCmp('textDenunciasAnteriores');
-                    mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (response.findField('totalconsultaciudadana').getValue() - 1))
+                    mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
                 }
-
             });
-
         };
 
-        function bloquearLectura(forma, activar) {
-            Ext.getCmp('id_persona').setReadOnly(activar);
-            Ext.getCmp('recepcion_documento').setReadOnly(activar);
-            Ext.getCmp('id_tipo_documento').setReadOnly(activar);
-            Ext.getCmp('num_documento').setReadOnly(activar);
-            Ext.getCmp('remitente').setReadOnly(activar);
-            Ext.getCmp('cedula').setReadOnly(activar);
-            Ext.getCmp('email').setReadOnly(activar);
-            Ext.getCmp('descripcion_anexos').setReadOnly(activar);
-            Ext.getCmp('cantidad_fojas').setReadOnly(activar);
-            Ext.getCmp('asunto').setReadOnly(activar);
-            Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
-            Ext.getCmp('observacion_secretaria').setReadOnly(activar);
-            Ext.getCmp('reasignacion').setReadOnly(activar);
-        };
 
     },
-    aprobarconsultaciudadana: function () {
+    grabarconsultaciudadana: function () {
         store = this.storeConsultaciudadana;
 
         var urlConsultaciudadanaLocal = this.urlConsultaciudadanaLocal;
@@ -888,35 +1150,12 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     var myForm = Ext.getCmp('formConsultaciudadanaDetalle').getForm();
                     myForm.submit({
-                        url: urlConsultaciudadanaLocal + 'crudConsultaciudadana.php?operation=aprobarDenuncia',
+                        url: urlConsultaciudadanaLocal + 'crudConsultaciudadana.php?operation=grabarDetalle',
                         method: 'POST',
                         waitMsg: 'Saving data',
                         success: function (form, action) {
-                            //se actualiza tabla en la web
-                            var dataReceived = JSON.parse(action.response.responseText);
-                            myForm.submit({
-                                url: urlConsultaciudadanaLocal + 'crudConsultaciudadana.php?operation=aprobarDenuncia',
-                                method: 'POST',
-                                waitMsg: 'Saving data',
-                                params: {
-                                    codigo_tramite: dataReceived.data
-                                },
-                                success: function (form, action) {
-                                    Ext.getCmp('tb_negarconsultaciudadana').setDisabled(true);
-                                    Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(true);
-                                    storeConsultaciudadana.load();
-                                },
-                                failure: function (form, action) {
-                                    var errorJson = JSON.parse(action.response.responseText);
-                                    Ext.Msg.show({
-                                        title: 'Error campos obligatorios'
-                                        , msg: errorJson.msg
-                                        , modal: true
-                                        , icon: Ext.Msg.ERROR
-                                        , buttons: Ext.Msg.OK
-                                    });
-                                }
-                            });
+                            Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
+                            //storeConsultaciudadana.load();
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);
@@ -934,46 +1173,6 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             }
         });
 
-    },
-    negarconsultaciudadana: function () {
-        store = this.storeConsultaciudadana;
-        var urlConsultaciudadanaLocal = this.urlConsultaciudadanaLocal;
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Desea negar el consultaciudadana, .<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    Ext.getCmp('codigo_tramite_formulario').setValue("n/a");
-
-                    var myForm = Ext.getCmp('formConsultaciudadanaDetalle').getForm();
-
-                    myForm.submit({
-                        url: urlConsultaciudadanaLocal + 'crudConsultaciudadana.php?operation=negarDenuncia',
-                        method: 'POST',
-                        waitMsg: 'Saving data',
-                        success: function (form, action) {
-                            Ext.getCmp('tb_negarconsultaciudadana').setDisabled(true);
-                            Ext.getCmp('tb_aprobarconsultaciudadana').setDisabled(true);
-                            // store.load();
-                        },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
-                            Ext.Msg.show({
-                                title: 'Error campos obligatorios'
-                                , msg: errorJson.msg
-                                , modal: true
-                                , icon: Ext.Msg.ERROR
-                                , buttons: Ext.Msg.OK
-                            });
-                        }
-                    });
-                }
-            }
-
-        });
     },
 
     requestConsultaciudadanaParticipantesData: function () {

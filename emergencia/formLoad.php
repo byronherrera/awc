@@ -1,5 +1,8 @@
 <?php
+header('Content-type: text/html; charset=utf-8');
 require_once '../server/os.php';
+require_once '../modules/common/Classes/funciones.php';
+
 $os = new os();
 
 
@@ -121,8 +124,8 @@ function getUsuarioExterno($id)
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($resultado) > 0) {
-        $resultado[0]['observaciones'] = utf8_encode($resultado[0]['observaciones']);
-        $resultado[0]['lugarinfraccion'] = utf8_encode($resultado[0]['lugarinfraccion']);
+//        $resultado[0]['observaciones'] = utf8_encode($resultado[0]['observaciones']);
+//        $resultado[0]['lugarinfraccion'] = utf8_encode($resultado[0]['lugarinfraccion']);
         echo json_encode(array(
             "success" => true,
             "data" => array($resultado[0])
@@ -297,6 +300,7 @@ function actualizacion()
     $imagenes = json_decode($data->imagenacto);
     $cedula = $_POST["cedula"];
     $estadoAnterior = getUsuarioExternoData($cedula);
+    $idAnterior = $estadoAnterior['id'];
     $imagenesAnteriore = json_decode($estadoAnterior['imagenacto']);
 
     global $listado;
@@ -337,7 +341,7 @@ function actualizacion()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "UPDATE `amc_sancion_emergencia` SET  $cadenaCampos WHERE `cedula` = '$cedula'";
+    $sql = "UPDATE `amc_sancion_emergencia` SET  $cadenaCampos WHERE `id` = '$idAnterior' ";
     $log = $sql;
 
     $sql = $os->db->conn->prepare($sql);
@@ -375,7 +379,7 @@ function ingresaImagen ($archivo, $cedula, $nombre) {
 
         $uploaddir = __DIR__ . "/uploads/";
 
-        $nombreArchivo = $_FILES[$archivo]['name'];
+        $nombreArchivo = eliminar_acentos ($_FILES[$archivo]['name']);
 
         $vowels = array("[", "]");
         $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
@@ -443,7 +447,7 @@ function ingresaNuevoProceso()
         $uploadfile = $uploaddir . basename($today . '-foto-' . $nombreArchivo);
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
-            //$data->anexo = "http://romsegroup.com/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
+            //$data->anexo = "http://amcmatis.quito.gob.ec/invede-dev/uploads/" . basename($today . '-' . $nombreArchivo);;
             $listado['archivo2'] = "uploads/" . basename($today . '-foto-' . $nombreArchivo);
         }
     }
@@ -730,7 +734,7 @@ function getmensajeSolicitud($nombre = '', $data)
 {
     if ($nombre == '') $nombre = $data['nombres'];
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-                <div style="text-align: center;"><img style="width: 200px;" src="http://www.romsegroup.com/invede-dev/img/logo-jardin-corto.png" alt="" width="30%" /></div>
+                <div style="text-align: center;"><img style="width: 200px;" src="http://www.amcmatis.quito.gob.ec/invede-dev/img/logo-jardin-corto.png" alt="" width="30%" /></div>
                 <div style="clear: both; margin: 20px 10%; float: left;">
                 <h1><span style="font-family:Calibri Light;color:rgb(47,84,150) ">Formulario de solicitudes para arrendatarios</span></h1>
                 <h2><span style="font-family:Calibri Light;color:rgb(47,84,150) ">Número ' . $data['id'] . '</span></h2>
@@ -789,7 +793,7 @@ function getmensajeEtapa($nombre = '', $data)
 {
 
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-                <div style="text-align: center;"><img style="width: 200px;" src="http://www.romsegroup.com/invede-dev/img/logo-jardin-corto.png" alt="" width="30%" /></div>
+                <div style="text-align: center;"><img style="width: 200px;" src="http://www.amcmatis.quito.gob.ec/invede-dev/img/logo-jardin-corto.png" alt="" width="30%" /></div>
 
                 <div style="clear: both; margin: 20px 10%; float: left;">
                 <h1><span style="font-family:Calibri Light;color:rgb(47,84,150) ">Formulario de solicitudes para arrendatarios</span></h1>
@@ -847,12 +851,12 @@ function getmensajeEtapa($nombre = '', $data)
 						  <div class="hijo" style="display: block; width: 230px; height: 50px; padding: 10px 0 0 0; margin: 0 auto; background: #4682B4;  
 						  background: -moz-linear-gradient(top, #87CEEB 0%, #4682B4 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#87CEEB), 
 						  color-stop(100%,#4682B4));box-shadow: inset 0px 0px 6px #fff;  -webkit-box-shadow: inset 0px 0px 6px #fff; border: 1px solid #62C2F9; border-radius: 10px;  display: inline-block; "> 
-						  <a href="http://romsegroup.com/invede-dev/accion.php?id=' . $data['id'] . '&accion=aprobar&etapa=' . $data['etapa'] . '" style="font-size: 24px; text-decoration: none; color: white;" target="_blank">Aprobar</a></div>
+						  <a href="http://amcmatis.quito.gob.ec/invede-dev/accion.php?id=' . $data['id'] . '&accion=aprobar&etapa=' . $data['etapa'] . '" style="font-size: 24px; text-decoration: none; color: white;" target="_blank">Aprobar</a></div>
 
 						  <div class="hijo" style="display: block; width: 230px; height: 50px; padding: 10px 0 0 0; margin: 0 auto; background: #4682B4;  
 						  background: -moz-linear-gradient(top, #87CEEB 0%, #4682B4 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#87CEEB), 
 						  color-stop(100%,#4682B4));box-shadow: inset 0px 0px 6px #fff;  -webkit-box-shadow: inset 0px 0px 6px #fff; border: 1px solid #62C2F9; border-radius: 10px;  display: inline-block; "> 
-						  <a href="http://romsegroup.com/invede-dev/accion.php?id=' . $data['id'] . '&accion=negar&etapa=' . $data['etapa'] . '" style="font-size: 24px; text-decoration: none; color: white;" target="_blank">Negar</a></div>
+						  <a href="http://amcmatis.quito.gob.ec/invede-dev/accion.php?id=' . $data['id'] . '&accion=negar&etapa=' . $data['etapa'] . '" style="font-size: 24px; text-decoration: none; color: white;" target="_blank">Negar</a></div>
 						  
 	                </div>
                 </div>
@@ -863,7 +867,7 @@ function getmensajeEtapa($nombre = '', $data)
 function getmensajeSolicitudAprobada($nombre = '', $data)
 {
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-                <div style="text-align: center;"><img style="width: 200px;" src="http://www.romsegroup.com/invede-dev/img/logo-jardin-corto.png" alt="" width="30%" /></div>
+                <div style="text-align: center;"><img style="width: 200px;" src="http://www.amcmatis.quito.gob.ec/invede-dev/img/logo-jardin-corto.png" alt="" width="30%" /></div>
 
                 <div style="clear: both; margin: 20px 10%; float: left;">
                 <h2><span style="font-family:Calibri Light;color:rgb(47,84,150) ">Número ' . $data['id'] . '</span></h2>
@@ -925,7 +929,7 @@ function getmensajeSolicitudAprobada($nombre = '', $data)
 function getmensajeSolicitudNegada($nombre = '', $data)
 {
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-                <div style="text-align: center;"><img style="width: 200px;" src="http://www.romsegroup.com/invede-dev/img/logo-jardin-corto.png" alt="" width="30%" /></div>
+                <div style="text-align: center;"><img style="width: 200px;" src="http://www.amcmatis.quito.gob.ec/invede-dev/img/logo-jardin-corto.png" alt="" width="30%" /></div>
 
                 <div style="clear: both; margin: 20px 10%; float: left;">
                 <h2><span style="font-family:Calibri Light;color:rgb(47,84,150) ">Número ' . $data['id'] . '</span></h2>
