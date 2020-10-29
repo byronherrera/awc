@@ -845,7 +845,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     renderer: operativosEstados
                 },
                 {
-                    header: 'Fecha inicio111',
+                    header: 'Fecha inicio',
                     dataIndex: 'fecha_inicio_planificacion',
                     sortable: true,
                     width: 100,

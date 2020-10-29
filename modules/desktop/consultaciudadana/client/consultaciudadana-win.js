@@ -348,19 +348,21 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         });
         //fin Consultaciudadana tab
 
-        // inicio ventana envio mensajes
+
+        //MensajesConsultas tab
         var proxyMensajesConsultas = new Ext.data.HttpProxy({
             api: {
+
                 create: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=insert",
                 read: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=select",
                 update: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=update",
                 destroy: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=delete"
             },
             listeners: {
-                write: function (proxy, action, result, res, rs) {
-                    if (typeof res.message !== 'undefined') {
-                        if (res.message != '') {
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
+                exception: function (proxy, type, action, options, response, arg) {
+                    if (typeof response.message !== 'undefined') {
+                        if (response.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, response.message);
                         }
                     }
                 }
@@ -374,263 +376,143 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id_entidad', allowBlank: false},
-                {name: 'id_operativo', allowBlank: false},
-                {name: 'jefe_grupo', allowBlank: false},
-                {name: 'personas', allowBlank: true},
-                {name: 'observaciones', allowBlank: true},
-                {name: 'asistencia', type: 'boolean', allowBlank: true}
-            ]
-        });
-        var writerMensajesConsultas = new Ext.data.JsonWriter({
-            encode: true,
-            writeAllFields: true
-        });
-
-        this.storeMensajesConsultas = new Ext.data.Store({
-            id: "id",
-            proxy: proxyMensajesConsultas,
-            reader: readerMensajesConsultas,
-            writer: writerMensajesConsultas,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true
-        });
-
-        storeMensajesConsultas = this.storeMensajesConsultas;
-
-        this.gridMensajesConsultas = new Ext.grid.EditorGridPanel({
-            id: 'gridMensajesConsultas',
-            autoHeight: true,
-            autoScroll: true,
-            store: this.storeMensajesConsultas,
-            clicksToEdit: 1,
-            columns: [
-                new Ext.grid.RowNumberer(),
-                {
-                    header: 'Participantes',
-                    dataIndex: 'id_entidad',
-                    sortable: true,
-                    width: 30,
-
-                },
-                {
-                    header: 'Operativo',
-                    dataIndex: 'id_operativo',
-                    sortable: true,
-                    width: 30, hidden: true
-                },
-                {
-                    header: 'Jefe Grupo',
-                    dataIndex: 'jefe_grupo',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Total personal',
-                    dataIndex: 'personas',
-                    sortable: true,
-                    width: 20,
-                    align: 'right',
-                    editor: new Ext.form.NumberField({
-                        allowBlank: false,
-                        allowNegative: false,
-                        maxValue: 100000
-                    })
-                },
-                {
-                    header: 'Observaciones',
-                    dataIndex: 'observaciones',
-                    sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                },
-                {
-                    header: 'Asistencia',
-                    dataIndex: 'asistencia',
-                    sortable: true,
-                    width: 30,
-                    editor: {
-                        xtype: 'checkbox'
-                    }
-                    , falseText: 'No'
-                    , menuDisabled: true
-                    , trueText: 'Si'
-                    , xtype: 'booleancolumn'
-                }
-            ],
-            viewConfig: {
-                forceFit: true,
-                getRowClass: function (record, index) {
-                    return 'gold'
-//                    return 'multiline-row';
-                }
-            },
-            sm: new Ext.grid.RowSelectionModel(
-                {
-                    singleSelect: true
-                }
-            ),
-            border: false,
-            stripeRows: true,
-            // paging bar on the bottom
-            listeners: {
-                beforeedit: function (e) {
-                    return true
-                    // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (acceso) {
-                        // verifico variable que permite editar o no
-                        gridBlockOperativos = true;
-                        if (gridBlockOperativos) {
-                            //verifico que si no es administrador se bloque la edicion
-                            if (!accesosAdministradorOpe) {
-
-                                //return false;
-                            }
-                        }
-                        //  return true;
-                    } else {
-                        //  return false;
-                    }
-                }
-            }
-        });
-
-        var gridMensajesConsultas = this.gridMensajesConsultas
-        // fin ventana envio mensajes
-        // inicio ventana envio mensajes
-        var proxyMensajesConsultas = new Ext.data.HttpProxy({
-            api: {
-                create: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=insert",
-                read: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=select",
-                update: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=update",
-                destroy: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=delete"
-            },
-            listeners: {
-                write: function (proxy, action, result, res, rs) {
-                    if (typeof res.message !== 'undefined') {
-                        if (res.message != '') {
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, res.message);
-                        }
-                    }
-                }
-            }
-        });
-
-        var readerMensajesConsultas = new Ext.data.JsonReader({
-            totalProperty: 'total',
-            successProperty: 'success',
-            messageProperty: 'message',
-            idProperty: 'id',
-            root: 'data',
-            fields: [
+                {name: 'id', allowBlank: false},
                 {name: 'id_solicitud', allowBlank: false},
                 {name: 'contenido', allowBlank: false},
                 {name: 'estado_envio', allowBlank: false},
                 {name: 'id_funcionario', allowBlank: true},
-                {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: false},
+                {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: false}
             ]
         });
+
         var writerMensajesConsultas = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
-
-        this.storeMensajesConsultas = new Ext.data.Store({
-            id: "id",
+        var storeMensajesConsultas = new Ext.data.Store({
+            id: "storeMensajesConsultas",
             proxy: proxyMensajesConsultas,
             reader: readerMensajesConsultas,
             writer: writerMensajesConsultas,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
-            remoteSort: true,
-            baseParams: {
-                id: 1,
-            }
+            autoSave: true
         });
 
 
-        storeMensajesConsultas = this.storeMensajesConsultas;
+        this.storeMensajesConsultas = storeMensajesConsultas;
 
         this.gridMensajesConsultas = new Ext.grid.EditorGridPanel({
-            id: 'gridMensajesConsultas',
             autoHeight: true,
             autoScroll: true,
-            store: this.storeMensajesConsultas,
-            clicksToEdit: 1,
+            store: storeMensajesConsultas,
             columns: [
                 new Ext.grid.RowNumberer(),
                 {
+                    header: 'id',
+                    dataIndex: 'id',
+                    sortable: true,
+                    width: 30,
+                    hidden: true
+                },{
                     header: 'id_solicitud',
-                    dataIndex: 'id_entidad',
+                    dataIndex: 'id_solicitud',
                     sortable: true,
                     width: 30,
                     hidden: true
                 },
                 {
-                    header: 'contenido',
+                    header: 'Contenido mensaje',
                     dataIndex: 'contenido',
                     sortable: true,
                     width: 140,
                     editor: textField
                 },
                 {
-                    header: 'estado_envio',
+                    header: 'Estado envio mensaje',
                     dataIndex: 'estado_envio',
                     sortable: true,
-                    width: 60,
-                    editor: new Ext.form.TextField({allowBlank: false})
+                    width: 60
                 },
                 {
-                    header: 'id_funcionario',
+                    header: 'Funcionario envia mensaje',
                     dataIndex: 'id_funcionario',
                     sortable: true,
                     width: 20,
                     align: 'left',
                     renderer: personaEnviaRespuesta
-                    //, editor: comboCCM
                 },
                 {
-                    header: 'fecha_envio',
+                    header: 'Fecha envio mensaje',
                     dataIndex: 'fecha_envio',
                     sortable: true,
                     width: 60,
                     renderer: formatDate
+                },
+                {
+                    xtype: 'actioncolumn',
+                    header: 'Enviar',
+                    width: 50,
+                    align: 'center',
+                    items: [
+                        {
+                            icon: 'email_go.png',
+                            iconCls: 'save-icon',
+                            tooltip: 'Enviar',
+                            handler: function (grid, rowIndex, colIndex, item, e, record) {
+                                var rec = storeMensajesConsultas.getAt(rowIndex);
+
+                                console.log (rec);
+                                console.log ("Sell " + rec.get('id'),  rec.get('id_solicitud'));
+                            },
+                            scope: this
+                        }
+                    ]
                 }
             ],
+            clicksToEdit: 1,
             viewConfig: {
-                forceFit: true
-            },
-            sm: new Ext.grid.RowSelectionModel(
-                {
-                    singleSelect: true
+                forceFit: true,
+                getRowClass: function (record, index) {
+                    if (record.get('estado_envio') == 'No enviado') return 'gold';
+                    if (record.get('estado_envio') == 'Enviado') return 'bluestate';
                 }
-            ),
+            },
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true,
+                listeners: {
+                    rowselect: function (sm, row, rec) {
+                        this.record = rec;
+                        /*cargar el formulario*/
+
+                    }
+                }
+            }),
             border: false,
             stripeRows: true,
             // paging bar on the bottom
             listeners: {
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    return true
-                    if (acceso) {
-                        // verifico variable que permite editar o no
-                        var gridBlockOperativos = true
-                        if (gridBlockOperativos) {
-                            //verifico que si no es administrador se bloque la edicion
-                            if (!accesosAdministradorOpe)
-                                return false;
-                        }
-                        return true;
-                    } else {
-                        return false;
-                        return false;
-                    }
+                    /* if (acceso) {
+
+                         if (accesosAdministrador)
+                             return true;
+                         if (e.field == 'secretaria_estado') {
+                             // en caso que ya este finalizado no se puede editar
+                             if (e.value == 'Finalizado') {
+                                 return false
+                             }
+                         }
+                         return true;
+                     } else {
+                         // si no se tiene acceso se bloquea el registro
+                         return false;
+                     }*/
                 }
             }
-        });
 
-        var gridMensajesConsultas = this.gridMensajesConsultas
-        // fin ventana envio mensajes
+        });
+        //fin MensajesConsultas tab
+
 
         var win = desktop.getWindow('layout-win');
 
@@ -975,32 +857,23 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                                             text: 'Nuevo',
                                                             scope: this,
                                                             //TODO funcion nuevo
-                                                            handler: this.addoperativosParticipantes,
+                                                            handler: this.addMensajesConsultas,
                                                             iconCls: 'save-icon',
 //                                                            disabled: true,
-                                                            id: 'addoperativoparticipantes'
+                                                            id: 'addMensajesConsultas'
                                                             //disabled: !acceso
                                                         },
                                                         '-',
                                                         {
                                                             text: "Eliminar",
                                                             scope: this,
-                                                            handler: this.deleteoperativosParticipantes,
-                                                            id: 'borraroperativoparticipantes',
+                                                            handler: this.deleteMensajesConsultas,
+                                                            id: 'deleteMensajesConsultas',
                                                             iconCls: 'delete-icon',
                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-  //                                                          disabled: true
+                                                            //                                                          disabled: true
                                                         },
-                                                        '-',
-                                                        {
-                                                            text: "Enviar Mensaje",
-                                                            scope: this,
-                                                            handler: this.deleteoperativosParticipantes,
-                                                            id: 'envioMensajeDetalle',
-                                                            iconCls: 'send-icon',
-                                                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-//                                                            disabled: true
-                                                        }
+
                                                     ]
                                                 },
                                             ]
