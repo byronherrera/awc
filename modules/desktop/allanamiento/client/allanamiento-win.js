@@ -1,7 +1,6 @@
 QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
     id: 'allanamiento',
     type: 'desktop/allanamiento',
-
     init: function () {
         this.launcher = {
             text: 'Allanamiento',
@@ -10,7 +9,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             scope: this
         }
     },
-
     createWindow: function () {
         var desktop = this.app.getDesktop();
         // define a que tiene acceso los funcionario de acuerdo al perfil
@@ -63,6 +61,70 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo activo
 
+        //inicio combos Allanamiento
+        storeEtapaAllanamiento = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 'Secretaria', "nombre": "Secretaria"},
+                    {"id": 'Instruccion', "nombre": "Instruccion"},
+                    {"id": 'Resolucion', "nombre": "Resolucion"},
+                    {"id": 'Ejecucion', "nombre": "Ejecucion"}
+                ]
+            }
+        });
+
+        var comboEtapaAllanamiento = new Ext.form.ComboBox({
+            id: 'comboEtapaAllanamiento',
+            store: storeEtapaAllanamiento,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function obtenerNombreEtapa(id) {
+            var index = storeEtapaAllanamiento.findExact('id', id);
+            if (index > -1) {
+                var record = storeEtapaAllanamiento.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        storeEstadoAllanamiento = new Ext.data.JsonStore({
+            root: 'users',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                users: [
+                    {"id": 'Asignado', "nombre": "Asignado"},
+                    {"id": 'Confirmado', "nombre": "Confirmado"},
+                    {"id": 'Procesado', "nombre": "Procesado"}
+                ]
+            }
+        });
+
+        var comboEstadoAllanamiento = new Ext.form.ComboBox({
+            id: 'comboEstadoAllanamiento',
+            store: storeEstadoAllanamiento,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function obtenerNombreEstado(id) {
+            var index = storeEstadoAllanamiento.findExact('id', id);
+            if (index > -1) {
+                var record = storeEstadoAllanamiento.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //Fin combos Allanamientos
+
         var textField = new Ext.form.TextField({allowBlank: false});
 
         function formatDate(value) {
@@ -86,7 +148,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             canvas.getContext('2d').drawImage(video, 0, 0, 300, 150);
 
             var Pic = document.getElementById(canvasId).toDataURL("image/png");
-            Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "")
+            Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "");
 
             Ext.Ajax.request({
                 url: urlAllanamientoLocal + 'uploadimagen.php',
@@ -145,11 +207,14 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 {name: 'zonal', allowBlank: false},
                 {name: 'ip', allowBlank: false},
 
-                {name: 'confirmed', allowBlank: false},
-                {name: 'procesado', allowBlank: false},
+                {name: 'estapa', allowBlank: true},
+                {name: 'estado', allowBlank: true},
                 {name: 'fechaprocesado', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'asignado', allowBlank: false},
-                {name: 'codigo_tramite', allowBlank: false},
+                {name: 'usuario_id', allowBlank: true},
+                {name: 'codigo_sitra', allowBlank: true},
+                {name: 'observacion_sitra', allowBlank: true},
+                {name: 'enviar',  disabled: true },
+                {name: 'devolver',  disabled: true },
             ]
         });
 
@@ -157,6 +222,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             encode: true,
             writeAllFields: true
         });
+
         var storeAllanamiento = new Ext.data.Store({
             id: "storeAllanamiento",
             proxy: proxyAllanamiento,
@@ -164,8 +230,9 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             writer: writerAllanamiento,
             autoSave: true
         });
+
         storeAllanamiento.load();
-        limiteallanamiento = 50
+        limiteallanamiento = 50;
 
         this.storeAllanamiento = storeAllanamiento;
 
@@ -175,10 +242,51 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             store: storeAllanamiento, columns: [
                 new Ext.grid.RowNumberer({width: 40})
                 , {header: 'Id', dataIndex: 'id', sortable: true, width: 60, scope: this}
-                , {header: 'SITRA', dataIndex: 'codigo_tramite', sortable: true, width: 170, scope: this}
-                , {header: 'asignado', dataIndex: 'asignado', sortable: true, width: 80, scope: this}
-                , {header: 'confirmed', dataIndex: 'secretaria_confirmed', sortable: true, width: 70, scope: this}
-                , {header: 'procesado', dataIndex: 'secretaria_procesado', sortable: true, width: 70, scope: this}
+                , {
+                    header: 'SITRA',
+                    //id: 'codigo_sitra',
+                    dataIndex: 'codigo_sitra',
+                    sortable: true,
+                    width: 30,
+                    scope: this,
+                    editor: new Ext.form.TextField({
+                        id: 'codigo_sitra1', allowBlank: false, listeners: {
+                            'change': function (value, newValue, oldValue) {
+                                if (newValue != oldValue) {
+                                    console.log("Valores", value, newValue, oldValue)
+                                }
+                            }
+                        }
+                    }),
+                    listeners: {}
+                }
+                , {
+                    header: 'Observación',
+                    //id: 'obervacion_sitra',
+                    dataIndex: 'obervacion_sitra',
+                    sortable: true,
+                    width: 170,
+                    scope: this,
+                    editor: new Ext.form.TextArea({id: 'obervacion_sitra1', allowBlank: true})
+                }
+                , {
+                    header: 'etapa',
+                    dataIndex: 'etapa',
+                    sortable: true,
+                    width: 80,
+                    scope: this,
+                    editor: comboEtapaAllanamiento,
+                    renderer: obtenerNombreEtapa
+                }
+                , {
+                    header: 'estado',
+                    dataIndex: 'estado',
+                    sortable: true,
+                    width: 80,
+                    scope: this,
+                    editor: comboEstadoAllanamiento,
+                    renderer: obtenerNombreEstado
+                }
                 , {
                     header: 'fechaprocesado',
                     dataIndex: 'fechaprocesado',
@@ -186,7 +294,53 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     width: 100,
                     renderer: formatDate
                 }
-
+                , {header: 'usuario', dataIndex: 'usuario_id', sortable: true, width: 70, scope: this}
+                , {
+                    xtype: 'actioncolumn',
+                    header: 'Enviar',
+                    dataIndex: 'enviar',
+                    width: 50,
+                    //hidden: true,
+                    align: 'center',
+                    renderer: function(value, metadata, record) {
+                        //var rec = storeAllanamiento.getAt(rowIndex);
+                        console.log("aaa",metadata);
+                        if(record.data.codigo_sitra != null){
+                            //record.disabled = true;
+                        }else{
+                            //record.disabled = false;
+                        }
+                    },
+                    items: [
+                        {
+                            icon: 'email_go.png',
+                            tooltip: 'Enviar',
+                            handler: function (grid, rowIndex, colIndex, item, record) {
+                                var rec = storeAllanamiento.getAt(rowIndex);
+                                this.enviarAllanamiento(rec.data);
+                            },
+                            scope: this
+                        }
+                    ]
+                }
+                , {
+                    xtype : 'actioncolumn',
+                    header: 'Devolver',
+                    dataIndex: 'devolver',
+                    width: 50,
+                    align: 'center',
+                    items: [
+                        {
+                            icon: 'email_go.png',
+                            tooltip: 'Devolver',
+                            handler: function (grid, rowIndex, colIndex) {
+                                var rec = storeAllanamiento.getAt(rowIndex);
+                                this.devolverAllanamiento(rec.data.id);
+                            },
+                            scope: this
+                        }
+                    ]
+                }
                 , {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 70, scope: this}
                 , {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 130, scope: this}
                 , {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 130, scope: this}
@@ -210,7 +364,11 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             viewConfig: {
                 forceFit: false,
                 getRowClass: function (record, index) {
-                    if (record.get('procesado') == 'false') return 'gold';
+                    if (record.get('estado') == 'Asignado') {
+                        return 'gold';
+                    } else {
+                        return 'bluestate';
+                    }
                 }
             },
             sm: new Ext.grid.RowSelectionModel({
@@ -218,28 +376,31 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 listeners: {
                     rowselect: function (sm, row, rec) {
                         this.record = rec;
-                        this.idDenunciasRecuperada = rec.id;
+                        //this.idDenunciasRecuperada = rec.id;
                         /*cargar el formulario*/
-                        cargaDetalle(rec.id, this.formAllanamientoDetalle, rec);
-                        Ext.getCmp('tb_negarallanamiento').setDisabled(true);
+                        cargaDetalle(rec.id);
+                        //Ext.getCmp('tb_negarallanamiento').setDisabled(true);
                         if (accesosSecretaria) {
                             if (this.record.get("procesado") == 'true') {
-                       //         Ext.getCmp('tb_negarallanamiento').setDisabled(true);
-                                Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
-                                Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
-                                Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
+                                //         Ext.getCmp('tb_negarallanamiento').setDisabled(true);
+
+                                //Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
+                                //Ext.getCmp('obervacion_sitra1').setDisabled(true);
+                                //Ext.getCmp('codigo_sitra1').setDisabled(true);
                             }
                             else {
-                         //       Ext.getCmp('tb_negarallanamiento').setDisabled(false);
+                                //       Ext.getCmp('tb_negarallanamiento').setDisabled(false);
                                 // Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
-                                Ext.getCmp('motivoNegarDenuncia').setDisabled(false);
-                                Ext.getCmp('codigo_tramite_formulario').setDisabled(false);
+
+                                //Ext.getCmp('obervacion_sitra1').setDisabled(false);
+                                //Ext.getCmp('codigo_sitra1').setDisabled(false);
                             }
                         } else {
-                        //    Ext.getCmp('tb_negarallanamiento').setDisabled(true);
-                            Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
-                            Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
-                            Ext.getCmp('codigo_tramite_formulario').setDisabled(true);
+                            //    Ext.getCmp('tb_negarallanamiento').setDisabled(true);
+
+                            // Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
+                            // Ext.getCmp('obervacion_sitra1').setDisabled(true);
+                            // Ext.getCmp('codigo_sitra1').setDisabled(true);
                         }
                     }
                 }
@@ -432,8 +593,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                 ]
                             },
                             {
-
-
                                 cls: 'fondogris',
                                 columnWidth: 1 / 3,
                                 layout: 'form',
@@ -535,36 +694,36 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                         name: 'totalallanamiento',
                                         anchor: '95%'
                                     },
-                                    {
-                                        xtype: 'textfield',
-                                        fieldLabel: 'SITRA',
-                                        name: 'codigo_tramite',
-                                        anchor: '95%',
-                                        allowBlank: false,
-                                        id: 'codigo_tramite_formulario',
-                                        listeners: {
-                                            'change': function (value, newValue, oldValue) {
-                                                if (newValue != oldValue) {
-                                                    Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        xtype: 'textfield',
-                                        fieldLabel: 'Motivo negar',
-                                        name: 'motivoNegarDenuncia',
-                                        anchor: '95%',
-                                        allowBlank: false,
-                                        id: 'motivoNegarDenuncia',
-                                        listeners: {
-                                            'change': function (value, newValue, oldValue) {
-                                                if (newValue != oldValue) {
-                                                    Ext.getCmp('tb_negarallanamiento').setDisabled(false);
-                                                }
-                                            }
-                                        }
-                                    }
+                                    /* {
+                                         xtype: 'textfield',
+                                         fieldLabel: 'SITRA',
+                                         name: 'codigo_sitra',
+                                         anchor: '95%',
+                                         allowBlank: false,
+                                         id: 'codigo_sitra',
+                                         listeners: {
+                                             'change': function (value, newValue, oldValue) {
+                                                 if (newValue != oldValue) {
+                                                     Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
+                                                 }
+                                             }
+                                         }
+                                     },
+                                     {
+                                         xtype: 'textfield',
+                                         fieldLabel: 'Observacion',
+                                         name: 'observacion_sitra',
+                                         anchor: '95%',
+                                         allowBlank: false,
+                                         id: 'observacion_sitra',
+                                         listeners: {
+                                             'change': function (value, newValue, oldValue) {
+                                                 if (newValue != oldValue) {
+                                                     Ext.getCmp('tb_negarallanamiento').setDisabled(false);
+                                                 }
+                                             }
+                                         }
+                                     }*/
                                 ]
                             }
                         ]
@@ -838,7 +997,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         }
         win.show();
 
-        function cargaDetalle(allanamiento, forma, bloqueo) {
+        function cargaDetalle(allanamiento) {
             forma = Ext.getCmp('formAllanamientoDetalle');
             forma.getForm().load({
                 waitMsg: 'Recuperando información',
@@ -853,8 +1012,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
             });
 
-        };
-
+        }
         function bloquearLectura(forma, activar) {
             Ext.getCmp('id_persona').setReadOnly(activar);
             Ext.getCmp('recepcion_documento').setReadOnly(activar);
@@ -869,13 +1027,11 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
             Ext.getCmp('observacion_secretaria').setReadOnly(activar);
             Ext.getCmp('reasignacion').setReadOnly(activar);
-        };
-
+        }
     },
-    aprobarallanamiento: function () {
+    enviarAllanamiento: function (data) {
+        console.log(">>>>>>idTramite",data);
         store = this.storeAllanamiento;
-
-        var urlAllanamientoLocal = this.urlAllanamientoLocal;
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Desea aprobar la allanamiento.<br>¿Desea continuar?',
@@ -886,22 +1042,23 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     var myForm = Ext.getCmp('formAllanamientoDetalle').getForm();
                     myForm.submit({
-                        url: urlAllanamientoLocal + 'crudAllanamiento.php?operation=aprobarDenuncia',
+                        url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
                         method: 'POST',
                         waitMsg: 'Saving data',
                         success: function (form, action) {
                             //se actualiza tabla en la web
-                            var dataReceived = JSON.parse(action.response.responseText);
+                            //var dataReceived = JSON.parse(action.response.responseText);
                             myForm.submit({
-                                url: urlAllanamientoLocal + 'crudAllanamiento.php?operation=aprobarDenuncia',
+                                url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
                                 method: 'POST',
                                 waitMsg: 'Saving data',
                                 params: {
-                                    codigo_tramite: dataReceived.data
+                                    //codigo_tramite: dataReceived.data
+                                    data1: data
                                 },
                                 success: function (form, action) {
-                                    Ext.getCmp('tb_negarallanamiento').setDisabled(true);
-                                    Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
+                                    //Ext.getCmp('tb_negarallanamiento').setDisabled(true);
+                                    //Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
                                     storeAllanamiento.load();
                                 },
                                 failure: function (form, action) {
@@ -933,7 +1090,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         });
 
     },
-    negarallanamiento: function () {
+    devolverAllanamiento: function () {
         store = this.storeAllanamiento;
         var urlAllanamientoLocal = this.urlAllanamientoLocal;
         Ext.Msg.show({
@@ -944,7 +1101,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    Ext.getCmp('codigo_tramite_formulario').setValue ("n/a");
+                    Ext.getCmp('codigo_tramite_formulario').setValue("n/a");
 
                     var myForm = Ext.getCmp('formAllanamientoDetalle').getForm();
 
@@ -955,7 +1112,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         success: function (form, action) {
                             Ext.getCmp('tb_negarallanamiento').setDisabled(true);
                             Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
-                           // store.load();
+                            // store.load();
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);
@@ -973,7 +1130,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
         });
     },
-
     requestAllanamientoParticipantesData: function () {
         this.storeAllanamientoParticipantes.load();
     },

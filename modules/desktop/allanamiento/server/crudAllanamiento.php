@@ -143,15 +143,15 @@ switch ($_GET['operation']) {
         selectAllanamientoForm();
         break;
 
-    case 'negarDenuncia' :
-        negar();
+    case 'devolver' :
+        devolver();
         break;
-    case 'aprobarDenuncia' :
-        aprobar();
+    case 'enviar' :
+        enviar();
         break;
 }
 
-function negar()
+function devolver()
 {
     global $os;
 
@@ -159,7 +159,7 @@ function negar()
     $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
 
     $sql  = "UPDATE amc_proc_reconocimineto_responsabilidad 
-            SET secretaria_procesado='true', secretaria_confirmed='false',secretaria_motivonegar='$motivoNegarDenuncia', secretaria_fecha_procesado =  CURDATE() WHERE (`id`='$id')";
+            SET estapa='true', secretaria_confirmed='false',secretaria_motivonegar='$motivoNegarDenuncia', secretaria_fecha_procesado =  CURDATE() WHERE (`id`='$id')";
 echo $sql;
     $sql = $os->db->conn->prepare($sql);
     $resultado = $sql->execute();
@@ -184,18 +184,46 @@ echo $sql;
 
 }
 
-function aprobar()
+function enviar()
 {
-    global $databaseAMC;
-    $id = (int)$_POST ['id'];
-    $codigo_tramite = $_POST ['codigo_tramite'];
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET asignado='Secretaria' WHERE (`id`='$id')");
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET codigo_tramite= '$codigo_tramite' WHERE (`id`='$id')");
-    $databaseAMC->Query("UPDATE amc_denuncias_web SET confirmed='true' WHERE (`id`='$id')");
-    $query = "UPDATE amc_denuncias_web SET prosesado='true' WHERE (`id`='$id')";
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $actual = $os->get_member_id();
+    $data = json_decode($_POST);
+    if (is_null($data))
+        $data = json_decode(stripslashes($_POST["data"]));
 
-    $mensaje = getmensaje('aprobar', $_POST ['nombre'], $codigo_tramite, $id);
-    $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
+    $id = (isset($data["id"])) ? $data["id"] : '';
+    $etapa = (isset($data["etapa"])) ? $data["etapa"] : '';
+    $estado = (isset($data["estado"])) ? $data["estado"] : '';
+    $codigoSitra = (isset($data["codigo_sitra"])) ? $data["codigo_sitra"] : '';
+    $observacionSitra = (isset($data["observacion_sitra"])) ? $data["observacion_sitra"] : '';
+
+    $sql  = " UPDATE amc_proc_reconocimineto_responsabilidad 
+             SET etapa = '$etapa',
+                 estado = '$estado',
+                 codigo_sitra = '$codigoSitra',
+                 observacion_sitra = '$observacionSitra'
+              WHERE id = '$id'; ";
+
+    $log = $sql;
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
+
+    echo json_encode(array(
+        "success" => $sql->errorCode() == 0,
+        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode(),
+        "data" => $data
+    ));
+
+    // genero archivo de log
+    $fichero = 'consultas_ciudadanas.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $os->get_member_id() . "\n" . $log . "\n\n";
+    file_put_contents($fichero, $actual);
+
+    //$mensaje = getmensaje('aprobar', $_POST ['nombre'], $codigo_tramite, $id);
+    //$envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
 
     /*
      *                 $email = regresaEmail($funcionario);
@@ -209,7 +237,7 @@ function aprobar()
      *
      */
 
-    if ($databaseAMC->Query($query)
+    /*if ($databaseAMC->Query($query)
     ) {
         echo json_encode(array(
             "success" => true,
@@ -220,7 +248,7 @@ function aprobar()
             "success" => false,
             "msg" => "Error en la base de datos."
         ));
-    }
+    }*/
 }
 
 function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $motivo = '')
