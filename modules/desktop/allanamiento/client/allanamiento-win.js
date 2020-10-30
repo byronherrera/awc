@@ -1051,6 +1051,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     Ext.Ajax.request({
                         url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
                         method: 'POST',
+
                         params: { data: data },
                         jsonData: { data: data },
                         success: function (response, opts) {
