@@ -1056,6 +1056,9 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             myForm.submit({
                                 url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
                                 method: 'POST',
+
+
+
                                 waitMsg: 'Saving data',
                                 params: {
                                     //codigo_tramite: dataReceived.data
