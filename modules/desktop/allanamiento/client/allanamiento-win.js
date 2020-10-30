@@ -1054,7 +1054,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                 waitMsg: 'Saving data',
                                 params: {
                                     //codigo_tramite: dataReceived.data
-                                    data1: data
+                                    data: data
                                 },
                                 success: function (form, action) {
                                     //Ext.getCmp('tb_negarallanamiento').setDisabled(true);
