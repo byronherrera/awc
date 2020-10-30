@@ -58,7 +58,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
-
         //fin combo activo
 
         //inicio combos Allanamiento
@@ -93,15 +92,15 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             }
         }
 
-        storeEstadoAllanamiento = new Ext.data.JsonStore({
+        /*storeEstadoAllanamiento = new Ext.data.JsonStore({
             root: 'users',
             fields: ['id', 'nombre'],
             autoLoad: true,
             data: {
                 users: [
                     {"id": 'Asignado', "nombre": "Asignado"},
-                    {"id": 'Confirmado', "nombre": "Confirmado"},
-                    {"id": 'Procesado', "nombre": "Procesado"}
+                    {"id": 'Enviado', "nombre": "Enviado"},
+                    {"id": 'Devuelto', "nombre": "Devuelto"}
                 ]
             }
         });
@@ -121,7 +120,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 var record = storeEstadoAllanamiento.getAt(index);
                 return record.get('nombre');
             }
-        }
+        }*/
 
         //Fin combos Allanamientos
 
@@ -173,7 +172,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
                 create: urlAllanamientoLocal + "crudAllanamiento.php?operation=insert",
                 read: urlAllanamientoLocal + "crudAllanamiento.php?operation=select",
-                //update: urlAllanamientoLocal + "crudAllanamiento.php?operation=upda",
+                update: urlAllanamientoLocal + "crudAllanamiento.php?operation=upda",
                 destroy: urlAllanamientoLocal + "crudAllanamiento.php?operation=delete"
             }
         });
@@ -228,7 +227,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             proxy: proxyAllanamiento,
             reader: readerAllanamiento,
             writer: writerAllanamiento,
-            autoSave: true
+            autoSave: false
         });
 
         storeAllanamiento.load();
@@ -247,13 +246,13 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     //id: 'codigo_sitra',
                     dataIndex: 'codigo_sitra',
                     sortable: true,
-                    width: 30,
+                    width: 50,
                     scope: this,
                     editor: new Ext.form.TextField({
                         id: 'codigo_sitra1', allowBlank: false, listeners: {
                             'change': function (value, newValue, oldValue) {
                                 if (newValue != oldValue) {
-                                    console.log("Valores", value, newValue, oldValue)
+                                    //console.log("Valores", value, newValue, oldValue)
                                 }
                             }
                         }
@@ -284,8 +283,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 80,
                     scope: this,
-                    editor: comboEstadoAllanamiento,
-                    renderer: obtenerNombreEstado
+                    //renderer: obtenerNombreEstado
                 }
                 , {
                     header: 'fechaprocesado',
@@ -304,7 +302,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     align: 'center',
                     renderer: function(value, metadata, record) {
                         //var rec = storeAllanamiento.getAt(rowIndex);
-                        console.log("aaa",metadata);
+                        //console.log("aaa",metadata);
                         if(record.data.codigo_sitra != null){
                             //record.disabled = true;
                         }else{
@@ -313,8 +311,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     },
                     items: [
                         {
-                            xtype: 'form',
-                            id: 'formEnviar',
                             icon: 'email_go.png',
                             tooltip: 'Enviar',
                             handler: function (grid, rowIndex, colIndex, item, record) {
@@ -333,13 +329,20 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     align: 'center',
                     items: [
                         {
-                            xtype: 'form',
-                            id: 'formDevolver',
                             icon: 'email_go.png',
                             tooltip: 'Devolver',
                             handler: function (grid, rowIndex, colIndex) {
                                 var rec = storeAllanamiento.getAt(rowIndex);
-                                this.devolverAllanamiento(rec.data.id);
+                                //this.devolverAllanamiento(rec.data.id);
+                                Ext.Ajax.request({
+                                    url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
+                                    success: function (response, opts) {
+                                        mensaje = Ext.getCmp('textDenunciasAnteriores');
+                                        mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
+                                    },
+                                    //failure: funcionMal,
+                                    params: { data: rec.data  }
+                                });
                             },
                             scope: this
                         }
@@ -1044,8 +1047,30 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    debugger;
-                    var myForm = Ext.getCmp('formEnviar').getForm();
+
+                    Ext.Ajax.request({
+                        url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
+                        method: 'POST',
+                        params: { data: data },
+                        jsonData: { data: data },
+                        success: function (response, opts) {
+                            storeAllanamiento.load();
+                            //mensaje = Ext.getCmp('textDenunciasAnteriores');
+                            //mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
+                        },
+                        failure: function (form, action) {
+                            var errorJson = JSON.parse(action.response.responseText);
+                            Ext.Msg.show({
+                                title: 'Error campos obligatorios'
+                                , msg: errorJson.msg
+                                , modal: true
+                                , icon: Ext.Msg.ERROR
+                                , buttons: Ext.Msg.OK
+                            });
+                        }
+                    });
+
+                    /*var myForm = Ext.getCmp('formEnviar').getForm();
                     myForm.submit({
                         url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
                         method: 'POST',
@@ -1056,10 +1081,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             myForm.submit({
                                 url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
                                 method: 'POST',
-
-
-
-
                                 waitMsg: 'Saving data',
                                 params: {
                                     //codigo_tramite: dataReceived.data
@@ -1092,7 +1113,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                 , buttons: Ext.Msg.OK
                             });
                         }
-                    });
+                    });*/
 
                 }
             }
