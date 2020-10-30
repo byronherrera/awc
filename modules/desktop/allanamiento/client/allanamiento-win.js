@@ -173,7 +173,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
                 create: urlAllanamientoLocal + "crudAllanamiento.php?operation=insert",
                 read: urlAllanamientoLocal + "crudAllanamiento.php?operation=select",
-                update: urlAllanamientoLocal + "crudAllanamiento.php?operation=upda",
+                //update: urlAllanamientoLocal + "crudAllanamiento.php?operation=upda",
                 destroy: urlAllanamientoLocal + "crudAllanamiento.php?operation=delete"
             }
         });
@@ -313,6 +313,8 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     },
                     items: [
                         {
+                            xtype: 'form',
+                            id: 'formEnviar',
                             icon: 'email_go.png',
                             tooltip: 'Enviar',
                             handler: function (grid, rowIndex, colIndex, item, record) {
@@ -331,6 +333,8 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     align: 'center',
                     items: [
                         {
+                            xtype: 'form',
+                            id: 'formDevolver',
                             icon: 'email_go.png',
                             tooltip: 'Devolver',
                             handler: function (grid, rowIndex, colIndex) {
@@ -1040,7 +1044,8 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var myForm = Ext.getCmp('formAllanamientoDetalle').getForm();
+                    debugger;
+                    var myForm = Ext.getCmp('formEnviar').getForm();
                     myForm.submit({
                         url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
                         method: 'POST',
