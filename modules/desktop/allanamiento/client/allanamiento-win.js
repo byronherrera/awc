@@ -1059,6 +1059,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
 
 
+
                                 waitMsg: 'Saving data',
                                 params: {
                                     //codigo_tramite: dataReceived.data
