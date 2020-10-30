@@ -1050,12 +1050,10 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
                     Ext.Ajax.request({
                         url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
-                        method: 'POST',
-
-//                        params: { data: data },
-                        jsonData: { data: data },
+                        params: { data: Ext.util.JSON.encode(data) },
+                        //jsonData: { data },
                         success: function (response, opts) {
-                            this.storeAllanamiento.load();
+                            storeAllanamiento.load();
                             //mensaje = Ext.getCmp('textDenunciasAnteriores');
                             //mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
                         },

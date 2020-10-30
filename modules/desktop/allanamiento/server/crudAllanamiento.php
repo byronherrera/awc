@@ -189,7 +189,9 @@ function enviar()
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $actual = $os->get_member_id();
-    $data = json_decode($_POST['data']);
+    $dataG = $_GET;
+    $data = $_POST;
+    $dataR = $_REQUEST;
     if (is_null($data))
         $data = json_decode(stripslashes($_POST["data"]));
 
