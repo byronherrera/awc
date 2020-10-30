@@ -1,6 +1,7 @@
 <?php
+header('Content-type: text/html; charset=utf-8');
 require_once '../../../../server/os.php';
-
+require_once '../../../common/Classes/funciones.php';
 $os = new os();
 if (!$os->session_exists()) {
     die('No existe sesión!');
@@ -29,25 +30,41 @@ function selectMensajesConsultas()
 
 function insertMensajesConsultas()
 {
+
+
     global $os;
+
     $os->db->conn->query("SET NAMES 'utf8'");
     $data = json_decode(stripslashes($_POST["data"]));
 
-    $sql = "INSERT INTO amc_proc_solicitud_detalle (nombre, activo )
-	values('$data->nombre','$data->activo');";
+    $data->id_funcionario = $os->get_member_id();
+
+    //genero el listado de nombre de campos
+
+    $cadenaDatos = '';
+    $cadenaCampos = '';
+    foreach ($data as $clave => $valor) {
+        $cadenaCampos = $cadenaCampos . $clave . ',';
+        $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+    }
+    $cadenaCampos = substr($cadenaCampos, 0, -1);
+    $cadenaDatos = substr($cadenaDatos, 0, -1);
+
+    $sql = "INSERT INTO amc_proc_solicitud_detalle($cadenaCampos)
+	values($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
+
+    $data->id = $os->db->conn->lastInsertId();
+    // genero el nuevo codigo de proceso
+
     echo json_encode(array(
         "success" => true,
         "msg" => $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode(),
-        "data" => array(
-            array(
-                "id" => $os->db->conn->lastInsertId(),
-                "nombre" => $data->nombre,
-                "activo" => $data->activo
-            )
-        )
+        "data" => array($data)
     ));
+
+
 }
 
 function updateMensajesConsultas()
@@ -121,6 +138,80 @@ function selectMensajesConsultasForm()
     );
 }
 
+function deleteMensajesConsultas()
+{
+    global $os;
+    $id = json_decode(stripslashes($_POST["data"]));
+
+    // se valida que no existan registros en la tabla hija
+
+    $sql = "DELETE FROM amc_proc_solicitud_detalle WHERE id = $id";
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
+    echo json_encode(array(
+        "success" => $sql->errorCode() == 0,
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_planificacion_notificaciones, eliminado exitosamente" : $sql->errorCode()
+    ));
+
+}
+
+function envioMensajesConsultas()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $data = $_POST;
+
+    $id = (isset($data["id"])) ? $data["id"] : '';
+    $id_solicitud = (isset($data["id_solicitud"])) ? $data["id_solicitud"] : '';
+    $contenido = (isset($data["contenido"])) ? $data["contenido"] : '';
+    $estado_envio = (isset($data["estado_envio"])) ? $data["estado_envio"] : '';
+    $id_funcionario = (isset($data["id_funcionario"])) ? $data["id_funcionario"] : '';
+    $fecha_envio = (isset($data["fecha_envio"])) ? $data["fecha_envio"] : '';
+    $fecha_creacion = (isset($data["fecha_creacion"])) ? $data["fecha_creacion"] : '';
+
+    // envio de mensaje
+
+    $contenidoMailRecepcion = getmensajeSolicitudInformacionReceptada($nombre , $fecha);
+    // envio email al encargado del negocio
+
+    $email = $data->correoelectronico;
+    $asunto = "Nueva Solicitud de Informcación, " . " - " . $email;
+
+
+    $funcionarios = ["tanya.ortega@quito.gob.ec", "francisco.collaguazo@quito.gob.ec"];
+    //$funcionarios = ["byron.herrera@quito.gob.ec" ];
+
+    $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "pamela.parreno@quito.gob.ec", "nelly.carrera@quito.gob.ec"];
+    $from = 'Solicitud de Información - Agencia Metropolitana de Control';
+    // activar envio de correos de prueba
+    $prueba = true;
+    $resultado = enviarEmailAmc($email, $asunto, $contenidoMailRecepcion, $funcionarios, $funcionariosSeguimiento, $from , $prueba);
+
+    // luego de enviar el mensaje se actualiza $estado envi
+    if ($estado_envio != 'Enviado')
+        $sql = "UPDATE amc_proc_solicitud_detalle SET estado_envio = 'Enviado'
+                WHERE id = '$id';";
+    $log = $sql;
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
+
+
+
+
+    echo json_encode(array(
+        "success" => $sql->errorCode() == 0,
+        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode(),
+        "data" => $data
+    ));
+
+    // genero archivo de log
+    $fichero = 'consultas_ciudadanas.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $os->get_member_id() . "\n" . $log . "\n\n";
+    file_put_contents($fichero, $actual);
+}
+
+
 switch ($_GET['operation']) {
     case 'select' :
         selectMensajesConsultas();
@@ -137,10 +228,11 @@ switch ($_GET['operation']) {
     case 'selectForm' :
         selectMensajesConsultasForm();
         break;
-
-
     case 'grabarDetalle' :
         aprobar();
+        break;
+    case 'envioMensajesConsultas' :
+        envioMensajesConsultas();
         break;
 }
 
@@ -175,56 +267,30 @@ function aprobar()
     file_put_contents($fichero, $actual);
 }
 
-function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $motivo = '')
+
+function getmensajeSolicitudInformacionReceptada($nombre = '', $fecha = '')
 {
-    switch ($opcion) {
-        case 'negar' :
-            $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-<div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
-<div style="clear: both; margin: 50px 10%; float: left;">
-<p>Estimado usuario gracias por escribirnos, su solicitud no es aprobada por el siguiente motivo: <br><br> 
-<span style="font-weight: bold"> ' . $motivo . '</span><br><br> 
-Adicionalmente estas son las causas para no aprobar una denuncia: <br><br>
-
-1. Imagen de la cédula, no válida<br>
-2. Fotografías anexas a la denunciada no son válidas.<br>
-3. En caso de ser una persona jurídica, la  imagen de nombramiento no es válida.<br>
-4. La denuncia realizada no se encuentra dentro de las competencias de la Agencia Metropolitana de Control.<br>
-5. La informacíon proporcianada como dirección, croquis, mapa, no permite ubicar el sitio de la denuncia<br>
-<br>
-<br>
-</p>
-<p>&nbsp;</p>
-<p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
-</div>
-<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
-</div>';
-            return $texto;
-            break;
-
-        case 'aprobar' :
-            $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-<div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
-<div style="clear: both; margin: 50px 10%; float: left;">
-<p><br><br>
- Estimado ciudadano gracias por escribirnos, su denuncia fue revisada y ha sido ingresada correctamente en nuestro sistema con el código ' . $codigo_tramite . '<br>
- <br>
- En el siguiente link, usted  podrá hacer el seguimiento del proceso.<br>
- <a href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/' . $id . '-' . $nombre . '" target="_blank">Click aquí</a>
-<br>    
-<br>
-</p>
-<p>&nbsp;</p>
-<p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
-</div>
-<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
-</div>
-';
-            return $texto;
-            break;
-
-    }
+    $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
+                <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
+                <div style="clear: both; margin: 50px 10%; float: left;">
+                <p><br><br>
+                 Estimado, ' . $nombre . ' hemos recibido su solicitud, un funcionario se encargará de gestionar su pedido.<br>
+                <br>
+                <br>    
+                <p>Fecha : ' . $fecha . '</p>
+                <p>Atentamente </p>
+                <p>GAD MDMQ AGENCIA METROPOLITANA DE CONTROL</p>
+                <p></p>
+                <p>IMPORTANTE</p>
+                <p>************************************************</p>
+                <p>- No responder este correo es un Mensaje Automático.</p>
+                </div>
+                <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                </div>
+                ';
+    return $texto;
 }
+
 
 
 function cors()

@@ -1052,10 +1052,10 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
                         method: 'POST',
 
-                        params: { data: data },
+//                        params: { data: data },
                         jsonData: { data: data },
                         success: function (response, opts) {
-                            storeAllanamiento.load();
+                            this.storeAllanamiento.load();
                             //mensaje = Ext.getCmp('textDenunciasAnteriores');
                             //mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
                         },
