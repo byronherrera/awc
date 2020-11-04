@@ -1042,7 +1042,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         var urlConsultaciudadanaLocal = this.urlConsultaciudadanaLocal;
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Desea aprobar la consultaciudadana.<br>¿Desea continuar?',
+            msg: '¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
@@ -1055,6 +1055,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                         waitMsg: 'Saving data',
                         success: function (form, action) {
                             Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
+                            AppMsg.setAlert('Atención', 'Datos guardados');
                             //storeConsultaciudadana.load();
                         },
                         failure: function (form, action) {
