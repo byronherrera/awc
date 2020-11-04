@@ -12,7 +12,7 @@ function selectAllanamiento()
     global $os;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_proc_reconocimineto_responsabilidad ORDER BY id";
+    $sql = "SELECT * FROM amc_proc_reconocimineto_responsabilidad where etapa = 'Secretaria' and estado = 'Asignado' ORDER BY id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -142,7 +142,6 @@ switch ($_GET['operation']) {
     case 'selectForm' :
         selectAllanamientoForm();
         break;
-
     case 'devolver' :
         devolver();
         break;
@@ -154,59 +153,22 @@ switch ($_GET['operation']) {
 function devolver()
 {
     global $os;
-
-    $id = (int)$_POST ['id'];
-    $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
-
-    $sql  = "UPDATE amc_proc_reconocimineto_responsabilidad 
-            SET estapa='true', secretaria_confirmed='false',secretaria_motivonegar='$motivoNegarDenuncia', secretaria_fecha_procesado =  CURDATE() WHERE (`id`='$id')";
-echo $sql;
-    $sql = $os->db->conn->prepare($sql);
-    $resultado = $sql->execute();
-
-    //enviar mensaje a usuari
-    $mensaje = getmensaje('negar', '', '', '', $motivoNegarDenuncia);
- //   $envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
-    $envioMail = '';
-    ////////////////////////
-    ///
-    if ($resultado) {
-        echo json_encode(array(
-            "success" => true,
-            "msg" => "Contenido actualizado exitosamente " . $envioMail
-        ));
-    } else {
-        echo json_encode(array(
-            "success" => false,
-            "msg" => "Error en la base de datos."
-        ));
-    }
-
-}
-
-function enviar()
-{
-    global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $actual = $os->get_member_id();
-    $dataG = $_GET;
-    $data = $_POST;
-    $dataR = $_REQUEST;
-    if (is_null($data))
-        $data = json_decode(stripslashes($_POST["data"]));
+    $usuario = $os->get_member_id();
+    $data = json_decode($_POST["data"]);
 
-    $id = (isset($data["id"])) ? $data["id"] : '';
-    $etapa = (isset($data["etapa"])) ? $data["etapa"] : '';
-    $estado = (isset($data["estado"])) ? $data["estado"] : '';
-    $codigoSitra = (isset($data["codigo_sitra"])) ? $data["codigo_sitra"] : '';
-    $observacionSitra = (isset($data["observacion_sitra"])) ? $data["observacion_sitra"] : '';
+    $id = (int) $data->id;
+    $observacionSitra = (isset($data->observacion_sitra)) ? $data->observacion_sitra : '';
 
     $sql  = " UPDATE amc_proc_reconocimineto_responsabilidad 
-             SET etapa = '$etapa',
-                 estado = '$estado',
-                 codigo_sitra = '$codigoSitra',
-                 observacion_sitra = '$observacionSitra'
-              WHERE id = '$id'; ";
+             SET estado = 'Devuelto',
+                 observacion_sitra = '$observacionSitra',
+                 id_usuario = '$usuario',
+                 fecha_procesado = CURDATE()
+              WHERE id = '$id'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, obervacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('$data->id','$data->etapa', '$data->estado', '$data->codigo_sitra','$data->observacion_sitra',CURDATE(),'$usuario'); ";
 
     $log = $sql;
     $sql = $os->db->conn->prepare($sql);
@@ -222,6 +184,56 @@ function enviar()
     $fichero = 'consultas_ciudadanas.log';
     $actual = file_get_contents($fichero);
     $actual .= $os->get_member_id() . "\n" . $log . "\n\n";
+    file_put_contents($fichero, $actual);
+
+}
+
+function enviar()
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $usuario = $os->get_member_id();
+    $data = json_decode($_POST["data"]);
+
+    $codigoSitra = (isset($data->codigo_sitra)) ? $data->codigo_sitra : '';
+    $observacionSitra = (isset($data->observacion_sitra)) ? $data->observacion_sitra : '';
+
+    $sql  = " UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Instruccion',
+                 estado = 'Enviado',
+                 codigo_sitra = '$codigoSitra',
+                 observacion_sitra = '$observacionSitra',
+                 id_usuario = '$usuario',
+                 fecha_procesado = CURDATE()
+              WHERE id = '$data->id'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, obervacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('$data->id','$data->etapa', '$data->estado', '$data->codigo_sitra','$data->observacion_sitra',CURDATE(),'$usuario'); ";
+
+    $log = $sql;
+    $sql = $os->db->conn->prepare($sql)->execute();
+
+    echo json_encode(array(
+        "success" => $sql->errorCode() == 0,
+        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode(),
+        "data" => $data
+    ));
+
+    /*$sqlHist  = " INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, obervacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('$data->id','$data->etapa', '$data->estado', '$data->codigo_sitra','$data->observacion_sitra',CURDATE(),'$usuario') ";
+    $logHist = $sqlHist;
+    $sqlHist = $os->db->conn->prepare($sqlHist)->execute();
+
+    echo json_encode(array(
+        "success" => $sqlHist->errorCode() == 0,
+        "msg" => $sqlHist->errorCode() == 0 ? "Inserccion Historico exitoso" : $sqlHist->errorCode(),
+        "data" => $data
+    ));*/
+
+    // genero archivo de log
+    $fichero = 'allanamiento.log';
+    $actual = file_get_contents($fichero);
+    $actual .= $os->get_member_id() . "\n" . $log . $logHist . "\n\n";
     file_put_contents($fichero, $actual);
 
     //$mensaje = getmensaje('aprobar', $_POST ['nombre'], $codigo_tramite, $id);

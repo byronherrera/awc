@@ -61,66 +61,66 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         //fin combo activo
 
         //inicio combos Allanamiento
-        storeEtapaAllanamiento = new Ext.data.JsonStore({
-            root: 'users',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                users: [
-                    {"id": 'Secretaria', "nombre": "Secretaria"},
-                    {"id": 'Instruccion', "nombre": "Instruccion"},
-                    {"id": 'Resolucion', "nombre": "Resolucion"},
-                    {"id": 'Ejecucion', "nombre": "Ejecucion"}
-                ]
-            }
-        });
+        /*storeEtapaAllanamiento = new Ext.data.JsonStore({
+           root: 'users',
+           fields: ['id', 'nombre'],
+           autoLoad: true,
+           data: {
+               users: [
+                   {"id": 'Secretaria', "nombre": "Secretaria"},
+                   {"id": 'Instruccion', "nombre": "Instruccion"},
+                   {"id": 'Resolucion', "nombre": "Resolucion"},
+                   {"id": 'Ejecucion', "nombre": "Ejecucion"}
+               ]
+           }
+       });
 
-        var comboEtapaAllanamiento = new Ext.form.ComboBox({
-            id: 'comboEtapaAllanamiento',
-            store: storeEtapaAllanamiento,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
+       var comboEtapaAllanamiento = new Ext.form.ComboBox({
+           id: 'comboEtapaAllanamiento',
+           store: storeEtapaAllanamiento,
+           valueField: 'id',
+           displayField: 'nombre',
+           triggerAction: 'all',
+           mode: 'local'
+       });
 
-        function obtenerNombreEtapa(id) {
-            var index = storeEtapaAllanamiento.findExact('id', id);
-            if (index > -1) {
-                var record = storeEtapaAllanamiento.getAt(index);
-                return record.get('nombre');
-            }
-        }
+       function obtenerNombreEtapa(id) {
+           var index = storeEtapaAllanamiento.findExact('id', id);
+           if (index > -1) {
+               var record = storeEtapaAllanamiento.getAt(index);
+               return record.get('nombre');
+           }
+       }
 
-        /*storeEstadoAllanamiento = new Ext.data.JsonStore({
-            root: 'users',
-            fields: ['id', 'nombre'],
-            autoLoad: true,
-            data: {
-                users: [
-                    {"id": 'Asignado', "nombre": "Asignado"},
-                    {"id": 'Enviado', "nombre": "Enviado"},
-                    {"id": 'Devuelto', "nombre": "Devuelto"}
-                ]
-            }
-        });
+      storeEstadoAllanamiento = new Ext.data.JsonStore({
+           root: 'users',
+           fields: ['id', 'nombre'],
+           autoLoad: true,
+           data: {
+               users: [
+                   {"id": 'Asignado', "nombre": "Asignado"},
+                   {"id": 'Enviado', "nombre": "Enviado"},
+                   {"id": 'Devuelto', "nombre": "Devuelto"}
+               ]
+           }
+       });
 
-        var comboEstadoAllanamiento = new Ext.form.ComboBox({
-            id: 'comboEstadoAllanamiento',
-            store: storeEstadoAllanamiento,
-            valueField: 'id',
-            displayField: 'nombre',
-            triggerAction: 'all',
-            mode: 'local'
-        });
+       var comboEstadoAllanamiento = new Ext.form.ComboBox({
+           id: 'comboEstadoAllanamiento',
+           store: storeEstadoAllanamiento,
+           valueField: 'id',
+           displayField: 'nombre',
+           triggerAction: 'all',
+           mode: 'local'
+       });
 
-        function obtenerNombreEstado(id) {
-            var index = storeEstadoAllanamiento.findExact('id', id);
-            if (index > -1) {
-                var record = storeEstadoAllanamiento.getAt(index);
-                return record.get('nombre');
-            }
-        }*/
+       function obtenerNombreEstado(id) {
+           var index = storeEstadoAllanamiento.findExact('id', id);
+           if (index > -1) {
+               var record = storeEstadoAllanamiento.getAt(index);
+               return record.get('nombre');
+           }
+       }*/
 
         //Fin combos Allanamientos
 
@@ -206,10 +206,10 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 {name: 'zonal', allowBlank: false},
                 {name: 'ip', allowBlank: false},
 
-                {name: 'estapa', allowBlank: true},
+                {name: 'etapa', allowBlank: true},
                 {name: 'estado', allowBlank: true},
-                {name: 'fechaprocesado', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'usuario_id', allowBlank: true},
+                {name: 'fecha_procesado', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'id_usuario', allowBlank: true},
                 {name: 'codigo_sitra', allowBlank: true},
                 {name: 'observacion_sitra', allowBlank: true},
                 {name: 'enviar',  disabled: true },
@@ -262,11 +262,11 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 , {
                     header: 'Observación',
                     //id: 'obervacion_sitra',
-                    dataIndex: 'obervacion_sitra',
+                    dataIndex: 'observacion_sitra',
                     sortable: true,
                     width: 170,
                     scope: this,
-                    editor: new Ext.form.TextArea({id: 'obervacion_sitra1', allowBlank: true})
+                    editor: new Ext.form.TextArea({id: 'observacion_sitra', allowBlank: true})
                 }
                 , {
                     header: 'etapa',
@@ -274,8 +274,8 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 80,
                     scope: this,
-                    editor: comboEtapaAllanamiento,
-                    renderer: obtenerNombreEtapa
+                    //editor: comboEtapaAllanamiento,
+                    //renderer: obtenerNombreEtapa
                 }
                 , {
                     header: 'estado',
@@ -286,13 +286,18 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     //renderer: obtenerNombreEstado
                 }
                 , {
-                    header: 'fechaprocesado',
-                    dataIndex: 'fechaprocesado',
+                    header: 'fecha_procesado',
+                    dataIndex: 'fecha_procesado',
                     sortable: true,
                     width: 100,
                     renderer: formatDate
                 }
-                , {header: 'usuario', dataIndex: 'usuario_id', sortable: true, width: 70, scope: this}
+                , {
+                    header: 'usuario',
+                    dataIndex: 'id_usuario',
+                    sortable: true,
+                    width: 70,
+                    scope: this}
                 , {
                     xtype: 'actioncolumn',
                     header: 'Enviar',
@@ -333,16 +338,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             tooltip: 'Devolver',
                             handler: function (grid, rowIndex, colIndex) {
                                 var rec = storeAllanamiento.getAt(rowIndex);
-                                //this.devolverAllanamiento(rec.data.id);
-                                Ext.Ajax.request({
-                                    url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
-                                    success: function (response, opts) {
-                                        mensaje = Ext.getCmp('textDenunciasAnteriores');
-                                        mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
-                                    },
-                                    //failure: funcionMal,
-                                    params: { data: rec.data  }
-                                });
+                                this.devolverAllanamiento(rec.data)
                             },
                             scope: this
                         }
@@ -1037,23 +1033,22 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         }
     },
     enviarAllanamiento: function (data) {
-        console.log(">>>>>>idTramite",data);
         store = this.storeAllanamiento;
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Desea aprobar la allanamiento.<br>¿Desea continuar?',
+            msg: 'Desea Enviar el allanamiento.<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-
                     Ext.Ajax.request({
                         url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
                         params: { data: Ext.util.JSON.encode(data) },
                         //jsonData: { data },
                         success: function (response, opts) {
-                            storeAllanamiento.load();
+                            console.log(">>>>>>>>>>Response",response);
+                            store.load();
                             //mensaje = Ext.getCmp('textDenunciasAnteriores');
                             //mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
                         },
@@ -1068,80 +1063,30 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             });
                         }
                     });
-
-                    /*var myForm = Ext.getCmp('formEnviar').getForm();
-                    myForm.submit({
-                        url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
-                        method: 'POST',
-                        waitMsg: 'Saving data',
-                        success: function (form, action) {
-                            //se actualiza tabla en la web
-                            //var dataReceived = JSON.parse(action.response.responseText);
-                            myForm.submit({
-                                url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
-                                method: 'POST',
-                                waitMsg: 'Saving data',
-                                params: {
-                                    //codigo_tramite: dataReceived.data
-                                    data: data
-                                },
-                                success: function (form, action) {
-                                    //Ext.getCmp('tb_negarallanamiento').setDisabled(true);
-                                    //Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
-                                    storeAllanamiento.load();
-                                },
-                                failure: function (form, action) {
-                                    var errorJson = JSON.parse(action.response.responseText);
-                                    Ext.Msg.show({
-                                        title: 'Error campos obligatorios'
-                                        , msg: errorJson.msg
-                                        , modal: true
-                                        , icon: Ext.Msg.ERROR
-                                        , buttons: Ext.Msg.OK
-                                    });
-                                }
-                            });
-                        },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
-                            Ext.Msg.show({
-                                title: 'Error campos obligatorios'
-                                , msg: errorJson.msg
-                                , modal: true
-                                , icon: Ext.Msg.ERROR
-                                , buttons: Ext.Msg.OK
-                            });
-                        }
-                    });*/
-
                 }
             }
         });
 
     },
-    devolverAllanamiento: function () {
+    devolverAllanamiento: function (data) {
         store = this.storeAllanamiento;
         var urlAllanamientoLocal = this.urlAllanamientoLocal;
         Ext.Msg.show({
             title: 'Advertencia',
-            msg: 'Desea negar el allanamiento, .<br>¿Desea continuar?',
+            msg: 'Desea devolver el allanamiento.<br>¿Desea continuar?',
             scope: this,
             icon: Ext.Msg.WARNING,
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    Ext.getCmp('codigo_tramite_formulario').setValue("n/a");
-
-                    var myForm = Ext.getCmp('formAllanamientoDetalle').getForm();
-
-                    myForm.submit({
-                        url: urlAllanamientoLocal + 'crudAllanamiento.php?operation=negarDenuncia',
-                        method: 'POST',
-                        waitMsg: 'Saving data',
-                        success: function (form, action) {
-                            Ext.getCmp('tb_negarallanamiento').setDisabled(true);
-                            Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
-                            // store.load();
+                    Ext.Ajax.request({
+                        url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=devolver',
+                        params: { data: Ext.util.JSON.encode(data) },
+                        //jsonData: { data },
+                        success: function (response, opts) {
+                            store.load();
+                            //mensaje = Ext.getCmp('textDenunciasAnteriores');
+                            //mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);
