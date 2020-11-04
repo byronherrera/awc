@@ -1,3 +1,4 @@
+var selectSolicitur = 0;
 QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
     id: 'consultaciudadana',
     type: 'desktop/consultaciudadana',
@@ -12,6 +13,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
     },
 
     createWindow: function () {
+
+
         var desktop = this.app.getDesktop();
         // define a que tiene acceso los funcionario de acuerdo al perfil
 
@@ -292,10 +295,12 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 singleSelect: true,
                 listeners: {
                     rowselect: function (sm, row, rec) {
+
                         this.record = rec;
                         /*cargar el formulario*/
                         cargaDetalle(rec.id);
 
+                        selectSolicitur = rec.id;
                         //   storeMensajesConsultas.baseParams.id  = rec.id;
                         var id_local = rec.id;
                         storeMensajesConsultas.baseParams.id = id_local;
@@ -376,10 +381,10 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id', allowBlank: false},
+                {name: 'id', allowBlank: true},
                 {name: 'id_solicitud', allowBlank: false},
                 {name: 'contenido', allowBlank: false},
-                {name: 'estado_envio', allowBlank: false},
+                {name: 'estado_envio', allowBlank: true},
                 {name: 'id_funcionario', allowBlank: true},
                 {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: false}
             ]
@@ -412,7 +417,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 30,
                     hidden: true
-                },{
+                }, {
                     header: 'id_solicitud',
                     dataIndex: 'id_solicitud',
                     sortable: true,
@@ -459,9 +464,24 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                             tooltip: 'Enviar',
                             handler: function (grid, rowIndex, colIndex, item, e, record) {
                                 var rec = storeMensajesConsultas.getAt(rowIndex);
+                                dataEnvio = storeMensajesConsultas.data.item(rowIndex);
 
-                                console.log (rec);
-                                console.log ("Sell " + rec.get('id'),  rec.get('id_solicitud'));
+                                Ext.Ajax.request({
+                                    url: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=envioMensajesConsultas",
+                                    params: {
+                                        id: dataEnvio['id'],
+                                        id_solicitud: dataEnvio['id_solicitud'],
+                                        contenido: dataEnvio['contenido'],
+                                        estado_envio: dataEnvio['estado_envio'],
+                                        id_funcionario: dataEnvio['id_funcionario'],
+                                        fecha_envio: dataEnvio['fecha_envio']
+                                    },
+                                    scope: this,
+                                    success: function (response, opts) {
+                                        storeMensajesConsultas.load()
+                                        //  mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
+                                    }
+                                });
                             },
                             scope: this
                         }
@@ -1065,6 +1085,42 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         });
 
     },
+    requestConsultaciudadanaData: function () {
+        this.storeConsultaciudadana.load();
+    },
+    deleteMensajesConsultas: function () {
+        Ext.Msg.show({
+            title: 'Confirmación',
+            msg: 'Está seguro de querer borrar?',
+            scope: this,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var rows = this.gridMensajesConsultas.getSelectionModel().getSelections();
+                    if (rows.length === 0) {
+                        return false;
+                    }
+                    this.storeMensajesConsultas.remove(rows);
+                }
+            }
+        });
+    },
+    addMensajesConsultas: function () {
+        var operativos = new this.storeMensajesConsultas.recordType({
+            id_solicitud: selectSolicitur,
+            contenido: null,
+            estado_envio: 'No enviado',
+            id_funcionario: '',
+            fecha_envio: (new Date())
+
+        });
+        this.gridMensajesConsultas.stopEditing();
+        this.storeMensajesConsultas.insert(0, operativos);
+        this.gridMensajesConsultas.startEditing(0, 0);
+    },
+    requestGridDataPersonal: function () {
+        this.storeMensajesConsultas.load();
+    },
 
     requestConsultaciudadanaParticipantesData: function () {
         this.storeConsultaciudadanaParticipantes.load();
@@ -1100,9 +1156,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             }
         });
     },
-    requestConsultaciudadanaData: function () {
-        this.storeConsultaciudadana.load();
-    },
+
     requestConsultaciudadanaDataExport: function () {
         Ext.Msg.show({
             title: 'Advertencia',
