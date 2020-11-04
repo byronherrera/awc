@@ -122,7 +122,6 @@ function ingresaPedidoInformacion()
     $data->fecha = date('Y-m-d h:i:s'); //todo
     $data->ip = recuperaIP(); //todo
 
-
     $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {

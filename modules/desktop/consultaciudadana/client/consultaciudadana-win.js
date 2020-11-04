@@ -386,7 +386,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 {name: 'contenido', allowBlank: false},
                 {name: 'estado_envio', allowBlank: true},
                 {name: 'id_funcionario', allowBlank: true},
-                {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: false}
+                {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: true}
             ]
         });
 
@@ -465,23 +465,26 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                             handler: function (grid, rowIndex, colIndex, item, e, record) {
                                 var rec = storeMensajesConsultas.getAt(rowIndex);
                                 dataEnvio = storeMensajesConsultas.data.item(rowIndex);
-
-                                Ext.Ajax.request({
-                                    url: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=envioMensajesConsultas",
-                                    params: {
-                                        id: dataEnvio['id'],
-                                        id_solicitud: dataEnvio['id_solicitud'],
-                                        contenido: dataEnvio['contenido'],
-                                        estado_envio: dataEnvio['estado_envio'],
-                                        id_funcionario: dataEnvio['id_funcionario'],
-                                        fecha_envio: dataEnvio['fecha_envio']
-                                    },
-                                    scope: this,
-                                    success: function (response, opts) {
-                                        storeMensajesConsultas.load()
-                                        //  mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
-                                    }
-                                });
+                                if ( dataEnvio.data['estado_envio'] == 'No enviado' ) {
+                                    Ext.Ajax.request({
+                                        url: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=envioMensajesConsultas",
+                                        params: {
+                                            id: dataEnvio.data['id'],
+                                            id_solicitud: dataEnvio.data['id_solicitud'],
+                                            contenido: dataEnvio.data['contenido'],
+                                            estado_envio: dataEnvio.data['estado_envio']
+                                        },
+                                        scope: this,
+                                        success: function (response, opts) {
+                                            storeMensajesConsultas.load()
+                                            AppMsg.setAlert('Atención', 'Enviando mensaje al cuidadano');
+                                            //  mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
+                                        }
+                                    });
+                                } else
+                                {
+                                    AppMsg.setAlert('Atención', 'Mensaje ya enviado');
+                                }
                             },
                             scope: this
                         }
@@ -502,7 +505,6 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                     rowselect: function (sm, row, rec) {
                         this.record = rec;
                         /*cargar el formulario*/
-
                     }
                 }
             }),
@@ -511,25 +513,12 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             // paging bar on the bottom
             listeners: {
                 beforeedit: function (e) {
-                    // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    /* if (acceso) {
-
-                         if (accesosAdministrador)
-                             return true;
-                         if (e.field == 'secretaria_estado') {
-                             // en caso que ya este finalizado no se puede editar
-                             if (e.value == 'Finalizado') {
-                                 return false
-                             }
-                         }
-                         return true;
-                     } else {
-                         // si no se tiene acceso se bloquea el registro
-                         return false;
-                     }*/
+                    // en caso de no enviar todavia el mensaje se puede editar
+                    if  (e.record.get("estado_envio") == 'Enviado')  {
+                        return false;
+                    }
                 }
             }
-
         });
         //fin MensajesConsultas tab
 
@@ -1111,7 +1100,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             contenido: null,
             estado_envio: 'No enviado',
             id_funcionario: '',
-            fecha_envio: (new Date())
+        //    fecha_envio: (new Date())
+            fecha_envio: ''
 
         });
         this.gridMensajesConsultas.stopEditing();
