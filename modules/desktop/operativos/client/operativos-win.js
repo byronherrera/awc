@@ -2920,7 +2920,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                                                             items: [
                                                                 {
                                                                     xtype: 'fileuploadfield',
-                                                                    id: 'form-file',
+                                                                    id: 'form-file-operativos',
                                                                     emptyText: 'Seleccione imagen a subir',
                                                                     fieldLabel: 'Imagen',
                                                                     name: 'photo-path',

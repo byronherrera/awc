@@ -1,4 +1,3 @@
-var selectSolicitur = 0;
 QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
     id: 'consultaciudadana',
     type: 'desktop/consultaciudadana',
@@ -13,6 +12,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
     },
 
     createWindow: function () {
+        var selectSolicitud = 0;
+        var estadoGeneral = false;
 
 
         var desktop = this.app.getDesktop();
@@ -133,7 +134,16 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
-            mode: 'local'
+            mode: 'local',
+            listeners: {
+                'select': function (value, newValue, oldValue) {
+// todo algo
+
+                    if (newValue != oldValue) {
+
+                    }
+                }
+            }
         });
 
         function estadoConsultaCiudadanan(id) {
@@ -156,12 +166,17 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 destroy: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=delete"
             },
             listeners: {
-                exception: function (proxy, type, action, options, response, arg) {
+                exception: function (proxy, type, action, options, response, arg1) {
                     if (typeof response.message !== 'undefined') {
                         if (response.message != '') {
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, response.message);
                         }
+                        var index = storeConsultaciudadana.findExact('id', arg1.data.id);
+                        grid = Ext.getCmp('gridConsultaciudadana')
+                        var models = grid.getStore().getRange();
+                        models[index].set('secretaria_estado', "Emitido");
                     }
+                    return false
                 }
             }
         });
@@ -213,6 +228,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
         this.storeConsultaciudadana = storeConsultaciudadana;
 
         this.gridConsultaciudadana = new Ext.grid.EditorGridPanel({
+            id: 'gridConsultaciudadana',
             height: 200,
             widht: '100%',
             store: storeConsultaciudadana,
@@ -234,6 +250,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                     scope: this,
                     editor: comboESTCONS,
                     renderer: estadoConsultaCiudadanan
+
                 }
                 , {header: 'Fecha pedido', dataIndex: 'fecha', sortable: true, width: 100, renderer: formatDate}
                 , {
@@ -296,22 +313,30 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 listeners: {
                     rowselect: function (sm, row, rec) {
 
+
                         this.record = rec;
                         /*cargar el formulario*/
                         cargaDetalle(rec.id);
+                        // para la creacion de nuevos items
+                        selectSolicitud = rec.id;
 
-                        selectSolicitur = rec.id;
-                        //   storeMensajesConsultas.baseParams.id  = rec.id;
-                        var id_local = rec.id;
-                        storeMensajesConsultas.baseParams.id = id_local;
+                        storeMensajesConsultas.baseParams.id = rec.id;
                         storeMensajesConsultas.load();
-                        this.record.get("secretaria_estado")
+
                         if (acceso) {
                             if (this.record.get("secretaria_estado") != 'En proceso') {
                                 Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
+                                // deshabilitar botones
+                                Ext.getCmp('addMensajesConsultas').setDisabled(true);
+                                Ext.getCmp('deleteMensajesConsultas').setDisabled(true);
+                                estadoGeneral = false;
                             }
                             else {
                                 Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(false);
+                                Ext.getCmp('addMensajesConsultas').setDisabled(false);
+                                Ext.getCmp('deleteMensajesConsultas').setDisabled(false);
+                                estadoGeneral = true;
+
                             }
                         } else {
                             Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
@@ -465,7 +490,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                             handler: function (grid, rowIndex, colIndex, item, e, record) {
                                 var rec = storeMensajesConsultas.getAt(rowIndex);
                                 dataEnvio = storeMensajesConsultas.data.item(rowIndex);
-                                if ( dataEnvio.data['estado_envio'] == 'No enviado' ) {
+                                if (dataEnvio.data['estado_envio'] == 'No enviado') {
                                     Ext.Ajax.request({
                                         url: urlConsultaciudadanaLocal + "crudMensajesConsultas.php?operation=envioMensajesConsultas",
                                         params: {
@@ -481,8 +506,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                             //  mensaje.setText('Solicitudes consultaciudadana anteriores: ' + (opts.result.data["totalconsultaciudadana"] - 1))
                                         }
                                     });
-                                } else
-                                {
+                                } else {
                                     AppMsg.setAlert('Atención', 'Mensaje ya enviado');
                                 }
                             },
@@ -513,8 +537,13 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             // paging bar on the bottom
             listeners: {
                 beforeedit: function (e) {
+                    // en caso que el estado de la solicitud es false
+                    if (!estadoGeneral) {
+                        return false
+                    }
                     // en caso de no enviar todavia el mensaje se puede editar
-                    if  (e.record.get("estado_envio") == 'Enviado')  {
+
+                    if (e.record.get("estado_envio") == 'Enviado') {
                         return false;
                     }
                 }
@@ -869,8 +898,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                                             handler: this.addMensajesConsultas,
                                                             iconCls: 'save-icon',
 //                                                            disabled: true,
-                                                            id: 'addMensajesConsultas'
-                                                            //disabled: !acceso
+                                                            id: 'addMensajesConsultas',
+                                                            disabled: true
                                                         },
                                                         '-',
                                                         {
@@ -879,6 +908,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                                             handler: this.deleteMensajesConsultas,
                                                             id: 'deleteMensajesConsultas',
                                                             iconCls: 'delete-icon',
+                                                            disabled: true
                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
                                                             //                                                          disabled: true
                                                         },
@@ -1097,11 +1127,11 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
     },
     addMensajesConsultas: function () {
         var operativos = new this.storeMensajesConsultas.recordType({
-            id_solicitud: selectSolicitur,
+            id_solicitud: selectSolicitud,
             contenido: null,
             estado_envio: 'No enviado',
             id_funcionario: '',
-        //    fecha_envio: (new Date())
+            //    fecha_envio: (new Date())
             fecha_envio: ''
 
         });

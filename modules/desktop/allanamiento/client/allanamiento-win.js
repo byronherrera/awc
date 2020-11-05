@@ -173,7 +173,8 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         this.gridAllanamiento = new Ext.grid.EditorGridPanel({
             height: 200,
             widht: '100%',
-            store: storeAllanamiento, columns: [
+            store: storeAllanamiento,
+            columns: [
                 new Ext.grid.RowNumberer({width: 40})
                 , {header: 'Id', dataIndex: 'id', sortable: true, width: 60, scope: this}
                 , {
@@ -271,8 +272,14 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         cargaDetalle(rec.id);
                         if(accesosSecretaria){
                             if (this.record.get("etapa") == 'Secretaria') {
+                                // habilito campos de secretaria
                                 Ext.getCmp('codigo_sitra').setDisabled(false);
                                 Ext.getCmp('observacion_sitra').setDisabled(false);
+                                // habilto botones de secretaria
+                            } else {
+
+                                Ext.getCmp('codigo_sitra').setDisabled(true);
+                                Ext.getCmp('observacion_sitra').setDisabled(true);
                             }
                         }
                     }
