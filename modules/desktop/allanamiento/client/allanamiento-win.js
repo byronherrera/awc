@@ -1,3 +1,4 @@
+var solicitudSelected =  {};
 QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
     id: 'allanamiento',
     type: 'desktop/allanamiento',
@@ -59,70 +60,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             }
         }
         //fin combo activo
-
-        //inicio combos Allanamiento
-        /*storeEtapaAllanamiento = new Ext.data.JsonStore({
-           root: 'users',
-           fields: ['id', 'nombre'],
-           autoLoad: true,
-           data: {
-               users: [
-                   {"id": 'Secretaria', "nombre": "Secretaria"},
-                   {"id": 'Instruccion', "nombre": "Instruccion"},
-                   {"id": 'Resolucion', "nombre": "Resolucion"},
-                   {"id": 'Ejecucion', "nombre": "Ejecucion"}
-               ]
-           }
-       });
-
-       var comboEtapaAllanamiento = new Ext.form.ComboBox({
-           id: 'comboEtapaAllanamiento',
-           store: storeEtapaAllanamiento,
-           valueField: 'id',
-           displayField: 'nombre',
-           triggerAction: 'all',
-           mode: 'local'
-       });
-
-       function obtenerNombreEtapa(id) {
-           var index = storeEtapaAllanamiento.findExact('id', id);
-           if (index > -1) {
-               var record = storeEtapaAllanamiento.getAt(index);
-               return record.get('nombre');
-           }
-       }
-
-      storeEstadoAllanamiento = new Ext.data.JsonStore({
-           root: 'users',
-           fields: ['id', 'nombre'],
-           autoLoad: true,
-           data: {
-               users: [
-                   {"id": 'Asignado', "nombre": "Asignado"},
-                   {"id": 'Enviado', "nombre": "Enviado"},
-                   {"id": 'Devuelto', "nombre": "Devuelto"}
-               ]
-           }
-       });
-
-       var comboEstadoAllanamiento = new Ext.form.ComboBox({
-           id: 'comboEstadoAllanamiento',
-           store: storeEstadoAllanamiento,
-           valueField: 'id',
-           displayField: 'nombre',
-           triggerAction: 'all',
-           mode: 'local'
-       });
-
-       function obtenerNombreEstado(id) {
-           var index = storeEstadoAllanamiento.findExact('id', id);
-           if (index > -1) {
-               var record = storeEstadoAllanamiento.getAt(index);
-               return record.get('nombre');
-           }
-       }*/
-
-        //Fin combos Allanamientos
 
         var textField = new Ext.form.TextField({allowBlank: false});
 
@@ -211,9 +148,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 {name: 'fecha_procesado', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'id_usuario', allowBlank: true},
                 {name: 'codigo_sitra', allowBlank: true},
-                {name: 'observacion_sitra', allowBlank: true},
-                {name: 'enviar',  disabled: true },
-                {name: 'devolver',  disabled: true },
+                {name: 'observacion_sitra', allowBlank: true}
             ]
         });
 
@@ -243,30 +178,27 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'Id', dataIndex: 'id', sortable: true, width: 60, scope: this}
                 , {
                     header: 'SITRA',
-                    //id: 'codigo_sitra',
                     dataIndex: 'codigo_sitra',
                     sortable: true,
                     width: 50,
                     scope: this,
-                    editor: new Ext.form.TextField({
+                    /*editor: new Ext.form.TextField({
                         id: 'codigo_sitra1', allowBlank: false, listeners: {
                             'change': function (value, newValue, oldValue) {
                                 if (newValue != oldValue) {
-                                    //console.log("Valores", value, newValue, oldValue)
+
                                 }
                             }
                         }
-                    }),
-                    listeners: {}
+                    })*/
                 }
                 , {
-                    header: 'Observación',
-                    //id: 'obervacion_sitra',
+                    header: 'observación',
                     dataIndex: 'observacion_sitra',
                     sortable: true,
                     width: 170,
                     scope: this,
-                    editor: new Ext.form.TextArea({id: 'observacion_sitra', allowBlank: true})
+                    /*editor: new Ext.form.TextArea({id: 'observacion_sitra', allowBlank: true})*/
                 }
                 , {
                     header: 'etapa',
@@ -286,7 +218,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     //renderer: obtenerNombreEstado
                 }
                 , {
-                    header: 'fecha_procesado',
+                    header: 'fecha procesado',
                     dataIndex: 'fecha_procesado',
                     sortable: true,
                     width: 100,
@@ -297,52 +229,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_usuario',
                     sortable: true,
                     width: 70,
-                    scope: this}
-                , {
-                    xtype: 'actioncolumn',
-                    header: 'Enviar',
-                    dataIndex: 'enviar',
-                    width: 50,
-                    //hidden: true,
-                    align: 'center',
-                    renderer: function(value, metadata, record) {
-                        //var rec = storeAllanamiento.getAt(rowIndex);
-                        //console.log("aaa",metadata);
-                        if(record.data.codigo_sitra != null){
-                            //record.disabled = true;
-                        }else{
-                            //record.disabled = false;
-                        }
-                    },
-                    items: [
-                        {
-                            icon: 'email_go.png',
-                            tooltip: 'Enviar',
-                            handler: function (grid, rowIndex, colIndex, item, record) {
-                                var rec = storeAllanamiento.getAt(rowIndex);
-                                this.enviarAllanamiento(rec.data);
-                            },
-                            scope: this
-                        }
-                    ]
-                }
-                , {
-                    xtype : 'actioncolumn',
-                    header: 'Devolver',
-                    dataIndex: 'devolver',
-                    width: 50,
-                    align: 'center',
-                    items: [
-                        {
-                            icon: 'email_go.png',
-                            tooltip: 'Devolver',
-                            handler: function (grid, rowIndex, colIndex) {
-                                var rec = storeAllanamiento.getAt(rowIndex);
-                                this.devolverAllanamiento(rec.data)
-                            },
-                            scope: this
-                        }
-                    ]
+                    scope: this
                 }
                 , {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 70, scope: this}
                 , {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 130, scope: this}
@@ -379,31 +266,14 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 listeners: {
                     rowselect: function (sm, row, rec) {
                         this.record = rec;
-                        //this.idDenunciasRecuperada = rec.id;
-                        /*cargar el formulario*/
+                        solicitudSelected = rec;
+                        console.log(">>>Antes",solicitudSelected);
                         cargaDetalle(rec.id);
-                        //Ext.getCmp('tb_negarallanamiento').setDisabled(true);
-                        if (accesosSecretaria) {
-                            if (this.record.get("procesado") == 'true') {
-                                //         Ext.getCmp('tb_negarallanamiento').setDisabled(true);
-
-                                //Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
-                                //Ext.getCmp('obervacion_sitra1').setDisabled(true);
-                                //Ext.getCmp('codigo_sitra1').setDisabled(true);
+                        if(accesosSecretaria){
+                            if (this.record.get("etapa") == 'Secretaria') {
+                                Ext.getCmp('codigo_sitra').setDisabled(false);
+                                Ext.getCmp('observacion_sitra').setDisabled(false);
                             }
-                            else {
-                                //       Ext.getCmp('tb_negarallanamiento').setDisabled(false);
-                                // Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
-
-                                //Ext.getCmp('obervacion_sitra1').setDisabled(false);
-                                //Ext.getCmp('codigo_sitra1').setDisabled(false);
-                            }
-                        } else {
-                            //    Ext.getCmp('tb_negarallanamiento').setDisabled(true);
-
-                            // Ext.getCmp('tb_aprobarallanamiento').setDisabled(true);
-                            // Ext.getCmp('obervacion_sitra1').setDisabled(true);
-                            // Ext.getCmp('codigo_sitra1').setDisabled(true);
                         }
                     }
                 }
@@ -482,26 +352,26 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             });
 
 
-            this.formAllanamientoDetalle = new Ext.FormPanel({
-                id: 'formAllanamientoDetalle',
+            this.formDetalle = new Ext.FormPanel({
+                id: 'formDetalle',
                 cls: 'no-border',
                 width: winWidth - 24,
                 tbar: [
                     {
-                        text: 'Receptar solicitud allanamiento',
+                        text: 'Asignar',
                         scope: this,
-                        handler: this.aprobarallanamiento,
+                        handler: this.enviarAllanamiento,
                         iconCls: 'save-icon',
-                        disabled: true,
-                        id: 'tb_aprobarallanamiento',
+                        //disabled: true,
+                        id: 'tabAprobarallanamiento',
                         formBind: true
                     }, {
-                        text: 'Devolver solicitud allanamiento',
+                        text: 'Devolver',
                         scope: this,
-                        handler: this.negarallanamiento,
-                        iconCls: 'save-icon',
-                        disabled: true,
-                        id: 'tb_negarallanamiento',
+                        handler: this.devolverAllanamiento,
+                        iconCls: 'delete-icon',
+                        //disabled: true,
+                        id: 'tabNegarallanamiento',
                         formBind: true
                     },
 
@@ -680,53 +550,49 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                         fieldLabel: 'LUAE',
                                         name: 'imagenaluae'
                                     }
-                                    , {
+                                    /*, {
                                         xtype: 'displayfield',
                                         fieldLabel: 'Acto Inicio',
                                         name: 'imagenactoinicio'
-                                    }
-                                    , {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'Motivo negar',
-                                        name: 'motivonegar',
-                                        anchor: '95%'
-                                    }
+                                    }*/
                                     , {
                                         xtype: 'displayfield',
                                         fieldLabel: 'Total pedidos anteriores',
                                         name: 'totalallanamiento',
                                         anchor: '95%'
                                     },
-                                    /* {
+                                     {
                                          xtype: 'textfield',
-                                         fieldLabel: 'SITRA',
+                                         id: 'codigo_sitra',
                                          name: 'codigo_sitra',
+                                         fieldLabel: 'SITRA',
                                          anchor: '95%',
                                          allowBlank: false,
-                                         id: 'codigo_sitra',
+                                         disabled: true,
                                          listeners: {
                                              'change': function (value, newValue, oldValue) {
                                                  if (newValue != oldValue) {
-                                                     Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
+                                                     //Ext.getCmp('tb_aprobarallanamiento').setDisabled(false);
                                                  }
                                              }
                                          }
                                      },
                                      {
                                          xtype: 'textfield',
-                                         fieldLabel: 'Observacion',
+                                         id: 'observacion_sitra',
                                          name: 'observacion_sitra',
+                                         fieldLabel: 'Observacion',
                                          anchor: '95%',
                                          allowBlank: false,
-                                         id: 'observacion_sitra',
+                                         disabled: true,
                                          listeners: {
                                              'change': function (value, newValue, oldValue) {
                                                  if (newValue != oldValue) {
-                                                     Ext.getCmp('tb_negarallanamiento').setDisabled(false);
+                                                     //Ext.getCmp('tb_negarallanamiento').setDisabled(false);
                                                  }
                                              }
                                          }
-                                     }*/
+                                     }
                                 ]
                             }
                         ]
@@ -734,6 +600,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
                 ]
             });
+
 
             win = desktop.createWindow({
                 id: 'grid-win-allanamiento',
@@ -751,7 +618,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     items: [
                         {
                             autoScroll: true,
-                            title: 'Solicitudesde Allanamiento',
+                            title: 'Solicitudes de Allanamiento',
                             closable: true,
 
                             items: [
@@ -800,72 +667,13 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                                 {
                                                     title: 'Resumen Solicitud',
                                                     layout: 'column',
-                                                    id: 'detalleOperativosTab',
+                                                    id: 'tabDetalle',
                                                     height: winHeight - 325,
                                                     width: winWidth,
-                                                    items: this.formAllanamientoDetalle,
+                                                    items: this.formDetalle,
                                                     disabled: false,
                                                     autoScroll: true
-                                                },
-                                                /* {
-                                                     title: 'Instituciones Participantes',
-                                                     layout: 'column',
-                                                     height: 250,
-                                                     items: this.gridOperativosParticipantes,
-                                                     autoScroll: true,
-                                                     tbar: [
-                                                         {
-                                                             text: 'Nuevo',
-                                                             scope: this,
-                                                             //handler: this.addoperativosPersonal,
-                                                             handler: this.addoperativosParticipantes,
-                                                             iconCls: 'save-icon',
-                                                             disabled: true,
-                                                             id: 'addoperativoparticipantes'
-                                                             //disabled: !acceso
-                                                         },
-                                                         '-',
-                                                         {
-                                                             text: "Eliminar",
-                                                             scope: this,
-                                                             handler: this.deleteoperativosPersonal,
-                                                             handler: this.deleteoperativosParticipantes,
-                                                             id: 'borraroperativoparticipantes',
-                                                             iconCls: 'delete-icon',
-                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                             disabled: true
-                                                         }
-                                                     ]
-                                                 },
-                                                 {
-                                                     title: 'Personal asignado',
-                                                     layout: 'column',
-                                                     height: 250,
-                                                     items: this.gridOperativosPersonal,
-                                                     autoScroll: true,
-                                                     tbar: [
-                                                         {
-                                                             text: 'Nuevo',
-                                                             scope: this,
-                                                             handler: this.addoperativosPersonal,
-                                                             iconCls: 'save-icon',
-                                                             //disabled: true,
-                                                             id: 'addoperativodetalle',
-                                                             //disabled: !acceso
-                                                         },
-                                                         '-',
-                                                         {
-                                                             text: "Eliminar",
-                                                             scope: this,
-                                                             handler: this.deleteoperativosPersonal,
-                                                             id: 'borraroperativodetalle',
-                                                             iconCls: 'delete-icon',
-                                                             //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
-                                                             //disabled: true
-                                                         }
-                                                     ]
-                                                 },*/
-
+                                                }
                                             ]
                                         }
 
@@ -873,149 +681,27 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ]
                         },
-                        /* {
-                             title: 'Reportes',
-                             closable: true,
-                             layout: 'border',
-                             //disabled: this.app.isAllowedTo('accesosOperativos', this.id) ? false : true,
-                             tbar: [
-                                 {
-                                     iconCls: 'reload-icon',
-                                     handler: this.requestGridDataDocumentoReporte,
-                                     scope: this,
-                                     text: 'Buscar'
-
-                                 },
-                                 {
-                                     iconCls: 'reload-icon',
-                                     handler: this.requestGridDataDocumentoReporteReset,
-                                     scope: this,
-                                     text: 'Borrar formulario'
-
-                                 },
-                                 {
-                                     xtype: 'checkbox',
-                                     boxLabel: 'Detalle acciones',
-                                     id: 'checkDetalleAcciones',
-                                     name: 'detalleacciones',
-                                     checked: false,
-                                     inputValue: '1',
-                                     tooltip: 'Detalle de las acciones efectuados en el reporte',
-                                     cls: 'barramenu',
-                                     handler: function (checkbox, isChecked) {
-                                     }
-                                 }, {
-                                     xtype: 'checkbox',
-                                     boxLabel: 'Detalle actas',
-                                     id: 'checkDetalleActas',
-                                     name: 'detalleactas',
-                                     checked: false,
-                                     inputValue: '1',
-                                     tooltip: 'Detalle de las actas efectuados en el reporte',
-                                     cls: 'barramenu',
-                                     handler: function (checkbox, isChecked) {
-                                     }
-                                 }, {
-                                     xtype: 'checkbox',
-                                     boxLabel: 'Detalle retiros',
-                                     id: 'checkDetalleRecibidos',
-                                     name: 'detalleretiros',
-                                     checked: false,
-                                     inputValue: '1',
-                                     tooltip: 'Detalle de los retiros efectuados en el reporte',
-                                     cls: 'barramenu',
-                                     handler: function (checkbox, isChecked) {
-                                     }
-                                 }, {
-                                     xtype: 'checkbox',
-                                     boxLabel: 'Totales personal',
-                                     id: 'checkTotalesPersonal',
-                                     name: 'totalespersonal',
-                                     checked: false,
-                                     inputValue: '1',
-                                     tooltip: 'Detalle de los retiros efectuados en el reporte',
-                                     cls: 'barramenu',
-                                     handler: function (checkbox, isChecked) {
-                                     }
-                                 }, '-',
-
-                                 {
-                                     iconCls: 'excel-icon',
-                                     handler: this.botonExportarDocumentoReporte,
-                                     scope: this,
-                                     text: 'Exportar listado',
-                                     tooltip: 'Se genera archivo Excel con la información solicitada'
-                                 },
-                                 {
-                                     iconCls: 'excel-icon',
-                                     handler: this.botonExportarDocumentoReporteCalendarioPersonal,
-                                     scope: this,
-                                     text: 'Calendario  personas',
-                                     tooltip: 'Se genera archivo Excel con la información solicitada'
-                                 }
-                                 ,
-                                 {
-                                     iconCls: 'excel-icon',
-                                     handler: this.botonExportarDocumentoReporteCalendarioOperativos,
-                                     scope: this,
-                                     text: 'Calendario  operativos',
-                                     tooltip: 'Se genera archivo Excel con la información solicitada'
-                                 }
-                                 ,
-                                 {
-                                     iconCls: 'excel-icon',
-                                     handler: this.botonExportarDocumentoReporteTotalOperativos,
-                                     scope: this,
-                                     text: 'Operativos tiempo',
-                                     tooltip: 'Se genera archivo Excel con total tiempo por operativo'
-                                 }
-                             ],
-                             items: [
-                                 {
-                                     region: 'north',
-                                     height: 175,
-                                     minSize: 100,
-                                     maxSize: 170,
-                                     closable: true,
-                                     autoScroll: false,
-                                     items: this.formConsultaDocumentos
-                                 },
-                                 {
-                                     // lazily created panel (xtype:'panel' is default)
-                                     region: 'center',
-                                     split: true,
-                                     autoScroll: true,
-                                     height: 270,
-                                     minSize: 100,
-                                     maxSize: 150,
-                                     items: this.gridDocumentosReporte
-                                 }
-                             ]
-
-                             //this.gridReportes
-                         } */
                     ]
                 })
             });
         }
         win.show();
 
-        function cargaDetalle(allanamiento) {
-            forma = Ext.getCmp('formAllanamientoDetalle');
+        function cargaDetalle(idAllanamiento) {
+            forma = Ext.getCmp('formDetalle');
             forma.getForm().load({
                 waitMsg: 'Recuperando información',
                 url: urlAllanamientoLocal + 'crudAllanamiento.php?operation=selectForm',
                 params: {
-                    id: allanamiento
+                    id: idAllanamiento
                 },
                 success: function (response, opts) {
                     mensaje = Ext.getCmp('textDenunciasAnteriores');
-                    mensaje.setText('Solicitudes allanamiento anteriores: ' + (response.findField('totalallanamiento').getValue() - 1))
+                    //mensaje.setText('Solicitudes allanamiento anteriores: ' + (response.findField('totalallanamiento').getValue() - 1));
                 }
-
             });
-
         }
+
         function bloquearLectura(forma, activar) {
             Ext.getCmp('id_persona').setReadOnly(activar);
             Ext.getCmp('recepcion_documento').setReadOnly(activar);
@@ -1032,7 +718,10 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             Ext.getCmp('reasignacion').setReadOnly(activar);
         }
     },
-    enviarAllanamiento: function (data) {
+    enviarAllanamiento: function () {
+        solicitudSelected.data.codigo_sitra = Ext.getCmp('codigo_sitra').getValue();
+        solicitudSelected.data.observacion_sitra = Ext.getCmp('observacion_sitra').getValue();
+        console.log(">>>Data",solicitudSelected);
         store = this.storeAllanamiento;
         Ext.Msg.show({
             title: 'Advertencia',
@@ -1044,7 +733,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     Ext.Ajax.request({
                         url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=enviar',
-                        params: { data: Ext.util.JSON.encode(data) },
+                        params: { data: Ext.util.JSON.encode(solicitudSelected.data) },
                         //jsonData: { data },
                         success: function (response, opts) {
                             console.log(">>>>>>>>>>Response",response);
@@ -1068,7 +757,8 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         });
 
     },
-    devolverAllanamiento: function (data) {
+    devolverAllanamiento: function () {
+        solicitudSelected.data.observacion_sitra = Ext.getCmp('observacion_sitra').getValue();
         store = this.storeAllanamiento;
         var urlAllanamientoLocal = this.urlAllanamientoLocal;
         Ext.Msg.show({
@@ -1081,7 +771,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     Ext.Ajax.request({
                         url: this.urlAllanamientoLocal + 'crudAllanamiento.php?operation=devolver',
-                        params: { data: Ext.util.JSON.encode(data) },
+                        params: { data: Ext.util.JSON.encode(solicitudSelected.data) },
                         //jsonData: { data },
                         success: function (response, opts) {
                             store.load();

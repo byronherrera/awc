@@ -12,7 +12,7 @@ function selectAllanamiento()
     global $os;
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_proc_reconocimineto_responsabilidad where etapa = 'Secretaria' and estado = 'Asignado' ORDER BY id";
+    $sql = "SELECT * FROM amc_proc_reconocimineto_responsabilidad ORDER BY id ";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -200,7 +200,7 @@ function enviar()
 
     $sql  = " UPDATE amc_proc_reconocimineto_responsabilidad
              SET etapa = 'Instruccion',
-                 estado = 'Enviado',
+                 estado = 'Asignado',
                  codigo_sitra = '$codigoSitra',
                  observacion_sitra = '$observacionSitra',
                  id_usuario = '$usuario',
