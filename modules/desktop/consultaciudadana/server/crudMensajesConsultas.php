@@ -14,7 +14,7 @@ function selectMensajesConsultas()
     $id = (int)$_POST ['id'];
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_proc_solicitud_detalle WHERE id_solicitud = $id ORDER BY fecha_envio ";
+    $sql = "SELECT * FROM amc_proc_solicitud_detalle WHERE id_solicitud = $id ORDER BY id DESC ";
 
     $result = $os->db->conn->query($sql);
     $data = array();
@@ -30,8 +30,6 @@ function selectMensajesConsultas()
 
 function insertMensajesConsultas()
 {
-
-
     global $os;
 
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -44,8 +42,13 @@ function insertMensajesConsultas()
     $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaCampos = $cadenaCampos . $clave . ',';
-        $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        if (($clave == 'fecha_envio') && ($valor == '')) {
+            $valor = null;
+        } else
+        {
+            $cadenaCampos = $cadenaCampos . $clave . ',';
+            $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+        }
     }
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
@@ -165,23 +168,26 @@ function envioMensajesConsultas()
     $id_solicitud = (isset($data["id_solicitud"])) ? $data["id_solicitud"] : '';
     $contenido = (isset($data["contenido"])) ? $data["contenido"] : '';
     $estado_envio = (isset($data["estado_envio"])) ? $data["estado_envio"] : '';
-    $id_funcionario = (isset($data["id_funcionario"])) ? $data["id_funcionario"] : '';
-    $fecha_envio = (isset($data["fecha_envio"])) ? $data["fecha_envio"] : '';
-    $fecha_creacion = (isset($data["fecha_creacion"])) ? $data["fecha_creacion"] : '';
+
 
     // envio de mensaje
+    $result = $os->db->conn->query("SELECT nombres, apellidos FROM  amc_proc_solicitud_informacion WHERE id = '" .$id_solicitud . "';");
+    $row = $result->fetch(PDO::FETCH_ASSOC) ;
+    $nombre  = $row['nombres'] . " " . $row['nombres'];
 
-    $contenidoMailRecepcion = getmensajeSolicitudInformacionReceptada($nombre , $fecha);
+    $fecha = date("F j, Y, g:i a");
+
+    $contenidoMailRecepcion = getmensajeSolicitudInformacionReceptada($nombre , $fecha, $contenido);
+
     // envio email al encargado del negocio
 
     $email = $data->correoelectronico;
     $asunto = "Nueva Solicitud de Informcación, " . " - " . $email;
 
-
     $funcionarios = ["tanya.ortega@quito.gob.ec", "francisco.collaguazo@quito.gob.ec"];
-    //$funcionarios = ["byron.herrera@quito.gob.ec" ];
 
     $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "pamela.parreno@quito.gob.ec", "nelly.carrera@quito.gob.ec"];
+
     $from = 'Solicitud de Información - Agencia Metropolitana de Control';
     // activar envio de correos de prueba
     $prueba = true;
@@ -189,14 +195,11 @@ function envioMensajesConsultas()
 
     // luego de enviar el mensaje se actualiza $estado envi
     if ($estado_envio != 'Enviado')
-        $sql = "UPDATE amc_proc_solicitud_detalle SET estado_envio = 'Enviado'
+        $sql = "UPDATE amc_proc_solicitud_detalle SET estado_envio = 'Enviado',  fecha_envio = NOW()
                 WHERE id = '$id';";
     $log = $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
-
-
-
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
@@ -268,14 +271,15 @@ function aprobar()
 }
 
 
-function getmensajeSolicitudInformacionReceptada($nombre = '', $fecha = '')
+function getmensajeSolicitudInformacionReceptada($nombre = '', $fecha = '', $contenido = "")
 {
     $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
                 <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
                 <div style="clear: both; margin: 50px 10%; float: left;">
                 <p><br><br>
-                 Estimado, ' . $nombre . ' hemos recibido su solicitud, un funcionario se encargará de gestionar su pedido.<br>
+                 Estimado, ' . $nombre . ' .<br>
                 <br>
+                ' . $contenido . '
                 <br>    
                 <p>Fecha : ' . $fecha . '</p>
                 <p>Atentamente </p>
