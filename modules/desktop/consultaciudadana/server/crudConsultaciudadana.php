@@ -11,16 +11,72 @@ function selectConsultaciudadana()
 {
     global $os;
 
+    $columnaBusqueda = 'busqueda_todos';
+    $where = '';
+
+    if (isset($_POST['filterField'])) {
+        $columnaBusqueda = $_POST['filterField'];
+    }
+
+    if (isset($_POST['filterText'])) {
+        $campo = $_POST['filterText'];
+        $campo = str_replace(" ", "%", $campo);
+        if ($columnaBusqueda != 'busqueda_todos') {
+            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+        } else {
+            $listadoCampos = array(
+                'cedula',
+                'nombres',
+                'apellidos',
+                'correoelectronico',
+                'celular',
+                'solicitud',
+                'observaciones',
+                'fecha',
+                'secretaria_sitra_respuesta',
+                'secretaria_observacion'
+            );
+            $cadena = '';
+            foreach ($listadoCampos as &$valor) {
+                $cadena = $cadena . " $valor LIKE '%$campo%' OR ";
+            }
+
+            $cadena = substr($cadena, 0, -3);
+            $where = " WHERE $cadena ";
+        }
+    }
+
+    if (isset ($_POST['start']))
+        $start = $_POST['start'];
+    else
+        $start = 0;
+    if (isset ($_POST['limit']))
+        $limit = $_POST['limit'];
+    else
+        $limit = 50;
+
+    $orderby = 'ORDER BY FIELD(secretaria_estado,  \'En proceso\', \'Emitido\', \'Finalizado\'), fecha';
+    if (isset($_POST['sort'])) {
+        $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
+    }
+
+
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_proc_solicitud_informacion ORDER BY FIELD(secretaria_estado,  'En proceso', 'Emitido', 'Finalizado'), fecha";
+    $sql = "SELECT * FROM amc_proc_solicitud_informacion $where $orderby LIMIT $start, $limit";
 
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
         $data[] = $row;
     }
+
+    $result = $os->db->conn->query("SELECT count(*) AS total FROM amc_proc_solicitud_informacion $where");
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total = $row['total'];
+
+
     echo json_encode(array(
+            "total" => $total,
             "success" => true,
             "data" => $data)
     );
@@ -61,6 +117,23 @@ function updateConsultaciudadana()
 
     $finalizado = false;
 
+    if ($data->secretaria_estado == 'Emitido') {
+        //recuperar valores grabados de secretaria_sitra_respuesta y secretaria_observacion
+        $sql = "SELECT secretaria_estado FROM amc_proc_solicitud_informacion WHERE id = '$data->id'";
+        $sql = $os->db->conn->query($sql);
+        $rownombre = $sql->fetch(PDO::FETCH_ASSOC);
+        $secretaria_estado = $rownombre['secretaria_estado'];
+
+        $data->secretaria_estado = $secretaria_estado;
+
+        echo json_encode(array(
+            "success" => false,
+            "message" => "No permitido",
+            "data" => $data
+        ));
+        return;
+    }
+
     if ($data->secretaria_estado == 'En proceso') {
         $data->secretaria_fecha_inicio = date('Y-m-d H:i:s');
         $cadenaSql .= ", secretaria_fecha_inicio = '" . $data->secretaria_fecha_inicio . "'";
@@ -70,19 +143,45 @@ function updateConsultaciudadana()
 
     if ($data->secretaria_estado == 'Finalizado') {
         //recuperar valores grabados de secretaria_sitra_respuesta y secretaria_observacion
-        $sql = "SELECT secretaria_sitra_respuesta, secretaria_observacion FROM amc_proc_solicitud_informacion WHERE id = '$data->id'";
+        $sql = "SELECT secretaria_sitra_respuesta, secretaria_observacion, secretaria_estado FROM amc_proc_solicitud_informacion WHERE id = '$data->id'";
         $sql = $os->db->conn->query($sql);
 
         $rownombre = $sql->fetch(PDO::FETCH_ASSOC);
-        $secretaria_observacion =  $rownombre['secretaria_observacion'];
-        $secretaria_sitra_respuesta =  $rownombre['secretaria_sitra_respuesta'];
+        $secretaria_observacion = $rownombre['secretaria_observacion'];
+        $secretaria_sitra_respuesta = $rownombre['secretaria_sitra_respuesta'];
+        $secretaria_estado = $rownombre['secretaria_estado'];
 
-        if ((strlen($secretaria_observacion) == 0) || (!isset($secretaria_observacion)) || (strlen($secretaria_sitra_respuesta) == 0)|| (!isset($secretaria_sitra_respuesta))) {
-            $data->secretaria_estado == 'En proceso';
+        // recuperamos cuando mensajes tienen enviados anteriormente
+
+        $sql = "SELECT COUNT(*) totalenviado FROM `amc_proc_solicitud_detalle` WHERE id_solicitud = '$data->id' AND estado_envio = 'ENVIADO'";
+        $sql = $os->db->conn->query($sql);
+
+        $rowEnvios = $sql->fetch(PDO::FETCH_ASSOC);
+        $totalEnvios = $rowEnvios['totalenviado'];
+
+        $sql = "SELECT COUNT(*) total FROM `amc_proc_solicitud_detalle` WHERE id_solicitud = '$data->id' ";
+        $sql = $os->db->conn->query($sql);
+
+        $rowEnvios = $sql->fetch(PDO::FETCH_ASSOC);
+        $total = $rowEnvios['total'];
+
+        if (($total > 0) && ($total == $totalEnvios)) {
+            $errorMensajes = false;
+        } else {
+            $errorMensajes = true;
+        }
+
+        if (($errorMensajes) || (strlen($secretaria_observacion) == 0) || (!isset($secretaria_observacion)) || (strlen($secretaria_sitra_respuesta) == 0) || (!isset($secretaria_sitra_respuesta))) {
+            $data->secretaria_estado = $secretaria_estado;
+            $respueta = '';
+            $respueta .= (strlen($secretaria_observacion) == 0) ? 'Observación, ' : '';
+            $respueta .= (strlen($secretaria_sitra_respuesta) == 0) ? 'SITRA, ' : '';
+            $respueta .= ($errorMensajes) ? 'Mensajes enviados.' : '';
+
             echo json_encode(array(
                 "success" => false,
-                "msg" => "Faltan respuesta SITRA y Observaciones",
-                "message" => "Faltan respuesta SITRA y Observaciones"
+                "message" => "Faltan: " . $respueta,
+                "data" => $data
             ));
             return;
         }
@@ -177,7 +276,7 @@ function aprobar()
     $data = $_POST;
 
     $secretariaRespeusta = (isset($data["secretaria_sitra_respuesta"])) ? $data["secretaria_sitra_respuesta"] : '';
-    $secretariaObservacion = (isset($data["secretaria_observacion"])) ? $data["secretaria_observacion"]: '';
+    $secretariaObservacion = (isset($data["secretaria_observacion"])) ? $data["secretaria_observacion"] : '';
     $id = $data["id"];
 
     $sql = "UPDATE amc_proc_solicitud_informacion SET secretaria_sitra_respuesta='$secretariaRespeusta', 

@@ -1,3 +1,5 @@
+var selectSolicitud = 0;
+
 QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
     id: 'consultaciudadana',
     type: 'desktop/consultaciudadana',
@@ -12,8 +14,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
     },
 
     createWindow: function () {
-        var selectSolicitud = 0;
         var estadoGeneral = false;
+        var estadoSeleccionado = '';
 
 
         var desktop = this.app.getDesktop();
@@ -174,7 +176,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                         var index = storeConsultaciudadana.findExact('id', arg1.data.id);
                         grid = Ext.getCmp('gridConsultaciudadana')
                         var models = grid.getStore().getRange();
-                        models[index].set('secretaria_estado', "Emitido");
+                        models[index].set('secretaria_estado', response.data[0].secretaria_estado);
                     }
                     return false
                 }
@@ -220,7 +222,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             proxy: proxyConsultaciudadana,
             reader: readerConsultaciudadana,
             writer: writerConsultaciudadana,
-            autoSave: true
+            autoSave: true,
+            remoteSort: true,
         });
         storeConsultaciudadana.load();
         limiteconsultaciudadana = 50
@@ -312,14 +315,11 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 singleSelect: true,
                 listeners: {
                     rowselect: function (sm, row, rec) {
-
-
                         this.record = rec;
                         /*cargar el formulario*/
                         cargaDetalle(rec.id);
                         // para la creacion de nuevos items
                         selectSolicitud = rec.id;
-
                         storeMensajesConsultas.baseParams.id = rec.id;
                         storeMensajesConsultas.load();
 
@@ -519,6 +519,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
             viewConfig: {
                 forceFit: true,
                 getRowClass: function (record, index) {
+                    return 'multiline-row';
                     if (record.get('estado_envio') == 'No enviado') return 'gold';
                     if (record.get('estado_envio') == 'Enviado') return 'bluestate';
                 }
@@ -571,45 +572,14 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'codigo_tramite',
+                            key: 'busqueda_todos',
                             scope: this,
-                            text: 'Código trámite'
+                            text: 'Todos'
                         }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'cedula',
-                            scope: this,
-                            text: 'Cédula'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'apellido',
-                            scope: this,
-                            text: 'Apellido'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'fecha',
-                            scope: this,
-                            text: 'Fecha'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'direccion',
-                            scope: this,
-                            text: 'Dirección'
-                        }
+
                     ]
                 })
-                , text: 'Código trámite'
+                , text: 'Todos'
             });
 
 
@@ -1085,6 +1055,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                         waitMsg: 'Saving data',
                         success: function (form, action) {
                             Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
+                            var AppMsg = new Ext.AppMsg({});
                             AppMsg.setAlert('Atención', 'Datos guardados');
                             //storeConsultaciudadana.load();
                         },

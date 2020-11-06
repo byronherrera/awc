@@ -55,6 +55,7 @@ function selectRecordatorios()
         $limit = $_POST['limit'];
     else
         $limit = 100;
+
     $orderby = 'ORDER BY id ASC';
     if (isset($_POST['sort'])) {
         $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
