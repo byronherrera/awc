@@ -1,9 +1,10 @@
-QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
+QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
     id: 'actosinicioapp',
     type: 'desktop/actosinicioapp',
+
     init: function () {
         this.launcher = {
-            text: 'Actosinicioapp',
+            text: 'ActosInicioapp',
             iconCls: 'actosinicioapp-icon',
             handler: this.createWindow,
             scope: this
@@ -12,10 +13,16 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
 
     createWindow: function () {
         var desktop = this.app.getDesktop();
-        //var grabarDenuncia = this.app.isAllowedTo('grabarDenuncia', this.id);
+
+        var grabarDenuncia = this.app.isAllowedTo('grabarDenuncia', this.id);
+
         var win = desktop.getWindow('grid-win-actosinicioapp');
+        //var urlActosInicioapp = "amcserver/";
         var urlActosInicioapp = "http://agenciadecontrol.quito.gob.ec/amcserver/"; // servidor produccion
+        var urlDenunciasLocal = "modules/desktop/actosinicioapp/server/";
+
         this.urlActosInicioapp = urlActosInicioapp;
+        this.urlDenunciasLocal = urlDenunciasLocal;
         var winWidth = desktop.getWinWidth();
         var winHeight = desktop.getWinHeight();
         //inicio combo activo
@@ -41,7 +48,7 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
             mode: 'local'
         });
 
-        function actosInicioappActivo(id) {
+        function actosinicioappActivo(id) {
             var index = storeSASINO.findExact('id', id);
             if (index > -1) {
                 var record = storeSASINO.getAt(index);
@@ -77,7 +84,7 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
             Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "")
 
             Ext.Ajax.request({
-                url: urlDenunciasweb + 'uploadimagen.php',
+                url: urlActosInicioapp + 'uploadimagen.php',
                 method: 'POST',
                 params: {
                     imageData: Pic,
@@ -93,17 +100,17 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
             });
         }
 
-        //Denunciasweb tab
-        var proxyActosInicioApp = new Ext.data.HttpProxy({
+        //ActosInicioapp tab
+        var proxyActosInicioapp = new Ext.data.HttpProxy({
             api: {
-                create: urlActosInicioapp + "crudActosinicioapp.php?operation=insert",
-                read: urlActosInicioapp + "crudActosinicioapp.php?operation=select",
-                update: urlActosInicioapp + "crudActosinicioapp.php?operation=upda",
-                destroy: urlActosInicioapp + "crudActosinicioapp.php?operation=delete"
+                create: urlActosInicioapp + "crudActosInicioapp.php?operation=insert",
+                read: urlActosInicioapp + "crudActosInicioapp.php?operation=select",
+                update: urlActosInicioapp + "crudActosInicioapp.php?operation=upda",
+                destroy: urlActosInicioapp + "crudActosInicioapp.php?operation=delete"
             }
         });
 
-        var readerActosInicioApp = new Ext.data.JsonReader({
+        var readerActosInicioapp = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
             messageProperty: 'message',
@@ -111,69 +118,58 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
             root: 'data',
             fields: [
                 {name: 'id', allowBlank: false},
-                {name: 'aislamiento_obligatorio', allowBlank: false},
-                {name: 'cedula', allowBlank: false},
-                {name: 'conductorSinMascarilla', allowBlank: false},
-                {name: 'direccionDomicilio', allowBlank: false},
-                {name: 'direccionInfraccion', allowBlank: false},
+                {name: 'codigo_tramite', allowBlank: false},
+                {name: 'asignado', allowBlank: false},
+                {name: 'confirmed', allowBlank: false},
+                {name: 'prosesado', allowBlank: false},
+                {name: 'nombre', allowBlank: false},
+                {name: 'apellido', allowBlank: false},
                 {name: 'email', allowBlank: false},
-                {name: 'fechaInfraccion', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'foto', allowBlank: false},
-                {name: 'foto1', allowBlank: false},
-                {name: 'hechosInfraccion', allowBlank: false},
-                {name: 'horaInfraccion', allowBlank: false},
-                {name: 'infraccionSinMascarilla', allowBlank: false},
-                {name: 'infraccioncedula', allowBlank: false},
-                {name: 'infracciondistancia', allowBlank: false},
-                {name: 'nombres', allowBlank: false},
-                {name: 'sancion_25_SMU', allowBlank: false},
-                {name: 'sancion_50_SMU', allowBlank: false},
-                {name: 'sancion_tres_salarios', allowBlank: false},
-                {name: 'sancion_un_salario_medio', allowBlank: false}
+                {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'telefono1', allowBlank: false},
+                {name: 'cedula', allowBlank: false},
+                {name: 'tipo', allowBlank: false},
+                {name: 'direcciondenunciado', allowBlank: false},
+                {name: 'geoposicionamiento', allowBlank: false}
             ]
         });
 
-        var writerActosInicioApp = new Ext.data.JsonWriter({
+        var writerActosInicioapp = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
-        var storeActosInicioApp = new Ext.data.Store({
-            id: "storeDenunciasweb",
-            proxy: proxyActosInicioApp,
-            reader: readerActosInicioApp,
-            writer: writerActosInicioApp,
+        var storeActosInicioapp = new Ext.data.Store({
+            id: "storeActosInicioapp",
+            proxy: proxyActosInicioapp,
+            reader: readerActosInicioapp,
+            writer: writerActosInicioapp,
             autoSave: true
         });
-        storeActosInicioApp.load();
-        limitActosInicioApp = 50
+        storeActosInicioapp.load();
+        limiteactosinicioapp = 50
 
-        this.storeActosInicioApp = storeActosInicioApp;
+        this.storeActosInicioapp = storeActosInicioapp;
 
-        this.gridActosInicioApp = new Ext.grid.EditorGridPanel({
+        this.gridActosInicioapp = new Ext.grid.EditorGridPanel({
             height: 200,
             widht: '100%',
-            store: storeActosInicioApp, columns: [
+            store: storeActosInicioapp, columns: [
                 new Ext.grid.RowNumberer({width: 40})
                 , {header: 'Id', dataIndex: 'id', sortable: true, width: 10, scope: this}
-                , {header: 'Aislamiento Obligatorio', dataIndex: 'aislamiento_obligatorio', sortable: true, width: 15, scope: this}
-                , {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 15, scope: this}
-                , {header: 'Conductor sin Mascarilla', dataIndex: 'conductorSinMascarilla', sortable: true, width: 25, scope: this}
-                , {header: 'Dirección de Domicilio', dataIndex: 'direccionDomicilio', sortable: true, width: 15, scope: this}
-                , {header: 'Dirección de Infracción', dataIndex: 'direccionInfraccion', sortable: true, width: 15, scope: this}
-                , {header: 'Email', dataIndex: 'email', sortable: true, width: 30, scope: this}
-                , {header: 'Fecha Infracción', dataIndex: 'fechaInfraccion', sortable: true, width: 30, scope: this}
-                , {header: 'Foto', dataIndex: 'foto', sortable: true, width: 50, scope: this}
-                , {header: 'Foto 1', dataIndex: 'foto1', sortable: true, width: 20, scope: this}
-                , {header: 'Hechos Infracción', dataIndex: 'hechosInfraccion', sortable: true, width: 30, renderer: formatDate}
-                , {header: 'Hora Infracción', dataIndex: 'horaInfraccion', sortable: true, width: 20, scope: this}
-                , {header: 'Infracción sin Mascarilla', dataIndex: 'infraccionSinMascarilla', sortable: true, width: 30, scope: this}
-                , {header: 'Infraccción Cédula', dataIndex: 'infraccioncedula', sortable: true, width: 30, scope: this}
-                , {header: 'Infraccción Distancia', dataIndex: 'infracciondistancia', sortable: true, width: 30, scope: this}
-                , {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 30, scope: this}
-                , {header: 'Sanción 25 SMU', dataIndex: 'sancion_25_SMU', sortable: true, width: 30, scope: this}
-                , {header: 'Sanción 50 SMU', dataIndex: 'sancion_50_SMU', sortable: true, width: 30, scope: this}
-                , {header: 'Sanción tres salarios', dataIndex: 'sancion_tres_salarios', sortable: true, width: 30, scope: this}
-                , {header: 'Sanción un salario medio', dataIndex: 'sancion_un_salario_medio', sortable: true, width: 30, scope: this}
+                , {header: 'Cod trámite', dataIndex: 'codigo_tramite', sortable: true, width: 15, scope: this}
+                , {header: 'Asignado a', dataIndex: 'asignado', sortable: true, width: 15, scope: this}
+                , {header: 'Aprobado/negado', dataIndex: 'confirmed', sortable: true, width: 25, scope: this}
+                , {header: 'Procesado', dataIndex: 'prosesado', sortable: true, width: 15, scope: this}
+                , {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 15, scope: this}
+                , {header: 'Nombre', dataIndex: 'nombre', sortable: true, width: 30, scope: this}
+                , {header: 'Apellido', dataIndex: 'apellido', sortable: true, width: 30, scope: this}
+                , {header: 'Email', dataIndex: 'email', sortable: true, width: 50, scope: this}
+                , {header: 'telefono', dataIndex: 'telefono1', sortable: true, width: 20, scope: this}
+                , {header: 'Fecha', dataIndex: 'fecha', sortable: true, width: 30, renderer: formatDate}
+                , {header: 'Tipo', dataIndex: 'tipo', sortable: true, width: 20, scope: this}
+                , {header: 'Dirección denunciado', dataIndex: 'direcciondenunciado', sortable: true, width: 30, scope: this}
+                , {header: 'Geoposicionamiento', dataIndex: 'geoposicionamiento', sortable: true, width: 30, scope: this}
+
             ],
             viewConfig: {
                 forceFit: true,
@@ -186,8 +182,26 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
                 listeners: {
                     rowselect: function (sm, row, rec) {
                         this.record = rec;
-                        this.actoInicioAppSelected = rec;
-                        cargaDetalle(rec.id);
+                        this.idDenunciasRecuperada = rec.id;
+                        /*cargar el formulario*/
+                        cargaDetalle(rec.id, this.formActosInicioappDetalle, rec);
+
+                        if (grabarDenuncia) {
+                            if (this.record.get("prosesado") == 'true') {
+                                Ext.getCmp('tb_negardenuncias').setDisabled(true);
+                                Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                                Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
+                            }
+                            else {
+                                Ext.getCmp('tb_negardenuncias').setDisabled(false);
+                                Ext.getCmp('tb_aprobardenuncias').setDisabled(false);
+                                Ext.getCmp('motivoNegarDenuncia').setDisabled(false);
+                            }
+                        } else {
+                            Ext.getCmp('tb_negardenuncias').setDisabled(true);
+                            Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                            Ext.getCmp('motivoNegarDenuncia').setDisabled(true);
+                        }
                     }
                 }
             }),
@@ -195,13 +209,14 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
             stripeRows: true,
             // paging bar on the bottom
             bbar: new Ext.PagingToolbar({
-                pageSize: limitActosInicioApp,
-                store: storeActosInicioApp,
+                pageSize: limiteactosinicioapp,
+                store: storeActosInicioapp,
                 displayInfo: true,
-                displayMsg: 'Mostrando actos inicio {0} - {1} of {2}',
-                emptyMsg: "No existen actos inicio que mostrar"
+                displayMsg: 'Mostrando denuncias {0} - {1} of {2}',
+                emptyMsg: "No existen denuncias que mostrar"
             }),
         });
+        //fin ActosInicioapp tab
 
         //var desktop = this.app.getDesktop();
         var win = desktop.getWindow('layout-win');
@@ -210,7 +225,7 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
 
             var checkHandler = function (item, checked) {
                 if (checked) {
-                    var store = this.storeActosInicioApp;
+                    var store = this.storeActosInicioapp;
                     store.baseParams.filterField = item.key;
                     searchFieldBtn.setText(item.text);
                 }
@@ -219,6 +234,14 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
                 menu: new Ext.menu.Menu({
                     items: [
                         {
+                            checked: true,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'codigo_tramite',
+                            scope: this,
+                            text: 'Código trámite'
+                        }
+                        , {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
@@ -230,42 +253,34 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'nombres',
+                            key: 'apellido',
                             scope: this,
-                            text: 'Nombres'
+                            text: 'Apellido'
                         }
                         , {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'fechaInfraccion',
+                            key: 'fecha',
                             scope: this,
-                            text: 'Fecha Infracción'
+                            text: 'Fecha'
                         }
                         , {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'direccionDomicilio',
+                            key: 'direccion',
                             scope: this,
-                            text: 'Dirección de Domicilio'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'direccionInfraccion',
-                            scope: this,
-                            text: 'Dirección de Infracción'
+                            text: 'Dirección'
                         }
                     ]
                 })
-                , text: 'Cédula'
+                , text: 'Código trámite'
             });
 
 
-            this.formActosInicioApp = new Ext.FormPanel({
-                id: 'formActosInicioApp',
+            this.formActosInicioappDetalle = new Ext.FormPanel({
+                id: 'formActosInicioappDetalle',
                 cls: 'no-border',
                 items: [
                     {
@@ -273,8 +288,8 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
                         height: 200,
 
                         autoScroll: false,
-                        id: 'formCabeceraActosInicioApp',
-                        items: this.gridActosInicioApp
+                        id: 'formcabeceradenuncias',
+                        items: this.gridActosInicioapp
                     },
                     {
                         region: 'center',
@@ -284,7 +299,42 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
                         height: winHeight - 265,
                         minSize: 100,
                         margins: '0 0 0 0',
-                        tbar: [],
+                        tbar: [
+                            {
+                                text: 'Aprobar denuncia',
+                                scope: this,
+                                handler: this.aprobardenuncias,
+                                iconCls: 'save-icon',
+                                disabled: true,
+                                id: 'tb_aprobardenuncias'
+                                , formBind: true
+                            }, {
+                                text: 'Negar denuncia',
+                                scope: this,
+                                handler: this.negardenuncias,
+                                iconCls: 'save-icon',
+                                disabled: true,
+                                id: 'tb_negardenuncias',
+                                formBind: true
+                            },
+                            {
+                                text: '| Motivo negar:'
+                                , xtype: 'tbtext',
+                            },
+                            {
+                                xtype: 'textfield',
+                                id: 'motivoNegarDenuncia',
+                                disabled: true,
+                                anchor: '40%',
+                                width: '500'
+                            },
+                            '->',
+                            {
+                                text: 'Denuncias anteriores:'
+                                , xtype: 'tbtext',
+                                id: 'textDenunciasAnteriores'
+                            }
+                        ],
                         items: [
                             {
                                 activeTab: 0,
@@ -293,140 +343,304 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
                                 layout: 'column',
                                 items: [
                                     {
-                                        columnWidth: 1 / 3,
+                                        columnWidth: 1 / 4,
                                         cls: 'margen10',
                                         layout: 'form',
                                         monitorValid: true,
                                         items: [
+                                            {xtype: 'hidden', name: 'id'},
+                                            {xtype: 'hidden', name: 'fecha'},
+                                            {xtype: 'hidden', name: 'urldenuncia'},
+                                            {xtype: 'hidden', name: 'nombre'},
+                                            {xtype: 'hidden', name: 'apellido'},
+                                            {xtype: 'hidden', name: 'cedula'},
+                                            {xtype: 'hidden', name: 'email'},
+                                            {xtype: 'hidden', name: 'ampliaciondenuncia'},
+                                            {xtype: 'hidden', name: 'direcciondenunciado'},
+                                            {xtype: 'hidden', name: 'geoposicionamiento2'},
+                                            {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Fecha',
+                                                name: 'fecha2'
+                                            }, {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Denuncia',
+                                                name: 'urldenuncia2'
+                                            },
                                             {
                                                 xtype: 'displayfield',
                                                 hideLabel: true,
-                                                value: '1. DATOS PERSONALES',
+                                                value: '1. DATOS DEL DENUNCIANTE',
                                                 cls: 'negrilla',
                                                 anchor: '95%'
                                             }
-                                            , {xtype: 'displayfield',
-                                                fieldLabel: 'Cédula',
-                                                name: 'cedula'}
                                             , {
                                                 xtype: 'compositefield',
                                                 fieldLabel: 'Nombres',
-                                                name: 'nombres',
+                                                msgTarget: 'under',
+                                                items: [
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'nombre2',
+                                                        width: '45%',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    },
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'apellido2',
+                                                        width: '45%',
+                                                        margins: '0 5 0 0',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    }
+                                                ]
                                             }
-                                            , {xtype: 'displayfield',
-                                                fieldLabel: 'Email',
-                                                name: 'email'}
-                                            ,{
+                                            , {xtype: 'displayfield', fieldLabel: 'Email', name: 'email2'}
+                                            , {xtype: 'displayfield', fieldLabel: 'Cédula', name: 'cedula2'}
+                                            , {
+                                                xtype: 'compositefield',
+                                                fieldLabel: 'Teléfonos',
+                                                msgTarget: 'under',
+                                                items: [
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'telefono1',
+                                                        width: '45%',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    },
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'telefono2',
+                                                        width: '45%',
+                                                        margins: '0 5 0 0',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    }
+                                                ]
+                                            },
+                                            {
                                                 xtype: 'displayfield',
-                                                fieldLabel: 'Dirección Domicilio',
-                                                name: 'direccionDomicilio',
+                                                fieldLabel: 'Dirección',
+                                                name: 'direccion',
                                                 anchor: '96%'
                                             }
+                                            , {
+                                                xtype: 'compositefield',
+                                                fieldLabel: '<span ext:qtip="Zona, Parroquia<br>Sector, Barrio">Ubicación</span>',
+                                                items: [
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'zonal',
+                                                        width: '45%',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    }
+                                                    , {
+                                                        xtype: 'textfield',
+                                                        name: 'parroquia',
+                                                        width: '45%',
+                                                        margins: '0 5 0 0',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    }
+
+                                                ]
+                                            }
+                                            , {
+                                                xtype: 'compositefield',
+                                                msgTarget: 'under',
+                                                fieldLabel: '<span ext:qtip="Sector, Barrio">Sector, Barrio</span>',
+                                                items: [
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'sector',
+                                                        width: '45%',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    }
+                                                    , {
+                                                        xtype: 'textfield',
+                                                        name: 'barrio',
+                                                        width: '45%',
+                                                        disabled: true,
+                                                        cls: 'disabled',
+                                                        margins: '0 5 0 0',
+                                                    }
+
+                                                ]
+                                            }
+                                            , {xtype: 'displayfield', fieldLabel: 'Num predio', name: 'numpredio'}
 
                                         ]
                                     },
                                     {
+
+
                                         cls: 'fondogris',
-                                        columnWidth: 1 / 3,
+                                        columnWidth: 1 / 4,
                                         layout: 'form',
                                         items: [
 
                                             {
                                                 xtype: 'displayfield',
                                                 hideLabel: true,
-                                                value: '2. DATOS DE LA INFRACCIÓN',
+                                                value: '2. DATOS DEL DENUNCIADO',
                                                 cls: 'negrilla',
                                                 anchor: '95%'
                                             }
+                                            , {xtype: 'displayfield', fieldLabel: 'Nombre', name: 'nombredenunciado'}
+                                            , {xtype: 'displayfield', fieldLabel: 'Email', name: 'emaildenunciado'}
                                             , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Hechos',
-                                                name: 'hechosInfraccion',
-                                                anchor: '96%'
+                                                xtype: 'compositefield',
+                                                fieldLabel: 'Teléfonos',
+                                                msgTarget: 'under',
+                                                items: [
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'telefono1denunciado',
+                                                        width: '45%',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    },
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'telefono2denunciado',
+                                                        width: '45%',
+                                                        margins: '0 5 0 0',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    }
+                                                ]
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Dirección',
-                                                name: 'direccionInfraccion',
+                                                name: 'direcciondenunciado',
                                                 anchor: '96%'
                                             }
                                             , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Fecha',
-                                                name: 'fechaInfraccion',
-                                                anchor: '96%'
+                                                xtype: 'compositefield',
+                                                fieldLabel: '<span ext:qtip="Zona, Parroquia<br>Sector, Barrio">Ubicación</span>',
+                                                items: [
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'zonaldenunciado',
+                                                        width: '45%',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    }
+                                                    , {
+                                                        xtype: 'textfield',
+                                                        name: 'parroquiadenunciado',
+                                                        width: '45%',
+                                                        margins: '0 5 0 0',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    }
+
+                                                ]
+                                            }
+                                            , {
+                                                xtype: 'compositefield',
+                                                msgTarget: 'under',
+                                                fieldLabel: '<span ext:qtip="Sector, barrio del denunciado">Sector, barrio</span>',
+                                                items: [
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'sectordenunciado',
+                                                        width: '45%',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    }
+                                                    , {
+                                                        xtype: 'textfield',
+                                                        name: 'barriodenunciado',
+                                                        width: '45%',
+                                                        disabled: true,
+                                                        cls: 'disabled',
+                                                        margins: '0 5 0 0',
+                                                    }
+                                                ]
                                             }
                                             , {
                                                 xtype: 'displayfield',
-                                                fieldLabel: 'Hora',
-                                                name: 'horaInfraccion',
-                                                anchor: '96%'
+                                                fieldLabel: 'Num Predio',
+                                                name: 'numprediodenunciado'
                                             }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Conductor Sin Mascarilla',
-                                                name: 'conductorSinMascarilla',
-                                                anchor: '96%'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Sin Mascarilla',
-                                                name: 'infraccionSinMascarilla',
-                                                anchor: '96%'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Sin Cédula',
-                                                name: 'infraccioncedula',
-                                                anchor: '96%'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Sin Distancia',
-                                                name: 'infracciondistancia',
-                                                anchor: '96%'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Sin Distancia',
-                                                name: 'infracciondistancia',
-                                                anchor: '96%'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Sanción 25 SMU',
-                                                name: 'sancion_25_SMU',
-                                                anchor: '96%'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Sanción 50 SMU',
-                                                name: 'sancion_50_SMU',
-                                                anchor: '96%'
-                                            }
+
                                         ]
                                     },
                                     {
-                                        columnWidth: 1 / 3,
+                                        columnWidth: 2 / 4,
                                         layout: 'form',
                                         cls: 'margen10',
                                         items: [
                                             {
                                                 xtype: 'displayfield',
-                                                hideLabel: true,
-                                                value: '3. ANEXOS',
-                                                cls: 'negrilla',
+                                                fieldLabel: 'Infracción',
+                                                name: 'infraccion',
+                                                anchor: '96%'
+                                            },
+                                            {
+                                                xtype: 'displayfield',
+                                                name: 'ampliaciondenuncia2',
+                                                fieldLabel: 'Ampliacion denuncia',
+                                                anchor: '96%'
+                                            }
+                                            ,
+                                            {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Coordenadas',
+                                                name: 'geoposicionamiento'
+                                            }
+                                            , {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Croquis',
+                                                name: 'croquis'
+                                            }
+                                            , {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Persona',
+                                                name: 'persona'
+                                            }
+                                            , {
+                                                xtype: 'compositefield',
+                                                msgTarget: 'under',
+                                                fieldLabel: 'Imágenes ',
+                                                items: [
+                                                    {xtype: 'displayfield', name: 'imagencedula', width: '25%',}
+                                                    , {xtype: 'displayfield', name: 'imagenvideo', width: '25%',}
+                                                    , {xtype: 'displayfield', name: 'imagennombramiento', width: '25%',}
+                                                    , {
+                                                        xtype: 'textfield',
+                                                        name: 'imagenvideo',
+                                                        width: '1%',
+                                                        disabled: true,
+                                                        cls: 'disabled'
+                                                    }
+
+                                                ]
+                                            }
+                                            , {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Fecha imágenes',
+                                                name: 'fechaimagenes',
+                                                anchor: '95%'
+                                            }
+                                            , {xtype: 'displayfield', fieldLabel: 'tipo', name: 'tipo', anchor: '95%'}
+                                            , {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Motivo negar',
+                                                name: 'motivonegar',
                                                 anchor: '95%'
                                             }
                                             , {
                                                 xtype: 'displayfield',
-                                                fieldLabel: 'Foto',
-                                                name: 'foto'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Foto 1',
-                                                name: 'foto1'
+                                                fieldLabel: 'total denuncias',
+                                                name: 'totaldenuncias',
+                                                anchor: '95%'
                                             }
                                         ]
                                     }
@@ -439,8 +653,8 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
             });
 
             win = desktop.createWindow({
-                id: 'grid-win-actoInicioApp',
-                title: 'Acto Inicio',
+                id: 'grid-win-actosinicioapp',
+                title: 'Denuncias web',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'actosinicioapp-icon',
@@ -452,11 +666,27 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
                     {
                         id: 'recargardatos',
                         iconCls: 'reload-icon',
-                        handler: this.requestDenunciaswebData,
+                        handler: this.requestActosInicioappData,
                         scope: this,
                         text: 'Recargar Datos',
                         tooltip: 'Recargar datos en la grilla'
                     },
+                    /*'-',
+                     {
+                     iconCls: 'demo-grid-add',
+                     handler: this.requestActosInicioappDataExport,
+                     scope: this,
+                     text: 'Boton 1',
+                     tooltip: 'Exportar datos en la grilla'
+                     },
+                     '-',
+                     {
+                     iconCls: 'demo-grid-add',
+                     handler: this.requestActosInicioappEstadisticasDataExport,
+                     scope: this,
+                     text: 'Boton 2',
+                     tooltip: 'Exportar Estadisticas'
+                     },*/
                     '->'
                     , {
                         text: 'Buscar por:'
@@ -466,24 +696,24 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
                     , ' ', ' '
                     , new QoDesk.QoAdmin.SearchField({
                         paramName: 'filterText'
-                        , store: this.storeActosInicioApp
+                        , store: this.storeActosInicioapp
                     })
                 ],
-                items: this.formActosInicioApp
+                items: this.formActosInicioappDetalle
             });
         }
         win.show();
-        function cargaDetalle(id) {
-            forma = Ext.getCmp('formActosInicioApp');
+        function cargaDetalle(denuncias, forma, bloqueo) {
+            forma = Ext.getCmp('formActosInicioappDetalle');
             forma.getForm().load({
                 waitMsg: 'Recuperando información',
-                url: urlActosInicioapp + 'crudActosinicioapp.php?operation=selectForm',
+                url: urlActosInicioapp + 'crudActosInicioapp.php?operation=selectForm',
                 params: {
-                    id: id
+                    id: denuncias
                 },
                 success: function (response, opts) {
-                    //mensaje = Ext.getCmp('textDenunciasAnteriores');
-                    //mensaje.setText('Denuncias anteriores: ' + (response.findField('totaldenuncias').getValue() - 1))
+                    mensaje = Ext.getCmp('textDenunciasAnteriores');
+                    mensaje.setText('Denuncias anteriores: ' + (response.findField('totaldenuncias').getValue() - 1))
                 }
 
             });
@@ -491,31 +721,189 @@ QoDesk.ActosInicioAppWindow = Ext.extend(Ext.app.Module, {
         };
 
         function bloquearLectura(forma, activar) {
+            Ext.getCmp('id_persona').setReadOnly(activar);
+            Ext.getCmp('recepcion_documento').setReadOnly(activar);
+            Ext.getCmp('id_tipo_documento').setReadOnly(activar);
+            Ext.getCmp('num_documento').setReadOnly(activar);
+            Ext.getCmp('remitente').setReadOnly(activar);
             Ext.getCmp('cedula').setReadOnly(activar);
-            Ext.getCmp('aislamiento_obligatorio').setReadOnly(activar);
-            Ext.getCmp('conductorSinMascarilla').setReadOnly(activar);
-            Ext.getCmp('direccionDomicilio').setReadOnly(activar);
-            Ext.getCmp('direccionInfraccion').setReadOnly(activar);
             Ext.getCmp('email').setReadOnly(activar);
-            Ext.getCmp('fechaInfraccion').setReadOnly(activar);
-            Ext.getCmp('foto').setReadOnly(activar);
-            Ext.getCmp('foto1').setReadOnly(activar);
-            Ext.getCmp('hechosInfraccion').setReadOnly(activar);
-            Ext.getCmp('horaInfraccion').setReadOnly(activar);
-            Ext.getCmp('infraccionSinMascarilla').setReadOnly(activar);
-            Ext.getCmp('infraccioncedula').setReadOnly(activar);
-            Ext.getCmp('infracciondistancia').setReadOnly(activar);
-            Ext.getCmp('nombres').setReadOnly(activar);
-            Ext.getCmp('sancion_25_SMU').setReadOnly(activar);
-            Ext.getCmp('sancion_50_SMU').setReadOnly(activar);
-            Ext.getCmp('sancion_tres_salarios').setReadOnly(activar);
-            Ext.getCmp('sancion_un_salario_medio').setReadOnly(activar);
+            Ext.getCmp('descripcion_anexos').setReadOnly(activar);
+            Ext.getCmp('cantidad_fojas').setReadOnly(activar);
+            Ext.getCmp('asunto').setReadOnly(activar);
+            Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
+            Ext.getCmp('observacion_secretaria').setReadOnly(activar);
+            Ext.getCmp('reasignacion').setReadOnly(activar);
         };
 
 
     },
-    requestActosInicioAppData: function () {
-        this.storeActosInicioApp.load();
+    aprobardenuncias: function () {
+        store = this.storeActosInicioapp;
+        var urlActosInicioapp = this.urlActosInicioapp;
+        var urlDenunciasLocal = this.urlDenunciasLocal;
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Desea aprobar la denuncia.<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var myForm = Ext.getCmp('formActosInicioappDetalle').getForm();
+                    myForm.submit({
+                        url: urlDenunciasLocal + 'crudActosInicioapp.php?operation=aprobarDenuncia',
+                        method: 'POST',
+                        waitMsg: 'Saving data',
+                        success: function (form, action) {
+                            //se actualiza tabla en la web
+                            var dataReceived = JSON.parse(action.response.responseText);
+                            myForm.submit({
+                                url: urlActosInicioapp + 'crudActosInicioapp.php?operation=aprobarDenuncia',
+                                method: 'POST',
+                                waitMsg: 'Saving data',
+                                params: {
+                                    codigo_tramite: dataReceived.data
+                                },
+                                success: function (form, action) {
+                                    Ext.getCmp('tb_negardenuncias').setDisabled(true);
+                                    Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                                    store.load();
+                                },
+                                failure: function (form, action) {
+                                    var errorJson = JSON.parse(action.response.responseText);
+                                    Ext.Msg.show({
+                                        title: 'Error campos obligatorios'
+                                        , msg: errorJson.msg
+                                        , modal: true
+                                        , icon: Ext.Msg.ERROR
+                                        , buttons: Ext.Msg.OK
+                                    });
+                                }
+                            });
+                        },
+                        failure: function (form, action) {
+                            var errorJson = JSON.parse(action.response.responseText);
+                            Ext.Msg.show({
+                                title: 'Error campos obligatorios'
+                                , msg: errorJson.msg
+                                , modal: true
+                                , icon: Ext.Msg.ERROR
+                                , buttons: Ext.Msg.OK
+                            });
+                        }
+                    });
+
+                }
+            }
+        });
+
+    },
+    negardenuncias: function () {
+        store = this.storeActosInicioapp;
+        var urlActosInicioapp = this.urlActosInicioapp;
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Desea negar la denuncia, .<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var myForm = Ext.getCmp('formActosInicioappDetalle').getForm();
+
+                    myForm.submit({
+                        url: urlActosInicioapp + 'crudActosInicioapp.php?operation=negarDenuncia',
+                        method: 'POST',
+                        waitMsg: 'Saving data',
+
+                        success: function (form, action) {
+
+                            Ext.getCmp('tb_negardenuncias').setDisabled(true);
+                            Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                            store.load();
+                        },
+                        failure: function (form, action) {
+                            var errorJson = JSON.parse(action.response.responseText);
+
+                            Ext.Msg.show({
+                                title: 'Error campos obligatorios'
+                                , msg: errorJson.msg
+                                , modal: true
+                                , icon: Ext.Msg.ERROR
+                                , buttons: Ext.Msg.OK
+                            });
+                        }
+                    });
+                }
+            }
+
+        });
+    },
+    requestActosInicioappParticipantesData: function () {
+        this.storeActosInicioappParticipantes.load();
+    },
+    requestActosInicioappParticipantesDataExport: function () {
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Descargue el archivo xls  .<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/actosinicioapp/server/ActosInicioappParticipantes.php';
+                }
+            }
+        });
+    },
+    requestActosInicioappIntentosData: function () {
+        this.storeActosInicioappIntentos.load();
+    },
+    requestActosInicioappIntentosDataExport: function () {
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Descargue el archivo xls  .<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/actosinicioapp/server/ActosInicioappIntentos.php';
+                }
+            }
+        });
+    },
+    requestActosInicioappData: function () {
+        this.storeActosInicioapp.load();
+    },
+    requestActosInicioappDataExport: function () {
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Descargue el archivo xls  .<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/actosinicioapp/server/ActosInicioapp.php';
+                }
+            }
+        });
+    },
+    requestActosInicioappEstadisticasDataExport: function () {
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Descargue el archivo xls  .<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    window.location.href = 'modules/desktop/actosinicioapp/server/ActosInicioappEstadisticas.php';
+                }
+            }
+        });
     }
 });
 

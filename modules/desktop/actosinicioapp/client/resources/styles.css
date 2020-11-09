@@ -1,7 +1,7 @@
-.denunciasweb-icon { background-image: url(images/denunciasweb.png) !important; }
-.x-btn-large .denunciasweb-icon { background-image: url(images/denunciasweb32.png) !important; }
-.denunciasweb-shortcut { background-image: url(images/denunciasweb48.png) !important; }
-#denunciasweb-nav-panel li { margin-bottom:5px; }
+.actosinicioapp-icon { background-image: url(images/actosinicioapp.png) !important; }
+.x-btn-large .actosinicioapp-icon { background-image: url(images/actosinicioapp32.png) !important; }
+.actosinicioapp-shortcut { background-image: url(images/actosinicioapp48.png) !important; }
+#actosinicioapp-nav-panel li { margin-bottom:5px; }
 .save-icon{background:transparent url(images/add.png) 0 0 no-repeat !important;}
 .delete-icon{background:transparent url(images/delete.png) 0 0 no-repeat !important;}
 .print-icon{background:transparent url(images/printer.png) 0 0 no-repeat !important;}

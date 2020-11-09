@@ -784,7 +784,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
 
             win = desktop.createWindow({
                 id: 'grid-win-consultaciudadana',
-                title: 'Gestión Consultaciudadana',
+                title: 'Consultas Ciudadanas',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'consultaciudadana-icon',
@@ -798,9 +798,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                     items: [
                         {
                             autoScroll: true,
-                            title: 'Solicitudes de Consulta Ciudadana',
+                            title: 'Listado de Solicitudes',
                             closable: true,
-
                             items: [
                                 {
                                     id: 'formcabeceraoperativos',
@@ -818,7 +817,6 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                             text: 'Recargar Datos',
                                             tooltip: 'Recargar datos en la grilla'
                                         },
-
                                         '->'
                                         , {
                                             text: 'Buscar por:'
