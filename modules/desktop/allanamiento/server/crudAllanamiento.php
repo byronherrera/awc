@@ -1,5 +1,7 @@
 <?php
 require_once '../../../../server/os.php';
+//require '../../../../includes/vendor/autoload.php';
+//use Kreait\Firebase\Factory;
 
 $os = new os();
 if (!$os->session_exists()) {
@@ -193,6 +195,14 @@ function updateHist(){
 
 function enviar()
 {
+    /*$factory = (new Factory())
+        ->withDatabaseUri('https://dqmactoinicio.firebaseio.com');
+    $database = $factory->createDatabase();
+    $reference = $database->getReference('formulario/-MLEPfFuHlrojS8QNJUH');
+    $snapshot = $reference->getSnapshot();
+    $value = $snapshot->getValue();
+    $value1 = $reference->getValue();*/
+
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $usuario = $os->get_member_id();
