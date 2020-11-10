@@ -12,96 +12,135 @@ function selectOrdenanzas()
 
     $columnaBusqueda = 'busqueda_todos';
     $usuarioLog = $os->get_member_id();
+    $acceso = '';
     $where = '';
-    if (isset($_POST['filterField'])) {
-        $columnaBusqueda = $_POST['filterField'];
-    }
-
-    if (isset($_POST['filterText'])) {
-        $campo = $_POST['filterText'];
-        $campo = str_replace(" ", "%", $campo);
-        if ($columnaBusqueda != 'busqueda_todos') {
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
-        } else {
-            $listadoCampos = array(
-                'fecha_retiro',
-                'fecha',
-                'fecha_devolucion',
-                'numero_retiros',
-                'codigo',
-                'perecible',
-                'bien',
-                'direccion_retiro',
-                'donacion_institucion',
-                'dado_baja',
-                'en_bodega',
-                'devolucion',
-                'unidad',
-                'observaciones',
-            );
-            $cadena = '';
-            foreach ($listadoCampos as &$valor) {
-                $cadena  = $cadena  .   " $valor LIKE '%$campo%' OR ";
-            }
-
-            $cadena = substr($cadena,0,-3);
-            $where = " WHERE $cadena ";
-        }
-
-    }
 
     if(isset ($_POST['accesosResolutores'])){
         $acceso = $_POST['accesosResolutores'];
+//        echo $acceso;
         if($acceso=='true'){
             if($where == ''){
                 $where = " WHERE funcionario = $usuarioLog ";
             }else{
-                $where = $where . " ) AND funcionario = $usuarioLog ";
+                $where = $where . " AND funcionario = $usuarioLog ";
             }
-        }else{
-            if($where != ''){
-                $where = $where . " ) ";
-            }
-        }
-    }
-    if (isset($_POST['numero_expediente']) && $_POST['numero_expediente']!="" ) {
-        $filtronumero_resolucion = $_POST['numero_expediente'];
-        if($where == ''){
-            $where = " WHERE numero_expediente_ejecucion LIKE '%$filtronumero_resolucion%' ";
-        }else{
-            $where = $where . " AND numero_expediente_ejecucion LIKE '%$filtronumero_resolucion%' ";
-        }
-    }
-    if (isset($_POST['nombre_administrado']) && $_POST['nombre_administrado']!="" ) {
-        $filtro_nombre_administrado = $_POST['nombre_administrado'];
-        if($where == ''){
-            $where = " WHERE nombre_administrado_ejecucion LIKE '%$filtro_nombre_administrado%' ";
-        }else{
-            $where = $where . " AND nombre_administrado_ejecucion LIKE '%$filtro_nombre_administrado%' ";
-        }
-    }
-    if (isset($_POST['cedula_ruc']) && $_POST['cedula_ruc']!="" ) {
-        $filtro_cedula_ruc = $_POST['cedula_ruc'];
-        if($where == ''){
-            $where = " WHERE cedula_ruc LIKE '%$filtro_cedula_ruc%' ";
-        }else{
-            $where = $where . " AND cedula_ruc LIKE '%$filtro_cedula_ruc%' ";
-        }
-    }
-    if (isset($_POST['unidad_ejecucion']) && $_POST['unidad_ejecucion']!="" ) {
-        $filtro_zona = $_POST['unidad_ejecucion'];
-        if($where == ''){
-            $where = " WHERE unidad_comisaria_ejecucion LIKE '%$filtro_zona%' OR unidad LIKE '%$filtro_zona%' ";
-        }else{
-            $where = $where . " AND unidad_comisaria_ejecucion LIKE '%$filtro_zona%' OR unidad LIKE '%$filtro_zona%'";
         }
     }
 
-//    $orderby = 'ORDER BY a.id ASC';
+    if (isset($_POST['busqueda_fecha_inicio']) && isset($_POST['busqueda_fecha_fin']) && $_POST['busqueda_fecha_inicio']!="" && $_POST['busqueda_fecha_fin']!="") {
+        $busqueda_fecha_inicio = $_POST['busqueda_fecha_inicio'];
+        $busqueda_fecha_fin = $_POST['busqueda_fecha_fin'];
+        if($where == ''){
+            $where = " WHERE cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
+        }else{
+            $where = $where . " AND cast(b.fecha_resolucion as date) >= '$busqueda_fecha_inicio' AND cast(b.fecha_resolucion as date) <= '$busqueda_fecha_fin' ";
+        }
+    }
+    if (isset($_POST['ordenanza']) && $_POST['ordenanza']!="" ) {
+        $filtroOrdenanza = $_POST['ordenanza'];
+        if($where == ''){
+            $where = " WHERE ordenanza = '$filtroOrdenanza' ";
+        }else{
+            $where = $where . " AND ordenanza = '$filtroOrdenanza' ";
+        }
+    }
+    if (isset($_POST['resolucion_de']) && $_POST['resolucion_de']!="" ) {
+        $filtroResolucion_de = $_POST['resolucion_de'];
+        if($where == ''){
+            $where = " WHERE resolucion_de = '$filtroResolucion_de' ";
+        }else{
+            $where = $where . " AND resolucion_de = '$filtroResolucion_de' ";
+        }
+    }
+    if (isset($_POST['funcionario']) && $_POST['funcionario']!="" ) {
+        $filtroFuncionario = $_POST['funcionario'];
+        if($where == ''){
+            $where = " WHERE funcionario = '$filtroFuncionario' ";
+        }else{
+            $where = $where . " AND funcionario = '$filtroFuncionario' ";
+        }
+    }
+    if (isset($_POST['numero_resolucion']) && $_POST['numero_resolucion']!="" ) {
+        $filtronumero_resolucion = $_POST['numero_resolucion'];
+        if($where == ''){
+            $where = " WHERE numero_resolucion LIKE '%$filtronumero_resolucion%' ";
+        }else{
+            $where = $where . " AND numero_resolucion LIKE '%$filtronumero_resolucion%' ";
+        }
+    }
+    if (isset($_POST['articulo_actual']) && $_POST['articulo_actual']!="" ) {
+        $filtro_articulo_actual = $_POST['articulo_actual'];
+        if($where == ''){
+            $where = " WHERE articulo_actual LIKE '%$filtro_articulo_actual%' ";
+        }else{
+            $where = $where . " AND articulo_actual LIKE '%$filtro_articulo_actual%' ";
+        }
+    }
+    if (isset($_POST['unidad']) && $_POST['unidad']!="" ) {
+        $filtro_unidad = $_POST['unidad'];
+        if($where == ''){
+            $where = " WHERE unidad LIKE '%$filtro_unidad%' ";
+        }else{
+            $where = $where . " AND unidad LIKE '%$filtro_unidad%' ";
+        }
+    }
+    if (isset($_POST['iniciado_por']) && $_POST['iniciado_por']!="" ) {
+        $filtro_iniciado_por = $_POST['iniciado_por'];
+        if($where == ''){
+            $where = " WHERE iniciado_por = '$filtro_iniciado_por' ";
+        }else{
+            $where = $where . " AND iniciado_por = '$filtro_iniciado_por' ";
+        }
+    }
+    if (isset($_POST['medida_cautelar']) && $_POST['medida_cautelar']!="" ) {
+        $filtro_medida_cautelar = $_POST['medida_cautelar'];
+        if($where == ''){
+            $where = " WHERE medida_cautelar LIKE '%$filtro_medida_cautelar%' ";
+        }else{
+            $where = $where . " AND medida_cautelar LIKE '%$filtro_medida_cautelar%' ";
+        }
+    }
+    if (isset($_POST['medida_cautelar']) && $_POST['medida_cautelar']!="" ) {
+        $filtro_medida_cautelar = $_POST['medida_cautelar'];
+        if($where == ''){
+            $where = " WHERE medida_cautelar = '$filtro_medida_cautelar' ";
+        }else{
+            $where = $where . " AND medida_cautelar = '$filtro_medida_cautelar' ";
+        }
+    }
+    if (isset($_POST['tipo_unidad']) && $_POST['tipo_unidad']!="" ) {
+        $filtro_tipo_unidad = $_POST['tipo_unidad'];
+        if($where == ''){
+            $where = " WHERE tipo_unidad = $filtro_tipo_unidad ";
+        }else{
+            $where = $where . " AND tipo_unidad = $filtro_tipo_unidad ";
+        }
+    }
+        if (isset($_POST['envio_expediente']) && $_POST['envio_expediente']!="" ) {
+        $filtro_envio_expediente = $_POST['envio_expediente'];
+        if($where == ''){
+            $where = " WHERE envio_expediente = '$filtro_envio_expediente' ";
+        }else{
+            $where = $where . " AND envio_expediente = '$filtro_envio_expediente' ";
+        }
+    }
+    if (isset($_POST['fecha_envio_inicio']) && isset($_POST['fecha_envio_fin']) && $_POST['fecha_envio_inicio']!="" && $_POST['fecha_envio_fin']!="") {
+        $busqueda_fecha_inicio = $_POST['fecha_envio_inicio'];
+        $busqueda_fecha_fin = $_POST['fecha_envio_fin'];
+        if($where == ''){
+            $where = " WHERE cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
+        }else{
+            $where = $where . " AND cast(a.fecha_envio as date) >= '$busqueda_fecha_inicio' AND cast(a.fecha_envio as date) <= '$busqueda_fecha_fin' ";
+        }
+    }
+
+    $orderby = 'ORDER BY a.id ASC';
     if (isset($_POST['sort'])) {
-        $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
-    }else{
-        $orderby = 'ORDER BY id DESC';
+        if ($_POST['sort'] == 'id') {
+            $orderby = 'ORDER BY id ASC';
+        } else {
+            $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
+        }
     }
 
     //$usuarioLog = $os->get_member_id();
@@ -117,21 +156,20 @@ function selectOrdenanzas()
         $limit = $_POST['limit'];
     else
         $limit = 100;
-//    $orderby = 'ORDER BY id ASC';
-
-
-
+//    $orderby = 'ORDER BY a.id ASC';
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_bodega $where $orderby LIMIT $start, $limit";
-    //echo $sql;
+    $sql = "SELECT *
+FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where $orderby LIMIT $start, $limit";
+//    echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
     };
+    $sql = "";
 
-    $sql = "SELECT count(*) AS total FROM amc_bodega $where";
+    $sql = "SELECT count(*) AS total FROM amc_libro_diario a INNER JOIN amc_resoluciones b ON a.id = b.id_libro_diario $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
@@ -164,9 +202,9 @@ function insertOrdenanzas()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_bodega($cadenaCampos)
+    $sql = "INSERT INTO amc_libro_diario($cadenaCampos)
 	values($cadenaDatos);";
-     $sql = $os->db->conn->prepare($sql);
+    $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
@@ -186,7 +224,7 @@ function generaCodigoProcesoOrdenanza()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(id) AS maximo FROM amc_bodega";
+    $sql = "SELECT MAX(id) AS maximo FROM amc_libro_diario";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -228,8 +266,8 @@ function updateOrdenanzas()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_bodega SET  $cadenaDatos  WHERE amc_bodega.id = '$data->id' ";
-//    echo ($sql);
+    $sql = "UPDATE amc_libro_diario SET  $cadenaDatos  WHERE amc_libro_diario.id = '$data->id' ";
+    //echo ($sql);
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
@@ -334,14 +372,14 @@ function updateOrdenanzasForm()
 
     }
     /*codigo_tramite='$codigo_tramite',*/
-    $sql = "UPDATE amc_bodega SET 
+    $sql = "UPDATE amc_libro_diario SET
             id = '$id',
             //nombre = $nombre,
             //nombre_completo = $nombre_completo,
             //activo = $activo,
             //orden = $orden
-            
-         
+
+
           WHERE id = '$id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -355,7 +393,7 @@ function deleteOrdenanzas()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_bodega WHERE id = $id";
+    $sql = "DELETE FROM amc_libro_diario WHERE id = $id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
