@@ -442,6 +442,7 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 ]
             });
 
+
             win = desktop.createWindow({
                 id: 'grid-win-actosinicioapp',
                 title: 'Denuncias web',
