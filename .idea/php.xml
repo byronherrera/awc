@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/includes/vendor/kreait/firebase-php" />
+      <path value="$PROJECT_DIR$/includes/vendor/kreait/clock" />
+      <path value="$PROJECT_DIR$/includes/vendor/fig/http-message-util" />
+      <path value="$PROJECT_DIR$/includes/vendor/giggsey/libphonenumber-for-php" />
+      <path value="$PROJECT_DIR$/includes/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/includes/vendor/giggsey/locale" />
+      <path value="$PROJECT_DIR$/includes/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/includes/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/includes/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/includes/vendor/rize/uri-template" />
+      <path value="$PROJECT_DIR$/includes/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/includes/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/includes/vendor/mtdowling/jmespath.php" />
+      <path value="$PROJECT_DIR$/includes/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/includes/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/includes/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/includes/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/includes/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/includes/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/includes/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/includes/vendor/riverline/multipart-parser" />
+      <path value="$PROJECT_DIR$/includes/vendor/google/cloud-storage" />
+      <path value="$PROJECT_DIR$/includes/vendor/google/auth" />
+      <path value="$PROJECT_DIR$/includes/vendor/google/cloud-core" />
+      <path value="$PROJECT_DIR$/includes/vendor/google/crc32" />
+      <path value="$PROJECT_DIR$/includes/vendor/composer" />
+      <path value="$PROJECT_DIR$/includes/vendor/kreait/firebase-tokens" />
+    </include_path>
+  </component>
   <component name="PhpProjectServersManager">
     <servers>
       <server debugger_id="php.debugger.ZendDebugger" host="localhost" id="c0c1e3fb-29d7-472f-a230-eb8e1e03f635" name="local" />
