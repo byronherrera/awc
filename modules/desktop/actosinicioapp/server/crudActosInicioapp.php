@@ -77,6 +77,7 @@ function selectForm()
         $data['foto2'] = '';
     }
 
+
     $data['aislamiento_obligatorio'] =  ($data['aislamiento_obligatorio'])  ? 'SI' :  'NO';
     $data['conductorSinMascarilla'] =  ($data['conductorSinMascarilla'])  ? 'SI' :  'NO';
     $data['infraccionSinMascarilla'] =  ($data['infraccionSinMascarilla'])  ? 'SI' :  'NO';

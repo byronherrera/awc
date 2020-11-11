@@ -214,6 +214,7 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
         //fin ActosInicioapp tab
 
 
+
         //var desktop = this.app.getDesktop();
         var win = desktop.getWindow('layout-win');
 
