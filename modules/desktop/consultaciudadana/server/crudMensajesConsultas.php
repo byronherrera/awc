@@ -190,7 +190,7 @@ function envioMensajesConsultas()
 
     $from = 'Solicitud de Información - Agencia Metropolitana de Control';
     // activar envio de correos de prueba
-    $prueba = true;
+    $prueba = false;
     $resultado = enviarEmailAmc($email, $asunto, $contenidoMailRecepcion, $funcionarios, $funcionariosSeguimiento, $from , $prueba);
 
     // luego de enviar el mensaje se actualiza $estado envi
