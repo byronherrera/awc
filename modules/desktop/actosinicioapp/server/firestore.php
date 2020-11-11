@@ -20,14 +20,14 @@ class Firestore
     public function getAll(){
         $arr = [];
         $query = $this->database->getReference($this->name)->getSnapshot()->getValue();
-        if (!empty($query)) {
+        /*if (!empty($query)) {
             /*foreach ($query as $value) {
                 //$key = $this->database->getReference($this->name)->getChild($id)->($value->cedula)->getKey();
                 $arr[] = $value;
-            }*/
+            }/
             array_push($arr,$query);
-        }
-        return $arr;
+        }*/
+        return $query;
     }
 
     public function get($id = NULL){

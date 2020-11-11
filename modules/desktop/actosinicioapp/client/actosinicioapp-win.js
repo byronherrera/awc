@@ -68,6 +68,7 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
         });
 
         function renderGeneraImagen(value, id, r) {
+            debugger
             return '<input type="button" value="Genera Imagen' + value + ' " id="' + value + '"/>';
         }
 
@@ -158,32 +159,32 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
             height: 200,
             widht: '100%',
             store: storeActosInicioapp, columns: [
-                new Ext.grid.RowNumberer({width: 40})
-                , {header: 'id', dataIndex: 'id', sortable: true, width: 50, scope: this}
-                , {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 50, scope: this}
-                , {header: 'Aislamiento Obligatorio', dataIndex: 'aislamiento_obligatorio', sortable: true, width: 25, scope: this}
-                , {header: 'Conductor sin Mascarilla', dataIndex: 'conductorSinMascarilla', sortable: true, width: 25, scope: this}
-                , {header: 'Dirección de Domicilio', dataIndex: 'direccionDomicilio', sortable: true, width: 50, scope: this}
-                , {header: 'Dirección de Infracción', dataIndex: 'direccionInfraccion', sortable: true, width: 50, scope: this}
-                , {header: 'Email', dataIndex: 'email', sortable: true, width: 25, scope: this}
-                , {header: 'Fecha Infracción', dataIndex: 'fechaInfraccion', sortable: true, width: 40, renderer: formatDate}
+                new Ext.grid.RowNumberer({width: 30})
+                , {header: 'id', dataIndex: 'id', sortable: true, width: 50, hidden: true, scope: this}
+                , {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 80, scope: this}
+                , {header: 'Aislamiento Obligatorio', dataIndex: 'aislamiento_obligatorio', sortable: true, width: 150, scope: this}
+                , {header: 'Conductor sin Mascarilla', dataIndex: 'conductorSinMascarilla', sortable: true, width: 150, scope: this}
+                , {header: 'Dirección de Domicilio', dataIndex: 'direccionDomicilio', sortable: true, width: 150, scope: this}
+                , {header: 'Dirección de Infracción', dataIndex: 'direccionInfraccion', sortable: true, width: 150, scope: this}
+                , {header: 'Email', dataIndex: 'email', sortable: true, width: 80, scope: this}
+                , {header: 'Fecha Infracción', dataIndex: 'fechaInfraccion', sortable: true, width: 80, renderer: formatDate}
                // , {header: 'Foto', dataIndex: 'foto', sortable: true, width: 50, scope: this}
                // , {header: 'Foto 1', dataIndex: 'foto1', sortable: true, width: 20, scope: this}
-                , {header: 'Hechos Infracción', dataIndex: 'hechosInfraccion', sortable: true, width: 150, scope: this}
-                , {header: 'Hora Infracción', dataIndex: 'horaInfraccion', sortable: true, width: 25, scope: this}
-                , {header: 'Infracción sin Mascarilla', dataIndex: 'infraccionSinMascarilla', sortable: true, width: 25, scope: this}
-                , {header: 'Infraccción Cédula', dataIndex: 'infraccioncedula', sortable: true, width: 25, scope: this}
-                , {header: 'Infraccción Distancia', dataIndex: 'infracciondistancia', sortable: true, width: 25, scope: this}
+                , {header: 'Hechos Infracción', dataIndex: 'hechosInfraccion', sortable: true, width: 200, scope: this}
+                , {header: 'Hora Infracción', dataIndex: 'horaInfraccion', sortable: true, width: 80, scope: this}
+                , {header: 'Sin Mascarilla', dataIndex: 'infraccionSinMascarilla', sortable: true, width: 120, scope: this}
+                , {header: 'Sin Cédula', dataIndex: 'infraccioncedula', sortable: true, width: 120, scope: this}
+                , {header: 'Sin Distancia', dataIndex: 'infracciondistancia', sortable: true, width: 120, scope: this}
                 , {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 150, scope: this}
-                , {header: 'Sanción 25 SMU', dataIndex: 'sancion_25_SMU', sortable: true, width: 35, scope: this}
-                , {header: 'Sanción 50 SMU', dataIndex: 'sancion_50_SMU', sortable: true, width: 35, scope: this}
-                , {header: 'Sanción tres salarios', dataIndex: 'sancion_tres_salarios', sortable: true, width: 35, scope: this}
-                , {header: 'Sanción un salario medio', dataIndex: 'sancion_un_salario_medio', sortable: true, width: 35, scope: this}
+                , {header: 'Sanción 25 SMU', dataIndex: 'sancion_25_SMU', sortable: true, width: 80, scope: this}
+                , {header: 'Sanción 50 SMU', dataIndex: 'sancion_50_SMU', sortable: true, width: 80, scope: this}
+                , {header: 'Sanción tres salarios', dataIndex: 'sancion_tres_salarios', sortable: true, width: 150, scope: this}
+                , {header: 'Sanción un salario medio', dataIndex: 'sancion_un_salario_medio', sortable: true, width: 150, scope: this}
             ],
             viewConfig: {
                 forceFit: true,
                 getRowClass: function (record, index) {
-                    if (record.get('prosesado') == 'false') return 'gold';
+                    //if (record.get('prosesado') == 'false') return 'gold';
                 }
             },
             sm: new Ext.grid.RowSelectionModel({
@@ -211,6 +212,7 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
             }),
         });
         //fin ActosInicioapp tab
+
 
         //var desktop = this.app.getDesktop();
         var win = desktop.getWindow('layout-win');
@@ -279,7 +281,7 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                     {
                         region: 'north',
                         height: 200,
-                        autoScroll: false,
+                        autoScroll: true,
                         id: 'formcabeceradenuncias',
                         items: this.gridActosInicioapp
                     },
@@ -393,12 +395,6 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                                             }
                                             , {
                                                 xtype: 'displayfield',
-                                                fieldLabel: 'Sin Distancia',
-                                                name: 'infracciondistancia',
-                                                anchor: '96%'
-                                            }
-                                            , {
-                                                xtype: 'displayfield',
                                                 fieldLabel: 'Sanción 25 SMU',
                                                 name: 'sancion_25_SMU',
                                                 anchor: '96%'
@@ -407,6 +403,18 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Sanción 50 SMU',
                                                 name: 'sancion_50_SMU',
+                                                anchor: '96%'
+                                            }
+                                            , {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Sanción tres salarios',
+                                                name: 'sancion_tres_salarios',
+                                                anchor: '96%'
+                                            }
+                                            , {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Sanción un salario y medio',
+                                                name: 'sancion_un_salario_medio',
                                                 anchor: '96%'
                                             }
                                         ]
@@ -426,12 +434,17 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Foto',
-                                                name: 'foto'
+                                                name: 'foto',
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Foto 1',
-                                                name: 'foto1'
+                                                name: 'foto1',
+                                            }
+                                            , {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Foto 2',
+                                                name: 'foto2',
                                             }
                                         ]
                                     }
@@ -445,7 +458,7 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
 
             win = desktop.createWindow({
                 id: 'grid-win-actosinicioapp',
-                title: 'Denuncias web',
+                title: 'Actos de Inicio App',
                 width: winWidth,
                 height: winHeight,
                 iconCls: 'actosinicioapp-icon',
@@ -462,22 +475,6 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                         text: 'Recargar Datos',
                         tooltip: 'Recargar datos en la grilla'
                     },
-                    /*'-',
-                     {
-                     iconCls: 'demo-grid-add',
-                     handler: this.requestActosInicioappDataExport,
-                     scope: this,
-                     text: 'Boton 1',
-                     tooltip: 'Exportar datos en la grilla'
-                     },
-                     '-',
-                     {
-                     iconCls: 'demo-grid-add',
-                     handler: this.requestActosInicioappEstadisticasDataExport,
-                     scope: this,
-                     text: 'Boton 2',
-                     tooltip: 'Exportar Estadisticas'
-                     },*/
                     '->'
                     , {
                         text: 'Buscar por:'
@@ -510,124 +507,7 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
         };
 
         function bloquearLectura(forma, activar) {
-            Ext.getCmp('id_persona').setReadOnly(activar);
-            Ext.getCmp('recepcion_documento').setReadOnly(activar);
-            Ext.getCmp('id_tipo_documento').setReadOnly(activar);
-            Ext.getCmp('num_documento').setReadOnly(activar);
-            Ext.getCmp('remitente').setReadOnly(activar);
-            Ext.getCmp('cedula').setReadOnly(activar);
-            Ext.getCmp('email').setReadOnly(activar);
-            Ext.getCmp('descripcion_anexos').setReadOnly(activar);
-            Ext.getCmp('cantidad_fojas').setReadOnly(activar);
-            Ext.getCmp('asunto').setReadOnly(activar);
-            Ext.getCmp('id_caracter_tramite').setReadOnly(activar);
-            Ext.getCmp('observacion_secretaria').setReadOnly(activar);
-            Ext.getCmp('reasignacion').setReadOnly(activar);
         };
-
-
-    },
-    aprobardenuncias: function () {
-        store = this.storeActosInicioapp;
-        var urlActosInicioapp = this.urlActosInicioapp;
-        var urlDenunciasLocal = this.urlDenunciasLocal;
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Desea aprobar la denuncia.<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var myForm = Ext.getCmp('formActosInicioappDetalle').getForm();
-                    myForm.submit({
-                        url: urlDenunciasLocal + 'crudActosInicioapp.php?operation=aprobarDenuncia',
-                        method: 'POST',
-                        waitMsg: 'Saving data',
-                        success: function (form, action) {
-                            //se actualiza tabla en la web
-                            var dataReceived = JSON.parse(action.response.responseText);
-                            myForm.submit({
-                                url: urlActosInicioapp + 'crudActosInicioapp.php?operation=aprobarDenuncia',
-                                method: 'POST',
-                                waitMsg: 'Saving data',
-                                params: {
-                                    codigo_tramite: dataReceived.data
-                                },
-                                success: function (form, action) {
-                                    Ext.getCmp('tb_negardenuncias').setDisabled(true);
-                                    Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
-                                    store.load();
-                                },
-                                failure: function (form, action) {
-                                    var errorJson = JSON.parse(action.response.responseText);
-                                    Ext.Msg.show({
-                                        title: 'Error campos obligatorios'
-                                        , msg: errorJson.msg
-                                        , modal: true
-                                        , icon: Ext.Msg.ERROR
-                                        , buttons: Ext.Msg.OK
-                                    });
-                                }
-                            });
-                        },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
-                            Ext.Msg.show({
-                                title: 'Error campos obligatorios'
-                                , msg: errorJson.msg
-                                , modal: true
-                                , icon: Ext.Msg.ERROR
-                                , buttons: Ext.Msg.OK
-                            });
-                        }
-                    });
-
-                }
-            }
-        });
-
-    },
-    negardenuncias: function () {
-        store = this.storeActosInicioapp;
-        var urlActosInicioapp = this.urlActosInicioapp;
-        Ext.Msg.show({
-            title: 'Advertencia',
-            msg: 'Desea negar la denuncia, .<br>¿Desea continuar?',
-            scope: this,
-            icon: Ext.Msg.WARNING,
-            buttons: Ext.Msg.YESNO,
-            fn: function (btn) {
-                if (btn == 'yes') {
-                    var myForm = Ext.getCmp('formActosInicioappDetalle').getForm();
-
-                    myForm.submit({
-                        url: urlActosInicioapp + 'crudActosInicioapp.php?operation=negarDenuncia',
-                        method: 'POST',
-                        waitMsg: 'Saving data',
-
-                        success: function (form, action) {
-
-                            Ext.getCmp('tb_negardenuncias').setDisabled(true);
-                            Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
-                            store.load();
-                        },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
-
-                            Ext.Msg.show({
-                                title: 'Error campos obligatorios'
-                                , msg: errorJson.msg
-                                , modal: true
-                                , icon: Ext.Msg.ERROR
-                                , buttons: Ext.Msg.OK
-                            });
-                        }
-                    });
-                }
-            }
-
-        });
     },
     requestActosInicioappParticipantesData: function () {
         this.storeActosInicioappParticipantes.load();
