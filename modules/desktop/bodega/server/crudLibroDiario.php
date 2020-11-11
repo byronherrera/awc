@@ -24,20 +24,30 @@ function selectOrdenanzas()
             $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
         } else {
             $listadoCampos = array(
-                'fecha_retiro',
-                'fecha',
-                'fecha_devolucion',
-                'numero_retiros',
-                'codigo',
-                'perecible',
-                'bien',
-                'direccion_retiro',
-                'donacion_institucion',
-                'dado_baja',
-                'en_bodega',
-                'devolucion',
+                'memo_ingreso',
+                'numero_resolucion',
+                'fecha_envio',
+                'fecha_ingreso_ejecucion',
+                'numero_expediente_ejecucion',
+                'numero_expediente',
+                'fojas_ejecucion',
+                'unidad_ejecucion',
+                'tipo_zona_ejecucion',
                 'unidad',
-                'observaciones',
+                'tipo_unidad',
+                'nombre_administrado_ejecucion',
+                'nombre_administrado',
+                'cedula_ruc',
+//                'articulo_numeral',
+                'nombre_denunciante',
+                'nombre_establecimiento_ejecucion',
+                'nombre_establecimiento',
+                'articulo_ejecucion',
+                'numero_resolucion',
+//                'funcionario',
+                'fecha_resolucion',
+                'fecha_sorteo_ejecucion',
+                'observaciones_ejecucion',
             );
             $cadena = '';
             foreach ($listadoCampos as &$valor) {
@@ -45,7 +55,7 @@ function selectOrdenanzas()
             }
 
             $cadena = substr($cadena,0,-3);
-            $where = " WHERE $cadena ";
+            $where = " WHERE ($cadena ";
         }
 
     }
@@ -123,7 +133,7 @@ function selectOrdenanzas()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_bodega $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT * FROM amc_libro_diario $where $orderby LIMIT $start, $limit";
     //echo $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
@@ -131,7 +141,7 @@ function selectOrdenanzas()
         $data[] = $row;
     };
 
-    $sql = "SELECT count(*) AS total FROM amc_bodega $where";
+    $sql = "SELECT count(*) AS total FROM amc_libro_diario $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
@@ -164,7 +174,7 @@ function insertOrdenanzas()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_bodega($cadenaCampos)
+    $sql = "INSERT INTO amc_libro_diario($cadenaCampos)
 	values($cadenaDatos);";
      $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -186,7 +196,7 @@ function generaCodigoProcesoOrdenanza()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(id) AS maximo FROM amc_bodega";
+    $sql = "SELECT MAX(id) AS maximo FROM amc_libro_diario";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -228,7 +238,7 @@ function updateOrdenanzas()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_bodega SET  $cadenaDatos  WHERE amc_bodega.id = '$data->id' ";
+    $sql = "UPDATE amc_libro_diario SET  $cadenaDatos  WHERE amc_libro_diario.id = '$data->id' ";
 //    echo ($sql);
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -334,7 +344,7 @@ function updateOrdenanzasForm()
 
     }
     /*codigo_tramite='$codigo_tramite',*/
-    $sql = "UPDATE amc_bodega SET 
+    $sql = "UPDATE amc_libro_diario SET 
             id = '$id',
             //nombre = $nombre,
             //nombre_completo = $nombre_completo,
@@ -355,7 +365,7 @@ function deleteOrdenanzas()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_bodega WHERE id = $id";
+    $sql = "DELETE FROM amc_libro_diario WHERE id = $id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
