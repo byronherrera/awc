@@ -21,9 +21,8 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
         var accesosConsultas = this.app.isAllowedTo('accesosConsultas', this.id);
 
-
         var win = desktop.getWindow('grid-win-allanamiento');
-
+        var AppMsg = new Ext.AppMsg({});
         var urlAllanamientoLocal = "modules/desktop/allanamiento/server/";
 
         this.urlAllanamientoLocal = urlAllanamientoLocal;
@@ -924,12 +923,12 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
         debugger
         if(etapa === 'Secretaria' &&  solicitudSelected.data.codigo_sitra === ''){
-            var AppMsg = new Ext.AppMsg({});
+            //var AppMsg = new Ext.AppMsg({});
             return AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Ingrese el código SITRA');
         }
 
         if( solicitudSelected.data.observacion_sitra === ''){
-            var AppMsg = new Ext.AppMsg({});
+            //var AppMsg = new Ext.AppMsg({});
             return AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Ingrese la observación');
         }
 
