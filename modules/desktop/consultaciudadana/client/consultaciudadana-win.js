@@ -168,6 +168,29 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 destroy: urlConsultaciudadanaLocal + "crudConsultaciudadana.php?operation=delete"
             },
             listeners: {
+                write: function (proxy, action, data, response, rs, options) {
+                    if (action=='update') {
+                        var secretaria_estado = data[0]['secretaria_estado']
+                        cargaDetalle(data[0]['id']);
+                        if (acceso) {
+                            if (secretaria_estado != 'En proceso') {
+                                Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
+                                // deshabilitar botones
+                                Ext.getCmp('addMensajesConsultas').setDisabled(true);
+                                Ext.getCmp('deleteMensajesConsultas').setDisabled(true);
+                                estadoGeneral = false;
+                            }
+                            else {
+                                Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(false);
+                                Ext.getCmp('addMensajesConsultas').setDisabled(false);
+                                Ext.getCmp('deleteMensajesConsultas').setDisabled(false);
+                                estadoGeneral = true;
+                            }
+                        } else {
+                            Ext.getCmp('tb_grabarconsultaciudadana').setDisabled(true);
+                        }
+                    }
+                },
                 exception: function (proxy, type, action, options, response, arg1) {
                     if (typeof response.message !== 'undefined') {
                         if (response.message != '') {
@@ -176,7 +199,9 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                         var index = storeConsultaciudadana.findExact('id', arg1.data.id);
                         grid = Ext.getCmp('gridConsultaciudadana')
                         var models = grid.getStore().getRange();
+                        // retorna al estado anterior
                         models[index].set('secretaria_estado', response.data[0].secretaria_estado);
+
                     }
                     return false
                 }
@@ -315,6 +340,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 singleSelect: true,
                 listeners: {
                     rowselect: function (sm, row, rec) {
+                        console.log ("x")
                         this.record = rec;
                         /*cargar el formulario*/
                         cargaDetalle(rec.id);
@@ -484,7 +510,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                     align: 'center',
                     items: [
                         {
-                            icon: 'email_go.png',
+                            icon: 'modules/desktop/consultaciudadana/client/resources/images/email_go.png',
                             iconCls: 'save-icon',
                             tooltip: 'Enviar',
                             handler: function (grid, rowIndex, colIndex, item, e, record) {
@@ -580,6 +606,255 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                     ]
                 })
                 , text: 'Todos'
+            });
+
+
+            this.formConsultaSolicitudes = new Ext.FormPanel({
+                layout: 'column',
+                title: 'Ingrese los parámetros',
+                frame: true,
+                bodyStyle: 'padding:5px 5px 0',
+                items: [
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'datetimefield',
+                                fieldLabel: 'Fecha Inicio',
+                                id: 'busqueda_fecha_inicio',
+                                anchor: '95%',
+                                dateFormat: 'Y-m-d',
+                                timeFormat: 'H:i:s'
+                            },
+                            {
+                                xtype: 'datetimefield',
+                                fieldLabel: 'Fecha Fin',
+                                id: 'busqueda_fecha_fin',
+                                anchor: '95%',
+                                dateFormat: 'Y-m-d',
+                                timeFormat: 'H:i:s'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Tipo control',
+                                id: 'busqueda_tipo_control',
+                                name: 'busqueda_tipo_control',
+                                hiddenName: 'busqueda_tipo_control',
+
+                                anchor: '95%',
+                                store: storeOPTID,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Nivel Complejidad',
+                                id: 'busqueda_nivel_complejidad',
+                                name: 'busqueda_nivel_complejidad',
+                                hiddenName: 'busqueda_nivel_complejidad',
+
+                                anchor: '95%',
+                                store: storeOPNICO,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Responsable',
+                                id: 'busqueda_persona_encargada',
+                                name: 'busqueda_persona_encargada',
+                                hiddenName: 'busqueda_persona_encargada',
+
+                                anchor: '95%',
+                                store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Zonal',
+                                id: 'busqueda_zonal',
+                                name: 'busqueda_zonal',
+                                hiddenName: 'busqueda_zonal',
+
+                                anchor: '95%',
+                                store: storeZONA,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Unidad',
+                                id: 'busqueda_unidad_asignado',
+                                name: 'busqueda_unidad_asignado',
+                                hiddenName: 'busqueda_unidad_asignado',
+
+                                anchor: '95%',
+                                store: storeOPREA,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Oper. Tipo',
+                                id: 'busqueda_tipo_operativo',
+                                name: 'busqueda_tipo_operativo',
+                                hiddenName: 'busqueda_tipo_operativo',
+
+                                anchor: '95%',
+                                store: storeOPTIPO,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Estado',
+
+                                id: 'busqueda_estado',
+                                name: 'busqueda_estado',
+                                hiddenName: 'busqueda_estado',
+
+
+                                anchor: '95%',
+                                store: storeOPESTA,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Func.operante',
+                                id: 'busqueda_personal_asignado',
+                                name: 'busqueda_personal_asignado',
+                                hiddenName: 'busqueda_personal_asignado',
+
+                                anchor: '95%',
+                                store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }
+                            /*{
+                             xtype: 'combo',
+                             fieldLabel: 'Oper. Finalizado',
+                             id: 'busqueda_finalizado',
+                             name: 'busqueda_finalizado',
+                             hiddenName: 'busqueda_finalizado',
+                             anchor: '95%',
+                             store: storeSINO,
+                             valueField: 'id',
+                             displayField: 'nombre',
+                             typeAhead: true,
+                             triggerAction: 'all',
+                             mode: 'local'
+                             },*/
+
+                        ]
+                    },
+                    {
+                        columnWidth: 1 / 3,
+                        layout: 'form',
+                        items: [
+
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Informe',
+                                id: 'busqueda_informe',
+                                name: 'busqueda_informe',
+                                anchor: '95%'
+                            },
+                            /*{   xtype: 'textfield',
+                             fieldLabel: 'Punto Encuentro',
+                             id: 'busqueda_punto_encuentro',
+                             name: 'busqueda_punto_encuentro',
+                             anchor: '95%'
+                             },*/
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Palabra clave',
+                                id: 'busqueda_observaciones',
+                                name: 'busqueda_observaciones',
+                                anchor: '95%'
+                            },
+
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Elaborado por',
+                                id: 'busqueda_elaborado_por',
+                                name: 'busqueda_elaborado_por',
+                                hiddenName: 'busqueda_elaborado_por',
+
+                                anchor: '95%',
+                                store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Revisado por',
+                                id: 'busqueda_revisado_por',
+                                name: 'busqueda_revisado_por',
+                                hiddenName: 'busqueda_revisado_por',
+
+                                anchor: '95%',
+                                store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            },
+                            {
+                                xtype: 'combo',
+                                fieldLabel: 'Aprobado por',
+                                id: 'busqueda_aprobado_por',
+                                name: 'busqueda_aprobado_por',
+                                hiddenName: 'busqueda_aprobado_por',
+
+                                anchor: '95%',
+                                store: storePRD,
+                                valueField: 'id',
+                                displayField: 'nombre',
+                                typeAhead: true,
+                                triggerAction: 'all',
+                                mode: 'local'
+                            }]
+                    }
+                ]
             });
 
 
@@ -890,7 +1165,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                 }
                             ]
                         },
-                        /* {
+                         {
                              title: 'Reportes',
                              closable: true,
                              layout: 'border',
@@ -910,81 +1185,13 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                      text: 'Borrar formulario'
 
                                  },
-                                 {
-                                     xtype: 'checkbox',
-                                     boxLabel: 'Detalle acciones',
-                                     id: 'checkDetalleAcciones',
-                                     name: 'detalleacciones',
-                                     checked: false,
-                                     inputValue: '1',
-                                     tooltip: 'Detalle de las acciones efectuados en el reporte',
-                                     cls: 'barramenu',
-                                     handler: function (checkbox, isChecked) {
-                                     }
-                                 }, {
-                                     xtype: 'checkbox',
-                                     boxLabel: 'Detalle actas',
-                                     id: 'checkDetalleActas',
-                                     name: 'detalleactas',
-                                     checked: false,
-                                     inputValue: '1',
-                                     tooltip: 'Detalle de las actas efectuados en el reporte',
-                                     cls: 'barramenu',
-                                     handler: function (checkbox, isChecked) {
-                                     }
-                                 }, {
-                                     xtype: 'checkbox',
-                                     boxLabel: 'Detalle retiros',
-                                     id: 'checkDetalleRecibidos',
-                                     name: 'detalleretiros',
-                                     checked: false,
-                                     inputValue: '1',
-                                     tooltip: 'Detalle de los retiros efectuados en el reporte',
-                                     cls: 'barramenu',
-                                     handler: function (checkbox, isChecked) {
-                                     }
-                                 }, {
-                                     xtype: 'checkbox',
-                                     boxLabel: 'Totales personal',
-                                     id: 'checkTotalesPersonal',
-                                     name: 'totalespersonal',
-                                     checked: false,
-                                     inputValue: '1',
-                                     tooltip: 'Detalle de los retiros efectuados en el reporte',
-                                     cls: 'barramenu',
-                                     handler: function (checkbox, isChecked) {
-                                     }
-                                 }, '-',
-
+                                   '-',
                                  {
                                      iconCls: 'excel-icon',
                                      handler: this.botonExportarDocumentoReporte,
                                      scope: this,
                                      text: 'Exportar listado',
                                      tooltip: 'Se genera archivo Excel con la información solicitada'
-                                 },
-                                 {
-                                     iconCls: 'excel-icon',
-                                     handler: this.botonExportarDocumentoReporteCalendarioPersonal,
-                                     scope: this,
-                                     text: 'Calendario  personas',
-                                     tooltip: 'Se genera archivo Excel con la información solicitada'
-                                 }
-                                 ,
-                                 {
-                                     iconCls: 'excel-icon',
-                                     handler: this.botonExportarDocumentoReporteCalendarioOperativos,
-                                     scope: this,
-                                     text: 'Calendario  operativos',
-                                     tooltip: 'Se genera archivo Excel con la información solicitada'
-                                 }
-                                 ,
-                                 {
-                                     iconCls: 'excel-icon',
-                                     handler: this.botonExportarDocumentoReporteTotalOperativos,
-                                     scope: this,
-                                     text: 'Operativos tiempo',
-                                     tooltip: 'Se genera archivo Excel con total tiempo por operativo'
                                  }
                              ],
                              items: [
@@ -995,22 +1202,21 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                      maxSize: 170,
                                      closable: true,
                                      autoScroll: false,
-                                     items: this.formConsultaDocumentos
+                                     items: this.formConsultaSolicitudes
                                  },
                                  {
-                                     // lazily created panel (xtype:'panel' is default)
+
                                      region: 'center',
                                      split: true,
                                      autoScroll: true,
                                      height: 270,
                                      minSize: 100,
                                      maxSize: 150,
-                                     items: this.gridDocumentosReporte
+                                     items: this.gridConsultaciudadana,
+                                     items: this.gridConsultaciudadana
                                  }
                              ]
-
-                             //this.gridReportes
-                         } */
+                        }
                     ]
                 })
             });

@@ -594,6 +594,7 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Coordenadas',
                                                 name: 'geoposicionamiento'
+
                                             }
                                             , {
                                                 xtype: 'displayfield',
