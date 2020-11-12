@@ -614,7 +614,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                 title: 'Ingrese los parámetros',
                 frame: true,
                 bodyStyle: 'padding:5px 5px 0',
-                items: [
+          /*      items: [
                     {
                         columnWidth: 1 / 3,
                         layout: 'form',
@@ -764,7 +764,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                 triggerAction: 'all',
                                 mode: 'local'
                             }
-                            /*{
+                            /!*{
                              xtype: 'combo',
                              fieldLabel: 'Oper. Finalizado',
                              id: 'busqueda_finalizado',
@@ -777,7 +777,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                              typeAhead: true,
                              triggerAction: 'all',
                              mode: 'local'
-                             },*/
+                             },*!/
 
                         ]
                     },
@@ -793,12 +793,12 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                 name: 'busqueda_informe',
                                 anchor: '95%'
                             },
-                            /*{   xtype: 'textfield',
+                            /!*{   xtype: 'textfield',
                              fieldLabel: 'Punto Encuentro',
                              id: 'busqueda_punto_encuentro',
                              name: 'busqueda_punto_encuentro',
                              anchor: '95%'
-                             },*/
+                             },*!/
                             {
                                 xtype: 'textfield',
                                 fieldLabel: 'Palabra clave',
@@ -854,7 +854,7 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                 mode: 'local'
                             }]
                     }
-                ]
+                ]*/
             });
 
 
@@ -1212,8 +1212,8 @@ QoDesk.ConsultaciudadanaWindow = Ext.extend(Ext.app.Module, {
                                      height: 270,
                                      minSize: 100,
                                      maxSize: 150,
-                                     items: this.gridConsultaciudadana,
-                                     items: this.gridConsultaciudadana
+                                    // items: this.gridConsultaciudadana,
+                                    // items: this.gridConsultaciudadana
                                  }
                              ]
                         }
