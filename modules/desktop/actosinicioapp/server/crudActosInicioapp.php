@@ -25,7 +25,25 @@ function select()
 {
     $data = [];
     $fs = new Firestore('formulario');
-    $query= $fs->getAll();
+    $campo = null;
+    $valor = null;
+
+    if (isset($_POST['filterField'])) {
+        $campo = $_POST['filterField'];
+    }
+
+    if (isset($_POST['filterText'])) {
+        $valor = $_POST['filterText'];
+    }
+
+    if($campo != null &&  $valor != null){
+        $query= $fs->getWhere($campo,'=',$valor);
+    }else {
+        $query= $fs->getAll();
+    }
+
+
+    //$query= $fs->getAll();
     foreach ($query as $key => $valor) {
         $id = $key;
         $valor += [ "id" =>  $id ];
@@ -39,8 +57,6 @@ function select()
         $valor['sancion_tres_salarios'] =  ($valor['sancion_tres_salarios'])  ? 'SI' :  'NO';
         $valor['sancion_un_salario_medio'] =  ($valor['sancion_un_salario_medio'])  ? 'SI' :  'NO';
         array_push($data, $valor);
-
-
     }
 
     echo json_encode(array(

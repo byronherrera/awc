@@ -1,18 +1,19 @@
 <?php
 require '../../../../includes/vendor/autoload.php';
 use Kreait\Firebase\Factory;
+use Kreait\Firebase\ServiceAccount;
 
 
 class Firestore
 {
     private $database;
-    private $db;
-    //private $name = 'formulario';
     private $name;
 
     public function __construct($collection) {
+        //$this->serviceAccount = ServiceAccount::fromJsonFile('../../../../includes/dqmactoinicio.json');
 
-        $factory = (new Factory())->withDatabaseUri('https://dqmactoinicio.firebaseio.com');
+        //$factory = (new Factory())->withDatabaseUri('https://dqmactoinicio.firebaseio.com');
+        $factory = (new Factory())->withServiceAccount('../../../../includes/dqmactoinicio.json');
         $this->database = $factory->createDatabase();
         $this->name = $collection;
     }
@@ -43,7 +44,8 @@ class Firestore
     public function getWhere($field, $operator, $value)
     {
         $arr = [];
-        $query = $this->database->getReference($this->name)->where($field,$operator,$value)->getValue();
+        //$query = $this->database->getReference($this->name)->where($field,$operator,$value)->getValue();
+        $query = $this->database->getReference("formulario")->orderByValue()->getSnapshot()->getValue();
         if (!empty($query)) {
             foreach ($query as $value) {
                 $arr[] = $value->data();

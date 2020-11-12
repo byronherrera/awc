@@ -921,6 +921,18 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         var etapa =  solicitudSelected.data.etapa;
         storeAllanamiento = this.storeAllanamiento;
         storeHistorico = this.storeHistorico;
+
+        debugger
+        if(etapa === 'Secretaria' &&  solicitudSelected.data.codigo_sitra === ''){
+            var AppMsg = new Ext.AppMsg({});
+            return AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Ingrese el código SITRA');
+        }
+
+        if( solicitudSelected.data.observacion_sitra === ''){
+            var AppMsg = new Ext.AppMsg({});
+            return AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Ingrese la observación');
+        }
+
         if(etapa === 'Secretaria'){
             solicitudSelected.data.etapa = 'Instruccion';
             solicitudSelected.data.estado = 'Asignado';
@@ -973,10 +985,17 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
     },
     devolverAllanamiento: function () {
+
         solicitudSelected.data.observacion_sitra = Ext.getCmp('observacion_sitra').getValue();
+        var etapa =  solicitudSelected.data.etapa;
         storeAllanamiento = this.storeAllanamiento;
         storeHistorico = this.storeHistorico;
-        var etapa =  solicitudSelected.data.etapa;
+
+        if( solicitudSelected.data.observacion_sitra === ''){
+            var AppMsg = new Ext.AppMsg({});
+            return AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Ingrese la observación');
+        }
+
         if(etapa === 'Secretaria'){
             solicitudSelected.data.estado = 'Finalizado';
         }

@@ -162,27 +162,27 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 new Ext.grid.RowNumberer({width: 30})
                 , {header: 'id', dataIndex: 'id', sortable: true, width: 50, hidden: true, scope: this}
                 , {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 80, scope: this}
-                , {header: 'Aislamiento Obligatorio', dataIndex: 'aislamiento_obligatorio', sortable: true, width: 150, scope: this}
-                , {header: 'Conductor sin Mascarilla', dataIndex: 'conductorSinMascarilla', sortable: true, width: 150, scope: this}
-                , {header: 'Dirección de Domicilio', dataIndex: 'direccionDomicilio', sortable: true, width: 150, scope: this}
-                , {header: 'Dirección de Infracción', dataIndex: 'direccionInfraccion', sortable: true, width: 150, scope: this}
-                , {header: 'Email', dataIndex: 'email', sortable: true, width: 80, scope: this}
-                , {header: 'Fecha Infracción', dataIndex: 'fechaInfraccion', sortable: true, width: 80, renderer: formatDate}
+                , {header: 'Aislamiento Obligatorio', dataIndex: 'aislamiento_obligatorio', sortable: true, width: 130, scope: this}
+                , {header: 'Conductor sin Mascarilla', dataIndex: 'conductorSinMascarilla', sortable: true, width: 140, scope: this}
+                , {header: 'Dirección de Domicilio', dataIndex: 'direccionDomicilio', sortable: true, width: 200, scope: this}
+                , {header: 'Dirección de Infracción', dataIndex: 'direccionInfraccion', sortable: true, width: 200, scope: this}
+                , {header: 'Email', dataIndex: 'email', sortable: true, width: 150, scope: this}
+                , {header: 'Fecha Infracción', dataIndex: 'fechaInfraccion', sortable: true, width: 100, renderer: formatDate}
                // , {header: 'Foto', dataIndex: 'foto', sortable: true, width: 50, scope: this}
                // , {header: 'Foto 1', dataIndex: 'foto1', sortable: true, width: 20, scope: this}
                 , {header: 'Hechos Infracción', dataIndex: 'hechosInfraccion', sortable: true, width: 200, scope: this}
-                , {header: 'Hora Infracción', dataIndex: 'horaInfraccion', sortable: true, width: 80, scope: this}
-                , {header: 'Sin Mascarilla', dataIndex: 'infraccionSinMascarilla', sortable: true, width: 120, scope: this}
-                , {header: 'Sin Cédula', dataIndex: 'infraccioncedula', sortable: true, width: 120, scope: this}
-                , {header: 'Sin Distancia', dataIndex: 'infracciondistancia', sortable: true, width: 120, scope: this}
-                , {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 150, scope: this}
-                , {header: 'Sanción 25 SMU', dataIndex: 'sancion_25_SMU', sortable: true, width: 80, scope: this}
-                , {header: 'Sanción 50 SMU', dataIndex: 'sancion_50_SMU', sortable: true, width: 80, scope: this}
-                , {header: 'Sanción tres salarios', dataIndex: 'sancion_tres_salarios', sortable: true, width: 150, scope: this}
+                , {header: 'Hora Infracción', dataIndex: 'horaInfraccion', sortable: true, width: 90, scope: this}
+                , {header: 'Sin Mascarilla', dataIndex: 'infraccionSinMascarilla', sortable: true, width: 80, scope: this}
+                , {header: 'Sin Cédula', dataIndex: 'infraccioncedula', sortable: true, width: 80, scope: this}
+                , {header: 'Sin Distancia', dataIndex: 'infracciondistancia', sortable: true, width: 80, scope: this}
+                , {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 250, scope: this}
+                , {header: 'Sanción 25 SMU', dataIndex: 'sancion_25_SMU', sortable: true, width: 100, scope: this}
+                , {header: 'Sanción 50 SMU', dataIndex: 'sancion_50_SMU', sortable: true, width: 100, scope: this}
+                , {header: 'Sanción tres salarios', dataIndex: 'sancion_tres_salarios', sortable: true, width: 120, scope: this}
                 , {header: 'Sanción un salario medio', dataIndex: 'sancion_un_salario_medio', sortable: true, width: 150, scope: this}
             ],
             viewConfig: {
-                forceFit: true,
+                forceFit: false,
                 getRowClass: function (record, index) {
                     //if (record.get('prosesado') == 'false') return 'gold';
                 }
@@ -227,6 +227,7 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                     searchFieldBtn.setText(item.text);
                 }
             };
+
             var searchFieldBtn = new Ext.Button({
                 menu: new Ext.menu.Menu({
                     items: [
@@ -238,41 +239,9 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                             scope: this,
                             text: 'Cédula'
                         }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'nombres',
-                            scope: this,
-                            text: 'Nombres'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'fechaInfraccion',
-                            scope: this,
-                            text: 'Fecha Infracción'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'direccionDomicilio',
-                            scope: this,
-                            text: 'Dirección de Domicilio'
-                        }
-                        , {
-                            checked: false,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'direccionInfraccion',
-                            scope: this,
-                            text: 'Dirección de Infracción'
-                        }
                     ]
                 })
-                , text: 'Cédula'
+                //, text: 'Cédula'
             });
 
             this.formActosInicioappDetalle = new Ext.FormPanel({
@@ -282,7 +251,6 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                     {
                         region: 'north',
                         height: 200,
-                        autoScroll: true,
                         id: 'formcabeceradenuncias',
                         items: this.gridActosInicioapp
                     },
