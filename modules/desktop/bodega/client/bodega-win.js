@@ -1115,6 +1115,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'numero_retiros',
                     allowBlank: true,
                     sortable: true,
+                    hidden: true,
                     editor: textField,
                     width: 100
                 },

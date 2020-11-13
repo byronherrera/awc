@@ -1055,18 +1055,18 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'numero_resolucion', allowBlank: false},
+                // {name: 'numero_resolucion', allowBlank: false},
                 {name: 'fecha_envio', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'memo_ingreso', allowBlank: true},
                 {name: 'url_documento', allowBlank: true},
                 {name: 'fecha_ingreso', allowBlank: true},
                 {name: 'unidad', allowBlank: true},
-                {name: 'unidad_ejecucion', allowBlank: true},
+                // {name: 'unidad_ejecucion', allowBlank: true},
                 {name: 'tipo_unidad', allowBlank: true},
                 {name: 'numero_expediente', allowBlank: true},
                 {name: 'numero_interno', allowBlank: true},
                 {name: 'nombre_administrado', allowBlank: true},
-                {name: 'nombre_administrado_ejecucion', allowBlank: true},
+                // {name: 'nombre_administrado_ejecucion', allowBlank: true},
                 {name: 'nombre_establecimiento', allowBlank: true},
                 {name: 'direccion_notificacion', allowBlank: true},
                 {name: 'direccion_domicilio', allowBlank: true},
@@ -1084,23 +1084,23 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'fecha_envio', allowBlank: true},
                 {name: 'fecha_sorteo', allowBlank: true},
                 {name: 'numero_memorando', allowBlank: true},
-                {name: 'memo_ingreso_ejecucion', allowBlank: true},
-                {name: 'fecha_ingreso_ejecucion', allowBlank: true},
-                {name: 'numero_expediente_ejecucion', allowBlank: true},
-                {name: 'anio_ejecucion', allowBlank: true},
-                {name: 'fojas_ejecucion', allowBlank: true},
-                {name: 'nombre_administrado_ejecucion', allowBlank: true},
-                {name: 'nombre_establecimiento_ejecucion', allowBlank: true},
-                {name: 'ordenanza_ejecucion', allowBlank: true},
-                {name: 'articulo_ejecucion', allowBlank: true},
+                // {name: 'memo_ingreso_ejecucion', allowBlank: true},
+                // {name: 'fecha_ingreso_ejecucion', allowBlank: true},
+                // {name: 'numero_expediente_ejecucion', allowBlank: true},
+                // {name: 'anio_ejecucion', allowBlank: true},
+                // {name: 'fojas_ejecucion', allowBlank: true},
+                // {name: 'nombre_administrado_ejecucion', allowBlank: true},
+                // {name: 'nombre_establecimiento_ejecucion', allowBlank: true},
+                // {name: 'ordenanza_ejecucion', allowBlank: true},
+                // {name: 'articulo_ejecucion', allowBlank: true},
                 {name: 'estado', allowBlank: true},
-                {name: 'funcionario_ejecutor_ejecucion', allowBlank: true},
-                {name: 'fecha_sorteo_ejecucion', allowBlank: true},
-                {name: 'observaciones_ejecucion', allowBlank: true},
+                // {name: 'funcionario_ejecutor_ejecucion', allowBlank: true},
+                // {name: 'fecha_sorteo_ejecucion', allowBlank: true},
+                // {name: 'observaciones_ejecucion', allowBlank: true},
                 {name: 'nombre_denunciante', allowBlank: true},
                 {name: 'fecha_resolucion', allowBlank: true},
-                {name: 'numero_resolucion', allowBlank: true},
-                {name: 'tipo_zona_ejecucion', allowBlank: true},
+                // {name: 'numero_resolucion', allowBlank: true},
+                // {name: 'tipo_zona_ejecucion', allowBlank: true},
                 {name: 'es_ejecucion', allowBlank: true},
             ]
         });
@@ -1159,7 +1159,8 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'memo_ingreso',
                     allowBlank: true,
                     sortable: true,
-                    width: 150
+                    width: 150,
+                    editor: textFieldLibroDiario
                 },
                 /*{
                     header: 'Memo ingreso',
@@ -1169,16 +1170,8 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                     editor: textFieldLibroDiario
                 },*/
                {
-                    header: 'Fecha de Ingreso Resolución',
-                    dataIndex: 'fecha_envio',
-                    sortable: true,
-                    width: 110,
-                    renderer: Ext.util.Format.dateRenderer('Y-m-d')
-                },
-                {
                     header: 'Fecha de Ingreso',
-                    dataIndex: 'fecha_ingreso_ejecucion',
-                    allowBlank: true,
+                    dataIndex: 'fecha_envio',
                     sortable: true,
                     width: 110,
                     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
@@ -1186,20 +1179,32 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                         format: 'Y-m-d'
                     })
                 },
+                // {
+                //     header: 'Fecha de Ingreso',
+                //     dataIndex: 'fecha_ingreso_ejecucion',
+                //     allowBlank: true,
+                //     sortable: true,
+                //     width: 110,
+                //     renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                //     editor: new Ext.form.DateField({
+                //         format: 'Y-m-d'
+                //     })
+                // },
+                // {
+                //     header: 'Número Expediente',
+                //     dataIndex: 'numero_expediente_ejecucion',
+                //     allowBlank: true,
+                //     sortable: true,
+                //     width: 120,
+                //     editor: textFieldLibroDiario
+                // },
                 {
                     header: 'Número Expediente',
-                    dataIndex: 'numero_expediente_ejecucion',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 120,
-                    editor: textFieldLibroDiario
-                },
-                {
-                    header: 'Número Expediente Resolución',
                     dataIndex: 'numero_expediente',
                     allowBlank: true,
                     sortable: true,
-                    width: 170
+                    width: 170,
+                    editor: textFieldLibroDiario
                 },
                 /*{
                     header: 'Año',
@@ -1209,39 +1214,40 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                     width: 120,
                     editor: textFieldLibroDiario
                 },*/
+                // {
+                //     header: 'Fojas',
+                //     dataIndex: 'fojas_ejecucion',
+                //     allowBlank: true,
+                //     sortable: true,
+                //     width: 120,
+                //     editor: textFieldLibroDiario
+                // },
+                // {
+                //     header: 'Zona',
+                //     dataIndex: 'unidad_ejecucion',
+                //     allowBlank: true,
+                //     sortable: true,
+                //     width: 120,
+                //     renderer: rendererUnidadEjecucion,
+                //     editor: comboUnidadEjecucion
+                // },
+                // {
+                //     header: 'Tipo Zona',
+                //     dataIndex: 'tipo_zona_ejecucion',
+                //     allowBlank: true,
+                //     sortable: true,
+                //     width: 80,
+                //     editor: comboTIPOZONA,
+                //     renderer: funcionTIPOZONA
+                // },
                 {
-                    header: 'Fojas',
-                    dataIndex: 'fojas_ejecucion',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 120,
-                    editor: textFieldLibroDiario
-                },
-                {
-                    header: 'Zona',
-                    dataIndex: 'unidad_ejecucion',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 120,
-                    renderer: rendererUnidadEjecucion,
-                    editor: comboUnidadEjecucion
-                },
-                {
-                    header: 'Tipo Zona',
-                    dataIndex: 'tipo_zona_ejecucion',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 80,
-                    editor: comboTIPOZONA,
-                    renderer: funcionTIPOZONA
-                },
-                {
-                    header: 'Unidad Resolución',
+                    header: 'Unidad',
                     dataIndex: 'unidad',
                     allowBlank: true,
                     sortable: true,
                     width: 100,
-                    renderer: rendererUnidad
+                    renderer: rendererUnidad,
+                    editor: comboUnidadEjecucion
                 },
                 {
                     header: 'Tipo Unidad',
@@ -1251,22 +1257,24 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                     width: 80,
                     renderer: funcionTIPOUNIDAD
                 },
+                // {
+                //     header: 'Nombre Administrado Ejecución',
+                //     dataIndex: 'nombre_administrado_ejecucion',
+                //     allowBlank: true,
+                //     sortable: true,
+                //     width: 250,
+                //     editor: textFieldLibroDiario
+                // },
                 {
-                    header: 'Nombre Administrado Ejecución',
-                    dataIndex: 'nombre_administrado_ejecucion',
+                    header: 'Nombre Administrado',
+                    dataIndex: 'nombre_administrado',
                     allowBlank: true,
                     sortable: true,
                     width: 250,
                     editor: textFieldLibroDiario
                 },
-                {
-                    header: 'Nombre Administrado Resolución',
-                    dataIndex: 'nombre_administrado',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 250
-                },
-                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, sortable: true, width: 100},
+                {header: 'Cédula o Ruc', dataIndex: 'cedula_ruc', allowBlank: true, sortable: true, width: 100,
+                    editor: textFieldLibroDiario},
                 {
                     header: 'Nombre Denunciante',
                     dataIndex: 'nombre_denunciante',
@@ -1275,36 +1283,38 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                     width: 250,
                     editor: textFieldLibroDiario
                 },
+                // {
+                //     header: 'Nombre del Establecimiento',
+                //     dataIndex: 'nombre_establecimiento_ejecucion',
+                //     allowBlank: true,
+                //     sortable: true,
+                //     width: 180,
+                //     editor: textFieldLibroDiario
+                // },
                 {
-                    header: 'Nombre del Establecimiento',
-                    dataIndex: 'nombre_establecimiento_ejecucion',
+                    header: 'Nombre Establecimiento',
+                    dataIndex: 'nombre_establecimiento',
                     allowBlank: true,
                     sortable: true,
                     width: 180,
                     editor: textFieldLibroDiario
                 },
-                {
-                    header: 'Nombre Establecimiento Resolución',
-                    dataIndex: 'nombre_establecimiento',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 180
-                },
+                // {
+                //     header: 'Ordenanza',
+                //     dataIndex: 'ordenanza_ejecucion',
+                //     allowBlank: true,
+                //     sortable: true,
+                //     width: 180,
+                //     editor: comboOrdenanzaEjecucion,
+                //     renderer: rendererOrdenanzaEjecucion
+                // },
                 {
                     header: 'Ordenanza',
-                    dataIndex: 'ordenanza_ejecucion',
-                    allowBlank: true,
-                    sortable: true,
-                    width: 180,
-                    editor: comboOrdenanzaEjecucion,
-                    renderer: rendererOrdenanzaEjecucion
-                },
-                {
-                    header: 'Ordenanza Resolución',
                     dataIndex: 'ordenanza',
                     allowBlank: true,
                     sortable: true,
                     width: 180,
+                    editor: comboOrdenanzaEjecucion,
                     renderer: rendererOrdenanza
                 },
                 {
@@ -1326,13 +1336,13 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                     editor: comboPersonalEjecucion,
                     renderer: rendererPersonalEjecucion
                 },
-                {
-                    header: 'Número Resolución',
-                    dataIndex: 'numero_resolucion',
-                    allowBlank: true,
-                    width: 180,
-                    editor: textFieldLibroDiario
-                },
+                // {
+                //     header: 'Número Resolución',
+                //     dataIndex: 'numero_resolucion',
+                //     allowBlank: true,
+                //     width: 180,
+                //     editor: textFieldLibroDiario
+                // },
                 {
                     header: 'Fecha Resolución',
                     dataIndex: 'fecha_resolucion',
@@ -1519,19 +1529,19 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'memo_ingreso_ejecucion', allowBlank: false},
-                {name: 'fecha_ingreso_ejecucion', allowBlank: false},
-                {name: 'numero_expediente_ejecucion', allowBlank: false},
-                {name: 'anio_ejecucion', allowBlank: false},
-                {name: 'fojas_ejecucion', allowBlank: false},
-                {name: 'nombre_administrado_ejecucion', allowBlank: false},
-                {name: 'nombre_establecimiento_ejecucion', allowBlank: false},
-                {name: 'ordenanza_ejecucion', allowBlank: false},
-                {name: 'articulo_ejecucion', allowBlank: false},
+                // {name: 'memo_ingreso_ejecucion', allowBlank: false},
+                // {name: 'fecha_ingreso_ejecucion', allowBlank: false},
+                // {name: 'numero_expediente_ejecucion', allowBlank: false},
+                // {name: 'anio_ejecucion', allowBlank: false},
+                // {name: 'fojas_ejecucion', allowBlank: false},
+                // {name: 'nombre_administrado_ejecucion', allowBlank: false},
+                // {name: 'nombre_establecimiento_ejecucion', allowBlank: false},
+                // {name: 'ordenanza_ejecucion', allowBlank: false},
+                // {name: 'articulo_ejecucion', allowBlank: false},
                 {name: 'estado', allowBlank: false},
                 {name: 'funcionario_ejecutor_ejecucion', allowBlank: false},
-                {name: 'fecha_sorteo_ejecucion', allowBlank: false},
-                {name: 'observaciones_ejecucion', allowBlank: false},
+                // {name: 'fecha_sorteo_ejecucion', allowBlank: false},
+                // {name: 'observaciones_ejecucion', allowBlank: false},
                 {name: 'memo_ingreso', allowBlank: false},
                 {name: 'numero_interno', allowBlank: false},
                 {name: 'numero_resolucion', allowBlank: false},
@@ -1541,7 +1551,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'multa_impuesta', allowBlank: false},
                 {name: 'fecha_ingreso', allowBlank: false},
                 {name: 'unidad', allowBlank: false},
-                {name: 'unidad_ejecucion', allowBlank: false},
+                // {name: 'unidad_ejecucion', allowBlank: false},
                 {name: 'tipo_zona_ejecucion', allowBlank: false},
                 {name: 'tipo_unidad', allowBlank: false},
                 {name: 'numero_expediente', allowBlank: false},
@@ -4246,7 +4256,7 @@ QoDesk.EjecucionWindow = Ext.extend(Ext.app.Module, {
             memo_ingreso: '',
             fecha_ingreso: (new Date()),
             unidad: 0,
-            unidad_ejecucion: 0,
+            // unidad_ejecucion: 0,
             tipo_zona_ejecucion: 0,
             tipo_unidad: ' ',
             numero_expediente: ' ',
