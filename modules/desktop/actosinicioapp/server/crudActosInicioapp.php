@@ -3,6 +3,7 @@
 require_once '../../../../server/os.php';
 require_once '../../../common/Classes/funciones.php';
 require '../../../../includes/vendor/autoload.php';
+require_once '../../../../actualizacion/migracionActoInicio.php';
 use Kreait\Firebase\Factory;
 require_once 'firestore.php';
 
@@ -17,6 +18,9 @@ switch ($_GET['operation']) {
         break;
     case 'selectForm' :
         selectForm();
+        break;
+    case 'migrar' :
+        migrarForm();
         break;
 }
 
@@ -109,3 +113,13 @@ function selectForm()
             "data" => $data)
     );
 }
+
+function migrarForm()
+{
+    $data =  migrar();
+
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+};

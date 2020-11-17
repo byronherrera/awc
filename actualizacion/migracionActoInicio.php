@@ -11,7 +11,6 @@ require '../../../../includes/vendor/autoload.php';
 use Kreait\Firebase\Factory;
 require_once 'firestore.php';
 
-
 function migrar(){
     $data = [];
     $fs = new Firestore('formulario');

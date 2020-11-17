@@ -33,7 +33,6 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 users: [
                     {"id": 1, "nombre": "Si"},
                     {"id": 0, "nombre": "No"}
-
                 ]
             }
         });
@@ -68,7 +67,6 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
         });
 
         function renderGeneraImagen(value, id, r) {
-            debugger
             return '<input type="button" value="Genera Imagen' + value + ' " id="' + value + '"/>';
         }
 
@@ -168,8 +166,8 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'Dirección de Infracción', dataIndex: 'direccionInfraccion', sortable: true, width: 200, scope: this}
                 , {header: 'Email', dataIndex: 'email', sortable: true, width: 150, scope: this}
                 , {header: 'Fecha Infracción', dataIndex: 'fechaInfraccion', sortable: true, width: 100, renderer: formatDate}
-               // , {header: 'Foto', dataIndex: 'foto', sortable: true, width: 50, scope: this}
-               // , {header: 'Foto 1', dataIndex: 'foto1', sortable: true, width: 20, scope: this}
+                // , {header: 'Foto', dataIndex: 'foto', sortable: true, width: 50, scope: this}
+                // , {header: 'Foto 1', dataIndex: 'foto1', sortable: true, width: 20, scope: this}
                 , {header: 'Hechos Infracción', dataIndex: 'hechosInfraccion', sortable: true, width: 200, scope: this}
                 , {header: 'Hora Infracción', dataIndex: 'horaInfraccion', sortable: true, width: 90, scope: this}
                 , {header: 'Sin Mascarilla', dataIndex: 'infraccionSinMascarilla', sortable: true, width: 80, scope: this}
@@ -185,6 +183,7 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 forceFit: false,
                 getRowClass: function (record, index) {
                     //if (record.get('prosesado') == 'false') return 'gold';
+                    return 'gold';
                 }
             },
             sm: new Ext.grid.RowSelectionModel({
@@ -212,8 +211,6 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
             }),
         });
         //fin ActosInicioapp tab
-
-
 
         //var desktop = this.app.getDesktop();
         var win = desktop.getWindow('layout-win');
@@ -261,6 +258,17 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                         height: winHeight - 265,
                         minSize: 100,
                         margins: '0 0 0 0',
+                        tbar: [
+                            {
+                                text: 'Migrar',
+                                scope: this,
+                                handler: this.migrar,
+                                iconCls: 'save-icon',
+                                disabled: false,
+                                id: 'tbMigrar',
+                                formBind: true
+                            }
+                        ],
                         items: [
                             {
                                 autoWidth: true,
@@ -478,6 +486,66 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
         function bloquearLectura(forma, activar) {
         };
     },
+    migrar: function () {
+        store = this.storeActosInicioapp;
+        var urlActosInicioapp = this.urlActosInicioapp;
+        Ext.Msg.show({
+            title: 'Advertencia',
+            msg: 'Desea migrar.<br>¿Desea continuar?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn == 'yes') {
+                    var myForm = Ext.getCmp('formActosInicioappDetalle').getForm();
+                    myForm.submit({
+                        url: urlActosInicioapp + 'crudActosInicioapp.php?operation=migrar',
+                        method: 'POST',
+                        waitMsg: 'Saving data',
+                        success: function (form, action) {
+                            //se actualiza tabla en la web
+                            //var dataReceived = JSON.parse(action.response.responseText);
+                            myForm.submit({
+                                url: urlActosInicioapp + 'migracionActoInicio.php?operation=migrar',
+                                method: 'POST',
+                                waitMsg: 'Saving data',
+                                params: {
+                                    //codigo_tramite: dataReceived.data
+                                },
+                                success: function (form, action) {
+                                    //Ext.getCmp('tb_negardenuncias').setDisabled(true);
+                                    //Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                                    store.load();
+                                },
+                                failure: function (form, action) {
+                                    var errorJson = JSON.parse(action.response.responseText);
+                                    Ext.Msg.show({
+                                        title: 'Error...'
+                                        , msg: errorJson.msg
+                                        , modal: true
+                                        , icon: Ext.Msg.ERROR
+                                        , buttons: Ext.Msg.OK
+                                    });
+                                }
+                            });
+                        },
+                        failure: function (form, action) {
+                            var errorJson = JSON.parse(action.response.responseText);
+                            Ext.Msg.show({
+                                title: 'Error...'
+                                , msg: errorJson.msg
+                                , modal: true
+                                , icon: Ext.Msg.ERROR
+                                , buttons: Ext.Msg.OK
+                            });
+                        }
+                    });
+
+                }
+            }
+        });
+
+    },
     requestActosInicioappParticipantesData: function () {
         this.storeActosInicioappParticipantes.load();
     },
@@ -544,6 +612,3 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
         });
     }
 });
-
-
-
