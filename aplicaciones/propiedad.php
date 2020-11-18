@@ -35,18 +35,20 @@
     <div class="row">
         <div class="col-6 themed-grid-col margen0"><img class="mb-4" src="propiedad/assets/logoagencia.png" alt="" width="100%"></div>
         <div class="col-6 themed-grid-col margen1">
-            <h1 class="h3 mb-3 font-weight-normal"><p>CONTROL DE PRENDAS</p></h1>
-            <p>AÑO DE ADQUISICIÓN 2019</p>
+            <h1 class="h1 mb-1 font-weight-normal"><p>CONTROL DE PRENDAS</p></h1>
+            <p class="mb-1 font-weight-normal">AÑO DE ADQUISICIÓN <?php echo $_GET['a']; ?></p>
         </div>
     </div>
     <div class="row text-center margen2">
         <div class="col-8 themed-grid-col">
-            <p>Fecha de entrega: 2020-01-01</p>
-            <p>Prenda: Chompa Plumón</p>
-            <p>Código: 11000-200-02-001</p>
+            <p class="mb-1 font-weight-normal">Fecha de entrega: <?php echo $_GET['f']; ?></p>
+            <p class="mb-1 font-weight-normal">Prenda: <?php echo $_GET['p']; ?></p>
+            <p class="mb-1 font-weight-normal">Código: <?php echo $_GET['c']; ?></p>
         </div>
         <div class="col-4 themed-grid-col">
-            <h1 class="h3 mb-3 font-weight-normal">001</h1>
+            <h1 class="h3 mb-3 font-weight-normal"><?php
+                $pieces = explode('-', $_GET['c']);
+                echo array_pop($pieces); ?></h1>
         </div>
     </div>
 
