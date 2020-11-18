@@ -39,6 +39,7 @@
             <p class="mb-1 font-weight-normal">AÑO DE ADQUISICIÓN <?php echo $_GET['a']; ?></p>
         </div>
     </div>
+
     <div class="row text-center margen2">
         <div class="col-8 themed-grid-col">
             <p class="mb-1 font-weight-normal">Fecha de entrega: <?php echo $_GET['f']; ?></p>
