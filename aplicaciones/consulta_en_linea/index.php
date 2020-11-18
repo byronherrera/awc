@@ -447,7 +447,7 @@
                     "                    <tr><th scope=\"row\">Sin Mascarilla Espacios Públicos </th><td>" + validaTexto(val['infraccionSinMascarilla']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Sin Mascarilla Aire Libre </th><td>" + validaTexto(val['infraccionSinMascarilla2']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Sin Cédula </th><td>" + validaTexto(val['infraccioncedula']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Sin distancia </th><td>" + validaTexto(val['infracciondistancia']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Sin Distancia </th><td>" + validaTexto(val['infracciondistancia']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Sanción 25 SMU </th><td>" + validaTexto(val['sancion_25_SMU']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Sanción 50 SMU </th><td>" + validaTexto(val['sancion_50_SMU']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Sanción tres salarios </th><td>" + validaTexto(val['sancion_tres_salarios']) + "</td></tr>\n" +

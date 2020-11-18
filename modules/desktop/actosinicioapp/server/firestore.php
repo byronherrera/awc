@@ -1,7 +1,6 @@
 <?php
 require '../../../../includes/vendor/autoload.php';
 use Kreait\Firebase\Factory;
-use Kreait\Firebase\ServiceAccount;
 
 
 class Firestore
@@ -10,8 +9,6 @@ class Firestore
     private $name;
 
     public function __construct($collection) {
-        //$this->serviceAccount = ServiceAccount::fromJsonFile('../../../../includes/dqmactoinicio.json');
-
         //$factory = (new Factory())->withDatabaseUri('https://dqmactoinicio.firebaseio.com');
         $factory = (new Factory())->withServiceAccount('../../../../includes/dqmactoinicio.json');
         $this->database = $factory->createDatabase();
@@ -19,15 +16,7 @@ class Firestore
     }
 
     public function getAll(){
-        $arr = [];
         $query = $this->database->getReference($this->name)->getSnapshot()->getValue();
-        /*if (!empty($query)) {
-            /*foreach ($query as $value) {
-                //$key = $this->database->getReference($this->name)->getChild($id)->($value->cedula)->getKey();
-                $arr[] = $value;
-            }/
-            array_push($arr,$query);
-        }*/
         return $query;
     }
 
@@ -41,17 +30,24 @@ class Firestore
         }
     }
 
-    public function getWhere($field, $operator, $value)
-    {
-        $arr = [];
-        //$query = $this->database->getReference($this->name)->where($field,$operator,$value)->getValue();
-        $query = $this->database->getReference("formulario")->orderByValue()->getSnapshot()->getValue();
-        if (!empty($query)) {
-            foreach ($query as $value) {
-                $arr[] = $value->data();
-            }
+    public function set($id = NULL, $campo = NULL, $value = NULL){
+        if (empty($id) || !isset($id)) { return FALSE; }
+        if (empty($campo) || !isset($campo)) { return FALSE; }
+
+        if ($this->database->getReference($this->name)->getSnapshot()->hasChild($id)){
+            $this->database->getReference($this->name)->getChild($id.'/'.$campo)->set($value);
+            return TRUE;
+        } else {
+            return FALSE;
         }
-        return $arr;
+    }
+
+    public function getWhere($campo = NULL, $value = NULL)
+    {
+        if (empty($campo) || !isset($campo)) { return FALSE; }
+
+        return $this->database->getReference($this->name)->orderByChild($campo)->equalTo($value)
+            ->getSnapshot()->getValue();
     }
 
     function insert ($data){
@@ -62,7 +58,7 @@ class Firestore
         return TRUE;
     }
 
-    function delete ($database,$userID){
+    function delete ($userID){
         if (empty($userID) || !isset($userID)) { return FALSE; }
         if ($this->database->getReference($this->name)->getSnapshot()->hasChild($userID)){
             $this->database->getReference($this->name)->getChild($userID)->remove();

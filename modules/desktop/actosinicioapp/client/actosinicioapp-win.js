@@ -127,13 +127,16 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 {name: 'hechosInfraccion', allowBlank: false},
                 {name: 'horaInfraccion', allowBlank: false},
                 {name: 'infraccionSinMascarilla', allowBlank: false},
+                {name: 'infraccionSinMascarilla2', allowBlank: false},
                 {name: 'infraccioncedula', allowBlank: false},
                 {name: 'infracciondistancia', allowBlank: false},
                 {name: 'nombres', allowBlank: false},
                 {name: 'sancion_25_SMU', allowBlank: false},
                 {name: 'sancion_50_SMU', allowBlank: false},
                 {name: 'sancion_tres_salarios', allowBlank: false},
-                {name: 'sancion_un_salario_medio', allowBlank: false}
+                {name: 'sancion_un_salario_medio', allowBlank: false},
+                {name: 'telefonoCelular', allowBlank: false},
+                {name: 'telefonoFijo', allowBlank: false}
             ]
         });
 
@@ -170,7 +173,8 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 // , {header: 'Foto 1', dataIndex: 'foto1', sortable: true, width: 20, scope: this}
                 , {header: 'Hechos Infracción', dataIndex: 'hechosInfraccion', sortable: true, width: 200, scope: this}
                 , {header: 'Hora Infracción', dataIndex: 'horaInfraccion', sortable: true, width: 90, scope: this}
-                , {header: 'Sin Mascarilla', dataIndex: 'infraccionSinMascarilla', sortable: true, width: 80, scope: this}
+                , {header: 'Sin Mascarilla Espacios Públicos', dataIndex: 'infraccionSinMascarilla', sortable: true, width: 180, scope: this}
+                , {header: 'Sin Mascarilla Aire Libre', dataIndex: 'infraccionSinMascarilla2', sortable: true, width: 130, scope: this}
                 , {header: 'Sin Cédula', dataIndex: 'infraccioncedula', sortable: true, width: 80, scope: this}
                 , {header: 'Sin Distancia', dataIndex: 'infracciondistancia', sortable: true, width: 80, scope: this}
                 , {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 250, scope: this}
@@ -178,6 +182,8 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 , {header: 'Sanción 50 SMU', dataIndex: 'sancion_50_SMU', sortable: true, width: 100, scope: this}
                 , {header: 'Sanción tres salarios', dataIndex: 'sancion_tres_salarios', sortable: true, width: 120, scope: this}
                 , {header: 'Sanción un salario medio', dataIndex: 'sancion_un_salario_medio', sortable: true, width: 150, scope: this}
+                , {header: 'Celular', dataIndex: 'telefonoCelular', sortable: true, width: 80, scope: this}
+                , {header: 'Teléfono', dataIndex: 'telefonoFijo', sortable: true, width: 70, scope: this}
             ],
             viewConfig: {
                 forceFit: false,
@@ -306,7 +312,16 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Dirección Domicilio',
                                                 name: 'direccionDomicilio',
-                                                anchor: '96%'
+                                            }
+                                            ,{
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Teléfono',
+                                                name: 'telefonoFijo'
+                                            }
+                                            ,{
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Celular',
+                                                name: 'telefonoCelular'
                                             }
                                         ]
                                     },
@@ -325,74 +340,67 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Hechos',
-                                                name: 'hechosInfraccion',
-                                                anchor: '96%'
+                                                name: 'hechosInfraccion'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Dirección',
-                                                name: 'direccionInfraccion',
-                                                anchor: '96%'
+                                                name: 'direccionInfraccion'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Fecha',
-                                                name: 'fechaInfraccion',
-                                                anchor: '96%'
+                                                name: 'fechaInfraccion'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Hora',
-                                                name: 'horaInfraccion',
-                                                anchor: '96%'
+                                                name: 'horaInfraccion'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Conductor Sin Mascarilla',
-                                                name: 'conductorSinMascarilla',
-                                                anchor: '96%'
+                                                name: 'conductorSinMascarilla'
                                             }
                                             , {
                                                 xtype: 'displayfield',
-                                                fieldLabel: 'Sin Mascarilla',
-                                                name: 'infraccionSinMascarilla',
-                                                anchor: '96%'
+                                                fieldLabel: 'Sin Mascarilla Espacios Públicos',
+                                                name: 'infraccionSinMascarilla'
+                                            }
+                                            , {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Sin Mascarilla Aire Libre',
+                                                name: 'infraccionSinMascarilla2'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Sin Cédula',
-                                                name: 'infraccioncedula',
-                                                anchor: '96%'
+                                                name: 'infraccioncedula'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Sin Distancia',
-                                                name: 'infracciondistancia',
-                                                anchor: '96%'
+                                                name: 'infracciondistancia'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Sanción 25 SMU',
-                                                name: 'sancion_25_SMU',
-                                                anchor: '96%'
+                                                name: 'sancion_25_SMU'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Sanción 50 SMU',
-                                                name: 'sancion_50_SMU',
-                                                anchor: '96%'
+                                                name: 'sancion_50_SMU'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Sanción tres salarios',
-                                                name: 'sancion_tres_salarios',
-                                                anchor: '96%'
+                                                name: 'sancion_tres_salarios'
                                             }
                                             , {
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Sanción un salario y medio',
-                                                name: 'sancion_un_salario_medio',
-                                                anchor: '96%'
+                                                name: 'sancion_un_salario_medio'
                                             }
                                         ]
                                     },

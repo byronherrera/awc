@@ -54,6 +54,7 @@ function select()
         $valor['aislamiento_obligatorio'] =  ($valor['aislamiento_obligatorio'])  ? 'SI' :  'NO';
         $valor['conductorSinMascarilla'] =  ($valor['conductorSinMascarilla'])  ? 'SI' :  'NO';
         $valor['infraccionSinMascarilla'] =  ($valor['infraccionSinMascarilla'])  ? 'SI' :  'NO';
+        $valor['infraccionSinMascarilla2'] =  ($valor['infraccionSinMascarilla2'])  ? 'SI' :  'NO';
         $valor['infraccioncedula'] =  ($valor['infraccioncedula'])  ? 'SI' :  'NO';
         $valor['infracciondistancia'] =  ($valor['infracciondistancia'])  ? 'SI' :  'NO';
         $valor['sancion_25_SMU'] =  ($valor['sancion_25_SMU'])  ? 'SI' :  'NO';
@@ -101,6 +102,7 @@ function selectForm()
     $data['aislamiento_obligatorio'] =  ($data['aislamiento_obligatorio'])  ? 'SI' :  'NO';
     $data['conductorSinMascarilla'] =  ($data['conductorSinMascarilla'])  ? 'SI' :  'NO';
     $data['infraccionSinMascarilla'] =  ($data['infraccionSinMascarilla'])  ? 'SI' :  'NO';
+    $data['infraccionSinMascarilla2'] =  ($data['infraccionSinMascarilla2'])  ? 'SI' :  'NO';
     $data['infraccioncedula'] =  ($data['infraccioncedula'])  ? 'SI' :  'NO';
     $data['infracciondistancia'] =  ($data['infracciondistancia'])  ? 'SI' :  'NO';
     $data['sancion_25_SMU'] =  ($data['sancion_25_SMU'])  ? 'SI' :  'NO';

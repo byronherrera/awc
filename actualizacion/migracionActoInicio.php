@@ -14,7 +14,7 @@ require_once 'firestore.php';
 function migrar(){
     $data = [];
     $fs = new Firestore('formulario');
-    $query= $fs->getAll();
+    $query= $fs->getWhere('exportado',false);
 
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
@@ -89,6 +89,9 @@ function migrar(){
                 .");";
             $sql = $os->db->conn->prepare($sql);
             $sql->execute();
+
+            //Actualizo la bdd firebase
+            $query= $fs->set($id,'exportado',true);
 
             echo json_encode(array(
                 "success" => true,
