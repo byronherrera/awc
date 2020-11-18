@@ -24,6 +24,9 @@ switch ($opcion) {
     case "dataEjecucion":
         getdataEjecucion($usuario);
         break;
+    case "dataApp":
+        getdataApp($usuario);
+        break;
     // fin pedidos datos
 
     // funciones adicionales
@@ -267,6 +270,28 @@ function getdataEjecucion($id)
     $os->db->conn->query("SET NAMES 'utf8'");
 
     $sql = "SELECT * FROM amc_libro_diario  WHERE cedula_ruc = '$id' AND es_ejecucion = '1' ;";
+
+    $result = $os->db->conn->query($sql);
+    $resultados = $result->fetchAll(PDO::FETCH_ASSOC);
+    if (count($resultados) > 0) {
+        echo json_encode(array(
+            "success" => true,
+            "data" => $resultados
+        ));
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }
+}
+
+function getdataApp($id)
+{
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+
+    $sql = "SELECT * FROM amc_actos_inicios  WHERE cedula = '$id' order by fechaInfraccion desc ;";
 
     $result = $os->db->conn->query($sql);
     $resultados = $result->fetchAll(PDO::FETCH_ASSOC);
