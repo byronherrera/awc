@@ -2,8 +2,8 @@
 require_once '../../server/os.php';
 $os = new os();
 
-getSecuencial();
-function getSecuencial()
+genSecuencial();
+function genSecuencial()
 {
     global $os;
 
@@ -14,7 +14,8 @@ function getSecuencial()
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
 
 
-    $resultado = "AMC-SERIAL-ZLM-APP-2020-001";
+    $resultado = getResultado();
+
 
     // Tipo de errores
     // 1. Error base de datos
@@ -38,5 +39,49 @@ function getSecuencial()
         ));
     }
 }
+
+function getResultado()
+{
+    $formato = getFormato();
+    $year = getYear();
+    $secuencia = getSecuencia();
+    $resultado = "$formato-$year-$secuencia";
+    return $resultado;
+}
+
+function getFormato()
+{
+    global $os;
+    // 1 determinar en que zonal esta el usuario
+    // https://amcmatis.quito.gob.ec/aplicaciones/secuencial/?email=argarcia@quito.gob.ec&password=123456&tipo_documento=1
+
+    $user = $_GET['email'];
+    $pass = $_GET['password'];
+    $group = '';
+
+    echo $os->login($user, $pass, $group);
+
+    $idUsuario = $os->get_member_id();
+    $zonal = $os->get_zonal_id ();
+
+    echo $idUsuario;
+    echo $zonal;
+
+    $os->logout();
+    //return $zonal;
+    return "AMC-SERIAL-ZLM-APP";
+
+}
+
+function getYear()
+{
+    return date("Y");
+}
+
+function getSecuencia()
+{
+    return "001";
+}
+
 
 ?>

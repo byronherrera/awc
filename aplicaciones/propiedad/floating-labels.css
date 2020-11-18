@@ -15,14 +15,23 @@ body {
 
 .form-signin {
   width: 100%;
-  max-width: 500px;
+  max-width: 380px;
   padding: 0;
   margin: auto;
+  line-height: 1em;
   
 }
+.titulo {
+  font-weight: bolder !important;
+  font-size: 1.1em;
+}
 
+.rojo {
+  color: red;
+}
 .margen0 {
 border-bottom: 2px solid blue;
+  padding: 1px 2px;
 }
 
 .margen1 {
