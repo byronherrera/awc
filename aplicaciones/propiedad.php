@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <div class="row text-center margen2">
+    <div class="row  margen2">
         <div class="col-8 themed-grid-col">
             <p class="mb-1 mt-2 font-weight-normal">Fecha de entrega: <?php echo $_GET['f']; ?></p>
             <p class="mb-1 font-weight-normal">Prenda: <?php echo $_GET['p']; ?></p>

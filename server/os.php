@@ -505,7 +505,7 @@ class os extends kernal {
       $success = $this->session->add($session_id, $member_id, $group_id);
 
       if($success){
-         die("{success: true, sessionId: '".$session_id."'}");
+         return ("{success: true, sessionId: '".$session_id."'}");
       }
 
       print "{errors: [{id: 'user', msg: 'Login Failed'}]}";
