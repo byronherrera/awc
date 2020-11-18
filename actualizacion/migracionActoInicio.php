@@ -58,7 +58,8 @@ function migrar(){
                                               ,sancion_tres_salarios
                                               ,sancion_un_salario_medio
                                               ,telefonoCelular
-                                              ,telefonoFijo)
+                                              ,telefonoFijo
+                                              ,fecha_registro)
 	            VALUES( "."'".$id."'".","
                 ."'".$valor['aislamiento_obligatorio']."'".","
                 ."'".$valor['cedula']."'".","
@@ -83,7 +84,9 @@ function migrar(){
                 ."'".$valor['sancion_tres_salarios']."'".","
                 ."'".$valor['sancion_un_salario_medio']."'".","
                 ."'".$valor['telefonoCelular']."'".","
-                ."'".$valor['telefonoFijo']."'".");";
+                ."'".$valor['telefonoFijo']."'".","
+                ."NOW()"
+                .");";
             $sql = $os->db->conn->prepare($sql);
             $sql->execute();
 
