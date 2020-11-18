@@ -1,7 +1,6 @@
 <?php
 require_once '../../../../server/os.php';
-//require '../../../../includes/vendor/autoload.php';
-//use Kreait\Firebase\Factory;
+require_once '../../../common/Classes/funciones.php';
 
 $os = new os();
 if (!$os->session_exists()) {
@@ -54,13 +53,31 @@ function selectAllanamiento()
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
-        $data[] = $row;
+        $id = $row["id_usuario"];
+        $nombreUsuario = getUsuarioById($id);
+        $row += [ "nombre_usuario" =>  $nombreUsuario ];
+        $data[] =   $row;
     }
     echo json_encode(array(
             "success" => true,
             "data" => $data)
     );
+}
+
+function getUsuarioById($id){
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id != '') {
+        $sql = "SELECT concat_ws(' ', qo_members.last_name, qo_members.first_name) AS nombre
+            FROM qo_members WHERE id = " . $id;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        return $rownombre['nombre'];
+        /*echo json_encode(array(
+                "success" => true,
+                "data" => $rownombre['nombre'])
+        );*/
+    }
 }
 
 function insertAllanamiento()
@@ -129,6 +146,9 @@ function selectAllanamientoForm()
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row["id_usuario"];
+        $nombreUsuario = getUsuarioById($id);
+        $row += [ "nombre_usuario" =>  $nombreUsuario ];
         $data = $row;
     }
     $data['fecha2'] = $data['fecha'];
@@ -172,7 +192,9 @@ function selectHist(){
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
+        $id = $row["id_usuario"];
+        $nombreUsuario = getUsuarioById($id);
+        $row += [ "nombre_usuario" =>  $nombreUsuario ];
         $data[] = $row;
     }
     echo json_encode(array(
@@ -228,6 +250,19 @@ function enviar()
     $log = $sql;
     $sql = $os->db->conn->prepare($sql)->execute();
 
+    //$mensaje = getmensaje('asignar', $_POST ['nombre'], $data->codigo_sitra, $data->id);
+    //$envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
+    $email = regresaEmail($data->id_usuario);
+    $mensaje = getmensaje('asignar',$data->nombre_usuario, $data->codigo_sitra, $data->id);
+    //$email = $data->correoelectronico;
+    $asunto = "Asignación del proceso de Allanamiento, " . " - " . $email;
+    $funcionarios = ["carlos.bastidas@quito.gob.ec"];
+    $funcionariosSeguimiento = ["carlos.bastidas@quito.gob.ec"];
+    $from = 'Planificación - Agencia Metropolitana de Control';
+    $prueba = false;
+    enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
+
+
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode(),
@@ -239,34 +274,6 @@ function enviar()
     $actual = file_get_contents($fichero);
     $actual .= $os->get_member_id() . "\n" . $log . "\n\n";
     file_put_contents($fichero, $actual);
-
-    //$mensaje = getmensaje('aprobar', $_POST ['nombre'], $codigo_tramite, $id);
-    //$envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
-
-    /*
-     *                 $email = regresaEmail($funcionario);
-                $asunto = "Tarea asignada, " . " - " . $email;
-                $funcionarios = ["katherine.montenegro@quito.gob.ec", "andrea.garcia@quito.gob.ec"];
-                $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "pamela.parreno@quito.gob.ec"];
-                $from = 'Planificación - Agencia Metropolitana de Control';
-                $prueba = false;
-                 enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
-
-     *
-     */
-
-    /*if ($databaseAMC->Query($query)
-    ) {
-        echo json_encode(array(
-            "success" => true,
-            "msg" => "Contenido actualizado exitosamente" . $envioMail
-        ));
-    } else {
-        echo json_encode(array(
-            "success" => false,
-            "msg" => "Error en la base de datos."
-        ));
-    }*/
 }
 
 function devolver()
@@ -303,7 +310,7 @@ function devolver()
     ));
 
     // genero archivo de log
-    $fichero = 'consultas_ciudadanas.log';
+    $fichero = 'allanamiento.log';
     $actual = file_get_contents($fichero);
     $actual .= $os->get_member_id() . "\n" . $log . "\n\n";
     file_put_contents($fichero, $actual);
@@ -313,51 +320,93 @@ function devolver()
 function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $motivo = '')
 {
     switch ($opcion) {
-        case 'negar' :
+        case 'asignar' :
             $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-<div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
-<div style="clear: both; margin: 50px 10%; float: left;">
-<p>Estimado usuario gracias por escribirnos, su solicitud no es aprobada por el siguiente motivo: <br><br> 
-<span style="font-weight: bold"> ' . $motivo . '</span><br><br> 
-Adicionalmente estas son las causas para no aprobar una denuncia: <br><br>
+                <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
+                <div style="clear: both; margin: 50px 10%; float: left;">
+                <p><br><br>
+                 Estimado, ' . $nombre . ' .<br>
+                <br>
+                
+                <br>    
+                
+                <p>Atentamente </p>
+                <p>GAD MDMQ AGENCIA METROPOLITANA DE CONTROL</p>
+                <p></p>
+                <p>IMPORTANTE</p>
+                <p>************************************************</p>
+                <p>- No responder este correo es un Mensaje Automático.</p>
+                </div>
+                <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                </div>
+                ';
+        case 'devolver' :
+            $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
+                <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
+                <div style="clear: both; margin: 50px 10%; float: left;">
+                <p><br><br>
+                 Estimado, ' . $nombre . ' .<br>
+                <br>
+                   
+                <br>    
+                <p>Atentamente </p>
+                <p>GAD MDMQ AGENCIA METROPOLITANA DE CONTROL</p>
+                <p></p>
+                <p>IMPORTANTE</p>
+                <p>************************************************</p>
+                <p>- No responder este correo es un Mensaje Automático.</p>
+                </div>
+                <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                </div>
+                ';
+        case 'rechazar' :
+            $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
+                      <div style="float: right; clear: both; width: 100%;">
+                           <img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" />
+                      </div>
+                      <div style="clear: both; margin: 50px 10%; float: left;">
+                        <p>Estimado usuario gracias por escribirnos, su solicitud es devuelta por el siguiente motivo: <br><br> 
+                           <span style="font-weight: bold"> ' . $motivo . '</span><br><br> 
+                              Adicionalmente estas son las causas para no aprobar una denuncia: <br><br>
 
-1. Imagen de la cédula, no válida<br>
-2. Fotografías anexas a la denunciada no son válidas.<br>
-3. En caso de ser una persona jurídica, la  imagen de nombramiento no es válida.<br>
-4. La denuncia realizada no se encuentra dentro de las competencias de la Agencia Metropolitana de Control.<br>
-5. La informacíon proporcianada como dirección, croquis, mapa, no permite ubicar el sitio de la denuncia<br>
-<br>
-<br>
-</p>
-<p>&nbsp;</p>
-<p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
-</div>
-<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
-</div>';
+                              1. Imagen de la cédula, no válida<br>
+                              2. Fotografías anexas a la denunciada no son válidas.<br>
+                              3. En caso de ser una persona jurídica, la  imagen de nombramiento no es válida.<br>
+                              4. La denuncia realizada no se encuentra dentro de las competencias de la Agencia Metropolitana de Control.<br>
+                              5. La informacíon proporcianada como dirección, croquis, mapa, no permite ubicar el sitio de la denuncia<br>
+                           <br>
+                           <br>
+                         </p>
+                         <p>&nbsp;</p>
+                         <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
+                      </div>
+                      <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                      </div>';
             return $texto;
             break;
 
-        case 'aprobar' :
+         case 'aprobar' :
             $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-<div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
-<div style="clear: both; margin: 50px 10%; float: left;">
-<p><br><br>
- Estimado ciudadano gracias por escribirnos, su denuncia fue revisada y ha sido ingresada correctamente en nuestro sistema con el código ' . $codigo_tramite . '<br>
- <br>
- En el siguiente link, usted  podrá hacer el seguimiento del proceso.<br>
- <a href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/' . $id . '-' . $nombre . '" target="_blank">Click aquí</a>
-<br>    
-<br>
-</p>
-<p>&nbsp;</p>
-<p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
-</div>
-<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
-</div>
-';
+                      <div style="float: right; clear: both; width: 100%;">
+                         <img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" />
+                      </div>
+                      <div style="clear: both; margin: 50px 10%; float: left;">
+                      <p>
+                         <br><br>
+                           Estimado ciudadano gracias por escribirnos, su denuncia fue revisada y ha sido ingresada correctamente en nuestro sistema con el código ' . $codigo_tramite . '
+                         <br><br>
+                           En el siguiente link, usted  podrá hacer el seguimiento del proceso.<br>
+                           <a href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/' . $id . '-' . $nombre . '" target="_blank">Click aquí</a>
+                         <br><br>
+                      </p>
+                      <p>&nbsp;</p>
+                      <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
+                      </div>
+                         <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                      </div>
+                      ';
             return $texto;
             break;
-
     }
 }
 
