@@ -57,18 +57,14 @@ function getFormato()
 
     $user = $_GET['email'];
     $pass = $_GET['password'];
-    $group = '';
 
-    echo $os->login($user, $pass, $group);
+    $os->load('member');
+    $member_id = $os->member->get_id($user, $pass, false);
+    $zonal = $os->get_zonal_id ($member_id);
 
-    $idUsuario = $os->get_member_id();
-    $zonal = $os->get_zonal_id ();
+    echo $zonal . " mmm " . $member_id;
 
-    echo $idUsuario;
-    echo $zonal;
 
-    $os->logout();
-    //return $zonal;
     return "AMC-SERIAL-ZLM-APP";
 
 }
