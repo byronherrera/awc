@@ -130,9 +130,9 @@ class os extends kernal {
     * @return {integer}
     */
 
-   public function get_zonal_id(){
+   public function get_zonal_id($member_id = ''){
       $this->load('amc');
-      return $this->amc->get_zonal_id();
+      return $this->amc->get_zonal_id($member_id);
    } // end get_group_id()
    /**
     * get_unidad_id() Returns the current zonal id for the session.

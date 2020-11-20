@@ -57,30 +57,14 @@ function getFormato()
 
     $user = $_GET['email'];
     $pass = $_GET['password'];
-    $group = '';
 
-
-    $json = $os->login($user, $pass, $group);
-    $json = str_replace("success", '"success"',$json);
-    $json = str_replace("sessionId", '"sessionId"',$json);
-    $json = str_replace("'", '"',$json);
-
-    $value =  json_decode($json,true);
-
-    setcookie("sessionId", $value['sessionId']);
-
-    echo $value['sessionId'];
-
-    $idUsuario = $os->get_member_id();
-    $zonal = $os->get_zonal_id ();
-
-    echo $idUsuario;
+    $os->load('member');
     $member_id = $os->member->get_id($user, $pass, false);
+    $zonal = $os->get_zonal_id ($member_id);
 
-    echo $zonal;
+    echo $zonal . " mmm " . $member_id;
 
-    $os->logoutsoft();
-    //return $zonal;
+
     return "AMC-SERIAL-ZLM-APP";
 
 }
