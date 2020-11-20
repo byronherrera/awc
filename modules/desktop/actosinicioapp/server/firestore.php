@@ -50,6 +50,14 @@ class Firestore
             ->getSnapshot()->getValue();
     }
 
+    public function getLike($campo = NULL, $value = NULL)
+    {
+        if (empty($campo) || !isset($campo)) { return FALSE; }
+
+        return $this->database->getReference($this->name)->orderByChild($campo)->startAt($value)->endAt($value.'\uf8ff')
+            ->getSnapshot()->getValue();
+    }
+
     function insert ($data){
         if (empty($data) || !isset($data)) { return FALSE; }
         foreach ($data as $key => $value){

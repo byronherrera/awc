@@ -116,16 +116,19 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
             fields: [
                 {name: 'id', allowBlank: false},
                 {name: 'cedula', allowBlank: false},
+                {name: 'direccionDomicilio', allowBlank: false},
+                {name: 'direccionTrabajo', allowBlank: false},
+                {name: 'email', allowBlank: false},
+                {name: 'telefonoCelular', allowBlank: false},
+                {name: 'telefonoFijo', allowBlank: false},
+                {name: 'hechosInfraccion', allowBlank: false},
+                {name: 'direccionInfraccion', allowBlank: false},
+                {name: 'fechaInfraccion', type: 'date', dateFormat: 'c', allowBlank: true},
+                {name: 'horaInfraccion', allowBlank: false},
                 {name: 'aislamiento_obligatorio', allowBlank: false},
                 {name: 'conductorSinMascarilla', allowBlank: false},
-                {name: 'direccionDomicilio', allowBlank: false},
-                {name: 'direccionInfraccion', allowBlank: false},
-                {name: 'email', allowBlank: false},
-                {name: 'fechaInfraccion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'foto', allowBlank: false},
                 {name: 'foto1', allowBlank: false},
-                {name: 'hechosInfraccion', allowBlank: false},
-                {name: 'horaInfraccion', allowBlank: false},
                 {name: 'infraccionSinMascarilla', allowBlank: false},
                 {name: 'infraccionSinMascarilla2', allowBlank: false},
                 {name: 'infraccioncedula', allowBlank: false},
@@ -135,8 +138,6 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 {name: 'sancion_50_SMU', allowBlank: false},
                 {name: 'sancion_tres_salarios', allowBlank: false},
                 {name: 'sancion_un_salario_medio', allowBlank: false},
-                {name: 'telefonoCelular', allowBlank: false},
-                {name: 'telefonoFijo', allowBlank: false}
             ]
         });
 
@@ -163,27 +164,29 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 new Ext.grid.RowNumberer({width: 30})
                 , {header: 'id', dataIndex: 'id', sortable: true, width: 50, hidden: true, scope: this}
                 , {header: 'Cédula', dataIndex: 'cedula', sortable: true, width: 80, scope: this}
+                , {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 250, scope: this}
+                , {header: 'Dirección de Domicilio', dataIndex: 'direccionDomicilio', sortable: true, width: 200, scope: this}
+                , {header: 'Dirección de Trabajo', dataIndex: 'direccionTrabajo', sortable: true, width: 200, scope: this}
+                , {header: 'Email', dataIndex: 'email', sortable: true, width: 150, scope: this}
+                , {header: 'Celular', dataIndex: 'telefonoCelular', sortable: true, width: 80, scope: this}
+                , {header: 'Teléfono', dataIndex: 'telefonoFijo', sortable: true, width: 70, scope: this}
+                , {header: 'Hechos Infracción', dataIndex: 'hechosInfraccion', sortable: true, width: 200, scope: this}
+                , {header: 'Dirección de Infracción', dataIndex: 'direccionInfraccion', sortable: true, width: 200, scope: this}
+                , {header: 'Fecha Infracción', dataIndex: 'fechaInfraccion', sortable: true, width: 100, renderer: formatDate}
+                , {header: 'Hora Infracción', dataIndex: 'horaInfraccion', sortable: true, width: 90, scope: this}
                 , {header: 'Aislamiento Obligatorio', dataIndex: 'aislamiento_obligatorio', sortable: true, width: 130, scope: this}
                 , {header: 'Conductor sin Mascarilla', dataIndex: 'conductorSinMascarilla', sortable: true, width: 140, scope: this}
-                , {header: 'Dirección de Domicilio', dataIndex: 'direccionDomicilio', sortable: true, width: 200, scope: this}
-                , {header: 'Dirección de Infracción', dataIndex: 'direccionInfraccion', sortable: true, width: 200, scope: this}
-                , {header: 'Email', dataIndex: 'email', sortable: true, width: 150, scope: this}
-                , {header: 'Fecha Infracción', dataIndex: 'fechaInfraccion', sortable: true, width: 100, renderer: formatDate}
                 // , {header: 'Foto', dataIndex: 'foto', sortable: true, width: 50, scope: this}
                 // , {header: 'Foto 1', dataIndex: 'foto1', sortable: true, width: 20, scope: this}
-                , {header: 'Hechos Infracción', dataIndex: 'hechosInfraccion', sortable: true, width: 200, scope: this}
-                , {header: 'Hora Infracción', dataIndex: 'horaInfraccion', sortable: true, width: 90, scope: this}
                 , {header: 'Sin Mascarilla Espacios Públicos', dataIndex: 'infraccionSinMascarilla', sortable: true, width: 180, scope: this}
                 , {header: 'Sin Mascarilla Aire Libre', dataIndex: 'infraccionSinMascarilla2', sortable: true, width: 130, scope: this}
                 , {header: 'Sin Cédula', dataIndex: 'infraccioncedula', sortable: true, width: 80, scope: this}
                 , {header: 'Sin Distancia', dataIndex: 'infracciondistancia', sortable: true, width: 80, scope: this}
-                , {header: 'Nombres', dataIndex: 'nombres', sortable: true, width: 250, scope: this}
                 , {header: 'Sanción 25 SMU', dataIndex: 'sancion_25_SMU', sortable: true, width: 100, scope: this}
                 , {header: 'Sanción 50 SMU', dataIndex: 'sancion_50_SMU', sortable: true, width: 100, scope: this}
                 , {header: 'Sanción tres salarios', dataIndex: 'sancion_tres_salarios', sortable: true, width: 120, scope: this}
                 , {header: 'Sanción un salario medio', dataIndex: 'sancion_un_salario_medio', sortable: true, width: 150, scope: this}
-                , {header: 'Celular', dataIndex: 'telefonoCelular', sortable: true, width: 80, scope: this}
-                , {header: 'Teléfono', dataIndex: 'telefonoFijo', sortable: true, width: 70, scope: this}
+
             ],
             viewConfig: {
                 forceFit: false,
@@ -241,10 +244,18 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                             key: 'cedula',
                             scope: this,
                             text: 'Cédula'
+                        },
+                        {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'nombres',
+                            scope: this,
+                            text: 'Nombres'
                         }
                     ]
                 })
-                //, text: 'Cédula'
+                , text: 'Cédula'
             });
 
             this.formActosInicioappDetalle = new Ext.FormPanel({
@@ -304,15 +315,20 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                                                 fieldLabel: 'Nombres',
                                                 name: 'nombres',
                                             }
-                                            , {
-                                                xtype: 'displayfield',
-                                                fieldLabel: 'Email',
-                                                name: 'email'}
                                             ,{
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Dirección Domicilio',
                                                 name: 'direccionDomicilio',
                                             }
+                                            ,{
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Dirección Trabajo',
+                                                name: 'direccionTrabajo',
+                                            }
+                                            , {
+                                                xtype: 'displayfield',
+                                                fieldLabel: 'Email',
+                                                name: 'email'}
                                             ,{
                                                 xtype: 'displayfield',
                                                 fieldLabel: 'Teléfono',

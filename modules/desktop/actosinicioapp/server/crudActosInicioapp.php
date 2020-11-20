@@ -24,28 +24,29 @@ switch ($_GET['operation']) {
         break;
 }
 
-
 function select()
 {
     $data = [];
     $fs = new Firestore('formulario');
     $campo = null;
-    $valor = null;
+    $texto = null;
 
     if (isset($_POST['filterField'])) {
         $campo = $_POST['filterField'];
+    }else{
+        $campo = 'cedula';
     }
 
     if (isset($_POST['filterText'])) {
-        $valor = $_POST['filterText'];
+        $texto = strtoupper($_POST['filterText']);
     }
 
-    if($campo != null &&  $valor != null){
-        $query= $fs->getWhere($campo,'=',$valor);
+    if($campo != null &&  $texto != null){
+        //$query= $fs->getWhere($campo,$texto);
+        $query= $fs->getLike($campo,$texto);
     }else {
         $query= $fs->getAll();
     }
-
 
     //$query= $fs->getAll();
     foreach ($query as $key => $valor) {
@@ -97,7 +98,6 @@ function selectForm()
     } else {
         $data['foto2'] = '';
     }
-
 
     $data['aislamiento_obligatorio'] =  ($data['aislamiento_obligatorio'])  ? 'SI' :  'NO';
     $data['conductorSinMascarilla'] =  ($data['conductorSinMascarilla'])  ? 'SI' :  'NO';

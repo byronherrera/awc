@@ -434,16 +434,18 @@
                     "                    <tbody>\n" +
                     "                    <tr><th scope=\"row\">Cédula/Ruc</th><td>" + validaTexto(val['cedula']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(val['nombres']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Dirección de Domicilio </th><td>" + validaTexto(val['direccionDomicilio']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Dirección de Trabajo </th><td>" + validaTexto(val['direccionTrabajo']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Email </th><td>" + validaTexto(val['email']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Celular </th><td>" + validaTexto(val['telefonoCelular']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Teléfono </th><td>" + validaTexto(val['telefonoFijo']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Hechos de Infracción </th><td>" + validaTexto(val['hechosInfraccion']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Dirección de Infracción </th><td>" + validaTexto(val['direccionInfraccion']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fechaInfraccion']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Hora de Infracción </th><td>" + validaTexto(val['horaInfraccion']) + "</td></tr>\n" +
                    // "                    <tr><th scope=\"row\">Número de Expediete </th><td>" + validaTexto(val['id']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Aislamiento Obligatorio </th><td>" + validaTexto(val['aislamiento_obligatorio']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Conductor sin Mascarilla </th><td>" + validaTexto(val['conductorSinMascarilla']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Dirección de Domicilio </th><td>" + validaTexto(val['direccionDomicilio']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Dirección de Infracción </th><td>" + validaTexto(val['direccionInfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Dirección de Trabajo </th><td>" + validaTexto(val['direccionTrabajo']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Email </th><td>" + validaTexto(val['email']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Hechos de Infracción </th><td>" + validaTexto(val['hechosInfraccion']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Hora de Infracción </th><td>" + validaTexto(val['horaInfraccion']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Sin Mascarilla Espacios Públicos </th><td>" + validaTexto(val['infraccionSinMascarilla']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Sin Mascarilla Aire Libre </th><td>" + validaTexto(val['infraccionSinMascarilla2']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Sin Cédula </th><td>" + validaTexto(val['infraccioncedula']) + "</td></tr>\n" +
@@ -452,8 +454,7 @@
                     "                    <tr><th scope=\"row\">Sanción 50 SMU </th><td>" + validaTexto(val['sancion_50_SMU']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Sanción tres salarios </th><td>" + validaTexto(val['sancion_tres_salarios']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Sanción un salario y medio </th><td>" + validaTexto(val['sancion_un_salario_medio']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Celular </th><td>" + validaTexto(val['telefonoCelular']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Teléfono </th><td>" + validaTexto(val['telefonoFijo']) + "</td></tr>\n" +
+
                     "                    <tr><th scope=\"row\">Foto</th><td>" + validaURL(val['foto']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Foto1</th><td>" + validaURL(val['foto1']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Foto2</th><td>" + validaURL(val['foto2']) + "</td></tr>\n" +
