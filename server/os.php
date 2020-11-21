@@ -141,9 +141,9 @@ class os extends kernal {
     * @return {integer}
     */
 
-   public function get_unidad_id(){
+   public function get_unidad_id($member_id = ''){
       $this->load('amc');
-      return $this->amc->get_unidad_id();
+      return $this->amc->get_unidad_id($member_id );
    } // end get_group_id()
 
     /**
@@ -153,9 +153,9 @@ class os extends kernal {
      * @return {string}
      */
 
-    public function get_unidad_siglas(){
+    public function get_unidad_siglas($member_id=''){
         $this->load('amc');
-        return $this->amc->get_unidad_siglas();
+        return $this->amc->get_unidad_siglas($member_id);
     } // end get_group_id()
 
 

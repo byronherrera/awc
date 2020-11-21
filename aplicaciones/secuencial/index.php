@@ -1,5 +1,6 @@
 <?php
 require_once '../../server/os.php';
+require_once '../../modules/common/Classes/funciones.php';
 $os = new os();
 
 genSecuencial();
@@ -44,7 +45,7 @@ function getResultado()
 {
     $formato = getFormato();
     $year = getYear();
-    $secuencia = getSecuencia();
+    $secuencia = getSecuencia($year, $formato);
     $resultado = "$formato-$year-$secuencia";
     return $resultado;
 }
@@ -60,24 +61,83 @@ function getFormato()
 
     $os->load('member');
     $member_id = $os->member->get_id($user, $pass, false);
-    $zonal = $os->get_zonal_id ($member_id);
+    $zonal = $os->get_unidad_siglas ($member_id);
+    return "GADDMQ-AMC-$zonal-APP";
+}
 
-    echo $zonal . " mmm " . $member_id;
+function getIdUnidad () {
+    global $os;
+    // 1 determinar en que zonal esta el usuario
+    // https://amcmatis.quito.gob.ec/aplicaciones/secuencial/?email=argarcia@quito.gob.ec&password=123456&tipo_documento=1
 
-
-    return "AMC-SERIAL-ZLM-APP";
+    $user = $_GET['email'];
+    $pass = $_GET['password'];
+    $os->load('member');
+    $member_id = $os->member->get_id($user, $pass, false);
+    $unidad = $os->get_unidad_id ($member_id);
+    return $unidad;
 
 }
+
+function getIdZonal () {
+    global $os;
+    // 1 determinar en que zonal esta el usuario
+    // https://amcmatis.quito.gob.ec/aplicaciones/secuencial/?email=argarcia@quito.gob.ec&password=123456&tipo_documento=1
+
+    $user = $_GET['email'];
+    $pass = $_GET['password'];
+    $os->load('member');
+    $member_id = $os->member->get_id($user, $pass, false);
+    $unidad = $os->get_zonal_id ($member_id);
+    return $unidad;
+}
+
+function getIdFuncionario () {
+    global $os;
+    // 1 determinar en que zonal esta el usuario
+    // https://amcmatis.quito.gob.ec/aplicaciones/secuencial/?email=argarcia@quito.gob.ec&password=123456&tipo_documento=1
+
+    $user = $_GET['email'];
+    $pass = $_GET['password'];
+    $os->load('member');
+    $member_id = $os->member->get_id($user, $pass, false);
+    return $member_id;
+}
+
 
 function getYear()
 {
     return date("Y");
 }
 
-function getSecuencia()
+function getSecuencia($year, $formato)
 {
-    return "001";
+    // get last number
+    $tipoDocumento =$_GET ['tipo_documento'];
+    $idUnidad = getIdUnidad () ;
+
+    global  $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT secuencial FROM amc_secuenciales WHERE id_unidad = $idUnidad AND tipo_documento = $tipoDocumento AND anio=$year;";
+    $result = $os->db->conn->query($sql);
+    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+    $nuevoNumeroSecuencial = $resultado[0]['secuencial']+1;
+    $formatted_secuencial = sprintf("%05d", $nuevoNumeroSecuencial);
+
+    actualizarSecuencial ($idUnidad, $tipoDocumento, $year, $nuevoNumeroSecuencial );
+    return  $formatted_secuencial;
 }
 
+function actualizarSecuencial ($idUnidad, $tipoDocumento, $year ,$nuevoNumeroSecuencial ) {
+    global $os;
+    $idZonal = getIdZonal () ;
+    $idFuncionario = getIdFuncionario();
+    $nombreFuncionario = regresaNombre($idFuncionario);
 
+    $sql = "UPDATE `procesos-amc`.`amc_secuenciales` SET `secuencial` = $nuevoNumeroSecuencial,  id_usuario = $idFuncionario, usuario = '$nombreFuncionario'".
+           " WHERE id_unidad = $idUnidad AND tipo_documento = $tipoDocumento AND anio=$year;";
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
+
+}
 ?>
