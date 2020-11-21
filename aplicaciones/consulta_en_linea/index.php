@@ -200,6 +200,7 @@
             formData.append("dato", "valor");
             var cedula = $("input[name^='cedula']").val();
             llamadaDatos(cedula);
+            renderDatosApp(cedula);
         })
 
 
@@ -263,7 +264,12 @@
                             break;
                     }
                     //$("#consulta").hide();
-                    $(destino).html(html)
+                    $(destino).html(html);
+
+                    if(opcion === 'dataApp'){
+                        renderDatosApp(data);
+                    }
+
                 } else {
                     if (!existeInformacion)
                         $('.mensaje').html('<div><b>No se encuentra información</b></div>');
@@ -423,12 +429,7 @@
             if (!existeInformacion)
                 existeInformacion = 1;
             $.each(data.data, function (key, val) {
-                //console.log('>>>Ingreso',val)
-                nombres = val['nombres'];
-                /*if (JSON.parse(val['imagenacto']) != null)
-                    imagenes = JSON.parse(val['imagenacto']);
-                else
-                    imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');*/
+
                 html += "<h3>TRAMITES EN EJECUCIÓN</h3>" +
                     "                   <table class=\"table\">\n" +
                     "                    <tbody>\n" +
@@ -443,24 +444,23 @@
                     "                    <tr><th scope=\"row\">Dirección de Infracción </th><td>" + validaTexto(val['direccionInfraccion']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fechaInfraccion']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Hora de Infracción </th><td>" + validaTexto(val['horaInfraccion']) + "</td></tr>\n" +
-                   // "                    <tr><th scope=\"row\">Número de Expediete </th><td>" + validaTexto(val['id']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Aislamiento Obligatorio </th><td>" + validaTexto(val['aislamiento_obligatorio']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Conductor sin Mascarilla </th><td>" + validaTexto(val['conductorSinMascarilla']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Sin Mascarilla Espacios Públicos </th><td>" + validaTexto(val['infraccionSinMascarilla']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Sin Mascarilla Aire Libre </th><td>" + validaTexto(val['infraccionSinMascarilla2']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Sin Cédula </th><td>" + validaTexto(val['infraccioncedula']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Sin Distancia </th><td>" + validaTexto(val['infracciondistancia']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Sanción 25 SMU </th><td>" + validaTexto(val['sancion_25_SMU']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Sanción 50 SMU </th><td>" + validaTexto(val['sancion_50_SMU']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Sanción tres salarios </th><td>" + validaTexto(val['sancion_tres_salarios']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Sanción un salario y medio </th><td>" + validaTexto(val['sancion_un_salario_medio']) + "</td></tr>\n" +
+
+                    "                    <tr class=\"aislamiento"+key+"\"><th scope=\"row\">Aislamiento Obligatorio </th><td>" + validaTexto(val['aislamiento_obligatorio']) + "</td></tr>\n" +
+                    "                    <tr class=\"conductorSinMascarilla"+key+"\"><th scope=\"row\">Conductor sin Mascarilla </th><td>" + validaTexto(val['conductorSinMascarilla']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinMascarilla"+key+"\"><th scope=\"row\">Sin Mascarilla Espacios Públicos </th><td>" + validaTexto(val['infraccionSinMascarilla']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinMascarilla2"+key+"\"><th scope=\"row\">Sin Mascarilla Aire Libre </th><td>" + validaTexto(val['infraccionSinMascarilla2']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinCedula"+key+"\"><th scope=\"row\">Sin Cédula </th><td>" + validaTexto(val['infraccioncedula']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinDistancia"+key+"\"><th scope=\"row\">Sin Distancia </th><td>" + validaTexto(val['infracciondistancia']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancion25"+key+"\"><th scope=\"row\">Sanción 25 SMU </th><td>" + validaTexto(val['sancion_25_SMU']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancion50"+key+"\"><th scope=\"row\">Sanción 50 SMU </th><td>" + validaTexto(val['sancion_50_SMU']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancionTresSal"+key+"\"><th scope=\"row\">Sanción tres salarios </th><td>" + validaTexto(val['sancion_tres_salarios']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancionSalyMedio"+key+"\"><th scope=\"row\">Sanción un salario y medio </th><td>" + validaTexto(val['sancion_un_salario_medio']) + "</td></tr>\n" +
 
                     "                    <tr><th scope=\"row\">Foto</th><td>" + validaURL(val['foto']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Foto1</th><td>" + validaURL(val['foto1']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Foto2</th><td>" + validaURL(val['foto2']) + "</td></tr>\n" +
                     "                    </tbody>\n" +
                     "                </table>"
-
             });
             //console.log('>>>Html',html)
             return html;
@@ -504,12 +504,44 @@
                 return "";
         }
 
-
+        function renderDatosApp(data) {
+            $.each(data.data, function (key, val) {
+                if(val['aislamiento_obligatorio'] === "NO" ){
+                    $(".aislamiento"+key).css("display","none");
+                }
+                if( val['conductorSinMascarilla'] === 'NO'){
+                    $(".conductorSinMascarilla"+key).css("display","none");
+                }
+                if(val['infraccionSinMascarilla'] === 'NO'){
+                    $(".sinMascarilla"+key).css("display","none");
+                }
+                if(val['infraccionSinMascarilla2'] === 'NO'){
+                    $(".sinMascarilla2"+key).css("display","none");
+                }
+                if(val['infraccioncedula'] === 'NO'){
+                    $(".sinCedula"+key).css("display","none");
+                }
+                if(val['infracciondistancia'] === 'NO'){
+                    $(".sinDistancia"+key).css("display","none");
+                }
+                if(val['sancion_25_SMU'] === 'NO'){
+                   $(".sancion25"+key).css("display","none");
+                }
+                if(val['sancion_50_SMU'] === 'NO'){
+                   $(".sancion50"+key).css("display","none");
+                }
+                if(val['sancion_tres_salarios'] === 'NO'){
+                   $(".sancionTresSal"+key).css("display","none");
+                }
+                if(val['sancion_un_salario_medio'] === 'NO'){
+                   $(".sancionSalyMedio"+key).css("display","none");
+                 }
+            });
+        }
 
     });
 
-    function validarFile(all)
-    {
+    function validarFile(all){
         //EXTENSIONES Y TAMANO PERMITIDO.
         var extensiones_permitidas = [".png",   ".jpg", ".jpeg", ".pdf", ".doc", ".docx" ];
         var tamano = 8; // EXPRESADO EN MB.
