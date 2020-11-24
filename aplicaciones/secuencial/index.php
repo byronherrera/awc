@@ -134,7 +134,7 @@ function actualizarSecuencial ($idUnidad, $tipoDocumento, $year ,$nuevoNumeroSec
     $idFuncionario = getIdFuncionario();
     $nombreFuncionario = regresaNombre($idFuncionario);
 
-    $sql = "UPDATE `procesos-amc`.`amc_secuenciales` SET `secuencial` = $nuevoNumeroSecuencial,  id_usuario = $idFuncionario, usuario = '$nombreFuncionario'".
+    $sql = "UPDATE `procesos-amc`.`amc_secuenciales` SET `secuencial` = $nuevoNumeroSecuencial,  id_usuario = $idFuncionario, usuario = '$nombreFuncionario', fecha_secuencia= NOW()".
            " WHERE id_unidad = $idUnidad AND tipo_documento = $tipoDocumento AND anio=$year;";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();

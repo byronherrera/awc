@@ -138,10 +138,8 @@ class amc
                     FROM
                         qo_groups 
                     WHERE
-                        qo_groups.id = ( SELECT qo_groups_id AS id FROM qo_sessions WHERE qo_members_id ='" . $member_id . "' ORDER BY date DESC LIMIT 1 ) ";
+                        qo_groups.id = ( SELECT qo_groups_id FROM qo_groups_has_members WHERE qo_members_id = '" . $member_id . "' LIMIT 1 )";
         }
-
-
         $result = $this->os->db->conn->query($sql);
         if ($result) {
             $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -185,7 +183,7 @@ class amc
                     FROM
                         qo_groups 
                     WHERE
-                        qo_groups.id = ( SELECT qo_groups_id AS id FROM qo_sessions WHERE qo_members_id ='" . $member_id . "' ORDER BY date DESC LIMIT 1 ) ";
+                        qo_groups.id = ( SELECT qo_groups_id FROM qo_groups_has_members WHERE qo_members_id = '" . $member_id . "' LIMIT 1 ) ";
             $result = $this->os->db->conn->query($sql);
             if ($result) {
                 $row = $result->fetch(PDO::FETCH_ASSOC);
