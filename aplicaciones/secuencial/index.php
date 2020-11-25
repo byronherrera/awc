@@ -56,11 +56,11 @@ function getFormato()
     // 1 determinar en que zonal esta el usuario
     // https://amcmatis.quito.gob.ec/aplicaciones/secuencial/?email=argarcia@quito.gob.ec&password=123456&tipo_documento=1
 
-    $user = $_GET['email'];
+    $email = $_GET['email'];
     $pass = $_GET['password'];
 
     $os->load('member');
-    $member_id = $os->member->get_id($user, $pass, false);
+    $member_id = $os->member->get_id($email, $pass, false);
     $zonal = $os->get_unidad_siglas ($member_id);
     return "GADDMQ-AMC-$zonal-APP";
 }
@@ -103,7 +103,6 @@ function getIdFuncionario () {
     $member_id = $os->member->get_id($user, $pass, false);
     return $member_id;
 }
-
 
 function getYear()
 {
