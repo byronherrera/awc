@@ -58,6 +58,12 @@ class Firestore
             ->getSnapshot()->getValue();
     }
 
+    public function getFiltroFecha($campo = NULL, $fechainicio = NULL, $fechafin = NULL)
+    {
+        return $this->database->getReference($this->name)->orderByChild($campo)->startAt($fechainicio)->endAt($fechafin)
+            ->getSnapshot()->getValue();
+    }
+
     function insert ($data){
         if (empty($data) || !isset($data)) { return FALSE; }
         foreach ($data as $key => $value){
