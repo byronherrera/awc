@@ -79,10 +79,11 @@ function getIdZonal () {
     // 1 determinar en que zonal esta el usuario
     // https://amcmatis.quito.gob.ec/aplicaciones/secuencial/?email=argarcia@quito.gob.ec&password=123456&tipo_documento=1
 
-    $user = $_GET['email'];
+    $email = $_GET['email'];
     $pass = $_GET['password'];
     $os->load('member');
-    $member_id = $os->member->get_id($user, $pass, false);
+    //$member_id = $os->member->get_id_email($email, $pass, false);
+    $member_id = $os->member->get_id_email($email);
     $unidad = $os->get_zonal_id ($member_id);
     return $unidad;
 }
@@ -92,10 +93,11 @@ function getIdFuncionario () {
     // 1 determinar en que zonal esta el usuario
     // https://amcmatis.quito.gob.ec/aplicaciones/secuencial/?email=argarcia@quito.gob.ec&password=123456&tipo_documento=1
 
-    $user = $_GET['email'];
+    $email = $_GET['email'];
     $pass = $_GET['password'];
     $os->load('member');
-    $member_id = $os->member->get_id($user, $pass, false);
+    //$member_id = $os->member->get_id_email($email, $pass, false);
+    $member_id = $os->member->get_id_email($email);
     return $member_id;
 }
 
@@ -135,4 +137,3 @@ function actualizarSecuencial ($idUnidad, $tipoDocumento, $year ,$nuevoNumeroSec
     $sql->execute();
 
 }
-?>
