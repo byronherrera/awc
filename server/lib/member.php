@@ -165,6 +165,36 @@ class member {
       return null;
    } // end get_id()
 
+    /**
+     * get_id_email() Returns the member id.
+     *
+     * @access public
+     * @param {string} $email The member email address.
+     * @param {string} $password (optional) The member password.
+     * @param {boolean} $is_encrypted (optional) True if the password passed in is already encrypted.
+     * @return {integer}
+     */
+    public function get_id_email($email){
+        if($email){
+            $sql = "SELECT
+				id
+				FROM
+				qo_members
+				WHERE
+				email_address = '$email' 
+				LIMIT 1";
+            $result = $this->os->db->conn->query($sql);
+            if($result){
+                $row = $result->fetch(PDO::FETCH_ASSOC);
+                if($row){
+                    return $row['id'];
+                }
+            }
+        }
+
+        return null;
+    } // end get_id_email()
+
 	/**
     * get_name() Returns the name of a member.
 	 *
