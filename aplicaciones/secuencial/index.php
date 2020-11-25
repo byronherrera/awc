@@ -106,6 +106,7 @@ function getYear()
     return date("Y");
 }
 
+
 function getSecuencia($year, $formato)
 {
     // get last number
