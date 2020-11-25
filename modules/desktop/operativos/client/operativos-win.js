@@ -1206,7 +1206,6 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     // si el operativo esta identificado como estado o planificado (1) o informe (4) se peude editar
                     if (acceso) {
                         // si el que edita es administrador de operativos puede cambiar
-                        console.log(accesosAdministradorOpe)
                         if (accesosAdministradorOpe) {
                             return true;
                         }
