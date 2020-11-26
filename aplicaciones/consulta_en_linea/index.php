@@ -430,7 +430,7 @@
                 existeInformacion = 1;
             $.each(data.data, function (key, val) {
 
-                html += "<h3>TRAMITES EN EJECUCIÓN</h3>" +
+                html += "<h3>SANCIONES BIOSEGURIDAD</h3>" +
                     "                   <table class=\"table\">\n" +
                     "                    <tbody>\n" +
                     "                    <tr><th scope=\"row\">Cédula/Ruc</th><td>" + validaTexto(val['cedula']) + "</td></tr>\n" +
