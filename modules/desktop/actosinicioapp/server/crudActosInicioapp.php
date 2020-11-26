@@ -79,22 +79,19 @@ function selectForm()
     $data= $fs->get($id);
 
     if (strlen($data['foto']) > 0) {
-       //$link1 = json_decode($data['foto']);
-       $data['foto'] = "<a href='" . $data['foto'] . "' target='_blank'>Ver foto</a>";;
+       $data['foto'] = "<a href='" . $data['foto'] . "' target='_blank'><img src='" . $data['foto'] . "' width='100' height='120'></a>";;
     } else {
        $valor[$data] = '';
     }
 
     if (strlen($data['foto1']) > 0) {
-       //$link2 = json_decode($data['foto1']);
-       $data['foto1'] = "<a href='" . $data['foto1'] . "' target='_blank'>Ver foto1</a>";;
+       $data['foto1'] = "<a href='" . $data['foto1'] . "' target='_blank'><img src='" . $data['foto1'] . "' width='100' height='120'></a>";;
     } else {
        $data['foto1'] = '';
     }
 
     if (strlen($data['foto2']) > 0) {
-        //$link2 = json_decode($data['foto1']);
-        $data['foto2'] = "<a href='" . $data['foto2'] . "' target='_blank'>Ver foto2</a>";;
+        $data['foto2'] = "<a href='" . $data['foto2'] . "' target='_blank'><img src='" . $data['foto2'] . "' width='100' height='120'></a>";;
     } else {
         $data['foto2'] = '';
     }
