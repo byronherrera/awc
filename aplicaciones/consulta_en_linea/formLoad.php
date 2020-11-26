@@ -2,6 +2,10 @@
 header('Content-type: text/html; charset=utf-8');
 require_once '../../server/os.php';
 require_once '../../modules/common/Classes/funciones.php';
+//require '../../includes/vendor/autoload.php';
+//require_once '../../modules/desktop/actosinicioapp/server/firestore.php';
+//use Kreait\Firebase\Factory;
+
 $os = new os();
 
 $opcion = isset($_GET['opcion']) ? $_GET['opcion'] : '';
@@ -306,6 +310,54 @@ function getdataApp($id)
             "data" => array()
         ));
     }
+
+    /*$fs = new Firestore('formulario');
+    $data= $fs->get($id);
+
+    if (strlen($data['foto']) > 0) {
+        //$link1 = json_decode($data['foto']);
+        $data['foto'] = "<a href='" . $data['foto'] . "' target='_blank'>Ver foto</a>";;
+    } else {
+        $valor[$data] = '';
+    }
+
+    if (strlen($data['foto1']) > 0) {
+        //$link2 = json_decode($data['foto1']);
+        $data['foto1'] = "<a href='" . $data['foto1'] . "' target='_blank'>Ver foto1</a>";;
+    } else {
+        $data['foto1'] = '';
+    }
+
+    if (strlen($data['foto2']) > 0) {
+        //$link2 = json_decode($data['foto1']);
+        $data['foto2'] = "<a href='" . $data['foto2'] . "' target='_blank'>Ver foto2</a>";;
+    } else {
+        $data['foto2'] = '';
+    }
+
+    $data['aislamiento_obligatorio'] =  ($data['aislamiento_obligatorio'])  ? 'SI' :  'NO';
+    $data['conductorSinMascarilla'] =  ($data['conductorSinMascarilla'])  ? 'SI' :  'NO';
+    $data['infraccionSinMascarilla'] =  ($data['infraccionSinMascarilla'])  ? 'SI' :  'NO';
+    $data['infraccionSinMascarilla2'] =  ($data['infraccionSinMascarilla2'])  ? 'SI' :  'NO';
+    $data['infraccioncedula'] =  ($data['infraccioncedula'])  ? 'SI' :  'NO';
+    $data['infracciondistancia'] =  ($data['infracciondistancia'])  ? 'SI' :  'NO';
+    $data['sancion_25_SMU'] =  ($data['sancion_25_SMU'])  ? 'SI' :  'NO';
+    $data['sancion_50_SMU'] =  ($data['sancion_50_SMU'])  ? 'SI' :  'NO';
+    $data['sancion_tres_salarios'] =  ($data['sancion_tres_salarios'])  ? 'SI' :  'NO';
+    $data['sancion_un_salario_medio'] =  ($data['sancion_un_salario_medio'])  ? 'SI' :  'NO';
+
+    if (count($data) > 0) {
+        echo json_encode(array(
+            "success" => true,
+            "data" => $data
+        ));
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }*/
+
 }
 
 // fin de recuperacion de datos

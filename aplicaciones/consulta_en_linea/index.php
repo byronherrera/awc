@@ -89,7 +89,7 @@
 <div class="container contact-form" id="consulta" style="display: block">
 
     <h3>CONSULTE SU TRAMITE O SANCION </h3>
-    <P>Actualmente nos encontramos trabajando duramente por poner a disposición de la ciudadanía toda la información que disponemos, en caso de
+    <P>Actualmente nos encontramos trabajando en poner a disposición de la ciudadanía toda la información que disponemos, en caso de
     no desplegarse lo solitado llene el siguiente formulario, uno de nuestros funcionarios realizará la búsqueda en nuestro registros, y se contactará con usted.</P>
     <form enctype="multipart/form-data" id="formularioConsulta" method="post">
         <div class="row">
@@ -456,13 +456,18 @@
                     "                    <tr class=\"sancionTresSal"+key+"\"><th scope=\"row\">Sanción tres salarios </th><td>" + validaTexto(val['sancion_tres_salarios']) + "</td></tr>\n" +
                     "                    <tr class=\"sancionSalyMedio"+key+"\"><th scope=\"row\">Sanción un salario y medio </th><td>" + validaTexto(val['sancion_un_salario_medio']) + "</td></tr>\n" +
 
-                    "                    <tr><th scope=\"row\">Foto</th><td>" + validaURL(val['foto']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Foto1</th><td>" + validaURL(val['foto1']) + "</td></tr>\n" +
-                    "                    <tr><th scope=\"row\">Foto2</th><td>" + validaURL(val['foto2']) + "</td></tr>\n" +
+//                    "                    <tr><th scope=\"row\">Foto</th><td>" + validaURL(val['foto']) + "</td></tr>\n" +
+//                    "                    <tr><th scope=\"row\">Foto1</th><td>" + validaURL(val['foto1']) + "</td></tr>\n" +
+//                    "                    <tr><th scope=\"row\">Foto2</th><td>" + validaURL(val['foto2']) + "</td></tr>\n" +
+                    "                    <tr class=\"fotos"+key+"\"><th scope=\"row\">Fotos</th>" +
+                    "                     <td>"+validaAppURL(val['foto'])+"</td>" +
+                    "                     <td>"+validaAppURL(val['foto1'])+"</td>" +
+                    "                     <td>"+validaAppURL(val['foto2'])+"</td>" +
+                    "                    </tr>\n" +
                     "                    </tbody>\n" +
                     "                </table>"
             });
-            //console.log('>>>Html',html)
+            console.log('>>>Html',html)
             return html;
         }
 
@@ -535,8 +540,20 @@
                 }
                 if(val['sancion_un_salario_medio'] === 'NO'){
                    $(".sancionSalyMedio"+key).css("display","none");
-                 }
+                }
+
+                $(".fotos"+key).css("display","flex");
+                $(".fotos"+key).css("justify-content","space-between");
+                $(".fotos"+key).css("flex-wrap","wrap");
+
             });
+        }
+
+        function validaAppURL(url) {
+            if (url != null)
+                return '<a href="' + url + '" target="_blank"><img src="' + url + '" width="100" height="120"></a>';
+            else
+                return "n/a";
         }
 
     });

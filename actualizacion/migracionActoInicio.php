@@ -59,7 +59,9 @@ function migrar(){
                                               ,sancion_un_salario_medio
                                               ,telefonoCelular
                                               ,telefonoFijo
-                                              ,fecha_registro)
+                                              ,usuarioApp
+                                              ,fecha_registro
+                                              )
 	            VALUES( "."'".$id."'".","
                 ."'".$valor['aislamiento_obligatorio']."'".","
                 ."'".$valor['cedula']."'".","
@@ -85,6 +87,7 @@ function migrar(){
                 ."'".$valor['sancion_un_salario_medio']."'".","
                 ."'".$valor['telefonoCelular']."'".","
                 ."'".$valor['telefonoFijo']."'".","
+                ."'".$valor['usuarioApp']."'".","
                 ."NOW()"
                 .");";
             $sql = $os->db->conn->prepare($sql);
