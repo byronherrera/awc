@@ -77,10 +77,19 @@
     </div>
 </section>
 
+<!--ACTOS DE INCIO APP-->
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="dataApp"></div>
+        </div>
+    </div>
+</section>
+
 <div class="container contact-form" id="consulta" style="display: block">
 
     <h3>CONSULTE SU TRAMITE O SANCION </h3>
-    <P>Actualmente nos encontramos trabajando duramente por poner a disposición de la ciudadanía toda la información que disponemos, en caso de
+    <P>Actualmente nos encontramos trabajando en poner a disposición de la ciudadanía toda la información que disponemos, en caso de
     no desplegarse lo solitado llene el siguiente formulario, uno de nuestros funcionarios realizará la búsqueda en nuestro registros, y se contactará con usted.</P>
     <form enctype="multipart/form-data" id="formularioConsulta" method="post">
         <div class="row">
@@ -191,6 +200,7 @@
             formData.append("dato", "valor");
             var cedula = $("input[name^='cedula']").val();
             llamadaDatos(cedula);
+            renderDatosApp(cedula);
         })
 
 
@@ -223,6 +233,7 @@
             //  getContent(cedula, 'dataInstruccion', '.dataInstruccion');
             getContent(cedula, 'dataResolucion', '.dataResolucion');
             getContent(cedula, 'dataEjecucion', '.dataEjecucion');
+            getContent(cedula, 'dataApp', '.dataApp');
         }
 
         function getContent(cedula, opcion, destino) {
@@ -248,9 +259,17 @@
                         case 'dataEjecucion' :
                             html = formatodataEjecucion(data)
                             break;
+                        case 'dataApp' :
+                            html = formatodataApp(data)
+                            break;
                     }
                     //$("#consulta").hide();
-                    $(destino).html(html)
+                    $(destino).html(html);
+
+                    if(opcion === 'dataApp'){
+                        renderDatosApp(data);
+                    }
+
                 } else {
                     if (!existeInformacion)
                         $('.mensaje').html('<div><b>No se encuentra información</b></div>');
@@ -405,6 +424,53 @@
             return html;
         }
 
+        function formatodataApp(data) {
+            var html = '';
+            if (!existeInformacion)
+                existeInformacion = 1;
+            $.each(data.data, function (key, val) {
+
+                html += "<h3>SANCIONES BIOSEGURIDAD</h3>" +
+                    "                   <table class=\"table\">\n" +
+                    "                    <tbody>\n" +
+                    "                    <tr><th scope=\"row\">Cédula/Ruc</th><td>" + validaTexto(val['cedula']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(val['nombres']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Dirección de Domicilio </th><td>" + validaTexto(val['direccionDomicilio']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Dirección de Trabajo </th><td>" + validaTexto(val['direccionTrabajo']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Email </th><td>" + validaTexto(val['email']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Celular </th><td>" + validaTexto(val['telefonoCelular']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Teléfono </th><td>" + validaTexto(val['telefonoFijo']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Hechos de Infracción </th><td>" + validaTexto(val['hechosInfraccion']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Dirección de Infracción </th><td>" + validaTexto(val['direccionInfraccion']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fechaInfraccion']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Hora de Infracción </th><td>" + validaTexto(val['horaInfraccion']) + "</td></tr>\n" +
+
+                    "                    <tr class=\"aislamiento"+key+"\"><th scope=\"row\">Aislamiento Obligatorio </th><td>" + validaTexto(val['aislamiento_obligatorio']) + "</td></tr>\n" +
+                    "                    <tr class=\"conductorSinMascarilla"+key+"\"><th scope=\"row\">Conductor sin Mascarilla </th><td>" + validaTexto(val['conductorSinMascarilla']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinMascarilla"+key+"\"><th scope=\"row\">Sin Mascarilla Espacios Públicos </th><td>" + validaTexto(val['infraccionSinMascarilla']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinMascarilla2"+key+"\"><th scope=\"row\">Sin Mascarilla Aire Libre </th><td>" + validaTexto(val['infraccionSinMascarilla2']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinCedula"+key+"\"><th scope=\"row\">Sin Cédula </th><td>" + validaTexto(val['infraccioncedula']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinDistancia"+key+"\"><th scope=\"row\">Sin Distancia </th><td>" + validaTexto(val['infracciondistancia']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancion25"+key+"\"><th scope=\"row\">Sanción 25 SMU </th><td>" + validaTexto(val['sancion_25_SMU']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancion50"+key+"\"><th scope=\"row\">Sanción 50 SMU </th><td>" + validaTexto(val['sancion_50_SMU']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancionTresSal"+key+"\"><th scope=\"row\">Sanción tres salarios </th><td>" + validaTexto(val['sancion_tres_salarios']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancionSalyMedio"+key+"\"><th scope=\"row\">Sanción un salario y medio </th><td>" + validaTexto(val['sancion_un_salario_medio']) + "</td></tr>\n" +
+
+//                    "                    <tr><th scope=\"row\">Foto</th><td>" + validaURL(val['foto']) + "</td></tr>\n" +
+//                    "                    <tr><th scope=\"row\">Foto1</th><td>" + validaURL(val['foto1']) + "</td></tr>\n" +
+//                    "                    <tr><th scope=\"row\">Foto2</th><td>" + validaURL(val['foto2']) + "</td></tr>\n" +
+                    "                    <tr class=\"fotos"+key+"\"><th scope=\"row\">Fotos</th>" +
+                    "                     <td>"+validaAppURL(val['foto'])+"</td>" +
+                    "                     <td>"+validaAppURL(val['foto1'])+"</td>" +
+                    "                     <td>"+validaAppURL(val['foto2'])+"</td>" +
+                    "                    </tr>\n" +
+                    "                    </tbody>\n" +
+                    "                </table>"
+            });
+            console.log('>>>Html',html)
+            return html;
+        }
+
         function validaImagen(archivo = '', path = '') {
             if ((archivo != null) && (archivo.length > 0)) {
                 var archivo = archivo.replace(/ /g, "%20");
@@ -443,12 +509,56 @@
                 return "";
         }
 
+        function renderDatosApp(data) {
+            $.each(data.data, function (key, val) {
+                if(val['aislamiento_obligatorio'] === "NO" ){
+                    $(".aislamiento"+key).css("display","none");
+                }
+                if( val['conductorSinMascarilla'] === 'NO'){
+                    $(".conductorSinMascarilla"+key).css("display","none");
+                }
+                if(val['infraccionSinMascarilla'] === 'NO'){
+                    $(".sinMascarilla"+key).css("display","none");
+                }
+                if(val['infraccionSinMascarilla2'] === 'NO'){
+                    $(".sinMascarilla2"+key).css("display","none");
+                }
+                if(val['infraccioncedula'] === 'NO'){
+                    $(".sinCedula"+key).css("display","none");
+                }
+                if(val['infracciondistancia'] === 'NO'){
+                    $(".sinDistancia"+key).css("display","none");
+                }
+                if(val['sancion_25_SMU'] === 'NO'){
+                   $(".sancion25"+key).css("display","none");
+                }
+                if(val['sancion_50_SMU'] === 'NO'){
+                   $(".sancion50"+key).css("display","none");
+                }
+                if(val['sancion_tres_salarios'] === 'NO'){
+                   $(".sancionTresSal"+key).css("display","none");
+                }
+                if(val['sancion_un_salario_medio'] === 'NO'){
+                   $(".sancionSalyMedio"+key).css("display","none");
+                }
 
+                $(".fotos"+key).css("display","flex");
+                $(".fotos"+key).css("justify-content","space-between");
+                $(".fotos"+key).css("flex-wrap","wrap");
+
+            });
+        }
+
+        function validaAppURL(url) {
+            if (url != null)
+                return '<a href="' + url + '" target="_blank"><img src="' + url + '" width="100" height="120"></a>';
+            else
+                return "n/a";
+        }
 
     });
 
-    function validarFile(all)
-    {
+    function validarFile(all){
         //EXTENSIONES Y TAMANO PERMITIDO.
         var extensiones_permitidas = [".png",   ".jpg", ".jpeg", ".pdf", ".doc", ".docx" ];
         var tamano = 8; // EXPRESADO EN MB.

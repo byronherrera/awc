@@ -130,9 +130,9 @@ class os extends kernal {
     * @return {integer}
     */
 
-   public function get_zonal_id(){
+   public function get_zonal_id($member_id = ''){
       $this->load('amc');
-      return $this->amc->get_zonal_id();
+      return $this->amc->get_zonal_id($member_id);
    } // end get_group_id()
    /**
     * get_unidad_id() Returns the current zonal id for the session.
@@ -141,9 +141,9 @@ class os extends kernal {
     * @return {integer}
     */
 
-   public function get_unidad_id(){
+   public function get_unidad_id($member_id = ''){
       $this->load('amc');
-      return $this->amc->get_unidad_id();
+      return $this->amc->get_unidad_id($member_id );
    } // end get_group_id()
 
     /**
@@ -153,9 +153,9 @@ class os extends kernal {
      * @return {string}
      */
 
-    public function get_unidad_siglas(){
+    public function get_unidad_siglas($member_id=''){
         $this->load('amc');
-        return $this->amc->get_unidad_siglas();
+        return $this->amc->get_unidad_siglas($member_id);
     } // end get_group_id()
 
 
@@ -505,10 +505,10 @@ class os extends kernal {
       $success = $this->session->add($session_id, $member_id, $group_id);
 
       if($success){
-         die("{success: true, sessionId: '".$session_id."'}");
+         return ("{success: true, sessionId: '".$session_id."'}");
       }
 
-      print "{errors: [{id: 'user', msg: 'Login Failed'}]}";
+      //print "{errors: [{id: 'user', msg: 'Login Failed1111'}]}";
 	} // end login()
 
    /**
@@ -534,6 +534,23 @@ class os extends kernal {
 			}
 		}
 	} // end logout()
+
+    public function logoutsoft(){
+        $this->load('session');
+        $session_id = $this->session->get_id();
+
+        if(isset($session_id)){
+            $success = $this->session->delete($session_id);
+            if($success){
+                // no longer using PHP session
+                //session_destroy();
+
+                // clear the cookie
+                setcookie('sessionId', '');
+
+            }
+        }
+    } // end logout()
 
    // forgot password
 

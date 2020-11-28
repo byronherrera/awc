@@ -91,7 +91,7 @@ class QoAdminMember {
       if($start != '' && $limit != ''){
          $sql_limit = " limit ".$start.", ".$limit;
       }
-
+       $this->os->db->conn->query("SET NAMES 'utf8'");
       $result = $this->os->db->conn->query($sql.$sql_filter.$sql_order_by.$sql_limit);
       if($result){
          $items = array();
@@ -214,6 +214,7 @@ class QoAdminMember {
                // build sql
                $sql = 'UPDATE qo_members SET '.$temp.' WHERE id = '.$data[$i]->id;
                // prepare the statement, prevents SQL injection by calling the PDO::quote() method internally
+                $this->os->db->conn->query("SET NAMES 'utf8'");
                $sql = $this->os->db->conn->prepare($sql);
 
                // loop thru the objects key/values to bind params

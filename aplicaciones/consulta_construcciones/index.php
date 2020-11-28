@@ -79,22 +79,8 @@ if (!$os->session_exists()) {
             // carga iframe con informacion de dinardat
             $.getJSON('formLoad.php?opcion=predio&predio=' + $("input[name^='predio']").val(), function (data) {
                 if (data.success) {
-                    num_nio = data.data[0]['num_nio'];
-                    proyecto = data.data[0]['proyecto'];
-                    predio = data.data[0]['predio'];
-                    zona = data.data[0]['zona'];
-                    fecha_ingreso = data.data[0]['fecha_ingreso'];
+                    data.data[0].forEach(NIOImpresion);
 
-                    $('.mensajepredio').html("<table class=\"table\">\n" +
-                        "                    <tbody>\n" +
-                        "                    <tr><th scope=\"row\"><h3>NIOS</h3></td></tr>\n" +
-                        "                    <tr><th scope=\"row\">NUMERO NIO</th><td>" + validaTexto(num_nio) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">NOMBRE PROYECTO</th><td>" + validaTexto(proyecto) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">NUMERO DE PREDIO</th><td>" + validaTexto(predio) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">ZONAL</th><td>" + validaTexto(zona) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">FECHA INGRESO</th><td>" + validaTexto(fecha_ingreso) + "</td></tr>\n" +
-                        "                    </tbody>\n" +
-                        "                </table>")
                 } else {
                     $('.mensajepredio').html("<table class=\"table\">\n" +
                         "                    <tbody>\n" +
@@ -107,27 +93,11 @@ if (!$os->session_exists()) {
                 }
             });
         }
-
         function recuperaDataCcf() {
             // carga iframe con informacion de dinardat
             $.getJSON('formLoad.php?opcion=predioCcf&predio=' + $("input[name^='predio']").val(), function (data) {
                 if (data.success) {
-                    num_ccf = data.data[0]['id_ccf'];
-                    proyecto = data.data[0]['proyecto'];
-                    predio = data.data[0]['predio'];
-                    zona = data.data[0]['zona'];
-                    fecha_ingreso = data.data[0]['fecha_recepcion_documento'];
-
-                    $('.mensajepredioCcf').html("<table class=\"table\">\n" +
-                        "                    <tbody>\n" +
-                        "                    <tr><th scope=\"row\"><h3>CCF</h3></td></tr>\n" +
-                        "                    <tr><th scope=\"row\">NUMERO CCF</th><td>" + validaTexto(num_ccf) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">NOMBRE PROYECTO</th><td>" + validaTexto(proyecto) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">NUMERO DE PREDIO</th><td>" + validaTexto(predio) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">ZONAL</th><td>" + validaTexto(zona) + "</td></tr>\n" +
-                        "                    <tr><th scope=\"row\">FECHA INGRESO</th><td>" + validaTexto(fecha_ingreso) + "</td></tr>\n" +
-                        "                    </tbody>\n" +
-                        "                </table>")
+                    data.data[0].forEach(CCFImpresion);
                 } else {
                     $('.mensajepredioCcf').html("<table class=\"table\">\n" +
                         "                    <tbody>\n" +
@@ -141,6 +111,43 @@ if (!$os->session_exists()) {
             });
         }
 
+        function NIOImpresion(item, index) {
+            num_nio = item['num_nio'];
+            proyecto = item['proyecto'];
+            predio = item['predio'];
+            zona = item['zona'];
+            fecha_ingreso = item['fecha_ingreso'];
+            anterioValor = $('.mensajepredio').html();
+            $('.mensajepredio').html( anterioValor + "<table class=\"table\">\n" +
+                "                    <tbody>\n" +
+                "                    <tr><th scope=\"row\"><h3>NIOS</h3></td></tr>\n" +
+                "                    <tr><th scope=\"row\">NUMERO NIO</th><td>" + validaTexto(num_nio) + "</td></tr>\n" +
+                "                    <tr><th scope=\"row\">NOMBRE PROYECTO</th><td>" + validaTexto(proyecto) + "</td></tr>\n" +
+                "                    <tr><th scope=\"row\">NUMERO DE PREDIO</th><td>" + validaTexto(predio) + "</td></tr>\n" +
+                "                    <tr><th scope=\"row\">ZONAL</th><td>" + validaTexto(zona) + "</td></tr>\n" +
+                "                    <tr><th scope=\"row\">FECHA INGRESO</th><td>" + validaTexto(fecha_ingreso) + "</td></tr>\n" +
+                "                    </tbody>\n" +
+                "                </table>")
+        }
+        function CCFImpresion(item, index) {
+            num_ccf = item['id_ccf'];
+            proyecto = item['proyecto'];
+            predio = item['predio'];
+            zona = item['zona'];
+            fecha_ingreso = item['fecha_recepcion_documento'];
+            anteriorValor = $('.mensajepredioCcf').html();
+
+            $('.mensajepredioCcf').html(anteriorValor + "<table class=\"table\">\n" +
+                "                    <tbody>\n" +
+                "                    <tr><th scope=\"row\"><h3>CCF</h3></td></tr>\n" +
+                "                    <tr><th scope=\"row\">NUMERO CCF</th><td>" + validaTexto(num_ccf) + "</td></tr>\n" +
+                "                    <tr><th scope=\"row\">NOMBRE PROYECTO</th><td>" + validaTexto(proyecto) + "</td></tr>\n" +
+                "                    <tr><th scope=\"row\">NUMERO DE PREDIO</th><td>" + validaTexto(predio) + "</td></tr>\n" +
+                "                    <tr><th scope=\"row\">ZONAL</th><td>" + validaTexto(zona) + "</td></tr>\n" +
+                "                    <tr><th scope=\"row\">FECHA INGRESO</th><td>" + validaTexto(fecha_ingreso) + "</td></tr>\n" +
+                "                    </tbody>\n" +
+                "                </table>")
+        }
 
         function validaImagen(archivo) {
             if (archivo != null)
@@ -156,12 +163,6 @@ if (!$os->session_exists()) {
                 return "";
         }
 
-        function validaFecha(fecha) {
-            if (fecha != null)
-                return fecha.substr(0, 10);
-            else
-                return "";
-        }
     });
 </script>
 <!-- Global site tag (gtag.js) - Google Analytics -->

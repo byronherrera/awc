@@ -1,15 +1,40 @@
 <?php
 require_once '../../../../server/os.php';
+require_once '../../../../modules/common/Classes/funciones.php';
 $os = new os();
 
 // activa acceso de data
 header("Access-Control-Allow-Origin: *");
 
-$idUsuario = getIdUsuario($_GET["usuario"]);
+//$idUsuario = getIdUsuario($_GET["usuario"]);
 
-getrecordatoriosUsuario($idUsuario);
+//getrecordatoriosUsuario($idUsuario);
 
-function getIdUsuario($email)
+switch ($_GET['operation']) {
+    case 'getUsuario' :
+        getUsuario();
+        break;
+}
+
+
+function getUsuario(){
+    $id = $_GET['id'];
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    if ($id != '') {
+        $sql = "SELECT concat_ws(' ', qo_members.last_name, qo_members.first_name) AS nombre
+            FROM qo_members WHERE id = " . $id;
+        $nombre = $os->db->conn->query($sql);
+        $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
+        //return $rownombre['nombre'];
+        echo json_encode(array(
+                "success" => true,
+                "data" => $rownombre['nombre'])
+        );
+    }
+}
+
+function email ($email)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");

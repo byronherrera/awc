@@ -13,18 +13,14 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
     createWindow: function () {
         var desktop = this.app.getDesktop();
         // define a que tiene acceso los funcionario de acuerdo al perfil
-
         var accesosSecretaria = this.app.isAllowedTo('accesosSecretaria', this.id);
         var accesosInstruccion = this.app.isAllowedTo('accesosInstruccion', this.id);
         var accesosResolucion = this.app.isAllowedTo('accesosResolucion', this.id);
         var accesosEjecucion = this.app.isAllowedTo('accesosEjecucion', this.id);
         var accesosAdministrador = this.app.isAllowedTo('accesosAdministrador', this.id);
         var accesosConsultas = this.app.isAllowedTo('accesosConsultas', this.id);
-
         var win = desktop.getWindow('grid-win-allanamiento');
-        var AppMsg = new Ext.AppMsg({});
         var urlAllanamientoLocal = "modules/desktop/allanamiento/server/";
-
         this.urlAllanamientoLocal = urlAllanamientoLocal;
         var winWidth = desktop.getWinWidth();
         var winHeight = desktop.getWinHeight();
@@ -41,7 +37,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 ]
             }
         });
-
         var comboSASINO = new Ext.form.ComboBox({
             id: 'comboSASINO',
             store: storeSASINO,
@@ -50,7 +45,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             triggerAction: 'all',
             mode: 'local'
         });
-
         function allanamientoActivo(id) {
             var index = storeSASINO.findExact('id', id);
             if (index > -1) {
@@ -61,20 +55,16 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         //fin combo activo
 
         var textField = new Ext.form.TextField({allowBlank: false});
-
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i') : '';
         }
-
         var formatoFechaMax = new Ext.form.DateField({
             format: 'Y-m-d',
             background: '#0000ff'
         });
-
         function renderGeneraImagen(value, id, r) {
             return '<input type="button" value="Genera Imagen' + value + ' " id="' + value + '"/>';
         }
-
         function llenaVideo(canvasId, videoSubidoId, nombreArchivoSubido) {
             var canvas = document.getElementById(canvasId);
             var video = document.getElementById(videoSubidoId);
@@ -102,17 +92,33 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             });
         }
 
+        /*function getNombre(value){
+            Ext.Ajax.request({
+                url: 'modules/desktop/allanamiento/server/consultasAllanamiento.php?operation=getUsuario',
+                method: 'GET',
+                params: {
+                    id: value,
+                },
+                success: function (response, opts) {
+                    value = Ext.util.JSON.decode(response.responseText).data;
+                    console.log("valor",value);
+                    return value;
+                },
+                failure: function (response, opts) {
+                    console.log('Error interno ' + response.status);
+                }
+            });
+        }*/
+
         //Allanamiento tab
         var proxyAllanamiento = new Ext.data.HttpProxy({
             api: {
-
                 create: urlAllanamientoLocal + "crudAllanamiento.php?operation=insert",
                 read: urlAllanamientoLocal + "crudAllanamiento.php?operation=select",
                 update: urlAllanamientoLocal + "crudAllanamiento.php?operation=upda",
                 destroy: urlAllanamientoLocal + "crudAllanamiento.php?operation=delete"
             }
         });
-
         var readerAllanamiento = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
@@ -146,16 +152,15 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 {name: 'estado', allowBlank: true},
                 {name: 'fecha_procesado', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'id_usuario', allowBlank: true},
+                {name: 'nombre_usuario', allowBlank: true},
                 {name: 'codigo_sitra', allowBlank: true},
                 {name: 'observacion_sitra', allowBlank: true}
             ]
         });
-
         var writerAllanamiento = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
-
         var storeAllanamiento = new Ext.data.Store({
             id: "storeAllanamiento",
             proxy: proxyAllanamiento,
@@ -163,23 +168,20 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             writer: writerAllanamiento,
             autoSave: false
         });
-
         storeAllanamiento.load();
         limiteallanamiento = 50;
-
         this.storeAllanamiento = storeAllanamiento;
-
         this.gridAllanamiento = new Ext.grid.EditorGridPanel({
             height: 200,
             widht: '100%',
             store: storeAllanamiento, columns: [
                 new Ext.grid.RowNumberer({width: 40})
-                , {header: 'Id', dataIndex: 'id', sortable: true, width: 60, scope: this}
+                , {header: 'Id', dataIndex: 'id', sortable: true, width: 35, scope: this}
                 , {
                     header: 'SITRA',
                     dataIndex: 'codigo_sitra',
                     sortable: true,
-                    width: 50,
+                    width: 60,
                     scope: this,
                     /*editor: new Ext.form.TextField({
                         id: 'codigo_sitra1', allowBlank: false, listeners: {
@@ -217,20 +219,28 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     //renderer: obtenerNombreEstado
                 }
                 , {
+                    header: 'id_usuario',
+                    dataIndex: 'id_usuario',
+                    sortable: true,
+                    width: 70,
+                    hidden: true,
+                    scope: this,
+                }
+                , {
+                    header: 'usuario',
+                    dataIndex: 'nombre_usuario',
+                    sortable: true,
+                    width: 230,
+                    scope: this,
+                }
+                , {
                     header: 'fecha procesado',
                     dataIndex: 'fecha_procesado',
                     sortable: true,
                     width: 100,
                     renderer: formatDate
                 }
-                , {
-                    header: 'usuario',
-                    dataIndex: 'id_usuario',
-                    sortable: true,
-                    width: 70,
-                    scope: this
-                }
-                , {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 70, scope: this}
+                , {header: 'cedula', dataIndex: 'cedula', sortable: true, width: 90, scope: this}
                 , {header: 'nombres', dataIndex: 'nombres', sortable: true, width: 130, scope: this}
                 , {header: 'apellidos', dataIndex: 'apellidos', sortable: true, width: 130, scope: this}
                 , {header: 'materia', dataIndex: 'materia', sortable: true, width: 180, scope: this}
@@ -253,11 +263,12 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             viewConfig: {
                 forceFit: false,
                 getRowClass: function (record, index) {
-                    if (record.get('estado') == 'Asignado') {
+                    /*if (record.get('estado') == 'Asignado') {
                         return 'gold';
                     } else {
                         return 'bluestate';
-                    }
+                    }*/
+                    return 'gold';
                 }
             },
             sm: new Ext.grid.RowSelectionModel({
@@ -317,9 +328,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         });
         //fin Allanamiento tab
 
-
         //Inicio Tab Historico
-
         var proxyHistorico = new Ext.data.HttpProxy({
             api: {
 
@@ -338,7 +347,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
-
         var readerHistorico = new Ext.data.JsonReader({
             totalProperty: 'total',
             successProperty: 'success',
@@ -353,15 +361,14 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 {name: 'etapa', allowBlank: false},
                 {name: 'estado', allowBlank: false},
                 {name: 'id_usuario', allowBlank: false},
+                {name: 'nombre_usuario', allowBlank: false},
                 {name: 'fecha_procesado', type: 'date', dateFormat: 'c', allowBlank: false},
             ]
         });
-
         var writerHistorico = new Ext.data.JsonWriter({
             encode: true,
             writeAllFields: true
         });
-
         var storeHistorico = new Ext.data.Store({
             id: "storeHistorico",
             proxy: proxyHistorico,
@@ -369,9 +376,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             writer: writerHistorico,
             autoSave: false
         });
-
         this.storeHistorico = storeHistorico;
-
         this.gridHistorico = new Ext.grid.EditorGridPanel({
             autoHeight: true,
             autoScroll: true,
@@ -382,52 +387,59 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     header: 'id',
                     dataIndex: 'id',
                     sortable: true,
-                    width: 30,
+                    width: 80,
                     hidden: true
                 }, {
                     header: 'id_proc_rec_resp',
                     dataIndex: 'id_proc_rec_resp',
                     sortable: true,
-                    width: 30,
+                    width: 80,
                     hidden: true
                 },
                 {
                     header: 'SITRA',
                     dataIndex: 'codigo_sitra',
                     sortable: true,
-                    width: 20
+                    width: 80
                 },
                 {
                     header: 'observacion',
                     dataIndex: 'observacion_sitra',
                     sortable: true,
-                    width: 30
+                    width: 300
                 },
                 {
                     header: 'etapa',
                     dataIndex: 'etapa',
                     sortable: true,
-                    width: 15,
+                    width: 100,
                 },
                 {
                     header: 'estado',
                     dataIndex: 'estado',
                     sortable: true,
-                    width: 15
+                    width: 100
+                },
+                {
+                    header: 'id_usuario',
+                    dataIndex: 'id_usuario',
+                    sortable: true,
+                    width: 50,
+                    hidden: true,
+                    align: 'left',
                 },
                 {
                     header: 'usuario',
-                    dataIndex: 'id_usuario',
+                    dataIndex: 'nombre_usuario',
                     sortable: true,
-                    width: 15,
+                    width: 250,
                     align: 'left',
-                    //renderer: personaEnviaRespuesta
                 },
                 {
                     header: 'fecha proceso',
                     dataIndex: 'fecha_procesado',
                     sortable: true,
-                    width: 15,
+                    width: 100,
                     renderer: formatDate
                 }
             ],
@@ -456,13 +468,11 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
-
         //Fin Tab Historico
 
         var win = desktop.getWindow('layout-win');
 
         if (!win) {
-
             var checkHandler = function (item, checked) {
                 if (checked) {
                     var store = this.storeAllanamiento;
@@ -470,7 +480,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     searchFieldBtn.setText(item.text);
                 }
             };
-
             var searchFieldBtn = new Ext.Button({
                 menu: new Ext.menu.Menu({
                     items: [
@@ -518,8 +527,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 })
                 , text: 'Código trámite'
             });
-
-
             this.formDetalle = new Ext.FormPanel({
                 id: 'formDetalle',
                 cls: 'no-border',
@@ -704,7 +711,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                     {
                                         xtype: 'displayfield',
                                         hideLabel: true,
-                                        value: '3. ANEXOS',
+                                        value: '3. ASIGNAR',
                                         cls: 'negrilla',
                                         anchor: '95%'
                                     }
@@ -727,21 +734,28 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                         xtype: 'displayfield',
                                         fieldLabel: 'Total pedidos anteriores',
                                         name: 'totalallanamiento',
-                                        anchor: '95%'
+                                        //anchor: '95%'
                                     },
+                                    /*{
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'Usuario',
+                                        name: 'nombre_usuario',
+                                        //style : {'color' : 'red'},
+                                        anchor: '95%'
+                                    },*/
                                     {
                                         xtype: 'displayfield',
                                         fieldLabel: 'Etapa',
                                         name: 'etapa',
                                         style : {'color' : 'red'},
-                                        anchor: '95%'
+                                        //anchor: '95%'
                                     },
                                     {
                                         xtype: 'displayfield',
                                         fieldLabel: 'Estado',
                                         name: 'estado',
                                         style : {'color' : 'red'},
-                                        anchor: '95%'
+                                        //anchor: '95%'
                                     },
                                     {
                                         xtype: 'textfield',
@@ -785,8 +799,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
                 ]
             });
-
-
             win = desktop.createWindow({
                 id: 'grid-win-allanamiento',
                 title: 'Gestión Allanamiento',
@@ -823,7 +835,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                             text: 'Recargar Datos',
                                             tooltip: 'Recargar datos en la grilla'
                                         },
-
                                         '->'
                                         , {
                                             text: 'Buscar por:'
@@ -881,7 +892,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             });
         }
         win.show();
-
         function cargaDetalle(idAllanamiento) {
             forma = Ext.getCmp('formDetalle');
             forma.getForm().load({
@@ -897,7 +907,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 }
             });
         }
-
         function bloquearLectura(forma, activar) {
             Ext.getCmp('id_persona').setReadOnly(activar);
             Ext.getCmp('recepcion_documento').setReadOnly(activar);
@@ -920,18 +929,14 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         var etapa =  solicitudSelected.data.etapa;
         storeAllanamiento = this.storeAllanamiento;
         storeHistorico = this.storeHistorico;
-
-        debugger
         if(etapa === 'Secretaria' &&  solicitudSelected.data.codigo_sitra === ''){
-            //var AppMsg = new Ext.AppMsg({});
+            var AppMsg = new Ext.AppMsg({});
             return AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Ingrese el código SITRA');
         }
-
         if( solicitudSelected.data.observacion_sitra === ''){
-            //var AppMsg = new Ext.AppMsg({});
+            var AppMsg = new Ext.AppMsg({});
             return AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Ingrese la observación');
         }
-
         if(etapa === 'Secretaria'){
             solicitudSelected.data.etapa = 'Instruccion';
             solicitudSelected.data.estado = 'Asignado';
@@ -960,12 +965,11 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         params: { data: Ext.util.JSON.encode(solicitudSelected.data) },
                         //jsonData: { data },
                         success: function (response, opts) {
+                            Ext.getCmp('formDetalle').getForm().reset();
                             storeAllanamiento.load();
-                            cargaDetalle(solicitudSelected.data.id);
-                            storeHistorico.baseParams.id = solicitudSelected.data.id;
                             storeHistorico.load();
-                            mensaje = Ext.getCmp('textDenunciasAnteriores');
-                            mensaje.setText('Se asignó a la siguiente fase exitosamente: ');
+                            var AppMsg = new Ext.AppMsg({});
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Se asignó a la siguiente fase exitosamente...');
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);
@@ -981,20 +985,16 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 }
             }
         });
-
     },
     devolverAllanamiento: function () {
-
         solicitudSelected.data.observacion_sitra = Ext.getCmp('observacion_sitra').getValue();
         var etapa =  solicitudSelected.data.etapa;
         storeAllanamiento = this.storeAllanamiento;
         storeHistorico = this.storeHistorico;
-
         if( solicitudSelected.data.observacion_sitra === ''){
             var AppMsg = new Ext.AppMsg({});
             return AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Ingrese la observación');
         }
-
         if(etapa === 'Secretaria'){
             solicitudSelected.data.estado = 'Finalizado';
         }
@@ -1024,12 +1024,11 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         params: { data: Ext.util.JSON.encode(solicitudSelected.data) },
                         //jsonData: { data },
                         success: function (response, opts) {
+                            Ext.getCmp('formDetalle').getForm().reset();
                             storeAllanamiento.load();
-                            cargaDetalle(solicitudSelected.data.id);
-                            storeHistorico.baseParams.id = solicitudSelected.data.id;
                             storeHistorico.load();
-                            mensaje = Ext.getCmp('textDenunciasAnteriores');
-                            mensaje.setText('Se devolvió a la fase exitosamente: ');
+                            var AppMsg = new Ext.AppMsg({});
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Se devolvió a la fase exitosamente...');
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);
@@ -1044,7 +1043,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     });
                 }
             }
-
         });
     },
     requestAllanamientoParticipantesData: function () {
@@ -1082,7 +1080,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         });
     },
     requestAllanamientoData: function () {
-        this.storeAllanamiento.load();
+    this.storeAllanamiento.load();
     },
     requestAllanamientoDataExport: function () {
         Ext.Msg.show({
