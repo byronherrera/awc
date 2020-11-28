@@ -17,7 +17,7 @@ function selectDenunciasReasignacion()
     if (isset($_POST['id'])  ) {
 //    if ((isset($_POST['id']) && ( strlen($_POST['filterText']) == 0))) {
         $id = (int)$_POST ['id'];
-        $chain = "id_libro_diario  = '$id'";
+        $chain = "id_bodega  = '$id'";
         $where = " WHERE $chain ";
     }
 
@@ -80,7 +80,7 @@ function selectDenunciasReasignacion()
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_providencias $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT * FROM amc_bienes $where $orderby LIMIT $start, $limit";
 //     echo($sql);
     $result = $os->db->conn->query($sql);
     $data = array();
@@ -88,7 +88,7 @@ function selectDenunciasReasignacion()
         $data[] = $row;
     };
 
-    $sql = "SELECT count(*) AS total FROM amc_providencias $where";
+    $sql = "SELECT count(*) AS total FROM amc_bienes $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
@@ -102,7 +102,7 @@ function selectDenunciasReasignacion()
 //
 //    global $os;
 //    $os->db->conn->query("SET NAMES 'utf8'");
-//    $sql = "SELECT * FROM amc_providencias $where ORDER BY id";
+//    $sql = "SELECT * FROM amc_bienes $where ORDER BY id";
 //    $result = $os->db->conn->query($sql);
 //    $data = array();
 //    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -135,7 +135,7 @@ function selectDenunciasReasignacion()
         $cadenaCampos = substr($cadenaCampos, 0, -1);
         $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-        $sql = "INSERT INTO amc_providencias($cadenaCampos)
+        $sql = "INSERT INTO amc_bienes($cadenaCampos)
 	    values($cadenaDatos);";
         $sql = $os->db->conn->prepare($sql);
         $sql->execute();
@@ -179,7 +179,7 @@ function updateDenunciasReasignacion()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_providencias SET  $cadenaDatos  WHERE amc_providencias.id = '$data->id' ";
+    $sql = "UPDATE amc_bienes SET  $cadenaDatos  WHERE amc_bienes.id = '$data->id' ";
     //echo ($sql);
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
@@ -196,7 +196,7 @@ function deleteDenunciasReasignacion()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_providencias WHERE id=$id";
+    $sql = "DELETE FROM amc_bienes WHERE id=$id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
@@ -211,7 +211,7 @@ function generaCodigoProcesoUnidades()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(id) AS maximo FROM amc_providencias";
+    $sql = "SELECT MAX(id) AS maximo FROM amc_bienes";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {

@@ -43,15 +43,14 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
         var winHeight = desktop.getWinHeight();
 
         var win = desktop.getWindow('grid-win-bodega');
-        var urlResolucion = "modules/desktop/bodega/server/";
+        var urlBodegas = "modules/desktop/bodega/server/";
 
-        var textField = new Ext.form.TextField({allowBlank: false});
-        var textFieldProvidencia = new Ext.form.TextField({allowBlank: false});
-        var textFieldLibroDiario = new Ext.form.TextField({allowBlank: false});
+        var textFieldBienes = new Ext.form.TextField({allowBlank: true});
+        var textFieldProductos = new Ext.form.TextField({allowBlank: true});
+        var textFieldRetiros = new Ext.form.TextField({allowBlank: true});
         var textFieldNTLibroDiario = new Ext.form.TextField({allowBlank: false});
         var textFieldResolucionesLibroDiario = new Ext.form.TextField({allowBlank: false});
         var textFieldProvidenciasLibroDiario = new Ext.form.TextField({allowBlank: false});
-        var textFieldResoluciones = new Ext.form.TextField({allowBlank: false});
 
         function formatDate(value) {
             return value ? value.dateFormat('Y-m-d H:i') : '';
@@ -874,12 +873,12 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
 
         // inicio ventana resolucion
         //Definición de url CRUD
-        var proxyResoluciones = new Ext.data.HttpProxy({
+        var proxyProducto = new Ext.data.HttpProxy({
             api: {
-                create: urlResolucion + "crudResoluciones.php?operation=insert",
-                read: urlResolucion + "crudResoluciones.php?operation=select",
-                update: urlResolucion + "crudResoluciones.php?operation=update",
-                destroy: urlResolucion + "crudResoluciones.php?operation=delete"
+                create: urlBodegas + "crudProductos.php?operation=insert",
+                read: urlBodegas + "crudProductos.php?operation=select",
+                update: urlBodegas + "crudProductos.php?operation=update",
+                destroy: urlBodegas + "crudProductos.php?operation=delete"
             }
         });
 
@@ -891,13 +890,13 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id_libro_diario', allowBlank: false},
-                {name: 'numero_resolucion', allowBlank: false},
-                {name: 'fecha_resolucion', allowBlank: false},
-                {name: 'articulo_actual', allowBlank: false},
-                {name: 'resolucion_de', allowBlank: false},
-                {name: 'multa_impuesta', allowBlank: false},
-                {name: 'observaciones', allowBlank: false},
+                {name: 'id_bodega', allowBlank: false},
+                {name: 'producto', allowBlank: true},
+                {name: 'estado_producto', allowBlank: true},
+                {name: 'unidades_recibidas', allowBlank: true},
+                {name: 'peso', allowBlank: true},
+
+
             ]
         });
 
@@ -908,9 +907,9 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
         });
 
         //Definición de store para módulo Resoluciones
-        this.storeResoluciones = new Ext.data.Store({
-            id: "idStoreResoluciones",
-            proxy: proxyResoluciones,
+        this.storeProducto = new Ext.data.Store({
+            id: "idStoreProductos",
+            proxy: proxyProducto,
             reader: readerResoluciones,
             writer: writerResoluciones,
             //autoSave: acceso, // dependiendo de si se tiene acceso para grabar
@@ -919,95 +918,54 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             autoSave: true,
             baseParams: {}
         });
-        storeResoluciones = this.storeResoluciones;
+        storeProducto = this.storeProducto;
         limiteresolucion = 100;
-        storeResoluciones.baseParams = {
+        storeProducto.baseParams = {
             limit: limiteresolucion
         };
 
         //Inicio formato grid Resoluciones
-        this.gridResoluciones = new Ext.grid.EditorGridPanel({
+        this.gridProducto = new Ext.grid.EditorGridPanel({
             height: winHeight/2-100,
-            store: this.storeResoluciones,
+            store: this.storeProducto,
             columns: [
                 //Definición de campos bdd Resoluciones
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true},
-                {header: 'id_libro_diario', dataIndex: 'id_libro_diario', width: 100, hidden: true},
+                {header: 'id_bodega', dataIndex: 'id', width: 100, hidden: true},
                 {
-                    header: 'Número de Resolución',
-                    dataIndex: 'numero_resolucion',
+                    header: 'Unidades recibidas',
+                    dataIndex: 'unidades_recibidas',
                     allowBlank: true,
                     sortable: true,
                     width: 140,
-                    editor: textField
+                    editor: textFieldProductos
                 },
                 {
-                    header: 'Fecha de Resolución',
-                    dataIndex: 'fecha_resolucion',
-                    sortable: true,
-                    width: 140,
-                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
-                },
-                {
-                    header: 'Artículo Actual',
-                    dataIndex: 'articulo_actual',
+                    header: 'Producto',
+                    dataIndex: 'producto',
                     allowBlank: true,
                     sortable: true,
                     width: 140,
-                    editor: textField
+                    editor: textFieldProductos
                 },
                 {
-                    header: 'Resolucion de',
-                    dataIndex: 'resolucion_de',
+                    header: 'Estado producto',
+                    dataIndex: 'estado_producto',
                     allowBlank: true,
                     sortable: true,
                     width: 140,
-                    editor: comboRESOLUCIONDE,
-                    renderer: functionRESOLUCIONDE
+                    editor: textFieldProductos
                 },
                 {
-                    header: 'Multa impuesta',
-                    dataIndex: 'multa_impuesta',
+                    header: 'Peso',
+                    dataIndex: 'peso',
                     allowBlank: true,
                     sortable: true,
                     width: 140,
-//                    editor: new Ext.form.TextField({allowBlank: false, minValue: 0}),
+                    editor: textFieldProductos
+                },
 
-                    editor: new Ext.ux.form.SpinnerField({
-                        minValue: 0,
-//                        maxValue: 200,
-                        allowBlank: false
-                    }),
-                    renderer: 'usMoney',
-//                    allowNegative: false
-//                    renderer: formatPositive
-                },
-                {
-                    header: 'Observaciones',
-                    allowBlank: true,
-                    dataIndex: 'observaciones',
-                    sortable: true,
-                    width: 500,
-                    editor: textField
-                },
-                // {
-                //     header: 'Dirección infracción',
-                //     dataIndex: 'direccion_infraccion',
-                //     allowBlank: true,
-                //     width: 140,
-                //     editor: textField
-                // },
-                // {
-                //     header: 'Dirección notificación',
-                //     dataIndex: 'direccion_notificacion',
-                //     allowBlank: true,
-                //     width: 140,
-                //     editor: textField
-                // },
             ],
             viewConfig: {
                 forceFit: false
@@ -1018,7 +976,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             //Definición de barra de paginado
             bbar: new Ext.PagingToolbar({
                 pageSize: limiteresolucion,
-                store: storeResoluciones,
+                store: storeProducto,
                 displayInfo: true,
                 displayMsg: 'Mostrando trámites: {0} - {1} de {2} - AMC',
                 emptyMsg: "No existen trámites que mostrar"
@@ -1026,7 +984,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             listeners:{
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (accesoResoluciones) {
+                    if (acceso) {
                         return true;
                     } else {
                         return false;
@@ -1041,10 +999,10 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
         //Definición de url CRUD
         var proxyBodega = new Ext.data.HttpProxy({
             api: {
-                create: urlResolucion + "crudBodega.php?operation=insert",
-                read: urlResolucion + "crudBodega.php?operation=select",
-                update: urlResolucion + "crudBodega.php?operation=update",
-                destroy: urlResolucion + "crudBodega.php?operation=delete"
+                create: urlBodegas + "crudBodega.php?operation=insert",
+                read: urlBodegas + "crudBodega.php?operation=select",
+                update: urlBodegas + "crudBodega.php?operation=update",
+                destroy: urlBodegas + "crudBodega.php?operation=delete"
             }
         });
 
@@ -1103,20 +1061,20 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
 
         //Inicio formato grid Libro Diario
         this.gridBodega = new Ext.grid.EditorGridPanel({
-            //height: winHeight / 2 - 50,  CC ESTRUCTURA DE 2
-            height: winHeight-110, //CC ESTRUCTURA DE 1
+            height: winHeight / 2 - 50,  //CC ESTRUCTURA DE 2
+            //height: winHeight-110, //CC ESTRUCTURA DE 1
             store: this.storeBodega,
             columns: [
                 //Definición de campos bdd Libro Diario
                 new Ext.grid.RowNumberer(),
-                {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldLibroDiario},
+                {header: 'id', dataIndex: 'id', width: 100, hidden: true, editor: textFieldRetiros},
                 {
                     header: 'Número Retiros',
                     dataIndex: 'numero_retiros',
                     allowBlank: true,
                     sortable: true,
                     hidden: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 100
                 },
                 {
@@ -1124,7 +1082,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'codigo',
                     allowBlank: true,
                     sortable: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 120
                 },
                 {
@@ -1132,7 +1090,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'perecible',
                     allowBlank: true,
                     sortable: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 70
                 },
                 {
@@ -1140,7 +1098,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'bien',
                     allowBlank: true,
                     sortable: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 500
                 },
                 {
@@ -1148,7 +1106,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'direccion_retiro',
                     allowBlank: true,
                     sortable: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 250
                 },
                 {
@@ -1156,7 +1114,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'donacion_institucion',
                     allowBlank: true,
                     sortable: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 120
                 },
                 {
@@ -1164,7 +1122,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'dado_baja',
                     allowBlank: true,
                     sortable: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 80
                 },
                 {
@@ -1172,7 +1130,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'en_bodega',
                     allowBlank: true,
                     sortable: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 80
                 },
                 {
@@ -1180,7 +1138,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'devolucion',
                     allowBlank: true,
                     sortable: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 80
                 },
                 {
@@ -1188,7 +1146,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'unidad',
                     allowBlank: true,
                     sortable: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 80
                 },
                 {
@@ -1196,7 +1154,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'observaciones',
                     allowBlank: true,
                     sortable: true,
-                    editor: textField,
+                    editor: textFieldRetiros,
                     width: 100
                 },
                {
@@ -1244,10 +1202,10 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                         // recuperamos la informacion de personal asignado a ese operativo
                         select_retiro_bodega = rec.id;
                         storeProvidencias.baseParams.id =  rec.id;
-                        storeResoluciones.baseParams.id =  rec.id;
-                        storeResoluciones.load();
+                        storeProducto.baseParams.id =  rec.id;
+                        storeProducto.load();
                         storeProvidencias.load();
-                        // storeResoluciones.load({params: {id: rec.id}});
+                        // storeProducto.load({params: {id: rec.id}});
                         // storeProvidencias.load({params: {id: rec.id}});
                         libroDiarioSeleccionado = rec.id;
                         // {params: id: libroDiarioSeleccionado
@@ -1288,10 +1246,10 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
         //Definición de url CRUD
         var proxyReporteLibroDiario = new Ext.data.HttpProxy({
             api: {
-                create: urlResolucion + "crudReporteLibroDiario.php?operation=insert",
-                read: urlResolucion + "crudReporteLibroDiario.php?operation=select",
-                update: urlResolucion + "crudReporteLibroDiario.php?operation=update",
-                destroy: urlResolucion + "crudReporteLibroDiario.php?operation=delete"
+                create: urlBodegas + "crudReporteLibroDiario.php?operation=insert",
+                read: urlBodegas + "crudReporteLibroDiario.php?operation=select",
+                update: urlBodegas + "crudReporteLibroDiario.php?operation=update",
+                destroy: urlBodegas + "crudReporteLibroDiario.php?operation=delete"
             }
         });
 
@@ -1624,10 +1582,10 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                         // recuperamos la informacion de personal asignado a ese operativo
                         //select_codigo_tramite = rec.id;
                         storeProvidencias.baseParams.id =  rec.id;
-                        storeResoluciones.baseParams.id =  rec.id;
-                        storeResoluciones.load();
+                        storeProducto.baseParams.id =  rec.id;
+                        storeProducto.load();
                         storeProvidencias.load();
-                        // storeResoluciones.load({params: {id: rec.id}});
+                        // storeProducto.load({params: {id: rec.id}});
                         // storeProvidencias.load({params: {id: rec.id}});
                         libroDiarioSeleccionado = rec.id;
                         // {params: id: libroDiarioSeleccionado
@@ -1664,10 +1622,10 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
         //Definición de url CRUD
         var proxyReporteNTLibroDiario = new Ext.data.HttpProxy({
             api: {
-                create: urlResolucion + "crudReporteNoTramitados.php?operation=insert",
-                read: urlResolucion + "crudReporteNoTramitados.php?operation=select",
-                update: urlResolucion + "crudReporteNoTramitados.php?operation=update",
-                destroy: urlResolucion + "crudReporteNoTramitados.php?operation=delete"
+                create: urlBodegas + "crudReporteNoTramitados.php?operation=insert",
+                read: urlBodegas + "crudReporteNoTramitados.php?operation=select",
+                update: urlBodegas + "crudReporteNoTramitados.php?operation=update",
+                destroy: urlBodegas + "crudReporteNoTramitados.php?operation=delete"
             }
         });
 
@@ -1937,10 +1895,10 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                         // recuperamos la informacion de personal asignado a ese operativo
                         //select_codigo_tramite = rec.id;
                         storeProvidencias.baseParams.id =  rec.id;
-                        storeResoluciones.baseParams.id =  rec.id;
-                        storeResoluciones.load();
+                        storeProducto.baseParams.id =  rec.id;
+                        storeProducto.load();
                         storeProvidencias.load();
-                        // storeResoluciones.load({params: {id: rec.id}});
+                        // storeProducto.load({params: {id: rec.id}});
                         // storeProvidencias.load({params: {id: rec.id}});
                         libroDiarioSeleccionado = rec.id;
                         // {params: id: libroDiarioSeleccionado
@@ -1976,10 +1934,10 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
         //Definición de url CRUD
         var proxyReporteProvidenciasLibroDiario = new Ext.data.HttpProxy({
             api: {
-                create: urlResolucion + "crudReporteProvidencias.php?operation=insert",
-                read: urlResolucion + "crudReporteProvidencias.php?operation=select",
-                update: urlResolucion + "crudReporteProvidencias.php?operation=update",
-                destroy: urlResolucion + "crudReporteProvidencias.php?operation=delete"
+                create: urlBodegas + "crudReporteProvidencias.php?operation=insert",
+                read: urlBodegas + "crudReporteProvidencias.php?operation=select",
+                update: urlBodegas + "crudReporteProvidencias.php?operation=update",
+                destroy: urlBodegas + "crudReporteProvidencias.php?operation=delete"
             }
         });
 
@@ -2280,10 +2238,10 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                         // recuperamos la informacion de personal asignado a ese operativo
                         //select_codigo_tramite = rec.id;
                         storeProvidencias.baseParams.id =  rec.id;
-                        storeResoluciones.baseParams.id =  rec.id;
-                        storeResoluciones.load();
+                        storeProducto.baseParams.id =  rec.id;
+                        storeProducto.load();
                         storeProvidencias.load();
-                        // storeResoluciones.load({params: {id: rec.id}});
+                        // storeProducto.load({params: {id: rec.id}});
                         // storeProvidencias.load({params: {id: rec.id}});
                         libroDiarioSeleccionado = rec.id;
                         // {params: id: libroDiarioSeleccionado
@@ -2320,10 +2278,10 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
         //Definición de url CRUD
         var proxyReporteResoluciones = new Ext.data.HttpProxy({
             api: {
-                create: urlResolucion + "crudReporteResoluciones.php?operation=insert",
-                read: urlResolucion + "crudReporteResoluciones.php?operation=select",
-                update: urlResolucion + "crudReporteResoluciones.php?operation=update",
-                destroy: urlResolucion + "crudReporteResoluciones.php?operation=delete"
+                create: urlBodegas + "crudReporteResoluciones.php?operation=insert",
+                read: urlBodegas + "crudReporteResoluciones.php?operation=select",
+                update: urlBodegas + "crudReporteResoluciones.php?operation=update",
+                destroy: urlBodegas + "crudReporteResoluciones.php?operation=delete"
             }
         });
 
@@ -2433,10 +2391,10 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
         //Definición de url CRUD
         var proxyProvidencias = new Ext.data.HttpProxy({
             api: {
-                create: urlResolucion + "crudProvidencias.php?operation=insert",
-                read: urlResolucion + "crudProvidencias.php?operation=select",
-                update: urlResolucion + "crudProvidencias.php?operation=update",
-                destroy: urlResolucion + "crudProvidencias.php?operation=delete"
+                create: urlBodegas + "crudBienes.php?operation=insert",
+                read: urlBodegas + "crudBienes.php?operation=select",
+                update: urlBodegas + "crudBienes.php?operation=update",
+                destroy: urlBodegas + "crudBienes.php?operation=delete"
             }
         });
 
@@ -2448,10 +2406,12 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id_libro_diario', allowBlank: false},
-                {name: 'numero_providencia', allowBlank: false},
-                {name: 'fecha_providencia', allowBlank: false},
-                {name: 'tipo_providencia', allowBlank: false},
+                {name: 'id', allowBlank: true},
+                {name: 'id_bodega', allowBlank: true},
+                {name: 'bien', allowBlank: true},
+                {name: 'estado_bien', allowBlank: true},
+                {name: 'cantidad', allowBlank: true},
+                {name: 'peso', allowBlank: true},
             ]
         });
 
@@ -2467,7 +2427,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             proxy: proxyProvidencias,
             reader: readerProvidencias,
             writer: writerProvidencias,
-            autoSave: acceso, // dependiendo de si se tiene acceso para grabar
+            //autoSave: acceso, // dependiendo de si se tiene acceso para grabar
             remoteSort: true,
             autoSave: true,
             baseParams: {}
@@ -2482,27 +2442,17 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
 
 
         //Inicio formato grid pestaña Providencias
-        this.gridProvidencias = new Ext.grid.EditorGridPanel({
+        this.gridBienes = new Ext.grid.EditorGridPanel({
             height: winHeight/2-100,
             store: this.storeProvidencias,
             columns: [
                 //Definición de campos bdd Providencias
                 new Ext.grid.RowNumberer(),
                 {header: 'id', dataIndex: 'id', width: 100, hidden: true},
-                {header: 'id_libro_diario', dataIndex: 'id_libro_diario', width: 100, hidden: true},
-                {header: 'Número de Providencia', dataIndex: 'numero_providencia', sortable: true, width: 140, editor: textFieldProvidencia},
-                {
-                    header: 'Fecha de Providencia',
-                    dataIndex: 'fecha_providencia',
-                    sortable: true,
-                    width: 140,
-                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
-                    editor: new Ext.form.DateField({
-                        format: 'Y-m-d'
-                    })
-                },
-                {header: 'Tipo', dataIndex: 'tipo_providencia', sortable: true, width: 140, editor: comboTIPOPROVIDENCIA,
-                    renderer: functionTIPOPROVIDENCIA},
+                {header: 'Cantidad', dataIndex: 'cantidad', width: 100, hidden: false, editor: textFieldBienes},
+                {header: 'Bien', dataIndex: 'bien', width: 100, hidden: false, editor: textFieldBienes},
+                {header: 'Estado del bien', dataIndex: 'estado_bien', sortable: true, width: 140, editor: textFieldBienes},
+                {header: 'Peso', dataIndex: 'peso', sortable: true, width: 140, editor: textFieldBienes},
             ],
             viewConfig: {
                 forceFit: false
@@ -2521,7 +2471,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             listeners:{
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
-                    if (accesoResoluciones) {
+                    if (acceso) {
                         return true;
                     } else {
                         return false;
@@ -2537,7 +2487,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
         // datastore and datagrid in Guia
         this.storeDocumentosReporte = new Ext.data.Store({
             id: "id",
-            proxy: proxyResoluciones,
+            proxy: proxyProducto,
             reader: readerResoluciones,
             writer: writerResoluciones,
             autoSave: acceso, // dependiendo de si se tiene acceso para grabar
@@ -3220,7 +3170,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
 
             var checkHandler = function (item, checked) {
                 if (checked) {
-                    var store = this.storeResoluciones;
+                    var store = this.storeProducto;
                     store.baseParams.filterField = item.key;
                     searchFieldBtn.setText(item.text);
                 }
@@ -3228,7 +3178,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
 
             var targetHandler = function (item, checked) {
                 if (checked) {
-                    //var store = this.storeResoluciones;
+                    //var store = this.storeProducto;
                     this.seleccionDepar = item.key;
                     this.targetFieldBtn.setText(item.text);
                 }
@@ -3251,7 +3201,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
 
             var checkHandlerResoluciones = function (item, checked) {
                 if (checked) {
-                    var store = this.storeResoluciones;
+                    var store = this.storeProducto;
                     store.baseParams.filterField = item.key;
                     searchFieldBtnResoluciones.setText(item.text);
                 }
@@ -3259,7 +3209,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
 
             var targetHandlerResoluciones = function (item, checked) {
                 if (checked) {
-                    //var store = this.storeResoluciones;
+                    //var store = this.storeProducto;
                     this.seleccionDepar = item.key;
                     this.targetFieldBtn.setText(item.text);
                 }
@@ -3290,7 +3240,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
 
             var targetHandlerProvidencias = function (item, checked) {
                 if (checked) {
-                    //var store = this.storeResoluciones;
+                    //var store = this.storeProducto;
                     this.seleccionDepar = item.key;
                     this.targetFieldBtn.setText(item.text);
                 }
@@ -3321,7 +3271,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
 
             var targetHandler2 = function (item, checked) {
                 if (checked) {
-                    //var store = this.storeResoluciones;
+                    //var store = this.storeProducto;
                     this.seleccionDepar = item.key;
                     this.targetFieldBtn.setText(item.text);
                 }
@@ -3516,7 +3466,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                                         if (libroDiarioSeleccionado != '') {
                                             if (Ext.getCmp('fp').getForm().isValid()) {
                                                 Ext.getCmp('fp').getForm().submit({
-                                                    url: urlResolucion +  'file-upload.php',
+                                                    url: urlBodegas +  'file-upload.php',
                                                     params: {data: libroDiarioSeleccionado},
                                                     waitMsg: 'Subiendo Documento...',
                                                     success: function (fp, o) {
@@ -3590,7 +3540,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                 // },
                 {
                     region: 'center',
-                    height: winHeight-100,
+                    height: winHeight/2-50,
                     minSize: 50,
                     maxSize: 100,
                     closable: true,
@@ -3599,7 +3549,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                     items: this.gridBodega
                 }
 
-                            /*, {
+                            , {
                                 flex: 2,
                                 bodyStyle: 'padding:0; background: #0f6dff',
                                 items: [
@@ -3611,71 +3561,40 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                                         cls: 'no-border',
                                         items: [
                                             {
-                                                title: 'Resoluciones',
+                                                title: 'Productos',
                                                 autoScroll: true,
                                                 height: winHeight / 2 - 72,
 //                                                height: winHeight * 0.41,
                                                 tbar: [
                                                     //Definición de botón nuevo
                                                     {
-                                                        id: 'btnNuevoResoluciones',
+                                                        id: 'btnNuevoProducto',
                                                         text: 'Nuevo',
                                                         scope: this,
-                                                        handler: this.addResoluciones,
-                                                        disabled: true,
+                                                        handler: this.addProducto,
+                                                        disabled: false,
                                                         iconCls: 'save-icon'
                                                     },
                                                     '-',
                                                     //Definición de botón eliminar
                                                     {
-                                                        id: 'btnEliminarResoluciones',
+                                                        id: 'btnEliminarProducto',
                                                         text: "Eliminar",
                                                         scope: this,
-                                                        handler: this.deleteResoluciones,
-                                                        disabled: true,
+                                                        handler: this.deleteProducto,
+                                                        disabled: false,
                                                         iconCls: 'delete-icon'
                                                     },
                                                     '-',
                                                     //Definición de botón Recargar datos
                                                     {
-                                                        id: 'btnRecargarDatosResoluciones',
+                                                        id: 'btnRecargarDatosProducto',
                                                         iconCls: 'reload-icon',
                                                         handler: this.requestGridDataResoluciones,
                                                         disabled: false,
                                                         scope: this,
                                                         text: 'Recargar'
                                                     },
-                                                    '-',
-                                                    {
-                                                        xtype: 'checkbox',
-                                                        boxLabel: 'Filtro',
-                                                        id: 'checkTodasResoluciones',
-                                                        name: 'todasResoluciones',
-                                                        checked: false,
-                                                        inputValue: '1',
-                                                        tooltip: 'Mostrar todas las inspecciones',
-                                                        //disabled: !creacionDatosInspeccion,
-                                                        disabled: true,
-                                                        cls: 'barramenu',
-                                                        handler: function (checkbox, isChecked) {
-                                                            Ext.getCmp('btnNuevoDetalleInspeccion').setDisabled(this.checked);
-                                                            Ext.getCmp('btnEliminarDetalleInspeccion').setDisabled(this.checked);
-                                                            //Ext.getCmp('btnRecargarDatosDetalleInspeccion').setDisabled(this.checked);
-                                                            Ext.getCmp('gridDetalleTodasInspecciones').setVisible(this.checked);
-                                                            Ext.getCmp('gridDetalleInspeccion').setVisible(!this.checked);
-                                                            storeDetalleTodasInspecciones.baseParams = {
-                                                                pendientesAprobar: isChecked
-                                                            };
-                                                            todasInspecciones = this.checked;
-                                                            if (this.checked) {
-                                                                storeDetalleTodasInspecciones.load();
-                                                            } else {
-                                                                storeDetalleInspeccion.load();
-                                                            }
-                                                        }
-
-                                                    },
-                                                    '-',
                                                     '->'
                                                     , {
                                                         text: 'Buscar por:'
@@ -3686,26 +3605,16 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                                                     , ' ', ' '
                                                     , new QoDesk.QoAdmin.SearchField({
                                                         paramName: 'filterText',
-                                                        store: this.storeResoluciones
+                                                        store: this.storeProducto
                                                     })
-                                                    /!*,
-                                                    '-',
-                                                    //Definición de botón guardar datos
-                                                    {
-                                                        text: 'Guardar datos Inspección',
-                                                        scope: this,
-                                                        handler: this.grabardenuncias,
-                                                        iconCls: 'save-icon',
-                                                        disabled: !acceso,
-                                                        id: 'tb_grabardenuncias'
-                                                        , formBind: true
-                                                    }*!/
+                                                    ,
+
                                                 ],
-                                                items: this.gridResoluciones
+                                                items: this.gridProducto
 
                                             },
                                             {
-                                                title: 'Providencias',
+                                                title: 'Bienes',
                                                 //titleCollapse: true,
                                                 layout: 'column',
                                                 //disabled: !accesosSecretaria
@@ -3720,7 +3629,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                                                         scope: this,
                                                         handler: this.addProvidencias,
                                                         //disabled: !creacionDatosInspeccion,
-                                                        disabled: true,
+                                                        disabled: false,
                                                         iconCls: 'save-icon'
                                                     },
                                                     '-',
@@ -3731,7 +3640,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                                                         scope: this,
                                                         handler: this.deleteProvidencias,
                                                         //disabled: !creacionDatosInspeccion,
-                                                        disabled: true,
+                                                        disabled: false,
                                                         iconCls: 'delete-icon'
                                                     },
                                                     '-',
@@ -3757,12 +3666,12 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
                                                         store: this.storeProvidencias
                                                     })
                                                 ],
-                                                items: this.gridProvidencias
+                                                items: this.gridBienes
                                             }
                                         ]
                                     }
                                 ]
-                            }*/
+                            }
                             ],
                         }
                         /*,
@@ -4004,7 +3913,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
 
         setTimeout(function () {
             this.storeBodega.load();
-            this.storeResoluciones.load({
+            this.storeProducto.load({
                 params: {
                     id: 0,
                     start: 0,
@@ -4047,46 +3956,20 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
     //Función para inserción de registros de Libro Diario
     addLibroDiario: function () {
         var libroDiario = new this.storeBodega.recordType({
-            memo_ingreso_ejecucion: '',
-            fecha_ingreso_ejecucion: '',
-            numero_expediente_ejecucion: '',
-            anio_ejecucion: '',
-            fojas_ejecucion: '',
-            nombre_administrado_ejecucion: '',
-            nombre_establecimiento_ejecucion: '',
-            ordenanza_ejecucion: '',
-            articulo_ejecucion: '',
-            estado: '',
-            funcionario_ejecutor_ejecucion: '',
-            fecha_sorteo_ejecucion: '',
-            observaciones_ejecucion: '',
-            memo_ingreso: '',
-            fecha_ingreso: (new Date()),
-            unidad: 0,
-            unidad_ejecucion: 0,
-            tipo_zona_ejecucion: 0,
-            tipo_unidad: ' ',
-            numero_expediente: ' ',
-            numero_interno: ' ',
-            nombre_administrado: ' ',
-            nombre_establecimiento: ' ',
-            direccion_notificacion: ' ',
-            direccion_domicilio: ' ',
-            cedula_ruc: ' ',
-            reincidencia: ' ',
-            ordenanza: 0,
-            articulo_numeral: 0,
-            iniciado_por: ' ',
-            entidad: ' ',
-            numero_informe: ' ',
-            medida_cautelar: ' ',
-            estado: ' ',
-            funcionario: 0,
-            envio_expediente: ' ',
-            numero_memorando: ' ',
-            fecha_sorteo:  ' ',
-            es_ejecucion: 1,
-            // fecha_envio: (new Date()),
+            fecha_retiro: (new Date()),
+            fecha: (new Date()),
+            fecha_devolucion: (new Date()),
+            numero_retiros: 0,
+            codigo: '',
+            perecible: '',
+            bien: '',
+            direccion_retiro: '',
+            donacion_institucion: '',
+            dado_baja: '',
+            en_bodega: '',
+            devolucion: '',
+            unidad: '0',
+            observaciones: ''
         });
         this.gridBodega.stopEditing();
         this.storeBodega.insert(0, libroDiario);
@@ -4106,7 +3989,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
     },
 
 
-    deleteResoluciones: function () {
+    deleteProducto: function () {
         Ext.Msg.show({
             title: 'Confirmación',
             msg: 'Está seguro de querer borrar?',
@@ -4114,32 +3997,32 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             buttons: Ext.Msg.YESNO,
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridResoluciones.getSelectionModel().getSelections();
+                    var rows = this.gridProducto.getSelectionModel().getSelections();
                     if (rows.length === 0) {
                         return false;
                     }
-                    this.storeResoluciones.remove(rows);
+                    this.storeProducto.remove(rows);
                 }
             }
         });
     },
-    addResoluciones: function () {
-        var resoluciones = new this.storeResoluciones.recordType({
+    addProducto: function () {
+        var producto = new this.storeProducto.recordType({
             //id: '',
-            id_libro_diario: libroDiarioSeleccionado,
-            numero_resolucion: '',
-            fecha_resolucion: (new Date()),
-            articulo_actual: ' ',
-            resolucion_de: '0',
-            multa_impuesta: ' ',
-            observaciones: ' ',
+            id_bodega: libroDiarioSeleccionado,
+            producto: '',
+            estado_producto: '',
+            unidades_recibidas: '',
+            peso: '',
+            fecha_registro: (new Date()),
+
         });
-        this.gridResoluciones.stopEditing();
-        this.storeResoluciones.insert(0, resoluciones);
-        this.gridResoluciones.startEditing(0, 0);
+        this.gridProducto.stopEditing();
+        this.storeProducto.insert(0, producto);
+        this.gridProducto.startEditing(0, 0);
     },
     requestGridData: function () {
-        this.storeResoluciones.load();
+        this.storeProducto.load();
     },
 
 
@@ -4154,7 +4037,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             //En caso de presionar el botón SI, se eliminan los datos del registro seleccionado
             fn: function (btn) {
                 if (btn == 'yes') {
-                    var rows = this.gridProvidencias.getSelectionModel().getSelections();
+                    var rows = this.gridBienes.getSelectionModel().getSelections();
                     if (rows.length === 0) {
                         return false;
                     }
@@ -4168,14 +4051,16 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
     addProvidencias: function () {
         var providencias = new this.storeProvidencias.recordType({
             //id: '',
-            id_libro_diario: libroDiarioSeleccionado,
-            numero_providencia: '' ,
-            fecha_providencia: (new Date()),
-            tipo_providencia: 0,
+            id_bodega: libroDiarioSeleccionado,
+            bien: '',
+            estado_bien: '',
+            cantidad: '',
+            peso: '',
+            fecha_registro: (new Date()),
         });
-        this.gridProvidencias.stopEditing();
+        this.gridBienes.stopEditing();
         this.storeProvidencias.insert(0, providencias);
-        this.gridProvidencias.startEditing(0, 0);
+        this.gridBienes.startEditing(0, 0);
     },
 
     //Función para actualizar los datos mostrados en pantalla de la pestaña de Providencias
