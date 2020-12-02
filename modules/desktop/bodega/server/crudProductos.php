@@ -11,33 +11,37 @@ function selectOrdenanzas()
     global $os;
 
     $columnaBusqueda = 'busqueda_todos';
-    $usuarioLog = $os->get_member_id();
     $where = '';
+    if (isset($_POST['id'])  ) {
+//    if ((isset($_POST['id']) && ( strlen($_POST['filterText']) == 0))) {
+        $id = (int)$_POST ['id'];
+        $chain = "id_bodega  = '$id'";
+        $where = " WHERE $chain ";
+    }
+
+
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
     }
 
     if (isset($_POST['filterText'])) {
+    if (strlen($_POST['filterText']>0)) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
         if ($columnaBusqueda != 'busqueda_todos') {
-            $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+
+            if($where == ''){
+                $where = " WHERE $columnaBusqueda LIKE '%$campo%'";
+            }else{
+                $where = $where . " AND $columnaBusqueda LIKE '%$campo%' ";
+            }
+
         } else {
             $listadoCampos = array(
-                'fecha_retiro',
-                'fecha',
-                'fecha_devolucion',
-                'numero_retiros',
-                'codigo',
-                'perecible',
-                'bien',
-                'direccion_retiro',
-                'donacion_institucion',
-                'dado_baja',
-                'en_bodega',
-                'devolucion',
-                'unidad',
-                'observaciones',
+                'producto',
+                'estado_producto',
+                'unidades_recibidas',
+                'peso',
             );
             $cadena = '';
             foreach ($listadoCampos as &$valor) {
@@ -45,67 +49,18 @@ function selectOrdenanzas()
             }
 
             $cadena = substr($cadena,0,-3);
-            $where = " WHERE $cadena ";
-        }
 
-    }
-
-    if(isset ($_POST['accesosResolutores'])){
-        $acceso = $_POST['accesosResolutores'];
-        if($acceso=='true'){
             if($where == ''){
-                $where = " WHERE funcionario = $usuarioLog ";
+                $where = " WHERE $cadena ";
             }else{
-                $where = $where . " ) AND funcionario = $usuarioLog ";
+                $where = $where . " AND $cadena ";
             }
-        }else{
-            if($where != ''){
-                $where = $where . " ) ";
-            }
+
         }
     }
-    if (isset($_POST['numero_expediente']) && $_POST['numero_expediente']!="" ) {
-        $filtronumero_resolucion = $_POST['numero_expediente'];
-        if($where == ''){
-            $where = " WHERE numero_expediente_ejecucion LIKE '%$filtronumero_resolucion%' ";
-        }else{
-            $where = $where . " AND numero_expediente_ejecucion LIKE '%$filtronumero_resolucion%' ";
-        }
-    }
-    if (isset($_POST['nombre_administrado']) && $_POST['nombre_administrado']!="" ) {
-        $filtro_nombre_administrado = $_POST['nombre_administrado'];
-        if($where == ''){
-            $where = " WHERE nombre_administrado_ejecucion LIKE '%$filtro_nombre_administrado%' ";
-        }else{
-            $where = $where . " AND nombre_administrado_ejecucion LIKE '%$filtro_nombre_administrado%' ";
-        }
-    }
-    if (isset($_POST['cedula_ruc']) && $_POST['cedula_ruc']!="" ) {
-        $filtro_cedula_ruc = $_POST['cedula_ruc'];
-        if($where == ''){
-            $where = " WHERE cedula_ruc LIKE '%$filtro_cedula_ruc%' ";
-        }else{
-            $where = $where . " AND cedula_ruc LIKE '%$filtro_cedula_ruc%' ";
-        }
-    }
-    if (isset($_POST['unidad_ejecucion']) && $_POST['unidad_ejecucion']!="" ) {
-        $filtro_zona = $_POST['unidad_ejecucion'];
-        if($where == ''){
-            $where = " WHERE unidad_comisaria_ejecucion LIKE '%$filtro_zona%' OR unidad LIKE '%$filtro_zona%' ";
-        }else{
-            $where = $where . " AND unidad_comisaria_ejecucion LIKE '%$filtro_zona%' OR unidad LIKE '%$filtro_zona%'";
-        }
     }
 
-//    $orderby = 'ORDER BY a.id ASC';
-    if (isset($_POST['sort'])) {
-        $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
-    }else{
-        $orderby = 'ORDER BY id DESC';
-    }
-
-    //$usuarioLog = $os->get_member_id();
-
+    $usuarioLog = $os->get_member_id();
 
 
     if (isset ($_POST['start']))
@@ -117,21 +72,21 @@ function selectOrdenanzas()
         $limit = $_POST['limit'];
     else
         $limit = 100;
-//    $orderby = 'ORDER BY id ASC';
+    $orderby = 'ORDER BY id ASC';
 
 
 
 
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_bodega $where $orderby LIMIT $start, $limit";
-    //echo $sql;
+    $sql = "SELECT * FROM amc_productos $where $orderby LIMIT $start, $limit";
+   // echo($sql);
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $data[] = $row;
     };
 
-    $sql = "SELECT count(*) AS total FROM amc_bodega $where";
+    $sql = "SELECT count(*) AS total FROM amc_productos $where";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
@@ -164,9 +119,8 @@ function insertOrdenanzas()
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "INSERT INTO amc_bodega($cadenaCampos)
+    $sql = "INSERT INTO amc_productos($cadenaCampos)
 	values($cadenaDatos);";
-    //echo ($sql);
      $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
@@ -187,7 +141,7 @@ function generaCodigoProcesoOrdenanza()
 
     $usuario = $os->get_member_id();
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT MAX(id) AS maximo FROM amc_bodega";
+    $sql = "SELECT MAX(id) AS maximo FROM amc_productos";
     $result = $os->db->conn->query($sql);
     $row = $result->fetch(PDO::FETCH_ASSOC);
     if (isset($row['maximo'])) {
@@ -229,14 +183,14 @@ function updateOrdenanzas()
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-    $sql = "UPDATE amc_bodega SET  $cadenaDatos  WHERE amc_bodega.id = '$data->id' ";
+    $sql = "UPDATE amc_productos SET  $cadenaDatos  WHERE amc_productos.id = '$data->id' ";
     //echo ($sql);
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_bodega actualizado exitosamente" : $sql->errorCode(),
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_productos actualizado exitosamente" : $sql->errorCode(),
         "message" => $message
     ));
 }
@@ -249,7 +203,7 @@ function validarCedulaCorreo($id)
 
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT cedula, email FROM amc_bodega WHERE id = $id";
+    $sql = "SELECT cedula, email FROM amc_productos WHERE id = $id";
     $result = $os->db->conn->query($sql);
 
     $row = $result->fetch(PDO::FETCH_ASSOC);
@@ -266,7 +220,7 @@ function selectOrdenanzasForm()
     global $os;
     $id = (int)$_POST ['id'];
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT *, (SELECT numero FROM amc_guias WHERE amc_guias.id = a.guia ) as guianumero, (SELECT COUNT(*) FROM amc_bodega  b WHERE a.cedula = b.cedula and b.cedula <> '') as totaldocumentos FROM amc_bodega as a  WHERE a.id = $id";
+    $sql = "SELECT *, (SELECT numero FROM amc_guias WHERE amc_guias.id = a.guia ) as guianumero, (SELECT COUNT(*) FROM amc_productos  b WHERE a.cedula = b.cedula and b.cedula <> '') as totaldocumentos FROM amc_productos as a  WHERE a.id = $id";
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -335,7 +289,7 @@ function updateOrdenanzasForm()
 
     }
     /*codigo_tramite='$codigo_tramite',*/
-    $sql = "UPDATE amc_bodega SET 
+    $sql = "UPDATE amc_productos SET 
             id = '$id',
             //nombre = $nombre,
             //nombre_completo = $nombre_completo,
@@ -356,12 +310,12 @@ function deleteOrdenanzas()
 {
     global $os;
     $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_bodega WHERE id = $id";
+    $sql = "DELETE FROM amc_productos WHERE id = $id";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_bodega, eliminado exitosamente" : $sql->errorCode()
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_productos, eliminado exitosamente" : $sql->errorCode()
     ));
 }
 
