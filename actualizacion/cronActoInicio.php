@@ -8,24 +8,16 @@
 require_once '../server/os.php';
 
 $os = new os();
-if (!$os->session_exists()) {
-    die('No existe sesión!');
-}
 
 require_once '../modules/common/Classes/funciones.php';
 require '../includes/vendor/autoload.php';
 use Kreait\Firebase\Factory;
 require_once '../includes/firestore.php';
 
-//error_log(">>Antes de Migrar", 0, '/home/amc_usuario/actoInicio.log');
-
 migrar();
-
 
 function migrar(){
     global $os;
-
-    //error_log(">>Inicio Proceso", 0, '/home/amc_usuario/actoInicio.log');
     $data = [];
     $fs = new Firestore('formulario');
     $query= $fs->getWhere('exportado',false);
@@ -103,6 +95,8 @@ function migrar(){
                 ."'".$valor['usuarioApp']."'".","
                 ."NOW()"
                 .");";
+
+
             $sql = $os->db->conn->prepare($sql);
             $sql->execute();
 
@@ -111,7 +105,7 @@ function migrar(){
 
             echo json_encode(array(
                 "success" => true,
-                "msg" => $sql->errorCode() == 0 ? "insertado exitosamente: ".$id : $sql->errorCode(),
+                "msg" => $sql->errorCode() == 0 ? "insertado exitosamente: ".$id : "errores ".$sql->errorCode()." ".$sql->errorInfo()[2]//." ".$sql->queryString,
             ));
         } else {
             echo json_encode(array(
@@ -120,9 +114,7 @@ function migrar(){
             ));
         }
     }
-
     //error_log(">>Fin Proceso", 0, '/home/amc_usuario/actoInicio.log');
-
 }
 
 
@@ -135,8 +127,8 @@ function validaRegistro ($id_hash){
     $rowValor = $result->fetch(PDO::FETCH_ASSOC);
     $valor = $rowValor['valor'];
     if($valor > 0){
-        //$pasaValidacion = false;
-        $pasaValidacion = true;
+        $pasaValidacion = false;
+        //$pasaValidacion = true;
     }
     return $pasaValidacion;
 }

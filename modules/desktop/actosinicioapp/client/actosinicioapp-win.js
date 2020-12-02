@@ -930,16 +930,18 @@ QoDesk.ActosInicioappWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     var myForm = Ext.getCmp('formActosInicioappDetalle').getForm();
                     myForm.submit({
-                        //url: urlActosInicioapp + 'crudActosInicioapp.php?operation=migrar',
-                        url: '/procesos-amc/actualizacion/cronActoInicio.php',
+                        url: urlActosInicioapp + 'crudActosInicioapp.php?operation=migrar',
+                        //url: '/actualizacion/cronActoInicio.php',
+                        //url: '/procesos-amc/actualizacion/cronActoInicio.php',
                         method: 'POST',
                         waitMsg: 'Saving data',
                         success: function (form, action) {
                             //se actualiza tabla en la web
                             //var dataReceived = JSON.parse(action.response.responseText);
                             myForm.submit({
-                                //url: urlActosInicioapp + 'migracionActoInicio.php?operation=migrar',
-                                url: '/procesos-amc/actualizacion/cronActoInicio.php',
+                                url: urlActosInicioapp + 'migracionActoInicio.php?operation=migrar',
+                                //url: '/actualizacion/cronActoInicio.php',
+                                //url: '/procesos-amc/actualizacion/cronActoInicio.php',
                                 method: 'POST',
                                 waitMsg: 'Saving data',
                                 params: {
