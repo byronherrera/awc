@@ -18,7 +18,7 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
 
         var win = desktop.getWindow('grid-win-denunciasweb');
         //var urlDenunciasweb = "amcserver/";
-        var urlDenunciasweb = "http://agenciadecontrol.quito.gob.ec/amcserver/"; // servidor produccion
+        var urlDenunciasweb = "https://agenciadecontrol.quito.gob.ec/amcserver/"; // servidor produccion
         var urlDenunciasLocal = "modules/desktop/denunciasweb/server/";
 
         this.urlDenunciasweb = urlDenunciasweb;
@@ -803,6 +803,7 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
     negardenuncias: function () {
         store = this.storeDenunciasweb;
         var urlDenunciasweb = this.urlDenunciasweb;
+        var urlDenunciasLocal = this.urlDenunciasLocal;
         Ext.Msg.show({
             title: 'Advertencia',
             msg: 'Desea negar la denuncia, .<br>¿Desea continuar?',
@@ -814,15 +815,33 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                     var myForm = Ext.getCmp('formDenunciaswebDetalle').getForm();
 
                     myForm.submit({
-                        url: urlDenunciasweb + 'crudDenunciasweb.php?operation=negarDenuncia',
+
+                        url: urlDenunciasLocal + 'crudDenunciasweb.php?operation=negarDenunciaAmc',
                         method: 'POST',
                         waitMsg: 'Saving data',
 
                         success: function (form, action) {
+                            myForm.submit({
+                                url: urlDenunciasweb + 'crudDenunciasweb.php?operation=negarDenuncia',
+                                method: 'POST',
+                                waitMsg: 'Saving data',
 
-                            Ext.getCmp('tb_negardenuncias').setDisabled(true);
-                            Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
-                            store.load();
+                                success: function (form, action) {
+                                    Ext.getCmp('tb_negardenuncias').setDisabled(true);
+                                    Ext.getCmp('tb_aprobardenuncias').setDisabled(true);
+                                    store.load();
+                                },
+                                failure: function (form, action) {
+                                    var errorJson = JSON.parse(action.response.responseText);
+                                    Ext.Msg.show({
+                                        title: 'Error campos obligatorios'
+                                        , msg: errorJson.msg
+                                        , modal: true
+                                        , icon: Ext.Msg.ERROR
+                                        , buttons: Ext.Msg.OK
+                                    });
+                                }
+                            });
                         },
                         failure: function (form, action) {
                             var errorJson = JSON.parse(action.response.responseText);

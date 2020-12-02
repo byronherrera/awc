@@ -18,6 +18,7 @@ function aprobarDenuncia()
     $data->codigo_tramite = generaCodigoProcesoDenuncia();
     $data->id_persona = $os->get_member_id();
     $data->recepcion_documento = $_POST["fecha"];
+
     $data->id_tipo_documento = 1;
     $data->num_documento = "Denuncia web - " . $_POST["id"];
     $data->remitente = $_POST["nombre"] . ' ' . $_POST["apellido"];
@@ -53,17 +54,19 @@ function aprobarDenuncia()
 
     $sql = "INSERT INTO amc_denuncias($cadenaCampos)
 	values($cadenaDatos);";
+
+    $codigo_tramite = $data->codigo_tramite;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
     // genero el nuevo codigo de proceso
 
-    $mensajeEnvio = enviarMensajeAprobado();
+    $mensajeEnvio = enviarMensajeAprobado($data->codigo_tramite);
     echo json_encode(array(
         "success" => true,
-        "msg" => $mensajeEnvio . $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode() ,
-        "data" => $data->codigo_tramite
+        "msg" =>  $sql->errorCode() == 0 ? "insertado exitosamente" : $sql->errorCode() ,
+        "data" => $codigo_tramite
     ));
 }
 
@@ -74,25 +77,29 @@ function enviarMensajeNegado()
     $motivoNegarDenuncia = $_POST ['motivoNegarDenuncia'];
 
 
-    $email = regresaEmail($_POST ['email']);
+    $email = $_POST ['email'];
     $mensaje = getmensaje('negar', '', '', '', $motivoNegarDenuncia);
 
     $asunto = "Actualización estado de denuncia" . " - " . $email;
     $funcionarios = ['juan.toscano@quito.gob.ec'];
     $funcionariosSeguimiento = ["nelly.carrera@quito.gob.ec", "byron.herrera@quito.gob.ec"];
-    $prueba = true;
+    $prueba = false;
     $envioMail = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, '', $prueba);
-
     return $envioMail;
 }
 
-function enviarMensajeAprobado()
+function enviarMensajeAprobado($codigo_tramite)
 {
     $id = (int)$_POST ['id'];
-    $codigo_tramite = $_POST ['codigo_tramite'];
+    $codigo_tramite = $codigo_tramite;
+    $email = $_POST ['email'];
 
     $mensaje = getmensaje('aprobar', $_POST ['nombre'], $codigo_tramite, $id);
-    $envioMail = enviarEmailAmc($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
+    $asunto = "Actualización estado de denuncia" . " - " . $email;
+    $funcionarios = ['juan.toscano@quito.gob.ec'];
+    $funcionariosSeguimiento = ["nelly.carrera@quito.gob.ec", "byron.herrera@quito.gob.ec"];
+    $prueba = false;
+    $envioMail = enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, '', $prueba);
 
     return $envioMail;
 }
@@ -150,9 +157,6 @@ function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $moti
 switch ($_GET['operation']) {
     case 'aprobarDenuncia' :
         aprobarDenuncia();
-        break;
-        case 'negarDenuncia' :
-        negarDenuncia();
         break;
     case 'negarDenunciaAmc' :
         enviarMensajeNegado();
