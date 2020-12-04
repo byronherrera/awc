@@ -533,7 +533,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
         });
         storeInstruccion = this.storeInstruccion;
 
-        this.gridInstruccion = new Ext.grid.EditorGridPanel({
+        this.gridInstruccion = new Ext.grid.Panel({
             height: desktop.getWinHeight() - 380,
             store: this.storeInstruccion,
             columns: [

@@ -759,16 +759,16 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                 {name: 'fecha_impresion_informe', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_fin_planificacion', type: 'date', dateFormat: 'c', allowBlank: true},
-                {name: 'id_tipo_control', allowBlank: false},
-                {name: 'id_nivel_complejidad', allowBlank: false},
+                {name: 'id_tipo_control', allowBlank: true},
+                {name: 'id_nivel_complejidad', allowBlank: true},
                 {name: 'id_zonal', allowBlank: true},
                 {name: 'observaciones', allowBlank: true},
                 {name: 'tramite', allowBlank: true},
-                {name: 'tipo_operativo', allowBlank: false},
+                {name: 'tipo_operativo', allowBlank: true},
                 {name: 'zona', allowBlank: true},
                 {name: 'id_unidad', allowBlank: true},
                 {name: 'punto_encuentro_planificado', allowBlank: true},
-                {name: 'id_persona_encargada', allowBlank: false},
+                {name: 'id_persona_encargada', allowBlank: true},
                 /* {name: 'fallido', type: 'boolean', allowBlank: false},*/
                 /* {name: 'finalizado', type: 'boolean', allowBlank: false},*/
                 {name: 'id_estado', allowBlank: false},
@@ -940,9 +940,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     width: 190,
                     editor: comboPRD,
                     renderer: personaReceptaDenuncia,
-                    /*
-                     editor: comboOPPERENC,
-                     renderer: operativosPersonalEncargado,*/
+
                     id: 'id_persona_encargada'
                 },
                 {
@@ -971,12 +969,9 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'tramite',
                     sortable: true,
                     width: 90,
-                    editor: new Ext.form.TextField({allowBlank: false})
-                    /*                    editor: new Ext.form.NumberField({
-                                            allowBlank: false,
-                                            allowNegative: false,
-                                            maxValue: 100000
-                                        }) */
+                    editor: new Ext.form.TextField({allowBlank: false}),
+                    hidden: true
+
                 },
                 {
                     header: 'Elaborado',
@@ -3150,13 +3145,13 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             fecha_planificacion: (new Date()),
             fecha_inicio_planificacion: (new Date()),
             fecha_fin_planificacion: (new Date()),
-            id_tipo_control: '',
-            id_nivel_complejidad: ' ',
+            id_tipo_control:  '',
+            id_nivel_complejidad: '1',
             observaciones: ' ',
             punto_encuentro_planificado: ' ',
-            id_zonal: ' ',
+            id_zonal: '1',
+            id_unidad: '23',
             tipo_operativo: '2',
-            id_persona_encargada: '',
             mail_enviado: 0
         });
         this.gridOperativos.stopEditing();
