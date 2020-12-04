@@ -3156,7 +3156,7 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
             punto_encuentro_planificado: ' ',
             id_zonal: ' ',
             tipo_operativo: '2',
-            id_persona_encargada: ' ',
+            id_persona_encargada: '',
             mail_enviado: 0
         });
         this.gridOperativos.stopEditing();

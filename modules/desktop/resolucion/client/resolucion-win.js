@@ -3793,8 +3793,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             resolucion_de: '0',
             multa_impuesta: ' ',
             horas_trabajo_comunitario: ' ',
-            numero_memo_apelacion: ' ',
-            fecha_envio_apelacion: ' ',
+            numero_memo_apelacion: '',
+            fecha_envio_apelacion: '',
             apelacion: 0,
             observaciones: ' ',
         });

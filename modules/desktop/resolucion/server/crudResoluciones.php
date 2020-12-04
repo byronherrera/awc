@@ -115,15 +115,18 @@ function insertOrdenanzas()
     $cadenaDatos = '';
     $cadenaCampos = '';
     foreach ($data as $clave => $valor) {
+	if ($valor != '') {
         $cadenaCampos = $cadenaCampos . $clave . ',';
         $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+	}
     }
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
     $sql = "INSERT INTO amc_resoluciones($cadenaCampos)
 	values($cadenaDatos);";
-     $sql = $os->db->conn->prepare($sql);
+
+      $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
     $data->id = $os->db->conn->lastInsertId();
@@ -174,13 +177,14 @@ function updateOrdenanzas()
     if (isset($data->id_tipo_documento)) {
         if ($data->id_tipo_documento == '1')
             if (validarCedulaCorreo($data->id)) {
-                $message = 'Ingresar número de cédula y correo electrónico';
+                $message = 'Ingresar numero de cedula y correo electronico';
             }
     }
 
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
+	if ($valor != '' )
         $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
