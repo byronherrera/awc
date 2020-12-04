@@ -217,6 +217,34 @@ class amc
         return null;
     } // end get_id()
 
+    public function get_unidad_by_id($id)
+    {
+        $sql = "SELECT *
+                FROM amc_unidades
+                WHERE id = '" . $id . "'";
+        $result = $this->os->db->conn->query($sql);
+        if ($result) {
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return $row['nombre'];
+            }
+        }
+    }
+
+    public function get_zona_by_id($id)
+    {
+        $sql = "SELECT *
+                FROM amc_zonas
+                WHERE id = '" . $id . "'";
+        $result = $this->os->db->conn->query($sql);
+        if ($result) {
+            $row = $result->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return $row['nombre'];
+            }
+        }
+    }
+
 }
 
 ?>
