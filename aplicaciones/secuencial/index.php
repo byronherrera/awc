@@ -191,11 +191,8 @@ function actualizarSecuencial ($idUnidad, $tipoDocumento, $year ,$nuevoNumeroSec
     $sql->execute();
 
     if ($sql->errorCode() != 0 ){
-        $resp = array("codError" => 1, "mensaje" => "Error al actualizar el secuencial..."." ".$sql->errorInfo()[2]);
+        $resp = array("codError" => 1, "mensaje" => "Error al actualizar el secuencial..."." ".$sql->errorCode());
     }else {
-
-
-
         $resp = array("codError" => 0, "mensaje" => "OK");
     }
 
