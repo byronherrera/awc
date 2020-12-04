@@ -108,8 +108,6 @@ class amc
                 return $row['id_zonal'];
             }
         }
-
-
         return null;
     } // end get_zonal_id()
 
