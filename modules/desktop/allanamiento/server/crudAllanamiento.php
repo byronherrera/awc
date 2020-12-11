@@ -322,43 +322,68 @@ function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $moti
     switch ($opcion) {
         case 'asignar' :
             $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-                <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
-                <div style="clear: both; margin: 50px 10%; float: left;">
-                <p><br><br>
-                 Estimado, ' . $nombre . ' .<br>
-                <br>
-                
-                <br>    
-                
-                <p>Atentamente </p>
-                <p>GAD MDMQ AGENCIA METROPOLITANA DE CONTROL</p>
-                <p></p>
-                <p>IMPORTANTE</p>
-                <p>************************************************</p>
-                <p>- No responder este correo es un Mensaje Automático.</p>
+                <div style="float: right; clear: both; width: 100%;">
+                   <img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" />
                 </div>
-                <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                <div style="clear: both; margin: 50px 10%; float: left;">
+                <p>
+                    <br><br>
+                      Estimado, ' . $nombre . ' .<br>
+                    <br><br>
+                      Tiene un documento asignado con código  '. $codigo_tramite . ' .<br>
+                    <br><br>
+                </p>
+                <p>&nbsp;</p>
+                <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>           
+                </div>
+                   <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
                 </div>
                 ';
+            return $texto;
+            break;
         case 'devolver' :
             $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-                <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
-                <div style="clear: both; margin: 50px 10%; float: left;">
-                <p><br><br>
-                 Estimado, ' . $nombre . ' .<br>
-                <br>
-                   
-                <br>    
-                <p>Atentamente </p>
-                <p>GAD MDMQ AGENCIA METROPOLITANA DE CONTROL</p>
-                <p></p>
-                <p>IMPORTANTE</p>
-                <p>************************************************</p>
-                <p>- No responder este correo es un Mensaje Automático.</p>
+                <div style="float: right; clear: both; width: 100%;">
+                   <img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" />
                 </div>
-                <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                <div style="clear: both; margin: 50px 10%; float: left;">
+                <p>
+                    <br><br>
+                      Estimado, ' . $nombre . ' .<br>
+                    <br><br>
+                      Tiene un documento devuelto con código  '. $codigo_tramite . ' .<br>
+                    <br><br>
+                </p>
+                <p>&nbsp;</p>
+                <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>           
+                </div>
+                   <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
                 </div>
                 ';
+            return $texto;
+            break;
+        case 'aprobar' :
+            $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
+                      <div style="float: right; clear: both; width: 100%;">
+                         <img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" />
+                      </div>
+                      <div style="clear: both; margin: 50px 10%; float: left;">
+                      <p>
+                         <br><br>
+                           Estimado ciudadano gracias por escribirnos, su denuncia fue revisada y ha sido ingresada correctamente en nuestro sistema con el código ' . $codigo_tramite . '
+                         <br><br>
+                           En el siguiente link, usted  podrá hacer el seguimiento del proceso.<br>
+                           <a href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/' . $id . '-' . $nombre . '" target="_blank">Click aquí</a>
+                         <br><br>
+                      </p>
+                      <p>&nbsp;</p>
+                      <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
+                      </div>
+                         <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                      </div>
+                      ';
+            return $texto;
+            break;
         case 'rechazar' :
             $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
                       <div style="float: right; clear: both; width: 100%;">
@@ -382,29 +407,6 @@ function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $moti
                       </div>
                       <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
                       </div>';
-            return $texto;
-            break;
-
-         case 'aprobar' :
-            $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
-                      <div style="float: right; clear: both; width: 100%;">
-                         <img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" />
-                      </div>
-                      <div style="clear: both; margin: 50px 10%; float: left;">
-                      <p>
-                         <br><br>
-                           Estimado ciudadano gracias por escribirnos, su denuncia fue revisada y ha sido ingresada correctamente en nuestro sistema con el código ' . $codigo_tramite . '
-                         <br><br>
-                           En el siguiente link, usted  podrá hacer el seguimiento del proceso.<br>
-                           <a href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/' . $id . '-' . $nombre . '" target="_blank">Click aquí</a>
-                         <br><br>
-                      </p>
-                      <p>&nbsp;</p>
-                      <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
-                      </div>
-                         <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
-                      </div>
-                      ';
             return $texto;
             break;
     }
