@@ -59,6 +59,7 @@ QoDesk.EmergenciaWindow = Ext.extend(Ext.app.Module, {
                 {name:'geoposicionamiento', allowBlank: true},
                 {name:'funcionario', allowBlank: true},
                 {name:'idzonal', allowBlank: true},
+                {name:'imagenacto', allowBlank: true},
                 {name:'zonal', allowBlank: true},
                 {name:'fecha', allowBlank: true}
             ]
@@ -98,6 +99,7 @@ QoDesk.EmergenciaWindow = Ext.extend(Ext.app.Module, {
                 {header:'funcionario', dataIndex:'funcionario', sortable: true,width: 125},
                 {header:'idzonal', dataIndex:'idzonal', sortable: true,width: 125},
                 {header:'zonal', dataIndex:'zonal', sortable: true,width: 125},
+                {header:'imagenacto', dataIndex:'imagenacto', sortable: true,width: 125},
                 {header:'fecha', dataIndex:'fecha', sortable: true,width: 125}
             ],
             viewConfig: {

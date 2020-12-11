@@ -137,13 +137,13 @@ function selectInstruccion()
             $where = $where . " AND reasignacion = $unidad ";
         }
     }
-
+    // para no mostrar los expedientes finalizados o fallidos
     if (isset($_POST['finalizados'])) {
-        if ($_POST['finalizados'] == 'true') {
+        if ($_POST['finalizados'] != 'true') {
             if ($where == '') {
-                $where = " WHERE (id_estado = 0 OR id_estado = 2) ";
+                $where = " WHERE id_estado in (0,1,2) ";
             } else {
-                $where = $where . " AND (id_estado = 1 OR id_estado = 2) ";
+                $where = $where . " AND id_estado in (0,1,2) ";
             }
         }
     }
@@ -158,10 +158,10 @@ function selectInstruccion()
     else
         $limit = 100;
 
-    $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) DESC';
+    $orderby = 'ORDER BY id_estado, fecha_ingreso ';
     if (isset($_POST['sort'])) {
         if ($_POST['sort'] == 'id') {
-            $orderby = 'ORDER BY CONVERT( id,UNSIGNED INTEGER) DESC';
+            $orderby = 'ORDER BY id_estado,  fecha_ingreso ';
         } else {
             $orderby = 'ORDER BY ' . $_POST['sort'] . ' ' . $_POST['dir'];
         }
@@ -284,6 +284,7 @@ function selectInstruccion()
     }
     $os->db->conn->query("SET NAMES 'utf8'");
     $sql = "SELECT * FROM amc_expediente $where $orderby LIMIT $start, $limit";
+    $sql_seguimiento = $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -298,7 +299,9 @@ function selectInstruccion()
     echo json_encode(array(
             "total" => $total,
             "success" => true,
-            "data" => $data)
+            "data" => $data,
+            "sql" => $sql_seguimiento
+        )
     );
 }
 
@@ -398,16 +401,17 @@ function verificaReincidenciaAdministrado($ruc, $cedula)
         $sql->execute();
      //   return 1;
     }
-
-    if (!is_null($ruc)) {
+    echo $ruc;
+    if ((!is_null($ruc)) && (strlen($ruc)> 0)) {
         $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE ruc = $ruc";
+        echo $sql;
         $result = $os->db->conn->query($sql);
         $row = $result->fetch(PDO::FETCH_ASSOC);
         if ($row['total'] >= 2) {
             return 1;
         }
     }
-    if (!is_null($cedula)) {
+    if ((!is_null($cedula)) && (strlen($cedula)> 0)) {
         $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE cedula = $cedula";
         $result = $os->db->conn->query($sql);
         $data = array();
@@ -509,6 +513,7 @@ function updateInstruccion()
         $cambioValorPrevio = verficaCambioValorPrevio("id_persona_encargada", $data->id, $data->id_persona_encargada);
         if (!$cambioValorPrevio) {
             $data->fecha_asignacion = date('Y-m-d\Th:i:s', time());
+            $data->id_estado = 1; // se le cambia el estado a asignado
         }
     }
 
@@ -546,7 +551,7 @@ function updateInstruccion()
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_expediente actualizado exitosamente" : $sql->errorCode(),
+        "msg" => $sql->errorCode() == 0 ? "amc_expediente actualizado exitosamente" : $sql->errorCode(),
         "data" => array($data)
     ));
 }
