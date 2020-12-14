@@ -243,12 +243,12 @@ function enviar()
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
-    if($etapa == 'Secretaria' && $estado = 'Devuelto'){
+    if($etapa == 'Secretaria' && $estado == 'Finalizado'){
         //$email = $data->correoelectronico;
         $email = 'carlos.bastidas@quito.gob.ec';
         $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Rechazo del proceso de Allanamiento, " . " - " . $email;
-    } else if($etapa == 'Ejecucion' && $estado = 'Finalizado'){
+    } else if($etapa == 'Ejecucion' && $estado == 'Finalizado'){
         //$email = $data->correoelectronico;
         $email = 'carlos.bastidas@quito.gob.ec';
         $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
@@ -306,12 +306,12 @@ function devolver()
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
-    if($etapa == 'Secretaria' && $estado = 'Devuelto'){
+    if($etapa == 'Secretaria' && $estado == 'Finalizado'){
         //$email = $data->correoelectronico;
         $email = 'carlos.bastidas@quito.gob.ec';
         $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Rechazo del proceso de Allanamiento, " . " - " . $email;
-    } else if($etapa == 'Ejecucion' && $estado = 'Finalizado'){
+    } else if($etapa == 'Ejecucion' && $estado == 'Finalizado'){
         //$email = $data->correoelectronico;
         $email = 'carlos.bastidas@quito.gob.ec';
         $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
