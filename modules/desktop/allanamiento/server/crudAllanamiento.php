@@ -217,14 +217,6 @@ function updateHist(){
 
 function enviar()
 {
-    /*$factory = (new Factory())
-        ->withDatabaseUri('https://dqmactoinicio.firebaseio.com');
-    $database = $factory->createDatabase();
-    $reference = $database->getReference('formulario/-MLEPfFuHlrojS8QNJUH');
-    $snapshot = $reference->getSnapshot();
-    $value = $snapshot->getValue();
-    $value1 = $reference->getValue();*/
-
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
     $usuario = $os->get_member_id();
@@ -248,25 +240,36 @@ function enviar()
               VALUES ('$data->id','$etapa', '$estado', '$data->codigo_sitra','$data->observacion_sitra',NOW(),'$usuario'); ";
 
     $log = $sql;
-    $sql = $os->db->conn->prepare($sql)->execute();
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
 
-    //$mensaje = getmensaje('asignar', $_POST ['nombre'], $data->codigo_sitra, $data->id);
-    //$envioMail = enviarEmail($_POST ['email'], $_POST ['nombre'] . ' ' . $_POST ['apellido'], $mensaje);
-    $email = regresaEmail($data->id_usuario);
-    $mensaje = getmensaje('asignar',$data->nombre_usuario, $data->codigo_sitra, $data->id);
-    //$email = $data->correoelectronico;
-    $asunto = "Asignación del proceso de Allanamiento, " . " - " . $email;
+    if($etapa == 'Secretaria' && $estado = 'Devuelto'){
+        //$email = $data->correoelectronico;
+        $email = 'carlos.bastidas@quito.gob.ec';
+        $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
+        $asunto = "Rechazo del proceso de Allanamiento, " . " - " . $email;
+    } else if($etapa == 'Ejecucion' && $estado = 'Finalizado'){
+        //$email = $data->correoelectronico;
+        $email = 'carlos.bastidas@quito.gob.ec';
+        $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
+        $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;
+    } else {
+        $email = regresaEmail($data->id_usuario);
+        $mensaje = getmensaje('enviar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
+        $asunto = "Asignación del proceso de Allanamiento, " . " - " . $email;
+    }
+
     $funcionarios = ["carlos.bastidas@quito.gob.ec"];
     $funcionariosSeguimiento = ["carlos.bastidas@quito.gob.ec"];
-    $from = 'Planificación - Agencia Metropolitana de Control';
+    $from = 'Agencia Metropolitana de Control';
     $prueba = false;
-    enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
 
+    enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode(),
-        "data" => $data
+        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : "errores ".$sql->errorCode(),
+        "data" => $sql->errorCode()
     ));
 
     // genero archivo de log
@@ -303,10 +306,33 @@ function devolver()
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
+    if($etapa == 'Secretaria' && $estado = 'Devuelto'){
+        //$email = $data->correoelectronico;
+        $email = 'carlos.bastidas@quito.gob.ec';
+        $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
+        $asunto = "Rechazo del proceso de Allanamiento, " . " - " . $email;
+    } else if($etapa == 'Ejecucion' && $estado = 'Finalizado'){
+        //$email = $data->correoelectronico;
+        $email = 'carlos.bastidas@quito.gob.ec';
+        $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
+        $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;
+    } else {
+        $email = regresaEmail($data->id_usuario);
+        $mensaje = getmensaje('devolver',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
+        $asunto = "Devolución del proceso de Allanamiento, " . " - " . $email;
+    }
+
+    $funcionarios = ["carlos.bastidas@quito.gob.ec"];
+    $funcionariosSeguimiento = ["carlos.bastidas@quito.gob.ec"];
+    $from = 'Agencia Metropolitana de Control';
+    $prueba = false;
+
+    enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
+
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : $sql->errorCode(),
-        "data" => $data
+        "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : "errores ".$sql->errorCode(),
+        "data" => $sql->errorCode()
     ));
 
     // genero archivo de log
@@ -320,7 +346,7 @@ function devolver()
 function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $motivo = '')
 {
     switch ($opcion) {
-        case 'asignar' :
+        case 'enviar' :
             $texto = '<div style="font-family: Arial, Helvetica, sans-serif;">
                 <div style="float: right; clear: both; width: 100%;">
                    <img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" />

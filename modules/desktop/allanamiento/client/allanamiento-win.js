@@ -537,7 +537,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         scope: this,
                         handler: this.enviarAllanamiento,
                         iconCls: 'save-icon',
-                        disabled: true,
+                        disabled: false,
                         id: 'tabEnviarAllanamiento',
                         formBind: true
                     }, {
@@ -545,7 +545,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         scope: this,
                         handler: this.devolverAllanamiento,
                         iconCls: 'delete-icon',
-                        disabled: true,
+                        disabled: false,
                         id: 'tabDevolverAllanamiento',
                         formBind: true
                     },
@@ -581,11 +581,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                     {xtype: 'hidden', name: 'ampliacionallanamiento'},
                                     {xtype: 'hidden', name: 'direccionallanamientodo'},
                                     {xtype: 'hidden', name: 'geoposicionamiento2'},
-                                    {
-                                        xtype: 'displayfield',
-                                        fieldLabel: 'Fecha',
-                                        name: 'fecha2'
-                                    },
+
                                     //  {xtype: 'displayfield', fieldLabel: 'Denuncia', name: 'urlallanamiento2'},
                                     {
                                         xtype: 'displayfield',
@@ -593,8 +589,13 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                         value: '1. DATOS DEL SOLICITANTE',
                                         cls: 'negrilla',
                                         anchor: '95%'
-                                    }
-                                    , {
+                                    },
+                                    {
+                                        xtype: 'displayfield',
+                                        fieldLabel: 'Fecha',
+                                        name: 'fecha2'
+                                    },
+                                    {
                                         xtype: 'compositefield',
                                         fieldLabel: 'Nombres',
                                         msgTarget: 'under',
@@ -780,7 +781,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                         fieldLabel: 'Observacion',
                                         anchor: '95%',
                                         allowBlank: false,
-                                        disabled: true,
+                                        disabled: false,
                                         listeners: {
                                             'change': function (value, newValue, oldValue) {
                                                 if (newValue != oldValue) {
@@ -971,10 +972,11 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             var AppMsg = new Ext.AppMsg({});
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Se asignó a la siguiente fase exitosamente...');
                         },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
+                        failure: function (response, opts) {
+                            console.log(">>>Respuesta ",response);
+                            var errorJson = JSON.parse(response.responseText);
                             Ext.Msg.show({
-                                title: 'Error campos obligatorios'
+                                title: 'Error...'
                                 , msg: errorJson.msg
                                 , modal: true
                                 , icon: Ext.Msg.ERROR
@@ -1030,10 +1032,11 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             var AppMsg = new Ext.AppMsg({});
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Se devolvió a la fase exitosamente...');
                         },
-                        failure: function (form, action) {
-                            var errorJson = JSON.parse(action.response.responseText);
+                        failure: function (response, opts) {
+                            console.log(">>>Respuesta Dev ",response);
+                            var errorJson = JSON.parse(response.responseText);
                             Ext.Msg.show({
-                                title: 'Error campos obligatorios'
+                                title: 'Error...'
                                 , msg: errorJson.msg
                                 , modal: true
                                 , icon: Ext.Msg.ERROR
