@@ -312,6 +312,11 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                 Ext.getCmp('observacion_sitra').setDisabled(false);
                             }
                         }
+
+                        if(this.record.get("estado") == 'Finalizado'){
+                            Ext.getCmp('tabEnviarAllanamiento').setDisabled(true);
+                            Ext.getCmp('tabDevolverAllanamiento').setDisabled(true);
+                        }
                     }
                 }
             }),

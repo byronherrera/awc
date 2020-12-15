@@ -227,6 +227,8 @@ function enviar()
     $etapa = (isset($data->etapa)) ? $data->etapa : '';
     $estado = (isset($data->estado)) ? $data->estado : '';
 
+    $email = regresaEmail($data->id_usuario);
+
     $sql  = " UPDATE amc_proc_reconocimineto_responsabilidad
              SET etapa = '$etapa',
                  estado = '$estado',
@@ -244,17 +246,15 @@ function enviar()
     $sql->execute();
 
     if($etapa == 'Secretaria' && $estado == 'Finalizado'){
-        //$email = $data->correoelectronico;
-        $email = 'carlos.bastidas@quito.gob.ec';
+        $email = $data->correoelectronico;
         $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Rechazo del proceso de Allanamiento, " . " - " . $email;
     } else if($etapa == 'Ejecucion' && $estado == 'Finalizado'){
-        //$email = $data->correoelectronico;
-        $email = 'carlos.bastidas@quito.gob.ec';
+        $email = $data->correoelectronico;
         $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;
     } else {
-        $email = regresaEmail($data->id_usuario);
+        //$email = regresaEmail($data->id_usuario);
         $mensaje = getmensaje('enviar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Asignación del proceso de Allanamiento, " . " - " . $email;
     }
@@ -291,6 +291,8 @@ function devolver()
     $etapa = (isset($data->etapa)) ? $data->etapa : '';
     $estado = (isset($data->estado)) ? $data->estado : '';
 
+    $email = regresaEmail($data->id_usuario);
+
     $sql  = " UPDATE amc_proc_reconocimineto_responsabilidad 
              SET etapa = '$etapa',
                  estado = '$estado',
@@ -307,17 +309,15 @@ function devolver()
     $sql->execute();
 
     if($etapa == 'Secretaria' && $estado == 'Finalizado'){
-        //$email = $data->correoelectronico;
-        $email = 'carlos.bastidas@quito.gob.ec';
+        $email = $data->correoelectronico;
         $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Rechazo del proceso de Allanamiento, " . " - " . $email;
     } else if($etapa == 'Ejecucion' && $estado == 'Finalizado'){
-        //$email = $data->correoelectronico;
-        $email = 'carlos.bastidas@quito.gob.ec';
+        $email = $data->correoelectronico;
         $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;
     } else {
-        $email = regresaEmail($data->id_usuario);
+        //$email = regresaEmail($data->id_usuario);
         $mensaje = getmensaje('devolver',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Devolución del proceso de Allanamiento, " . " - " . $email;
     }
@@ -476,3 +476,4 @@ function totalpedidos($cedula)
     $rownombre = $nombre->fetch(PDO::FETCH_ASSOC);
     return $rownombre['total'];
 }
+
