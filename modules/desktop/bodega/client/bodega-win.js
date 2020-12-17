@@ -1014,6 +1014,7 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
+                {name: 'id', allowBlank: true},
                 {name: 'fecha_retiro', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'fecha_devolucion', type: 'date', dateFormat: 'c', allowBlank: true},
@@ -2406,7 +2407,6 @@ QoDesk.BodegaWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'id', allowBlank: true},
                 {name: 'id_bodega', allowBlank: true},
                 {name: 'bien', allowBlank: true},
                 {name: 'estado_bien', allowBlank: true},

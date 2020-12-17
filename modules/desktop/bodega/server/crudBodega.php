@@ -166,7 +166,6 @@ function insertOrdenanzas()
 
     $sql = "INSERT INTO amc_bodega($cadenaCampos)
 	values($cadenaDatos);";
-    //echo ($sql);
      $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 

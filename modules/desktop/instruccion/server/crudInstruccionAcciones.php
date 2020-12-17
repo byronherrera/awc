@@ -54,15 +54,20 @@ function insertAcciones()
     //$message = validarAcciones($data->id_member,$data->id_expediente );
     $message = "";
     foreach ($data as $clave => $valor) {
+
+        if (($clave == "estado") || ($clave == "sancion"))
+            $valor = $valor ? 1 : 0;
+
         $cadenaCampos = $cadenaCampos . $clave . ',';
         $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
     }
+
     $cadenaCampos = substr($cadenaCampos, 0, -1);
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
-
     $sql = "INSERT INTO amc_expedientes_procesos_administrativos ($cadenaCampos)
 	values($cadenaDatos);";
+    echo $sql;
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 

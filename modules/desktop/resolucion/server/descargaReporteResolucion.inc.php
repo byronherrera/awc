@@ -377,7 +377,7 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     $objPHPExcel->getActiveSheet()->setCellValue('AJ' . $filaInicio, $rowdetalle['numero_memo_apelacion']);
     $objPHPExcel->getActiveSheet()->setCellValue('AK' . $filaInicio, (isset($rowdetalle['fecha_envio_apelacion'])&&strlen($rowdetalle['fecha_envio_apelacion'])>9)  ? substr($rowdetalle['fecha_envio_apelacion'], 0, 10): "");
     $objPHPExcel->getActiveSheet()->setCellValue('AL' . $filaInicio, $rowdetalle['horas_trabajo_comunitario']);
-    $objPHPExcel->getActiveSheet()->setCellValue('AM' . $filaInicio, getApelacion($rowdetalle['apelacion']));
+    //$objPHPExcel->getActiveSheet()->setCellValue('AM' . $filaInicio, getApelacion($rowdetalle['apelacion']));
     $objPHPExcel->getActiveSheet()->setCellValue('AN' . $filaInicio, $rowdetalle['observaciones']);
 
     $objPHPExcel->getActiveSheet()->getStyle('A' . $filaInicio . ':AN' . $filaInicio)->applyFromArray($styleArray);
