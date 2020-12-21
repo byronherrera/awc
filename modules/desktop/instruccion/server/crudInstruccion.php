@@ -57,46 +57,18 @@ function selectProcedimientosCadena($procLista)
 function selectInstruccion()
 {
     global $os;
-    //TODO cambiar columna por defecto en busquedas
-    $columnaBusqueda = 'id';
+
 
     $where = '';
-    $usuarioLog = $os->get_member_id();
-    if (isset($_POST['accesosInstruccion'])) {
-        $accesosInstruccion = $_POST['accesosInstruccion'];
-        if ($accesosInstruccion == 'true')
-            $where = " WHERE $usuarioLog = id_persona_encargada ";
-    }
 
-
-    if (isset($_POST['accesosAdministradorIns'])) {
-        $accesosInstruccion = $_POST['accesosAdministradorIns'];
-        if ($accesosInstruccion == 'true')
-            $where = " WHERE ($usuarioLog = id_persona_encargada or id_unidad = 3 ) ";
-    }
-
-
-    if (isset($_POST['accesosAdministradorOpe'])) {
-        $accesosInstruccion = $_POST['accesosAdministradorOpe'];
-        if ($accesosInstruccion == 'false')
-            if ($where == '')
-                $where = " WHERE visible  = 1 ";
-            else
-                $where = $where . " AND visible  = 1";
-    }
-    // se muestran todos los instruccion
-    if (isset($_POST['acceso'])) {
-        $acceso = $_POST['acceso'];
-        if ($acceso == 'false')
-            $where = "";
-        //$where = " WHERE $usuarioLog = id_persona_encargada ";
-    }
-
+    //Columna por defecto en busquedas
+    $columnaBusqueda = 'expediente';
+    // para el caso de busquedas
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
     }
 
-    if (isset($_POST['filterText'])) {
+    if ((isset($_POST['filterText'])) && ($_POST['filterText'] != '' )) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
 
@@ -128,6 +100,42 @@ function selectInstruccion()
         }
 
     }
+
+    // fin para el caso de busquedas
+
+
+
+    $usuarioLog = $os->get_member_id();
+    if (isset($_POST['accesosInstruccion'])) {
+        $accesosInstruccion = $_POST['accesosInstruccion'];
+        if ($accesosInstruccion == 'true')
+            $where = " WHERE $usuarioLog = id_persona_encargada ";
+    }
+
+
+    if (isset($_POST['accesosAdministradorIns'])) {
+        $accesosInstruccion = $_POST['accesosAdministradorIns'];
+        if ($accesosInstruccion == 'true')
+            $where = " WHERE ($usuarioLog = id_persona_encargada or id_unidad = 3 ) ";
+    }
+
+
+    if (isset($_POST['accesosAdministradorOpe'])) {
+        $accesosInstruccion = $_POST['accesosAdministradorOpe'];
+        if ($accesosInstruccion == 'false')
+            if ($where == '')
+                $where = " WHERE visible  = 1 ";
+            else
+                $where = $where . " AND visible  = 1";
+    }
+    // se muestran todos los instruccion
+    if (isset($_POST['acceso'])) {
+        $acceso = $_POST['acceso'];
+        if ($acceso == 'false')
+            $where = "";
+        //$where = " WHERE $usuarioLog = id_persona_encargada ";
+    }
+
 
     if (isset($_POST['unidadfiltro'])) {
         $unidad = $_POST['unidadfiltro'];
@@ -315,7 +323,7 @@ function insertInstruccion()
 // todo generar estado por defecto
 
     //  $data->finalizado = 'false';
-    $data->codigo_expediente = generaNuevoCodigoInstruccion();
+    $data->expediente = generaNuevoCodigoInstruccion();
     $data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
 

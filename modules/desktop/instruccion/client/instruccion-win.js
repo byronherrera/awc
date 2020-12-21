@@ -63,6 +63,9 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             return value ? value.dateFormat('Y-m-d H:i') : '';
         }
 
+
+        // inicio combos instruccion
+
         //inicio combo Zonales
         storeInsZonal = new Ext.data.JsonStore({
             root: 'data',
@@ -87,13 +90,14 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 return record.get('nombre');
             }
         }
+
         //fin combo zonales
 
 
         //inicio combo unidades
         storeInsUnidades = new Ext.data.JsonStore({
             root: 'data',
-            fields: ['id', 'nombre','miniprefijo'],
+            fields: ['id', 'nombre', 'miniprefijo'],
             autoLoad: true,
             url: 'modules/common/combos/combos.php?tipo=unidades'
         });
@@ -111,18 +115,11 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             var index = storeInsUnidades.findExact('id', id);
             if (index > -1) {
                 var record = storeInsUnidades.getAt(index);
-                console.log (record)
-                console.log (11)
                 return record.get('miniprefijo');
-                //return record.get('nombre');
             }
         }
+
         //fin combo unidades
-
-
-
-// inicio combos instruccion
-
         //inicio combo persona asignada INSPRASA
         storeINSPRASA = new Ext.data.JsonStore({
             root: 'data',
@@ -522,7 +519,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             idProperty: 'id',
             root: 'data',
             fields: [
-                {name: 'codigo_expediente', allowBlank: true},
                 {name: 'id_persona', allowBlank: true},
                 {name: 'fecha_ingreso', type: 'date', dateFormat: 'c', allowBlank: false},
                 {name: 'fecha_fin', type: 'date', dateFormat: 'c', allowBlank: true},
@@ -548,7 +544,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'nombre_establecimiento', allowBlank: true},
                 {name: 'sector', allowBlank: true},
                 {name: 'direccion_notificacion', allowBlank: true},
-
                 {name: 'direccion', allowBlank: true},
                 {name: 'ruc', allowBlank: true},
                 {name: 'cedula', allowBlank: true},
@@ -598,15 +593,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             store: this.storeInstruccion,
             columns: [
                 new Ext.grid.RowNumberer(),
-
-                {
-                    header: 'Código',
-                    dataIndex: 'codigo_expediente',
-                    sortable: true,
-                    width: 40
-                    , align: 'center'
-                    , hidden: true
-                },
                 {
                     header: 'Estado',
                     dataIndex: 'id_estado',
@@ -615,7 +601,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: estadoRecepcionExpediente,
                     editor: comboESTEXP
                 },
-
                 {
                     header: 'Fecha Ingreso',
                     dataIndex: 'fecha_ingreso',
@@ -636,7 +621,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_zonal',
                     sortable: true,
                     width: 100,
-                    editor: textField,
+                    // editor: textField,
                     renderer: rendererInsZonal
                 },
                 {
@@ -644,29 +629,11 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'id_unidad',
                     sortable: true,
                     width: 80,
-                    editor: textField,
+                    //  editor: textField,
                     renderer: rendererInsUnidades
                 },
                 {
-                    header: 'Año',
-                    dataIndex: 'year',
-                    sortable: true,
-                    width: 50,
-                    editor: textField,
-                    align: 'center'
-                },
-                {
-                    header: 'Expediente',
-                    dataIndex: 'expediente',
-                    sortable: true,
-                    width: 70,
-                    editor: textField,
-                    align: 'center'
-                },
-
-
-                {
-                    header: 'Funcionario Asignación',
+                    header: 'Funcionario Asignado',
                     dataIndex: 'id_persona_encargada',
                     renderer: personaAsignadaInstruccion,
                     editor: comboINSPRFULA,
@@ -705,27 +672,32 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: editorDate, hidden: true
                 },
 
-
-                /*{
-                    header: 'Trámite General',
-                    dataIndex: 'id_tramite',
-                    sortable: true,
-                    width: 100,
-                    renderer: instruccionSecretariaTramite,
-                    editor: comboSECTRAM
-                },*/
-
                 {header: 'Acta', dataIndex: 'id_acta', sortable: true, width: 120, editor: textField, hidden: true},
-                {header: 'Detalle', dataIndex: 'detalle', sortable: true, width: 170, editor: textField},
-                {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 170, editor: textField},
+                {
+                    header: 'Año',
+                    dataIndex: 'year',
+                    sortable: true,
+                    width: 50,
+                    editor: textField,
+                    align: 'center'
+                },
+                {
+                    header: 'Expediente',
+                    dataIndex: 'expediente',
+                    sortable: true,
+                    width: 70,
+                    editor: textField,
+                    align: 'center'
+                },
                 {
                     header: 'Clausura', dataIndex: 'clausura', sortable: true, width: 60, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
                     , xtype: 'booleancolumn'
                 },
-                {header: 'Skelta', dataIndex: 'skelta', sortable: true, width: 80, editor: textField},
+// administrado
+
                 {
-                    header: 'Predio Número',
+                    header: 'Predio',
                     dataIndex: 'predio',
                     sortable: true,
                     width: 80,
@@ -757,18 +729,38 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: textField
                 },
                 {
+                    header: 'Reincidencia administrado',
+                    dataIndex: 'reincidencia_administrado',
+                    sortable: true,
+                    width: 130,
+                    align: 'center',
+                    menuDisabled: true,
+                    renderer: reincidencia
+                },
+                {
                     header: 'Sector',
                     dataIndex: 'sector',
                     sortable: true,
                     width: 120,
                     editor: textField
                 },
+
+                {header: 'Dirección', dataIndex: 'direccion', sortable: true, width: 160, editor: textField},
                 {
                     header: 'Dirección Notificación',
                     dataIndex: 'direccion_notificacion',
                     sortable: true,
                     width: 120,
                     editor: textField
+                },
+                {
+                    header: 'Cédula',
+                    dataIndex: 'cedula',
+                    sortable: true,
+                    width: 80,
+                    editor: textField,
+                    xtype: 'numbercolumn',
+                    format: '00000000'
                 },
 
                 {
@@ -781,32 +773,22 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     format: '00000000'
                 },
                 {
-                    header: 'Cédula',
-                    dataIndex: 'cedula',
-                    sortable: true,
-                    width: 80,
-                    editor: textField,
-                    xtype: 'numbercolumn',
-                    format: '00000000'
-                },
-                {
-                    header: 'Reincidencia administrado',
-                    dataIndex: 'reincidencia_administrado',
-                    sortable: true,
-                    width: 130,
-                    align: 'center',
-                    menuDisabled: true,
-                    renderer: reincidencia
-                },
-                {header: 'Dirección', dataIndex: 'direccion', sortable: true, width: 160, editor: textField},
-
-                {
                     header: 'Casillero Judicial',
                     dataIndex: 'casillero_judicial',
                     sortable: true,
                     width: 100,
                     editor: textField,
                 },
+                // fin administrado
+
+                {header: 'Detalle', dataIndex: 'detalle', sortable: true, width: 170, editor: textField},
+                {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 170, editor: textField},
+
+                {header: 'Skelta', dataIndex: 'skelta', sortable: true, width: 80, editor: textField},
+
+
+
+
                 {
                     header: 'Actividad Verificada',
                     dataIndex: 'actividad_verificada',
@@ -815,7 +797,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     width: 100,
                     editor: textField,
                     renderer: columnaColor
-
                 },
                 {
                     header: 'CIIU', dataIndex: 'ciiu', sortable: true, width: 50, editor: textField,
@@ -898,7 +879,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 140,
                     editor: textField
-                },
+                }
             ],
             viewConfig: {
                 forceFit: false,
@@ -1081,7 +1062,14 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     }
                     */
                 }
-            }
+            },
+            plugins: new Ext.ux.grid.ColumnHeaderGroup({
+                rows: [[
+                    {header: "SECRETARIA", colspan: 14, align: 'center'},
+                    {header: "ADMINISTRADO", colspan: 12, align: 'center'},
+                    { colspan: 1},
+                    {header: "TOTALES", colspan: 19, align: 'center'}]]
+            })
         });
         // fin ventana instruccion
 
@@ -1289,7 +1277,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 beforeedit: function (e) {
                     // si el operativo ya esta marcado como finalizado no se lo puede editar
                     if (acceso) {
-                        console.log(acceso)
                         //verifico que si no es administrador se bloque la edicion
                         return true;
                         // TODO reivsar este funcionamiento
@@ -1392,12 +1379,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     width: 40,
                     // renderer: personaReceptaDenuncia
                 },
-                /*                {
-                 header: 'Participantes',
-                 dataIndex: 'participantes',
-                 sortable: true,
-                 width: 55
-                 },*/
                 {
                     header: 'Punto Encuentro',
                     dataIndex: 'punto_encuentro_planificado',
@@ -1747,41 +1728,73 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                             checked: true,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'id',
+                            key: 'expediente',
                             scope: this,
-                            text: 'Código'
-                        },
-                        {
-                            checked: true,
-                            checkHandler: checkHandler,
-                            group: 'filterField',
-                            key: 'id_zonal',
-                            scope: this,
-                            text: 'Zona'
-                        },
-                        {
+                            text: 'Expediente'
+                        }
+                        , {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
                             key: 'id_persona_encargada',
                             scope: this,
                             text: 'Responsable'
-                        },
-                        {
+                        }
+                        , {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'punto_encuentro_planificado',
+                            key: 'detalle',
                             scope: this,
-                            text: 'Punto encuentro'
-                        },
-                        {
+                            text: 'Detalle'
+                        }
+                        , {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
                             key: 'observaciones',
                             scope: this,
                             text: 'Observaciones'
+                        }
+                        , {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'skelta',
+                            scope: this,
+                            text: 'Skelta'
+                        }
+                        , {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'predio',
+                            scope: this,
+                            text: 'Predio'
+                        }
+                        , {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'nombre_administrado',
+                            scope: this,
+                            text: 'Nombre Administrado'
+                        }
+                        , {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'nombre_establecimiento',
+                            scope: this,
+                            text: 'Nombre Establecimiento'
+                        }
+                        , {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
+                            key: 'cedula',
+                            scope: this,
+                            text: 'Cedula'
                         }
                     ]
                 })
@@ -1852,16 +1865,16 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                         storeInstruccion.load();
                                     }
                                 }, '-',
-                             // todo generar reporte  ????
-/*                                {
-                                    id: 'tb_repoteInstruccion',
-                                    iconCls: 'excel-icon',
-                                    handler: this.botonExportarReporteExpediente,
-                                    scope: this,
-                                    text: 'Generar Reporte',
-                                    tooltip: 'Se genera el reporte de los operativo',
-                                    disabled: true
-                                },*/
+                                // todo generar reporte  ????
+                                /*                                {
+                                                                    id: 'tb_repoteInstruccion',
+                                                                    iconCls: 'excel-icon',
+                                                                    handler: this.botonExportarReporteExpediente,
+                                                                    scope: this,
+                                                                    text: 'Generar Reporte',
+                                                                    tooltip: 'Se genera el reporte de los operativo',
+                                                                    disabled: true
+                                                                },*/
                                 /*'-',
                                  {
                                  xtype: 'checkbox',
