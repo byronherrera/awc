@@ -68,7 +68,7 @@ function selectInstruccion()
         $columnaBusqueda = $_POST['filterField'];
     }
 
-    if ((isset($_POST['filterText'])) && ($_POST['filterText'] != '' )) {
+    if ((isset($_POST['filterText'])) && ($_POST['filterText'] != '')) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
 
@@ -102,7 +102,6 @@ function selectInstruccion()
     }
 
     // fin para el caso de busquedas
-
 
 
     $usuarioLog = $os->get_member_id();
@@ -372,69 +371,58 @@ function insertInstruccion()
     ));
 }
 
-function verificaReincidenciaPredio($predio)
+//predio , reincidencia_predio
+function verificaReincidencia($valor, $id, $campo, $reincidenciaCampo)
 {
-    if (!is_null($predio)) {
-        global $os;
+    $valor = trim($valor);
+    global $os;
 
-        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE predio = '$predio' AND predio <> ' '";
+    $sql = "SELECT $campo FROM amc_expediente WHERE id = '$id';";
+    $result = $os->db->conn->query($sql);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+
+    $valorOld = trim($row [$campo]);
+
+
+    if ((!is_null($valorOld)) && ($valorOld != '')) {
+        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE $campo = '$valorOld';";
         $result = $os->db->conn->query($sql);
         $row = $result->fetch(PDO::FETCH_ASSOC);
-        if ($row['total'] >= 2) {
-
-            $sql = "UPDATE  amc_expediente SET reincidencia_predio = 0;
-                        UPDATE  amc_expediente SET reincidencia_predio = 1 WHERE predio in (SELECT predio FROM ( SELECT COUNT(*) as total , predio from amc_expediente  GROUP BY predio ) b WHERE total > 1);";
+        if ($row['total'] == 2) {
+            $sql = "UPDATE  amc_expediente SET $reincidenciaCampo = 0 WHERE $campo = '$valorOld';";
             $sql = $os->db->conn->prepare($sql);
             $sql->execute();
+        }
+        if ($row['total'] > 2) {
+            $sql = "UPDATE  amc_expediente SET $reincidenciaCampo = 0 WHERE id = '$id';";
+            $sql = $os->db->conn->prepare($sql);
+            $sql->execute();
+        }
+    }
 
+    if ((!is_null($valor)) && ($valor != '')) {
+        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE $campo = '$valor';";
+        $result = $os->db->conn->query($sql);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        if ($row['total'] >= 1) {
+            $sql = "UPDATE  amc_expediente SET $reincidenciaCampo = 1 WHERE $campo = '$valor';";
+            $sql = $os->db->conn->prepare($sql);
+            $sql->execute();
             return 1;
         } else {
+            $sql = "UPDATE  amc_expediente SET $reincidenciaCampo = 0 WHERE id = '$id';";
+            $sql = $os->db->conn->prepare($sql);
+            $sql->execute();
             return 0;
         }
     } else {
+        $sql = "UPDATE  amc_expediente SET $reincidenciaCampo = 0 WHERE $campo = '$valor';";
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
         return 0;
     }
 }
 
-function verificaReincidenciaAdministrado($ruc, $cedula)
-{
-    global $os;
-    // analizar para los casos que solo exista ruc o exista cedula
-    // se genera una
-    if ((!is_null($ruc)) or (!is_null($cedula))) {
-        $sql = "UPDATE  amc_expediente SET reincidencia_administrado = 0;
-                UPDATE  amc_expediente SET reincidencia_administrado = 1 WHERE ruc in (SELECT ruc FROM ( SELECT COUNT(*) as total , ruc from amc_expediente  GROUP BY ruc ) b WHERE total > 1);
-                UPDATE  amc_expediente SET reincidencia_administrado = 1 WHERE cedula in (SELECT cedula FROM ( SELECT COUNT(*) as total , cedula from amc_expediente  GROUP BY cedula ) b WHERE total > 1);";
-        $sql = $os->db->conn->prepare($sql);
-        $sql->execute();
-     //   return 1;
-    }
-    echo $ruc;
-    if ((!is_null($ruc)) && (strlen($ruc)> 0)) {
-        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE ruc = $ruc";
-        echo $sql;
-        $result = $os->db->conn->query($sql);
-        $row = $result->fetch(PDO::FETCH_ASSOC);
-        if ($row['total'] >= 2) {
-            return 1;
-        }
-    }
-    if ((!is_null($cedula)) && (strlen($cedula)> 0)) {
-        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE cedula = $cedula";
-        $result = $os->db->conn->query($sql);
-        $data = array();
-        $row = $result->fetch(PDO::FETCH_ASSOC);
-        if ($row['total'] >= 2) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    // si no encuentra coincidencia
-    return 0;
-
-}
 
 function updateInstruccion()
 {
@@ -524,6 +512,14 @@ function updateInstruccion()
             $data->id_estado = 1; // se le cambia el estado a asignado
         }
     }
+    $data->predio = trim ($data->predio);
+
+    $data->reincidencia_predio = verificaReincidencia($data->predio,$data->id, "predio" , "reincidencia_predio");
+
+    $data->reincidencia_administrado = verificaReincidencia($data->cedula,$data->id, "cedula" , "reincidencia_administrado");
+
+    $data->reincidencia_administrado = verificaReincidencia($data->ruc,$data->id, "ruc" , "reincidencia_administrado");
+
 
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
@@ -538,6 +534,10 @@ function updateInstruccion()
             $valBoolean = true;
         }
 
+        if (($clave == 'auto') || ($clave == 'dmi')|| ($clave == 'medida_cautelar')) {
+            if (gettype($valor) != "integer" ) $valor ='';
+        }
+
         if (isset($valor) and ($valor != '')) {
             if ($valBoolean)
                 $cadenaDatos = $cadenaDatos . $clave . " = " . $valor . " ,";
@@ -549,13 +549,10 @@ function updateInstruccion()
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
 
+
     $sql = "UPDATE amc_expediente SET  $cadenaDatos  WHERE amc_expediente.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
-
-
-    $data->reincidencia_predio = verificaReincidenciaPredio($data->predio);
-    $data->reincidencia_administrado = verificaReincidenciaAdministrado($data->ruc, $data->cedula);
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,

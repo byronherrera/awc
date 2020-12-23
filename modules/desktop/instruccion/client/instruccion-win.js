@@ -178,6 +178,18 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             return val;
         }
 
+
+        function reincidenciaAdministrado(val, meta) {
+            if (val == 0) {
+                // meta.style = "background-color:#e4765c;";
+                return '<span style="color:green;">No</span>';
+            } else if (val == 1) {
+                meta.style = "background-color:#fdb09f; text-align: center;";
+                return '<span style="color:white; font-weight: bolder;">Si</span>';
+            }
+            return val;
+        }
+
         function columnaColor(value, meta) {
             meta.css = 'blue';
             return value;
@@ -326,12 +338,21 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 datos: [
+                    {"id": 2012, "nombre": "2012"},
+                    {"id": 2013, "nombre": "2013"},
+                    {"id": 2014, "nombre": "2014"},
+                    {"id": 2015, "nombre": "2015"},
+                    {"id": 2016, "nombre": "2016"},
                     {"id": 2017, "nombre": "2017"},
                     {"id": 2018, "nombre": "2018"},
                     {"id": 2019, "nombre": "2019"},
                     {"id": 2020, "nombre": "2020"},
                     {"id": 2021, "nombre": "2021"},
-                    {"id": 2022, "nombre": "2022"}
+                    {"id": 2022, "nombre": "2022"},
+                    {"id": 2023, "nombre": "2023"},
+                    {"id": 2024, "nombre": "2024"},
+                    {"id": 2025, "nombre": "2025"},
+                    {"id": 2026, "nombre": "2026"}
                 ]
             }
         });
@@ -351,7 +372,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 var record = storeANILUAIN.getAt(index);
                 return record.get('nombre');
             }
-            meta.css = 'blue';
+
         }
 
         //fin combo años luae ANILUAIN
@@ -364,6 +385,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 datos: [
+                    {"id": ' ', "nombre": " "},
                     {"id": 0, "nombre": "CATEGORIA (I)"},
                     {"id": 1, "nombre": "CATEGORIA (II)"},
                     {"id": 2, "nombre": "CATEGORIA (III)"},
@@ -387,7 +409,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 var record = storeCATINTR.getAt(index);
                 return record.get('nombre');
             }
-            meta.css = 'blue';
+            // meta.css = 'blue';
         }
 
         //fin combo categoria instruccion CATINTR
@@ -398,6 +420,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 users: [
+                    {"id": ' ', "nombre": " "},
                     {"id": '1', "nombre": "AUTO FLAGRANCIA"},
                     {"id": '2', "nombre": "AUTO ORDINARIO"}
                 ]
@@ -430,6 +453,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             autoLoad: true,
             data: {
                 users: [
+                    {"id": ' ', "nombre": " "},
                     {"id": '1', "nombre": "ACTA INFRACCION"},
                     {"id": '2', "nombre": "INFORME TÉCNICO"}
                 ]
@@ -533,8 +557,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'id_tramite', allowBlank: true},
                 {name: 'id_acta', allowBlank: true},
                 {name: 'id_estado', allowBlank: true},
-                {name: 'detalle', allowBlank: true},
-                {name: 'observaciones', allowBlank: true},
+                {name: 'nota', allowBlank: true},
+                {name: 'actividad_realizar', allowBlank: true},
                 {name: 'clausura', type: 'boolean', allowBlank: true},
                 {name: 'skelta', allowBlank: true},
                 {name: 'predio', allowBlank: true},
@@ -706,10 +730,10 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     format: '00000000'
                 },
                 {
-                    header: 'Reincidencia Predio',
+                    header: 'Reincidencia</br>Predio',
                     dataIndex: 'reincidencia_predio',
                     sortable: true,
-                    width: 120,
+                    width: 76,
                     align: 'center',
                     menuDisabled: true,
                     renderer: reincidencia
@@ -718,30 +742,30 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Nombre Administrado',
                     dataIndex: 'nombre_administrado',
                     sortable: true,
-                    width: 120,
+                    width: 180,
                     editor: textField
                 },
                 {
                     header: 'Nombre Establecimiento',
                     dataIndex: 'nombre_establecimiento',
                     sortable: true,
-                    width: 120,
+                    width: 180,
                     editor: textField
                 },
                 {
-                    header: 'Reincidencia administrado',
+                    header: 'Reincidencia</br>administrado',
                     dataIndex: 'reincidencia_administrado',
                     sortable: true,
-                    width: 130,
+                    width: 76,
                     align: 'center',
                     menuDisabled: true,
-                    renderer: reincidencia
+                    renderer: reincidenciaAdministrado
                 },
                 {
                     header: 'Sector',
                     dataIndex: 'sector',
                     sortable: true,
-                    width: 120,
+                    width: 100,
                     editor: textField
                 },
 
@@ -754,12 +778,11 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: textField
                 },
                 {
-                    header: 'Cédula',
+                    header: 'Cédula/<br>Pasaporte',
                     dataIndex: 'cedula',
                     sortable: true,
                     width: 80,
                     editor: textField,
-                    xtype: 'numbercolumn',
                     format: '00000000'
                 },
 
@@ -767,52 +790,41 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'RUC',
                     dataIndex: 'ruc',
                     sortable: true,
-                    width: 120,
+                    width: 100,
                     editor: textField,
-                    xtype: 'numbercolumn',
                     format: '00000000'
                 },
                 {
-                    header: 'Casillero Judicial',
+                    header: 'Casillero<br>Judicial',
                     dataIndex: 'casillero_judicial',
                     sortable: true,
-                    width: 100,
+                    width: 70,
                     editor: textField,
                 },
                 // fin administrado
 
-                {header: 'Detalle', dataIndex: 'detalle', sortable: true, width: 170, editor: textField},
-                {header: 'Observaciones', dataIndex: 'observaciones', sortable: true, width: 170, editor: textField},
-
-                {header: 'Skelta', dataIndex: 'skelta', sortable: true, width: 80, editor: textField},
-
-
-
-
                 {
                     header: 'Actividad Verificada',
                     dataIndex: 'actividad_verificada',
-                    cls: 'blue',
                     sortable: true,
-                    width: 100,
+                    width: 160,
                     editor: textField,
                     renderer: columnaColor
                 },
                 {
-                    header: 'CIIU', dataIndex: 'ciiu', sortable: true, width: 50, editor: textField,
-                    renderer: columnaColor
+                    header: 'CIIU', dataIndex: 'ciiu', sortable: true, width: 50, editor: textField
                 },
                 {
-                    header: 'TIENE LUAE', dataIndex: 'luae', sortable: true, width: 70, align: 'center',
+                    header: 'Tiene<BR>LUAE', dataIndex: 'luae', sortable: true, width: 40, align: 'center',
                     editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
-                    , xtype: 'booleancolumn',
-                    renderer: columnaColor
+                    , xtype: 'booleancolumn'
                 },
                 {
-                    header: 'Año LUAE',
+                    header: 'Año<br>LUAE',
                     dataIndex: 'luae_anio',
                     sortable: true,
-                    width: 100,
+                    width: 50,
+                    align: 'center',
                     renderer: aniosluaeInstruccion,
                     editor: comboANILUAIN
                 },
@@ -849,25 +861,39 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: ordenanzasInstruccion,
                     editor: comboORDINSTR
                 },
-                {header: 'Artículo', dataIndex: 'id_articulo', sortable: true, width: 100, editor: textField},
-                {header: 'Literal', dataIndex: 'id_literal', sortable: true, width: 100, editor: textField},
+                {header: 'Artículo', dataIndex: 'id_articulo', sortable: true, width: 60, editor: textField},
+                {header: 'Numeroal / Literal', dataIndex: 'id_literal', sortable: true, width: 60, editor: textField},
                 {
-                    header: 'Auto', dataIndex: 'auto', sortable: true, width: 130,
+                    header: 'ACTO', dataIndex: 'auto', sortable: true, width: 120,
                     renderer: instruccionAuto,
                     editor: comboINSTRAUTO
                 },
                 {
-                    header: 'Dmi', dataIndex: 'dmi', sortable: true, width: 130,
+                    header: 'DMI<br>Actuación previa', dataIndex: 'dmi', sortable: true, width: 120, align: 'center',
                     renderer: instruccionDmi,
                     editor: comboINSTRDMI
                 },
                 {
-                    header: 'Informe Otros', dataIndex: 'informe_otros', sortable: true, width: 90, align: 'center',
-                    editor: {xtype: 'checkbox'}, falseText: 'No', menuDisabled: true, trueText: 'Si'
-                    , xtype: 'booleancolumn'
+                    header: 'Otros<br>Actuación previa',
+                    dataIndex: 'informe_otros',
+                    sortable: true,
+                    width: 90,
+                    align: 'center',
+                    editor: {xtype: 'checkbox'},
+                    falseText: 'No',
+                    menuDisabled: true,
+                    trueText: 'Si'
+                    ,
+                    xtype: 'booleancolumn'
                 },
                 {header: 'Entidad', dataIndex: 'entidad', sortable: true, width: 100, editor: textField},
-                {header: 'Informe', dataIndex: 'informe', sortable: true, width: 120, editor: textField},
+                {
+                    header: 'Informe/Actas<br>N° DE ACTUACIÓN PREVIA',
+                    dataIndex: 'informe',
+                    sortable: true,
+                    width: 120,
+                    editor: textField
+                },
                 {
                     header: 'Medida Cautelar', dataIndex: 'medida_cautelar', sortable: true, width: 180,
                     renderer: instruccionMedidaCautelar,
@@ -879,7 +905,17 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 140,
                     editor: textField
-                }
+                },
+                {header: 'Nota', dataIndex: 'nota', sortable: true, width: 170, editor: textField},
+                {
+                    header: 'Actividad Realizar',
+                    dataIndex: 'actividad_realizar',
+                    sortable: true,
+                    width: 170,
+                    editor: textField
+                },
+                {header: 'Skelta', dataIndex: 'skelta', sortable: true, width: 80, editor: textField, hidden: true}
+
             ],
             viewConfig: {
                 forceFit: false,
@@ -1067,8 +1103,14 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 rows: [[
                     {header: "SECRETARIA", colspan: 14, align: 'center'},
                     {header: "ADMINISTRADO", colspan: 12, align: 'center'},
-                    { colspan: 1},
-                    {header: "TOTALES", colspan: 19, align: 'center'}]]
+                    {colspan: 1},
+                    {header: "LUAE", colspan: 4, align: 'center'},
+                    {header: "CONSTRUCCIONES", colspan: 2, align: 'center'},
+                    {header: "ORDENANZA", colspan: 3, align: 'center'},
+                    {header: "HERRAMIENTA APLICADA", colspan: 6, align: 'center'},
+                    {header: "DESPACHO", colspan: 1, align: 'center'},
+                    { colspan: 3, align: 'center'}
+                ]]
             })
         });
         // fin ventana instruccion
@@ -1108,11 +1150,11 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 }]
             }, {
                 xtype: 'textarea',
-                id: 'detalle',
+                id: 'nota',
                 fieldLabel: 'Resumen Expediente',
                 height: 145,
                 anchor: '98%',
-                name: 'detalle'
+                name: 'nota'
             }],
             defaults: {
                 listeners: {
@@ -1344,7 +1386,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     renderer: formatDate
                 },
                 {
-                    header: 'Fecha Fin',
+                    header: 'Fecha Entrega',
                     dataIndex: 'fecha_fin_planificacion',
                     sortable: true,
                     width: 37,
@@ -1744,9 +1786,9 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
-                            key: 'detalle',
+                            key: 'actividad_verificada',
                             scope: this,
-                            text: 'Detalle'
+                            text: 'Actividad Verificada'
                         }
                         , {
                             checked: false,
