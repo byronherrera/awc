@@ -108,6 +108,9 @@ function updateAcciones()
             else
                 $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
         }
+        if ($clave == 'actividad_etapa')  {
+            if ($valor == " " ) $valor ='';
+        }
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
     $sql = "UPDATE amc_expedientes_procesos_administrativos SET  $cadenaDatos  WHERE id = '$data->id' ";

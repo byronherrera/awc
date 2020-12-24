@@ -63,6 +63,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             return value ? value.dateFormat('Y-m-d H:i') : '';
         }
 
+        var fecha = new Ext.form.DateField({format: 'Y-m-d'});
+
 
         // inicio combos instruccion
 
@@ -331,6 +333,39 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
 
         //fin combo Estado Recepcion Expediente Instruccion ESTEXP
 
+        //inicio combo Estado Recepcion Expediente Instruccion ESTEXP
+        storeACTIVIDADETAPA = new Ext.data.JsonStore({
+            root: 'datos',
+            fields: ['id', 'nombre'],
+            autoLoad: true,
+            data: {
+                datos: [
+                    {"id": '', "nombre": " "},
+                    {"id": 1, "nombre": "REABRE EXPEDIENTE"},
+                    {"id": 2, "nombre": "NO REABRE EXPEDIENTE"}
+                ]
+            }
+        });
+
+        var comboACTIVIDADETAPA = new Ext.form.ComboBox({
+            id: 'comboACTIVIDADETAPA',
+            store: storeACTIVIDADETAPA,
+            valueField: 'id',
+            displayField: 'nombre',
+            triggerAction: 'all',
+            mode: 'local'
+        });
+
+        function estadoACTIVIDADETAPA(id) {
+            var index = storeACTIVIDADETAPA.find('id', id);
+            if (index > -1) {
+                var record = storeACTIVIDADETAPA.getAt(index);
+                return record.get('nombre');
+            }
+        }
+
+        //fin combo Estado Recepcion Expediente Instruccion ESTEXP
+
         //inicio combo años luae ANILUAIN
         storeANILUAIN = new Ext.data.JsonStore({
             root: 'datos',
@@ -386,10 +421,10 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
             data: {
                 datos: [
                     {"id": ' ', "nombre": " "},
-                    {"id": 0, "nombre": "CATEGORIA (I)"},
-                    {"id": 1, "nombre": "CATEGORIA (II)"},
-                    {"id": 2, "nombre": "CATEGORIA (III)"},
-                    {"id": 3, "nombre": "CATEGORIA DESCONCIDA"}
+                    {"id": 1, "nombre": "CATEGORIA (I)"},
+                    {"id": 2, "nombre": "CATEGORIA (II)"},
+                    {"id": 3, "nombre": "CATEGORIA (III)"},
+                    {"id": 4, "nombre": "CATEGORIA DESCONCIDA"}
                 ]
             }
         });
@@ -588,7 +623,10 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'entidad', allowBlank: true},
                 {name: 'informe', allowBlank: true},
                 {name: 'medida_cautelar', allowBlank: true},
-                {name: 'ultima_actividad', allowBlank: true}
+                {name: 'ultima_actividad', allowBlank: true},
+                {name: 'dias_transcurridos', allowBlank: true},
+                {name: 'fecha_ultima_notificacion', type: 'date', dateFormat: 'c', allowBlank: true},
+
             ]
         });
         var writerInstruccion = new Ext.data.JsonWriter({
@@ -673,7 +711,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     //, editor: editorDate
                 },
                 {
-                    header: 'Fecha Fin',
+                    header: 'Fecha Entrega',
                     dataIndex: 'fecha_fin',
                     sortable: true,
                     width: 100,
@@ -906,6 +944,22 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     width: 140,
                     editor: textField
                 },
+                {
+                    header: 'Fecha última<br>notificación',
+                    dataIndex: 'fecha_ultima_notificacion',
+                    sortable: true,
+                    width: 100,
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    editor: fecha
+
+                },
+                {
+                    header: 'Dias<br>Transcurridos',
+                    dataIndex: 'dias_transcurridos',
+                    sortable: true,
+                    align: 'center',
+                    width: 80
+                },
                 {header: 'Nota', dataIndex: 'nota', sortable: true, width: 170, editor: textField},
                 {
                     header: 'Actividad Realizar',
@@ -915,7 +969,6 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     editor: textField
                 },
                 {header: 'Skelta', dataIndex: 'skelta', sortable: true, width: 80, editor: textField, hidden: true}
-
             ],
             viewConfig: {
                 forceFit: false,
@@ -1108,8 +1161,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     {header: "CONSTRUCCIONES", colspan: 2, align: 'center'},
                     {header: "ORDENANZA", colspan: 3, align: 'center'},
                     {header: "HERRAMIENTA APLICADA", colspan: 6, align: 'center'},
-                    {header: "DESPACHO", colspan: 1, align: 'center'},
-                    { colspan: 3, align: 'center'}
+                    {header: "DESPACHO", colspan: 3, align: 'center'},
+                    {colspan: 3, align: 'center'}
                 ]]
             })
         });
@@ -1207,6 +1260,8 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 {name: 'sancion', type: 'boolean', allowBlank: true},
                 {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: true},
                 {name: 'num_resolucion', allowBlank: true},
+                {name: 'num_memo', allowBlank: true},
+                {name: 'actividad_etapa', allowBlank: true},
                 {name: 'observaciones', allowBlank: true}
             ]
         });
@@ -1286,16 +1341,34 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'fecha',
                     sortable: true,
                     width: 40,
-                    renderer: formatDate,
-                    editor: editorDate
+                    renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+                    editor: fecha
 
                 },
                 {
-                    header: 'Número documento',
+                    header: 'Número Resolución',
                     dataIndex: 'num_resolucion',
                     sortable: true,
                     width: 120,
                     editor: textField
+                },
+                {
+                    header: 'Número Memo',
+                    dataIndex: 'num_memo',
+                    sortable: true,
+                    width: 120,
+                    editor: textField
+                },
+                {
+                    header: 'Actividad Etapa',
+                    dataIndex: 'actividad_etapa',
+                    sortable: true,
+                    width: 120,
+                    editor: textField,
+                    renderer: estadoACTIVIDADETAPA ,
+                    editor: comboACTIVIDADETAPA
+
+
                 },
                 {
                     header: 'Observaciones',
