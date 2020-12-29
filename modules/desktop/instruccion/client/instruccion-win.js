@@ -1365,7 +1365,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     sortable: true,
                     width: 120,
                     editor: textField,
-                    renderer: estadoACTIVIDADETAPA ,
+                    renderer: estadoACTIVIDADETAPA,
                     editor: comboACTIVIDADETAPA
 
 
@@ -1979,7 +1979,70 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                         storeInstruccion.baseParams.finalizados = isChecked;
                                         storeInstruccion.load();
                                     }
-                                }, '-',
+                                },
+                                '-',
+                                {
+                                    xtype: 'form',
+                                    fileUpload: true,
+                                    width: 300,
+                                    frame: true,
+                                    autoHeight: 60,
+                                    defaults: {
+                                        anchor: '100%',
+                                        allowBlank: false
+                                    },
+                                    id: "fp",
+                                    items: [
+                                        {
+                                            xtype: 'fileuploadfield',
+                                            id: 'form-file',
+                                            emptyText: 'Seleccione documento a subir',
+                                            fieldLabel: 'Documento',
+                                            name: 'doc-path',
+                                            regex: /^.*.(xlsx|XLSX|xls|XLS)$/,
+                                            regexText: 'Solo pdf ',
+                                            buttonText: '',
+                                            //buttonOnly: true,
+                                            buttonCfg: {
+                                                iconCls: 'ux-start-menu-submenu'
+                                            }
+                                        }
+                                    ]
+                                },
+                                '-',
+                                {
+                                    text: "Migrar Archivo",
+                                    scope: this,
+                                    handler: function () {
+                                        if (Ext.getCmp('fp').getForm().isValid()) {
+                                            Ext.getCmp('fp').getForm().submit({
+                                                url: urlInstruccion + 'migrar.php',
+                                              //  params: {data: libroDiarioSeleccionado},
+                                                waitMsg: 'Subiendo Documento...',
+                                                success: function (fp, o) {
+
+                                                    //storeOperativosImagenes.load({params: {id_operativo: selectOperativos}});
+                                                    //Ext.getCmp('fp').getForm().reset();
+                                                },
+                                                failure: function (form, action) {
+                                                    var errorJson = JSON.parse(action.response.responseText);
+                                                    Ext.Msg.show({
+                                                        title: 'Error '
+                                                        , msg: errorJson.msg
+                                                        , modal: true
+                                                        , icon: Ext.Msg.ERROR
+                                                        , buttons: Ext.Msg.OK
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    },
+                                    id: 'subirimagen',
+                                    iconCls: 'subir-icon',
+                                    //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                                    disabled: false
+                                },
+
                                 // todo generar reporte  ????
                                 /*                                {
                                                                     id: 'tb_repoteInstruccion',
@@ -2413,6 +2476,34 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                 if (btn == 'yes') {
                     valueParams = JSON.stringify(this.formConsultaDocumentos.getForm().getValues());
                     window.location.href = 'modules/desktop/instruccion/server/descargaReporteInstruccioncalendario2.inc.php?param=' + valueParams;
+                }
+            }
+        });
+    },
+    botonMigrateData: function () {
+        Ext.Msg.show({
+            title: 'Warning',
+            msg: 'The migration will overwrite the previous information<br><br>Do you wish to continue?',
+            scope: this,
+            icon: Ext.Msg.WARNING,
+            buttons: Ext.Msg.YESNO,
+            fn: function (btn) {
+                if (btn === 'yes') {
+
+                    Ext.Ajax.request({
+
+                        url: 'modules/desktop/instruccion/server/migrar.php',
+                        waitMsg: 'Import data ...',
+                        success: function (response, opts) {
+                            // var obj = Ext.decode(response.responseText);
+                            // console.dir(obj);
+                            console.dir("se sube");
+                        },
+                        failure: function (response, opts) {
+                            console.log('server-side failure with status code ');
+                            alert("error")
+                        }
+                    });
                 }
             }
         });

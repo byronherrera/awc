@@ -1,0 +1,54 @@
+1
+UPDATE amc_proc_solicitud_detalle SET  fecha_envio = '2020-10-27T14:19:20'  WHERE id = '59' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  fecha_envio = '2020-10-27T14:19:20'  WHERE id = '59' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = ' Lorem ipsum dolor sit amet, consessctetur ad',fecha_envio = '2020-10-27T14:19:20'  WHERE id = '59' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = ' Lorem ipsum dolor sit amet, consessctetur ad1111',fecha_envio = '2020-10-27T14:19:20'  WHERE id = '59' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = ' Lorem ipsum dolor sit amet, consessctetur ad11111',fecha_envio = '2020-10-27T14:19:20'  WHERE id = '59' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = ' Lorem ipsum dolor sit amet, consessctetur ad11111asfa',fecha_envio = '2020-10-27T14:19:20'  WHERE id = '59' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = ' Lorem ipsum dolor sit amet, consessctetur ad11111asfa11',fecha_envio = '2020-10-27T14:19:20'  WHERE id = '59' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = ' Lorem ipsum dolor sit amet, consessctetur 111',fecha_envio = '2020-10-27T14:19:20'  WHERE id = '59' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = ' Lorem ipsum dolor sit amet, consessctetu1r 111',fecha_envio = '2020-10-27T14:19:20'  WHERE id = '59' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = 'Su pedido fue realizado a la zonal correspondiente se estia su respeusta en 15 habilesddfd',fecha_envio = '2020-11-04T14:07:15'  WHERE id = '63' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = 'Enviadno una respuesta con sentido '  WHERE id = '65' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = 'Enviadno una respuesta con asdfasd',fecha_envio = '2020-11-04T16:08:17'  WHERE id = '65' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = 'Enviadno una respuesta con texto lo mas mas ',fecha_envio = '2020-11-04T16:08:17'  WHERE id = '65' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = 'Su pedido fue realziado mediante oficio no adfasdfasdfa'  WHERE id = '64' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = 'Mensaje 1'  WHERE id = '65' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = 'Mensaje 2'  WHERE id = '61' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = 'se envio a la zonal '  WHERE id = '68' 
+
+1
+UPDATE amc_proc_solicitud_detalle SET  contenido = 'las oadfa adfa '  WHERE id = '66' 
+
