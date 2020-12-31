@@ -2571,6 +2571,14 @@ QoDesk.OperativosWindow = Ext.extend(Ext.app.Module, {
                             checked: false,
                             checkHandler: checkHandler,
                             group: 'filterField',
+                            key: 'zona',
+                            scope: this,
+                            text: 'Lugar intervención'
+                        },
+                        {
+                            checked: false,
+                            checkHandler: checkHandler,
+                            group: 'filterField',
                             key: 'observaciones',
                             scope: this,
                             text: 'Observaciones'

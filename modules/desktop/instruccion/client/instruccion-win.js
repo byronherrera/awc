@@ -2017,7 +2017,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                         if (Ext.getCmp('fp').getForm().isValid()) {
                                             Ext.getCmp('fp').getForm().submit({
                                                 url: urlInstruccion + 'migrar.php',
-                                              //  params: {data: libroDiarioSeleccionado},
+                                              //JSON.parse(action.response.responseText);  params: {data: libroDiarioSeleccionado},
                                                 waitMsg: 'Subiendo Documento...',
                                                 success: function (fp, o) {
 
@@ -2025,7 +2025,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                                     //Ext.getCmp('fp').getForm().reset();
                                                 },
                                                 failure: function (form, action) {
-                                                    var errorJson = JSON.parse(action.response.responseText);
+                                                    //var errorJson = JSON.parse(action.response.responseText);
                                                     Ext.Msg.show({
                                                         title: 'Error '
                                                         , msg: errorJson.msg
