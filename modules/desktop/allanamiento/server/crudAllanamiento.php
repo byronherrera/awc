@@ -235,7 +235,7 @@ function enviar()
                  codigo_sitra = '$codigoSitra',
                  observacion_sitra = '$observacionSitra',
                  id_usuario = '$usuario',
-                 fecha_procesado = CURDATE()
+                 fecha_procesado = NOW()
               WHERE id = '$data->id'; 
               
               INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)

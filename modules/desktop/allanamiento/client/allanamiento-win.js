@@ -475,6 +475,134 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         });
         //Fin Tab Historico
 
+        //Inicio Tab Archivos
+        var proxyArchivo = new Ext.data.HttpProxy({
+            api: {
+
+                create: urlAllanamientoLocal + "crudAllanamiento.php?operation=insertArch",
+                read: urlAllanamientoLocal + "crudAllanamiento.php?operation=selectArch",
+                update: urlAllanamientoLocal + "crudAllanamiento.php?operation=updateArch",
+                destroy: urlAllanamientoLocal + "crudAllanamiento.php?operation=deleteArch"
+            },
+            listeners: {
+                exception: function (proxy, type, action, options, response, arg) {
+                    if (typeof response.message !== 'undefined') {
+                        if (response.message != '') {
+                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, response.message);
+                        }
+                    }
+                }
+            }
+        });
+        var readerArchivo = new Ext.data.JsonReader({
+            totalProperty: 'total',
+            successProperty: 'success',
+            messageProperty: 'message',
+            idProperty: 'id',
+            root: 'data',
+            fields: [
+                {name: 'id', allowBlank: false},
+                {name: 'id_proc_rec_resp', allowBlank: false},
+                {name: 'codigo_sitra', allowBlank: false},
+                {name: 'observacion', allowBlank: false},
+                {name: 'id_usuario', allowBlank: false},
+                {name: 'nombre_usuario', allowBlank: false},
+                {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: false},
+            ]
+        });
+        var writerArchivo = new Ext.data.JsonWriter({
+            encode: true,
+            writeAllFields: true
+        });
+        var storeArchivo = new Ext.data.Store({
+            id: "storeArchivo",
+            proxy: proxyArchivo,
+            reader: readerArchivo,
+            writer: writerArchivo,
+            autoSave: false
+        });
+        this.storeArchivo = storeArchivo;
+        this.gridArchivo = new Ext.grid.EditorGridPanel({
+            autoHeight: true,
+            autoScroll: true,
+            store: storeArchivo,
+            columns: [
+                new Ext.grid.RowNumberer(),
+                {
+                    header: 'id',
+                    dataIndex: 'id',
+                    sortable: true,
+                    width: 80,
+                    hidden: true
+                }, {
+                    header: 'id_proc_rec_resp',
+                    dataIndex: 'id_proc_rec_resp',
+                    sortable: true,
+                    width: 80,
+                    hidden: true
+                },
+                {
+                    header: 'SITRA',
+                    dataIndex: 'codigo_sitra',
+                    sortable: true,
+                    width: 80
+                },
+                {
+                    header: 'observacion',
+                    dataIndex: 'observacion',
+                    sortable: true,
+                    width: 300
+                },
+                {
+                    header: 'id_usuario',
+                    dataIndex: 'id_usuario',
+                    sortable: true,
+                    width: 50,
+                    hidden: true,
+                    align: 'left',
+                },
+                {
+                    header: 'usuario',
+                    dataIndex: 'nombre_usuario',
+                    sortable: true,
+                    width: 250,
+                    align: 'left',
+                },
+                {
+                    header: 'fecha',
+                    dataIndex: 'fecha',
+                    sortable: true,
+                    width: 100,
+                    renderer: formatDate
+                }
+            ],
+            clicksToEdit: 1,
+            viewConfig: {
+                forceFit: true,
+                getRowClass: function (record, index) {
+
+                }
+            },
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true,
+                listeners: {
+                    rowselect: function (sm, row, rec) {
+                        this.record = rec;
+                        /*cargar el formulario*/
+                    }
+                }
+            }),
+            border: false,
+            stripeRows: true,
+            // paging bar on the bottom
+            listeners: {
+                beforeedit: function (e) {
+                    // en caso de no enviar todavia el mensaje se puede editar
+                }
+            }
+        });
+        //Fin Tab Archivos
+
         var win = desktop.getWindow('layout-win');
 
         if (!win) {
@@ -532,6 +660,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 })
                 , text: 'Código trámite'
             });
+            //Detalle Datos Personales
             this.formDetalle = new Ext.FormPanel({
                 id: 'formDetalle',
                 cls: 'no-border',
@@ -542,7 +671,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         scope: this,
                         handler: this.enviarAllanamiento,
                         iconCls: 'save-icon',
-                        disabled: false,
+                        disabled: true,
                         id: 'tabEnviarAllanamiento',
                         formBind: true
                     }, {
@@ -550,7 +679,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         scope: this,
                         handler: this.devolverAllanamiento,
                         iconCls: 'delete-icon',
-                        disabled: false,
+                        disabled: true,
                         id: 'tabDevolverAllanamiento',
                         formBind: true
                     },
@@ -797,7 +926,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                                 }
                                             }
                                         }
-                                    }
+                                    },
                                 ]
                             }
                         ]
@@ -805,6 +934,103 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
 
                 ]
             });
+
+            //Detalle Carga de Archivos
+            this.formCargaArchivos = new Ext.FormPanel(
+                {
+                    id: 'formCargaArchivos',
+                    cls: 'no-border',
+                    width: winWidth - 24,
+                    tbar: [
+                        {
+                            xtype: 'form',
+                            fileUpload: true,
+                            width: 300,
+                            frame: true,
+                            autoHeight: 60,
+                            defaults: {
+                                anchor: '100%',
+                                allowBlank: false
+
+                            },
+                            id: "fp",
+                            items: [
+                                {
+                                    xtype: 'fileuploadfield',
+                                    id: 'form-file',
+                                    emptyText: 'Seleccione documento a subir',
+                                    fieldLabel: 'Documento',
+                                    name: 'doc-path',
+                                    regex: /^.*.(pdf|PDF|jpg|JPG|png|PNG)$/,
+                                    regexText: 'Solo pdf ',
+                                    buttonText: '',
+                                    //buttonOnly: true,
+                                    buttonCfg: {
+                                        iconCls: 'ux-start-menu-submenu'
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            text: "Subir Archivo",
+                            scope: this,
+                            handler: function () {
+                                console.log(">>>>>Solicitud<<<<<<",solicitudSelected.data)
+                                if (solicitudSelected.data != '') {
+                                    if (Ext.getCmp('fp').getForm().isValid()) {
+                                        Ext.getCmp('fp').getForm().submit({
+                                            url: urlAllanamientoLocal + 'file-upload.php',
+                                            params: {data: Ext.util.JSON.encode(solicitudSelected.data)},
+                                            waitMsg: 'Subiendo Documento...',
+                                            success: function (fp, o) {
+
+                                                //storeOperativosImagenes.load({params: {id_operativo: selectOperativos}});
+                                                //Ext.getCmp('fp').getForm().reset();
+                                            },
+                                            failure: function (form, action) {
+                                                var errorJson = JSON.parse(action.response.responseText);
+                                                Ext.Msg.show({
+                                                    title: 'Error '
+                                                    , msg: errorJson.msg
+                                                    , modal: true
+                                                    , icon: Ext.Msg.ERROR
+                                                    , buttons: Ext.Msg.OK
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                            },
+                            id: 'subirimagen',
+                            iconCls: 'subir-icon',
+                            //disabled: this.app.isAllowedTo('accesosAdministradorOpe', this.id) ? false : true
+                            disabled: false
+                        },
+                    ],
+                    items: [
+                        {
+                          activeTab: 0,
+                          autoWidth: true,
+                          cls: 'no-border',
+                          layout: 'column',
+                          items: [
+                            {
+                                title: 'Archivos',
+                                layout: 'column',
+                                id: 'tabArchivos',
+                                height: winHeight - 325,
+                                width: winWidth,
+                                items: this.gridArchivo,
+                                disabled: false,
+                                autoScroll: true
+                            },
+                          ],
+                        }
+                    ]
+                }
+            );
+
+
             win = desktop.createWindow({
                 id: 'grid-win-allanamiento',
                 title: 'Gestión Allanamiento',
@@ -873,6 +1099,16 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                                     height: winHeight - 325,
                                                     width: winWidth,
                                                     items: this.formDetalle,
+                                                    disabled: false,
+                                                    autoScroll: true
+                                                },
+                                                {
+                                                    title: 'Archivos',
+                                                    layout: 'column',
+                                                    id: 'tabArchivo',
+                                                    height: winHeight - 325,
+                                                    width: winWidth,
+                                                    items: this.formCargaArchivos,
                                                     disabled: false,
                                                     autoScroll: true
                                                 },
@@ -978,7 +1214,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Se asignó a la siguiente fase exitosamente...');
                         },
                         failure: function (response, opts) {
-                            console.log(">>>Respuesta ",response);
                             var errorJson = JSON.parse(response.responseText);
                             Ext.Msg.show({
                                 title: 'Error...'
@@ -1038,7 +1273,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Se devolvió a la fase exitosamente...');
                         },
                         failure: function (response, opts) {
-                            console.log(">>>Respuesta Dev ",response);
                             var errorJson = JSON.parse(response.responseText);
                             Ext.Msg.show({
                                 title: 'Error...'
@@ -1088,7 +1322,9 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         });
     },
     requestAllanamientoData: function () {
-    this.storeAllanamiento.load();
+      Ext.getCmp('formDetalle').getForm().reset();
+      this.storeAllanamiento.load();
+      this.storeHistorico.load();
     },
     requestAllanamientoDataExport: function () {
         Ext.Msg.show({
