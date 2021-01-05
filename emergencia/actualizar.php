@@ -103,7 +103,7 @@ if (!class_exists('os')) {
                                placeholder="Ingrese el numero de acta de infración">
                     </div>
 
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Imagen Cédula </label>
@@ -115,7 +115,7 @@ if (!class_exists('os')) {
                         </div>
                     </div>
 
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Fotografía Infracción</label>
@@ -128,7 +128,7 @@ if (!class_exists('os')) {
                         </div>
                     </div>
 
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Acto de Inicio</label>
@@ -141,7 +141,7 @@ if (!class_exists('os')) {
                         </div>
                     </div>
 
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Expediente</label>
@@ -151,6 +151,44 @@ if (!class_exists('os')) {
                         </div>
                         <div class="col-md-6">
                             <div id="mostrarimagen4"></div>
+                        </div>
+                    </div>
+
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
+                        <div class="col-md-6">
+                            <div class="custom-file">
+                                <label class="custom-file-label" for="archivo">Cierre de Instrución</label>
+                                <input type="file" class="custom-file-input" id="archivo5" lang="es"
+                                       name="archivo5">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="mostrarimagen5"></div>
+                        </div>
+                    </div>
+
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
+                        <div class="col-md-6">
+                            <div class="custom-file">
+                                <label class="custom-file-label" for="archivo">Certificación</label>
+                                <input type="file" class="custom-file-input" id="archivo6" lang="es"
+                                       name="archivo6">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="mostrarimagen6"></div>
+                        </div>
+                    </div>
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
+                        <div class="col-md-6">
+                            <div class="custom-file">
+                                <label class="custom-file-label" for="archivo">Listado de expedientes publicados</label>
+                                <input type="file" class="custom-file-input" id="archivo7" lang="es"
+                                       name="archivo7">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="mostrarimagen7"></div>
                         </div>
                     </div>
 
@@ -271,7 +309,7 @@ if (!class_exists('os')) {
                             if (JSON.parse(data.data[0]['imagenacto']) != null)
                                 imagenes = JSON.parse(data.data[0]['imagenacto']);
                             else
-                                imagenes = JSON.parse('{"archivo1":null,"archivo2":null,"archivo3":null,"archivo4":null}');
+                                imagenes = JSON.parse('{"archivo1":null,"archivo2":null,"archivo3":null,"archivo4":null,"archivo5":null,"archivo6":null,"archivo7":null}');
 
                             $urlArchivos = 'https://amcmatis.quito.gob.ec/emergencia/';
 
@@ -280,6 +318,9 @@ if (!class_exists('os')) {
                             $('#mostrarimagen2').html(validaImagen(imagenes.archivo2, $urlArchivos))
                             $('#mostrarimagen3').html(validaImagen(imagenes.archivo3, $urlArchivos))
                             $('#mostrarimagen4').html(validaImagen(imagenes.archivo4, $urlArchivos))
+                            $('#mostrarimagen5').html(validaImagen(imagenes.archivo5, $urlArchivos))
+                            $('#mostrarimagen6').html(validaImagen(imagenes.archivo6, $urlArchivos))
+                            $('#mostrarimagen7').html(validaImagen(imagenes.archivo7, $urlArchivos))
 
 
                             $('#geoposicionamiento').val(data.data[0]['geoposicionamiento'])
@@ -297,12 +338,20 @@ if (!class_exists('os')) {
                             $('#actainfraccion').val('')
                             $('#archivo1').html('')
                             $('#archivo2').html('')
+                            $('#archivo3').html('')
+                            $('#archivo4').html('')
+                            $('#archivo5').html('')
+                            $('#archivo6').html('')
+                            $('#archivo7').html('')
                             $('#geoposicionamiento').val('')
 
                             $('#mostrarimagen1').html('');
                             $('#mostrarimagen2').html('');
                             $('#mostrarimagen3').html('');
                             $('#mostrarimagen4').html('');
+                            $('#mostrarimagen5').html('');
+                            $('#mostrarimagen6').html('');
+                            $('#mostrarimagen7').html('');
 
 
                             $('.mensajecedula').html("")

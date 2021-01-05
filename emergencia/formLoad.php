@@ -310,6 +310,9 @@ function actualizacion()
     ingresaImagen ('archivo2', $cedula, 'fotogracia' );
     ingresaImagen ('archivo3', $cedula, 'actoinicio' );
     ingresaImagen ('archivo4', $cedula, 'expediente' );
+    ingresaImagen ('archivo5', $cedula, 'cierre' );
+    ingresaImagen ('archivo6', $cedula, 'certificacion' );
+    ingresaImagen ('archivo7', $cedula, 'listadocertificado' );
 
     if (count($listado) > 0)
         $data->imagenacto = json_encode($listado);
@@ -488,6 +491,60 @@ function ingresaNuevoProceso()
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
             $listado['archivo4'] = "uploads/" . basename($today . '-expediente-' . $nombreArchivo);
+        }
+    }
+    if ($_FILES['archivo5']['name'] != null) {
+        $temp_file_name = $_FILES['archivo5']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo5']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo5']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-cierre-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            $listado['archivo5'] = "uploads/" . basename($today . '-cierre-' . $nombreArchivo);
+        }
+    }
+    if ($_FILES['archivo6']['name'] != null) {
+        $temp_file_name = $_FILES['archivo6']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo6']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo6']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-certificacion-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            $listado['archivo6'] = "uploads/" . basename($today . '-certificacion-' . $nombreArchivo);
+        }
+    }
+    if ($_FILES['archivo7']['name'] != null) {
+        $temp_file_name = $_FILES['archivo7']['tmp_name'];
+
+        $original_file_name = $_FILES['archivo7']['name'];
+        $uploaddir = __DIR__ . "/uploads/";
+
+        $nombreArchivo = $_FILES['archivo7']['name'];
+
+        $vowels = array("[", "]");
+        $nombreArchivo = str_replace($vowels, "", $nombreArchivo);
+        $today = date("Y-n-j-H-i");
+
+        $uploadfile = $uploaddir . basename($today . '-listadocertificado-' . $nombreArchivo);
+
+        if (move_uploaded_file($temp_file_name, $uploadfile)) {
+            $listado['archivo7'] = "uploads/" . basename($today . '-listadocertificado-' . $nombreArchivo);
         }
     }
 

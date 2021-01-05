@@ -217,7 +217,16 @@ function updateOrdenanzas()
     // genero el listado de valores a insertar
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
-        $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+        if ($clave == 'url_documento')
+            if ($valor == '')
+                $valor = 'NULL';
+
+        if (strval( $valor ) != '')
+            if ($valor != 'NULL')
+                $cadenaDatos = $cadenaDatos . $clave . " = '" . $valor . "',";
+            else
+                $cadenaDatos = $cadenaDatos . $clave . " = " . $valor . ",";
+
     }
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 

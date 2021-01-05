@@ -9,94 +9,21 @@ if (!$os->session_exists()) {
 }
 
 
-function verificarAnteriorOperativo($id_operativo)
-{
-    global $os;
-
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_expediente WHERE id = $id_operativo ";
-    $result = $os->db->conn->query($sql);
-    $data = array();
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    if ($row) {
-        return $row;
-    } else {
-        return $row;
-    }
-
-
-}
-
-function selectProcedimientosCadena($procLista)
-{
-    global $os;
-    if (isset($procLista)) {
-        $os->db->conn->query("SET NAMES 'utf8'");
-        $sql = "SELECT amc_procedimientos.nombre FROM amc_procedimientos WHERE id in ( $procLista ) ORDER BY id";
-        $result = $os->db->conn->query($sql);
-        $data = array();
-
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $data[] = $row ['nombre'];
-        }
-        return implode(",\n", $data);
-    } else {
-        return '';
-    }
-    $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT amc_procedimientos.nombre FROM amc_procedimientos WHERE id in ( $procLista ) ORDER BY id";
-    $result = $os->db->conn->query($sql);
-    $data = array();
-
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        $data[] = $row ['nombre'];
-    }
-    return implode(",\n", $data);
-}
-
 function selectInstruccion()
 {
     global $os;
-    //TODO cambiar columna por defecto en busquedas
-    $columnaBusqueda = 'id';
+
 
     $where = '';
-    $usuarioLog = $os->get_member_id();
-    if (isset($_POST['accesosInstruccion'])) {
-        $accesosInstruccion = $_POST['accesosInstruccion'];
-        if ($accesosInstruccion == 'true')
-            $where = " WHERE $usuarioLog = id_persona_encargada ";
-    }
 
-
-    if (isset($_POST['accesosAdministradorIns'])) {
-        $accesosInstruccion = $_POST['accesosAdministradorIns'];
-        if ($accesosInstruccion == 'true')
-            $where = " WHERE ($usuarioLog = id_persona_encargada or id_unidad = 3 ) ";
-    }
-
-
-    if (isset($_POST['accesosAdministradorOpe'])) {
-        $accesosInstruccion = $_POST['accesosAdministradorOpe'];
-        if ($accesosInstruccion == 'false')
-            if ($where == '')
-                $where = " WHERE visible  = 1 ";
-            else
-                $where = $where . " AND visible  = 1";
-    }
-    // se muestran todos los instruccion
-    if (isset($_POST['acceso'])) {
-        $acceso = $_POST['acceso'];
-        if ($acceso == 'false')
-            $where = "";
-        //$where = " WHERE $usuarioLog = id_persona_encargada ";
-    }
-
+    //Columna por defecto en busquedas
+    $columnaBusqueda = 'expediente';
+    // para el caso de busquedas
     if (isset($_POST['filterField'])) {
         $columnaBusqueda = $_POST['filterField'];
     }
 
-    if (isset($_POST['filterText'])) {
+    if ((isset($_POST['filterText'])) && ($_POST['filterText'] != '')) {
         $campo = $_POST['filterText'];
         $campo = str_replace(" ", "%", $campo);
 
@@ -128,6 +55,41 @@ function selectInstruccion()
         }
 
     }
+
+    // fin para el caso de busquedas
+
+
+    $usuarioLog = $os->get_member_id();
+    if (isset($_POST['accesosInstruccion'])) {
+        $accesosInstruccion = $_POST['accesosInstruccion'];
+        if ($accesosInstruccion == 'true')
+            $where = " WHERE $usuarioLog = id_persona_encargada ";
+    }
+
+
+    if (isset($_POST['accesosAdministradorIns'])) {
+        $accesosInstruccion = $_POST['accesosAdministradorIns'];
+        if ($accesosInstruccion == 'true')
+            $where = " WHERE ($usuarioLog = id_persona_encargada or id_unidad = 3 ) ";
+    }
+
+
+    if (isset($_POST['accesosAdministradorOpe'])) {
+        $accesosInstruccion = $_POST['accesosAdministradorOpe'];
+        if ($accesosInstruccion == 'false')
+            if ($where == '')
+                $where = " WHERE visible  = 1 ";
+            else
+                $where = $where . " AND visible  = 1";
+    }
+    // se muestran todos los instruccion
+    if (isset($_POST['acceso'])) {
+        $acceso = $_POST['acceso'];
+        if ($acceso == 'false')
+            $where = "";
+        //$where = " WHERE $usuarioLog = id_persona_encargada ";
+    }
+
 
     if (isset($_POST['unidadfiltro'])) {
         $unidad = $_POST['unidadfiltro'];
@@ -283,7 +245,7 @@ function selectInstruccion()
         }
     }
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_expediente $where $orderby LIMIT $start, $limit";
+    $sql = "SELECT *, DATEDIFF(NOW(), fecha_ultima_notificacion ) AS dias_transcurridos  FROM amc_expediente $where $orderby LIMIT $start, $limit";
     $sql_seguimiento = $sql;
     $result = $os->db->conn->query($sql);
     $data = array();
@@ -315,7 +277,7 @@ function insertInstruccion()
 // todo generar estado por defecto
 
     //  $data->finalizado = 'false';
-    $data->codigo_expediente = generaNuevoCodigoInstruccion();
+    $data->expediente = generaNuevoCodigoInstruccion();
     $data->id_persona = $os->get_member_id();
     //genero el listado de nombre de campos
 
@@ -364,69 +326,7 @@ function insertInstruccion()
     ));
 }
 
-function verificaReincidenciaPredio($predio)
-{
-    if (!is_null($predio)) {
-        global $os;
 
-        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE predio = '$predio' AND predio <> ' '";
-        $result = $os->db->conn->query($sql);
-        $row = $result->fetch(PDO::FETCH_ASSOC);
-        if ($row['total'] >= 2) {
-
-            $sql = "UPDATE  amc_expediente SET reincidencia_predio = 0;
-                        UPDATE  amc_expediente SET reincidencia_predio = 1 WHERE predio in (SELECT predio FROM ( SELECT COUNT(*) as total , predio from amc_expediente  GROUP BY predio ) b WHERE total > 1);";
-            $sql = $os->db->conn->prepare($sql);
-            $sql->execute();
-
-            return 1;
-        } else {
-            return 0;
-        }
-    } else {
-        return 0;
-    }
-}
-
-function verificaReincidenciaAdministrado($ruc, $cedula)
-{
-    global $os;
-    // analizar para los casos que solo exista ruc o exista cedula
-    // se genera una
-    if ((!is_null($ruc)) or (!is_null($cedula))) {
-        $sql = "UPDATE  amc_expediente SET reincidencia_administrado = 0;
-                UPDATE  amc_expediente SET reincidencia_administrado = 1 WHERE ruc in (SELECT ruc FROM ( SELECT COUNT(*) as total , ruc from amc_expediente  GROUP BY ruc ) b WHERE total > 1);
-                UPDATE  amc_expediente SET reincidencia_administrado = 1 WHERE cedula in (SELECT cedula FROM ( SELECT COUNT(*) as total , cedula from amc_expediente  GROUP BY cedula ) b WHERE total > 1);";
-        $sql = $os->db->conn->prepare($sql);
-        $sql->execute();
-     //   return 1;
-    }
-    echo $ruc;
-    if ((!is_null($ruc)) && (strlen($ruc)> 0)) {
-        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE ruc = $ruc";
-        echo $sql;
-        $result = $os->db->conn->query($sql);
-        $row = $result->fetch(PDO::FETCH_ASSOC);
-        if ($row['total'] >= 2) {
-            return 1;
-        }
-    }
-    if ((!is_null($cedula)) && (strlen($cedula)> 0)) {
-        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE cedula = $cedula";
-        $result = $os->db->conn->query($sql);
-        $data = array();
-        $row = $result->fetch(PDO::FETCH_ASSOC);
-        if ($row['total'] >= 2) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    // si no encuentra coincidencia
-    return 0;
-
-}
 
 function updateInstruccion()
 {
@@ -516,6 +416,14 @@ function updateInstruccion()
             $data->id_estado = 1; // se le cambia el estado a asignado
         }
     }
+    $data->predio = trim ($data->predio);
+
+    $data->reincidencia_predio = verificaReincidencia($data->predio,$data->id, "predio" , "reincidencia_predio");
+
+    $data->reincidencia_administrado = verificaReincidencia($data->cedula,$data->id, "cedula" , "reincidencia_administrado");
+
+    $data->reincidencia_administrado = verificaReincidencia($data->ruc,$data->id, "ruc" , "reincidencia_administrado");
+
 
     $cadenaDatos = '';
     foreach ($data as $clave => $valor) {
@@ -530,7 +438,11 @@ function updateInstruccion()
             $valBoolean = true;
         }
 
-        if (isset($valor) and ($valor != '')) {
+        if (($clave == 'auto') ||($clave == 'categoria') || ($clave == 'dmi')|| ($clave == 'medida_cautelar')) {
+            if (gettype($valor) != "integer" ) $valor ='';
+        }
+
+        if (isset($valor) and ($valor != '') and ($clave != 'dias_transcurridos')) {
             if ($valBoolean)
                 $cadenaDatos = $cadenaDatos . $clave . " = " . $valor . " ,";
             else
@@ -541,18 +453,28 @@ function updateInstruccion()
     $cadenaDatos = substr($cadenaDatos, 0, -1);
 
 
+
     $sql = "UPDATE amc_expediente SET  $cadenaDatos  WHERE amc_expediente.id = '$data->id' ";
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
-
-
-    $data->reincidencia_predio = verificaReincidenciaPredio($data->predio);
-    $data->reincidencia_administrado = verificaReincidenciaAdministrado($data->ruc, $data->cedula);
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "amc_expediente actualizado exitosamente" : $sql->errorCode(),
         "data" => array($data)
+    ));
+}
+
+function deleteInstruccion()
+{
+    global $os;
+    $id = json_decode(stripslashes($_POST["data"]));
+    $sql = "DELETE FROM amc_expediente WHERE id = $id";
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
+    echo json_encode(array(
+        "success" => $sql->errorCode() == 0,
+        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_expediente, eliminado exitosamente" : $sql->errorCode()
     ));
 }
 
@@ -609,18 +531,7 @@ function updateInstruccionForm()
     ));
 }
 
-function deleteInstruccion()
-{
-    global $os;
-    $id = json_decode(stripslashes($_POST["data"]));
-    $sql = "DELETE FROM amc_expediente WHERE id = $id";
-    $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
-    echo json_encode(array(
-        "success" => $sql->errorCode() == 0,
-        "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_expediente, eliminado exitosamente" : $sql->errorCode()
-    ));
-}
+
 
 switch ($_GET['operation']) {
     case 'select' :
@@ -642,6 +553,59 @@ switch ($_GET['operation']) {
         deleteInstruccion();
         break;
 }
+
+//predio , reincidencia_predio
+function verificaReincidencia($valor, $id, $campo, $reincidenciaCampo)
+{
+    $valor = trim($valor);
+    global $os;
+
+    $sql = "SELECT $campo FROM amc_expediente WHERE id = '$id';";
+    $result = $os->db->conn->query($sql);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+
+    $valorOld = trim($row [$campo]);
+
+
+    if ((!is_null($valorOld)) && ($valorOld != '')) {
+        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE $campo = '$valorOld';";
+        $result = $os->db->conn->query($sql);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        if ($row['total'] == 2) {
+            $sql = "UPDATE  amc_expediente SET $reincidenciaCampo = 0 WHERE $campo = '$valorOld';";
+            $sql = $os->db->conn->prepare($sql);
+            $sql->execute();
+        }
+        if ($row['total'] > 2) {
+            $sql = "UPDATE  amc_expediente SET $reincidenciaCampo = 0 WHERE id = '$id';";
+            $sql = $os->db->conn->prepare($sql);
+            $sql->execute();
+        }
+    }
+
+    if ((!is_null($valor)) && ($valor != '')) {
+        $sql = "SELECT COUNT(*) total FROM amc_expediente WHERE $campo = '$valor';";
+        $result = $os->db->conn->query($sql);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        if ($row['total'] >= 1) {
+            $sql = "UPDATE  amc_expediente SET $reincidenciaCampo = 1 WHERE $campo = '$valor';";
+            $sql = $os->db->conn->prepare($sql);
+            $sql->execute();
+            return 1;
+        } else {
+            $sql = "UPDATE  amc_expediente SET $reincidenciaCampo = 0 WHERE id = '$id';";
+            $sql = $os->db->conn->prepare($sql);
+            $sql->execute();
+            return 0;
+        }
+    } else {
+        $sql = "UPDATE  amc_expediente SET $reincidenciaCampo = 0 WHERE $campo = '$valor';";
+        $sql = $os->db->conn->prepare($sql);
+        $sql->execute();
+        return 0;
+    }
+}
+
 function validarCedulaCorreo($id)
 {
     // true en caso que no exista ni correo ni cedula
