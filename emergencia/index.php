@@ -136,6 +136,12 @@ if (!class_exists('os')) {
                             <input type="file" class="custom-file-input" id="archivo6" lang="es" name="archivo6">
                         </div>
                     </div>
+                    <div class="form-group" style="padding: 20px 0;">
+                        <div class="custom-file">
+                            <label class="custom-file-label" for="archivo">Listado de expedientes publicados</label>
+                            <input type="file" class="custom-file-input" id="archivo7" lang="es" name="archivo7">
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label for="geoposicionamiento" style="display:none">Coordenadas</label>
