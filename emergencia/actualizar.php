@@ -103,7 +103,7 @@ if (!class_exists('os')) {
                                placeholder="Ingrese el numero de acta de infración">
                     </div>
 
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Imagen Cédula </label>
@@ -115,7 +115,7 @@ if (!class_exists('os')) {
                         </div>
                     </div>
 
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Fotografía Infracción</label>
@@ -128,7 +128,7 @@ if (!class_exists('os')) {
                         </div>
                     </div>
 
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Acto de Inicio</label>
@@ -141,7 +141,7 @@ if (!class_exists('os')) {
                         </div>
                     </div>
 
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Expediente</label>
@@ -154,7 +154,7 @@ if (!class_exists('os')) {
                         </div>
                     </div>
 
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Cierre de Instrución</label>
@@ -167,7 +167,7 @@ if (!class_exists('os')) {
                         </div>
                     </div>
 
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Certificación</label>
@@ -179,7 +179,7 @@ if (!class_exists('os')) {
                             <div id="mostrarimagen6"></div>
                         </div>
                     </div>
-                    <div class="row" style="clear: both; padding-top: 20px">
+                    <div class="row form-control" style="clear: both; padding-top: 20px">
                         <div class="col-md-6">
                             <div class="custom-file">
                                 <label class="custom-file-label" for="archivo">Listado de expedientes publicados</label>

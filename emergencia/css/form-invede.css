@@ -11,6 +11,8 @@
 
         .contact-form .form-control {
             border-radius: 1rem;
+            height: auto;
+            margin-bottom: 5px !important;
         }
 
         .contact-image {
