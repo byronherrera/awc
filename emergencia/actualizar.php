@@ -192,8 +192,6 @@ if (!class_exists('os')) {
                         </div>
                     </div>
 
-
-
                     <div class="form-group">
                         <input id="geoposicionamiento" type="hidden" name="geoposicionamiento" class="form-control">
                     </div>
@@ -313,6 +311,7 @@ if (!class_exists('os')) {
 
                             $urlArchivos = 'https://amcmatis.quito.gob.ec/emergencia/';
 
+                            console.log (imagenes)
                             //  $urlArchivos = 'http://localhost/procesos/emergencia/';
                             $('#mostrarimagen1').html(validaImagen(imagenes.archivo1, $urlArchivos))
                             $('#mostrarimagen2').html(validaImagen(imagenes.archivo2, $urlArchivos))
