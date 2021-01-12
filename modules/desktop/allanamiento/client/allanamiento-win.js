@@ -277,7 +277,12 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     rowselect: function (sm, row, rec) {
                         this.record = rec;
                         solicitudSelected = rec;
+                        //Cargo Detalle
                         cargaDetalle(rec.id);
+                        //Cargo Archivos
+                        storeArchivo.baseParams.id = rec.id;
+                        storeArchivo.load();
+                        //Cargo Historico
                         storeHistorico.baseParams.id = rec.id;
                         storeHistorico.load();
                         if(accesosSecretaria){
@@ -503,8 +508,9 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             fields: [
                 {name: 'id', allowBlank: false},
                 {name: 'id_proc_rec_resp', allowBlank: false},
-                {name: 'codigo_sitra', allowBlank: false},
-                {name: 'observacion', allowBlank: false},
+                {name: 'url', allowBlank: false},
+                {name: 'etapa', allowBlank: false},
+                {name: 'estado', allowBlank: false},
                 {name: 'id_usuario', allowBlank: false},
                 {name: 'nombre_usuario', allowBlank: false},
                 {name: 'fecha', type: 'date', dateFormat: 'c', allowBlank: false},
@@ -532,26 +538,43 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     header: 'id',
                     dataIndex: 'id',
                     sortable: true,
-                    width: 80,
+                    width: 15,
                     hidden: true
                 }, {
-                    header: 'id_proc_rec_resp',
+                    header: 'id',
                     dataIndex: 'id_proc_rec_resp',
                     sortable: true,
-                    width: 80,
-                    hidden: true
+                    width: 15,
+                    hidden: false
                 },
                 {
-                    header: 'SITRA',
-                    dataIndex: 'codigo_sitra',
+                    header: 'url',
+                    dataIndex: 'url',
                     sortable: true,
-                    width: 80
+                    width: 250,
+                    align: 'left',
+                    renderer: function (value, metaData, record) {
+                        if((typeof value != 'undefined') && (value != null )) {
+                            return '<a href="' + value + '" target="_blank">'+value+'</a>';
+                        } else
+                            return ''
+                    }
                 },
                 {
-                    header: 'observacion',
-                    dataIndex: 'observacion',
+                    header: 'etapa',
+                    dataIndex: 'etapa',
                     sortable: true,
-                    width: 300
+                    width: 50,
+                    hidden: false,
+                    align: 'left',
+                },
+                {
+                    header: 'estado',
+                    dataIndex: 'estado',
+                    sortable: true,
+                    width: 50,
+                    hidden: true,
+                    align: 'left',
                 },
                 {
                     header: 'id_usuario',
@@ -975,7 +998,6 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                             text: "Subir Archivo",
                             scope: this,
                             handler: function () {
-                                console.log(">>>>>Solicitud<<<<<<",solicitudSelected.data)
                                 if (solicitudSelected.data != '') {
                                     if (Ext.getCmp('fp').getForm().isValid()) {
                                         Ext.getCmp('fp').getForm().submit({
@@ -983,9 +1005,10 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                                             params: {data: Ext.util.JSON.encode(solicitudSelected.data)},
                                             waitMsg: 'Subiendo Documento...',
                                             success: function (fp, o) {
-
-                                                //storeOperativosImagenes.load({params: {id_operativo: selectOperativos}});
-                                                //Ext.getCmp('fp').getForm().reset();
+                                                Ext.getCmp('formCargaArchivos').getForm().reset();
+                                                storeArchivo.load();
+                                                var AppMsg = new Ext.AppMsg({});
+                                                AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'El documento se agregó correctamente...');
                                             },
                                             failure: function (form, action) {
                                                 var errorJson = JSON.parse(action.response.responseText);
@@ -1169,8 +1192,10 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         solicitudSelected.data.codigo_sitra = Ext.getCmp('codigo_sitra').getValue();
         solicitudSelected.data.observacion_sitra = Ext.getCmp('observacion_sitra').getValue();
         var etapa =  solicitudSelected.data.etapa;
+        var estado =  solicitudSelected.data.estado;
         storeAllanamiento = this.storeAllanamiento;
         storeHistorico = this.storeHistorico;
+        storeArchivo = this.storeArchivo;
         if(etapa === 'Secretaria' &&  solicitudSelected.data.codigo_sitra === ''){
             var AppMsg = new Ext.AppMsg({});
             return AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Ingrese el código SITRA');
@@ -1188,8 +1213,13 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             solicitudSelected.data.estado = 'Asignado';
         }
         if(etapa === 'Resolucion'){
-            solicitudSelected.data.etapa = 'Ejecucion';
-            solicitudSelected.data.estado = 'Asignado';
+            if(estado === 'ResolucionEmitida'){
+                solicitudSelected.data.etapa = 'Ejecucion';
+                solicitudSelected.data.estado = 'Asignado';
+            }else {
+                solicitudSelected.data.etapa = 'Resolucion';
+                solicitudSelected.data.estado = 'Asignado';
+            }
         }
         if(etapa === 'Ejecucion'){
             solicitudSelected.data.estado = 'Finalizado';
@@ -1245,8 +1275,13 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
             solicitudSelected.data.estado = 'Devuelto';
         }
         if(etapa === 'Resolucion'){
-            solicitudSelected.data.etapa = 'Instruccion';
-            solicitudSelected.data.estado = 'Devuelto';
+            if(estado === 'ResolucionEmitida'){
+                solicitudSelected.data.etapa = 'Resolucion';
+                solicitudSelected.data.estado = 'Devuelto';
+            }else {
+                solicitudSelected.data.etapa = 'Instruccion';
+                solicitudSelected.data.estado = 'Devuelto';
+            }
         }
         if(etapa === 'Ejecucion'){
             solicitudSelected.data.etapa = 'Resolucion';

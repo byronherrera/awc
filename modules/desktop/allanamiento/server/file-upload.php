@@ -1,12 +1,9 @@
 <?php
-
-
 require_once '../../../../server/os.php';
 $os = new os();
 if (!$os->session_exists()) {
     die('No existe sesiÃ³n!');
 }
-
 
 if(isset($_POST['data'])){
     $data = json_decode($_POST["data"]);
@@ -26,10 +23,7 @@ if(isset($_POST['data'])){
 
             if (move_uploaded_file($temp_file_name, $uploadfile)) {
                 insertDocumentos('https://amcmatis.quito.gob.ec/archivos/allanamiento/' .$data->id. '-' . $_FILES['doc-path']['name']);
-            }else {
-                echo "error al subir registro...";
             }
-
         }
     }
 }
@@ -40,10 +34,9 @@ function insertDocumentos($url)
     $os->db->conn->query("SET NAMES 'utf8'");
     $usuario = $os->get_member_id();
     $data = json_decode($_POST["data"]);
-    $codigoSitra = (isset($data->codigo_sitra)) ? $data->codigo_sitra : '';
 
-    $sql  = " INSERT INTO amc_proc_reconocimiento_responsabilidad_archivos (id_proc_rec_resp, url, id_usuario, fecha)
-              VALUES ('$data->id','$url','$usuario', NOW()); ";
+    $sql  = " INSERT INTO amc_proc_reconocimiento_responsabilidad_archivos (id_proc_rec_resp, url, etapa, estado, id_usuario, fecha)
+              VALUES ('$data->id','$url','$data->etapa','$data->estado','$usuario', NOW()); ";
 
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
