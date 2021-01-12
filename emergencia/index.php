@@ -219,6 +219,7 @@ if (!class_exists('os')) {
                                 "                        <th scope=\"row\">Apellido</th>" +
                                 "                        <th scope=\"row\">Fecha </th>" +
                                 "                        <th scope=\"row\">Numero de acto</th>" +
+                                "                        <th scope=\"row\">Zonal</th>" +
                                 "                    </tr>";
                             $.each(data.data, function (key, val) {
                                 html += "<tr>" +
@@ -228,6 +229,7 @@ if (!class_exists('os')) {
                                     "                         <td> "+val['apellidos']+ " </td> "+
                                     "                         <td> "+val['fecha']+ " </td> "+
                                     "                         <td> "+val['actainfraccion']+ " </td> "+
+                                    "                         <td> "+val['zonal']+ " </td> "+
                                     "    </tr>"
                                     "                </table>"
                                 //$('.mensajecedula').html("<table <tr> <th> Id </th> <th> Cédula </th> <th> Nombre </th> <th> Apellido </th> </tr> <tr> <td> "+ val['id']+ "</td> <td> "+ val['cedula']+ "</td> <td>"+ val['nombres']+ "</td> <td>"+ val['apellidos'] +"</td> </tr> </table>");
