@@ -12,6 +12,10 @@ switch ($opcion) {
         $usuario = isset($_GET['usuario']) ? $_GET['usuario'] : '';
         getUsuarioExterno($usuario);
         break;
+    case "todosByUsuario":
+        $usuario = isset($_GET['usuario']) ? $_GET['usuario'] : '';
+        getTodosByUsuarios($usuario);
+        break;
     case "funcionario":
         getFuncionarios();
         break;
@@ -129,6 +133,30 @@ function getUsuarioExterno($id)
         echo json_encode(array(
             "success" => true,
             "data" => array($resultado[0])
+        ));
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }
+}
+
+function getTodosByUsuarios($id)
+{
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM amc_sancion_emergencia WHERE cedula = '$id' ";
+    $result = $os->db->conn->query($sql);
+    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($resultado) > 0) {
+//        $resultado[0]['observaciones'] = utf8_encode($resultado[0]['observaciones']);
+//        $resultado[0]['lugarinfraccion'] = utf8_encode($resultado[0]['lugarinfraccion']);
+        echo json_encode(array(
+            "success" => true,
+            "data" => $resultado
         ));
     } else {
         echo json_encode(array(
