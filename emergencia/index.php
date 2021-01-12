@@ -233,6 +233,7 @@ if (!class_exists('os')) {
                                 //$('.mensajecedula').html("<table <tr> <th> Id </th> <th> Cédula </th> <th> Nombre </th> <th> Apellido </th> </tr> <tr> <td> "+ val['id']+ "</td> <td> "+ val['cedula']+ "</td> <td>"+ val['nombres']+ "</td> <td>"+ val['apellidos'] +"</td> </tr> </table>");
                             });
                             $('.mensajecedula').html(html);
+
                         } else {
                             $('#nombres').val('')
                             $('#apellidos').val('')
