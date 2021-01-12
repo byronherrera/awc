@@ -376,8 +376,7 @@ if (!class_exists('os')) {
                             data.data.forEach(function (element) {
                              //       lineas = lineas + lineaCedula(element, seleccionado);
                                     lineas = lineas + lineaCedula(element, '');
-                                    console.log ("xxxxx")
-                            //        seleccionado = '';
+
                                 }
                             );
                             $('.mensajecedula').html('<select name="listacedulas" size=4 id="listacedulas" style="width: 100%;">\n' + lineas + '</select>');

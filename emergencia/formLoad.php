@@ -334,6 +334,7 @@ function actualizacion()
     global $listado;
     $listado = array();
 
+
     ingresaImagen ('archivo1', $cedula, 'cedula' );
     ingresaImagen ('archivo2', $cedula, 'fotogracia' );
     ingresaImagen ('archivo3', $cedula, 'actoinicio' );
