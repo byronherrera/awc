@@ -12,6 +12,10 @@ switch ($opcion) {
         $usuario = isset($_GET['usuario']) ? $_GET['usuario'] : '';
         getUsuarioExterno($usuario);
         break;
+    case "usuarioId":
+        $usuario = isset($_GET['id']) ? $_GET['id'] : '';
+        getUsuarioExternoId($usuario);
+        break;
     case "funcionario":
         getFuncionarios();
         break;
@@ -119,7 +123,8 @@ function getUsuarioExterno($id)
 
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $sql = "SELECT * FROM amc_sancion_emergencia WHERE cedula = '$id' limit 1";
+    //$sql = "SELECT * FROM amc_sancion_emergencia WHERE cedula = '$id' limit 1";
+    $sql = "SELECT * FROM amc_sancion_emergencia WHERE cedula = '$id'";
     $result = $os->db->conn->query($sql);
     $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -128,7 +133,28 @@ function getUsuarioExterno($id)
 //        $resultado[0]['lugarinfraccion'] = utf8_encode($resultado[0]['lugarinfraccion']);
         echo json_encode(array(
             "success" => true,
-            "data" => array($resultado[0])
+            "data" => $resultado
+        ));
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "data" => array()
+        ));
+    }
+}
+function getUsuarioExternoId($id)
+{
+
+    global $os;
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM amc_sancion_emergencia WHERE id = '$id'";
+    $result = $os->db->conn->query($sql);
+    $resultado = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($resultado) > 0) {
+        echo json_encode(array(
+            "success" => true,
+            "data" => $resultado
         ));
     } else {
         echo json_encode(array(
@@ -298,9 +324,11 @@ function actualizacion()
     }
 
     $imagenes = json_decode($data->imagenacto);
+    $id = $_POST["id"];
     $cedula = $_POST["cedula"];
     $estadoAnterior = getUsuarioExternoData($cedula);
-    $idAnterior = $estadoAnterior['id'];
+    //$idAnterior = $estadoAnterior['id'];
+    $idAnterior = $id;
     $imagenesAnteriore = json_decode($estadoAnterior['imagenacto']);
 
     global $listado;
