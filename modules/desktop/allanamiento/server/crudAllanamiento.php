@@ -41,6 +41,18 @@ switch ($_GET['operation']) {
     case 'updateHist' :
         updateHist();
         break;
+    case 'selectArch' :
+        selectArch();
+        break;
+    case 'insertArch' :
+        insertArch();
+        break;
+    case 'deleteArch' :
+        deleteArch();
+        break;
+    case 'updateArch' :
+        updateArch();
+        break;
 }
 
 
@@ -215,6 +227,37 @@ function updateHist(){
 
 }
 
+function selectArch(){
+    global $os;
+    $id = (int)$_POST ['id'];
+    $os->db->conn->query("SET NAMES 'utf8'");
+    $sql = "SELECT * FROM amc_proc_reconocimiento_responsabilidad_archivos where id_proc_rec_resp = '$id' ORDER BY fecha desc ";
+    $result = $os->db->conn->query($sql);
+    $data = array();
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $id = $row["id_usuario"];
+        $nombreUsuario = getUsuarioById($id);
+        $row += [ "nombre_usuario" =>  $nombreUsuario ];
+        $data[] = $row;
+    }
+    echo json_encode(array(
+            "success" => true,
+            "data" => $data)
+    );
+}
+
+function insertArch(){
+
+}
+
+function deleteArch(){
+
+}
+
+function updateArch(){
+
+}
+
 function enviar()
 {
     global $os;
@@ -249,10 +292,26 @@ function enviar()
         $email = $data->correoelectronico;
         $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Rechazo del proceso de Allanamiento, " . " - " . $email;
-    } else if($etapa == 'Ejecucion' && $estado == 'Finalizado'){
+    } else if($etapa == 'Resolucion' && $estado == 'ResolucionEmitida'){
         $email = $data->correoelectronico;
         $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;
+
+        $sql  = " SELECT *
+                  FROM amc_proc_reconocimineto_responsabilidad_archivos
+                  WHERE id = '$data->id'
+                  AND etapa = 'Resolucion'
+                  AND estado = 'ResolucionEmitida' ";
+
+        $result = $os->db->conn->query($sql);
+        $data = array();
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $adjuntos[] = $row["url"];
+        }
+    /*} else if($etapa == 'Ejecucion' && $estado == 'Finalizado'){
+        $email = $data->correoelectronico;
+        $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
+        $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;*/
     } else {
         //$email = regresaEmail($data->id_usuario);
         $mensaje = getmensaje('enviar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
@@ -264,7 +323,7 @@ function enviar()
     $from = 'Agencia Metropolitana de Control';
     $prueba = false;
 
-    enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
+    enviarEmailAmcConAdjuntos($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba, $adjuntos);
 
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
