@@ -202,13 +202,37 @@ if (!class_exists('os')) {
                     // carga iframe con informacion de dinardat
                     $("#frame").attr("src", "https://sitra.quito.gob.ec/Administracion/usuarios/validar_datos_registro_civil.php?cedula=" + $("input[name^='cedula']").val() + "&tipo_identificacion=0");
 
+                    debugger
                     // se carga la información si ya existe información anterior
-                    $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
+                    $.getJSON('formLoad.php?opcion=todosByUsuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
                         if (data.success) {
+                            var html = '';
                             $('#nombres').val(data.data[0]['nombres'])
                             $('#apellidos').val(data.data[0]['apellidos'])
 //                            $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción</h3>")
-                            $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción,fecha: " + data.data[0]['fecha_creacion'] + "</h3>")
+//                            $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción,fecha: " + data.data[0]['fecha_creacion'] + "</h3>")
+                            html = "<h3>LISTADO DE EXPEDIENTES</h3>" +
+                                "                   <table class=\"table\">\n" +
+                                "                    <tr><th scope=\"row\">Id</th>" +
+                                "                        <th scope=\"row\">Cédula</th>" +
+                                "                        <th scope=\"row\">Nombre</th>" +
+                                "                        <th scope=\"row\">Apellido</th>" +
+                                "                        <th scope=\"row\">Fecha </th>" +
+                                "                        <th scope=\"row\">Observaciones</th>" +
+                                "                    </tr>";
+                            $.each(data.data, function (key, val) {
+                                html += "<tr>" +
+                                    "                         <td> "+val['id']+ " </td> "+
+                                    "                         <td> "+val['cedula']+ " </td> "+
+                                    "                         <td> "+val['nombres']+ " </td> "+
+                                    "                         <td> "+val['apellidos']+ " </td> "+
+                                    "                         <td> "+val['fecha']+ " </td> "+
+                                    "                         <td> "+val['observaciones']+ " </td> "+
+                                    "    </tr>"
+                                    "                </table>"
+                                //$('.mensajecedula').html("<table <tr> <th> Id </th> <th> Cédula </th> <th> Nombre </th> <th> Apellido </th> </tr> <tr> <td> "+ val['id']+ "</td> <td> "+ val['cedula']+ "</td> <td>"+ val['nombres']+ "</td> <td>"+ val['apellidos'] +"</td> </tr> </table>");
+                            });
+                            $('.mensajecedula').html(html);
                         } else {
                             $('#nombres').val('')
                             $('#apellidos').val('')
