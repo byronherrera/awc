@@ -34,12 +34,19 @@ if (!class_exists('os')) {
             <form enctype="multipart/form-data" id="myForm" method="post">
                 <div class="row">
 
-                    <div class="form-group">
-                        <label for="cedula">CEDULA INFRACTOR*</label>
-                        <input type="text" class="form-control" id="cedula" name="cedula" placeholder=""
-                               required="required">
-                        <div class="mensajecedula"></div>
+                    <div class="row form-control">
+                        <div class="col-md-6">
+                            <label for="cedula">CEDULA INFRACTOR*</label>
+                            <input type="text" class="form-control" id="cedula" name="cedula" placeholder=""
+                                   required="required">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mensajecedula"></div>
+
+                        </div>
                     </div>
+
+
                     <div class="form-group">
                         <label for="nombres">NOMBRES COMPLETOS*</label>
                         <input type="text" class="form-control " id="nombres" name="nombres" required="required"
@@ -192,15 +199,15 @@ if (!class_exists('os')) {
                         </div>
                     </div>
 
-
-
                     <div class="form-group">
                         <input id="geoposicionamiento" type="hidden" name="geoposicionamiento" class="form-control">
+                        <input id="id" type="hidden" name="id" class="form-control">
                     </div>
 
                     <div class="row" style="clear: both; padding-top: 20px">
                         <div class="form-group col-md-4">
-                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" id="actualizar" value="GRABAR">
+                            <input type="submit" class="btn btn-success btn-send btnContactSubmit" id="actualizar"
+                                   value="GRABAR">
                             <div class="mensaje"></div>
                         </div>
                         <div class="form-group col-md-4">
@@ -232,6 +239,8 @@ if (!class_exists('os')) {
                 $("input[name^='cedula']").change(function () {
                     cargaData()
                 });
+
+
 
                 // llenar los datos del combobox
                 $.getJSON('formLoad.php?opcion=funcionario', function (data) {
@@ -282,12 +291,75 @@ if (!class_exists('os')) {
                     });
                 })
 
-                $( "#botonnuevo" ).click(function() {
+                $("#botonnuevo").click(function () {
                     $('#myForm')[0].reset();
                     $("input[name^='cedula']").focus();
                     $('.mensajecedula').html('');
                     $("#frame").attr("src", "");
                 });
+                function mostrarData (data) {
+                    $('#cedula').val(data.data[0]['cedula'])
+                    $('#nombres').val(data.data[0]['nombres'])
+                    $('#apellidos').val(data.data[0]['apellidos'])
+                    $('#lugarinfraccion').val(data.data[0]['lugarinfraccion'])
+                    $('#ordenanza').val(data.data[0]['materia'])
+                    $('#observaciones').val(data.data[0]['observaciones'])
+                    $('#funcionario').val(data.data[0]['funcionario'])
+                    $('#idzonal').val(data.data[0]['idzonal'])
+                    $('#fecha').val(data.data[0]['fecha'])
+                    $('#actainfraccion').val(data.data[0]['actainfraccion'])
+                    $('#id').val(data.data[0]['id'])
+                    if (JSON.parse(data.data[0]['imagenacto']) != null)
+                        imagenes = JSON.parse(data.data[0]['imagenacto']);
+                    else
+                        imagenes = JSON.parse('{"archivo1":null,"archivo2":null,"archivo3":null,"archivo4":null,"archivo5":null,"archivo6":null,"archivo7":null}');
+
+                    $urlArchivos = 'https://amcmatis.quito.gob.ec/emergencia/';
+
+                    //  $urlArchivos = 'http://localhost/procesos/emergencia/';
+                    $('#mostrarimagen1').html(validaImagen(imagenes.archivo1, $urlArchivos))
+                    $('#mostrarimagen2').html(validaImagen(imagenes.archivo2, $urlArchivos))
+                    $('#mostrarimagen3').html(validaImagen(imagenes.archivo3, $urlArchivos))
+                    $('#mostrarimagen4').html(validaImagen(imagenes.archivo4, $urlArchivos))
+                    $('#mostrarimagen5').html(validaImagen(imagenes.archivo5, $urlArchivos))
+                    $('#mostrarimagen6').html(validaImagen(imagenes.archivo6, $urlArchivos))
+                    $('#mostrarimagen7').html(validaImagen(imagenes.archivo7, $urlArchivos))
+
+                    $('#geoposicionamiento').val(data.data[0]['geoposicionamiento'])
+
+
+                };
+
+                function clearData () {
+                    $('#nombres').val('')
+                    $('#apellidos').val('')
+                    $('#lugarinfraccion').val('')
+                    $('#ordenanza').val('')
+                    $('#observaciones').val('')
+                    $('#funcionario').val('')
+                    $('#idzonal').val('')
+                    $('#fecha').val('')
+                    $('#actainfraccion').val('')
+                    $('#archivo1').html('')
+                    $('#archivo2').html('')
+                    $('#archivo3').html('')
+                    $('#archivo4').html('')
+                    $('#archivo5').html('')
+                    $('#archivo6').html('')
+                    $('#archivo7').html('')
+                    $('#geoposicionamiento').val('')
+
+                    $('#mostrarimagen1').html('');
+                    $('#mostrarimagen2').html('');
+                    $('#mostrarimagen3').html('');
+                    $('#mostrarimagen4').html('');
+                    $('#mostrarimagen5').html('');
+                    $('#mostrarimagen6').html('');
+                    $('#mostrarimagen7').html('');
+
+
+                    $('.mensajecedula').html("")
+                }
 
                 function cargaData() {
                     // carga iframe con informacion de dinardat
@@ -296,65 +368,33 @@ if (!class_exists('os')) {
                     $.getJSON('formLoad.php?opcion=usuario&usuario=' + $("input[name^='cedula']").val(), function (data) {
                         $('#myForm')[0].reset();
                         if (data.success) {
-                            $('#cedula').val(data.data[0]['cedula'])
-                            $('#nombres').val(data.data[0]['nombres'])
-                            $('#apellidos').val(data.data[0]['apellidos'])
-                            $('#lugarinfraccion').val(data.data[0]['lugarinfraccion'])
-                            $('#ordenanza').val(data.data[0]['materia'])
-                            $('#observaciones').val(data.data[0]['observaciones'])
-                            $('#funcionario').val(data.data[0]['funcionario'])
-                            $('#idzonal').val(data.data[0]['idzonal'])
-                            $('#fecha').val(data.data[0]['fecha'])
-                            $('#actainfraccion').val(data.data[0]['actainfraccion'])
-                            if (JSON.parse(data.data[0]['imagenacto']) != null)
-                                imagenes = JSON.parse(data.data[0]['imagenacto']);
-                            else
-                                imagenes = JSON.parse('{"archivo1":null,"archivo2":null,"archivo3":null,"archivo4":null,"archivo5":null,"archivo6":null,"archivo7":null}');
+                            mostrarData (data)
 
-                            $urlArchivos = 'https://amcmatis.quito.gob.ec/emergencia/';
+                            lineas = '';
+                           // seleccionado = 'selected';
 
-                            //  $urlArchivos = 'http://localhost/procesos/emergencia/';
-                            $('#mostrarimagen1').html(validaImagen(imagenes.archivo1, $urlArchivos))
-                            $('#mostrarimagen2').html(validaImagen(imagenes.archivo2, $urlArchivos))
-                            $('#mostrarimagen3').html(validaImagen(imagenes.archivo3, $urlArchivos))
-                            $('#mostrarimagen4').html(validaImagen(imagenes.archivo4, $urlArchivos))
-                            $('#mostrarimagen5').html(validaImagen(imagenes.archivo5, $urlArchivos))
-                            $('#mostrarimagen6').html(validaImagen(imagenes.archivo6, $urlArchivos))
-                            $('#mostrarimagen7').html(validaImagen(imagenes.archivo7, $urlArchivos))
+                            data.data.forEach(function (element) {
+                             //       lineas = lineas + lineaCedula(element, seleccionado);
+                                    lineas = lineas + lineaCedula(element, '');
 
+                                }
+                            );
+                            $('.mensajecedula').html('<select name="listacedulas" size=4 id="listacedulas" style="width: 100%;">\n' + lineas + '</select>');
+                            $("#listacedulas").change(function () {
+                                cargaDataId(this.value);
+                            });
 
-                            $('#geoposicionamiento').val(data.data[0]['geoposicionamiento'])
-
-                            $('.mensajecedula').html("<h3>El ciudadano tiene ya sanción,fecha: " + data.data[0]['fecha_creacion'] + "</h3>")
                         } else {
-                            $('#nombres').val('')
-                            $('#apellidos').val('')
-                            $('#lugarinfraccion').val('')
-                            $('#ordenanza').val('')
-                            $('#observaciones').val('')
-                            $('#funcionario').val('')
-                            $('#idzonal').val('')
-                            $('#fecha').val('')
-                            $('#actainfraccion').val('')
-                            $('#archivo1').html('')
-                            $('#archivo2').html('')
-                            $('#archivo3').html('')
-                            $('#archivo4').html('')
-                            $('#archivo5').html('')
-                            $('#archivo6').html('')
-                            $('#archivo7').html('')
-                            $('#geoposicionamiento').val('')
+                            clearData ()
+                        }
+                    });
+                }
 
-                            $('#mostrarimagen1').html('');
-                            $('#mostrarimagen2').html('');
-                            $('#mostrarimagen3').html('');
-                            $('#mostrarimagen4').html('');
-                            $('#mostrarimagen5').html('');
-                            $('#mostrarimagen6').html('');
-                            $('#mostrarimagen7').html('');
-
-
-                            $('.mensajecedula').html("")
+                function cargaDataId(id) {
+                    $.getJSON('formLoad.php?opcion=usuarioId&id=' + id, function (data) {
+                        $('#myForm')[0].reset();
+                        if (data.success) {
+                            mostrarData (data)
                         }
                     });
                 }
@@ -374,6 +414,10 @@ if (!class_exists('os')) {
 
                 function get_extension(filename) {
                     return filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
+                }
+
+                function lineaCedula(data, seleccionado) {
+                    return '<option value="' + data['id'] + '" ' + seleccionado + ' >Id:' + data['id'] + ' , Acta : ' + data['actainfraccion'] + ' , Zonal : ' + data['zonal'] + ', Fecha:' + data['fecha_creacion'] + '</option>\n';
                 }
             });
         </script>

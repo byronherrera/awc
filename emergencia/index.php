@@ -126,13 +126,13 @@ if (!class_exists('os')) {
                     </div>
                     <div class="form-group" style="padding: 20px 0;">
                         <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Expediente</label>
+                            <label class="custom-file-label" for="archivo">Cierre de Instrución</label>
                             <input type="file" class="custom-file-input" id="archivo5" lang="es" name="archivo5">
                         </div>
                     </div>
                     <div class="form-group" style="padding: 20px 0;">
                         <div class="custom-file">
-                            <label class="custom-file-label" for="archivo">Expediente</label>
+                            <label class="custom-file-label" for="archivo">Certificación</label>
                             <input type="file" class="custom-file-input" id="archivo6" lang="es" name="archivo6">
                         </div>
                     </div>
