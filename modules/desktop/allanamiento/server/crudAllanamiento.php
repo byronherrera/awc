@@ -272,22 +272,6 @@ function enviar()
 
     $email = regresaEmail($data->id_usuario);
 
-    $sql  = " UPDATE amc_proc_reconocimineto_responsabilidad
-             SET etapa = '$etapa',
-                 estado = '$estado',
-                 codigo_sitra = '$codigoSitra',
-                 observacion_sitra = '$observacionSitra',
-                 id_usuario = '$usuario',
-                 fecha_procesado = NOW()
-              WHERE id = '$data->id'; 
-              
-              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
-              VALUES ('$data->id','$etapa', '$estado', '$data->codigo_sitra','$data->observacion_sitra',NOW(),'$usuario'); ";
-
-    $log = $sql;
-    $sql = $os->db->conn->prepare($sql);
-    $sql->execute();
-
     if($etapa == 'Secretaria' && $estado == 'Finalizado'){
         $email = $data->correoelectronico;
         $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
@@ -297,16 +281,25 @@ function enviar()
         $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;
 
-        $sql  = " SELECT *
-                  FROM amc_proc_reconocimineto_responsabilidad_archivos
-                  WHERE id = '$data->id'
+        $sqlArch  = " SELECT *
+                  FROM amc_proc_reconocimiento_responsabilidad_archivos
+                  WHERE id_proc_rec_resp = '$data->id'
                   AND etapa = 'Resolucion'
-                  AND estado = 'ResolucionEmitida' ";
+                  AND estado in ('Asignado','Devuelto') ";
 
-        $result = $os->db->conn->query($sql);
-        $data = array();
+        $result = $os->db->conn->query($sqlArch);
+        $adjuntos = array();
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $adjuntos[] = $row["url"];
+            array_push($adjuntos, $row["url"]);
+            //$adjuntos = $row["url"];
+        }
+
+        if(sizeof($adjuntos) == 0){
+            echo json_encode(array(
+                    "valida" => true,
+                    "msg" => "Falta el adjunto...")
+            );
+            return;
         }
     /*} else if($etapa == 'Ejecucion' && $estado == 'Finalizado'){
         $email = $data->correoelectronico;
@@ -323,9 +316,26 @@ function enviar()
     $from = 'Agencia Metropolitana de Control';
     $prueba = false;
 
+    $sql  = " UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = '$etapa',
+                 estado = '$estado',
+                 codigo_sitra = '$codigoSitra',
+                 observacion_sitra = '$observacionSitra',
+                 id_usuario = '$usuario',
+                 fecha_procesado = NOW()
+              WHERE id = '$data->id'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('$data->id','$etapa', '$estado', '$data->codigo_sitra','$data->observacion_sitra',NOW(),'$usuario'); ";
+
+    $log = $sql;
+    $sql = $os->db->conn->prepare($sql);
+    $sql->execute();
+
     enviarEmailAmcConAdjuntos($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba, $adjuntos);
 
     echo json_encode(array(
+        "valida" => false,
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : "errores ".$sql->errorCode(),
         "data" => $sql->errorCode()

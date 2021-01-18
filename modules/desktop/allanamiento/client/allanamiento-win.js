@@ -181,7 +181,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     header: 'SITRA',
                     dataIndex: 'codigo_sitra',
                     sortable: true,
-                    width: 60,
+                    width: 100,
                     scope: this,
                     /*editor: new Ext.form.TextField({
                         id: 'codigo_sitra1', allowBlank: false, listeners: {
@@ -214,7 +214,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     header: 'estado',
                     dataIndex: 'estado',
                     sortable: true,
-                    width: 80,
+                    width: 110,
                     scope: this,
                     //renderer: obtenerNombreEstado
                 }
@@ -285,43 +285,85 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         //Cargo Historico
                         storeHistorico.baseParams.id = rec.id;
                         storeHistorico.load();
-                        if(accesosSecretaria){
-                            if (this.record.get("etapa") === 'Secretaria' && this.record.get("estado") !== 'Finalizado') {
-                                Ext.getCmp('codigo_sitra').setDisabled(false);
-                                Ext.getCmp('observacion_sitra').setDisabled(false);
-                                Ext.getCmp('tabEnviarAllanamiento').setDisabled(false);
-                                Ext.getCmp('tabDevolverAllanamiento').setDisabled(false);
+                        console.log(">>>Secretaria",accesosSecretaria);
+                        console.log(">>>Instruccion",accesosInstruccion);
+                        console.log(">>>Resolucion",accesosResolucion);
+                        console.log(">>>Ejecucion",accesosEjecucion);
+                        var roles = [];
+                        roles.push(Ext.util.JSON.encode({'accesosSecretaria':accesosSecretaria}));
+                        roles.push(Ext.util.JSON.encode({'accesosInstruccion':accesosInstruccion}));
+                        roles.push(Ext.util.JSON.encode({'accesosResolucion':accesosResolucion}));
+                        roles.push(Ext.util.JSON.encode({'accesosEjecucion':accesosEjecucion}));
+                        var etapa = this.record.get("etapa");
+                        var estado = this.record.get("estado");
+
+                        for(i in roles) {
+                            var rol = Ext.util.JSON.decode(roles[i]);
+                            if(rol.accesosSecretaria){
+                                if (etapa === 'Secretaria' && estado !== 'Finalizado') {
+                                    Ext.getCmp('codigo_sitra').setDisabled(false);
+                                    Ext.getCmp('observacion_sitra').setDisabled(false);
+                                    Ext.getCmp('tabEnviarAllanamiento').setDisabled(false);
+                                    Ext.getCmp('tabDevolverAllanamiento').setDisabled(false);
+                                    break;
+                                }else {
+                                    Ext.getCmp('codigo_sitra').setDisabled(true);
+                                    Ext.getCmp('observacion_sitra').setDisabled(true);
+                                    Ext.getCmp('tabEnviarAllanamiento').setDisabled(true);
+                                    Ext.getCmp('tabDevolverAllanamiento').setDisabled(true);
+                                }
                             }
-                        }
-                        if(accesosInstruccion){
-                            if (this.record.get("etapa") === 'Instruccion' && this.record.get("estado") !== 'Finalizado') {
-                                Ext.getCmp('tabEnviarAllanamiento').setDisabled(false);
-                                Ext.getCmp('tabDevolverAllanamiento').setDisabled(false);
-                                Ext.getCmp('codigo_sitra').setDisabled(true);
-                                Ext.getCmp('observacion_sitra').setDisabled(false);
+                            if(rol.accesosInstruccion){
+                                if (etapa === 'Instruccion' && estado !== 'Finalizado') {
+                                    Ext.getCmp('tabEnviarAllanamiento').setDisabled(false);
+                                    Ext.getCmp('tabDevolverAllanamiento').setDisabled(false);
+                                    Ext.getCmp('codigo_sitra').setDisabled(true);
+                                    Ext.getCmp('observacion_sitra').setDisabled(false);
+                                    break;
+                                } else {
+                                    Ext.getCmp('codigo_sitra').setDisabled(true);
+                                    Ext.getCmp('observacion_sitra').setDisabled(true);
+                                    Ext.getCmp('tabEnviarAllanamiento').setDisabled(true);
+                                    Ext.getCmp('tabDevolverAllanamiento').setDisabled(true);
+                                }
                             }
-                        }
-                        if(accesosResolucion){
-                            if (this.record.get("etapa") === 'Resolucion' && this.record.get("estado") !== 'Finalizado') {
-                                Ext.getCmp('tabEnviarAllanamiento').setDisabled(false);
-                                Ext.getCmp('tabDevolverAllanamiento').setDisabled(false);
-                                Ext.getCmp('codigo_sitra').setDisabled(true);
-                                Ext.getCmp('observacion_sitra').setDisabled(false);
+                            if(rol.accesosResolucion){
+                                if (etapa === 'Resolucion' && estado !== 'Finalizado') {
+                                    Ext.getCmp('tabEnviarAllanamiento').setDisabled(false);
+                                    Ext.getCmp('tabDevolverAllanamiento').setDisabled(false);
+                                    Ext.getCmp('codigo_sitra').setDisabled(true);
+                                    Ext.getCmp('observacion_sitra').setDisabled(false);
+                                    break;
+                                } else {
+                                    Ext.getCmp('codigo_sitra').setDisabled(true);
+                                    Ext.getCmp('observacion_sitra').setDisabled(true);
+                                    Ext.getCmp('tabEnviarAllanamiento').setDisabled(true);
+                                    Ext.getCmp('tabDevolverAllanamiento').setDisabled(true);
+                                }
                             }
-                        }
-                        if(accesosEjecucion){
-                            if (this.record.get("etapa") === 'Ejecucion' && this.record.get("estado") !== 'Finalizado') {
-                                Ext.getCmp('tabEnviarAllanamiento').setDisabled(false);
-                                Ext.getCmp('tabDevolverAllanamiento').setDisabled(false);
+                            if(rol.accesosEjecucion){
+                                if (etapa === 'Ejecucion' && estado !== 'Finalizado') {
+                                    Ext.getCmp('tabEnviarAllanamiento').setDisabled(false);
+                                    Ext.getCmp('tabDevolverAllanamiento').setDisabled(false);
+                                    Ext.getCmp('codigo_sitra').setDisabled(true);
+                                    Ext.getCmp('observacion_sitra').setDisabled(false);
+                                    break;
+                                } else {
+                                    Ext.getCmp('codigo_sitra').setDisabled(true);
+                                    Ext.getCmp('observacion_sitra').setDisabled(true);
+                                    Ext.getCmp('tabEnviarAllanamiento').setDisabled(true);
+                                    Ext.getCmp('tabDevolverAllanamiento').setDisabled(true);
+                                }
+
+                            }
+                            if(estado == 'Finalizado'){
                                 Ext.getCmp('codigo_sitra').setDisabled(true);
-                                Ext.getCmp('observacion_sitra').setDisabled(false);
+                                Ext.getCmp('observacion_sitra').setDisabled(true);
+                                Ext.getCmp('tabEnviarAllanamiento').setDisabled(true);
+                                Ext.getCmp('tabDevolverAllanamiento').setDisabled(true);
                             }
                         }
 
-                        if(this.record.get("estado") == 'Finalizado'){
-                            Ext.getCmp('tabEnviarAllanamiento').setDisabled(true);
-                            Ext.getCmp('tabDevolverAllanamiento').setDisabled(true);
-                        }
                     }
                 }
             }),
@@ -410,7 +452,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     header: 'SITRA',
                     dataIndex: 'codigo_sitra',
                     sortable: true,
-                    width: 80
+                    width: 100
                 },
                 {
                     header: 'observacion',
@@ -428,7 +470,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                     header: 'estado',
                     dataIndex: 'estado',
                     sortable: true,
-                    width: 100
+                    width: 110
                 },
                 {
                     header: 'id_usuario',
@@ -1218,7 +1260,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                 solicitudSelected.data.estado = 'Asignado';
             }else {
                 solicitudSelected.data.etapa = 'Resolucion';
-                solicitudSelected.data.estado = 'Asignado';
+                solicitudSelected.data.estado = 'ResolucionEmitida';
             }
         }
         if(etapa === 'Ejecucion'){
@@ -1237,11 +1279,18 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         params: { data: Ext.util.JSON.encode(solicitudSelected.data) },
                         //jsonData: { data },
                         success: function (response, opts) {
+                            //console.log(">>>>>error1",opts);
+                            debugger
+                            var resp= JSON.parse(response.responseText);
+                            var AppMsg = new Ext.AppMsg({});
+                            if(resp.valida){
+                                AppMsg.setAlert(AppMsg.STATUS_NOTICE, resp.msg);
+                            }else{
+                                AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Se asignó a la siguiente fase exitosamente...');
+                            }
                             Ext.getCmp('formDetalle').getForm().reset();
                             storeAllanamiento.load();
                             storeHistorico.load();
-                            var AppMsg = new Ext.AppMsg({});
-                            AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Se asignó a la siguiente fase exitosamente...');
                         },
                         failure: function (response, opts) {
                             var errorJson = JSON.parse(response.responseText);
@@ -1261,6 +1310,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
     devolverAllanamiento: function () {
         solicitudSelected.data.observacion_sitra = Ext.getCmp('observacion_sitra').getValue();
         var etapa =  solicitudSelected.data.etapa;
+        var estado =  solicitudSelected.data.estado;
         storeAllanamiento = this.storeAllanamiento;
         storeHistorico = this.storeHistorico;
         if( solicitudSelected.data.observacion_sitra === ''){
@@ -1285,7 +1335,7 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
         }
         if(etapa === 'Ejecucion'){
             solicitudSelected.data.etapa = 'Resolucion';
-            solicitudSelected.data.estado = 'Devuelto';
+            solicitudSelected.data.estado = 'ResolucionEmitida';
         }
         var urlAllanamientoLocal = this.urlAllanamientoLocal;
         Ext.Msg.show({
