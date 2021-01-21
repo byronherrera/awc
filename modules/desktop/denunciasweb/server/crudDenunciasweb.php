@@ -91,7 +91,7 @@ function enviarMensajeNegado()
 function enviarMensajeAprobado($codigo_tramite)
 {
     $id = (int)$_POST ['id'];
-    $codigo_tramite = $codigo_tramite;
+    $codigo_tramite = $_POST ['motivoNegarDenuncia'];;
     $email = $_POST ['email'];
 
     $mensaje = getmensaje('aprobar', $_POST ['nombre'], $codigo_tramite, $id);
@@ -112,9 +112,12 @@ function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $moti
                     <div style="float: right; clear: both; width: 100%;"><img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" /></div>
                     <div style="clear: both; margin: 50px 10%; float: left;">
                     <p><br><br>
-                     Estimado ciudadano gracias por escribirnos, su denuncia fue revisada y ha sido ingresada correctamente en nuestro sistema con el código ' . $codigo_tramite . '<br>
+                     Estimado ciudadano gracias por escribirnos, su denuncia fue revisada y ha sido ingresada con el número de documento ' . $codigo_tramite . '<br>
                      <br>
-                     En el siguiente link, usted  podrá hacer el seguimiento del proceso.<br>
+                     En el siguiente link, usted  podrá hacer el resumen de su denuncia.<br>
+                     <a href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/' . $id . '-' . $nombre . '" target="_blank">Click aquí</a>
+                     <br>
+                     Para el seguimiento de su trámite ingrese en  <a href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/' . $id . '-' . $nombre . '" target="_blank">sitra.gob.ec</a>, el usuario y contraseña es su número de cédula.<br>
                      <a href="http://agenciadecontrol.quito.gob.ec/index.php/denuncias/denuncias-amc/' . $id . '-' . $nombre . '" target="_blank">Click aquí</a>
                     <br>    
                     <br>
