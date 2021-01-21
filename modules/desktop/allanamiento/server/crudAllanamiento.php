@@ -277,15 +277,11 @@ function enviar()
         $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
         $asunto = "Rechazo del proceso de Allanamiento, " . " - " . $email;
     } else if($etapa == 'Resolucion' && $estado == 'ResolucionEmitida'){
-        $email = $data->correoelectronico;
-        $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
-        $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;
-
         $sqlArch  = " SELECT *
                   FROM amc_proc_reconocimiento_responsabilidad_archivos
                   WHERE id_proc_rec_resp = '$data->id'
                   AND etapa = 'Resolucion'
-                  AND estado in ('Asignado','Devuelto') ";
+                  AND estado in ('Asignado','Devuelto', 'ResolucionEmitida') ";
 
         $result = $os->db->conn->query($sqlArch);
         $adjuntos = array();
@@ -301,6 +297,11 @@ function enviar()
             );
             return;
         }
+
+        $email = $data->correoelectronico;
+        $mensaje = getmensaje('notificar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra,$adjuntos);
+        $asunto = "Notificación del proceso de Allanamiento, " . " - " . $email;
+
     /*} else if($etapa == 'Ejecucion' && $estado == 'Finalizado'){
         $email = $data->correoelectronico;
         $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
@@ -332,7 +333,8 @@ function enviar()
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
-    enviarEmailAmcConAdjuntos($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba, $adjuntos);
+    //enviarEmailAmcConAdjuntos($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba, $adjuntos);
+    enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
 
     echo json_encode(array(
         "valida" => false,
@@ -412,7 +414,7 @@ function devolver()
 
 }
 
-function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $motivo = '')
+function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $motivo = '',$rutaArchivos=[])
 {
     switch ($opcion) {
         case 'enviar' :
@@ -502,6 +504,34 @@ function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $moti
                       </div>
                       <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
                       </div>';
+            return $texto;
+            break;
+        case 'notificar' :
+            //Si tiene Adjuntos
+            $texto = '';
+            $textoAdjunto = '';
+            foreach ($rutaArchivos as $ruta) {
+                $textoAdjunto = $textoAdjunto . '<a href='.$ruta.' target="_blank">'.$ruta.'</a> <br> ';
+            }
+            $textoInicio = '<div style="font-family: Arial, Helvetica, sans-serif;">
+                      <div style="float: right; clear: both; width: 100%;">
+                         <img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" />
+                      </div>
+                      <div style="clear: both; margin: 50px 10%; float: left;">
+                      <p>
+                         <br><br>
+                           Estimado ciudadano se envía la notificación con el código ' . $codigo_tramite . '
+                         <br><br>
+                           En el siguiente link, usted  podrá descargar su notificación.<br> ';
+
+            $textoFin = '<br><br>
+                      </p>
+                      <p>&nbsp;</p>
+                      <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
+                      </div>
+                         <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                      </div>';
+            $texto = $textoInicio . $textoAdjunto . $textoFin;
             return $texto;
             break;
     }

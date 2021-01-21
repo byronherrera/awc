@@ -853,3 +853,241 @@
               INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
               VALUES ('304','Resolucion', 'Devuelto', 'DMQ-1234','aasdsdd',NOW(),'674'); 
 
+
+ UPDATE amc_proc_reconocimineto_responsabilidad 
+             SET etapa = 'Instruccion',
+                 estado = 'Devuelto',
+                 observacion_sitra = 'sdsadasdasd',
+                 id_usuario = '674',
+                 fecha_procesado = CURDATE()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Instruccion', 'Devuelto', 'DMQ-1234','sdsadasdasd',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Resolucion',
+                 estado = 'Asignado',
+                 codigo_sitra = 'DMQ-1234',
+                 observacion_sitra = 'sdsdasdsd',
+                 id_usuario = '674',
+                 fecha_procesado = NOW()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'Asignado', 'DMQ-1234','sdsdasdsd',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Resolucion',
+                 estado = 'ResolucionEmitida',
+                 codigo_sitra = 'DMQ-1234',
+                 observacion_sitra = 'sdaasdasdasd',
+                 id_usuario = '674',
+                 fecha_procesado = NOW()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'ResolucionEmitida', 'DMQ-1234','sdaasdasdasd',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad 
+             SET etapa = 'Resolucion',
+                 estado = 'Devuelto',
+                 observacion_sitra = 'sdaasdasdasd',
+                 id_usuario = '674',
+                 fecha_procesado = CURDATE()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'Devuelto', 'DMQ-1234','sdaasdasdasd',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad 
+             SET etapa = 'Instruccion',
+                 estado = 'Devuelto',
+                 observacion_sitra = 'fsdfdfdf',
+                 id_usuario = '674',
+                 fecha_procesado = CURDATE()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Instruccion', 'Devuelto', 'DMQ-1234','fsdfdfdf',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Resolucion',
+                 estado = 'Asignado',
+                 codigo_sitra = 'DMQ-1234',
+                 observacion_sitra = 'fdsfdfdsf',
+                 id_usuario = '674',
+                 fecha_procesado = NOW()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'Asignado', 'DMQ-1234','fdsfdfdsf',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad 
+             SET etapa = 'Instruccion',
+                 estado = 'Devuelto',
+                 observacion_sitra = 'dfdsffsdf',
+                 id_usuario = '674',
+                 fecha_procesado = CURDATE()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Instruccion', 'Devuelto', 'DMQ-1234','dfdsffsdf',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Resolucion',
+                 estado = 'Asignado',
+                 codigo_sitra = 'DMQ-1234',
+                 observacion_sitra = 'sadsadasd',
+                 id_usuario = '674',
+                 fecha_procesado = NOW()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'Asignado', 'DMQ-1234','sadsadasd',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Resolucion',
+                 estado = 'ResolucionEmitida',
+                 codigo_sitra = 'DMQ-1234',
+                 observacion_sitra = 'sdasdsd',
+                 id_usuario = '674',
+                 fecha_procesado = NOW()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'ResolucionEmitida', 'DMQ-1234','sdasdsd',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad 
+             SET etapa = 'Instruccion',
+                 estado = 'Devuelto',
+                 observacion_sitra = 'fdsfdfdsf',
+                 id_usuario = '674',
+                 fecha_procesado = CURDATE()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Instruccion', 'Devuelto', 'DMQ-1234','fdsfdfdsf',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Resolucion',
+                 estado = 'Asignado',
+                 codigo_sitra = 'DMQ-1234',
+                 observacion_sitra = 'ewrewerdfsdfs',
+                 id_usuario = '674',
+                 fecha_procesado = NOW()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'Asignado', 'DMQ-1234','ewrewerdfsdfs',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Resolucion',
+                 estado = 'ResolucionEmitida',
+                 codigo_sitra = 'DMQ-1234',
+                 observacion_sitra = 'asasasas',
+                 id_usuario = '674',
+                 fecha_procesado = NOW()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'ResolucionEmitida', 'DMQ-1234','asasasas',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Ejecucion',
+                 estado = 'Asignado',
+                 codigo_sitra = 'DMQ-1234',
+                 observacion_sitra = 'asaSAAS',
+                 id_usuario = '674',
+                 fecha_procesado = NOW()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Ejecucion', 'Asignado', 'DMQ-1234','asaSAAS',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad 
+             SET etapa = 'Resolucion',
+                 estado = 'ResolucionEmitida',
+                 observacion_sitra = 'ASASAS',
+                 id_usuario = '674',
+                 fecha_procesado = CURDATE()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'ResolucionEmitida', 'DMQ-1234','ASASAS',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad 
+             SET etapa = 'Resolucion',
+                 estado = 'Devuelto',
+                 observacion_sitra = 'ASAASAS',
+                 id_usuario = '674',
+                 fecha_procesado = CURDATE()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'Devuelto', 'DMQ-1234','ASAASAS',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Ejecucion',
+                 estado = 'Asignado',
+                 codigo_sitra = 'DMQ-1234',
+                 observacion_sitra = 'ASDSDAASD',
+                 id_usuario = '674',
+                 fecha_procesado = NOW()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Ejecucion', 'Asignado', 'DMQ-1234','ASDSDAASD',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad 
+             SET etapa = 'Resolucion',
+                 estado = 'ResolucionEmitida',
+                 observacion_sitra = 'wqeqweweq',
+                 id_usuario = '674',
+                 fecha_procesado = CURDATE()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'ResolucionEmitida', 'DMQ-1234','wqeqweweq',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad 
+             SET etapa = 'Resolucion',
+                 estado = 'Devuelto',
+                 observacion_sitra = 'ewwewe',
+                 id_usuario = '674',
+                 fecha_procesado = CURDATE()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'Devuelto', 'DMQ-1234','ewwewe',NOW(),'674'); 
+
+
+ UPDATE amc_proc_reconocimineto_responsabilidad
+             SET etapa = 'Resolucion',
+                 estado = 'ResolucionEmitida',
+                 codigo_sitra = 'DMQ-1234',
+                 observacion_sitra = 'qwwewewe',
+                 id_usuario = '674',
+                 fecha_procesado = NOW()
+              WHERE id = '304'; 
+              
+              INSERT INTO amc_proc_reconocimineto_responsabilidad_hist (id_proc_rec_resp, etapa, estado, codigo_sitra, observacion_sitra, fecha_procesado, id_usuario)
+              VALUES ('304','Resolucion', 'ResolucionEmitida', 'DMQ-1234','qwwewewe',NOW(),'674'); 
+

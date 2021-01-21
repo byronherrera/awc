@@ -1279,18 +1279,16 @@ QoDesk.AllanamientoWindow = Ext.extend(Ext.app.Module, {
                         params: { data: Ext.util.JSON.encode(solicitudSelected.data) },
                         //jsonData: { data },
                         success: function (response, opts) {
-                            //console.log(">>>>>error1",opts);
-                            debugger
                             var resp= JSON.parse(response.responseText);
                             var AppMsg = new Ext.AppMsg({});
                             if(resp.valida){
                                 AppMsg.setAlert(AppMsg.STATUS_NOTICE, resp.msg);
                             }else{
                                 AppMsg.setAlert(AppMsg.STATUS_NOTICE, 'Se asignó a la siguiente fase exitosamente...');
+                                Ext.getCmp('formDetalle').getForm().reset();
+                                storeAllanamiento.load();
+                                storeHistorico.load();
                             }
-                            Ext.getCmp('formDetalle').getForm().reset();
-                            storeAllanamiento.load();
-                            storeHistorico.load();
                         },
                         failure: function (response, opts) {
                             var errorJson = JSON.parse(response.responseText);
