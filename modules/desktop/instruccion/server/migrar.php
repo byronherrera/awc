@@ -116,34 +116,59 @@ function migrarPestana($hoja = 0, $tabla = 'amc_expediente_temporal')
             $columType = $columna['type'];
 
             // dato
-            if ( $columna['combo'] == 'NO' ) {
-                $excel_columna  = $columna['excel_columna'];
+            if ($columna['combo'] == 'NO') {
+                $excel_columna = $columna['excel_columna'];
 
-                $tableMaster  = $columna['table'];
+                $tableMaster = $columna['table'];
 
-                $cadenaCampos[] = $table_columna;
-                $cadenaDatos[] = $data[$i][$excel_columna];
-
-            } else
-            {
+                switch ($columType) {
+                    case 'varchar':
+                        $cadenaDatos[] = '"' . $data[$i][$excel_columna] . '"';
+                        $cadenaCampos[] = $table_columna;
+                        break;
+                    case 'int':
+                        if (strlen($data[$i][$excel_columna]) > 0) {
+                            // para validar datos
+                            $data[$i][$excel_columna] = validaIntInput ($data[$i][$excel_columna]);
+                            $cadenaDatos[] = $data[$i][$excel_columna];
+                            $cadenaCampos[] = $table_columna;
+                        }
+                        break;
+                    case 'datetime':
+                        if (strlen($data[$i][$excel_columna]) > 0) {
+                            $linux_time = fromExcelToLinux($data[$i][$excel_columna]);
+                            $cadenaDatos[] = '"' . $linux_time . '"';
+                            $cadenaCampos[] = $table_columna;
+                        }
+                        break;
+                    case 'date':
+                        if (strlen($data[$i][$excel_columna]) > 0) {
+                            $linux_time = fromExcelToLinux($data[$i][$excel_columna]);
+                            $cadenaDatos[] = '"' . $linux_time . '"';
+                            $cadenaCampos[] = $table_columna;
+                        }
+                        break;
+                }
+            } else {
                 // caso cuando los datos salen de una tabla
-                $table_ombo =  $columna['$table_ombo'];
-                $search_field =  $columna['search_field'];
+                $table_ombo = $columna['$table_ombo'];
+                $search_field = $columna['search_field'];
 
-                $excel_columna  = $columna['excel_columna'];
+                $excel_columna = $columna['excel_columna'];
                 $cadenaCampos[] = $table_columna;
                 $cadenaDatos[] = $data[$i][$excel_columna];
 
-                recupeDataTablaDetalle  ($data[$i][$excel_columna], $search_field , $table_ombo  )  ;
-                $tableMaster  = $columna['table'];
+                recupeDataTablaDetalle($data[$i][$excel_columna], $search_field, $table_ombo);
+                $tableMaster = $columna['table'];
 
             }
         };
 
         $cadenaCampos = implode(",", $cadenaCampos);
         $cadenaDatos = implode(",", $cadenaDatos);
-
+        $os->db->conn->query("SET NAMES 'utf8'");
         $sql = "INSERT INTO $tableMaster ($cadenaCampos) values ($cadenaDatos);";
+      //  echo $sql;
 
         $sql = $os->db->conn->prepare($sql);
         $code = $sql->errorCode();
@@ -152,7 +177,8 @@ function migrarPestana($hoja = 0, $tabla = 'amc_expediente_temporal')
     return true;
 }
 
-function recupeDataTablaDetalle  ($textoBusqueda  = 'herrera avalos', $campo = "last_name" , $tabla = 'qo_members'  ) {
+function recupeDataTablaDetalle($textoBusqueda = 'herrera avalos', $campo = "last_name", $tabla = 'qo_members')
+{
     global $os;
 
     $sql = "SELECT
@@ -170,3 +196,32 @@ function recupeDataTablaDetalle  ($textoBusqueda  = 'herrera avalos', $campo = "
     return 123;
 
 }
+
+function fromExcelToLinux($excel_time)
+{
+    $fechalinux = ($excel_time - 25569) * 86400;
+    return date("Y-m-d 00:00:00", $fechalinux);
+}
+
+
+function validaIntInput ($dato ) {
+
+    switch ($dato) {
+        case 'o':
+            $dato = '0';
+            break;
+        case 'O':
+            $dato = '0';
+            break;
+        case 'X':
+            $dato = '1';
+            break;
+        case 'NO':
+            $dato  = "0";
+            break;
+        case 'SI':
+            $dato  = "0";
+            break;
+    }
+    return $dato;
+};

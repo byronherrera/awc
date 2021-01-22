@@ -929,7 +929,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Informe/Actas<br>N° DE ACTUACIÓN PREVIA',
                     dataIndex: 'informe',
                     sortable: true,
-                    width: 120,
+                    width: 130,
                     editor: textField
                 },
                 {
