@@ -1,14 +1,16 @@
-console.log (111)
 setTimeout(function () {
-    console.log ("test");
-    console.log (window.document.body.innerHTML);
-    console.log (document.getElementsByTagName("frame").length);
-    console.log (document.getElementsByTagName("frame")[0]);
-    console.log (document.getElementsByTagName("frame")[0].document.body.innerHTML);
-    console.log (window.frames['topFrame'].document);
-    window.frames['topFrame'].document.body.style.border = "5px solid red";
-    window.frames['leftFrame'].document.body.style.border = "5px solid blue";
-    window.frames['mainFrame'].document.body.style.border = "5px solid green";
-}, 2000);
+    console.log (window.document.body.innerHTML,'0');
+    console.log (document.getElementsByTagName("frame")[0].document, '2');
+    document.getElementById('mainFrame').onload = function() {
+        console.log ("date");
+        setTimeout(function () {
+            var tets = document.getElementsByTagName("frame")[0].document;
 
-console.log (2222)
+            var x = document.getElementById("mainFrame");
+            var y = (x.contentWindow || x.contentDocument);
+            if (y.document)y = y.document;
+            y.body.style.backgroundColor = "red";
+            console.log (y.body.innerHTML);
+        }, 1000)
+    }
+}, 2000);
