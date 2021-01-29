@@ -304,6 +304,9 @@
                     "                    <tr><th scope=\"row\">Fotografía Infracción</th><td>" + validaImagen(imagenes.archivo2, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Acto Inicio</th><td>" + validaImagen(imagenes.archivo3, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Expediente</th><td>" + validaImagen(imagenes.archivo4, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Cierre de Instrución</th><td>" + validaImagen(imagenes.archivo5, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Certificación</th><td>" + validaImagen(imagenes.archivo6, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Listado de expedientes publicados</th><td>" + validaImagen(imagenes.archivo7, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
                     "                    </tbody>\n" +
                     "                </table>"
             });

@@ -819,7 +819,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Cédula/<br>Pasaporte',
                     dataIndex: 'cedula',
                     sortable: true,
-                    width: 80,
+                    width: 90,
                     editor: textField,
                     format: '00000000'
                 },
@@ -929,7 +929,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                     header: 'Informe/Actas<br>N° DE ACTUACIÓN PREVIA',
                     dataIndex: 'informe',
                     sortable: true,
-                    width: 120,
+                    width: 130,
                     editor: textField
                 },
                 {
@@ -2017,7 +2017,7 @@ QoDesk.InstruccionWindow = Ext.extend(Ext.app.Module, {
                                         if (Ext.getCmp('fp').getForm().isValid()) {
                                             Ext.getCmp('fp').getForm().submit({
                                                 url: urlInstruccion + 'migrar.php',
-                                              //JSON.parse(action.response.responseText);  params: {data: libroDiarioSeleccionado},
+                                                //JSON.parse(action.response.responseText);  params: {data: libroDiarioSeleccionado},
                                                 waitMsg: 'Subiendo Documento...',
                                                 success: function (fp, o) {
 

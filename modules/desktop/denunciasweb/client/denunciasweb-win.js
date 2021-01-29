@@ -318,7 +318,7 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                                 formBind: true
                             },
                             {
-                                text: '| Motivo negar:'
+                                text: '| Motivo negar / Sitra:'
                                 , xtype: 'tbtext',
                             },
                             {
@@ -326,7 +326,8 @@ QoDesk.DenunciaswebWindow = Ext.extend(Ext.app.Module, {
                                 id: 'motivoNegarDenuncia',
                                 disabled: true,
                                 anchor: '40%',
-                                width: '500'
+                                width: '500',
+                                allowBlank : false
                             },
                             '->',
                             {

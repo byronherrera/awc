@@ -272,6 +272,51 @@ function enviar()
 
     $email = regresaEmail($data->id_usuario);
 
+    if($etapa == 'Secretaria' && $estado == 'Finalizado'){
+        $email = $data->correoelectronico;
+        $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
+        $asunto = "Rechazo del proceso de Allanamiento, " . " - " . $email;
+    } else if($etapa == 'Resolucion' && $estado == 'ResolucionEmitida'){
+        $sqlArch  = " SELECT *
+                  FROM amc_proc_reconocimiento_responsabilidad_archivos
+                  WHERE id_proc_rec_resp = '$data->id'
+                  AND etapa = 'Resolucion'
+                  AND estado in ('Asignado','Devuelto', 'ResolucionEmitida') ";
+
+        $result = $os->db->conn->query($sqlArch);
+        $adjuntos = array();
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            array_push($adjuntos, $row["url"]);
+            //$adjuntos = $row["url"];
+        }
+
+        if(sizeof($adjuntos) == 0){
+            echo json_encode(array(
+                    "valida" => true,
+                    "msg" => "Falta el adjunto...")
+            );
+            return;
+        }
+
+        $email = $data->correoelectronico;
+        $mensaje = getmensaje('notificar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra,$adjuntos);
+        $asunto = "Notificación del proceso de Allanamiento, " . " - " . $email;
+
+    /*} else if($etapa == 'Ejecucion' && $estado == 'Finalizado'){
+        $email = $data->correoelectronico;
+        $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
+        $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;*/
+    } else {
+        //$email = regresaEmail($data->id_usuario);
+        $mensaje = getmensaje('enviar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
+        $asunto = "Asignación del proceso de Allanamiento, " . " - " . $email;
+    }
+
+    $funcionarios = ["carlos.bastidas@quito.gob.ec"];
+    $funcionariosSeguimiento = ["carlos.bastidas@quito.gob.ec"];
+    $from = 'Agencia Metropolitana de Control';
+    $prueba = false;
+
     $sql  = " UPDATE amc_proc_reconocimineto_responsabilidad
              SET etapa = '$etapa',
                  estado = '$estado',
@@ -288,44 +333,11 @@ function enviar()
     $sql = $os->db->conn->prepare($sql);
     $sql->execute();
 
-    if($etapa == 'Secretaria' && $estado == 'Finalizado'){
-        $email = $data->correoelectronico;
-        $mensaje = getmensaje('rechazar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
-        $asunto = "Rechazo del proceso de Allanamiento, " . " - " . $email;
-    } else if($etapa == 'Resolucion' && $estado == 'ResolucionEmitida'){
-        $email = $data->correoelectronico;
-        $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
-        $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;
-
-        $sql  = " SELECT *
-                  FROM amc_proc_reconocimineto_responsabilidad_archivos
-                  WHERE id = '$data->id'
-                  AND etapa = 'Resolucion'
-                  AND estado = 'ResolucionEmitida' ";
-
-        $result = $os->db->conn->query($sql);
-        $data = array();
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $adjuntos[] = $row["url"];
-        }
-    /*} else if($etapa == 'Ejecucion' && $estado == 'Finalizado'){
-        $email = $data->correoelectronico;
-        $mensaje = getmensaje('aprobar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
-        $asunto = "Aprobación del proceso de Allanamiento, " . " - " . $email;*/
-    } else {
-        //$email = regresaEmail($data->id_usuario);
-        $mensaje = getmensaje('enviar',$data->nombre_usuario, $data->codigo_sitra, $data->id, $data->observacion_sitra);
-        $asunto = "Asignación del proceso de Allanamiento, " . " - " . $email;
-    }
-
-    $funcionarios = ["carlos.bastidas@quito.gob.ec"];
-    $funcionariosSeguimiento = ["carlos.bastidas@quito.gob.ec"];
-    $from = 'Agencia Metropolitana de Control';
-    $prueba = false;
-
-    enviarEmailAmcConAdjuntos($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba, $adjuntos);
+    //enviarEmailAmcConAdjuntos($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba, $adjuntos);
+    enviarEmailAmc($email, $asunto, $mensaje, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
 
     echo json_encode(array(
+        "valida" => false,
         "success" => $sql->errorCode() == 0,
         "msg" => $sql->errorCode() == 0 ? "Actualizado exitosamente" : "errores ".$sql->errorCode(),
         "data" => $sql->errorCode()
@@ -402,7 +414,7 @@ function devolver()
 
 }
 
-function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $motivo = '')
+function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $motivo = '',$rutaArchivos=[])
 {
     switch ($opcion) {
         case 'enviar' :
@@ -492,6 +504,34 @@ function getmensaje($opcion, $nombre = '', $codigo_tramite = '', $id = '', $moti
                       </div>
                       <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
                       </div>';
+            return $texto;
+            break;
+        case 'notificar' :
+            //Si tiene Adjuntos
+            $texto = '';
+            $textoAdjunto = '';
+            foreach ($rutaArchivos as $ruta) {
+                $textoAdjunto = $textoAdjunto . '<a href='.$ruta.' target="_blank">'.$ruta.'</a> <br> ';
+            }
+            $textoInicio = '<div style="font-family: Arial, Helvetica, sans-serif;">
+                      <div style="float: right; clear: both; width: 100%;">
+                         <img style="float: right;" src="http://agenciadecontrol.quito.gob.ec/images/logoamc.png" alt="" width="30%" />
+                      </div>
+                      <div style="clear: both; margin: 50px 10%; float: left;">
+                      <p>
+                         <br><br>
+                           Estimado ciudadano se envía la notificación con el código ' . $codigo_tramite . '
+                         <br><br>
+                           En el siguiente link, usted  podrá descargar su notificación.<br> ';
+
+            $textoFin = '<br><br>
+                      </p>
+                      <p>&nbsp;</p>
+                      <p>&iexcl;Trabajamos por la convivencia pac&iacute;fica!</p>
+                      </div>
+                         <p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://agenciadecontrol.quito.gob.ec/images/piepagina.png" alt="" width="100%" /></p>
+                      </div>';
+            $texto = $textoInicio . $textoAdjunto . $textoFin;
             return $texto;
             break;
     }

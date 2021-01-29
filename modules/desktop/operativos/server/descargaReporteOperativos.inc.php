@@ -428,15 +428,20 @@ while ($rowdetalle = $result->fetch(PDO::FETCH_ASSOC)) {
     }
 
     //cambio para impresion el tipo de control
-    $sql = "SELECT nombre_completo as nombre  FROM amc_ordenanzas WHERE id in (" . $rowdetalle['id_tipo_control'] . ")";
+    if ($rowdetalle['id_tipo_control'] != '') {
+        $sql = "SELECT nombre_completo as nombre  FROM amc_ordenanzas WHERE id in (" . $rowdetalle['id_tipo_control'] . ")";
 
-    $nombres = $os->db->conn->query($sql);
-    $nombresUsuarios = array();
-    while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
-        $nombresUsuarios[] = $nombreDetalle['nombre'];
+        $nombres = $os->db->conn->query($sql);
+        $nombresUsuarios = array();
+        while ($nombreDetalle = $nombres->fetch(PDO::FETCH_ASSOC)) {
+            $nombresUsuarios[] = $nombreDetalle['nombre'];
+        }
+        $cadena_personal = implode(", ", $nombresUsuarios);
+        $rowdetalle['id_tipo_control'] = $cadena_personal;
+
+     } else {
+        $rowdetalle['id_tipo_control'] = '';
     }
-    $cadena_personal = implode(", ", $nombresUsuarios);
-    $rowdetalle['id_tipo_control'] = $cadena_personal;
 
 // recuperamos los nombres de los usuarios
     $sql = "SELECT id_member, (SELECT CONCAT(qo_members.last_name, ' ', qo_members.first_name) FROM qo_members WHERE qo_members.id = b.id_member ) AS nombre  FROM amc_operativos_personal b WHERE id_operativo = '" . $rowdetalle['id'] . "'";

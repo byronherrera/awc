@@ -56,7 +56,7 @@ if (isset($_FILES)) {
         $sql->execute();
 
 
-        $resultado = migrarPestana(0, 'pma_migrate_contribuciones', $nombreArchivo[0]);
+        $resultado = migrarPestana(0, 'amc_expediente_temporal', $nombreArchivo[0]);
         if ($resultado) {
             $error = false;
             $mensajeError = '';
@@ -96,62 +96,132 @@ function migrarPestana($hoja = 0, $tabla = 'amc_expediente_temporal')
     global $os;
     global $spreadsheet;
 
-    $sql = "SELECT * FROM amc_expediente_migrate_tables WHERE active  = 1 ;";
+    // consulta a tabla con la descripcion de campos
+
+    // carga en el maestro
+    $sql = "SELECT * FROM amc_expediente_migrate_tables WHERE active  = 1 AND `table` = 'amc_expediente_temporal';";
     $result = $os->db->conn->query($sql);
     $columnas = $result->fetchAll(PDO::FETCH_ASSOC);
 
 
     $data = $spreadsheet->getSheet($hoja)->toArray(null, true, false, true);
 
-
+    // i = 8 fila que comienzan los datos
     for ($i = 8; $i <= (count($data) - 1); $i++) {
-        $cadenaDatos = '';
-        $cadenaCampos = '';
-        foreach ($data[$i] as $clave => $valor) {
+        $cadenaDatos = [];
+        $cadenaCampos = [];
 
-            if ($valor != '') {
-                // se busca el nombre de la columna
-                foreach ($columnas as &$columna) {
-                    if (in_array($data[1][$clave], $columna)) {
-                        $columnaAsociada = $columna['table'];
-                        $columType = $columna['type'];
+        foreach ($columnas as &$columna) {
+            $table_columna = $columna['table_columna'];
+            $columType = $columna['type'];
+
+            // dato
+            if ($columna['combo'] == 'NO') {
+                $excel_columna = $columna['excel_columna'];
+
+                $tableMaster = $columna['table'];
+
+                switch ($columType) {
+                    case 'varchar':
+                        $cadenaDatos[] = '"' . $data[$i][$excel_columna] . '"';
+                        $cadenaCampos[] = $table_columna;
                         break;
-                    }
-                };
-
-                // para el caso de la columna fechas
-              /*  if ($columType == 'date') {
-                    $excel_date = $valor; //here is that value 41621 or 41631
-                    $unix_date = ($excel_date - 25569) * 86400;
-                    $excel_date = 25569 + ($unix_date / 86400);
-                    $unix_date = ($excel_date - 25569) * 86400;
-                    $valor = gmdate("Y/m/d", $unix_date);
+                    case 'int':
+                        if (strlen($data[$i][$excel_columna]) > 0) {
+                            // para validar datos
+                            $data[$i][$excel_columna] = validaIntInput ($data[$i][$excel_columna]);
+                            $cadenaDatos[] = $data[$i][$excel_columna];
+                            $cadenaCampos[] = $table_columna;
+                        }
+                        break;
+                    case 'datetime':
+                        if (strlen($data[$i][$excel_columna]) > 0) {
+                            $linux_time = fromExcelToLinux($data[$i][$excel_columna]);
+                            $cadenaDatos[] = '"' . $linux_time . '"';
+                            $cadenaCampos[] = $table_columna;
+                        }
+                        break;
+                    case 'date':
+                        if (strlen($data[$i][$excel_columna]) > 0) {
+                            $linux_time = fromExcelToLinux($data[$i][$excel_columna]);
+                            $cadenaDatos[] = '"' . $linux_time . '"';
+                            $cadenaCampos[] = $table_columna;
+                        }
+                        break;
                 }
-*/
-                $valor = addslashes($valor);
+            } else {
+                // caso cuando los datos salen de una tabla
+                $table_ombo = $columna['$table_ombo'];
+                $search_field = $columna['search_field'];
 
-                //$cadenaCampos = $cadenaCampos . "`" . $columnaAsociada . "`,";
-                $cadenaCampos = $cadenaCampos . " ,";
-                $cadenaDatos = $cadenaDatos . "'" . $valor . "',";
+                $excel_columna = $columna['excel_columna'];
+                $cadenaCampos[] = $table_columna;
+                $cadenaDatos[] = $data[$i][$excel_columna];
+
+                recupeDataTablaDetalle($data[$i][$excel_columna], $search_field, $table_ombo);
+                $tableMaster = $columna['table'];
 
             }
-        }
-        // se incrementa el tipo de registro
-        $cadenaCampos = $cadenaCampos . "`tipo`,";
-        $cadenaDatos = $cadenaDatos . " ,";
+        };
 
-        $cadenaCampos = substr($cadenaCampos, 0, -1);
-        $cadenaDatos = substr($cadenaDatos, 0, -1);
+        $cadenaCampos = implode(",", $cadenaCampos);
+        $cadenaDatos = implode(",", $cadenaDatos);
+        $os->db->conn->query("SET NAMES 'utf8'");
+        $sql = "INSERT INTO $tableMaster ($cadenaCampos) values ($cadenaDatos);";
+      //  echo $sql;
 
-        $sql = "INSERT INTO $tabla ($cadenaCampos) values($cadenaDatos);";
-
-    /*    $sql = $os->db->conn->prepare($sql);
-
-        $code = $sql->errorCode();*/
-
-        echo $sql;
-
-//        $sql->execute();
+        $sql = $os->db->conn->prepare($sql);
+        $code = $sql->errorCode();
+        $sql->execute();
     }
     return true;
 }
+
+function recupeDataTablaDetalle($textoBusqueda = 'herrera avalos', $campo = "last_name", $tabla = 'qo_members')
+{
+    global $os;
+
+    $sql = "SELECT
+                id 
+            FROM
+                $tabla 
+            WHERE
+                $campo like '%$textoBusqueda%'";
+
+    $sql = $os->db->conn->prepare($sql);
+    $code = $sql->errorCode();
+    $sql->execute();
+
+
+    return 123;
+
+}
+
+function fromExcelToLinux($excel_time)
+{
+    $fechalinux = ($excel_time - 25569) * 86400;
+    return date("Y-m-d 00:00:00", $fechalinux);
+}
+
+
+function validaIntInput ($dato ) {
+
+    switch ($dato) {
+        case 'o':
+            $dato = '0';
+            break;
+        case 'O':
+            $dato = '0';
+            break;
+        case 'X':
+            $dato = '1';
+            break;
+        case 'NO':
+            $dato  = "0";
+            break;
+        case 'SI':
+            $dato  = "0";
+            break;
+    }
+    return $dato;
+};
