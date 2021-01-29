@@ -121,7 +121,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             valueField: 'id',
             displayField: 'nombre',
             triggerAction: 'all',
-            mode: 'local'
+            mode: 'local',
+            editable:       false
         });
 
         function funcionTIPOUNIDAD(id) {
