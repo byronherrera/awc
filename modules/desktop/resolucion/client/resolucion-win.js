@@ -122,7 +122,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             displayField: 'nombre',
             triggerAction: 'all',
             mode: 'local',
-            editable:       false
+            editable: false
         });
 
         function funcionTIPOUNIDAD(id) {
@@ -1038,8 +1038,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'url_documento',
                     width: 100,
                     renderer: function (value, metaData, record) {
-                        if((typeof value != 'undefined') && (value != null )) {
-                                return '<a href="' + value + '" target="_blank">Ver documento</a>';
+                        if ((typeof value != 'undefined') && (value != null)) {
+                            return '<a href="' + value + '" target="_blank">Ver documento</a>';
                         } else
                             return ''
                     }
