@@ -153,12 +153,19 @@ function selectOperativos()
     if (isset ($_POST['start']))
         $start = $_POST['start'];
     else
+        if (isset ($_GET['start']))
+            $start = $_GET['start'];
+        else
         $start = 0;
 
     if (isset ($_POST['limit']))
         $limit = $_POST['limit'];
     else
-        $limit = 100;
+        if (isset ($_GET['limit']))
+            $limit = $_GET['limit'];
+        else
+            $limit = 100;
+
 
     $orderby = 'ORDER BY CONVERT( amc_operativos.id,UNSIGNED INTEGER) DESC';
     if (isset($_POST['sort'])) {
@@ -343,12 +350,19 @@ amc_operativos.mail_enviado FROM amc_operativos $innerJoin  $where $orderby LIMI
     $row = $result->fetch(PDO::FETCH_ASSOC);
     $total = $row['total'];
 
-    echo json_encode(array(
+    $result = json_encode(array(
             "total" => $total,
             "success" => true,
             "data" => $data,
             "sql" => $sql)
     );
+    if (isset($_GET['callback']) == true) {
+        $callback = $_GET['callback'];
+        if ($callback) {
+            $result = $callback . '(' . $result . ');';
+        }
+    }
+    echo $result;
 }
 
 function insertOperativos()
