@@ -1,19 +1,27 @@
 {
-
-  "description": "Adds a solid red border to all webpages matching mozilla.org. See https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Examples#borderify",
+  "description": "Captura los datos ingresados en el sitra para ingresar en el ITT para su seguimiento",
   "manifest_version": 2,
-  "name": "Borderify",
+  "name": "AmcCaptureSitra",
   "version": "1.0",
   "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/borderify",
   "icons": {
     "48": "icons/border-48.png"
   },
 
+  "permissions": [
+    "webRequest"
+  ],
+
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
   "content_scripts": [
     {
-      "matches": ["*://t-sitra.quito.gob.ec/*"],
-      "js": ["borderify.js"]
+      "matches": ["*://t-sitra.quito.gob.ec/*", "*://localhost/*"],
+      "js": ["amccapturesitra.js"]
     }
   ]
-
 }
+

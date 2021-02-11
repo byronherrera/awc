@@ -735,8 +735,7 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios)
     $mail->AddBCC("byron.herrera@quito.gob.ec");
     $mail->AddBCC("pamela.parreno@quito.gob.ec");
     $mail->AddBCC("galo.salazar@quito.gob.ec");
-    $mail->AddBCC("eduardo.chicaiza@quito.gob.ec");
-
+    $mail->AddBCC("katherine.ramirez@quito.gob.ec@quito.gob.ec");
     $mail->Subject = $nombre;
     $mail->msgHTML($mensaje);
     $mail->AltBody = 'Mensaje enviado';

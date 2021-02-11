@@ -1038,7 +1038,7 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     dataIndex: 'url_documento',
                     width: 100,
                     renderer: function (value, metaData, record) {
-                        if ((typeof value != 'undefined') && (value != null)) {
+                        if ((typeof value != 'undefined') && (value != null)&& (value.length > 0)) {
                             return '<a href="' + value + '" target="_blank">Ver documento</a>';
                         } else
                             return ''
@@ -1284,8 +1284,14 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
                     // validamos la fecha
                     fechaActual = new Date();
                     if (record.get('fecha_ultima_notificacion') != null) {
-                        var diasDif = Math.round((fechaActual.getTime() - record.get('fecha_ultima_notificacion').getTime()) / days)
-                        console.log(diasDif);
+
+                        if (record.get('fecha_ultima_notificacion').length > 4 ) {
+                            var diasDif = Math.round((fechaActual.getTime() - record.get('fecha_ultima_notificacion').getTime()) / days)
+                        } else
+                        {
+                            diasDif = 0
+                        }
+
                         if (diasDif >= 24) {
                             return 'redstate';
                         }
@@ -3753,7 +3759,8 @@ QoDesk.ResolucionWindow = Ext.extend(Ext.app.Module, {
             numero_memorando: ' ',
             fecha_sorteo: ' ',
             fecha_ultima_notificacion: ' ',
-            es_ejecucion: 0
+            es_ejecucion: 0,
+            url_documento : null
             // fecha_envio: (new Date()),
         });
         this.gridLibroDiario.stopEditing();
