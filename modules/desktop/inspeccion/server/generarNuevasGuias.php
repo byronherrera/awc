@@ -315,8 +315,8 @@ function enviarEmail1($email, $nombre, $mensaje)
 
     $headers = "From: Agencia Metropolitana de Control <byron.herrera@quito.gob.ec>\r\n";
     //$headers .= "Reply-To: ". strip_tags("herrera.byron@gmail.com") . "\r\n";
-    $headers .= "CCO: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec\r\n";
-    $headers .= "Bcc: byron.herrera@quito.gob.ec, pamela.parreno@quito.gob.ec\r\n";
+    $headers .= "CCO: byron.herrera@quito.gob.ec\r\n";
+    $headers .= "Bcc: byron.herrera@quito.gob.ec\r\n";
 
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
@@ -349,7 +349,7 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios = [])
     $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
 
     $mail->AddBCC("byron.herrera@quito.gob.ec");
-    $mail->AddBCC("pamela.parreno@quito.gob.ec");
+    $mail->AddBCC("carlos.mafla@quito.gob.ec");
 
 
     $mail->Subject = $nombre;

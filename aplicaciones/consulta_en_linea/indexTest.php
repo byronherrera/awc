@@ -13,7 +13,7 @@
 
 <body>
 <div class="container contact-form">
-    <form enctype="multipart/form-data" id="formularioCedula" method="post">
+    <form enctype="multipart/form-data" id="formularioCedula" action="" >
         <div class="row">
             <div class="col-md-12"><label for="exampleInputEmail1">INGRESE CEDULA *</label></div>
             <div class="col-md-6">
@@ -35,6 +35,95 @@
 
     </form>
 </div>
+
+
+<div class="container contact-form">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered table-hover">
+
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Fecha ingreso</th>
+                    <th># Proceso</th>
+                    <th>Acción</th>
+                    <th>Tipo</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>2021-02-08</td>
+                    <td>AMC-2021-658</td>
+                    <td>Denuncia espacio publico</td>
+                    <td>Ingreso Documento</td>
+                    <td><a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button"
+                           aria-expanded="false" aria-controls="collapseExample">
+                            Detalle
+                        </a></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0" colspan="6"><div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                <table class="table">
+                                    <tbody>
+                                    <tr><th scope="row">Cédula/Ruc</th><td>1717007437</td></tr>
+                                    <tr><th scope="row">Nombres y Apellidos</th><td>ANDRES ROBERTO GARCIA ROMERO</td></tr>
+                                    <tr><th scope="row">Fecha </th><td>2021-02-08</td></tr>
+                                    <tr><th scope="row">Proceso </th><td>AMC-2021-658</td></tr>
+                                    <tr><th scope="row">Detalle </th><td>a1</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div></td>
+
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>2021-02-08</td>
+                    <td>AMC-2021-658</td>
+                    <td>Denuncia espacio publico</td>
+                    <td>Ingreso Documento</td>
+                    <td>
+                        <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">
+                            Detalle
+                        </button>
+                    </td>
+                </tr>
+                <tr >
+                    <td style="padding: 0"  colspan="6"><div class="collapse" id="collapseExample2">
+                            <div class="card card-body">
+                                <table class="table">
+                                    <tbody>
+                                    <tr><th scope="row">Cédula/Ruc</th><td>1717007437</td></tr>
+                                    <tr><th scope="row">Nombres y Apellidos</th><td>ANDRES ROBERTO GARCIA ROMERO</td></tr>
+                                    <tr><th scope="row">Fecha </th><td>2021-02-08</td></tr>
+                                    <tr><th scope="row">Proceso </th><td>AMC-2021-658</td></tr>
+                                    <tr><th scope="row">Detalle </th><td>a1</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div></td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+
+            <div class="collapse" id="collapseExample2">
+                <div class="card card-body">
+                    Este es el ejemplo 44
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!--ACTOS DE INCIO DE BIOSEGURIDAD-->
 <section>
     <div class="container">
@@ -110,7 +199,8 @@
 
             <div class="form-group">
                 <label for="cedulaformulario">CEDULA *</label>
-                <input type="text" class="form-control" id="cedulaformulario" name="cedulaformulario" placeholder=""
+                <input type="text" class="form-control" id="cedulaformulario" name="cedulaformulario"
+                       placeholder=""
                        required="required"
                        onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
             </div>
@@ -142,7 +232,8 @@
 
             <div class="form-group">
                 <label for="documentoformulario">DOCUMENTO SOLICITADO (OFICIO, MEMO, EXPEDIENTE, ETC).</label>
-                <textarea class="form-control" id="documentoformulario" name="documentoformulario" required="required"
+                <textarea class="form-control" id="documentoformulario" name="documentoformulario"
+                          required="required"
                           rows="3" placeholder="Ingrese el número de documento solicitado"></textarea>
             </div>
             <div class="form-group">
@@ -170,7 +261,8 @@
 
             <div class="form-group" style="padding: 20px 0">
                 <div class="form-group col-md-4">
-                    <input type="submit" class="btn btn-success btn-send btnContactSubmit" value="ENVIAR FORMULARIO">
+                    <input type="submit" class="btn btn-success btn-send btnContactSubmit"
+                           value="ENVIAR FORMULARIO">
                 </div>
 
                 <div class="form-group col-md-4">
@@ -188,16 +280,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var existeInformacion = 0;
 
-        $("input[name^='cedula']").change(function () {
-
-            if ($("input[name^='cedula']").val().length == 0) return
-
-            $('.mensaje').html('<div class="blink_me"><b>Buscando</b></div>');
-            cedula = $("input[name^='cedula']").val();
-            llamadaDatos(cedula);
-        });
         // llenar los datos zonal del combobox
         $.getJSON('formLoad.php?opcion=idzonal', function (data) {
             if (data.success) {
@@ -211,14 +294,26 @@
             }
         });
 
+        var existeInformacion = 0;
+
+        $("input[name^='cedula']").change(function () {
+
+            if ($("input[name^='cedula']").val().length == 0) return
+
+            $('.mensaje').html('<div class="blink_me"><b>Buscando</b></div>');
+            cedula = $("input[name^='cedula']").val();
+            llamadaDatos(cedula);
+        });
+
         $("#formularioCedula").on("submit", function () {
             $('.mensaje').html('<div class="blink_me"><b>Buscando</b></div>');
-
+            // TODO Para que se puso
             var formData = new FormData(document.getElementById("formularioCedula"));
             formData.append("dato", "valor");
+            // end todo
+
             var cedula = $("input[name^='cedula']").val();
             llamadaDatos(cedula);
-            renderDatosApp(cedula);
         })
 
 
@@ -246,16 +341,16 @@
 
         function llamadaDatos(cedula) {
             $("#consulta").show();
+
             getContentItt(cedula, 'dataItt', '.dataItt');
-
-            /*  getContent(cedula, 'actosbioseguridad', '.actosbioseguridad');
-              getContent(cedula, 'actosclausura', '.actosclausura');
-              //  getContent(cedula, 'dataInstruccion', '.dataInstruccion');
-              getContent(cedula, 'dataResolucion', '.dataResolucion');
-              getContent(cedula, 'dataEjecucion', '.dataEjecucion');
-              getContent(cedula, 'dataApp', '.dataApp');
-  */
-
+            /*
+                          getContent(cedula, 'actosbioseguridad', '.actosbioseguridad');
+                          getContent(cedula, 'actosclausura', '.actosclausura');
+                          //  getContent(cedula, 'dataInstruccion', '.dataInstruccion');
+                          getContent(cedula, 'dataResolucion', '.dataResolucion');
+                          getContent(cedula, 'dataEjecucion', '.dataEjecucion');
+                          getContent(cedula, 'dataApp', '.dataApp');
+              */
         }
 
         function getContent(cedula, opcion, destino) {
@@ -281,14 +376,11 @@
                             break;
                         case 'dataApp' :
                             html = formatodataApp(data)
+                            renderDatosApp(data);
                             break;
                     }
-                    //$("#consulta").hide();
-                    $(destino).html(html);
 
-                    if (opcion === 'dataApp') {
-                        renderDatosApp(data);
-                    }
+                    $(destino).html(html);
 
                 } else {
                     if (!existeInformacion)
@@ -299,12 +391,11 @@
             });
         }
 
-
         function getContentItt(cedula, opcion, destino) {
             // carga iframe con informacion de dinardat
             $(destino).html('');
             //$.getJSON('https://siamc.quito.gob.ec:8091/api/tramite?cedula=' + cedula , function (data) {
-            $.getJSON('https://amcmatis.quito.gob.ec/aplicaciones/consulta_en_linea/itt.php?cedula=' + opcion, function (data) {
+            $.getJSON('https://amcmatis.quito.gob.ec/aplicaciones/consulta_en_linea/itt.php?cedula=' + cedula, function (data) {
                 if (data) {
                     switch (opcion) {
                         case 'dataItt' :
@@ -529,6 +620,9 @@
                     "                    <tbody>\n" +
                     "                    <tr><th scope=\"row\">Cédula/Ruc</th><td>" + validaTexto(val['tra_cedula']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(val['tra_nombreCiudadano']) + "</td></tr>\n" +
+                                        "                    <tr><th scope=\"row\">Fecha </th><td>" + validaFecha(val['tra_fechaTramite']) + "</td></tr>\n" +
+                                        "                    <tr><th scope=\"row\">Proceso </th><td>" + validaTexto(val['tra_numero']) + "</td></tr>\n" +
+                                        "                    <tr><th scope=\"row\">Detalle </th><td>" + validaTexto(val['tra_observacion']) + "</td></tr>\n" +
                     /*                    "                    <tr><th scope=\"row\">Dirección de Domicilio </th><td>" + validaTexto(val['direccionDomicilio']) + "</td></tr>\n" +
                                         "                    <tr><th scope=\"row\">Dirección de Trabajo </th><td>" + validaTexto(val['direccionTrabajo']) + "</td></tr>\n" +
                                         "                    <tr><th scope=\"row\">Email </th><td>" + validaTexto(val['email']) + "</td></tr>\n" +
@@ -633,11 +727,9 @@
                 if (val['sancion_un_salario_medio'] === 'NO') {
                     $(".sancionSalyMedio" + key).css("display", "none");
                 }
-
                 $(".fotos" + key).css("display", "flex");
                 $(".fotos" + key).css("justify-content", "space-between");
                 $(".fotos" + key).css("flex-wrap", "wrap");
-
             });
         }
 
@@ -647,7 +739,6 @@
             else
                 return "n/a";
         }
-
     });
 
     function validarFile(all) {
@@ -668,6 +759,7 @@
             return;
         }
     }
+
 </script>
 
 <!-- Global site tag (gtag.js) - Google Analytics -->

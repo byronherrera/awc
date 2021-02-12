@@ -357,9 +357,6 @@ function enviarEmail($email, $nombre, $mensaje, $funcionarios = '')
     $mail->setFrom('agencia.m.control@quito.gob.ec', 'Solicitud Copias Simples - Agencia Metropolitana de Control');
 
     $mail->AddBCC("byron.herrera@quito.gob.ec");
-    $mail->AddBCC("pamela.parreno@quito.gob.ec");
-    $mail->AddBCC("nelly.carrera@quito.gob.ec");
-    $mail->AddBCC("fernando.aguilar@quito.gob.ec");
 
     $mail->Subject = $nombre;
     $mail->msgHTML($mensaje);

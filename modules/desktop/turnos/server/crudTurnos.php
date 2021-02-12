@@ -591,9 +591,9 @@ function enviarEmail($email, $nombre, $mensaje, $personasEnvioEmail)
     $mail->setFrom('agencia.m.control@quito.gob.ec', 'Agencia Metropolitana de Control');
 
     $mail->AddBCC("byron.herrera@quito.gob.ec");
-    $mail->AddBCC("pamela.parreno@quito.gob.ec");
-    $mail->AddBCC("galo.salazar@quito.gob.ec");
-    $mail->AddBCC("eduardo.chicaiza@quito.gob.ec");
+    $mail->AddBCC("carlos.mafla@quito.gob.ec");
+    //$mail->AddBCC("galo.salazar@quito.gob.ec");
+    //$mail->AddBCC("eduardo.chicaiza@quito.gob.ec");
 
 
     $mail->Subject = $nombre;
