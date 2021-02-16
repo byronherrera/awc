@@ -314,10 +314,6 @@ function  enviarEmail ($email, $nombre, $mensaje, $copia = '')
 //$mail->addReplyTo('replyto@example.com', 'First Last');
 
     $mail->AddBCC("byron.herrera@quito.gob.ec");
-    $mail->AddBCC("pamela.parreno@quito.gob.ec");
-    $mail->AddBCC("nelly.carrera@quito.gob.ec");
-    $mail->AddBCC("natalia.caicedo@quito.gob.ec");
-    $mail->AddBCC("narcisa.andrade@quito.gob.ec");
 
 //Set who the message is to be sent to
     $mail->addAddress($email, $nombre);

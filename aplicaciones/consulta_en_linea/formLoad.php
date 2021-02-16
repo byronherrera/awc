@@ -65,7 +65,7 @@ switch ($opcion) {
         $funcionarios = ["tanya.ortega@quito.gob.ec", "francisco.collaguazo@quito.gob.ec"];
         //$funcionarios = ["byron.herrera@quito.gob.ec" ];
 
-        $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "pamela.parreno@quito.gob.ec", "nelly.carrera@quito.gob.ec"];
+        $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec"];
         $from = 'Solicitud de Información - Agencia Metropolitana de Control';
         // activar envio de correos de prueba
         $prueba = true;

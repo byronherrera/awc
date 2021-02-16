@@ -12,6 +12,7 @@ Ext.define('Writer.Form', {
             title: 'Detalle operativo',
             defaultType: 'textfield',
             bodyPadding: 5,
+            height: 'auto',
             fieldDefaults: {
                 anchor: '100%',
                 labelAlign: 'right'
@@ -19,7 +20,15 @@ Ext.define('Writer.Form', {
             items: [
                 {fieldLabel: 'Parroquias', name: 'parroquias', allowBlank: false},
                 {fieldLabel: 'Barrios', name: 'barrios', allowBlank: false},
-                {fieldLabel: 'Detalle', name: 'detalle', allowBlank: false}
+                {
+                    xtype: 'displayfield',
+                    fieldLabel: 'Detalle',
+                    name: 'fecha_respuesta_devolucion' ,
+                    labelAlign: 'left'
+
+                },
+
+                {name: 'detalle', allowBlank: false, xtype: 'htmleditor', height: 200},
             ],
             dockedItems: [{
                 xtype: 'toolbar',

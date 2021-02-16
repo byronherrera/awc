@@ -309,7 +309,7 @@ function ingresaNuevoProceso()
     $sql = "INSERT INTO amc_secretaria_copias_simples ($cadenaCampos) VALUES ($cadenaDatos);";
     $sql = $os->db->conn->prepare($sql);
     $result = $sql->execute();
-    $funcionarios = ["byron.herrera@quito.gob.ec","pamela.parreno@quito.gob.ec", "nelly.carrera@quito.gob.ec" , "fernando.aguilar@quito.gob.ec" ];
+    $funcionarios = ["byron.herrera@quito.gob.ec" ];
 // genero el nuevo codigo de proceso
     $ultimo = $os->db->conn->lastInsertId();
     $data->id = $ultimo;

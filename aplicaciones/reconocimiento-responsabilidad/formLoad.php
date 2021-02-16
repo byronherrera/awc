@@ -38,7 +38,7 @@ switch ($opcion) {
        // getFuncionarioEncargado ( $data->idzonal) ;
         $funcionarios = ["byron.herrera@quito.gob.ec" ];
         //TODO quien hace el seguimiento
-        $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec", "pamela.parreno@quito.gob.ec"];
+        $funcionariosSeguimiento = ["byron.herrera@quito.gob.ec"];
         $from = 'Solicitud de Allanamiento - Agencia Metropolitana de Control';
         $prueba = false;
         $resultado = enviarEmailAmc($email, $asunto, $contenidoMailRecepcion, $funcionarios, $funcionariosSeguimiento, $from , $prueba);
