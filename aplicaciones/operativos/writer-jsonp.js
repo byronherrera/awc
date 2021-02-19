@@ -12,13 +12,23 @@ Ext.define('Writer.Form', {
             title: 'Detalle operativo',
             defaultType: 'textfield',
             bodyPadding: 5,
+            height: 'auto',
             fieldDefaults: {
                 anchor: '100%',
                 labelAlign: 'right'
             },
-            items: [{fieldLabel: 'detalle', name: 'detalle', allowBlank: false},
-                {fieldLabel: 'parroquias', name: 'parroquias', allowBlank: false},
-                {fieldLabel: 'barrios', name: 'barrios', allowBlank: false}
+            items: [
+                {fieldLabel: 'Parroquias', name: 'parroquias', allowBlank: false},
+                {fieldLabel: 'Barrios', name: 'barrios', allowBlank: false},
+                {
+                    xtype: 'displayfield',
+                    fieldLabel: 'Detalle',
+                    name: 'fecha_respuesta_devolucion',
+                    labelAlign: 'left'
+
+                },
+
+                {name: 'detalle', allowBlank: false, xtype: 'htmleditor', height: 200},
             ],
             dockedItems: [{
                 xtype: 'toolbar',
@@ -344,81 +354,29 @@ Ext.onReady(function () {
 
     Ext.tip.QuickTipManager.init();
 
-    /*  Ext.create('Ext.button.Button', {
-          margin: '0 0 20 20',
-          text: 'Reset sample database back to initial state',
-          renderTo: document.body,
-          tooltip: 'The sample database is stored in the session, including any changes you make. Click this button to reset the sample database to the initial state',
-          handler: function () {
-              var didReset, o;
-
-              Ext.getBody().mask('Resetting...');
-              Ext.Ajax.request({
-                  url: 'app.php/example/reset',
-                  callback: function (options, success, response) {
-                      Ext.getBody().unmask();
-
-                      didReset = true;
-
-                      if (success) {
-                          try {
-                              o = Ext.decode(response.responseText);
-                              didReset = o.success === true;
-                          }
-                          catch (e) {
-                              didReset = false;
-                          }
-                      }
-                      else {
-                          didReset = false;
-                      }
-
-                      if (didReset) {
-                          store.load();
-                          main.down('#form').setActiveRecord(null);
-                          Ext.example.msg('Reset', 'Reset successful');
-                      }
-                      else {
-                          Ext.MessageBox.alert('Error', 'Unable to reset example database');
-                      }
-
-                  }
-              });
-          }
-      });*/
     var urlOperativos = "../../modules/desktop/operativos/server/";
     store = Ext.create('Ext.data.Store', {
         model: 'Writer.Person',
         autoLoad: true,
         autoSync: true,
         proxy: {
-            //type: 'ajax',
-            extraParams: {
-                limit: 10
-            },
-            type: 'jsonp',
+            type: 'ajax',
             api: {
                 create: urlOperativos + "crudOperativos.php?operation=insert",
                 read: urlOperativos + "crudOperativos.php?operation=select",
                 update: urlOperativos + "crudOperativos.php?operation=update",
                 destroy: urlOperativos + "crudOperativos.php?operation=delete"
-                /*
-                read: 'app.php/users/view',
-                create: 'app.php/users/create',
-                update: 'app.php/users/update',
-                destroy: 'app.php/users/destroy'*/
             },
             reader: {
                 type: 'json',
                 successProperty: 'success',
-                rootProperty: 'data',
+                root: 'data',
                 messageProperty: 'message'
             },
             writer: {
                 type: 'json',
-                encode: true,
                 writeAllFields: false,
-                rootProperty: 'data'
+                root: 'data'
             },
             listeners: {
                 exception: function (proxy, response, operation) {
@@ -445,7 +403,7 @@ Ext.onReady(function () {
     main = Ext.create('Ext.container.Container', {
         padding: '0 0 0 0',
         width: '100%',
-        height: Ext.themeName === 'neptune' ? 700 : 650,
+        height: Ext.themeName === 'neptune' ? 800 : 800,
         renderTo: document.body,
         layout: {
             type: 'vbox',
@@ -454,8 +412,8 @@ Ext.onReady(function () {
         items: [{
             itemId: 'grid',
             xtype: 'writergrid',
-            title: 'User List',
-            flex: 1,
+            title: 'Operativos',
+            height: '40%',
             margin: '0 0 10 0',
             store: store,
             listeners: {

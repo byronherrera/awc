@@ -453,7 +453,16 @@ function updateOperativos()
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    $data = json_decode($_POST["data"]);
+
+
+    if (isset ($_POST['data']))
+        $data = json_decode($_POST["data"]);
+    else
+    {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
+    }
+
     $resultado = '';
     if (isset($data->visible)) {
         if ($data->visible) {
@@ -556,6 +565,7 @@ function updateOperativos()
     echo json_encode(array(
         "success" => $sql->errorCode() == 0,
         "mail" => $resultado,
+        "message" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos actualizado exitosamente" : $sql->errorCode(),
         "msg" => $sql->errorCode() == 0 ? "Ubicación en amc_operativos actualizado exitosamente" : $sql->errorCode(),
         "data" => array($data)
     ));

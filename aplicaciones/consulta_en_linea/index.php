@@ -304,6 +304,7 @@
                     "                    <tr><th scope=\"row\">Cierre de Instrución</th><td>" + validaImagen(imagenes.archivo5, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Certificación</th><td>" + validaImagen(imagenes.archivo6, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Listado de expedientes publicados</th><td>" + validaImagen(imagenes.archivo7, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Resolucion</th><td>" + validaImagen(imagenes.resolucion, '') + "</td></tr>\n" +
                     "                    </tbody>\n" +
                     "                </table>"
             });
