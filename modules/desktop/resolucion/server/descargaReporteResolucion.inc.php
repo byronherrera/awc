@@ -565,7 +565,7 @@ function nombreFuncionario($id_dato)
 {
     global $os;
     $os->db->conn->query("SET NAMES 'utf8'");
-    if (($id_dato != '') and (isset($id_dato))) {
+    if (($id_dato != '') and ((int)$id_dato > 0) and (isset($id_dato))) {
         $sql = "SELECT a.id, CONCAT(a.first_name,' ',a.last_name) AS nombre FROM qo_members a
             WHERE $id_dato = a.id";
         $nombre = $os->db->conn->query($sql);

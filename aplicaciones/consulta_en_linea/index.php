@@ -8,7 +8,7 @@
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="../vendor/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
     <link href="css/form-ifram.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 </head>
 
 <body>
@@ -32,6 +32,16 @@
         </div>
     </form>
 </div>
+
+<!--ACTOS DE INCIO DE TRAMITES-->
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="dataItt"></div>
+        </div>
+    </div>
+</section>
+
 <!--ACTOS DE INCIO DE BIOSEGURIDAD-->
 <section>
     <div class="container">
@@ -89,8 +99,10 @@
 <div class="container contact-form" id="consulta" style="display: block">
 
     <h3>CONSULTE SU TRAMITE O SANCION </h3>
-    <P>Actualmente nos encontramos trabajando en poner a disposición de la ciudadanía toda la información que disponemos, en caso de
-    no desplegarse lo solitado llene el siguiente formulario, uno de nuestros funcionarios realizará la búsqueda en nuestro registros, y se contactará con usted.</P>
+    <P>Actualmente nos encontramos trabajando en poner a disposición de la ciudadanía toda la información que
+        disponemos, en caso de
+        no desplegarse lo solitado llene el siguiente formulario, uno de nuestros funcionarios realizará la búsqueda en
+        nuestro registros, y se contactará con usted.</P>
     <form enctype="multipart/form-data" id="formularioConsulta" method="post">
         <div class="row">
 
@@ -101,23 +113,27 @@
             </div>
             <div class="form-group">
                 <label for="nombresformulario">NOMBRES COMPLETOS*</label>
-                <input type="text" class="form-control " id="nombresformulario" name="nombresformulario" required="required"
+                <input type="text" class="form-control " id="nombresformulario" name="nombresformulario"
+                       required="required"
                        placeholder="Nombres">
             </div>
             <div class="form-group">
                 <label for="apellidosformulario">APELLIDOS COMPLETOS*</label>
-                <input type="text" class="form-control " id="apellidosformulario" name="apellidosformulario" required="required"
+                <input type="text" class="form-control " id="apellidosformulario" name="apellidosformulario"
+                       required="required"
                        placeholder="Apellidos">
             </div>
 
             <div class="form-group">
                 <label for="correo">CORREO ELECTRONICO*</label>
-                <input id="correoformulario" type="text" name="correoformulario" class="form-control" required="required"
+                <input id="correoformulario" type="text" name="correoformulario" class="form-control"
+                       required="required"
                        placeholder="Ingrese su correo">
             </div>
             <div class="form-group">
                 <label for="celularformulario">CELULAR</label>
-                <input id="celularformulario" type="text" name="celularformulario" class="form-control" required="required"
+                <input id="celularformulario" type="text" name="celularformulario" class="form-control"
+                       required="required"
                        placeholder="Ingrese su número celular">
             </div>
 
@@ -128,7 +144,8 @@
             </div>
             <div class="form-group">
                 <label for="observacionesformulario">OBSERVACIONES.</label>
-                <textarea class="form-control" id="observacionesformulario" name="observacionesformulario" required="required"
+                <textarea class="form-control" id="observacionesformulario" name="observacionesformulario"
+                          required="required"
                           rows="3"></textarea>
             </div>
 
@@ -180,7 +197,7 @@
             cedula = $("input[name^='cedula']").val();
             llamadaDatos(cedula);
         });
-    // llenar los datos zonal del combobox
+        // llenar los datos zonal del combobox
         $.getJSON('formLoad.php?opcion=idzonal', function (data) {
             if (data.success) {
                 $.each(data.data[0], function (i, el) {
@@ -193,15 +210,13 @@
             }
         });
 
-        $("#formularioCedula").on("submit", function (e) {
+        $( "#formularioCedula" ).submit(function( event ) {
+            if ($("input[name^='cedula']").val().length == 0) return
             $('.mensaje').html('<div class="blink_me"><b>Buscando</b></div>');
-            var formData = new FormData(document.getElementById("formularioCedula"));
-            formData.append("dato", "valor");
-            var cedula = $("input[name^='cedula']").val();
+            cedula = $("input[name^='cedula']").val();
             llamadaDatos(cedula);
-            renderDatosApp(cedula);
-        })
-
+            event.preventDefault();
+        });
 
         $("#formularioConsulta").on("submit", function (e) {
 
@@ -225,6 +240,7 @@
 
         function llamadaDatos(cedula) {
             $("#consulta").show();
+            getContentItt(cedula, 'dataItt', '.dataItt');
             getContent(cedula, 'actosbioseguridad', '.actosbioseguridad');
             getContent(cedula, 'actosclausura', '.actosclausura');
             //  getContent(cedula, 'dataInstruccion', '.dataInstruccion');
@@ -232,6 +248,31 @@
             getContent(cedula, 'dataEjecucion', '.dataEjecucion');
             getContent(cedula, 'dataApp', '.dataApp');
         }
+
+        function getContentItt(cedula, opcion, destino) {
+            // carga iframe con informacion de dinardat
+            $(destino).html('');
+            $.getJSON('https://siamc.quito.gob.ec:8091/api/tramite?cedula=' + cedula, function (data) {
+                //$.getJSON('https://amcmatis.quito.gob.ec/aplicaciones/consulta_en_linea/itt.php?cedula=' + cedula, function (data) {
+                if (data) {
+                    switch (opcion) {
+                        case 'dataItt' :
+                            //
+                            html = formatodataItt(data)
+                            break;
+                    }
+                    $('.mensaje').html('');
+                    $(destino).html(html);
+
+                } else {
+                    if (!existeInformacion)
+                        $('.mensaje').html('<div><b>No se encuentra información</b></div>');
+                    else
+                        $('.mensaje').html('');
+                }
+            });
+        }
+
 
         function getContent(cedula, opcion, destino) {
             // carga iframe con informacion de dinardat
@@ -263,7 +304,7 @@
                     //$("#consulta").hide();
                     $(destino).html(html);
 
-                    if(opcion === 'dataApp'){
+                    if (opcion === 'dataApp') {
                         renderDatosApp(data);
                     }
 
@@ -305,6 +346,31 @@
                     "                    <tr><th scope=\"row\">Certificación</th><td>" + validaImagen(imagenes.archivo6, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Listado de expedientes publicados</th><td>" + validaImagen(imagenes.archivo7, 'https://amcmatis.quito.gob.ec/emergencia/') + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Resolucion</th><td>" + validaImagen(imagenes.resolucion, '') + "</td></tr>\n" +
+                    "                    </tbody>\n" +
+                    "                </table>"
+            });
+            return html;
+        }
+
+        function formatodataItt(data) {
+            var html = '';
+            if (!existeInformacion)
+                existeInformacion = 1;
+            if (data.length)
+                html += "<h3>SEGUIMIENTO DE TRAMITES</h3>";
+            $.each(data, function (key, val) {
+                html += "                   <table class=\"table\">\n" +
+                    "                    <tbody>\n" +
+                    "                    <tr><th scope=\"row\">#</th><td>" + validaTexto(key + 1) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Cédula/Ruc</th><td>" + validaTexto(val['tra_cedula']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Nombres y Apellidos</th><td>" + validaTexto(val['tra_nombreCiudadano']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Fecha </th><td>" + validaFecha(val['tra_fechaTramite']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Proceso </th><td>" + validaTexto(val['tra_numero']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Detalle </th><td>" + validaTexto(val['tra_observacion']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Tipo trámite</th><td>" + validaTexto(val['tipo']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Estado</th><td>" + validaTexto(val['estado']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\">Área trámite</th><td>" + validaTexto(val['area_nombre']) + "</td></tr>\n" +
+                    "                    <tr><th scope=\"row\"> </th><td> </td></tr>\n" +
                     "                    </tbody>\n" +
                     "                </table>"
             });
@@ -446,29 +512,29 @@
                     "                    <tr><th scope=\"row\">Fecha Infracción</th><td>" + validaFecha(val['fechaInfraccion']) + "</td></tr>\n" +
                     "                    <tr><th scope=\"row\">Hora de Infracción </th><td>" + validaTexto(val['horaInfraccion']) + "</td></tr>\n" +
 
-                    "                    <tr class=\"aislamiento"+key+"\"><th scope=\"row\">Aislamiento Obligatorio </th><td>" + validaTexto(val['aislamiento_obligatorio']) + "</td></tr>\n" +
-                    "                    <tr class=\"conductorSinMascarilla"+key+"\"><th scope=\"row\">Conductor sin Mascarilla </th><td>" + validaTexto(val['conductorSinMascarilla']) + "</td></tr>\n" +
-                    "                    <tr class=\"sinMascarilla"+key+"\"><th scope=\"row\">Sin Mascarilla Espacios Públicos </th><td>" + validaTexto(val['infraccionSinMascarilla']) + "</td></tr>\n" +
-                    "                    <tr class=\"sinMascarilla2"+key+"\"><th scope=\"row\">Sin Mascarilla Aire Libre </th><td>" + validaTexto(val['infraccionSinMascarilla2']) + "</td></tr>\n" +
-                    "                    <tr class=\"sinCedula"+key+"\"><th scope=\"row\">Sin Cédula </th><td>" + validaTexto(val['infraccioncedula']) + "</td></tr>\n" +
-                    "                    <tr class=\"sinDistancia"+key+"\"><th scope=\"row\">Sin Distancia </th><td>" + validaTexto(val['infracciondistancia']) + "</td></tr>\n" +
-                    "                    <tr class=\"sancion25"+key+"\"><th scope=\"row\">Sanción 25 SMU </th><td>" + validaTexto(val['sancion_25_SMU']) + "</td></tr>\n" +
-                    "                    <tr class=\"sancion50"+key+"\"><th scope=\"row\">Sanción 50 SMU </th><td>" + validaTexto(val['sancion_50_SMU']) + "</td></tr>\n" +
-                    "                    <tr class=\"sancionTresSal"+key+"\"><th scope=\"row\">Sanción tres salarios </th><td>" + validaTexto(val['sancion_tres_salarios']) + "</td></tr>\n" +
-                    "                    <tr class=\"sancionSalyMedio"+key+"\"><th scope=\"row\">Sanción un salario y medio </th><td>" + validaTexto(val['sancion_un_salario_medio']) + "</td></tr>\n" +
+                    "                    <tr class=\"aislamiento" + key + "\"><th scope=\"row\">Aislamiento Obligatorio </th><td>" + validaTexto(val['aislamiento_obligatorio']) + "</td></tr>\n" +
+                    "                    <tr class=\"conductorSinMascarilla" + key + "\"><th scope=\"row\">Conductor sin Mascarilla </th><td>" + validaTexto(val['conductorSinMascarilla']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinMascarilla" + key + "\"><th scope=\"row\">Sin Mascarilla Espacios Públicos </th><td>" + validaTexto(val['infraccionSinMascarilla']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinMascarilla2" + key + "\"><th scope=\"row\">Sin Mascarilla Aire Libre </th><td>" + validaTexto(val['infraccionSinMascarilla2']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinCedula" + key + "\"><th scope=\"row\">Sin Cédula </th><td>" + validaTexto(val['infraccioncedula']) + "</td></tr>\n" +
+                    "                    <tr class=\"sinDistancia" + key + "\"><th scope=\"row\">Sin Distancia </th><td>" + validaTexto(val['infracciondistancia']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancion25" + key + "\"><th scope=\"row\">Sanción 25 SMU </th><td>" + validaTexto(val['sancion_25_SMU']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancion50" + key + "\"><th scope=\"row\">Sanción 50 SMU </th><td>" + validaTexto(val['sancion_50_SMU']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancionTresSal" + key + "\"><th scope=\"row\">Sanción tres salarios </th><td>" + validaTexto(val['sancion_tres_salarios']) + "</td></tr>\n" +
+                    "                    <tr class=\"sancionSalyMedio" + key + "\"><th scope=\"row\">Sanción un salario y medio </th><td>" + validaTexto(val['sancion_un_salario_medio']) + "</td></tr>\n" +
 
-//                    "                    <tr><th scope=\"row\">Foto</th><td>" + validaURL(val['foto']) + "</td></tr>\n" +
-//                    "                    <tr><th scope=\"row\">Foto1</th><td>" + validaURL(val['foto1']) + "</td></tr>\n" +
-//                    "                    <tr><th scope=\"row\">Foto2</th><td>" + validaURL(val['foto2']) + "</td></tr>\n" +
-                    "                    <tr class=\"fotos"+key+"\"><th scope=\"row\">Fotos</th>" +
-                    "                     <td>"+validaAppURL(val['foto'])+"</td>" +
-                    "                     <td>"+validaAppURL(val['foto1'])+"</td>" +
-                    "                     <td>"+validaAppURL(val['foto2'])+"</td>" +
+                    //                    "                    <tr><th scope=\"row\">Foto</th><td>" + validaURL(val['foto']) + "</td></tr>\n" +
+                    //                    "                    <tr><th scope=\"row\">Foto1</th><td>" + validaURL(val['foto1']) + "</td></tr>\n" +
+                    //                    "                    <tr><th scope=\"row\">Foto2</th><td>" + validaURL(val['foto2']) + "</td></tr>\n" +
+                    "                    <tr class=\"fotos" + key + "\"><th scope=\"row\">Fotos</th>" +
+                    "                     <td>" + validaAppURL(val['foto']) + "</td>" +
+                    "                     <td>" + validaAppURL(val['foto1']) + "</td>" +
+                    "                     <td>" + validaAppURL(val['foto2']) + "</td>" +
                     "                    </tr>\n" +
                     "                    </tbody>\n" +
                     "                </table>"
             });
-            console.log('>>>Html',html)
+//            console.log('>>>Html',html)
             return html;
         }
 
@@ -512,40 +578,40 @@
 
         function renderDatosApp(data) {
             $.each(data.data, function (key, val) {
-                if(val['aislamiento_obligatorio'] === "NO" ){
-                    $(".aislamiento"+key).css("display","none");
+                if (val['aislamiento_obligatorio'] === "NO") {
+                    $(".aislamiento" + key).css("display", "none");
                 }
-                if( val['conductorSinMascarilla'] === 'NO'){
-                    $(".conductorSinMascarilla"+key).css("display","none");
+                if (val['conductorSinMascarilla'] === 'NO') {
+                    $(".conductorSinMascarilla" + key).css("display", "none");
                 }
-                if(val['infraccionSinMascarilla'] === 'NO'){
-                    $(".sinMascarilla"+key).css("display","none");
+                if (val['infraccionSinMascarilla'] === 'NO') {
+                    $(".sinMascarilla" + key).css("display", "none");
                 }
-                if(val['infraccionSinMascarilla2'] === 'NO'){
-                    $(".sinMascarilla2"+key).css("display","none");
+                if (val['infraccionSinMascarilla2'] === 'NO') {
+                    $(".sinMascarilla2" + key).css("display", "none");
                 }
-                if(val['infraccioncedula'] === 'NO'){
-                    $(".sinCedula"+key).css("display","none");
+                if (val['infraccioncedula'] === 'NO') {
+                    $(".sinCedula" + key).css("display", "none");
                 }
-                if(val['infracciondistancia'] === 'NO'){
-                    $(".sinDistancia"+key).css("display","none");
+                if (val['infracciondistancia'] === 'NO') {
+                    $(".sinDistancia" + key).css("display", "none");
                 }
-                if(val['sancion_25_SMU'] === 'NO'){
-                   $(".sancion25"+key).css("display","none");
+                if (val['sancion_25_SMU'] === 'NO') {
+                    $(".sancion25" + key).css("display", "none");
                 }
-                if(val['sancion_50_SMU'] === 'NO'){
-                   $(".sancion50"+key).css("display","none");
+                if (val['sancion_50_SMU'] === 'NO') {
+                    $(".sancion50" + key).css("display", "none");
                 }
-                if(val['sancion_tres_salarios'] === 'NO'){
-                   $(".sancionTresSal"+key).css("display","none");
+                if (val['sancion_tres_salarios'] === 'NO') {
+                    $(".sancionTresSal" + key).css("display", "none");
                 }
-                if(val['sancion_un_salario_medio'] === 'NO'){
-                   $(".sancionSalyMedio"+key).css("display","none");
+                if (val['sancion_un_salario_medio'] === 'NO') {
+                    $(".sancionSalyMedio" + key).css("display", "none");
                 }
 
-                $(".fotos"+key).css("display","flex");
-                $(".fotos"+key).css("justify-content","space-between");
-                $(".fotos"+key).css("flex-wrap","wrap");
+                $(".fotos" + key).css("display", "flex");
+                $(".fotos" + key).css("justify-content", "space-between");
+                $(".fotos" + key).css("flex-wrap", "wrap");
 
             });
         }
@@ -559,22 +625,20 @@
 
     });
 
-    function validarFile(all){
+    function validarFile(all) {
         //EXTENSIONES Y TAMANO PERMITIDO.
-        var extensiones_permitidas = [".png",   ".jpg", ".jpeg", ".pdf", ".doc", ".docx" ];
+        var extensiones_permitidas = [".png", ".jpg", ".jpeg", ".pdf", ".doc", ".docx"];
         var tamano = 8; // EXPRESADO EN MB.
         var rutayarchivo = all.value;
         var ultimo_punto = all.value.lastIndexOf(".");
         var extension = rutayarchivo.slice(ultimo_punto, rutayarchivo.length);
-        if(extensiones_permitidas.indexOf(extension) == -1)
-        {
+        if (extensiones_permitidas.indexOf(extension) == -1) {
             alert("Extensión de archivo no valida");
             document.getElementById(all.id).value = "";
             return; // Si la extension es no válida ya no chequeo lo de abajo.
         }
-        if((all.files[0].size / 1048576) > tamano)
-        {
-            alert("El archivo no puede superar los "+tamano+"MB");
+        if ((all.files[0].size / 1048576) > tamano) {
+            alert("El archivo no puede superar los " + tamano + "MB");
             document.getElementById(all.id).value = "";
             return;
         }

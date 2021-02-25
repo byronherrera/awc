@@ -342,7 +342,7 @@
         function llamadaDatos(cedula) {
             $("#consulta").show();
 
-            getContentItt(cedula, 'dataItt', '.dataItt');
+                getContentItt(cedula, 'dataItt', '.dataItt');
             /*
                           getContent(cedula, 'actosbioseguridad', '.actosbioseguridad');
                           getContent(cedula, 'actosclausura', '.actosclausura');
