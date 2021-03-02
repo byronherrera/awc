@@ -290,11 +290,11 @@
                             break;
                         case 'dataApp' :
                             html = formatodataApp(data)
-                            renderDatosApp(data);
                             break;
                     }
 
                     $(destino).html(html);
+                    renderDatosApp(data);
 
                 } else {
                     if (!existeInformacion)
@@ -349,9 +349,11 @@
             "<tbody> ";
             let htmlDetalle = "";
             let htmlFooter = "</tbody> </table> ";
+            let i = 0;
             $.each(data, function (key, val) {
+                i++;
                 htmlDetalle += "<tr>"+
-                                 "<th scope='row'>1</th> "+
+                                 "<th scope='row'>"+i+"</th> "+
                                  "<td>"+validaTexto(val['tra_numero'])+"</td> "+
                                  "<td>"+validaFecha(val['tra_fechaTramite'])+"</td> "+
                                  "<td>"+validaTexto(val['estado'])+"</td> "+
@@ -359,12 +361,12 @@
                                  "<td>"+validaTexto(val['tipo'])+"</td> "+
                                  "<td>Seguimiento de Trámites</td> "+
                                  "<td> "+
-                                   "<a class='btn btn-primary' data-toggle='collapse' href='#tramite' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
+                                   "<a class='btn btn-primary' data-toggle='collapse' href='#tramite"+key+"'  role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
                                  "</td> "+
                                "</tr>"+
                                "<tr> "+
                                   "<td style='padding: 0' colspan='6'> "+
-                                  "<div class='collapse' id='tramite'> "+
+                                  "<div class='collapse' id='tramite"+key+"'"+"> "+
                                   "<div class='card card-body'> "+
                                   "<table class='table'> "+
                                     "<tbody> "+
@@ -403,13 +405,15 @@
                     "<tbody> ";
             let htmlDetalle = "";
             let htmlFooter = "</tbody> </table> ";
+            let i = 0;
             $.each(data.data, function (key, val) {
+                    i++;
                     if (JSON.parse(val['imagenacto']) != null)
                         imagenes = JSON.parse(val['imagenacto']);
                     else
                         imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
                     htmlDetalle += "<tr>"+
-                        "<th scope='row'>1</th> "+
+                        "<th scope='row'>"+i+"</th> "+
                         "<td>"+validaTexto(val['actainfraccion'])+"</td> "+
                         "<td>"+validaFecha(validaFecha(val['fecha']))+"</td> "+
                         //"<td>"+validaTexto(val['estado'])+"</td> "+
@@ -417,12 +421,12 @@
                         //"<td>"+validaTexto(val['tipo'])+"</td> "+
                         "<td>Bioseguridad</td> "+
                         "<td> "+
-                        "<a class='btn btn-primary' data-toggle='collapse' href='#bioseguridad' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
+                        "<a class='btn btn-primary' data-toggle='collapse' href='#bioseguridad"+key+"' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
                         "</td> "+
                         "</tr>"+
                         "<tr> "+
                         "<td style='padding: 0' colspan='6'> "+
-                        "<div class='collapse' id='bioseguridad'> "+
+                        "<div class='collapse' id='bioseguridad"+key+"'"+"> "+
                         "<div class='card card-body'> "+
                         "<table class='table'> "+
                         "<tbody> "+
@@ -470,23 +474,25 @@
                 "<tbody> ";
             let htmlDetalle = "";
             let htmlFooter = "</tbody> </table> ";
+            let i = 0;
             $.each(data, function (key, val) {
+                i++;
                 if (JSON.parse(val['imagenacto']) != null)
                     imagenes = JSON.parse(val['imagenacto']);
                 else
                     imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
                  htmlDetalle += "<tr>"+
-                    "<th scope='row'>1</th> "+
+                    "<th scope='row'>"+i+"</th> "+
                     "<td>"+validaTexto(val['actainfraccion'])+"</td> "+
                     "<td>"+validaFecha(validaFecha(val['fecha']))+"</td> "+
                     "<td>Actos Inicio Locales</td> "+
                     "<td> "+
-                    "<a class='btn btn-primary' data-toggle='collapse' href='#locales' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
+                    "<a class='btn btn-primary' data-toggle='collapse' href='#locales"+key+"' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
                     "</td> "+
                     "</tr>"+
                     "<tr> "+
                     "<td style='padding: 0' colspan='6'> "+
-                    "<div class='collapse' id='locales'> "+
+                    "<div class='collapse' id='locales"+key+"'"+"> "+
                     "<div class='card card-body'> "+
                     "<table class='table'> "+
                     "<tbody> "+
@@ -528,25 +534,26 @@
                 "<tbody> ";
             let htmlDetalle = "";
             let htmlFooter = "</tbody> </table> ";
-
+            let i = 0;
             $.each(data.data, function (key, val) {
+                i++;
                 if (JSON.parse(val['imagenacto']) != null)
                     imagenes = JSON.parse(val['imagenacto']);
                 else
                     imagenes = JSON.parse('{"archivo1":null,"archivo2":null}');
 
                 htmlDetalle += "<tr>"+
-                    "<th scope='row'>1</th> "+
+                    "<th scope='row'>"+i+"</th> "+
                     "<td>"+validaTexto(val['actainfraccion'])+"</td> "+
                     "<td>"+validaFecha(validaFecha(val['fecha']))+"</td> "+
                     "<td>Instrucción</td> "+
                     "<td> "+
-                    "<a class='btn btn-primary' data-toggle='collapse' href='#instruccion' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
+                    "<a class='btn btn-primary' data-toggle='collapse' href='#instruccion"+key+"' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
                     "</td> "+
                     "</tr>"+
                     "<tr> "+
                     "<td style='padding: 0' colspan='6'> "+
-                    "<div class='collapse' id='instruccion'> "+
+                    "<div class='collapse' id='instruccion"+key+"'"+"> "+
                     "<div class='card card-body'> "+
                     "<table class='table'> "+
                     "<tbody> "+
@@ -589,20 +596,21 @@
                 "<tbody> ";
             let htmlDetalle = "";
             let htmlFooter = "</tbody> </table> ";
-
+            let i = 0;
             $.each(data.data, function (key, val) {
+                i++;
                 htmlDetalle += "<tr>"+
-                    "<th scope='row'>1</th> "+
+                    "<th scope='row'>"+i+"</th> "+
                     "<td>"+validaTexto(val['numero_expediente'])+"</td> "+
                     "<td>"+validaFecha(val['fecha_ingreso'])+"</td> "+
                     "<td>Resolución</td> "+
                     "<td> "+
-                    "<a class='btn btn-primary' data-toggle='collapse' href='#resolucion' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
+                    "<a class='btn btn-primary' data-toggle='collapse'  href='#resolucion"+key+"' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
                     "</td> "+
                     "</tr>"+
                     "<tr> "+
                     "<td style='padding: 0' colspan='6'> "+
-                    "<div class='collapse' id='resolucion'> "+
+                    "<div class='collapse' id='resolucion"+key+"'"+"> "+
                     "<div class='card card-body'> "+
                     "<table class='table'> "+
                     "<tbody> "+
@@ -642,20 +650,21 @@
                 "<tbody> ";
             let htmlDetalle = "";
             let htmlFooter = "</tbody> </table> ";
-
+            let i = 0;
             $.each(data.data, function (key, val) {
+                i++;
                 htmlDetalle += "<tr>"+
-                    "<th scope='row'>1</th> "+
+                    "<th scope='row'>"+i+"</th> "+
                     "<td>"+validaTexto(val['numero_expediente'])+"</td> "+
                     "<td>"+validaFecha(val['fecha_ingreso'])+"</td> "+
                     "<td>Ejecución</td> "+
                     "<td> "+
-                    "<a class='btn btn-primary' data-toggle='collapse' href='#ejecucion' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
+                    "<a class='btn btn-primary' data-toggle='collapse'  href='#ejecucion"+key+"' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
                     "</td> "+
                     "</tr>"+
                     "<tr> "+
                     "<td style='padding: 0' colspan='6'> "+
-                    "<div class='collapse' id='ejecucion'> "+
+                    "<div class='collapse' id='ejecucion"+key+"'"+"> "+
                     "<div class='card card-body'> "+
                     "<table class='table'> "+
                     "<tbody> "+
@@ -679,7 +688,7 @@
                 existeInformacion = 1;
 
             let html = "<h3>SANCIONES BIOSEGURIDAD</h3>";
-            let htmlCabecera = "<table class='table table-bordered table-hover'> "+
+            let htmlCabecera = "<table id='tblCabecera' class='table table-bordered table-hover'> "+
                 "<thead> "+
                 "<tr> "+
                 "<th>#</th> "+
@@ -695,23 +704,23 @@
                 "<tbody> ";
             let htmlDetalle = "";
             let htmlFooter = "</tbody> </table> ";
-
+            let i = 0;
             $.each(data.data, function (key, val) {
-
+                i++;
                 htmlDetalle += "<tr>"+
-                    "<th scope='row'>1</th> "+
+                    "<th scope='row'>"+i+"</th> "+
                     "<td>"+validaTexto(val['numero_expediente'])+"</td> "+
-                    "<td>"+validaFecha(val['fecha'])+"</td> "+
-                    "<td>Actos Inicio Locales</td> "+
+                    "<td>"+validaFecha(val['fechaInfraccion'])+"</td> "+
+                    "<td>Sanciones Bioseguridad</td> "+
                     "<td> "+
-                    "<a class='btn btn-primary' data-toggle='collapse' href='#bioseguridad' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
+                    "<a class='btn btn-primary' data-toggle='collapse' href='#bioseguridad"+key+"' role='button'  aria-expanded='false' aria-controls='collapseExample'>Detalle</a>"+
                     "</td> "+
                     "</tr>"+
                     "<tr> "+
                     "<td style='padding: 0' colspan='6'> "+
-                    "<div class='collapse' id='bioseguridad'> "+
+                    "<div class='collapse' id='bioseguridad"+key+"'"+"> "+
                     "<div class='card card-body'> "+
-                    "<table class='table'> "+
+                    "<table id='tblDetalle' class='table'> "+
                     "<tbody> "+
                     "<tr><th scope='row'>Cédula/Ruc</th><td>"+validaTexto(val['cedula'])+"</td></tr> "+
                     "<tr><th scope='row'>Nombres y Apellidos</th><td>"+validaTexto(val['nombres'])+"</td></tr> "+
@@ -724,16 +733,21 @@
                     "<tr><th scope='row'>Dirección de Infracción</th><td>"+validaTexto(val['direccionInfraccion'])+"</td></tr> " +
                     "<tr><th scope='row'>Fecha Infracción</th><td>"+validaFecha(val['fechaInfraccion']) +"</td></tr> " +
                     "<tr><th scope='row'>Hora de Infracción</th><td>"+validaTexto(val['horaInfraccion'])+"</td></tr> " +
-                    "<tr class=\"aislamiento" + key + "\"><th scope=\"row\">Aislamiento Obligatorio </th><td>" + validaTexto(val['aislamiento_obligatorio']) + "</td></tr> " +
-                    "<tr class=\"conductorSinMascarilla" + key + "\"><th scope=\"row\">Conductor sin Mascarilla </th><td>" + validaTexto(val['conductorSinMascarilla']) + "</td></tr> " +
-                    "<tr class=\"sinMascarilla" + key + "\"><th scope=\"row\">Sin Mascarilla Espacios Públicos </th><td>" + validaTexto(val['infraccionSinMascarilla']) + "</td></tr> " +
-                    "<tr class=\"sinMascarilla2" + key + "\"><th scope=\"row\">Sin Mascarilla Aire Libre </th><td>" + validaTexto(val['infraccionSinMascarilla2']) + "</td></tr> " +
-                    "<tr class=\"sinCedula" + key + "\"><th scope=\"row\">Sin Cédula </th><td>" + validaTexto(val['infraccioncedula']) + "</td></tr> " +
-                    "<tr class=\"sinDistancia" + key + "\"><th scope=\"row\">Sin Distancia </th><td>" + validaTexto(val['infracciondistancia']) + "</td></tr> " +
-                    "<tr class=\"sancion25" + key + "\"><th scope=\"row\">Sanción 25 SMU </th><td>" + validaTexto(val['sancion_25_SMU']) + "</td></tr> " +
-                    "<tr class=\"sancion50" + key + "\"><th scope=\"row\">Sanción 50 SMU </th><td>" + validaTexto(val['sancion_50_SMU']) + "</td></tr> " +
-                    "<tr class=\"sancionTresSal" + key + "\"><th scope=\"row\">Sanción tres salarios </th><td>" + validaTexto(val['sancion_tres_salarios']) + "</td></tr> " +
-                    "<tr class=\"sancionSalyMedio" + key + "\"><th scope=\"row\">Sanción un salario y medio </th><td>" + validaTexto(val['sancion_un_salario_medio']) + "</td></tr> " +
+                    "<tr class='aislamiento" + key + "'"+"><th scope='row'>Aislamiento Obligatorio </th><td>" + validaTexto(val['aislamiento_obligatorio']) + "</td></tr> " +
+                    "<tr class='conductorSinMascarilla" + key + "'"+"><th scope='row'>Conductor sin Mascarilla </th><td>" + validaTexto(val['conductorSinMascarilla']) + "</td></tr> " +
+                    "<tr class='sinMascarilla" + key + "'"+"><th scope='row'>Sin Mascarilla Espacios Públicos </th><td>" + validaTexto(val['infraccionSinMascarilla']) + "</td></tr> " +
+                    "<tr class='sinMascarilla2" + key + "'"+"><th scope='row'>Sin Mascarilla Aire Libre </th><td>" + validaTexto(val['infraccionSinMascarilla2']) + "</td></tr> " +
+                    "<tr class='sinCedula" + key + "'"+"><th scope='row'>Sin Cédula </th><td>" + validaTexto(val['infraccioncedula']) + "</td></tr> " +
+                    "<tr class='sinDistancia" + key + "'"+"><th scope='row'>Sin Distancia </th><td>" + validaTexto(val['infracciondistancia']) + "</td></tr> " +
+                    "<tr class='sancion25" + key + "'"+"><th scope='row'>Sanción 25 SMU </th><td>" + validaTexto(val['sancion_25_SMU']) + "</td></tr> " +
+                    "<tr class='sancion50" + key + "'"+"><th scope='row'>Sanción 50 SMU </th><td>" + validaTexto(val['sancion_50_SMU']) + "</td></tr> " +
+                    "<tr class='sancionTresSal" + key + "'"+"><th scope='row'>Sanción tres salarios </th><td>" + validaTexto(val['sancion_tres_salarios']) + "</td></tr> " +
+                    "<tr class='sancionSalyMedio" + key + "'"+"><th scope='row'>Sanción un salario y medio </th><td>" + validaTexto(val['sancion_un_salario_medio']) + "</td></tr> " +
+                    "<tr class='fotos" + key + "'"+"><th scope='row'>Fotos</th> " +
+                    "   <td>" + validaAppURL(val['foto']) + "</td> " +
+                    "   <td>" + validaAppURL(val['foto1']) + "</td> " +
+                    "   <td>" + validaAppURL(val['foto2']) + "</td> " +
+                    "</tr>" +
                     "</tbody> "+
                     "</table> "+
                     "</div> "+
@@ -789,38 +803,38 @@
         function renderDatosApp(data) {
             $.each(data.data, function (key, val) {
                 if (val['aislamiento_obligatorio'] === "NO") {
-                    $(".aislamiento" + key).css("display", "none");
+                    $("tr .aislamiento"+ key).css("display", "none");
                 }
                 if (val['conductorSinMascarilla'] === 'NO') {
-                    $(".conductorSinMascarilla" + key).css("display", "none");
+                    $("tr .conductorSinMascarilla" + key).css("display", "none");
                 }
                 if (val['infraccionSinMascarilla'] === 'NO') {
-                    $(".sinMascarilla" + key).css("display", "none");
+                    $("tr .sinMascarilla" + key).css("display", "none");
                 }
                 if (val['infraccionSinMascarilla2'] === 'NO') {
-                    $(".sinMascarilla2" + key).css("display", "none");
+                    $("tr .sinMascarilla2" + key).css("display", "none");
                 }
                 if (val['infraccioncedula'] === 'NO') {
-                    $(".sinCedula" + key).css("display", "none");
+                    $("tr .sinCedula" + key).css("display", "none");
                 }
                 if (val['infracciondistancia'] === 'NO') {
-                    $(".sinDistancia" + key).css("display", "none");
+                    $("tr .sinDistancia" + key).css("display", "none");
                 }
                 if (val['sancion_25_SMU'] === 'NO') {
-                    $(".sancion25" + key).css("display", "none");
+                    $("tr .sancion25" + key).css("display", "none");
                 }
                 if (val['sancion_50_SMU'] === 'NO') {
-                    $(".sancion50" + key).css("display", "none");
+                    $("tr .sancion50" + key).css("display", "none");
                 }
                 if (val['sancion_tres_salarios'] === 'NO') {
-                    $(".sancionTresSal" + key).css("display", "none");
+                    $("tr .sancionTresSal" + key).css("display", "none");
                 }
                 if (val['sancion_un_salario_medio'] === 'NO') {
-                    $(".sancionSalyMedio" + key).css("display", "none");
+                    $("tr .sancionSalyMedio" + key).css("display", "none");
                 }
-                $(".fotos" + key).css("display", "flex");
-                $(".fotos" + key).css("justify-content", "space-between");
-                $(".fotos" + key).css("flex-wrap", "wrap");
+                $("tr .fotos" + key).css("display", "flex");
+                $("tr .fotos" + key).css("justify-content", "space-between");
+                $("tr .fotos" + key).css("flex-wrap", "wrap");
             });
         }
 
