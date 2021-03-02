@@ -55,7 +55,7 @@ switch ($opcion) {
         $fecha = date("Y-m-d, G:i");
         $nombre = $data->nombres;
 
-        $contenidoMailRecepcion = getmensajeSolicitudInformacionReceptada($nombre, $fecha);
+        $contenidoMailRecepcion = getmensajeSolicitudInformacionReceptada($nombre , $fecha);
         // envio email al encargado del negocio
 
         $email = $data->correoelectronico;
@@ -69,7 +69,7 @@ switch ($opcion) {
         $from = 'Solicitud de Información - Agencia Metropolitana de Control';
         // activar envio de correos de prueba
         $prueba = true;
-        $resultado = enviarEmailAmc($email, $asunto, $contenidoMailRecepcion, $funcionarios, $funcionariosSeguimiento, $from, $prueba);
+        $resultado = enviarEmailAmc($email, $asunto, $contenidoMailRecepcion, $funcionarios, $funcionariosSeguimiento, $from , $prueba);
         break;
 }
 
@@ -102,12 +102,12 @@ function ingresaPedidoInformacion()
         $uploadfile = $uploaddir . basename($today . '-' . $nombreArchivo);
 
         if (move_uploaded_file($temp_file_name, $uploadfile)) {
-            $listado1['archivo1'] = "archivos/consulta_en_linea/" . basename($today . '-' . $nombreArchivo);
+            $listado1['archivo1'] = "archivos/consulta_en_linea/" . basename($today . '-' .$nombreArchivo );
         }
     }
 
     if (count($listado1) > 0) {
-        $data->imagencedula = json_encode($listado1);
+        $data->imagencedula= json_encode($listado1);
     }
 
     $data->cedula = $_POST["cedulaformulario"];
@@ -122,7 +122,7 @@ function ingresaPedidoInformacion()
     $data->idzonal = $_POST["idzonal"];
     $data->zonal = getNombreZonal($_POST["idzonal"]); //se recupera el nombre
 
-    // $data->imagencedula = $_POST["imagencedula"];
+   // $data->imagencedula = $_POST["imagencedula"];
     $data->fecha = date('Y-m-d h:i:s'); //todo
     $data->ip = recuperaIP(); //todo
 
@@ -187,20 +187,6 @@ function getactosbioseguridad($id)
     $result = $os->db->conn->query($sql);
     $resultados = $result->fetchAll(PDO::FETCH_ASSOC);
     if (count($resultados) > 0) {
-        $sql2 = "SELECT * FROM amc_libro_diario  WHERE cedula_ruc = '$id' AND es_ejecucion = '0' ;";
-
-        $result2 = $os->db->conn->query($sql2);
-        $resultados2 = $result2->fetchAll(PDO::FETCH_ASSOC);
-
-        if (count($resultados2) > 0) {
-            if (strlen($resultados2[0]['url_documento']) > 0)
-            {
-                $test = json_decode($resultados[0]['imagenacto'] );
-                $test->resolucion = $resultados2[0]['url_documento'];
-                $resultados[0]['imagenacto'] = json_encode($test);
-            }
-        }
-
         echo json_encode(array(
             "success" => true,
             "data" => $resultados
@@ -471,6 +457,7 @@ function getTotales()
 }
 
 
+
 function getUsuario($id)
 {
     global $os;
@@ -499,8 +486,7 @@ function getNombreZonal($id)
 // fin funciones recupera informacion
 
 
-function cors()
-{
+function cors() {
 
     // Allow from any origin
     if (isset($_SERVER['HTTP_ORIGIN'])) {
